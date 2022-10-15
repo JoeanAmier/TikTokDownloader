@@ -1,8 +1,8 @@
-import random
 import re
-import time
 
 import requests
+
+from main import sleep
 
 
 class UserData:
@@ -38,13 +38,9 @@ class UserData:
         if value in ("post", "like"):
             self._api = f"https://www.iesdouyin.com/web/api/v2/aweme/{value}/"
 
-    @staticmethod
-    def sleep():
-        time.sleep(random.randrange(10, 50, 5) * 0.1)
-
     def get_sec_uid(self):
         response = requests.get(self.url, headers=self.headers, timeout=10)
-        self.sleep()
+        sleep()
         if len(
                 sec_uid := re.match(
                     r'https://www\.douyin\.com/user/(.*?)\?previous_page=(?:web|app)_code_link$',
@@ -61,7 +57,7 @@ class UserData:
             params=params,
             headers=self.headers,
             timeout=10)
-        self.sleep()
+        sleep()
         if response.status_code == 200:
             data = response.json()
             self.max_cursor = data['max_cursor']
