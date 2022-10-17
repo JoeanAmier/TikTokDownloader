@@ -1,3 +1,6 @@
+from string import whitespace
+
+
 class StringCleaner:
     def __init__(self):
         """
@@ -16,13 +19,18 @@ class StringCleaner:
             "*": "",
         }  # Windows system illegal characters
 
-    def set_rule(self, rule: dict[str, str]):
+    def set_rule(self, rule: dict[str, str], update=False):
         """
         Set custom replacement rules.
 
         :param rule: Replacement rules, dictionary keys and values are string types.
+        :param update: If True, update the default rule, if False, replace the default rule.
         """
-        self.replace = rule
+        if update:
+            for i, j in rule.items():
+                self.replace[i] = j
+        else:
+            self.replace = rule
 
     def filter(self, text: str) -> str:
         """
@@ -33,4 +41,5 @@ class StringCleaner:
         """
         for i in self.replace:
             text = text.replace(i, self.replace[i])
+            text = "".join(i for i in text if i not in whitespace)
         return text

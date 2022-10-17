@@ -1,8 +1,13 @@
+import random
 import re
+import time
+from urllib.parse import urlparse
 
 import requests
 
-from main import sleep
+
+def sleep():
+    time.sleep(random.randrange(15, 55, 5) * 0.1)
 
 
 class UserData:
@@ -41,11 +46,9 @@ class UserData:
     def get_sec_uid(self):
         response = requests.get(self.url, headers=self.headers, timeout=10)
         sleep()
-        if len(
-                sec_uid := re.match(
-                    r'https://www\.douyin\.com/user/(.*?)\?previous_page=(?:web|app)_code_link$',
-                    response.url).groups()) == 1:
-            self.sec_uid = sec_uid[0]
+        if response.status_code == 200:
+            params = urlparse(response.url)
+            self.sec_uid = params.path.split("/")[-1]
 
     def get_user_data(self):
         params = {
@@ -69,10 +72,10 @@ class UserData:
             return False
         self.name = self.list[0]["author"]["nickname"]
         for item in self.list:
-            if len(item["video"]["play_addr"]["url_list"]) < 4:
-                self.image_data.extend([item["desc"], item["aweme_id"]])
+            if item["images"]:
+                self.image_data.append(item["aweme_id"])
             else:
-                self.video_data.extend([item["desc"], item["aweme_id"]])
+                self.video_data.append(item["aweme_id"])
 
     def run(self):
         if not self.api or not self.url:
@@ -85,6 +88,12 @@ class UserData:
             if not self.list:
                 return False
             self.deal_data()
+
+    def run_alone(self):
+        if not self.url:
+            return False
+        self.get_sec_uid()
+        return self.sec_uid or False
 
 
 if __name__ == '__main__':
