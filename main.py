@@ -16,10 +16,12 @@ class TikTok:
         try:
             self.request.url = settings["url"]
             self.request.api = settings["mode"]
-            self.download.set_rename(settings["rename"])
+            self.download.name = settings["name"]
             self.download.music = settings["music"]
+            self.download.time = settings["time"]
+            self.download.split = settings["split"]
             return True
-        except KeyError:
+        except (KeyError, TypeError):
             select = input(
                 "Configuration file error, whether to regenerate the configuration file? (Y/N)")
             if select == "Y":
@@ -35,7 +37,7 @@ class TikTok:
     def run(self):
         if not self.check_config():
             return False
-        select = input("1. 批量下载用户资源\n2. 单独下载链接资源\n\n输入序号后确认进入下一步！")
+        select = input("1. 批量下载用户资源\n2. 单独下载链接资源\n输入序号：")
         match select:
             case "1":
                 self.batch_acquisition()

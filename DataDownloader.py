@@ -1,5 +1,6 @@
 import os
 import time
+from string import whitespace
 
 import requests
 
@@ -16,23 +17,53 @@ class Download:
         self.item_ids_api = "https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/"
         self.root = {"video": "", "images": ""}
         self.clean = StringCleaner()
-        self.rename = [2, 3, 1]
+        self._name = None
+        self._time = None
+        self._split = None
+        # TODO: 将单独下载的文件夹名称也设置为修饰器属性
         self.music = False
         self.video_data = []
         self.image_data = []
 
-    def set_rename(self, name):
+    @property
+    def time(self):
+        return self._time
+
+    @time.setter
+    def time(self, value):
+        try:
+            _ = time.strftime(value, time.localtime())
+            self._time = value
+        except ValueError as e:
+            raise ValueError(f"Invalid format string: {value}") from e
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
         dict_ = {
             "id": 0,
             "desc": 1,
             "create_time": 2,
             "author": 3,
         }
-        rename = name.split("-")
-        self.rename = [dict_[i] for i in rename]
+        name = value.strip().split(" ")
+        self._name = [dict_[i] for i in name]
 
-    def get_rename(self, data: list) -> str:
-        return self.clean.filter("-".join(data[i] for i in self.rename))
+    def get_name(self, data: list) -> str:
+        return self.clean.filter(self.split.join(data[i] for i in self.name))
+
+    @property
+    def split(self):
+        return self._split
+
+    @split.setter
+    def split(self, value):
+        if value in self.clean.replace.values() or value in whitespace:
+            raise ValueError(f"Invalid split value: {value}")
+        self._split = value
 
     def create_folder(self, author, root="./"):
         if not author:
@@ -64,7 +95,7 @@ class Download:
             id_ = item["aweme_id"]
             desc = item["desc"] or id_
             create_time = time.strftime(
-                "%Y-%m-%d %H:%M:%S",
+                self.time,
                 time.localtime(
                     item["create_time"]))
             author = item["author"]["nickname"]
@@ -80,7 +111,7 @@ class Download:
             id_ = item["aweme_id"]
             desc = item["desc"] or id_
             create_time = time.strftime(
-                "%Y-%m-%d %H:%M:%S",
+                self.time,
                 time.localtime(
                     item["create_time"]))
             author = item["author"]["nickname"]
@@ -100,7 +131,7 @@ class Download:
                         stream=True,
                         headers=self.headers) as response:
                     sleep()
-                    name = self.get_rename(item)
+                    name = self.get_name(item)
                     self.save_file(response, root, f"{name}_{index}", "webp")
             if self.music:
                 with requests.get(
@@ -125,7 +156,7 @@ class Download:
                     stream=True,
                     headers=self.headers) as response:
                 sleep()
-                name = self.get_rename(item)
+                name = self.get_name(item)
                 self.save_file(response, root, name, "mp4")
             if self.music:
                 with requests.get(
