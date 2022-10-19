@@ -5,7 +5,7 @@ from string import whitespace
 import requests
 
 from DataAcquirer import sleep
-from String_Cleaner import StringCleaner
+from StringCleaner import Cleaner
 
 
 class Download:
@@ -15,15 +15,17 @@ class Download:
                           "Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.37"}
         self.video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"
         self.item_ids_api = "https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/"
-        self.root = {"video": "", "images": ""}
-        self.clean = StringCleaner()
+        self.type_ = {"video": "", "images": ""}
+        self.clean = Cleaner()
+        self._root = None
         self._name = None
         self._time = None
         self._split = None
-        # TODO: 将单独下载的文件夹名称也设置为修饰器属性
+        self._folder = None
         self.music = False
         self.video_data = []
         self.image_data = []
+        self.illegal = "".join(self.clean.replace.keys()) + whitespace
 
     @property
     def time(self):
@@ -34,8 +36,9 @@ class Download:
         try:
             _ = time.strftime(value, time.localtime())
             self._time = value
-        except ValueError as e:
-            raise ValueError(f"Invalid format string: {value}") from e
+        except ValueError:
+            print("时间格式错误，将使用默认时间格式（2022-11-11 11:11:11）")
+            self._time = "%Y-%m-%d %H:%M:%S"
 
     @property
     def name(self):
@@ -50,7 +53,11 @@ class Download:
             "author": 3,
         }
         name = value.strip().split(" ")
-        self._name = [dict_[i] for i in name]
+        try:
+            self._name = [dict_[i] for i in name]
+        except KeyError:
+            print("命名格式错误，将使用默认命名格式（创建时间 作者 描述）")
+            self._name = [2, 3, 1]
 
     def get_name(self, data: list) -> str:
         return self.clean.filter(self.split.join(data[i] for i in self.name))
@@ -61,22 +68,51 @@ class Download:
 
     @split.setter
     def split(self, value):
-        if value in self.clean.replace.values() or value in whitespace:
-            raise ValueError(f"Invalid split value: {value}")
+        for s in value:
+            if s in self.illegal:
+                print("无效的文件命名分隔符！默认使用“-”作为分隔符！")
+                self._split = "-"
+                return
         self._split = value
 
-    def create_folder(self, author, root="./"):
+    @property
+    def folder(self):
+        return self._folder
+
+    @folder.setter
+    def folder(self, value):
+        for s in value:
+            if s in self.illegal:
+                print("无效的下载文件夹名称！默认使用“Download”作为下载文件夹名称！")
+                self._folder = "Download"
+                return
+        self._folder = value
+
+    @property
+    def root(self):
+        return self._root
+
+    @root.setter
+    def root(self, value):
+        if os.path.exists(value) and os.path.isdir(value):
+            self._root = value
+        else:
+            print("文件保存路径错误！将使用当前路径作为保存路径！")
+            self._root = "./"
+
+    def create_folder(self, author):
         if not author:
-            return
-        root = os.path.join(root, author)
+            return False
+        root = os.path.join(self.root, author)
         if not os.path.exists(root):
             os.mkdir(root)
-        self.root["video"] = os.path.join(root, "video")
-        if not os.path.exists(self.root["video"]):
-            os.mkdir(self.root["video"])
-        self.root["images"] = os.path.join(root, "images")
-        if not os.path.exists(self.root["images"]):
-            os.mkdir(self.root["images"])
+        self.type_["video"] = os.path.join(root, "video")
+        if not os.path.exists(self.type_["video"]):
+            os.mkdir(self.type_["video"])
+        self.type_["images"] = os.path.join(root, "images")
+        if not os.path.exists(self.type_["images"]):
+            os.mkdir(self.type_["images"])
+        return True
 
     def get_data(self, item):
         params = {
@@ -123,7 +159,7 @@ class Download:
                 [id_, desc, create_time, author, images, [music_title, music]])
 
     def download_images(self):
-        root = self.root["images"]
+        root = self.type_["images"]
         for item in self.image_data:
             for index, image in enumerate(item[4]):
                 with requests.get(
@@ -144,7 +180,7 @@ class Download:
                             item[5][0]), "mp3")
 
     def download_video(self):
-        root = self.root["video"]
+        root = self.type_["video"]
         for item in self.video_data:
             params = {
                 "video_id": item[4],
@@ -175,8 +211,7 @@ class Download:
                 f.write(chunk)
 
     def run(self, author: str, video: list[str], image: list[str]):
-        self.create_folder(author)
-        if self.root:
+        if self.create_folder(author):
             self.get_video(video)
             self.get_image(image)
             self.download_video()
@@ -184,8 +219,8 @@ class Download:
         else:
             print("Invalid user name!")
 
-    def run_alone(self, id_: str, author="Download"):
-        self.create_folder(author)
+    def run_alone(self, id_: str):
+        self.create_folder(self.folder)
         data = self.get_data(id_)
         if data["images"]:
             self.get_image([id_])

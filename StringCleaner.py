@@ -1,7 +1,7 @@
 from string import whitespace
 
 
-class StringCleaner:
+class Cleaner:
     def __init__(self):
         """
         Replace illegal Windows system characters contained in the string,

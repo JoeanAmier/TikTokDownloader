@@ -8,6 +8,7 @@ class Settings:
         self.__default = {
             "url": "https://v.douyin.com/XXXXXXX/",
             "mode": "post",
+            "root": "./",
             "folder": "Download",
             "name": "create_time author desc",
             "time": "%Y-%m-%d %H:%M:%S",
@@ -17,9 +18,7 @@ class Settings:
 
     def create_file(self):
         with open(self.file, "w") as f:
-            print(
-                "Create the default configuration file successfully, if you need to modify the configuration, "
-                "please modify the \"settings.json\" file and run the program again!")
+            print("创建默认配置成功，如需修改配置，请修改“settings.json”文件后重新运行程序！")
             json.dump(self.__default, f)
 
     def read_file(self):
@@ -31,11 +30,7 @@ class Settings:
                 self.create_file()
                 return self.__default
         except json.decoder.JSONDecodeError:
-            return False
-
-    def delete_file(self):
-        os.remove(self.file)
-        self.create_file()
+            return {}
 
 
 if __name__ == "__main__":

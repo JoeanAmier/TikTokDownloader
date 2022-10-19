@@ -33,6 +33,8 @@ class UserData:
     def url(self, value):
         if re.match(r'https://v\.douyin\.com/[A-Za-z0-9]+/$', value):
             self._url = value
+        else:
+            print("分享链接格式错误！")
 
     @property
     def api(self):
@@ -42,6 +44,8 @@ class UserData:
     def api(self, value):
         if value in ("post", "like"):
             self._api = f"https://www.iesdouyin.com/web/api/v2/aweme/{value}/"
+        else:
+            print("下载类型错误！必须设置为“post”或者“like”")
 
     def get_sec_uid(self):
         response = requests.get(self.url, headers=self.headers, timeout=10)
@@ -49,6 +53,8 @@ class UserData:
         if response.status_code == 200:
             params = urlparse(response.url)
             self.sec_uid = params.path.split("/")[-1]
+        else:
+            print(f"响应码异常：{response.status_code}")
 
     def get_user_data(self):
         params = {
@@ -65,17 +71,19 @@ class UserData:
             data = response.json()
             self.max_cursor = data['max_cursor']
             self.list = data["aweme_list"]
+        else:
+            print(f"响应码异常：{response.status_code}")
 
     def deal_data(self):
         if len(self.list) == 0:
             self.finish = True
-            return False
-        self.name = self.list[0]["author"]["nickname"]
-        for item in self.list:
-            if item["images"]:
-                self.image_data.append(item["aweme_id"])
-            else:
-                self.video_data.append(item["aweme_id"])
+        else:
+            self.name = self.list[0]["author"]["nickname"]
+            for item in self.list:
+                if item["images"]:
+                    self.image_data.append(item["aweme_id"])
+                else:
+                    self.video_data.append(item["aweme_id"])
 
     def run(self):
         if not self.api or not self.url:
@@ -88,6 +96,7 @@ class UserData:
             if not self.list:
                 return False
             self.deal_data()
+        print("批量下载结束！")
 
     def run_alone(self):
         if not self.url:

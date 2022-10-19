@@ -21,11 +21,11 @@ class TikTok:
             self.download.time = settings["time"]
             self.download.split = settings["split"]
             return True
-        except (KeyError, TypeError):
+        except KeyError:
             select = input(
                 "Configuration file error, whether to regenerate the configuration file? (Y/N)")
             if select == "Y":
-                self.settings.delete_file()
+                self.settings.create_file()
             return False
 
     def batch_acquisition(self):
