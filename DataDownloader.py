@@ -33,12 +33,16 @@ class Download:
 
     @time.setter
     def time(self, value):
-        try:
-            _ = time.strftime(value, time.localtime())
-            self._time = value
-        except ValueError:
+        if value:
+            try:
+                _ = time.strftime(value, time.localtime())
+                self._time = value
+            except ValueError:
+                print("时间格式错误，将使用默认时间格式（2022-11-11 11:11:11）")
+                self._time = "%Y-%m-%d"
+        else:
             print("时间格式错误，将使用默认时间格式（2022-11-11 11:11:11）")
-            self._time = "%Y-%m-%d %H:%M:%S"
+            self._time = "%Y-%m-%d"
 
     @property
     def name(self):
@@ -46,16 +50,20 @@ class Download:
 
     @name.setter
     def name(self, value):
-        dict_ = {
-            "id": 0,
-            "desc": 1,
-            "create_time": 2,
-            "author": 3,
-        }
-        name = value.strip().split(" ")
-        try:
-            self._name = [dict_[i] for i in name]
-        except KeyError:
+        if value:
+            dict_ = {
+                "id": 0,
+                "desc": 1,
+                "create_time": 2,
+                "author": 3,
+            }
+            name = value.strip().split(" ")
+            try:
+                self._name = [dict_[i] for i in name]
+            except KeyError:
+                print("命名格式错误，将使用默认命名格式（创建时间 作者 描述）")
+                self._name = [2, 3, 1]
+        else:
             print("命名格式错误，将使用默认命名格式（创建时间 作者 描述）")
             self._name = [2, 3, 1]
 
@@ -68,12 +76,16 @@ class Download:
 
     @split.setter
     def split(self, value):
-        for s in value:
-            if s in self.illegal:
-                print("无效的文件命名分隔符！默认使用“-”作为分隔符！")
-                self._split = "-"
-                return
-        self._split = value
+        if value:
+            for s in value:
+                if s in self.illegal:
+                    print("无效的文件命名分隔符！默认使用“-”作为分隔符！")
+                    self._split = "-"
+                    return
+            self._split = value
+        else:
+            print("无效的文件命名分隔符！默认使用“-”作为分隔符！")
+            self._split = "-"
 
     @property
     def folder(self):
@@ -81,12 +93,16 @@ class Download:
 
     @folder.setter
     def folder(self, value):
-        for s in value:
-            if s in self.illegal:
-                print("无效的下载文件夹名称！默认使用“Download”作为下载文件夹名称！")
-                self._folder = "Download"
-                return
-        self._folder = value
+        if value:
+            for s in value:
+                if s in self.illegal:
+                    print("无效的下载文件夹名称！默认使用“Download”作为下载文件夹名称！")
+                    self._folder = "Download"
+                    return
+            self._folder = value
+        else:
+            print("无效的下载文件夹名称！默认使用“Download”作为下载文件夹名称！")
+            self._folder = "Download"
 
     @property
     def root(self):
@@ -240,6 +256,10 @@ if __name__ == "__main__":
     image_data = ['7153520963852799262', '7150543698709777694']
     demo = Download()
     demo.music = True
+    demo.root = ""
+    demo.name = ""
+    demo.time = ""
+    demo.split = ""
     demo.run("Demo", video_data, image_data)
     # print(demo.video_data)
     # print(demo.image_data)

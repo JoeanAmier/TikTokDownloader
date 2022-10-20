@@ -11,7 +11,7 @@ class Settings:
             "root": "./",
             "folder": "Download",
             "name": "create_time author desc",
-            "time": "%Y-%m-%d %H:%M:%S",
+            "time": "%Y-%m-%d",
             "split": "-",
             "music": False,
         }
