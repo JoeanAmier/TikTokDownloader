@@ -16,23 +16,28 @@ class Settings:
             "music": False,
         }
 
-    def create_file(self):
+    def create(self):
         with open(self.file, "w") as f:
-            print("创建默认配置成功，如需修改配置，请修改“settings.json”文件后重新运行程序！")
             json.dump(self.__default, f)
+        print("创建默认配置成功，如需修改配置，请修改“settings.json”文件后重新运行程序！")
 
-    def read_file(self):
+    def read(self):
         try:
             if os.path.exists(self.file):
                 with open(self.file, "r") as f:
                     return json.load(f)
             else:
-                self.create_file()
+                self.create()
                 return self.__default
         except json.decoder.JSONDecodeError:
             return {}
 
+    def update(self, settings: dict):
+        with open(self.file, "w") as f:
+            json.dump(settings, f)
+        print("保存配置成功！")
+
 
 if __name__ == "__main__":
     demo = Settings()
-    print(demo.read_file())
+    print(demo.read())
