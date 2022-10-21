@@ -22,7 +22,7 @@ class Download:
         self._time = None
         self._split = None
         self._folder = None
-        self.music = False
+        self._music = False
         self.video_data = []
         self.image_data = []
         self.illegal = "".join(self.clean.replace.keys()) + whitespace
@@ -116,6 +116,18 @@ class Download:
             print("文件保存路径错误！将使用当前路径作为保存路径！")
             self._root = "./"
 
+    @property
+    def music(self):
+        return self._music
+
+    @music.setter
+    def music(self, value):
+        if isinstance(value, bool):
+            self._music = value
+        else:
+            print("音乐下载设置错误！默认不下载视频/图集的音乐！")
+            self._music = False
+
     def create_folder(self, author):
         if not author:
             return False
@@ -184,7 +196,7 @@ class Download:
                         headers=self.headers) as response:
                     sleep()
                     name = self.get_name(item)
-                    self.save_file(response, root, f"{name}_{index}", "webp")
+                    self.save_file(response, root, f"{name}({index})", "webp")
             if self.music:
                 with requests.get(
                         item[5][1],
@@ -221,10 +233,15 @@ class Download:
                             item[5][0]), "mp3")
 
     @staticmethod
-    def save_file(data, root: str, name: str, file: str):
-        with open(os.path.join(root, f"{name}.{file}"), "wb") as f:
+    def save_file(data, root: str, name: str, type_: str):
+        file = os.path.join(root, f"{name}.{type_}")
+        if os.path.exists(file):
+            print(f"文件{name}.{type_}已存在，跳过下载，详细路径：{file}")
+            return True
+        with open(file, "wb") as f:
             for chunk in data.iter_content(chunk_size=1048576):
                 f.write(chunk)
+        print(f"文件{name}.{type_}下载成功！详细路径：{file}")
 
     def run(self, author: str, video: list[str], image: list[str]):
         if self.create_folder(author):
@@ -233,7 +250,7 @@ class Download:
             self.download_video()
             self.download_images()
         else:
-            print("Invalid user name!")
+            print("无效的账号名称！未下载任何资源！")
 
     def run_alone(self, id_: str):
         self.create_folder(self.folder)
@@ -250,7 +267,6 @@ if __name__ == "__main__":
     video_data = []
     image_data = []
     demo = Download()
-    demo.music = True
     demo.root = ""
     demo.name = ""
     demo.time = ""

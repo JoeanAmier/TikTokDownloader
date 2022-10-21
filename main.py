@@ -37,7 +37,10 @@ class TikTok:
         if not self.request.run():
             return False
         print(f"账号({self.request.name})开始批量下载{self.type_}资源！")
-        self.download.run(self.request.name, self.request.video_data, self.request.image_data)
+        self.download.run(
+            self.request.name,
+            self.request.video_data,
+            self.request.image_data)
         print(f"账号({self.request.name})批量下载{self.type_}资源结束！")
 
     def single_acquisition(self):

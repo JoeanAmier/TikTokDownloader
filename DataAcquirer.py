@@ -7,7 +7,7 @@ import requests
 
 
 def sleep():
-    time.sleep(random.randrange(15, 55, 5) * 0.1)
+    time.sleep(random.randrange(10, 55, 5) * 0.1)
 
 
 class UserData:
@@ -34,7 +34,7 @@ class UserData:
         if re.match(r'https://v\.douyin\.com/[A-Za-z0-9]+/$', value):
             self._url = value
         else:
-            print("分享链接格式错误！")
+            print("分享链接错误！")
 
     @property
     def api(self):
@@ -45,7 +45,7 @@ class UserData:
         if value in ("post", "like"):
             self._api = f"https://www.iesdouyin.com/web/api/v2/aweme/{value}/"
         else:
-            print("下载类型错误！必须设置为“post”或者“like”")
+            print("批量下载类型错误！必须设置为“post”或者“like”")
 
     def get_sec_uid(self):
         response = requests.get(self.url, headers=self.headers, timeout=10)
@@ -54,7 +54,7 @@ class UserData:
             params = urlparse(response.url)
             self.sec_uid = params.path.split("/")[-1]
         else:
-            print(f"响应码异常：{response.status_code}")
+            print(f"响应码异常：{response.status_code}，获取sec_uid失败！")
 
     def get_user_data(self):
         params = {
@@ -72,7 +72,7 @@ class UserData:
             self.max_cursor = data['max_cursor']
             self.list = data["aweme_list"]
         else:
-            print(f"响应码异常：{response.status_code}")
+            print(f"响应码异常：{response.status_code}，获取JSON数据失败！")
 
     def deal_data(self):
         if len(self.list) == 0:
@@ -88,15 +88,14 @@ class UserData:
     def run(self):
         if not self.api or not self.url:
             return False
+        print("正在尝试获取账号数据！")
         self.get_sec_uid()
         if not self.sec_uid:
             return False
         while not self.finish:
             self.get_user_data()
-            if not self.list:
-                break
             self.deal_data()
-        print("获取数据结束！")
+        print("获取账号数据成功！")
         return True
 
     def run_alone(self):
