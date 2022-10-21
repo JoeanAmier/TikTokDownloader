@@ -10,6 +10,7 @@ class TikTok:
         self.download = Download()
         self.settings = Settings()
         self.record = Record()
+        self.type_ = None
 
     def check_config(self):
         settings = self.settings.read()
@@ -22,6 +23,7 @@ class TikTok:
             self.download.music = settings["music"]
             self.download.time = settings["time"]
             self.download.split = settings["split"]
+            self.type_ = {"post": "发布页", "like": "喜欢页"}[settings["mode"]]
             return True
         except KeyError:
             select = input(
@@ -32,10 +34,23 @@ class TikTok:
             return False
 
     def batch_acquisition(self):
-        pass
+        if not self.request.run():
+            return False
+        print(f"账号({self.request.name})开始批量下载{self.type_}资源！")
+        self.download.run(self.request.name, self.request.video_data, self.request.image_data)
+        print(f"账号({self.request.name})批量下载{self.type_}资源结束！")
 
     def single_acquisition(self):
-        pass
+        while True:
+            url = input("请输入分享链接：")
+            if url in ("Q", "q"):
+                break
+            self.request.url = url
+            id_ = self.request.run_alone()
+            if not id_:
+                print("获取资源信息失败！")
+                continue
+            self.download.run_alone(id_)
 
     def run(self):
         if not self.check_config():

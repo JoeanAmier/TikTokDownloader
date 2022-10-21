@@ -119,7 +119,7 @@ class Download:
     def create_folder(self, author):
         if not author:
             return False
-        root = os.path.join(self.root, author)
+        root = os.path.join(self.root, self.clean.filter(author))
         if not os.path.exists(root):
             os.mkdir(root)
         self.type_["video"] = os.path.join(root, "video")
@@ -247,13 +247,8 @@ class Download:
 
 
 if __name__ == "__main__":
-    video_data = [
-        '7151969548021845285',
-        '7150201232915778847',
-        '7147640146253368612',
-        '7147564509018787079',
-        '7147289039563951390']
-    image_data = ['7153520963852799262', '7150543698709777694']
+    video_data = []
+    image_data = []
     demo = Download()
     demo.music = True
     demo.root = ""
@@ -261,6 +256,3 @@ if __name__ == "__main__":
     demo.time = ""
     demo.split = ""
     demo.run("Demo", video_data, image_data)
-    # print(demo.video_data)
-    # print(demo.image_data)
-    # demo.run_alone('7153520963852799262')

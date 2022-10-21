@@ -80,7 +80,7 @@ class UserData:
         else:
             self.name = self.list[0]["author"]["nickname"]
             for item in self.list:
-                if item["images"]:
+                if len(item["video"]["play_addr"]["url_list"]) < 4:
                     self.image_data.append(item["aweme_id"])
                 else:
                     self.video_data.append(item["aweme_id"])
@@ -94,9 +94,10 @@ class UserData:
         while not self.finish:
             self.get_user_data()
             if not self.list:
-                return False
+                break
             self.deal_data()
-        print("批量下载结束！")
+        print("获取数据结束！")
+        return True
 
     def run_alone(self):
         if not self.url:
@@ -107,9 +108,7 @@ class UserData:
 
 if __name__ == '__main__':
     demo = UserData()
-    demo.url = "https://v.douyin.com/MYnH9Jm/"  # 发布页测试一
-    # demo.url = "https://v.douyin.com/MhgkDKs/"  # 发布页测试二
-    # demo.url = "https://v.douyin.com/MhqA5A1/"  # 喜欢页测试
+    demo.url = ""
     demo.api = "post"
     demo.run()
     print(demo.name)
