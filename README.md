@@ -14,3 +14,8 @@
 |  time  | str  |                       发布时间的格式，默认值：年-月-日（注意：Windows下文件名不能包含“:”）                       |
 | split  | str  |                                   文件命名的分隔符，默认值：“-”                                   |
 | music  | bool |                                是否下载视频和图集的音乐，默认值：False                                |
+
+# 参考
+
+* https://github.com/Johnserf-Seed/TikTokDownload
+* https://requests.readthedocs.io/en/latest/
