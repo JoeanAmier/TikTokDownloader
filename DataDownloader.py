@@ -236,12 +236,12 @@ class Download:
     def save_file(data, root: str, name: str, type_: str):
         file = os.path.join(root, f"{name}.{type_}")
         if os.path.exists(file):
-            print(f"文件{name}.{type_}已存在，跳过下载，详细路径：{file}")
+            print(f"{name}.{type_} 已存在，跳过下载！")
             return True
         with open(file, "wb") as f:
             for chunk in data.iter_content(chunk_size=1048576):
                 f.write(chunk)
-        print(f"文件{name}.{type_}下载成功！详细路径：{file}")
+        print(f"{name}.{type_} 下载成功！")
 
     def run(self, author: str, video: list[str], image: list[str]):
         if self.create_folder(author):
