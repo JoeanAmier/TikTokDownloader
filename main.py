@@ -48,12 +48,12 @@ class TikTok:
             url = input("请输入分享链接：")
             if url in ("Q", "q", ""):
                 break
-            self.request.url = url
-            id_ = self.request.run_alone()
+            id_ = self.request.run_alone(url)
             if not id_:
                 print("获取资源信息失败！")
                 continue
             self.download.run_alone(id_)
+            self.request.sec_uid = None
 
     def run(self):
         if not self.check_config():
