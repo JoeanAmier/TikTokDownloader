@@ -1,15 +1,15 @@
 from Configuration import Settings
 from DataAcquirer import UserData
 from DataDownloader import Download
-from Recorder import Record
+from Recorder import Logger
 
 
 class TikTok:
     def __init__(self):
+        self.record = Logger()
         self.request = UserData()
         self.download = Download()
         self.settings = Settings()
-        self.record = Record()
         self.type_ = None
 
     def check_config(self):
@@ -46,7 +46,7 @@ class TikTok:
     def single_acquisition(self):
         while True:
             url = input("请输入分享链接：")
-            if url in ("Q", "q"):
+            if url in ("Q", "q", ""):
                 break
             self.request.url = url
             id_ = self.request.run_alone()

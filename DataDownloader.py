@@ -255,7 +255,7 @@ class Download:
     def run_alone(self, id_: str):
         self.create_folder(self.folder)
         data = self.get_data(id_)
-        if data["images"]:
+        if len(data["video"]["play_addr"]["url_list"]) < 4:
             self.get_image([id_])
             self.download_images()
         else:
