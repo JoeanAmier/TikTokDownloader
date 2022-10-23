@@ -17,6 +17,8 @@ class Download:
         self.item_ids_api = "https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/"
         self.type_ = {"video": "", "images": ""}
         self.clean = Cleaner()
+        self.length = 128
+        self.chunk = 1048576
         self._root = None
         self._name = None
         self._time = None
@@ -232,16 +234,15 @@ class Download:
                         response, root, self.clean.filter(
                             item[5][0]), "mp3")
 
-    @staticmethod
-    def save_file(data, root: str, name: str, type_: str):
-        file = os.path.join(root, f"{name[:128]}.{type_}")
+    def save_file(self, data, root: str, name: str, type_: str):
+        file = os.path.join(root, f"{name[:self.length]}.{type_}")
         if os.path.exists(file):
-            print(f"{name[:128]}.{type_} 已存在，跳过下载！")
+            print(f"{name[:self.length]}.{type_} 已存在，跳过下载！")
             return True
         with open(file, "wb") as f:
-            for chunk in data.iter_content(chunk_size=1048576):
+            for chunk in data.iter_content(chunk_size=self.chunk):
                 f.write(chunk)
-        print(f"{name[:128]}.{type_} 下载成功！")
+        print(f"{name[:self.length]}.{type_} 下载成功！")
 
     def run(self, author: str, video: list[str], image: list[str]):
         if self.create_folder(author):
