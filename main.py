@@ -7,8 +7,8 @@ from Recorder import Logger
 class TikTok:
     def __init__(self):
         self.record = None
-        self.request = UserData()
-        self.download = Download()
+        self.request = None
+        self.download = None
         self.settings = Settings()
         self.type_ = None
 
@@ -24,9 +24,10 @@ class TikTok:
             self.download.time = settings["time"]
             self.download.split = settings["split"]
             self.type_ = {"post": "发布页", "like": "喜欢页"}[settings["mode"]]
+            self.record.info("读取配置文件成功")
             return True
         except KeyError as e:
-            self.record.error(f"读取配置发生错误：{e}")
+            self.record.error(f"读取配置文件发生错误：{e}")
             select = input(
                 "读取配置文件发生异常！是否需要重新生成默认配置文件？（Y/N）")
             if select == "Y":
@@ -36,9 +37,7 @@ class TikTok:
 
     def batch_acquisition(self):
         if not self.request.run():
-            self.record.error(F"获取账号数据失败: {self.request.url}")
             return False
-        self.record.info(F"获取账号数据成功: {self.request.url}")
         self.record.info(f"账号({self.request.name})开始批量下载{self.type_}资源！")
         self.download.run(
             self.request.name,
@@ -53,17 +52,20 @@ class TikTok:
                 break
             id_ = self.request.run_alone(url)
             if not id_:
-                self.record.error(f"获取资源信息失败: {id_}")
                 continue
             self.download.run_alone(id_)
-            self.record.info(f"下载资源成功: {id_}")
             self.request.sec_uid = None
 
-    def run(self, root="./", name="%Y-%m-%d %H.%M.%S"):
+    def initialize(self, **kwargs):
         self.record = Logger()
-        self.record.root = root
-        self.record.name = name
+        self.record.root = kwargs["root"]
+        self.record.name = kwargs["name"]
         self.record.run()
+        self.request = UserData(self.record)
+        self.download = Download(self.record)
+
+    def run(self, root="./", name="%Y-%m-%d %H.%M.%S"):
+        self.initialize(root=root, name=name)
         self.record.info("程序开始运行")
         if not self.check_config():
             return False

@@ -32,10 +32,10 @@ class Logger:
                 _ = time.strftime(value, time.localtime())
                 self._name = value
             except ValueError:
-                print("时间格式错误，将使用默认时间格式（年-月-日 时.分.秒）")
+                print("日志名称格式错误，将使用默认时间格式（年-月-日 时.分.秒）")
                 self._name = "%Y-%m-%d %H.%M.%S"
         else:
-            print("时间格式错误，将使用默认时间格式（年-月-日 时.分.秒）")
+            print("日志名称格式错误，将使用默认时间格式（年-月-日 时.分.秒）")
             self._name = "%Y-%m-%d %H.%M.%S"
 
     def run(self):
