@@ -6,7 +6,7 @@ from Recorder import Logger
 
 class TikTok:
     def __init__(self):
-        self.record = Logger()
+        self.record = None
         self.request = UserData()
         self.download = Download()
         self.settings = Settings()
@@ -25,7 +25,8 @@ class TikTok:
             self.download.split = settings["split"]
             self.type_ = {"post": "发布页", "like": "喜欢页"}[settings["mode"]]
             return True
-        except KeyError:
+        except KeyError as e:
+            self.record.error(f"读取配置发生错误：{e}")
             select = input(
                 "读取配置文件发生异常！是否需要重新生成默认配置文件？（Y/N）")
             if select == "Y":
@@ -35,13 +36,15 @@ class TikTok:
 
     def batch_acquisition(self):
         if not self.request.run():
+            self.record.error(F"获取账号数据失败: {self.request.url}")
             return False
-        print(f"账号({self.request.name})开始批量下载{self.type_}资源！")
+        self.record.info(F"获取账号数据成功: {self.request.url}")
+        self.record.info(f"账号({self.request.name})开始批量下载{self.type_}资源！")
         self.download.run(
             self.request.name,
             self.request.video_data,
             self.request.image_data)
-        print(f"账号({self.request.name})批量下载{self.type_}资源结束！")
+        self.record.info(f"账号({self.request.name})批量下载{self.type_}资源结束！")
 
     def single_acquisition(self):
         while True:
@@ -50,21 +53,31 @@ class TikTok:
                 break
             id_ = self.request.run_alone(url)
             if not id_:
-                print("获取资源信息失败！")
+                self.record.error(f"获取资源信息失败: {id_}")
                 continue
             self.download.run_alone(id_)
+            self.record.info(f"下载资源成功: {id_}")
             self.request.sec_uid = None
 
-    def run(self):
+    def run(self, root="./", name="%Y-%m-%d %H.%M.%S"):
+        self.record = Logger()
+        self.record.root = root
+        self.record.name = name
+        self.record.run()
+        self.record.info("程序开始运行")
         if not self.check_config():
             return False
-        select = input("1. 批量下载用户资源\n2. 单独下载链接资源\n输入序号：")
+        select = input("请选择下载模式：\n1. 批量下载用户资源\n2. 单独下载链接资源\n输入序号：")
         match select:
             case "1":
+                self.record.info("已选择批量下载资源模式")
                 self.batch_acquisition()
             case "2":
+                self.record.info("已选择单独下载资源模式")
                 self.single_acquisition()
-        print("程序运行结束！")
+            case _:
+                self.record.warning(f"选择下载模式时输入了无效的内容: “{select}”")
+        self.record.info("程序运行结束")
 
 
 def main():

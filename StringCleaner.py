@@ -41,7 +41,7 @@ class Cleaner:
         """
         for i in self.replace:
             text = text.replace(i, self.replace[i])
-            text = "".join(i for i in text if i not in whitespace)
+            text = "".join(i for i in text if i not in whitespace[1:])
         if text:
             return text
         raise ValueError("The processed string is empty!")

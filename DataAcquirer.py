@@ -97,7 +97,6 @@ class UserData:
         while not self.finish:
             self.get_user_data()
             self.deal_data()
-        print("获取账号数据成功！")
         return True
 
     def run_alone(self, text: str):

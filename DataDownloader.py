@@ -27,7 +27,7 @@ class Download:
         self._music = False
         self.video_data = []
         self.image_data = []
-        self.illegal = "".join(self.clean.replace.keys()) + whitespace
+        self.illegal = "".join(self.clean.replace.keys()) + whitespace[1:]
 
     @property
     def time(self):
@@ -40,11 +40,11 @@ class Download:
                 _ = time.strftime(value, time.localtime())
                 self._time = value
             except ValueError:
-                print("时间格式错误，将使用默认时间格式（2022-11-11 11:11:11）")
-                self._time = "%Y-%m-%d"
+                print("时间格式错误，将使用默认时间格式（年-月-日 时.分.秒）")
+                self._time = "%Y-%m-%d %H.%M.%S"
         else:
-            print("时间格式错误，将使用默认时间格式（2022-11-11 11:11:11）")
-            self._time = "%Y-%m-%d"
+            print("时间格式错误，将使用默认时间格式（年-月-日 时.分.秒）")
+            self._time = "%Y-%m-%d %H.%M.%S"
 
     @property
     def name(self):
