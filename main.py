@@ -77,6 +77,8 @@ class TikTok:
             case "2":
                 self.record.info("已选择单独下载资源模式")
                 self.single_acquisition()
+            case "Q" | "q" | "":
+                pass
             case _:
                 self.record.warning(f"选择下载模式时输入了无效的内容: “{select}”")
         self.record.info("程序运行结束")
