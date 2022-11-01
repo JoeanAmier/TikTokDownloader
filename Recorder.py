@@ -51,14 +51,17 @@ class Logger:
             format="%(asctime)s:%(levelname)s:[%(lineno)d]:%(message)s",
             encoding="UTF-8")
 
-    def info(self, text: str):
-        print(text)
+    def info(self, text: str, output=True):
+        if output:
+            print(text)
         self.log.info(text)
 
-    def warning(self, text: str):
-        print(text)
+    def warning(self, text: str, output=True):
+        if output:
+            print(text)
         self.log.warning(text)
 
-    def error(self, text: str):
-        print(text)
+    def error(self, text: str, output=True):
+        if output:
+            print(text)
         self.log.error(text)
