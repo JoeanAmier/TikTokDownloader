@@ -34,10 +34,6 @@ class Cleaner:
         rule = {**rule, **cache}
         return rule
 
-    def get_rule(self):
-        print(self.rule)
-        return self.rule
-
     def set_rule(self, rule: dict[str, str], update=False):
         """
         Set custom replacement rules.
@@ -61,4 +57,4 @@ class Cleaner:
 
 if __name__ == "__main__":
     demo = Cleaner()
-    demo.get_rule()
+    print(demo.rule)
