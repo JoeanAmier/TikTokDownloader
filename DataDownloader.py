@@ -29,7 +29,7 @@ class Download:
         self._music = False
         self.video_data = []
         self.image_data = []
-        self.illegal = "".join(self.clean.replace.keys()) + whitespace[1:]
+        self.illegal = "".join(self.clean.rule.keys()) + whitespace[1:]
 
     @property
     def time(self):
