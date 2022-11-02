@@ -41,7 +41,7 @@ class Download:
             try:
                 _ = time.strftime(value, time.localtime())
                 self._time = value
-                self.log.info(f"时间格式设置成功: {value}")
+                self.log.info(f"时间格式设置成功: {value}", False)
             except ValueError:
                 self.log.warning(f"时间格式错误: {value}，将使用默认时间格式（年-月-日 时.分.秒）")
                 self._time = "%Y-%m-%d %H.%M.%S"
@@ -65,7 +65,7 @@ class Download:
             name = value.strip().split(" ")
             try:
                 self._name = [dict_[i] for i in name]
-                self.log.info(f"命名格式设置成功: {value}")
+                self.log.info(f"命名格式设置成功: {value}", False)
             except KeyError:
                 self.log.warning(f"命名格式错误: {value}，将使用默认命名格式（创建时间 作者 描述）")
                 self._name = [2, 3, 1]
@@ -89,7 +89,7 @@ class Download:
                     self._split = "-"
                     return
             self._split = value
-            self.log.info(f"命名分隔符设置成功: {value}")
+            self.log.info(f"命名分隔符设置成功: {value}", False)
         else:
             self.log.warning("非法的文件命名分隔符，默认使用“-”作为分隔符！")
             self._split = "-"
@@ -108,7 +108,7 @@ class Download:
                     self._folder = "Download"
                     return
             self._folder = value
-            self.log.info(f"下载文件夹名称设置成功: {value}")
+            self.log.info(f"下载文件夹名称设置成功: {value}", False)
         else:
             self.log.warning("非法的下载文件夹名称！默认使用“Download”作为下载文件夹名称！")
             self._folder = "Download"
@@ -121,7 +121,7 @@ class Download:
     def root(self, value):
         if os.path.exists(value) and os.path.isdir(value):
             self._root = value
-            self.log.info(f"文件保存路径设置成功: {value}")
+            self.log.info(f"文件保存路径设置成功: {value}", False)
         else:
             self.log.warning(f"文件保存路径错误: {value}，将使用当前路径作为保存路径！")
             self._root = "./"
@@ -134,7 +134,7 @@ class Download:
     def music(self, value):
         if isinstance(value, bool):
             self._music = value
-            self.log.info(f"是否下载视频/图集的音乐: {value}")
+            self.log.info(f"是否下载视频/图集的音乐: {value}", False)
         else:
             self.log.warning(f"音乐下载设置错误: {value}，默认不下载视频/图集的音乐！")
             self._music = False
@@ -182,7 +182,7 @@ class Download:
             music_title = item["music"]["title"]
             music = item["music"]["play_url"]["url_list"][0]
             self.log.info(
-                "视频: " + ",".join([item, id_, desc, create_time, author, video_id]), False)
+                "视频: " + ",".join([id_, desc, create_time, author, video_id]), False)
             self.video_data.append(
                 [id_, desc, create_time, author, video_id, [music_title, music]])
 
@@ -201,7 +201,7 @@ class Download:
             music_title = item["music"]["title"]
             music = item["music"]["play_url"]["url_list"][0]
             self.log.info(
-                "图集: " + ",".join([item, id_, desc, create_time, author, images]), False)
+                "图集: " + ",".join([id_, desc, create_time, author, images]), False)
             self.image_data.append(
                 [id_, desc, create_time, author, images, [music_title, music]])
 

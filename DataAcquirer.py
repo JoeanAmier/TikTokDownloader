@@ -38,7 +38,7 @@ class UserData:
     def url(self, value):
         if self.share.match(value):
             self._url = value
-            self.log.info(f"当前分享链接: {value}")
+            self.log.info(f"当前分享链接: {value}", False)
         else:
             self.log.warning(f"无效的分享链接: {value}")
 
@@ -59,7 +59,7 @@ class UserData:
         if response.status_code == 200:
             params = urlparse(response.url)
             self.sec_uid = params.path.split("/")[-1]
-            self.log.info(f"sec_uid: {self.sec_uid}")
+            self.log.info(f"sec_uid: {self.sec_uid}", False)
         else:
             self.log.error(f"响应码异常：{response.status_code}，获取sec_uid失败！")
 
@@ -105,8 +105,8 @@ class UserData:
         while not self.finish:
             self.get_user_data()
             self.deal_data()
-        self.log.info(f"{self.name} 视频资源列表: {self.video_data}")
-        self.log.info(f"{self.name} 图集资源列表: {self.image_data}")
+        self.log.info(f"{self.name} 视频资源列表: {self.video_data}", False)
+        self.log.info(f"{self.name} 图集资源列表: {self.image_data}", False)
         return True
 
     def run_alone(self, text: str):
