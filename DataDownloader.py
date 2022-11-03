@@ -21,6 +21,7 @@ class Download:
         self.clean = Cleaner()
         self.length = 128  # 文件名称长度限制
         self.chunk = 1048576  # 单次下载文件大小，单位字节
+        self._nickname = None  # 账号昵称
         self._root = None
         self._name = None
         self._time = None
@@ -139,11 +140,23 @@ class Download:
             self.log.warning(f"音乐下载设置错误: {value}，默认不下载视频/图集的音乐！")
             self._music = False
 
-    def create_folder(self, author):
-        if not author:
+    @property
+    def nickname(self):
+        return self._nickname
+
+    @nickname.setter
+    def nickname(self, value):
+        if name := self.clean.filter(value):
+            self._nickname = name
+            self.log.info(f"账号昵称: {value}, 去除非法字符后: {name}", False)
+        else:
+            self.log.error(f"无效的账号昵称，原始昵称: {value}, 去除非法字符后: {name}")
+
+    def create_folder(self, folder):
+        if not folder:
             self.log.warning("无效的账号昵称！")
             return False
-        root = os.path.join(self.root, self.clean.filter(author))
+        root = os.path.join(self.root, folder)
         if not os.path.exists(root):
             os.mkdir(root)
         self.type_["video"] = os.path.join(root, "video")
@@ -164,46 +177,37 @@ class Download:
             headers=self.headers, timeout=10)
         sleep()
         if response.status_code == 200:
-            self.log.info(f"{item} 获取 item_list 成功！", False)
+            self.log.info(f"资源 {item} 获取 item_list 成功！", False)
             return response.json()["item_list"][0]
-        self.log.error(f"{item} 获取 item_list 失败！响应码: {response.status_code}")
+        self.log.error(
+            f"资源 {item} 获取 item_list 失败！响应码: {response.status_code}")
 
-    def get_video(self, data):
+    def get_info(self, data, type_):
         for item in data:
             item = self.get_data(item)
             id_ = item["aweme_id"]
-            desc = item["desc"] or id_
+            desc = self.clean.filter(item["desc"] or id_)
             create_time = time.strftime(
                 self.time,
                 time.localtime(
                     item["create_time"]))
-            author = item["author"]["nickname"]
-            video_id = item["video"]["play_addr"]["uri"]
             music_title = item["music"]["title"]
             music = item["music"]["play_url"]["url_list"][0]
-            self.log.info(
-                "视频: " + ",".join([id_, desc, create_time, author, video_id]), False)
-            self.video_data.append(
-                [id_, desc, create_time, author, video_id, [music_title, music]])
-
-    def get_image(self, data):
-        for item in data:
-            item = self.get_data(item)
-            id_ = item["aweme_id"]
-            desc = item["desc"] or id_
-            create_time = time.strftime(
-                self.time,
-                time.localtime(
-                    item["create_time"]))
-            author = item["author"]["nickname"]
-            images = item["images"]
-            images = [i['url_list'][3] for i in images]
-            music_title = item["music"]["title"]
-            music = item["music"]["play_url"]["url_list"][0]
-            self.log.info(
-                "图集: " + ",".join([id_, desc, create_time, author, images]), False)
-            self.image_data.append(
-                [id_, desc, create_time, author, images, [music_title, music]])
+            if type_ == "Video":
+                video_id = item["video"]["play_addr"]["uri"]
+                self.log.info(
+                    "视频: " + ",".join([id_, desc, create_time, self.nickname, video_id]), False)
+                self.video_data.append(
+                    [id_, desc, create_time, self.nickname, video_id, [music_title, music]])
+            elif type_ == "Image":
+                images = item["images"]
+                images = [i['url_list'][3] for i in images]
+                self.log.info(
+                    "图集: " + ",".join([id_, desc, create_time, self.nickname, images]), False)
+                self.image_data.append(
+                    [id_, desc, create_time, self.nickname, images, [music_title, music]])
+            else:
+                raise ValueError("type_ 参数错误！应该为 Video 或 Image 其中之一！")
 
     def download_images(self):
         root = self.type_["images"]
@@ -263,10 +267,10 @@ class Download:
         self.log.info(f"{name[:self.length]}.{type_} 下载成功！")
         self.log.info(f"{name[:self.length]}.{type_} 文件路径: {file}", False)
 
-    def run(self, author: str, video: list[str], image: list[str]):
-        if self.create_folder(author):
-            self.get_video(video)
-            self.get_image(image)
+    def run(self, video: list[str], image: list[str]):
+        if self.create_folder(self.nickname):
+            self.get_info(video, "Video")
+            self.get_info(image, "Image")
             self.download_video()
             self.download_images()
         else:
@@ -278,11 +282,12 @@ class Download:
             return False
         self.create_folder(self.folder)
         data = self.get_data(id_)
+        self.nickname = data["author"]["nickname"]
         if len(data["video"]["play_addr"]["url_list"]) < 4:
-            self.get_image([id_])
+            self.get_info([id_], "Video")
             self.download_images()
         else:
-            self.get_video([id_])
+            self.get_info([id_], "Image")
             self.download_video()
 
 
@@ -294,4 +299,5 @@ if __name__ == "__main__":
     demo.name = ""
     demo.time = ""
     demo.split = ""
-    demo.run("Demo", video_data, image_data)
+    demo.nickname = "Demo"
+    demo.run(video_data, image_data)

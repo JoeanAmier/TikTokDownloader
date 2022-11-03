@@ -93,6 +93,14 @@ class UserData:
                 else:
                     self.video_data.append(item["aweme_id"])
 
+    def summary(self):
+        self.log.info(f"账号 {self.name} 的视频总数: {len(self.video_data)}")
+        for i in self.video_data:
+            self.log.info(f"视频: {i}", False)
+        self.log.info(f"账号 {self.name} 的图集总数: {len(self.image_data)}")
+        for i in self.image_data:
+            self.log.info(f"图集: {i}", False)
+
     def run(self):
         if not self.api or not self.url:
             self.log.warning("分享链接或下载类型设置无效！")
@@ -105,8 +113,6 @@ class UserData:
         while not self.finish:
             self.get_user_data()
             self.deal_data()
-        self.log.info(f"{self.name} 视频资源列表: {self.video_data}", False)
-        self.log.info(f"{self.name} 图集资源列表: {self.image_data}", False)
         return True
 
     def run_alone(self, text: str):

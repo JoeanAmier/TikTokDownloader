@@ -39,8 +39,8 @@ class TikTok:
         if not self.request.run():
             return False
         self.record.info(f"账号({self.request.name})开始批量下载{self.type_}资源！")
+        self.download.nickname = self.request.name
         self.download.run(
-            self.request.name,
             self.request.video_data,
             self.request.image_data)
         self.record.info(f"账号({self.request.name})批量下载{self.type_}资源结束！")
@@ -54,7 +54,7 @@ class TikTok:
             if not id_:
                 self.record.error(f"{url} 获取 sec_uid 失败！")
                 continue
-            self.record.info(f"{url} 对应的 sec_uid: {id_}")
+            self.record.info(f"{url} 对应的 sec_uid: {id_}", False)
             self.download.run_alone(id_)
             self.request.sec_uid = None
 
