@@ -53,15 +53,15 @@ class UserData:
         else:
             self.log.warning(f"批量下载类型错误！必须设置为“post”或者“like”，错误值: {value}")
 
-    def get_sec_uid(self):
+    def get_sec_uid(self, value="sec_uid"):
         response = requests.get(self.url, headers=self.headers, timeout=10)
         sleep()
         if response.status_code == 200:
             params = urlparse(response.url)
             self.sec_uid = params.path.split("/")[-1]
-            self.log.info(f"{self.url} sec_uid: {self.sec_uid}", False)
+            self.log.info(f"{self.url} {value}: {self.sec_uid}", False)
         else:
-            self.log.error(f"响应码异常：{response.status_code}，获取sec_uid失败！")
+            self.log.error(f"响应码异常：{response.status_code}，获取 {value} 失败！")
 
     def get_user_data(self):
         params = {
@@ -122,7 +122,7 @@ class UserData:
             self.log.warning("无效的分享链接！")
             return False
         self.url = url
-        self.get_sec_uid()
+        self.get_sec_uid("item_ids")
         return self.sec_uid or False
 
     def clean_url(self, url: str):

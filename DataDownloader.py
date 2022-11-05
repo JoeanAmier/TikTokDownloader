@@ -30,8 +30,8 @@ class Download:
         self._music = False
         self.video_data = []
         self.image_data = []
-        self.image = 0
-        self.video = 0
+        self.video = 0  # 视频下载数量，未使用
+        self.image = 0  # 图集下载数量，未使用
         self.illegal = "".join(self.clean.rule.keys()) + whitespace[1:]
 
     @property
@@ -258,16 +258,19 @@ class Download:
                 sleep()
 
     def save_file(self, data, root: str, name: str, type_: str):
-        file = os.path.join(root, f"{name[:self.length]}.{type_}")
+        file = os.path.join(root, f"{name[:self.length].strip()}.{type_}")
         if os.path.exists(file):
-            self.log.info(f"{name[:self.length]}.{type_} 已存在，跳过下载！")
-            self.log.info(f"{name[:self.length]}.{type_} 文件路径: {file}", False)
+            self.log.info(f"{name[:self.length].strip()}.{type_} 已存在，跳过下载！")
+            self.log.info(
+                f"{name[:self.length].strip()}.{type_} 文件路径: {file}", False)
             return True
         with open(file, "wb") as f:
             for chunk in data.iter_content(chunk_size=self.chunk):
                 f.write(chunk)
-        self.log.info(f"{name[:self.length]}.{type_} 下载成功！")
-        self.log.info(f"{name[:self.length]}.{type_} 文件路径: {file}", False)
+        self.log.info(f"{name[:self.length].strip()}.{type_} 下载成功！")
+        self.log.info(
+            f"{name[:self.length].strip()}.{type_} 文件路径: {file}",
+            False)
 
     def summary(self):
         self.log.info(f"本次运行下载视频数量: {self.video}")
@@ -295,8 +298,10 @@ class Download:
         if isinstance(data["image_infos"], list):
             self.get_info([id_], "Image")
             self.download_images()
+            self.image_data = []
         elif data["image_infos"] is None:
             self.get_info([id_], "Video")
             self.download_video()
+            self.video_data = []
         else:
             raise ValueError("无法判断资源类型！")
