@@ -58,7 +58,6 @@ class TikTok:
             if not id_:
                 self.record.error(f"{url} 获取 sec_uid 失败！")
                 continue
-            self.record.info(f"{url} 对应的 sec_uid: {id_}", False)
             self.download.run_alone(id_)
             self.request.sec_uid = None
 

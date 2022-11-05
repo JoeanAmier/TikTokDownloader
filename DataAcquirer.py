@@ -59,7 +59,7 @@ class UserData:
         if response.status_code == 200:
             params = urlparse(response.url)
             self.sec_uid = params.path.split("/")[-1]
-            self.log.info(f"sec_uid: {self.sec_uid}", False)
+            self.log.info(f"{self.url} sec_uid: {self.sec_uid}", False)
         else:
             self.log.error(f"响应码异常：{response.status_code}，获取sec_uid失败！")
 

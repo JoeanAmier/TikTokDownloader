@@ -292,9 +292,11 @@ class Download:
         self.create_folder(self.folder)
         data = self.get_data(id_)
         self.nickname = data["author"]["nickname"]
-        if len(data["video"]["play_addr"]["url_list"]) < 4:
+        if isinstance(data["image_infos"], list):
             self.get_info([id_], "Image")
             self.download_images()
-        else:
+        elif data["image_infos"] is None:
             self.get_info([id_], "Video")
             self.download_video()
+        else:
+            raise ValueError("无法判断资源类型！")
