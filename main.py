@@ -3,6 +3,10 @@ from DataAcquirer import UserData
 from DataDownloader import Download
 from Recorder import Logger
 
+CLEAN_PATCH = {
+    " ": "",
+}
+
 
 class TikTok:
     def __init__(self):
@@ -38,12 +42,12 @@ class TikTok:
     def batch_acquisition(self):
         if not self.request.run():
             return False
-        self.record.info(f"账号({self.request.name})开始批量下载{self.type_}资源！")
+        self.record.info(f"账号 {self.request.name} 开始批量下载{self.type_}资源！")
         self.download.nickname = self.request.name
         self.download.run(
             self.request.video_data,
             self.request.image_data)
-        self.record.info(f"账号({self.request.name})批量下载{self.type_}资源结束！")
+        self.record.info(f"账号 {self.request.name} 批量下载{self.type_}资源结束！")
 
     def single_acquisition(self):
         while True:
@@ -65,6 +69,7 @@ class TikTok:
         self.record.run()
         self.request = UserData(self.record)
         self.download = Download(self.record)
+        self.download.clean.set_rule(CLEAN_PATCH, True)
 
     def run(self, root="./", name="%Y-%m-%d %H.%M.%S"):
         self.initialize(root=root, name=name)

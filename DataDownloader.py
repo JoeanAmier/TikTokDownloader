@@ -177,7 +177,6 @@ class Download:
             headers=self.headers, timeout=10)
         sleep()
         if response.status_code == 200:
-            self.log.info(f"资源 {item} 获取 item_list 成功！", False)
             return response.json()["item_list"][0]
         self.log.error(
             f"资源 {item} 获取 item_list 失败！响应码: {response.status_code}")
@@ -203,7 +202,7 @@ class Download:
                 images = item["images"]
                 images = [i['url_list'][3] for i in images]
                 self.log.info(
-                    "图集: " + ",".join([id_, desc, create_time, self.nickname, images]), False)
+                    "图集: " + ",".join([id_, desc, create_time, self.nickname]), False)
                 self.image_data.append(
                     [id_, desc, create_time, self.nickname, images, [music_title, music]])
             else:
@@ -218,7 +217,8 @@ class Download:
                         stream=True,
                         headers=self.headers) as response:
                     name = self.get_name(item)
-                    self.save_file(response, root, f"{name}({index})", "webp")
+                    self.save_file(
+                        response, root, f"{name}({index + 1})", "webp")
                 sleep()
             if self.music:
                 with requests.get(
@@ -284,20 +284,8 @@ class Download:
         data = self.get_data(id_)
         self.nickname = data["author"]["nickname"]
         if len(data["video"]["play_addr"]["url_list"]) < 4:
-            self.get_info([id_], "Video")
+            self.get_info([id_], "Image")
             self.download_images()
         else:
-            self.get_info([id_], "Image")
+            self.get_info([id_], "Video")
             self.download_video()
-
-
-if __name__ == "__main__":
-    video_data = []
-    image_data = []
-    demo = Download(Logger())
-    demo.root = ""
-    demo.name = ""
-    demo.time = ""
-    demo.split = ""
-    demo.nickname = "Demo"
-    demo.run(video_data, image_data)

@@ -113,6 +113,7 @@ class UserData:
         while not self.finish:
             self.get_user_data()
             self.deal_data()
+        self.summary()
         return True
 
     def run_alone(self, text: str):
@@ -127,13 +128,3 @@ class UserData:
     def clean_url(self, url: str):
         url = self.share.findall(url)
         return url[0] if len(url) == 1 else ""
-
-
-if __name__ == '__main__':
-    demo = UserData(Logger())
-    demo.url = ""
-    demo.api = "post"
-    demo.run()
-    print(demo.name)
-    print(demo.video_data)
-    print(demo.image_data)

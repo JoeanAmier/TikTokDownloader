@@ -36,8 +36,3 @@ class Settings:
         with open(self.file, "w") as f:
             json.dump(settings, f)
         print("保存配置成功！")
-
-
-if __name__ == "__main__":
-    demo = Settings()
-    print(demo.read())
