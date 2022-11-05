@@ -30,6 +30,8 @@ class Download:
         self._music = False
         self.video_data = []
         self.image_data = []
+        self.image = 0
+        self.video = 0
         self.illegal = "".join(self.clean.rule.keys()) + whitespace[1:]
 
     @property
@@ -267,12 +269,19 @@ class Download:
         self.log.info(f"{name[:self.length]}.{type_} 下载成功！")
         self.log.info(f"{name[:self.length]}.{type_} 文件路径: {file}", False)
 
+    def summary(self):
+        self.log.info(f"本次运行下载视频数量: {self.video}")
+        self.log.info(f"本次运行下载图集数量: {self.image}")
+        self.video = 0
+        self.image = 0
+
     def run(self, video: list[str], image: list[str]):
         if self.create_folder(self.nickname):
             self.get_info(video, "Video")
             self.get_info(image, "Image")
             self.download_video()
             self.download_images()
+            # self.summary()
         else:
             self.log.warning("未下载任何资源！")
 
