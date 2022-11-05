@@ -4,7 +4,7 @@ from DataDownloader import Download
 from Recorder import Logger
 
 CLEAN_PATCH = {
-    " ": "",
+    " ": " ",
 }
 
 
