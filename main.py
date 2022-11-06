@@ -16,7 +16,8 @@ class TikTok:
         self.request = None
         self.download = None
         self.settings = Settings()
-        self.link = re.compile(r"^https://www\.douyin\.com/video/([0-9]{19})$")
+        self.link = re.compile(
+            r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")
         self.type_ = None
 
     def check_config(self):
