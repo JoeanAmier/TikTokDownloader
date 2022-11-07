@@ -30,8 +30,9 @@ class Download:
         self._music = False
         self.video_data = []
         self.image_data = []
-        self.video = 0  # 视频下载数量，未使用
+        self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量，未使用
+        self.image_id = None  # 临时记录图集ID，用于下载计数
         self.illegal = "".join(self.clean.rule.keys()) + whitespace[1:]
 
     @property
@@ -220,7 +221,12 @@ class Download:
                         headers=self.headers) as response:
                     name = self.get_name(item)
                     self.save_file(
-                        response, root, f"{name}({index + 1})", "webp")
+                        response,
+                        root,
+                        f"{name}({index + 1})",
+                        "webp",
+                        item[0])
+                self.image_id = item[0]
                 sleep()
             if self.music:
                 with requests.get(
@@ -257,7 +263,7 @@ class Download:
                             item[5][0]), "mp3")
                 sleep()
 
-    def save_file(self, data, root: str, name: str, type_: str):
+    def save_file(self, data, root: str, name: str, type_: str, id_=""):
         file = os.path.join(root, f"{name[:self.length].strip()}.{type_}")
         if os.path.exists(file):
             self.log.info(f"{name[:self.length].strip()}.{type_} 已存在，跳过下载！")
@@ -267,12 +273,17 @@ class Download:
         with open(file, "wb") as f:
             for chunk in data.iter_content(chunk_size=self.chunk):
                 f.write(chunk)
+        if type_ == "mp4":
+            self.video += 1
+        elif type_ == "webp" and id_ != self.image_id:
+            self.image += 1
         self.log.info(f"{name[:self.length].strip()}.{type_} 下载成功！")
         self.log.info(
             f"{name[:self.length].strip()}.{type_} 文件路径: {file}",
             False)
 
     def summary(self):
+        """汇总下载数量"""
         self.log.info(f"本次运行下载视频数量: {self.video}")
         self.log.info(f"本次运行下载图集数量: {self.image}")
         self.video = 0
@@ -284,7 +295,7 @@ class Download:
             self.get_info(image, "Image")
             self.download_video()
             self.download_images()
-            # self.summary()
+            self.summary()
         else:
             self.log.warning("未下载任何资源！")
 
