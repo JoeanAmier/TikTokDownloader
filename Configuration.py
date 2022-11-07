@@ -8,6 +8,9 @@ class Settings:
         self.__default = {
             "url": "https://v.douyin.com/XXXXXXX/",
             "mode": "post",
+            "accounts": [
+                ["https://v.douyin.com/XXXXXXX/", "post"],
+            ],
             "root": "./",
             "folder": "Download",
             "name": "create_time author desc",
