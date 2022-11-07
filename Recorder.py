@@ -65,3 +65,9 @@ class Logger:
         if output:
             print(text)
         self.log.error(text)
+
+
+class SheetLog:
+    def __init__(self, nickname):
+        self.name = nickname
+        self.data = []
