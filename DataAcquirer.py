@@ -12,23 +12,35 @@ def sleep():
     time.sleep(random.randrange(10, 55, 5) * 0.1)
 
 
+def reset(function):
+    def inner(self, *args, **kwargs):
+        function(self, *args, **kwargs)
+        self.id_ = None
+
+    return inner
+
+
 class UserData:
     def __init__(self, log: Logger):
         self.log = log
         self.headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
                           "Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.37"}
-        self.sec_uid = None
+        self.id_ = None  # sec_uid or item_ids
         self.max_cursor = 0
-        self.list = None
-        self.name = None
-        self.video_data = []
-        self.image_data = []
-        self.finish = False
+        self.list = None  # 未处理的数据
+        self.name = None  # 账号昵称
+        self.video_data = []  # 视频ID数据
+        self.image_data = []  # 图集ID数据
+        self.finish = False  # 是否获取完毕
         self.share = re.compile(
-            r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")
-        self._url = None
-        self._api = None
+            r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")  # 分享短链
+        self.account_link = re.compile(
+            r"^https://www\.douyin\.com/user/([a-zA-z0-9-_]+)$")  # 账号链接
+        self.works_link = re.compile(
+            r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
+        self._url = None  # 账号链接
+        self._api = None  # 批量下载类型
 
     @property
     def url(self):
@@ -38,9 +50,13 @@ class UserData:
     def url(self, value):
         if self.share.match(value):
             self._url = value
-            self.log.info(f"当前分享链接: {value}", False)
+            self.log.info(f"当前账号链接: {value}", False)
+        elif len(s := self.account_link.findall(value)) == 1:
+            self._url = True
+            self.id_ = s[0]
+            self.log.info(f"当前账号链接: {value}", False)
         else:
-            self.log.warning(f"无效的分享链接: {value}")
+            self.log.warning(f"无效的账号链接: {value}")
 
     @property
     def api(self):
@@ -53,21 +69,25 @@ class UserData:
         else:
             self.log.warning(f"批量下载类型错误！必须设置为“post”或者“like”，错误值: {value}")
 
-    def get_sec_uid(self, value="sec_uid"):
-        response = requests.get(self.url, headers=self.headers, timeout=10)
+    def get_id(self, value="sec_uid", url=None):
+        if self.id_:
+            return True
+        url = url or self.url
+        response = requests.get(url, headers=self.headers, timeout=10)
         sleep()
         if response.status_code == 200:
             params = urlparse(response.url)
-            self.sec_uid = params.path.split("/")[-1]
-            self.log.info(f"{self.url} {value}: {self.sec_uid}", False)
+            self.id_ = params.path.split("/")[-1]
+            self.log.info(f"{url} {value}: {self.id_}", False)
         else:
-            self.log.error(f"响应码异常：{response.status_code}，获取 {value} 失败！")
+            self.log.error(
+                f"{url} 响应码异常：{response.status_code}，获取 {value} 失败！")
 
     def get_user_data(self):
         params = {
-            "sec_uid": self.sec_uid,
+            "sec_uid": self.id_,
             "max_cursor": self.max_cursor,
-            "count": "20"}
+            "count": "35"}
         response = requests.get(
             self.api,
             params=params,
@@ -103,28 +123,33 @@ class UserData:
 
     def run(self):
         if not self.api or not self.url:
-            self.log.warning("分享链接或下载类型设置无效！")
+            self.log.warning("账号链接或批量下载类型设置无效！")
             return False
-        self.log.info("正在尝试获取账号数据！")
-        self.get_sec_uid()
-        if not self.sec_uid:
-            self.log.error("获取 sec_uid 失败！")
+        self.log.info("正在获取账号数据！")
+        self.get_id()
+        if not self.id_:
+            self.log.error("获取账号 sec_uid 失败！")
             return False
         while not self.finish:
             self.get_user_data()
             self.deal_data()
         self.summary()
+        self.log.info("获取账号数据成功！")
         return True
 
+    @reset
     def run_alone(self, text: str):
-        url = self.clean_url(text)
+        url = self.check_url(text)
         if not url:
-            self.log.warning("无效的分享链接！")
+            self.log.warning("无效的作品链接！")
             return False
-        self.url = url
-        self.get_sec_uid("item_ids")
-        return self.sec_uid or False
+        self.get_id("item_ids", url)
+        return self.id_ or False
 
-    def clean_url(self, url: str):
-        url = self.share.findall(url)
-        return url[0] if len(url) == 1 else ""
+    def check_url(self, url: str):
+        if len(s := self.works_link.findall(url)) == 1:
+            self.id_ = s[0]
+            return True
+        elif len(s := self.share.findall(url)) == 1:
+            return s[0]
+        return False

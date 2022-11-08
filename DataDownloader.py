@@ -9,6 +9,15 @@ from Recorder import Logger
 from StringCleaner import Cleaner
 
 
+def reset(function):
+    def inner(self, *args, **kwargs):
+        function(self, *args, **kwargs)
+        self.video_data = []
+        self.image_data = []
+
+    return inner
+
+
 class Download:
     def __init__(self, log: Logger):
         self.log = log  # 日志记录模块
@@ -17,8 +26,8 @@ class Download:
                           "Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.37"}  # 请求头
         self.video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"  # 官方视频下载接口
         self.item_ids_api = "https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/"  # 官方信息接口
-        self.type_ = {"video": "", "images": ""}
-        self.clean = Cleaner()
+        self.type_ = {"video": "", "images": ""}  # 文件保存目录
+        self.clean = Cleaner()  # 过滤非法字符
         self.length = 128  # 文件名称长度限制
         self.chunk = 1048576  # 单次下载文件大小，单位字节
         self._nickname = None  # 账号昵称
@@ -31,7 +40,7 @@ class Download:
         self.video_data = []
         self.image_data = []
         self.video = 0  # 视频下载数量
-        self.image = 0  # 图集下载数量，未使用
+        self.image = 0  # 图集下载数量
         self.image_id = None  # 临时记录图集ID，用于下载计数
         self.illegal = "".join(self.clean.rule.keys()) + whitespace[1:]
 
@@ -153,12 +162,11 @@ class Download:
             self._nickname = name
             self.log.info(f"账号昵称: {value}, 去除非法字符后: {name}", False)
         else:
+            self._nickname = str(time.time())[:10]
             self.log.error(f"无效的账号昵称，原始昵称: {value}, 去除非法字符后: {name}")
+            self.log.warning(f"本次运行将默认使用当前时间戳作为帐号昵称: {self._nickname}")
 
     def create_folder(self, folder):
-        if not folder:
-            self.log.warning("无效的账号昵称！")
-            return False
         root = os.path.join(self.root, folder)
         if not os.path.exists(root):
             os.mkdir(root)
@@ -168,7 +176,6 @@ class Download:
         self.type_["images"] = os.path.join(root, "images")
         if not os.path.exists(self.type_["images"]):
             os.mkdir(self.type_["images"])
-        return True
 
     def get_data(self, item):
         params = {
@@ -268,7 +275,7 @@ class Download:
         if os.path.exists(file):
             self.log.info(f"{name[:self.length].strip()}.{type_} 已存在，跳过下载！")
             self.log.info(
-                f"{name[:self.length].strip()}.{type_} 文件路径: {file}", False)
+                f"文件保存路径: {file}", False)
             return True
         with open(file, "wb") as f:
             for chunk in data.iter_content(chunk_size=self.chunk):
@@ -279,7 +286,7 @@ class Download:
             self.image += 1
         self.log.info(f"{name[:self.length].strip()}.{type_} 下载成功！")
         self.log.info(
-            f"{name[:self.length].strip()}.{type_} 文件路径: {file}",
+            f"文件保存路径: {file}",
             False)
 
     def summary(self):
@@ -290,15 +297,17 @@ class Download:
         self.image = 0
 
     def run(self, video: list[str], image: list[str]):
-        if self.create_folder(self.nickname):
-            self.get_info(video, "Video")
-            self.get_info(image, "Image")
-            self.download_video()
-            self.download_images()
-            self.summary()
-        else:
-            self.log.warning("未下载任何资源！")
+        self.log.info("开始获取作品数据！")
+        self.get_info(video, "Video")
+        self.get_info(image, "Image")
+        self.log.info("获取作品数据成功！")
+        self.log.info("开始下载视频/图集！")
+        self.download_video()
+        self.download_images()
+        self.log.info("视频/图集下载结束！")
+        self.summary()
 
+    @reset
     def run_alone(self, id_: str):
         if not self.folder:
             self.log.warning("未设置下载文件夹名称！")
@@ -309,10 +318,8 @@ class Download:
         if isinstance(data["image_infos"], list):
             self.get_info([id_], "Image")
             self.download_images()
-            self.image_data = []
         elif data["image_infos"] is None:
             self.get_info([id_], "Video")
             self.download_video()
-            self.video_data = []
         else:
             raise ValueError("无法判断资源类型！")
