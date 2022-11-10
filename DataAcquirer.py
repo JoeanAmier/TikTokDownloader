@@ -14,8 +14,8 @@ def sleep():
 
 def reset(function):
     def inner(self, *args, **kwargs):
-        function(self, *args, **kwargs)
         self.id_ = None
+        return function(self, *args, **kwargs)
 
     return inner
 

@@ -11,9 +11,9 @@ from StringCleaner import Cleaner
 
 def reset(function):
     def inner(self, *args, **kwargs):
-        function(self, *args, **kwargs)
         self.video_data = []
         self.image_data = []
+        return function(self, *args, **kwargs)
 
     return inner
 
@@ -323,3 +323,4 @@ class Download:
             self.download_video()
         else:
             raise ValueError("无法判断资源类型！")
+        return True

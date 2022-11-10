@@ -1,5 +1,3 @@
-import re
-
 from Configuration import Settings
 from DataAcquirer import UserData
 from DataDownloader import Download
@@ -16,8 +14,6 @@ class TikTok:
         self.request = None
         self.download = None
         self.settings = Settings()
-        self.link = re.compile(
-            r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")
         self.type_ = None
 
     def check_config(self):
@@ -58,20 +54,11 @@ class TikTok:
             url = input("请输入分享链接：")
             if url in ("Q", "q", ""):
                 break
-            id_ = self.share_link(url) or self.request.run_alone(url)
+            id_ = self.request.run_alone(url)
             if not id_:
                 self.record.error(f"{url} 获取 item_ids 失败！")
                 continue
             self.download.run_alone(id_)
-            self.request.sec_uid = None
-
-    def share_link(self, link):
-        id_ = self.link.findall(link)
-        if len(id_) == 1:
-            self.record.info(f"分享链接: {link}", False)
-            self.record.info(f"item_ids: {id_[0]}", False)
-            return id_[0]
-        return False
 
     def initialize(self, **kwargs):
         self.record = Logger()
