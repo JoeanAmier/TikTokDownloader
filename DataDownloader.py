@@ -297,6 +297,7 @@ class Download:
         self.image = 0
 
     def run(self, video: list[str], image: list[str]):
+        self.create_folder(self.nickname)
         self.log.info("开始获取作品数据！")
         self.get_info(video, "Video")
         self.get_info(image, "Image")
