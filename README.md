@@ -14,17 +14,19 @@
 
 ```text
 TikTokDownloader
-├─ Configuration.py     //配置文件处理模块
-├─ DataAcquirer.py      //抖音数据获取模块
-├─ DataDownloader.py    //抖音作品下载模块
-├─ Recorder.py          //运行日志记录模块
-├─ StringCleaner.py     //过滤非法字符模块
-├─ main.py              //程序启动入口
-└─ settings.json        //配置文件，首次运行程序自动生成
+├─ Configuration.py       //配置文件处理模块
+├─ DataAcquirer.py        //抖音数据获取模块
+├─ DataDownloader.py      //抖音作品下载模块
+├─ Recorder.py            //运行日志记录模块
+├─ StringCleaner.py       //过滤非法字符模块
+├─ main.py                //程序单线程启动入口
+├─ main_concurrency.py    //程序多进程启动入口，适用于多账号批量爬取
+└─ settings.json          //配置文件，首次运行程序自动生成
 ```
 
 # 程序说明
 
+* 建议优先使用单线程下载，避免频繁请求服务器导致IP被封禁
 * 程序请求输入时，不输入内容或者输入“Q”或“q”即为退出程序
 * 批量下载时，文件将会下载至账号同名文件夹（自动创建）
 * 单独下载时，文件将会下载至指定名称文件夹（默认文件夹名称：Download）
