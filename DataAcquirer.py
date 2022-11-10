@@ -71,6 +71,7 @@ class UserData:
 
     def get_id(self, value="sec_uid", url=None):
         if self.id_:
+            self.log.info(f"{url} {value}: {self.id_}", False)
             return True
         url = url or self.url
         response = requests.get(url, headers=self.headers, timeout=10)
