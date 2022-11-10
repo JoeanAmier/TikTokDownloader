@@ -36,7 +36,7 @@ class UserData:
         self.share = re.compile(
             r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")  # 分享短链
         self.account_link = re.compile(
-            r"^https://www\.douyin\.com/user/([a-zA-z0-9-_]+)$")  # 账号链接
+            r"^https://www\.douyin\.com/user/([a-zA-z0-9-_]+)\??.*?$")  # 账号链接
         self.works_link = re.compile(
             r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
         self._url = None  # 账号链接
