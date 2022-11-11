@@ -7,6 +7,7 @@ class Logger:
     def __init__(self):
         self.log = None
         self._root = "./"
+        self._folder = "Log"
         self._name = "%Y-%m-%d %H.%M.%S"
 
     @property
@@ -38,8 +39,16 @@ class Logger:
             print("日志名称格式错误，将使用默认时间格式（年-月-日 时.分.秒）")
             self._name = "%Y-%m-%d %H.%M.%S"
 
+    @property
+    def folder(self):
+        return self._folder
+
+    @folder.setter
+    def folder(self, value):
+        pass
+
     def run(self):
-        if not os.path.exists(dir_ := os.path.join(self.root, "Log")):
+        if not os.path.exists(dir_ := os.path.join(self.root, self.folder)):
             os.mkdir(dir_)
         self.log = logging
         self.log.basicConfig(
