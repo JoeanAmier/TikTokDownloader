@@ -19,8 +19,8 @@ TikTokDownloader
 ├─ DataDownloader.py      //抖音作品下载模块
 ├─ Recorder.py            //运行日志记录模块
 ├─ StringCleaner.py       //过滤非法字符模块
-├─ main.py                //程序单线程启动入口
-├─ main_concurrency.py    //程序多进程启动入口，适用于多账号批量爬取
+├─ main.py                //程序单线程启动入口，适用于所有下载方式
+├─ main_concurrency.py    //程序多进程启动入口，适用于多账号批量下载
 └─ settings.json          //配置文件，首次运行程序自动生成
 ```
 
