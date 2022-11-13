@@ -9,13 +9,34 @@ from Recorder import Logger
 
 
 def sleep():
-    time.sleep(random.randrange(10, 55, 5) * 0.1)
+    time.sleep(random.randrange(10, 50, 5) * 0.1)
 
 
 def reset(function):
+    """重置数据"""
+
     def inner(self, *args, **kwargs):
-        self.id_ = None
+        if not isinstance(self.url, bool):
+            self.id_ = None
+        self.max_cursor = 0
+        self.list = None  # 未处理的数据
+        self.name = None  # 账号昵称
+        self.video_data = []  # 视频ID数据
+        self.image_data = []  # 图集ID数据
+        self.finish = False  # 是否获取完毕
         return function(self, *args, **kwargs)
+
+    return inner
+
+
+def retry(max_num=3):
+    def inner(function):
+        def execute(self, *args, **kwargs):
+            for i in range(max_num):
+                if r := function(self, *args, **kwargs):
+                    return r
+
+        return execute
 
     return inner
 
@@ -84,6 +105,7 @@ class UserData:
             self.log.error(
                 f"{url} 响应码异常：{response.status_code}，获取 {value} 失败！")
 
+    @retry(max_num=5)
     def get_user_data(self):
         params = {
             "sec_uid": self.id_,
@@ -97,10 +119,18 @@ class UserData:
         sleep()
         if response.status_code == 200:
             data = response.json()
-            self.max_cursor = data['max_cursor']
-            self.list = data["aweme_list"]
+            try:
+                self.max_cursor = data['max_cursor']
+                self.list = data["aweme_list"]
+                return True
+            except KeyError:
+                self.list = []
+                self.log.error(f"响应内容异常: {data}", False)
+                return False
         else:
+            self.list = []
             self.log.error(f"响应码异常：{response.status_code}，获取JSON数据失败！")
+            return False
 
     def deal_data(self):
         if len(self.list) == 0:
@@ -122,11 +152,12 @@ class UserData:
         for i in self.image_data:
             self.log.info(f"图集: {i}", False)
 
-    def run(self):
+    @reset
+    def run(self, index: int):
         if not self.api or not self.url:
             self.log.warning("账号链接或批量下载类型设置无效！")
             return False
-        self.log.info("正在获取账号数据！")
+        self.log.info(f"正在获取第 {index} 个账号数据！")
         self.get_id()
         if not self.id_:
             self.log.error("获取账号 sec_uid 失败！")
@@ -135,7 +166,7 @@ class UserData:
             self.get_user_data()
             self.deal_data()
         self.summary()
-        self.log.info("获取账号数据成功！")
+        self.log.info(f"获取第 {index} 个账号数据成功！")
         return True
 
     @reset

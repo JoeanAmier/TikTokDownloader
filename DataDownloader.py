@@ -4,6 +4,7 @@ from string import whitespace
 
 import requests
 
+from DataAcquirer import retry
 from DataAcquirer import sleep
 from Recorder import Logger
 from StringCleaner import Cleaner
@@ -11,8 +12,12 @@ from StringCleaner import Cleaner
 
 def reset(function):
     def inner(self, *args, **kwargs):
+        self.type_ = {"video": "", "images": ""}  # 文件保存目录
         self.video_data = []
         self.image_data = []
+        self.video = 0  # 视频下载数量
+        self.image = 0  # 图集下载数量
+        self.image_id = None  # 临时记录图集ID，用于下载计数
         return function(self, *args, **kwargs)
 
     return inner
@@ -26,7 +31,6 @@ class Download:
                           "Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.37"}  # 请求头
         self.video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"  # 官方视频下载接口
         self.item_ids_api = "https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/"  # 官方信息接口
-        self.type_ = {"video": "", "images": ""}  # 文件保存目录
         self.clean = Cleaner()  # 过滤非法字符
         self.length = 128  # 文件名称长度限制
         self.chunk = 1048576  # 单次下载文件大小，单位字节
@@ -37,6 +41,7 @@ class Download:
         self._split = None
         self._folder = None
         self._music = False
+        self.type_ = {"video": "", "images": ""}  # 文件保存目录
         self.video_data = []
         self.image_data = []
         self.video = 0  # 视频下载数量
@@ -177,6 +182,7 @@ class Download:
         if not os.path.exists(self.type_["images"]):
             os.mkdir(self.type_["images"])
 
+    @retry(max_num=5)
     def get_data(self, item):
         params = {
             "item_ids": item,
@@ -190,6 +196,7 @@ class Download:
             return response.json()["item_list"][0]
         self.log.error(
             f"资源 {item} 获取 item_list 失败！响应码: {response.status_code}")
+        return False
 
     def get_info(self, data, type_):
         for item in data:
@@ -296,6 +303,7 @@ class Download:
         self.video = 0
         self.image = 0
 
+    @reset
     def run(self, video: list[str], image: list[str]):
         self.create_folder(self.nickname)
         self.log.info("开始获取作品数据！")
