@@ -15,6 +15,8 @@
 
 ```text
 TikTokDownloader
+├─ Log                    //运行日志记录文件夹，用于 Bug 分析，可删除
+├─ Data                   //详细数据记录文件夹，可删除
 ├─ Configuration.py       //配置文件处理模块
 ├─ DataAcquirer.py        //抖音数据获取模块
 ├─ DataDownloader.py      //抖音作品下载模块
