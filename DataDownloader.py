@@ -193,7 +193,11 @@ class Download:
             headers=self.headers, timeout=10)
         sleep()
         if response.status_code == 200:
-            return response.json()["item_list"][0]
+            try:
+                return response.json()["item_list"][0]
+            except KeyError:
+                self.log.error(f"响应内容异常: {response.json()}", False)
+                return False
         self.log.error(
             f"资源 {item} 获取 item_list 失败！响应码: {response.status_code}")
         return False
