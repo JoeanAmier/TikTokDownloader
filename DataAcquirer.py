@@ -42,11 +42,18 @@ def retry(max_num=3):
 
 
 class UserData:
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                      "Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.37"}
+    share = re.compile(
+        r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")  # 分享短链
+    account_link = re.compile(
+        r"^https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*$")  # 账号链接
+    works_link = re.compile(
+        r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
+
     def __init__(self, log: Logger):
         self.log = log
-        self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                          "Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.37"}
         self.id_ = None  # sec_uid or item_ids
         self.max_cursor = 0
         self.list = None  # 未处理的数据
@@ -54,12 +61,6 @@ class UserData:
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
         self.finish = False  # 是否获取完毕
-        self.share = re.compile(
-            r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")  # 分享短链
-        self.account_link = re.compile(
-            r"^https://www\.douyin\.com/user/([a-zA-z0-9-_]+)\??.*?$")  # 账号链接
-        self.works_link = re.compile(
-            r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
         self._url = None  # 账号链接
         self._api = None  # 批量下载类型
 
@@ -74,7 +75,7 @@ class UserData:
             self.log.info(f"当前账号链接: {value}", False)
         elif len(s := self.account_link.findall(value)) == 1:
             self._url = True
-            self.id_ = s[0]
+            self.id_ = s[0][0]
             self.log.info(f"当前账号链接: {value}", False)
         else:
             self.log.warning(f"无效的账号链接: {value}")
@@ -184,4 +185,8 @@ class UserData:
             return True
         elif len(s := self.share.findall(url)) == 1:
             return s[0]
+        elif len(s := self.account_link.findall(url)) == 1:
+            if s := s[0][1]:
+                self.id_ = s
+                return True
         return False
