@@ -93,7 +93,7 @@ class UserData:
 
     def get_id(self, value="sec_uid", url=None):
         if self.id_:
-            self.log.info(f"{self.url} {value}: {self.id_}", False)
+            self.log.info(f"{url} {value}: {self.id_}", False)
             return True
         url = url or self.url
         response = requests.get(url, headers=self.headers, timeout=10)
@@ -182,11 +182,11 @@ class UserData:
     def check_url(self, url: str):
         if len(s := self.works_link.findall(url)) == 1:
             self.id_ = s[0]
-            return True
+            return url
         elif len(s := self.share.findall(url)) == 1:
             return s[0]
         elif len(s := self.account_link.findall(url)) == 1:
             if s := s[0][1]:
                 self.id_ = s
-                return True
+                return url
         return False
