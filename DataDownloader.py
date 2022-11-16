@@ -1,6 +1,5 @@
 import os
 import time
-from string import whitespace
 
 import requests
 
@@ -24,16 +23,17 @@ def reset(function):
 
 
 class Download:
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                      "Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.37"}  # 请求头
+    video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"  # 官方视频下载接口
+    item_ids_api = "https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/"  # 官方信息接口
+    clean = Cleaner()  # 过滤非法字符
+    length = 128  # 文件名称长度限制
+    chunk = 1048576  # 单次下载文件大小，单位字节
+
     def __init__(self, log: Logger):
         self.log = log  # 日志记录模块
-        self.headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                          "Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.37"}  # 请求头
-        self.video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"  # 官方视频下载接口
-        self.item_ids_api = "https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/"  # 官方信息接口
-        self.clean = Cleaner()  # 过滤非法字符
-        self.length = 128  # 文件名称长度限制
-        self.chunk = 1048576  # 单次下载文件大小，单位字节
         self._nickname = None  # 账号昵称
         self._root = None
         self._name = None
@@ -47,7 +47,6 @@ class Download:
         self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量
         self.image_id = None  # 临时记录图集ID，用于下载计数
-        self.illegal = "".join(self.clean.rule.keys()) + whitespace[1:]
 
     @property
     def time(self):
@@ -102,7 +101,7 @@ class Download:
     def split(self, value):
         if value:
             for s in value:
-                if s in self.illegal:
+                if s in self.clean.rule.keys():
                     self.log.warning(f"无效的文件命名分隔符: {value}，默认使用“-”作为分隔符！")
                     self._split = "-"
                     return
@@ -120,7 +119,7 @@ class Download:
     def folder(self, value):
         if value:
             for s in value:
-                if s in self.illegal:
+                if s in self.clean.rule.keys():
                     self.log.warning(
                         f"无效的下载文件夹名称: {value}，默认使用“Download”作为下载文件夹名称！")
                     self._folder = "Download"
