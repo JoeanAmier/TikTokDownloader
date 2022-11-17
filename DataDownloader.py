@@ -186,10 +186,13 @@ class Download:
         params = {
             "item_ids": item,
         }
-        response = requests.get(
-            self.item_ids_api,
-            params=params,
-            headers=self.headers, timeout=10)
+        try:
+            response = requests.get(
+                self.item_ids_api,
+                params=params,
+                headers=self.headers, timeout=10)
+        except requests.exceptions.ReadTimeout:
+            return False
         sleep()
         if response.status_code == 200:
             try:

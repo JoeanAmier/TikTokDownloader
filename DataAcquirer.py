@@ -91,20 +91,26 @@ class UserData:
         else:
             self.log.warning(f"批量下载类型错误！必须设置为“post”或者“like”，错误值: {value}")
 
+    @retry(max_num=5)
     def get_id(self, value="sec_uid", url=None):
         if self.id_:
             self.log.info(f"{url} {value}: {self.id_}", False)
             return True
         url = url or self.url
-        response = requests.get(url, headers=self.headers, timeout=10)
+        try:
+            response = requests.get(url, headers=self.headers, timeout=10)
+        except requests.exceptions.ReadTimeout:
+            return False
         sleep()
         if response.status_code == 200:
             params = urlparse(response.url)
             self.id_ = params.path.split("/")[-1]
             self.log.info(f"{url} {value}: {self.id_}", False)
+            return True
         else:
             self.log.error(
                 f"{url} 响应码异常：{response.status_code}，获取 {value} 失败！")
+            return False
 
     @retry(max_num=5)
     def get_user_data(self):
@@ -112,11 +118,14 @@ class UserData:
             "sec_uid": self.id_,
             "max_cursor": self.max_cursor,
             "count": "35"}
-        response = requests.get(
-            self.api,
-            params=params,
-            headers=self.headers,
-            timeout=10)
+        try:
+            response = requests.get(
+                self.api,
+                params=params,
+                headers=self.headers,
+                timeout=10)
+        except requests.exceptions.ReadTimeout:
+            return False
         sleep()
         if response.status_code == 200:
             data = response.json()
