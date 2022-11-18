@@ -5,13 +5,13 @@ from string import whitespace
 class Cleaner:
     def __init__(self):
         """
-        Replace illegal Windows system characters contained in the string,
-        or you can customize the replacement rules.
+        替换字符串中包含的非法字符，默认根据系统类型生成对应的非法字符字典，也可以自行设置非法字符字典
         """
-        self.rule = self.default_rule()
+        self.rule = self.default_rule()  # 默认非法字符字典
 
     @staticmethod
     def default_rule():
+        """根据系统类型生成默认非法字符字典"""
         system = platform.system()
         match system:
             case "Windows":
@@ -25,30 +25,30 @@ class Cleaner:
                     "?": "",
                     ":": "",
                     "*": "",
-                }  # Windows system illegal characters
+                }  # Windows 系统
             case "Linux":
-                rule = {}
+                rule = {}  # Linux 系统，待完善
             case _:
-                rule = {}
-        cache = {i: "" for i in whitespace[1:]}
+                rule = {}  # 其他系统需要自行设置
+        cache = {i: "" for i in whitespace[1:]}  # 补充换行符等非法字符
         rule = {**rule, **cache}
         return rule
 
     def set_rule(self, rule: dict[str, str], update=False):
         """
-        Set custom replacement rules.
+        设置非法字符字典
 
-        :param rule: Replacement rules, dictionary keys and values are string types.
-        :param update: If True, update the default rule, if False, replace the default rule.
+        :param rule: 替换规则，字典格式，键为非法字符，值为替换后的内容
+        :param update: 如果是 True，则与原有规则字典合并，否则替换原有规则字典
         """
         self.rule = {**self.rule, **rule} if update else rule
 
     def filter(self, text: str) -> str:
         """
-        Replace string.
+        去除非法字符
 
-        :param text: String to be processed.
-        :return: Replaced string.
+        :param text: 待处理的字符串
+        :return: 替换后的字符串，如果替换后字符串为空，则返回 None
         """
         for i in self.rule:
             text = text.replace(i, self.rule[i])
