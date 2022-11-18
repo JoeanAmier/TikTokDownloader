@@ -5,10 +5,10 @@ import time
 
 class Logger:
     def __init__(self):
-        self.log = None
-        self._root = "./"
-        self._folder = "Log"
-        self._name = "%Y-%m-%d %H.%M.%S"
+        self.log = None  # 记录器主体
+        self._root = "./"  # 日志记录保存根路径
+        self._folder = "Log"  # 日志记录保存文件夹名称
+        self._name = "%Y-%m-%d %H.%M.%S"  # 日志文件名称
 
     @property
     def root(self):
