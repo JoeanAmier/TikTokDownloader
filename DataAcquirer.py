@@ -9,6 +9,7 @@ from Recorder import Logger
 
 
 def sleep():
+    """避免频繁请求"""
     time.sleep(random.randrange(10, 50, 5) * 0.1)
 
 
@@ -30,6 +31,8 @@ def reset(function):
 
 
 def retry(max_num=3):
+    """发生错误时尝试重新执行"""
+
     def inner(function):
         def execute(self, *args, **kwargs):
             for i in range(max_num):
@@ -93,6 +96,7 @@ class UserData:
 
     @retry(max_num=5)
     def get_id(self, value="sec_uid", url=None):
+        """获取账号ID或者作品ID"""
         if self.id_:
             self.log.info(f"{url} {value}: {self.id_}", False)
             return True
@@ -114,6 +118,7 @@ class UserData:
 
     @retry(max_num=5)
     def get_user_data(self):
+        """获取账号作品信息"""
         params = {
             "sec_uid": self.id_,
             "max_cursor": self.max_cursor,
@@ -143,6 +148,7 @@ class UserData:
             return False
 
     def deal_data(self):
+        """对账号作品进行分类"""
         if len(self.list) == 0:
             self.log.info("该账号的资源信息已获取完毕！")
             self.finish = True
@@ -155,6 +161,7 @@ class UserData:
                     self.video_data.append(item["aweme_id"])
 
     def summary(self):
+        """汇总账号作品数量"""
         self.log.info(f"账号 {self.name} 的视频总数: {len(self.video_data)}")
         for i in self.video_data:
             self.log.info(f"视频: {i}", False)

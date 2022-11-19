@@ -10,6 +10,8 @@ from StringCleaner import Cleaner
 
 
 def reset(function):
+    """重置数据"""
+
     def inner(self, *args, **kwargs):
         self.type_ = {"video": "", "images": ""}  # 文件保存目录
         self.video_data = []
@@ -42,8 +44,8 @@ class Download:
         self._folder = None
         self._music = False
         self.type_ = {"video": "", "images": ""}  # 文件保存目录
-        self.video_data = []
-        self.image_data = []
+        self.video_data = []  # 视频详细信息
+        self.image_data = []  # 图集详细信息
         self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量
         self.image_id = None  # 临时记录图集ID，用于下载计数
@@ -91,6 +93,7 @@ class Download:
             self._name = [2, 3, 1]
 
     def get_name(self, data: list) -> str:
+        """生成文件名称"""
         return self.clean.filter(self.split.join(data[i] for i in self.name))
 
     @property
@@ -171,6 +174,7 @@ class Download:
             self.log.warning(f"本次运行将默认使用当前时间戳作为帐号昵称: {self._nickname}")
 
     def create_folder(self, folder):
+        """创建作品保存文件夹"""
         root = os.path.join(self.root, folder)
         if not os.path.exists(root):
             os.mkdir(root)
@@ -183,6 +187,7 @@ class Download:
 
     @retry(max_num=5)
     def get_data(self, item):
+        """获取作品详细信息"""
         params = {
             "item_ids": item,
         }
@@ -205,6 +210,7 @@ class Download:
         return False
 
     def get_info(self, data, type_):
+        """提取作品详细信息"""
         for item in data:
             item = self.get_data(item)
             id_ = item["aweme_id"]
@@ -284,6 +290,7 @@ class Download:
                 sleep()
 
     def save_file(self, data, root: str, name: str, type_: str, id_=""):
+        """保存文件"""
         file = os.path.join(root, f"{name[:self.length].strip()}.{type_}")
         if os.path.exists(file):
             self.log.info(f"{name[:self.length].strip()}.{type_} 已存在，跳过下载！")

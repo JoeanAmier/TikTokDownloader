@@ -45,6 +45,7 @@ class Logger:
 
     @folder.setter
     def folder(self, value):
+        """未生效"""
         pass
 
     def run(
