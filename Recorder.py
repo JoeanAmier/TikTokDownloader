@@ -47,7 +47,9 @@ class Logger:
     def folder(self, value):
         pass
 
-    def run(self):
+    def run(
+            self,
+            format_="%(asctime)s[%(levelname)s]%(filename)s-%(lineno)d: %(message)s"):
         if not os.path.exists(dir_ := os.path.join(self.root, self.folder)):
             os.mkdir(dir_)
         self.log = logging
@@ -56,8 +58,8 @@ class Logger:
                 dir_,
                 f"{time.strftime(self.name, time.localtime())}.log"),
             level=logging.INFO,
-            datefmt='[%Y-%m-%d %H:%M:%S]',
-            format="%(asctime)s:%(levelname)s:[%(lineno)d]:%(message)s",
+            datefmt='%Y-%m-%d %H:%M:%S',
+            format=format_,
             encoding="UTF-8")
 
     def info(self, text: str, output=True):
