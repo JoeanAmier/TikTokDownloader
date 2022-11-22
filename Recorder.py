@@ -3,7 +3,7 @@ import os
 import time
 
 
-class Logger:
+class RunLogger:
     def __init__(self):
         self.log = None  # 记录器主体
         self._root = "./"  # 日志记录保存根路径
@@ -79,7 +79,7 @@ class Logger:
         self.log.error(text)
 
 
-class SheetLog:
+class DataLogger:
     def __init__(self, nickname):
         self.name = nickname
         self.data = []

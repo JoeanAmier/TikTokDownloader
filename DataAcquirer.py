@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 import requests
 
-from Recorder import Logger
+from Recorder import RunLogger
 
 
 def sleep():
@@ -55,7 +55,7 @@ class UserData:
     works_link = re.compile(
         r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
 
-    def __init__(self, log: Logger):
+    def __init__(self, log: RunLogger):
         self.log = log
         self.id_ = None  # sec_uid or item_ids
         self.max_cursor = 0

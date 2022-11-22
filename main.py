@@ -1,7 +1,7 @@
 from Configuration import Settings
 from DataAcquirer import UserData
 from DataDownloader import Download
-from Recorder import Logger
+from Recorder import RunLogger
 
 CLEAN_PATCH = {
     " ": " ",
@@ -74,7 +74,7 @@ class TikTok:
             self.download.run_alone(id_)
 
     def initialize(self, **kwargs):
-        self.record = Logger()
+        self.record = RunLogger()
         self.record.root = kwargs["root"]
         self.record.name = kwargs["name"]
         self.record.run()

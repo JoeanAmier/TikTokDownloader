@@ -5,7 +5,7 @@ import requests
 
 from DataAcquirer import retry
 from DataAcquirer import sleep
-from Recorder import Logger
+from Recorder import RunLogger
 from StringCleaner import Cleaner
 
 
@@ -34,7 +34,7 @@ class Download:
     length = 128  # 文件名称长度限制
     chunk = 1048576  # 单次下载文件大小，单位字节
 
-    def __init__(self, log: Logger):
+    def __init__(self, log: RunLogger):
         self.log = log  # 日志记录模块
         self._nickname = None  # 账号昵称
         self._root = None
