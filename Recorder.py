@@ -1,3 +1,4 @@
+import csv
 import logging
 import os
 import time
@@ -79,7 +80,52 @@ class RunLogger:
         self.log.error(text)
 
 
+class Writer:
+    param = {
+        "type_": "",
+        "encoding": "UTF-8",
+    }
+
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def save(self, *args, **kwargs):
+        pass
+
+
+class CSV(Writer):
+    param = {
+        "type_": "csv",
+        "encoding": "UTF-8",
+        "newline": ""
+    }
+
+    def __init__(self, file):
+        self.main = csv.writer(file)
+
+    def save(self, data):
+        self.main.writerow(data)
+
+
 class DataLogger:
-    def __init__(self, nickname):
-        self.name = nickname
-        self.data = []
+    __root = "./"
+    __folder = "Data"
+    __name = "%Y-%m-%d %H.%M.%S"
+    TYPE = {
+        "csv": CSV,
+    }
+
+    def __init__(self, type_: str):
+        self.writer = self.TYPE.get(type_, Writer)
+
+    def start(self, dir_):
+        self.file = open(os.path.join(
+            dir_,
+            f"{time.strftime(self.__name, time.localtime())}.csv"), "w")
+        print("文件已打开")
+        self.writer = csv.writer(self.file)
+
+    def run(self):
+        if not os.path.exists(dir_ := os.path.join(self.__root, self.__folder)):
+            os.mkdir(dir_)
+        self.start(dir_)
