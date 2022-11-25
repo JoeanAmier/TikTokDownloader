@@ -82,26 +82,25 @@ class RunLogger:
 
 class Writer:
     param = {
-        "type_": "",
         "encoding": "UTF-8",
     }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args):
         pass
 
-    def save(self, *args, **kwargs):
+    def save(self, *args):
         pass
 
 
 class CSV(Writer):
     param = {
-        "type_": "csv",
         "encoding": "UTF-8",
         "newline": ""
     }
 
-    def __init__(self, file):
-        self.main = csv.writer(file)
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.main = csv.writer(args[0])
 
     def save(self, data):
         self.main.writerow(data)
@@ -116,6 +115,7 @@ class DataLogger:
     }
 
     def __init__(self, type_: str):
+        self.file = None
         self.writer = self.TYPE.get(type_, Writer)
 
     def start(self, dir_):
@@ -126,6 +126,9 @@ class DataLogger:
         self.writer = csv.writer(self.file)
 
     def run(self):
-        if not os.path.exists(dir_ := os.path.join(self.__root, self.__folder)):
+        if not os.path.exists(
+                dir_ := os.path.join(
+                    self.__root,
+                    self.__folder)):
             os.mkdir(dir_)
         self.start(dir_)
