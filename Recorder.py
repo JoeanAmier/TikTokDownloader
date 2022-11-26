@@ -85,10 +85,10 @@ class Writer:
         "encoding": "UTF-8",
     }
 
-    def __init__(self, *args):
-        pass
+    def __init__(self, file):
+        self.main = file
 
-    def save(self, *args):
+    def save(self, data):
         pass
 
 
@@ -98,9 +98,9 @@ class CSV(Writer):
         "newline": ""
     }
 
-    def __init__(self, *args):
-        super().__init__(*args)
-        self.main = csv.writer(args[0])
+    def __init__(self, file):
+        super().__init__(file)
+        self.main = csv.writer(file)
 
     def save(self, data):
         self.main.writerow(data)
@@ -116,19 +116,26 @@ class DataLogger:
 
     def __init__(self, type_: str):
         self.file = None
+        self.type_ = type_
         self.writer = self.TYPE.get(type_, Writer)
 
-    def start(self, dir_):
-        self.file = open(os.path.join(
-            dir_,
-            f"{time.strftime(self.__name, time.localtime())}.csv"), "w")
-        print("文件已打开")
-        self.writer = csv.writer(self.file)
-
-    def run(self):
+    def __enter__(self):
         if not os.path.exists(
                 dir_ := os.path.join(
                     self.__root,
                     self.__folder)):
             os.mkdir(dir_)
-        self.start(dir_)
+        self.file = open(
+            os.path.join(
+                dir_,
+                f"{time.strftime(self.__name, time.localtime())}.{self.type_}"),
+            "w",
+            **self.writer.param)
+        self.writer(self.file)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.file.close()
+
+    def save(self, data: str):
+        self.writer.save(data)
