@@ -21,16 +21,7 @@ class TikTok:
     def check_config(self):
         settings = self.settings.read()
         try:
-            self.accounts = settings["accounts"]
-            self.__number = len(self.accounts)
-            self.__data["root"] = settings["root"]
-            self.__data["folder"] = settings["folder"]
-            self.__data["name"] = settings["name"]
-            self.__data["music"] = settings["music"]
-            self.__data["time"] = settings["time"]
-            self.__data["split"] = settings["split"]
-            self.record.info("读取配置文件成功")
-            return True
+            return self.read_data(settings)
         except KeyError as e:
             self.record.error(f"读取配置文件发生错误：{e}")
             select = input(
@@ -39,6 +30,18 @@ class TikTok:
                 self.settings.create()
             print("程序即将关闭，请检查配置文件后再重新运行程序！")
             return False
+
+    def read_data(self, settings):
+        self.accounts = settings["accounts"]
+        self.__number = len(self.accounts)
+        self.__data["root"] = settings["root"]
+        self.__data["folder"] = settings["folder"]
+        self.__data["name"] = settings["name"]
+        self.__data["music"] = settings["music"]
+        self.__data["time"] = settings["time"]
+        self.__data["split"] = settings["split"]
+        self.record.info("读取配置文件成功")
+        return True
 
     def batch_acquisition(self):
         self.set_parameters()
