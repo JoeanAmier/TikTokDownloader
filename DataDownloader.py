@@ -5,6 +5,7 @@ import requests
 
 from DataAcquirer import retry
 from DataAcquirer import sleep
+from Recorder import DataLogger
 from Recorder import RunLogger
 from StringCleaner import Cleaner
 
@@ -34,8 +35,9 @@ class Download:
     length = 128  # 文件名称长度限制
     chunk = 1048576  # 单次下载文件大小，单位字节
 
-    def __init__(self, log: RunLogger):
+    def __init__(self, log: RunLogger, save: DataLogger | None):
         self.log = log  # 日志记录模块
+        self.save = save  # 详细数据记录模块
         self._nickname = None  # 账号昵称
         self._root = None
         self._name = None
@@ -225,6 +227,7 @@ class Download:
                 video_id = item["video"]["play_addr"]["uri"]
                 self.log.info(
                     "视频: " + ",".join([id_, desc, create_time, self.nickname, video_id]), False)
+                self.save.save(["视频", id_, desc, create_time, self.nickname, video_id])
                 self.video_data.append(
                     [id_, desc, create_time, self.nickname, video_id, [music_title, music]])
             elif type_ == "Image":
@@ -232,6 +235,7 @@ class Download:
                 images = [i['url_list'][3] for i in images]
                 self.log.info(
                     "图集: " + ",".join([id_, desc, create_time, self.nickname]), False)
+                self.save.save(["视频", id_, desc, create_time, self.nickname])
                 self.image_data.append(
                     [id_, desc, create_time, self.nickname, images, [music_title, music]])
             else:

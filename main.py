@@ -1,6 +1,7 @@
 from Configuration import Settings
 from DataAcquirer import UserData
 from DataDownloader import Download
+from Recorder import DataLogger
 from Recorder import RunLogger
 
 CLEAN_PATCH = {
@@ -16,7 +17,7 @@ class TikTok:
         self.settings = Settings()
         self.accounts = []  # 账号数据
         self.__number = 0  # 账号数量
-        self.__data = {}  # 其他配置数据
+        self.__data = {"save": "csv"}  # 其他配置数据
 
     def check_config(self):
         settings = self.settings.read()
@@ -40,6 +41,7 @@ class TikTok:
         self.__data["music"] = settings["music"]
         self.__data["time"] = settings["time"]
         self.__data["split"] = settings["split"]
+        # 补充读取保存格式
         self.record.info("读取配置文件成功")
         return True
 
@@ -66,15 +68,17 @@ class TikTok:
 
     def single_acquisition(self):
         self.set_parameters()
-        while True:
-            url = input("请输入分享链接：")
-            if url in ("Q", "q", ""):
-                break
-            id_ = self.request.run_alone(url)
-            if not id_:
-                self.record.error(f"{url} 获取 item_ids 失败！")
-                continue
-            self.download.run_alone(id_)
+        with DataLogger(self.__data["save"]) as data:
+            self.download.save = data
+            while True:
+                url = input("请输入分享链接：")
+                if url in ("Q", "q", ""):
+                    break
+                id_ = self.request.run_alone(url)
+                if not id_:
+                    self.record.error(f"{url} 获取 item_ids 失败！")
+                    continue
+                self.download.run_alone(id_)
 
     def initialize(self, **kwargs):
         self.record = RunLogger()
@@ -82,7 +86,7 @@ class TikTok:
         self.record.name = kwargs["name"]
         self.record.run()
         self.request = UserData(self.record)
-        self.download = Download(self.record)
+        self.download = Download(self.record, None)
         self.download.clean.set_rule(CLEAN_PATCH, True)
 
     def set_parameters(self):

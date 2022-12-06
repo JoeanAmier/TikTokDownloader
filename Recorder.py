@@ -102,20 +102,20 @@ class CSV(Writer):
         super().__init__(file)
         self.main = csv.writer(file)
 
-    def save(self, data):
+    def save(self, data: list | tuple):
         self.main.writerow(data)
 
 
 class DataLogger:
     __root = "./"
     __folder = "Data"
-    __name = "%Y-%m-%d %H.%M.%S"
     TYPE = {
         "csv": CSV,
     }
 
-    def __init__(self, type_: str):
+    def __init__(self, type_: str, name="Download"):
         self.file = None
+        self.name = name
         self.type_ = type_
         self.writer = self.TYPE.get(type_, Writer)
 
@@ -128,8 +128,8 @@ class DataLogger:
         self.file = open(
             os.path.join(
                 dir_,
-                f"{time.strftime(self.__name, time.localtime())}.{self.type_}"),
-            "w",
+                f"{self.name}.{self.type_}"),
+            "a",
             **self.writer.param)
         self.writer(self.file)
         return self
@@ -137,5 +137,5 @@ class DataLogger:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.file.close()
 
-    def save(self, data: str):
+    def save(self, data: list | tuple):
         self.writer.save(data)
