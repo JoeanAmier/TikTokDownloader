@@ -235,7 +235,7 @@ class Download:
                 images = [i['url_list'][3] for i in images]
                 self.log.info(
                     "图集: " + ",".join([id_, desc, create_time, self.nickname]), False)
-                self.save.save(["视频", id_, desc, create_time, self.nickname])
+                self.save.save(["图集", id_, desc, create_time, self.nickname])
                 self.image_data.append(
                     [id_, desc, create_time, self.nickname, images, [music_title, music]])
             else:
