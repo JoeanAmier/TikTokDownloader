@@ -1,3 +1,5 @@
+from os import path
+
 from Configuration import Settings
 from DataAcquirer import UserData
 from DataDownloader import Download
@@ -69,7 +71,10 @@ class TikTok:
     def single_acquisition(self):
         self.set_parameters()
         with DataLogger(self.__data["save"]) as data:
-            self.download.save = data
+            self.download.data = data
+            if path.getsize(data.root) == 0:
+                # 如果文件没有任何数据，则写入标题行
+                self.download.data.save(["类型", "ID", "描述", "创建时间", "账号昵称", "video_id", ])
             while True:
                 url = input("请输入分享链接：")
                 if url in ("Q", "q", ""):

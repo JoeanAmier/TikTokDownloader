@@ -88,7 +88,7 @@ class Writer:
     def __init__(self, file):
         self.main = file
 
-    def save(self, data):
+    def save(self, data=None):
         pass
 
 
@@ -102,22 +102,23 @@ class CSV(Writer):
         super().__init__(file)
         self.main = csv.writer(file)
 
-    def save(self, data: list | tuple):
+    def save(self, data=None):
         self.main.writerow(data)
 
 
 class DataLogger:
-    __root = "./"
-    __folder = "Data"
+    __root = "./"  # 根目录
+    __folder = "Data"  # 保存文件夹
     TYPE = {
         "csv": CSV,
     }
 
     def __init__(self, type_: str, name="Download"):
-        self.file = None
-        self.name = name
+        self.file = None  # 文件对象
+        self.name = name  # 文件名称
+        self.root = None  # 文件绝对路径
         self.type_ = type_
-        self.writer = self.TYPE.get(type_, Writer)
+        self.writer = self.TYPE.get(type_, Writer)  # 数据写入对象
 
     def __enter__(self):
         if not os.path.exists(
@@ -125,17 +126,19 @@ class DataLogger:
                     self.__root,
                     self.__folder)):
             os.mkdir(dir_)
+        self.root = os.path.join(
+            dir_,
+            f"{self.name}.{self.type_}")
         self.file = open(
-            os.path.join(
-                dir_,
-                f"{self.name}.{self.type_}"),
+            self.root,
             "a",
             **self.writer.param)
-        self.writer(self.file)
+        self.writer = self.writer(self.file)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.file.close()
 
-    def save(self, data: list | tuple):
-        self.writer.save(data)
+    def save(self, data=None):
+        if data:
+            self.writer.save(data)
