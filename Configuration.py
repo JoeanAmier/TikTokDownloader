@@ -15,6 +15,7 @@ class Settings:
             "time": "%Y-%m-%d %H.%M.%S",
             "split": "-",
             "music": False,
+            "save": None
         }  # 默认配置
 
     def create(self):
