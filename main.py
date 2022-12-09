@@ -19,7 +19,7 @@ class TikTok:
         self.settings = Settings()
         self.accounts = []  # 账号数据
         self.__number = 0  # 账号数量
-        self.__data = {"save": "csv"}  # 其他配置数据
+        self.__data = {}  # 其他配置数据
 
     def check_config(self):
         settings = self.settings.read()
@@ -43,7 +43,7 @@ class TikTok:
         self.__data["music"] = settings["music"]
         self.__data["time"] = settings["time"]
         self.__data["split"] = settings["split"]
-        # 补充读取保存格式
+        self.__data["save"] = settings["save"]
         self.record.info("读取配置文件成功")
         return True
 
@@ -61,9 +61,11 @@ class TikTok:
             return False
         self.record.info(f"账号 {self.request.name} 开始批量下载{type_}作品！")
         self.download.nickname = self.request.name
-        self.download.run(
-            self.request.video_data,
-            self.request.image_data)
+        with DataLogger(self.__data["save"], name=self.download.nickname) as data:
+            self.data_settings(data)
+            self.download.run(
+                self.request.video_data,
+                self.request.image_data)
         self.record.info(f"账号 {self.request.name} 批量下载{type_}作品结束！")
         self.download._nickname = None
         return True
@@ -71,10 +73,7 @@ class TikTok:
     def single_acquisition(self):
         self.set_parameters()
         with DataLogger(self.__data["save"]) as data:
-            self.download.data = data
-            if path.getsize(data.root) == 0:
-                # 如果文件没有任何数据，则写入标题行
-                self.download.data.save(["类型", "ID", "描述", "创建时间", "账号昵称", "video_id", ])
+            self.data_settings(data)
             while True:
                 url = input("请输入分享链接：")
                 if url in ("Q", "q", ""):
@@ -84,6 +83,13 @@ class TikTok:
                     self.record.error(f"{url} 获取 item_ids 失败！")
                     continue
                 self.download.run_alone(id_)
+
+    def data_settings(self, file):
+        self.download.data = file
+        if path.getsize(file.root) == 0:
+            # 如果文件没有任何数据，则写入标题行
+            self.download.data.save(
+                ["类型", "ID", "描述", "创建时间", "账号昵称", "video_id", ])
 
     def initialize(self, **kwargs):
         self.record = RunLogger()
