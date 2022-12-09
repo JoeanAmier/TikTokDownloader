@@ -61,6 +61,7 @@ TikTokDownloader
 |           time            |         str          |                    发布时间的格式，默认值：年-月-日 时.分.秒<br>（注意：Windows下文件名不能包含英文冒号“:”）                    |
 |           split           |         str          |                                       文件命名的分隔符，默认值：“-”                                       |
 |           music           |         bool         |                                    是否下载视频和图集的音乐，默认值：False                                    |
+|           save            |         str          |                                      详细数据保存格式，目前支持: csv                                      |
 
 # 代码参考
 
