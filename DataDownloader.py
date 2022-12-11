@@ -204,7 +204,7 @@ class Download:
         if response.status_code == 200:
             try:
                 return response.json()["item_list"][0]
-            except KeyError:
+            except (KeyError, IndexError):
                 self.log.error(f"响应内容异常: {response.json()}", False)
                 return False
         self.log.error(
@@ -227,7 +227,8 @@ class Download:
                 video_id = item["video"]["play_addr"]["uri"]
                 self.log.info(
                     "视频: " + ",".join([id_, desc, create_time, self.nickname, video_id]), False)
-                self.data.save(["视频", id_, desc, create_time, self.nickname, video_id])
+                self.data.save(
+                    ["视频", id_, desc, create_time, self.nickname, video_id])
                 self.video_data.append(
                     [id_, desc, create_time, self.nickname, video_id, [music_title, music]])
             elif type_ == "Image":
@@ -235,7 +236,8 @@ class Download:
                 images = [i['url_list'][3] for i in images]
                 self.log.info(
                     "图集: " + ",".join([id_, desc, create_time, self.nickname]), False)
-                self.data.save(["图集", id_, desc, create_time, self.nickname, ""])
+                self.data.save(
+                    ["图集", id_, desc, create_time, self.nickname, "#"])
                 self.image_data.append(
                     [id_, desc, create_time, self.nickname, images, [music_title, music]])
             else:
