@@ -89,7 +89,7 @@ class TikTok:
         if path.getsize(file.root) == 0:
             # 如果文件没有任何数据，则写入标题行
             self.download.data.save(
-                ["类型", "ID", "描述", "创建时间", "账号昵称", "video_id", ])
+                ["类型", "作品ID", "描述", "创建时间", "账号昵称", "video_id", ])
 
     def initialize(self, **kwargs):
         self.record = RunLogger()
