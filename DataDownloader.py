@@ -222,7 +222,8 @@ class Download:
                 time.localtime(
                     item["create_time"]))
             music_title = item["music"]["title"]
-            music = item["music"]["play_url"]["url_list"][0]
+            music = u[0] if (u := item["music"]["play_url"]
+            ["url_list"]) else None
             if type_ == "Video":
                 video_id = item["video"]["play_addr"]["uri"]
                 self.log.info(
@@ -260,9 +261,9 @@ class Download:
                         item[0])
                 self.image_id = item[0]
                 sleep()
-            if self.music:
+            if self.music and (u := item[5][1]):
                 with requests.get(
-                        item[5][1],
+                        u,
                         stream=True,
                         headers=self.headers) as response:
                     self.save_file(
@@ -285,9 +286,9 @@ class Download:
                 name = self.get_name(item)
                 self.save_file(response, root, name, "mp4")
             sleep()
-            if self.music:
+            if self.music and (u := item[5][1]):
                 with requests.get(
-                        item[5][1],
+                        u,
                         stream=True,
                         headers=self.headers) as response:
                     self.save_file(
