@@ -223,7 +223,7 @@ class Download:
                     item["create_time"]))
             music_title = item["music"]["title"]
             music = u[0] if (u := item["music"]["play_url"]
-            ["url_list"]) else None
+            ["url_list"]) else None  # 部分作品的数据没有音乐下载地址
             if type_ == "Video":
                 video_id = item["video"]["play_addr"]["uri"]
                 self.log.info(
