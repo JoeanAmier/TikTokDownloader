@@ -2,6 +2,8 @@
 
 **抖音视频/图集下载工具**，批量下载账号发布页或者喜欢页的视频和图集，或者单独下载链接对应的视频和图集。
 
+**抖音数据接口发生变化，等待更新！**
+
 # 实现功能
 
 * ✅下载抖音无水印视频/图集
@@ -67,4 +69,5 @@ TikTokDownloader
 # 代码参考
 
 * https://github.com/Johnserf-Seed/TikTokDownload
+* https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://requests.readthedocs.io/en/latest/
