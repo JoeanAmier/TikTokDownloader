@@ -90,7 +90,7 @@ class UserData:
     @api.setter
     def api(self, value):
         if value in ("post", "like"):
-            self._api = f"https://www.iesdouyin.com/web/api/v2/aweme/{value}/"
+            self._api = f"https://www.iesdouyin.com/aweme/v1/web/aweme/{value}/"
         else:
             self.log.warning(f"批量下载类型错误！必须设置为“post”或者“like”，错误值: {value}")
 
@@ -120,9 +120,10 @@ class UserData:
     def get_user_data(self):
         """获取账号作品信息"""
         params = {
-            "sec_uid": self.id_,
+            "sec_user_id": self.id_,
             "max_cursor": self.max_cursor,
-            "count": "35"}
+            "count": "35",
+            "aid": "1128", }
         try:
             response = requests.get(
                 self.api,

@@ -30,7 +30,7 @@ class Download:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
                       "Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.37"}  # 请求头
     video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"  # 官方视频下载接口
-    item_ids_api = "https://www.iesdouyin.com/web/api/v2/aweme/iteminfo/"  # 官方信息接口
+    item_ids_api = "https://www.iesdouyin.com/aweme/v1/web/aweme/detail/"  # 官方信息接口
     clean = Cleaner()  # 过滤非法字符
     length = 128  # 文件名称长度限制
     chunk = 1048576  # 单次下载文件大小，单位字节
@@ -191,7 +191,11 @@ class Download:
     def get_data(self, item):
         """获取作品详细信息"""
         params = {
-            "item_ids": item,
+            "aweme_id": item,
+            "aid": "1128",
+            "version_name": "23.5.0",
+            "device_platform": "android",
+            "os_version": "2333",
         }
         try:
             response = requests.get(
@@ -203,7 +207,7 @@ class Download:
         sleep()
         if response.status_code == 200:
             try:
-                return response.json()["item_list"][0]
+                return response.json()["aweme_detail"]
             except (KeyError, IndexError):
                 self.log.error(f"响应内容异常: {response.json()}", False)
                 return False
