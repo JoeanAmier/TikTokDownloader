@@ -47,7 +47,8 @@ def retry(max_num=3):
 class UserData:
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                      "Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.37"}
+                      "Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.37",
+        'referer': 'https://www.douyin.com/'}
     share = re.compile(
         r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")  # 分享短链
     account_link = re.compile(
