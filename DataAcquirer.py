@@ -46,8 +46,7 @@ def retry(max_num=3):
 
 class UserData:
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                      "Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.37",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.50",
         'referer': 'https://www.douyin.com/'}
     share = re.compile(
         r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")  # 分享短链
@@ -135,7 +134,12 @@ class UserData:
             return False
         sleep()
         if response.status_code == 200:
-            data = response.json()
+            try:
+                data = response.json()
+            except requests.exceptions.JSONDecodeError:
+                self.list = []
+                self.log.error("数据接口返回内容异常！疑似接口失效！", False)
+                return False
             try:
                 self.max_cursor = data['max_cursor']
                 self.list = data["aweme_list"]
