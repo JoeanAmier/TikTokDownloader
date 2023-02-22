@@ -108,7 +108,7 @@ class UserData:
         sleep()
         if response.status_code == 200:
             params = urlparse(response.url)
-            self.id_ = params.path.split("/")[-1]
+            self.id_ = params.path.split("/")[-2]
             self.log.info(f"{url} {value}: {self.id_}", False)
             return True
         else:
