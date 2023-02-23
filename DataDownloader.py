@@ -27,7 +27,7 @@ def reset(function):
 
 class Download:
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.50",
+        "User-Agent": "Mozilla/5.0 (Linux; Android 10; Mi 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Mobile Safari/537.36",
         'referer': 'https://www.douyin.com/'}  # 请求头
     video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"  # 官方视频下载接口
     item_ids_api = "https://www.iesdouyin.com/aweme/v1/web/aweme/detail/"  # 官方信息接口
