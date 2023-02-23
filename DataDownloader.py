@@ -348,10 +348,10 @@ class Download:
         self.create_folder(self.folder)
         data = self.get_data(id_)
         self.nickname = data["author"]["nickname"]
-        if isinstance(data["image_infos"], list):
+        if t := data["aweme_type"] == 68:
             self.get_info([id_], "Image")
             self.download_images()
-        elif data["image_infos"] is None:
+        elif t == 0:
             self.get_info([id_], "Video")
             self.download_video()
         else:

@@ -161,10 +161,12 @@ class UserData:
         else:
             self.name = self.list[0]["author"]["nickname"]
             for item in self.list:
-                if len(item["video"]["play_addr"]["url_list"]) < 4:
+                if t := item["aweme_type"] == 68:
                     self.image_data.append(item["aweme_id"])
-                else:
+                elif t == 0:
                     self.video_data.append(item["aweme_id"])
+                else:
+                    self.log.warning(f"无法判断资源类型, 详细数据: {item}")
 
     def summary(self):
         """汇总账号作品数量"""
