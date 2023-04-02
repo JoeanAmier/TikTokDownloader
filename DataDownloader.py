@@ -347,12 +347,10 @@ class Download:
             return False
         self.create_folder(self.folder)
         data = self.get_data(id_)
-        try:
-            self.nickname = data["author"]["nickname"]
-        except TypeError:
-            self.log.error("响应内容异常！")
-            self.log.error(f"{data}", False)
+        if not data:
+            print("下载作品失败！")
             return False
+        self.nickname = data["author"]["nickname"]
         if t := data["aweme_type"] == 68:
             self.get_info([id_], "Image")
             self.download_images()
