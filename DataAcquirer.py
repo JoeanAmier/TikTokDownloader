@@ -19,6 +19,7 @@ def reset(function):
     def inner(self, *args, **kwargs):
         if not isinstance(self.url, bool):
             self.id_ = None
+        self.cookie = None
         self.max_cursor = 0
         self.list = None  # 未处理的数据
         self.name = None  # 账号昵称
@@ -55,9 +56,9 @@ class UserData:
     works_link = re.compile(
         r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
 
-    def __init__(self, cookie: str, log: RunLogger):
+    def __init__(self, log: RunLogger):
         self.log = log
-        self.cookie = cookie
+        self._cookie = None
         self.id_ = None  # sec_uid or item_ids
         self.max_cursor = 0
         self.list = None  # 未处理的数据
@@ -94,6 +95,14 @@ class UserData:
             self._api = f"https://www.iesdouyin.com/aweme/v1/web/aweme/{value}/"
         else:
             self.log.warning(f"批量下载类型错误！必须设置为“post”或者“like”，错误值: {value}")
+
+    @property
+    def cookie(self):
+        return self._cookie
+
+    @cookie.setter
+    def cookie(self, cookie):
+        self._cookie = cookie
 
     @retry(max_num=5)
     def get_id(self, value="sec_uid", url=None):

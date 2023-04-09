@@ -15,6 +15,7 @@ def reset(function):
 
     def inner(self, *args, **kwargs):
         self.type_ = {"video": "", "images": ""}  # 文件保存目录
+        self.cookie = None
         self.video_data = []
         self.image_data = []
         self.video = 0  # 视频下载数量
@@ -35,10 +36,10 @@ class Download:
     length = 128  # 文件名称长度限制
     chunk = 1048576  # 单次下载文件大小，单位字节
 
-    def __init__(self, cookie: str, log: RunLogger, save: DataLogger | None):
+    def __init__(self, log: RunLogger, save: DataLogger | None):
         self.log = log  # 日志记录模块
         self.data = save  # 详细数据记录模块
-        self.cookie = cookie
+        self._cookie = None
         self._nickname = None  # 账号昵称
         self._root = None
         self._name = None
@@ -175,6 +176,14 @@ class Download:
             self._nickname = str(time.time())[:10]
             self.log.error(f"无效的账号昵称，原始昵称: {value}, 去除非法字符后: {name}")
             self.log.warning(f"本次运行将默认使用当前时间戳作为帐号昵称: {self._nickname}")
+
+    @property
+    def cookie(self):
+        return self._cookie
+
+    @cookie.setter
+    def cookie(self, cookie):
+        self._cookie = cookie
 
     def create_folder(self, folder):
         """创建作品保存文件夹"""
