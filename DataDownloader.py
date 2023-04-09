@@ -35,9 +35,10 @@ class Download:
     length = 128  # 文件名称长度限制
     chunk = 1048576  # 单次下载文件大小，单位字节
 
-    def __init__(self, log: RunLogger, save: DataLogger | None):
+    def __init__(self, cookie: str, log: RunLogger, save: DataLogger | None):
         self.log = log  # 日志记录模块
         self.data = save  # 详细数据记录模块
+        self.cookie = cookie
         self._nickname = None  # 账号昵称
         self._root = None
         self._name = None
@@ -201,7 +202,7 @@ class Download:
             response = requests.get(
                 self.item_ids_api,
                 params=params,
-                headers=self.headers, timeout=10)
+                headers=self.headers, cookies=self.cookie, timeout=10)
         except requests.exceptions.ReadTimeout:
             return False
         sleep()
@@ -255,7 +256,7 @@ class Download:
                 with requests.get(
                         image,
                         stream=True,
-                        headers=self.headers) as response:
+                        headers=self.headers, cookies=self.cookie) as response:
                     name = self.get_name(item)
                     self.save_file(
                         response,
@@ -269,7 +270,7 @@ class Download:
                 with requests.get(
                         u,
                         stream=True,
-                        headers=self.headers) as response:
+                        headers=self.headers, cookies=self.cookie) as response:
                     self.save_file(
                         response, root, self.clean.filter(
                             item[5][0]), "mp3")
@@ -286,7 +287,7 @@ class Download:
                     self.video_id_api,
                     params=params,
                     stream=True,
-                    headers=self.headers) as response:
+                    headers=self.headers, cookies=self.cookie) as response:
                 name = self.get_name(item)
                 self.save_file(response, root, name, "mp4")
             sleep()
@@ -294,7 +295,7 @@ class Download:
                 with requests.get(
                         u,
                         stream=True,
-                        headers=self.headers) as response:
+                        headers=self.headers, cookies=self.cookie) as response:
                     self.save_file(
                         response, root, self.clean.filter(
                             item[5][0]), "mp3")

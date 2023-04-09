@@ -55,8 +55,9 @@ class UserData:
     works_link = re.compile(
         r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
 
-    def __init__(self, log: RunLogger):
+    def __init__(self, cookie: str, log: RunLogger):
         self.log = log
+        self.cookie = cookie
         self.id_ = None  # sec_uid or item_ids
         self.max_cursor = 0
         self.list = None  # 未处理的数据
@@ -102,7 +103,11 @@ class UserData:
             return True
         url = url or self.url
         try:
-            response = requests.get(url, headers=self.headers, timeout=10)
+            response = requests.get(
+                url,
+                headers=self.headers,
+                cookies=self.cookie,
+                timeout=10)
         except requests.exceptions.ReadTimeout:
             return False
         sleep()
@@ -129,6 +134,7 @@ class UserData:
                 self.api,
                 params=params,
                 headers=self.headers,
+                cookies=self.cookie,
                 timeout=10)
         except requests.exceptions.ReadTimeout:
             return False
