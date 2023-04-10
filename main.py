@@ -44,6 +44,7 @@ class TikTok:
         self.__data["time"] = settings["time"]
         self.__data["split"] = settings["split"]
         self.__data["save"] = settings["save"]
+        self.__data["cookie"] = settings["cookie"]
         self.record.info("读取配置文件成功")
         return True
 
@@ -107,6 +108,7 @@ class TikTok:
         self.download.music = self.__data["music"]
         self.download.time = self.__data["time"]
         self.download.split = self.__data["split"]
+        self.download.cookie = self.__data["cookie"]
 
     def run(self, root="./", name="%Y-%m-%d %H.%M.%S"):
         self.initialize(root=root, name=name)
