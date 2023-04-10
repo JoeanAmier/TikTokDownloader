@@ -15,7 +15,6 @@ def reset(function):
 
     def inner(self, *args, **kwargs):
         self.type_ = {"video": "", "images": ""}  # 文件保存目录
-        self.cookie = None
         self.video_data = []
         self.image_data = []
         self.video = 0  # 视频下载数量
@@ -39,7 +38,7 @@ class Download:
     def __init__(self, log: RunLogger, save: DataLogger | None):
         self.log = log  # 日志记录模块
         self.data = save  # 详细数据记录模块
-        self._cookie = None
+        self._cookie = False
         self._nickname = None  # 账号昵称
         self._root = None
         self._name = None
@@ -183,7 +182,9 @@ class Download:
 
     @cookie.setter
     def cookie(self, cookie):
-        self._cookie = cookie
+        if isinstance(cookie, str):
+            self.headers["cookie"] = cookie
+            self._cookie = True
 
     def create_folder(self, folder):
         """创建作品保存文件夹"""
@@ -211,7 +212,7 @@ class Download:
             response = requests.get(
                 self.item_ids_api,
                 params=params,
-                headers=self.headers, cookies=self.cookie, timeout=10)
+                headers=self.headers, timeout=10)
         except requests.exceptions.ReadTimeout:
             return False
         sleep()
@@ -265,7 +266,7 @@ class Download:
                 with requests.get(
                         image,
                         stream=True,
-                        headers=self.headers, cookies=self.cookie) as response:
+                        headers=self.headers) as response:
                     name = self.get_name(item)
                     self.save_file(
                         response,
@@ -279,7 +280,7 @@ class Download:
                 with requests.get(
                         u,
                         stream=True,
-                        headers=self.headers, cookies=self.cookie) as response:
+                        headers=self.headers) as response:
                     self.save_file(
                         response, root, self.clean.filter(
                             item[5][0]), "mp3")
@@ -296,7 +297,7 @@ class Download:
                     self.video_id_api,
                     params=params,
                     stream=True,
-                    headers=self.headers, cookies=self.cookie) as response:
+                    headers=self.headers) as response:
                 name = self.get_name(item)
                 self.save_file(response, root, name, "mp4")
             sleep()
@@ -304,7 +305,7 @@ class Download:
                 with requests.get(
                         u,
                         stream=True,
-                        headers=self.headers, cookies=self.cookie) as response:
+                        headers=self.headers) as response:
                     self.save_file(
                         response, root, self.clean.filter(
                             item[5][0]), "mp3")

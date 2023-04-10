@@ -19,7 +19,6 @@ def reset(function):
     def inner(self, *args, **kwargs):
         if not isinstance(self.url, bool):
             self.id_ = None
-        self.cookie = None
         self.max_cursor = 0
         self.list = None  # 未处理的数据
         self.name = None  # 账号昵称
@@ -58,7 +57,7 @@ class UserData:
 
     def __init__(self, log: RunLogger):
         self.log = log
-        self._cookie = None
+        self._cookie = False
         self.id_ = None  # sec_uid or item_ids
         self.max_cursor = 0
         self.list = None  # 未处理的数据
@@ -102,7 +101,9 @@ class UserData:
 
     @cookie.setter
     def cookie(self, cookie):
-        self._cookie = cookie
+        if isinstance(cookie, str):
+            self.headers["cookie"] = cookie
+            self._cookie = True
 
     @retry(max_num=5)
     def get_id(self, value="sec_uid", url=None):
@@ -115,7 +116,6 @@ class UserData:
             response = requests.get(
                 url,
                 headers=self.headers,
-                cookies=self.cookie,
                 timeout=10)
         except requests.exceptions.ReadTimeout:
             return False
@@ -143,7 +143,6 @@ class UserData:
                 self.api,
                 params=params,
                 headers=self.headers,
-                cookies=self.cookie,
                 timeout=10)
         except requests.exceptions.ReadTimeout:
             return False
