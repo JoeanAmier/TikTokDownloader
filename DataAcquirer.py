@@ -55,8 +55,9 @@ class UserData:
     works_link = re.compile(
         r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
 
-    def __init__(self, log: RunLogger):
+    def __init__(self, log: RunLogger, session=None):
         self.log = log
+        self.session = self.check_session(session)
         self._cookie = False
         self.id_ = None  # sec_uid or item_ids
         self.max_cursor = 0
@@ -67,6 +68,12 @@ class UserData:
         self.finish = False  # 是否获取完毕
         self._url = None  # 账号链接
         self._api = None  # 批量下载类型
+
+    @staticmethod
+    def check_session(session):
+        if not session:
+            return requests.session()
+        return session
 
     @property
     def url(self):
