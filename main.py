@@ -61,14 +61,15 @@ class TikTok:
         if not self.request.run(num):
             return False
         self.record.info(f"账号 {self.request.name} 开始批量下载{type_}作品！")
-        self.download.nickname = self.request.name
-        with DataLogger(self.__data["save"], name=self.download.nickname) as data:
-            self.data_settings(data)
-            self.download.run(
-                self.request.video_data,
-                self.request.image_data)
-        self.record.info(f"账号 {self.request.name} 批量下载{type_}作品结束！")
-        self.download._nickname = None
+        """批量下载待修复"""
+        # self.download.nickname = self.request.name
+        # with DataLogger(self.__data["save"], name=self.download.nickname) as data:
+        #     self.data_settings(data)
+        #     self.download.run(
+        #         self.request.video_data,
+        #         self.request.image_data)
+        # self.record.info(f"账号 {self.request.name} 批量下载{type_}作品结束！")
+        # self.download._nickname = None
         return True
 
     def single_acquisition(self):
@@ -109,6 +110,7 @@ class TikTok:
         self.download.time = self.__data["time"]
         self.download.split = self.__data["split"]
         self.download.cookie = self.__data["cookie"]
+        self.request.cookie = self.__data["cookie"]
 
     def run(self, root="./", name="%Y-%m-%d %H.%M.%S"):
         self.initialize(root=root, name=name)
