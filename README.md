@@ -32,6 +32,7 @@ TikTokDownloader
 
 # 程序说明
 
+* 首次使用前需要登录抖音网页版，并复制全部Cookie至配置文件
 * 建议优先使用单线程下载，避免频繁请求服务器导致IP被封禁
 * 程序请求输入时，不输入内容或者输入“Q”或“q”即为退出程序
 * 批量下载时，文件将会下载至账号同名文件夹（自动创建）
@@ -66,7 +67,7 @@ TikTokDownloader
 |           split           |         str          |                                       文件命名的分隔符，默认值：“-”                                       |
 |           music           |         bool         |                                    是否下载视频和图集的音乐，默认值：False                                    |
 |           save            |         str          |                                      详细数据保存格式，目前支持: csv                                      |
-|          cookie           |         str          |                                       抖音网页版cookie，必需参数                                       |
+|          cookie           |         str          |                                       抖音网页版Cookie，必需参数                                       |
 
 # 代码参考
 
