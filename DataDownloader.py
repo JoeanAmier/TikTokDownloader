@@ -1,10 +1,12 @@
 import os
 import time
+from urllib.parse import urlencode
 
 import requests
 
 from DataAcquirer import retry
 from DataAcquirer import sleep
+from Parameter import XBogus
 from Recorder import DataLogger
 from Recorder import RunLogger
 from StringCleaner import Cleaner
@@ -27,15 +29,17 @@ def reset(function):
 
 class Download:
     headers = {
-        "User-Agent": "Mozilla/5.0 (Linux; Android 10; Mi 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Mobile Safari/537.36",
-        'referer': 'https://www.douyin.com/'}  # 请求头
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
+        'referer': 'https://www.douyin.com/',
+    }  # 请求头
     video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"  # 官方视频下载接口
-    item_ids_api = "https://www.iesdouyin.com/aweme/v1/web/aweme/detail/"  # 官方信息接口
+    item_ids_api = "https://www.douyin.com/aweme/v1/web/aweme/detail/"  # 官方信息接口
     clean = Cleaner()  # 过滤非法字符
     length = 128  # 文件名称长度限制
     chunk = 1048576  # 单次下载文件大小，单位字节
 
     def __init__(self, log: RunLogger, save: DataLogger | None):
+        self.xb = XBogus()
         self.log = log  # 日志记录模块
         self.data = save  # 详细数据记录模块
         self._cookie = False
@@ -183,7 +187,7 @@ class Download:
     @cookie.setter
     def cookie(self, cookie):
         if isinstance(cookie, str):
-            self.headers["cookie"] = cookie
+            self.headers["Cookie"] = cookie
             self._cookie = True
 
     def create_folder(self, folder):
@@ -203,27 +207,30 @@ class Download:
         """获取作品详细信息"""
         params = {
             "aweme_id": item,
-            "aid": "1128",
-            "version_name": "23.5.0",
-            "device_platform": "android",
-            "os_version": "2333",
+            "aid": "6383",
+            "cookie_enabled": "true",
+            "platform": "PC",
+            "downlink": "10"
         }
-        try:
-            response = requests.get(
-                self.item_ids_api,
-                params=params,
-                headers=self.headers, timeout=10)
-        except requests.exceptions.ReadTimeout:
-            return False
-        sleep()
-        if response.status_code == 200:
+        xb = self.xb.getXBogus(urlencode(params))
+        params["X-Bogus"] = xb
+        for _ in range(10):
             try:
-                return response.json()["aweme_detail"]
-            except (KeyError, IndexError):
-                self.log.error(f"响应内容异常: {response.json()}", False)
-                return False
+                response = requests.get(
+                    self.item_ids_api,
+                    params=params,
+                    headers=self.headers, timeout=10)
+                sleep()
+                if response.status_code == 200 and response.text:
+                    try:
+                        return response.json()["aweme_detail"]
+                    except (KeyError, IndexError):
+                        self.log.error(f"响应内容异常: {response.json()}", False)
+                        return False
+            except requests.exceptions.ReadTimeout:
+                continue
         self.log.error(
-            f"资源 {item} 获取 item_list 失败！响应码: {response.status_code}")
+            f"资源 {item} 获取 item_list 失败！")
         return False
 
     def get_info(self, data, type_):
