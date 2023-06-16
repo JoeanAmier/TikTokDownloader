@@ -1,10 +1,12 @@
 import random
 import re
 import time
+from urllib.parse import urlencode
 from urllib.parse import urlparse
 
 import requests
 
+from Parameter import XBogus
 from Recorder import RunLogger
 
 
@@ -46,8 +48,9 @@ def retry(max_num=3):
 
 class UserData:
     headers = {
-        "User-Agent": "Mozilla/5.0 (Linux; Android 10; Mi 10) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Mobile Safari/537.36",
-        'referer': 'https://www.douyin.com/'}
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
+        'referer': 'https://www.douyin.com/',
+    }
     share = re.compile(
         r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")  # 分享短链
     account_link = re.compile(
@@ -56,6 +59,7 @@ class UserData:
         r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
 
     def __init__(self, log: RunLogger, session=None):
+        self.xb = XBogus()
         self.log = log
         self.session = self.check_session(session)
         self._cookie = False
@@ -97,10 +101,10 @@ class UserData:
 
     @api.setter
     def api(self, value):
-        if value in ("post", "like"):
-            self._api = f"https://www.iesdouyin.com/aweme/v1/web/aweme/{value}/"
+        if value in ("post", "favorite"):
+            self._api = f"https://www.douyin.com/aweme/v1/web/aweme/{value}/"
         else:
-            self.log.warning(f"批量下载类型错误！必须设置为“post”或者“like”，错误值: {value}")
+            self.log.warning(f"批量下载类型错误！必须设置为“post”或者“favorite”，错误值: {value}")
 
     @property
     def cookie(self):
@@ -109,7 +113,7 @@ class UserData:
     @cookie.setter
     def cookie(self, cookie):
         if isinstance(cookie, str):
-            self.headers["cookie"] = cookie
+            self.headers["Cookie"] = cookie
             self._cookie = True
 
     @retry(max_num=5)
@@ -129,7 +133,7 @@ class UserData:
         sleep()
         if response.status_code == 200:
             params = urlparse(response.url)
-            self.id_ = params.path.split("/")[-2]
+            self.id_ = params.path.rstrip("/").split("/")[-1]
             self.log.info(f"{url} {value}: {self.id_}", False)
             return True
         else:
@@ -141,10 +145,16 @@ class UserData:
     def get_user_data(self):
         """获取账号作品信息"""
         params = {
+            "aid": "6383",
             "sec_user_id": self.id_,
-            "max_cursor": self.max_cursor,
             "count": "35",
-            "aid": "1128", }
+            "max_cursor": self.max_cursor,
+            "cookie_enabled": "true",
+            "platform": "PC",
+            "downlink": "10",
+        }
+        xb = self.xb.getXBogus(urlencode(params))
+        params["X-Bogus"] = xb
         try:
             response = requests.get(
                 self.api,
