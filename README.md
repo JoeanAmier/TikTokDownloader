@@ -25,6 +25,7 @@ TikTokDownloader
 ├─ DataDownloader.py      //抖音作品下载模块
 ├─ Recorder.py            //运行日志记录模块
 ├─ StringCleaner.py       //过滤非法字符模块
+├─ Parameter.py           //加密参数生成模块
 ├─ main.py                //程序单线程启动入口，适用于所有下载方式
 ├─ main_concurrency.py    //程序多进程启动入口，适用于多账号批量下载
 └─ settings.json          //配置文件，首次运行程序自动生成
@@ -67,7 +68,7 @@ TikTokDownloader
 |           split           |         str          |                                       文件命名的分隔符，默认值：“-”                                       |
 |           music           |         bool         |                                    是否下载视频和图集的音乐，默认值：False                                    |
 |           save            |         str          |                                      详细数据保存格式，目前支持: csv                                      |
-|          cookie           |         str          |                                       抖音网页版Cookie，必需参数                                       |
+|          cookie           |         str          |                           抖音网页版Cookie，必需参数，使用Cookie_tool.py写入配置文件                            |
 
 # 代码参考
 
