@@ -1,3 +1,4 @@
+import datetime
 import random
 import re
 import time
@@ -27,6 +28,8 @@ def reset(function):
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
         self.finish = False  # 是否获取完毕
+        self._earliest = datetime.date(2000, 1, 1)
+        self._latest = datetime.date.today()
         return function(self, *args, **kwargs)
 
     return inner
@@ -70,6 +73,8 @@ class UserData:
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
         self.finish = False  # 是否获取完毕
+        self._earliest = datetime.date(2000, 1, 1)
+        self._latest = datetime.date.today()
         self._url = None  # 账号链接
         self._api = None  # 批量下载类型
 
@@ -115,6 +120,35 @@ class UserData:
         if isinstance(cookie, str):
             self.headers["Cookie"] = cookie
             self._cookie = True
+
+    @property
+    def earliest(self):
+        return self._earliest
+
+    @earliest.setter
+    def earliest(self, value):
+        if not value:
+            return
+        try:
+            self._earliest = datetime.datetime.strptime(
+                value, "%Y/%m/%d").date()
+            self.log.info(f"作品最早发布日期: {value}")
+        except ValueError:
+            self.log.warning("作品最早发布日期无效！")
+
+    @property
+    def latest(self):
+        return self._latest
+
+    @latest.setter
+    def latest(self, value):
+        if not value:
+            return
+        try:
+            self._latest = datetime.datetime.strptime(value, "%Y/%m/%d").date()
+            self.log.info(f"作品最晚发布日期: {value}")
+        except ValueError:
+            self.log.warning("作品最晚发布日期无效！")
 
     @retry(max_num=5)
     def get_id(self, value="sec_uid", url=None):
@@ -187,15 +221,17 @@ class UserData:
     def deal_data(self):
         """对账号作品进行分类"""
         if len(self.list) == 0:
-            self.log.info("该账号的资源信息已获取完毕！")
+            self.log.info("该账号的资源信息获取结束！")
             self.finish = True
         else:
             self.name = self.list[0]["author"]["nickname"]
             for item in self.list:
                 if t := item["aweme_type"] == 68:
-                    self.image_data.append(item["aweme_id"])
+                    self.image_data.append(
+                        [item["create_time"], item["aweme_id"]])
                 elif t == 0:
-                    self.video_data.append(item["aweme_id"])
+                    self.video_data.append(
+                        [item["create_time"], item["aweme_id"]])
                 else:
                     self.log.warning(f"无法判断资源类型, 详细数据: {item}")
 
@@ -203,10 +239,10 @@ class UserData:
         """汇总账号作品数量"""
         self.log.info(f"账号 {self.name} 的视频总数: {len(self.video_data)}")
         for i in self.video_data:
-            self.log.info(f"视频: {i}", False)
+            self.log.info(f"视频: {i[1]}", False)
         self.log.info(f"账号 {self.name} 的图集总数: {len(self.image_data)}")
         for i in self.image_data:
-            self.log.info(f"图集: {i}", False)
+            self.log.info(f"图集: {i[1]}", False)
 
     @reset
     def run(self, index: int):
@@ -221,6 +257,10 @@ class UserData:
         while not self.finish:
             self.get_user_data()
             self.deal_data()
+        if not self.name:
+            self.log.error("获取账号数据失败，请稍后重试！")
+            return False
+        self.date_filters()
         self.summary()
         self.log.info(f"获取第 {index} 个账号数据成功！")
         return True
@@ -245,3 +285,19 @@ class UserData:
                 self.id_ = s
                 return url
         return False
+
+    def date_filters(self):
+        earliest_date = self.earliest
+        latest_date = self.latest
+        filtered = []
+        for item in self.video_data:
+            date = datetime.datetime.fromtimestamp(item[0]).date()
+            if earliest_date <= date <= latest_date:
+                filtered.append(item[1])
+        self.video_data = filtered
+        filtered = []
+        for item in self.image_data:
+            date = datetime.datetime.fromtimestamp(item[0]).date()
+            if earliest_date <= date <= latest_date:
+                filtered.append(item[1])
+        self.image_data = filtered

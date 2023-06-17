@@ -242,7 +242,7 @@ class Download:
         }
         xb = self.xb.get_x_bogus(urlencode(params))
         params["X-Bogus"] = xb
-        for _ in range(10):
+        for _ in range(3):
             try:
                 response = requests.get(
                     self.item_ids_api,

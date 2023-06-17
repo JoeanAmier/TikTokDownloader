@@ -56,22 +56,29 @@ class TikTok:
         for index in range(self.__number):
             self.account_download(index + 1, *self.accounts[index])
 
-    def account_download(self, num: int, url: str, mode: str):
+    def account_download(
+            self,
+            num: int,
+            url: str,
+            mode: str,
+            earliest: str,
+            latest: str):
         self.request.url = url
         self.request.api = mode
+        self.request.earliest = earliest
+        self.request.latest = latest
         type_ = {"post": "发布页", "like": "喜欢页"}[mode]
         if not self.request.run(num):
             return False
         self.record.info(f"账号 {self.request.name} 开始批量下载{type_}作品！")
-        """批量下载待修复"""
-        # self.download.nickname = self.request.name
-        # with DataLogger(self.__data["save"], name=self.download.nickname) as data:
-        #     self.data_settings(data)
-        #     self.download.run(
-        #         self.request.video_data,
-        #         self.request.image_data)
-        # self.record.info(f"账号 {self.request.name} 批量下载{type_}作品结束！")
-        # self.download._nickname = None
+        self.download.nickname = self.request.name
+        with DataLogger(self.__data["save"], name=self.download.nickname) as data:
+            self.data_settings(data)
+            self.download.run(
+                self.request.video_data,
+                self.request.image_data)
+        self.record.info(f"账号 {self.request.name} 批量下载{type_}作品结束！")
+        self.download._nickname = None
         return True
 
     def single_acquisition(self):
