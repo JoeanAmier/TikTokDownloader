@@ -212,7 +212,7 @@ class Download:
             "platform": "PC",
             "downlink": "10"
         }
-        xb = self.xb.getXBogus(urlencode(params))
+        xb = self.xb.get_x_bogus(urlencode(params))
         params["X-Bogus"] = xb
         for _ in range(10):
             try:

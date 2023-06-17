@@ -1,3 +1,4 @@
+import contextlib
 import time
 from hashlib import md5
 
@@ -121,22 +122,20 @@ class XBogus:
         if isinstance(md5_str, str) and len(md5_str) > 32:
             return [ord(char) for char in md5_str]
         else:
-            array = []
-            idx = 0
-            while idx < len(md5_str):
-                array.append(
-                    (self.Array[ord(md5_str[idx])] << 4) | self.Array[ord(md5_str[idx + 1])])
-                idx += 2
-            return array
+            return [
+                (self.Array[ord(md5_str[idx])] << 4)
+                | self.Array[ord(md5_str[idx + 1])]
+                for idx in range(0, len(md5_str), 2)
+            ]
 
     def md5_encrypt(self, url_path):
         """
         使用多轮md5哈希算法对URL路径进行加密。
         Encrypt the URL path using multiple rounds of md5 hashing.
         """
-        hashed_url_path = self.md5_str_to_array(
-            self.md5(self.md5_str_to_array(self.md5(url_path))))
-        return hashed_url_path
+        return self.md5_str_to_array(
+            self.md5(self.md5_str_to_array(self.md5(url_path)))
+        )
 
     def md5(self, input_data):
         """
@@ -154,8 +153,8 @@ class XBogus:
         md5_hash.update(bytes(array))
         return md5_hash.hexdigest()
 
+    @staticmethod
     def encoding_conversion(
-            self,
             a,
             b,
             c,
@@ -179,42 +178,41 @@ class XBogus:
         第一次编码转换。
         Perform encoding conversion.
         """
-        y = [a]
-        y.append(int(i))
-        y.extend([b, _, c, x, e, u, d, s, t, l, f, v, r, h, n, p, o])
-        re = bytes(y).decode('ISO-8859-1')
-        return re
+        y = [a, int(i), *[b, _, c, x, e, u, d, s, t, l, f, v, r, h, n, p, o]]
+        return bytes(y).decode('ISO-8859-1')
 
-    def encoding_conversion2(self, a, b, c):
+    @staticmethod
+    def encoding_conversion2(a, b, c):
         """
         第三次编码转换。
         Perform an encoding conversion on the given input values and return the result.
         """
         return chr(a) + chr(b) + c
 
-    def rc4_encrypt(self, key, data):
+    @staticmethod
+    def rc4_encrypt(key, data):
         """
         使用RC4算法对数据进行加密。
         Encrypt data using the RC4 algorithm.
         """
-        S = list(range(256))
+        s = list(range(256))
         j = 0
         encrypted_data = bytearray()
 
         # 初始化 S 盒
         # Initialize the S box
         for i in range(256):
-            j = (j + S[i] + key[i % len(key)]) % 256
-            S[i], S[j] = S[j], S[i]
+            j = (j + s[i] + key[i % len(key)]) % 256
+            s[i], s[j] = s[j], s[i]
 
         # 生成密文
         # Generate the ciphertext
         i = j = 0
         for byte in data:
             i = (i + 1) % 256
-            j = (j + S[i]) % 256
-            S[i], S[j] = S[j], S[i]
-            encrypted_byte = byte ^ S[(S[i] + S[j]) % 256]
+            j = (j + s[i]) % 256
+            s[i], s[j] = s[j], s[i]
+            encrypted_byte = byte ^ s[(s[i] + s[j]) % 256]
             encrypted_data.append(encrypted_byte)
 
         return encrypted_data
@@ -231,7 +229,7 @@ class XBogus:
                                                                       >> 12] + self.character[(x3 & 4032) >> 6] + \
             self.character[x3 & 63]
 
-    def getXBogus(self, url_path):
+    def get_x_bogus(self, url_path):
         """
         获取 X-Bogus 值。
         Get the X-Bogus value.
@@ -269,7 +267,6 @@ class XBogus:
 
         xor_result = new_array[0]
         for i in range(1, len(new_array)):
-            # a = xor_result
             b = new_array[i]
             if isinstance(b, float):
                 b = int(b)
@@ -280,10 +277,8 @@ class XBogus:
         idx = 0
         while idx < len(new_array):
             array3.append(new_array[idx])
-            try:
+            with contextlib.suppress(IndexError):
                 array4.append(new_array[idx + 1])
-            except IndexError:
-                pass
             idx += 2
 
         merge_array = array3 + array4
@@ -302,7 +297,8 @@ class XBogus:
             xb_ += self.calculation(ord(garbled_code[idx]), ord(
                 garbled_code[idx + 1]), ord(garbled_code[idx + 2]))
             idx += 3
-        self.params = '%s&X-Bogus=%s' % (url_path, xb_)
-        self.xb = xb_
-        # return (self.params, self.xb)
-        return self.xb
+        return xb_
+
+
+if __name__ == "__main__":
+    print(XBogus().get_x_bogus(input("输入URL: ")))
