@@ -62,7 +62,7 @@ class UserData:
     def __init__(self, log: RunLogger, session=None):
         self.xb = XBogus()
         self.log = log
-        self.session = self.check_session(session)
+        self.session = self.check_session(session)  # 未使用
         self._cookie = False
         self.id_ = None  # sec_uid or item_ids
         self.max_cursor = 0
@@ -78,9 +78,7 @@ class UserData:
 
     @staticmethod
     def check_session(session):
-        if not session:
-            return requests.session()
-        return session
+        return session or requests.session()
 
     @property
     def url(self):
