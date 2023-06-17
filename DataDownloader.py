@@ -279,7 +279,7 @@ class Download:
                         response,
                         root,
                         f"{name}({index + 1})",
-                        "webp",
+                        "webp",  # 图像后缀
                         item[0])
                 self.image_id = item[0]
                 sleep()
@@ -289,8 +289,10 @@ class Download:
                         stream=True,
                         headers=self.headers) as response:
                     self.save_file(
-                        response, root, self.clean.filter(
-                            item[5][0]), "mp3")
+                        response,
+                        root,
+                        f"{item[0]}_{self.clean.filter(item[5][0])}",
+                        "mp3")
                 sleep()
 
     def download_video(self):
@@ -314,8 +316,10 @@ class Download:
                         stream=True,
                         headers=self.headers) as response:
                     self.save_file(
-                        response, root, self.clean.filter(
-                            item[5][0]), "mp3")
+                        response,
+                        root,
+                        f"{item[0]}_{self.clean.filter(item[5][0])}",
+                        "mp3")
                 sleep()
 
     def save_file(self, data, root: str, name: str, type_: str, id_=""):
