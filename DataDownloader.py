@@ -315,11 +315,11 @@ class Download:
                         response,
                         root,
                         f"{name}_{index + 1}",
-                        "webp",  # 图像后缀
+                        "jpeg",
                         item[0])
                 self.image_id = item[0]
-                sleep()
-                self.download_music(root, item)
+            sleep()
+            self.download_music(root, item)
 
     def download_video(self):
         root = self.type_["video"]
@@ -430,12 +430,10 @@ class Download:
             print("下载作品失败！")
             return False
         self.nickname = data["author"]["nickname"]
-        if t := data["aweme_type"] == 68:
+        if data["images"]:
             self.get_info([id_], "Image")
             self.download_images()
-        elif t == 0:
+        else:
             self.get_info([id_], "Video")
             self.download_video()
-        else:
-            raise ValueError("无法判断资源类型！")
         return True
