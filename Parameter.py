@@ -3,6 +3,8 @@ from hashlib import md5
 
 
 class XBogus:
+    """代码参考: https://github.com/Johnserf-Seed/TikTokDownload/blob/main/Util/XB.py"""
+
     def __init__(self) -> None:
 
         self.Array = [
