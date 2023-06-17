@@ -8,7 +8,7 @@ from Recorder import RunLogger
 
 CLEAN_PATCH = {
     " ": " ",
-}
+}  # 过滤字符
 
 
 class TikTok:
