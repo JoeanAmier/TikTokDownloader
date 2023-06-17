@@ -283,17 +283,7 @@ class Download:
                         item[0])
                 self.image_id = item[0]
                 sleep()
-            if self.music and (u := item[5][1]):
-                with requests.get(
-                        u,
-                        stream=True,
-                        headers=self.headers) as response:
-                    self.save_file(
-                        response,
-                        root,
-                        f"{item[0]}_{self.clean.filter(item[5][0])}",
-                        "mp3")
-                sleep()
+                self.download_music(root, item)
 
     def download_video(self):
         root = self.type_["video"]
@@ -310,17 +300,21 @@ class Download:
                 name = self.get_name(item)
                 self.save_file(response, root, name, "mp4")
             sleep()
-            if self.music and (u := item[5][1]):
-                with requests.get(
-                        u,
-                        stream=True,
-                        headers=self.headers) as response:
-                    self.save_file(
-                        response,
-                        root,
-                        f"{item[0]}_{self.clean.filter(item[5][0])}",
-                        "mp3")
-                sleep()
+            self.download_music(root, item)
+
+    def download_music(self, root, item):
+        """下载音乐"""
+        if self.music and (u := item[5][1]):
+            with requests.get(
+                    u,
+                    stream=True,
+                    headers=self.headers) as response:
+                self.save_file(
+                    response,
+                    root,
+                    f"{item[0]}_{self.clean.filter(item[5][0])}",
+                    "mp3")
+            sleep()
 
     def save_file(self, data, root: str, name: str, type_: str, id_=""):
         """保存文件"""
