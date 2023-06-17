@@ -31,8 +31,7 @@ class Cleaner:
             case _:
                 rule = {}  # 其他系统需要自行设置
         cache = {i: "" for i in whitespace[1:]}  # 补充换行符等非法字符
-        rule = {**rule, **cache}
-        return rule
+        return rule | cache
 
     def set_rule(self, rule: dict[str, str], update=False):
         """
