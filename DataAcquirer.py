@@ -13,7 +13,7 @@ from Recorder import RunLogger
 
 def sleep():
     """避免频繁请求"""
-    time.sleep(random.randrange(10, 50, 5) * 0.1)
+    time.sleep(random.randrange(10, 40, 5) * 0.1)
 
 
 def reset(function):
@@ -28,8 +28,6 @@ def reset(function):
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
         self.finish = False  # 是否获取完毕
-        self._earliest = datetime.date(2000, 1, 1)
-        self._latest = datetime.date.today()
         return function(self, *args, **kwargs)
 
     return inner
@@ -73,8 +71,8 @@ class UserData:
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
         self.finish = False  # 是否获取完毕
-        self._earliest = datetime.date(2000, 1, 1)
-        self._latest = datetime.date.today()
+        self._earliest = None
+        self._latest = None
         self._url = None  # 账号链接
         self._api = None  # 批量下载类型
 
@@ -128,6 +126,7 @@ class UserData:
     @earliest.setter
     def earliest(self, value):
         if not value:
+            self._earliest = datetime.date(2010, 1, 1)
             return
         try:
             self._earliest = datetime.datetime.strptime(
@@ -143,6 +142,7 @@ class UserData:
     @latest.setter
     def latest(self, value):
         if not value:
+            self._latest = datetime.date.today()
             return
         try:
             self._latest = datetime.datetime.strptime(value, "%Y/%m/%d").date()
@@ -246,7 +246,7 @@ class UserData:
 
     @reset
     def run(self, index: int):
-        if not self.api or not self.url:
+        if not all((self.api, self.url, self.earliest, self.latest)):
             self.log.warning("账号链接或批量下载类型设置无效！")
             return False
         self.log.info(f"正在获取第 {index} 个账号数据！")
