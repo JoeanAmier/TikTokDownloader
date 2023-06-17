@@ -49,7 +49,9 @@ class Download:
         self._time = None
         self._split = None
         self._folder = None
-        self._music = False
+        self._music = False  # 是否下载音乐
+        self._dynamic = False  # 是否下载动态封面图
+        self._original = False  # 是否下载静态封面图
         self.type_ = {"video": "", "images": ""}  # 文件保存目录
         self.video_data = []  # 视频详细信息
         self.image_data = []  # 图集详细信息
@@ -167,6 +169,32 @@ class Download:
             self._music = False
 
     @property
+    def dynamic(self):
+        return self._dynamic
+
+    @dynamic.setter
+    def dynamic(self, value):
+        if isinstance(value, bool):
+            self._dynamic = value
+            self.log.info(f"是否下载视频动态封面图: {value}", False)
+        else:
+            self.log.warning(f"动态封面图下载设置错误: {value}，默认不下载视频动态封面图！")
+            self._dynamic = False
+
+    @property
+    def original(self):
+        return self._original
+
+    @original.setter
+    def original(self, value):
+        if isinstance(value, bool):
+            self._original = value
+            self.log.info(f"是否下载视频封面图: {value}", False)
+        else:
+            self.log.warning(f"封面图下载设置错误: {value}，默认不下载视频封面图！")
+            self._original = False
+
+    @property
     def nickname(self):
         return self._nickname
 
@@ -234,7 +262,11 @@ class Download:
         return False
 
     def get_info(self, data, type_):
-        """提取作品详细信息"""
+        """
+        提取作品详细信息
+        视频格式: 作品ID, 描述, 创建时间, 作者, 视频ID, [音乐名称, 音乐链接], 动态封面图, 静态封面图
+        图集格式: 作品ID, 描述, 创建时间, 作者, 图集链接, [音乐名称, 音乐链接]
+        """
         for item in data:
             item = self.get_data(item)
             id_ = item["aweme_id"]
@@ -243,17 +275,21 @@ class Download:
                 self.time,
                 time.localtime(
                     item["create_time"]))
-            music_title = item["music"]["title"]
+            music_name = f'{item["music"]["author"]}-{item["music"]["title"]}'
             music = u[0] if (u := item["music"]["play_url"]
             ["url_list"]) else None  # 部分作品的数据没有音乐下载地址
             if type_ == "Video":
                 video_id = item["video"]["play_addr"]["uri"]
+                # 动态封面图链接
+                dynamic_cover = item["video"]["dynamic_cover"]["url_list"][0]
+                # 封面图链接
+                cover_original_scale = item["video"]["cover_original_scale"]["url_list"][0]
                 self.log.info(
                     "视频: " + ",".join([id_, desc, create_time, self.nickname, video_id]), False)
                 self.data.save(
                     ["视频", id_, desc, create_time, self.nickname, video_id])
-                self.video_data.append(
-                    [id_, desc, create_time, self.nickname, video_id, [music_title, music]])
+                self.video_data.append([id_, desc, create_time, self.nickname, video_id, [
+                    music_name, music], dynamic_cover, cover_original_scale])
             elif type_ == "Image":
                 images = item["images"]
                 images = [i['url_list'][3] for i in images]
@@ -262,7 +298,7 @@ class Download:
                 self.data.save(
                     ["图集", id_, desc, create_time, self.nickname, "#"])
                 self.image_data.append(
-                    [id_, desc, create_time, self.nickname, images, [music_title, music]])
+                    [id_, desc, create_time, self.nickname, images, [music_name, music]])
             else:
                 raise ValueError("type_ 参数错误！应该为 Video 或 Image 其中之一！")
 
@@ -278,7 +314,7 @@ class Download:
                     self.save_file(
                         response,
                         root,
-                        f"{name}({index + 1})",
+                        f"{name}_{index + 1}",
                         "webp",  # 图像后缀
                         item[0])
                 self.image_id = item[0]
@@ -301,8 +337,9 @@ class Download:
                 self.save_file(response, root, name, "mp4")
             sleep()
             self.download_music(root, item)
+            self.download_cover(root, name, item)
 
-    def download_music(self, root, item):
+    def download_music(self, root: str, item: list):
         """下载音乐"""
         if self.music and (u := item[5][1]):
             with requests.get(
@@ -315,6 +352,32 @@ class Download:
                     f"{item[0]}_{self.clean.filter(item[5][0])}",
                     "mp3")
             sleep()
+
+    def download_cover(self, root: str, name: str, item: list):
+        """下载静态/动态封面图"""
+        if not self.dynamic and not self.original:
+            return
+        if self.dynamic and (u := item[6]):
+            with requests.get(
+                    u,
+                    stream=True,
+                    headers=self.headers) as response:
+                self.save_file(
+                    response,
+                    root,
+                    name,
+                    "webp")
+        if self.original and (u := item[7]):
+            with requests.get(
+                    u,
+                    stream=True,
+                    headers=self.headers) as response:
+                self.save_file(
+                    response,
+                    root,
+                    name,
+                    "jpeg")
+        sleep()
 
     def save_file(self, data, root: str, name: str, type_: str, id_=""):
         """保存文件"""

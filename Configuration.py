@@ -17,6 +17,8 @@ class Settings:
             "music": False,
             "save": None,
             "cookie": "",
+            "dynamic": False,
+            "original": False,
         }  # 默认配置
 
     def create(self):
@@ -42,3 +44,7 @@ class Settings:
         with open(self.file, "w", encoding="UTF-8") as f:
             json.dump(settings, f)
         print("保存配置成功！")
+
+
+if __name__ == "__main__":
+    print(Settings().read())

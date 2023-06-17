@@ -45,6 +45,8 @@ class TikTok:
         self.__data["split"] = settings["split"]
         self.__data["save"] = settings["save"]
         self.__data["cookie"] = settings["cookie"]
+        self.__data["dynamic"] = settings["dynamic"]
+        self.__data["original"] = settings["original"]
         self.record.info("读取配置文件成功")
         return True
 
@@ -111,6 +113,8 @@ class TikTok:
         self.download.split = self.__data["split"]
         self.download.cookie = self.__data["cookie"]
         self.request.cookie = self.__data["cookie"]
+        self.download.dynamic = self.__data["dynamic"]
+        self.download.original = self.__data["original"]
 
     def run(self, root="./", name="%Y-%m-%d %H.%M.%S"):
         self.initialize(root=root, name=name)
