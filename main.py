@@ -104,12 +104,12 @@ class TikTok:
 
     def initialize(self, **kwargs):
         self.record = RunLogger()
-        self.record.root = kwargs["root"]
-        self.record.name = kwargs["name"]
+        self.record.root = kwargs["root"]  # 日志根目录
+        self.record.name = kwargs["name"]  # 日志文件名称格式
         self.record.run()
         self.request = UserData(self.record)
         self.download = Download(self.record, None)
-        self.download.clean.set_rule(CLEAN_PATCH, True)
+        self.download.clean.set_rule(CLEAN_PATCH, True)  # 设置文本过滤规则
 
     def set_parameters(self):
         self.download.root = self.__data["root"]
@@ -128,7 +128,7 @@ class TikTok:
         self.record.info("程序开始运行")
         if not self.check_config():
             return False
-        select = input("请选择下载模式：\n1. 批量下载用户作品源\n2. 单独下载链接作品\n输入序号：")
+        select = input("请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n输入序号：")
         match select:
             case "1":
                 self.record.info("已选择批量下载作品模式")

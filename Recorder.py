@@ -138,6 +138,7 @@ class DataLogger:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.file.close()
+        print("文件已关闭！")
 
     def save(self, data=None):
         if data:
