@@ -7,7 +7,7 @@ import requests
 from DataAcquirer import retry
 from DataAcquirer import sleep
 from Parameter import XBogus
-from Recorder import DataLogger
+from Recorder import RecordManager
 from Recorder import RunLogger
 from StringCleaner import Cleaner
 
@@ -38,7 +38,7 @@ class Download:
     length = 128  # 文件名称长度限制
     chunk = 1048576  # 单次下载文件大小，单位字节
 
-    def __init__(self, log: RunLogger, save: DataLogger | None):
+    def __init__(self, log: RunLogger, save: RecordManager | None):
         self.xb = XBogus()
         self.log = log  # 日志记录模块
         self.data = save  # 详细数据记录模块

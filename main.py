@@ -1,17 +1,20 @@
-from os import path
-
 from Configuration import Settings
 from DataAcquirer import UserData
 from DataDownloader import Download
-from Recorder import DataLogger
+from Recorder import CSVLogger
+from Recorder import NoneLogger
+from Recorder import RecordManager
 from Recorder import RunLogger
-
-CLEAN_PATCH = {
-    " ": " ",
-}  # 过滤字符
 
 
 class TikTok:
+    CLEAN_PATCH = {
+        " ": " ",
+    }  # 过滤字符
+    DataLogger = {
+        "csv": CSVLogger,
+    }
+
     def __init__(self):
         self.record = None
         self.request = None
@@ -74,8 +77,10 @@ class TikTok:
             return False
         self.record.info(f"账号 {self.request.name} 开始批量下载{type_}作品！")
         self.download.nickname = self.request.name
-        with DataLogger(self.__data["save"], name=self.download.nickname) as data:
-            self.data_settings(data)
+        data_root = RecordManager.run()
+        save_file = self.DataLogger.get(self.__data["save"], NoneLogger)
+        with save_file(data_root, self.download.nickname) as data:
+            self.download.data = data
             self.download.run(
                 self.request.video_data,
                 self.request.image_data)
@@ -85,8 +90,10 @@ class TikTok:
 
     def single_acquisition(self):
         self.set_parameters()
-        with DataLogger(self.__data["save"]) as data:
-            self.data_settings(data)
+        data_root = RecordManager.run()
+        save_file = self.DataLogger.get(self.__data["save"], NoneLogger)
+        with save_file(data_root) as data:
+            self.download.data = data
             while True:
                 url = input("请输入分享链接：")
                 if url in ("Q", "q", ""):
@@ -97,13 +104,6 @@ class TikTok:
                     continue
                 self.download.run_alone(id_)
 
-    def data_settings(self, file):
-        self.download.data = file
-        if path.getsize(file.root) == 0:
-            # 如果文件没有任何数据，则写入标题行
-            self.download.data.save(
-                ["作品类型", "作品ID", "作品描述", "发布时间", "账号昵称", "Video_ID", ])
-
     def initialize(self, **kwargs):
         self.record = RunLogger()
         self.record.root = kwargs["root"]  # 日志根目录
@@ -111,7 +111,7 @@ class TikTok:
         self.record.run()
         self.request = UserData(self.record)
         self.download = Download(self.record, None)
-        self.download.clean.set_rule(CLEAN_PATCH, True)  # 设置文本过滤规则
+        self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
 
     def set_parameters(self):
         self.download.root = self.__data["root"]

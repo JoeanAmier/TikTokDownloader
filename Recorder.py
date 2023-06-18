@@ -3,6 +3,8 @@ import logging
 import os
 import time
 
+from StringCleaner import Cleaner
+
 
 class RunLogger:
     def __init__(self):
@@ -80,65 +82,63 @@ class RunLogger:
         self.log.error(text)
 
 
-class Writer:
-    param = {
-        "encoding": "UTF-8",
-    }
+class NoneLogger:
+    def __init__(self, *args, **kwargs):
+        pass
 
-    def __init__(self, file):
-        self.main = file
+    def __enter__(self):
+        return self
 
-    def save(self, data=None):
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
+
+    def save(self, *args, **kwargs):
         pass
 
 
-class CSV(Writer):
-    param = {
-        "encoding": "UTF-8",
-        "newline": ""
-    }
+class CSVLogger:
+    """CSV格式记录"""
 
-    def __init__(self, file):
-        super().__init__(file)
-        self.main = csv.writer(file)
-
-    def save(self, data=None):
-        self.main.writerow(data)
-
-
-class DataLogger:
-    __root = "./"  # 根目录
-    __folder = "Data"  # 保存文件夹
-    TYPE = {
-        "csv": CSV,
-    }
-
-    def __init__(self, type_: str, name="Download"):
+    def __init__(self, root: str, name="Download"):
         self.file = None  # 文件对象
+        self.writer = None  # CSV对象
+        self.root = root  # 文件路径
         self.name = name  # 文件名称
-        self.root = None  # 文件绝对路径
-        self.type_ = type_
-        self.writer = self.TYPE.get(type_, Writer)  # 数据写入对象
 
     def __enter__(self):
-        if not os.path.exists(
-                dir_ := os.path.join(
-                    self.__root,
-                    self.__folder)):
-            os.mkdir(dir_)
-        self.root = os.path.join(
-            dir_,
-            f"{self.name}.{self.type_}")
+        if not os.path.exists(self.root):
+            os.mkdir(self.root)
         self.file = open(
-            self.root,
+            os.path.join(
+                self.root,
+                f"{self.name}.csv"),
             "a",
-            **self.writer.param)
-        self.writer = self.writer(self.file)
+            encoding="UTF-8",
+            newline="")
+        self.writer = csv.writer(self.file)
+        self.title()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.file.close()
 
-    def save(self, data=None):
-        if data:
-            self.writer.save(data)
+    def title(self):
+        if os.path.getsize(os.path.join(self.root, f"{self.name}.csv")) == 0:
+            # 如果文件没有任何数据，则写入标题行
+            self.save(RecordManager.title)
+
+    def save(self, data):
+        self.writer.writerow(data)
+
+
+class RecordManager:
+    """检查数据记录路径"""
+    title = ("作品类型", "作品ID", "作品描述", "发布时间", "账号昵称", "Video_ID")
+
+    @staticmethod
+    def run(root="./", folder="Data"):
+        if not os.path.exists(root):
+            return False
+        return os.path.join(
+            root, r) if (
+            r := Cleaner().filter(folder)) else False
