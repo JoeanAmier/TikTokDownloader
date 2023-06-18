@@ -5,6 +5,7 @@ from Recorder import CSVLogger
 from Recorder import NoneLogger
 from Recorder import RecordManager
 from Recorder import RunLogger
+from Recorder import XLSXLogger
 
 
 class TikTok:
@@ -13,6 +14,7 @@ class TikTok:
     }  # 过滤字符
     DataLogger = {
         "csv": CSVLogger,
+        "xlsx": XLSXLogger,
     }
 
     def __init__(self):

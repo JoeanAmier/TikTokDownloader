@@ -3,6 +3,9 @@ import logging
 import os
 import time
 
+from openpyxl import Workbook
+from openpyxl import load_workbook
+
 from StringCleaner import Cleaner
 
 
@@ -108,13 +111,11 @@ class CSVLogger:
     def __enter__(self):
         if not os.path.exists(self.root):
             os.mkdir(self.root)
-        self.file = open(
-            os.path.join(
-                self.root,
-                f"{self.name}.csv"),
-            "a",
-            encoding="UTF-8",
-            newline="")
+        self.root = os.path.join(self.root, f"{self.name}.csv")
+        self.file = open(self.root,
+                         "a",
+                         encoding="UTF-8",
+                         newline="")
         self.writer = csv.writer(self.file)
         self.title()
         return self
@@ -123,12 +124,47 @@ class CSVLogger:
         self.file.close()
 
     def title(self):
-        if os.path.getsize(os.path.join(self.root, f"{self.name}.csv")) == 0:
+        if os.path.getsize(self.root) == 0:
             # 如果文件没有任何数据，则写入标题行
             self.save(RecordManager.title)
 
     def save(self, data):
         self.writer.writerow(data)
+
+
+class XLSXLogger:
+    """XLSX格式"""
+
+    def __init__(self, root: str, name="Download"):
+        self.book = None  # XLSX数据簿
+        self.sheet = None  # XLSX数据表
+        self.root = root  # 文件路径
+        self.name = name  # 文件名称
+
+    def __enter__(self):
+        if not os.path.exists(self.root):
+            os.mkdir(self.root)
+        self.root = os.path.join(self.root, f"{self.name}.xlsx")
+        if os.path.exists(self.root):
+            self.book = load_workbook(self.root)
+        else:
+            self.book = Workbook()
+        self.sheet = self.book.active
+        self.title()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.book.save(self.root)
+        self.book.close()
+
+    def title(self):
+        if not self.sheet["A1"].value:
+            # 如果文件没有任何数据，则写入标题行
+            for col, value in enumerate(RecordManager.title, start=1):
+                self.sheet.cell(row=1, column=col, value=value)
+
+    def save(self, data):
+        self.sheet.append(data)
 
 
 class RecordManager:

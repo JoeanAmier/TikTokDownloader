@@ -7,7 +7,6 @@ import requests
 from DataAcquirer import retry
 from DataAcquirer import sleep
 from Parameter import XBogus
-from Recorder import RecordManager
 from Recorder import RunLogger
 from StringCleaner import Cleaner
 
@@ -38,7 +37,7 @@ class Download:
     length = 128  # 文件名称长度限制
     chunk = 1048576  # 单次下载文件大小，单位字节
 
-    def __init__(self, log: RunLogger, save: RecordManager | None):
+    def __init__(self, log: RunLogger, save):
         self.xb = XBogus()
         self.log = log  # 日志记录模块
         self.data = save  # 详细数据记录模块
@@ -285,18 +284,28 @@ class Download:
                 # 封面图链接
                 cover_original_scale = item["video"]["cover_original_scale"]["url_list"][0]
                 self.log.info(
-                    "视频: " + ",".join([id_, desc, create_time, self.nickname, video_id]), False)
-                self.data.save(
-                    ["视频", id_, desc, create_time, self.nickname, video_id])
+                    "视频: " +
+                    ",".join(
+                        [
+                            id_,
+                            desc,
+                            create_time.replace(
+                                ".",
+                                ":"),
+                            self.nickname,
+                            video_id]),
+                    False)
+                self.data.save(["视频", id_, desc, create_time.replace(
+                    ".", ":"), self.nickname, video_id])
                 self.video_data.append([id_, desc, create_time, self.nickname, video_id, [
                     music_name, music], dynamic_cover, cover_original_scale])
             elif type_ == "Image":
                 images = item["images"]
                 images = [i['url_list'][3] for i in images]
                 self.log.info(
-                    "图集: " + ",".join([id_, desc, create_time, self.nickname]), False)
+                    "图集: " + ",".join([id_, desc, create_time.replace(".", ":"), self.nickname]), False)
                 self.data.save(
-                    ["图集", id_, desc, create_time, self.nickname, "#"])
+                    ["图集", id_, desc, create_time.replace(".", ":"), self.nickname, "#"])
                 self.image_data.append(
                     [id_, desc, create_time, self.nickname, images, [music_name, music]])
             else:
