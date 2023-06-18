@@ -23,6 +23,8 @@ class TikTok:
 
     def check_config(self):
         settings = self.settings.read()
+        if not isinstance(settings, dict):
+            return False
         try:
             return self.read_data(settings)
         except KeyError as e:

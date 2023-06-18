@@ -35,7 +35,7 @@ class Settings:
                     return json.load(f)
             else:
                 self.create()
-                return {}  # 生成的默认配置文件必须要设置cookie才可以正常运行
+                return None  # 生成的默认配置文件必须要设置cookie才可以正常运行
         except json.decoder.JSONDecodeError:
             return {}  # 读取配置文件发生错误时返回空配置
 
