@@ -349,8 +349,9 @@ class Download:
                 self.save_file(
                     response,
                     root,
-                    f"{item[0]}_{self.clean.filter(item[5][0])}",
-                    "mp3")
+                    self.clean.filter(f"{f'{item[0]}-{item[5][0]}'}"),
+                    "mp3",
+                )
             sleep()
 
     def download_cover(self, root: str, name: str, item: list):
@@ -410,6 +411,7 @@ class Download:
 
     @reset
     def run(self, video: list[str], image: list[str]):
+        """批量下载"""
         self.create_folder(self.nickname)
         self.log.info("开始获取作品数据！")
         self.get_info(video, "Video")
@@ -423,6 +425,7 @@ class Download:
 
     @reset
     def run_alone(self, id_: str):
+        """单独下载"""
         if not self.folder:
             self.log.warning("未设置下载文件夹名称！")
             return False
@@ -431,7 +434,7 @@ class Download:
         if not data:
             print("下载作品失败！")
             return False
-        self.nickname = data["author"]["nickname"]
+        self.nickname = self.clean.filter(data["author"]["nickname"])
         if data["images"]:
             self.get_info([id_], "Image")
             self.download_images()

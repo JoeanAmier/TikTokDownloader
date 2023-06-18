@@ -7,7 +7,7 @@ class Settings:
         self.file = "./settings.json"  # 配置文件
         self.__default = {
             "accounts": [
-                ["https://v.douyin.com/XXXXXXX/", "post", "2023/1/1", ""],
+                ["https://v.douyin.com/XXXXXXX/", "post", "2016/9/20", ""],
             ],
             "root": "./",
             "folder": "Download",

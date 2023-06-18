@@ -9,6 +9,7 @@ import requests
 
 from Parameter import XBogus
 from Recorder import RunLogger
+from StringCleaner import Cleaner
 
 
 def sleep():
@@ -58,12 +59,12 @@ class UserData:
         r"^https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*$")  # 账号链接
     works_link = re.compile(
         r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
+    clean = Cleaner()  # 过滤非法字符
 
-    def __init__(self, log: RunLogger, session=None):
-        self.xb = XBogus()
-        self.log = log
-        self.session = self.check_session(session)  # 未使用
-        self._cookie = False
+    def __init__(self, log: RunLogger):
+        self.xb = XBogus()  # 加密参数对象
+        self.log = log  # 日志记录对象
+        self._cookie = False  # 是否设置了Cookie
         self.id_ = None  # sec_uid or item_ids
         self.max_cursor = 0
         self.list = None  # 未处理的数据
@@ -71,14 +72,10 @@ class UserData:
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
         self.finish = False  # 是否获取完毕
-        self._earliest = None
-        self._latest = None
+        self._earliest = None  # 最早发布时间
+        self._latest = None  # 最晚发布时间
         self._url = None  # 账号链接
         self._api = None  # 批量下载类型
-
-    @staticmethod
-    def check_session(session):
-        return session or requests.session()
 
     @property
     def url(self):
@@ -124,7 +121,7 @@ class UserData:
     @earliest.setter
     def earliest(self, value):
         if not value:
-            self._earliest = datetime.date(2010, 1, 1)
+            self._earliest = datetime.date(2016, 9, 20)
             return
         try:
             self._earliest = datetime.datetime.strptime(
@@ -194,6 +191,7 @@ class UserData:
                 headers=self.headers,
                 timeout=10)
         except requests.exceptions.ReadTimeout:
+            print("请求超时！")
             return False
         sleep()
         if response.status_code == 200:
@@ -222,7 +220,7 @@ class UserData:
             self.log.info("该账号的资源信息获取结束！")
             self.finish = True
         else:
-            self.name = self.list[0]["author"]["nickname"]
+            self.name = self.clean.filter(self.list[0]["author"]["nickname"])
             for item in self.list:
                 if t := item["aweme_type"] == 68:
                     self.image_data.append(
@@ -244,6 +242,7 @@ class UserData:
 
     @reset
     def run(self, index: int):
+        """批量下载模式"""
         if not all((self.api, self.url, self.earliest, self.latest)):
             self.log.warning("账号链接或批量下载类型设置无效！")
             return False
@@ -265,6 +264,7 @@ class UserData:
 
     @reset
     def run_alone(self, text: str):
+        """单独下载模式"""
         url = self.check_url(text)
         if not url:
             self.log.warning("无效的作品链接！")
@@ -285,6 +285,7 @@ class UserData:
         return False
 
     def date_filters(self):
+        """筛选发布时间"""
         earliest_date = self.earliest
         latest_date = self.latest
         filtered = []
