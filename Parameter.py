@@ -317,11 +317,11 @@ class MsToken:
         return "".join(base_str[randint(0, length)] for _ in range(size))
 
 
-class ttwid:
+class TtWid:
     """代码参考: https://github.com/B1gM8c/X-Bogus"""
 
     @staticmethod
-    def get_ttwid():
+    def get_TtWid():
         def clean(value):
             if s := value.get("Set-Cookie", None):
                 try:
@@ -343,4 +343,4 @@ class ttwid:
 if __name__ == "__main__":
     # print(XBogus().get_x_bogus(input("输入URL: ")))
     print(MsToken.get_ms_token())
-    # print(ttwid.get_ttwid())
+    # print(TtWid.get_TtWid())
