@@ -9,7 +9,12 @@ class Cookie:
         """提取 Cookie 并写入配置文件"""
         get_key = ("passport_csrf_token", "odin_tt")
         data = {}
-        cookie = input("粘贴 Cookie 后回车：")
+        cookie = input("请粘贴 Cookie 内容：")
+        try:
+            index = int(input("请输入该 Cookie 的写入位置(索引，默认为0)：")) or 0
+        except ValueError:
+            print("写入位置错误！")
+            return
         for i in cookie.split('; '):
             text = i.split("=", 1)
             try:
@@ -17,14 +22,16 @@ class Cookie:
             except IndexError:
                 continue
         if result := "; ".join(f"{i}={data.get(i, '')}" for i in get_key):
-            self.write(result)
+            self.write(result, index)
             print(f"已写入 Cookie: {result}")
         else:
             print("写入 Cookie 失败！")
 
-    def write(self, text):
+    def write(self, text, index):
         data = self.settings.read()
-        data["cookie"] = text
+        while len(data["cookie"]) < index + 1:
+            data["cookie"].append("")
+        data["cookie"][index] = text
         self.settings.update(data)
 
 
