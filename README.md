@@ -4,13 +4,14 @@
 
 # 项目介绍
 
-* ✅全部代码开源，用于学习交流
+* ✅全部代码开源，仅限学习交流
 * ✅下载抖音无水印视频/图集
 * ✅批量下载账号发布页/喜欢页作品
 * ✅单独下载链接对应的作品
-* ✅多账号批量下载
+* ✅多账号批量下载作品
 * ✅记录详细数据至文件
 * ✅下载动态/静态封面图
+* ✅获取直播推流地址
 * ❎用户图形交互界面 GUI
 * ❎下载 TikTok 无水印视频/图集
 
@@ -36,7 +37,7 @@ TikTokDownloader
 
 * 首次使用前需要登录抖音网页版，并复制Cookie至配置文件
 * 由于Cookie包含账号登陆信息，应避免短时间内大量下载，以免账号异常
-* 程序请求输入时，不输入内容或者输入“Q”或“q”即为退出程序
+* 程序请求输入时，不输入内容即为退出程序
 * 批量下载时，文件将会下载至账号同名文件夹（自动创建）
 * 单独下载时，文件将会下载至指定名称文件夹（默认文件夹名称：Download）
 * 如果资源没有描述，保存时文件名称的描述将替换为作品唯一值
@@ -55,6 +56,7 @@ TikTokDownloader
 |       `https://www.douyin.com/video/作品ID`        |    视频    | 永久有效 |   单独下载    |
 |        `https://www.douyin.com/user/账号ID`        |    账号    | 永久有效 |   批量下载    |
 | `https://www.douyin.com/user/账号ID?modal_id=作品ID` | 账号、视频、图集 | 永久有效 | 批量下载、单独下载 |
+|          `https://live.douyin.com/直播ID`          |    直播    | 临时有效 |   直播下载    |
 
 # Settings.json
 
@@ -134,3 +136,4 @@ TikTokDownloader
 * https://github.com/Johnserf-Seed/TikTokDownload
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://requests.readthedocs.io/en/latest/
+* https://github.com/B1gM8c/X-Bogus

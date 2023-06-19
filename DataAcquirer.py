@@ -7,6 +7,8 @@ from urllib.parse import urlparse
 
 import requests
 
+from Parameter import MsToken
+from Parameter import TtWid
 from Parameter import XBogus
 from Recorder import RunLogger
 from StringCleaner import Cleaner
@@ -30,6 +32,18 @@ def reset(function):
         self.image_data = []  # 图集ID数据
         self.finish = False  # 是否获取完毕
         return function(self, *args, **kwargs)
+
+    return inner
+
+
+def check_cookie(function):
+    """检查是否设置了Cookie"""
+
+    def inner(self, *args, **kwargs):
+        if self.cookie:
+            return function(self, *args, **kwargs)
+        print("未设置Cookie！")
+        return False
 
     return inner
 
@@ -59,6 +73,8 @@ class UserData:
         r"^https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*$")  # 账号链接
     works_link = re.compile(
         r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
+    live_link = re.compile(r"^https://live\.douyin\.com/([0-9]+)$")  # 直播链接
+    live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
     clean = Cleaner()  # 过滤非法字符
 
     def __init__(self, log: RunLogger):
@@ -110,9 +126,15 @@ class UserData:
         return self._cookie
 
     @cookie.setter
-    def cookie(self, cookie):
-        if isinstance(cookie, str):
+    def cookie(self, cookie: str | tuple):
+        if not cookie:
+            return
+        elif isinstance(cookie, str):
             self.headers["Cookie"] = cookie
+            self._cookie = True
+        elif isinstance(cookie, tuple):
+            for i in cookie:
+                self.headers["Cookie"] += f"; {i}"
             self._cookie = True
 
     @property
@@ -152,7 +174,7 @@ class UserData:
 
     @proxies.setter
     def proxies(self, value):
-        if isinstance(value, str):
+        if value and isinstance(value, str):
             test = {
                 "http": value,
                 "https": value,
@@ -199,6 +221,11 @@ class UserData:
                 f"{url} 响应码异常：{response.status_code}，获取 {value} 失败！")
             return False
 
+    def deal_params(self, params: dict) -> dict:
+        xb = self.xb.get_x_bogus(urlencode(params))
+        params["X-Bogus"] = xb
+        return params
+
     @retry(max_num=5)
     def get_user_data(self):
         """获取账号作品信息"""
@@ -211,8 +238,7 @@ class UserData:
             "platform": "PC",
             "downlink": "10",
         }
-        xb = self.xb.get_x_bogus(urlencode(params))
-        params["X-Bogus"] = xb
+        params = self.deal_params(params)
         try:
             response = requests.get(
                 self.api,
@@ -271,10 +297,16 @@ class UserData:
             self.log.info(f"图集: {i[1]}", False)
 
     @reset
+    @check_cookie
     def run(self, index: int):
         """批量下载模式"""
-        if not all((self.api, self.url, self.earliest, self.latest)):
-            self.log.warning("账号链接或批量下载类型设置无效！")
+        if not all(
+                (self.api,
+                 self.url,
+                 self.earliest,
+                 self.latest,
+                 self.cookie)):
+            self.log.warning("请检查账号链接、批量下载类型、最早发布时间、最晚发布时间、Cookie是否正确！")
             return False
         self.log.info(f"正在获取第 {index} 个账号数据！")
         self.get_id()
@@ -293,8 +325,12 @@ class UserData:
         return True
 
     @reset
+    @check_cookie
     def run_alone(self, text: str):
         """单独下载模式"""
+        if not self.cookie:
+            self.log.warning("请检查Cookie是否正确！")
+            return False
         url = self.check_url(text)
         if not url:
             self.log.warning("无效的作品链接！")
@@ -330,3 +366,50 @@ class UserData:
             if earliest_date <= date <= latest_date:
                 filtered.append(item[1])
         self.image_data = filtered
+
+    def get_live_id(self, link: str):
+        """检查直播链接并返回直播ID"""
+        return s[0] if len(s := self.live_link.findall(link)) == 1 else None
+
+    def add_cookie(self):
+        mstoken = MsToken.get_ms_token()
+        ttwid = TtWid.get_TtWid()
+        self.cookie = (mstoken, ttwid)
+
+    @check_cookie
+    def get_live_data(self, link: str):
+        id_ = self.get_live_id(link)
+        if not id_:
+            self.log.warning("直播链接格式错误！")
+            return False
+        self.add_cookie()
+        params = {
+            "aid": "6383",
+            "device_platform": "web",
+            "web_rid": id_
+        }
+        params = self.deal_params(params)
+        try:
+            response = requests.get(
+                self.live_api,
+                headers=self.headers,
+                params=params,
+                timeout=10,
+                proxies=self.proxies)
+            return response.json()
+        except requests.exceptions.ReadTimeout:
+            print("请求超时！")
+            return False
+        except requests.exceptions.JSONDecodeError:
+            self.log.warning("直播数据接口返回内容格式错误！")
+            return False
+
+    def deal_live_data(self, data):
+        if data['data']['data'][0]['status'] == 4:
+            self.log.info("当前直播已结束！")
+        nickname = self.clean.filter(
+            data['data']['data'][0]['owner']['nickname'])
+        title = self.clean.filter(data['data']['data'][0]['title'])
+        url = data['data']['data'][0]['stream_url']['flv_pull_url']
+        self.log.info(f"直播数据: {nickname}, {title}")
+        self.log.info(f"推流地址: {url}")

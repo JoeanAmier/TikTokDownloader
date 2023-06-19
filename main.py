@@ -118,6 +118,15 @@ class TikTok:
                     continue
                 self.download.run_alone(id_)
 
+    def live_acquisition(self):
+        self.set_parameters()
+        link = input("请输入直播链接：")
+        if data := self.request.get_live_data(link):
+            self.request.deal_live_data(data)
+            self.record.info("直播数据获取结束！")
+        else:
+            self.record.warning("获取直播数据失败！")
+
     def initialize(self, **kwargs):
         self.record = RunLogger()
         self.record.root = kwargs["root"]  # 日志根目录
@@ -146,7 +155,7 @@ class TikTok:
         self.record.info("程序开始运行")
         if not self.check_config():
             return False
-        select = input("请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n输入序号：")
+        select = input("请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n3. 直播下载\n输入序号：")
         match select:
             case "1":
                 self.record.info("已选择批量下载作品模式")
@@ -154,10 +163,11 @@ class TikTok:
             case "2":
                 self.record.info("已选择单独下载作品模式")
                 self.single_acquisition()
-            case "Q" | "q" | "":
-                pass
+            case "3":
+                self.record.info("已选择直播下载模式")
+                self.live_acquisition()
             case _:
-                self.record.warning(f"选择下载模式时输入了无效的内容: “{select}”")
+                pass
         self.record.info("程序运行结束")
 
 
