@@ -1,6 +1,10 @@
 import contextlib
 import time
 from hashlib import md5
+from random import randint
+
+from requests import exceptions
+from requests import post
 
 
 class XBogus:
@@ -300,5 +304,43 @@ class XBogus:
         return xb_
 
 
+class MsToken:
+    """代码参考: https://github.com/B1gM8c/X-Bogus"""
+
+    @staticmethod
+    def get_ms_token(size=107):
+        """
+        根据传入长度产生随机字符串
+        """
+        base_str = 'ABCDEFGHIGKLMNOPQRSTUVWXYZabcdefghigklmnopqrstuvwxyz0123456789='
+        length = len(base_str) - 1
+        return "".join(base_str[randint(0, length)] for _ in range(size))
+
+
+class ttwid:
+    """代码参考: https://github.com/B1gM8c/X-Bogus"""
+
+    @staticmethod
+    def get_ttwid():
+        def clean(value):
+            if s := value.get("Set-Cookie", None):
+                try:
+                    return s.split("; ")[0]
+                except IndexError:
+                    print("提取 ttwid 参数失败！")
+                    return False
+
+        api = "https://ttwid.bytedance.com/ttwid/union/register/"
+        data = '{"region":"cn","aid":1768,"needFid":false,"service":"www.ixigua.com","migrate_info":{"ticket":"","source":"node"},"cbUrlProtocol":"https","union":true}'
+        try:
+            response = post(api, data=data, timeout=10)
+        except exceptions.ReadTimeout:
+            print("获取 ttwid 参数失败！")
+            return False
+        return clean(response.headers) or False
+
+
 if __name__ == "__main__":
-    print(XBogus().get_x_bogus(input("输入URL: ")))
+    # print(XBogus().get_x_bogus(input("输入URL: ")))
+    print(MsToken.get_ms_token())
+    # print(ttwid.get_ttwid())
