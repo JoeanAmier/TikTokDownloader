@@ -4,6 +4,7 @@ from urllib.parse import urlencode
 
 import requests
 
+from DataAcquirer import check_cookie
 from DataAcquirer import retry
 from DataAcquirer import sleep
 from Parameter import XBogus
@@ -214,7 +215,7 @@ class Download:
 
     @cookie.setter
     def cookie(self, cookie):
-        if isinstance(cookie, str):
+        if cookie and isinstance(cookie, str):
             self.headers["Cookie"] = cookie
             self._cookie = True
 
@@ -426,6 +427,7 @@ class Download:
         # self.image = 0
 
     @reset
+    @check_cookie
     def run(self, video: list[str], image: list[str]):
         """批量下载"""
         self.create_folder(self.nickname)
@@ -440,6 +442,7 @@ class Download:
         self.summary()
 
     @reset
+    @check_cookie
     def run_alone(self, id_: str):
         """单独下载"""
         if not self.folder:
