@@ -102,11 +102,12 @@ class NoneLogger:
 class CSVLogger:
     """CSV格式记录"""
 
-    def __init__(self, root: str, name="Download"):
+    def __init__(self, root: str, name="Download", title_line=None):
         self.file = None  # 文件对象
         self.writer = None  # CSV对象
         self.root = root  # 文件路径
         self.name = name  # 文件名称
+        self.title_line = title_line or RecordManager.title  # 标题行
 
     def __enter__(self):
         if not os.path.exists(self.root):
@@ -126,7 +127,7 @@ class CSVLogger:
     def title(self):
         if os.path.getsize(self.root) == 0:
             # 如果文件没有任何数据，则写入标题行
-            self.save(RecordManager.title)
+            self.save(self.title_line)
 
     def save(self, data):
         self.writer.writerow(data)
@@ -135,11 +136,12 @@ class CSVLogger:
 class XLSXLogger:
     """XLSX格式"""
 
-    def __init__(self, root: str, name="Download"):
+    def __init__(self, root: str, name="Download", title_line=None):
         self.book = None  # XLSX数据簿
         self.sheet = None  # XLSX数据表
         self.root = root  # 文件路径
         self.name = name  # 文件名称
+        self.title_line = title_line or RecordManager.title  # 标题行
 
     def __enter__(self):
         if not os.path.exists(self.root):
@@ -160,7 +162,7 @@ class XLSXLogger:
     def title(self):
         if not self.sheet["A1"].value:
             # 如果文件没有任何数据，则写入标题行
-            for col, value in enumerate(RecordManager.title, start=1):
+            for col, value in enumerate(self.title_line, start=1):
                 self.sheet.cell(row=1, column=col, value=value)
 
     def save(self, data):
