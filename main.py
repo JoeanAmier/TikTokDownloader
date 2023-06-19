@@ -42,19 +42,30 @@ class TikTok:
             return False
 
     def read_data(self, settings):
+        def get_data(key, value, items, index=False):
+            for i in items:
+                key[i] = value[i][0] if index else value[i]
+
         self.accounts = settings["accounts"]
         self.__number = len(self.accounts)
-        self.__data["root"] = settings["root"]
-        self.__data["folder"] = settings["folder"]
-        self.__data["name"] = settings["name"]
-        self.__data["music"] = settings["music"]
-        self.__data["time"] = settings["time"]
-        self.__data["split"] = settings["split"]
-        self.__data["save"] = settings["save"]
-        self.__data["cookie"] = settings["cookie"]
-        self.__data["dynamic"] = settings["dynamic"]
-        self.__data["original"] = settings["original"]
-        self.__data["proxies"] = settings["proxies"]
+        get_data(
+            self.__data,
+            settings,
+            ("root",
+             "folder",
+             "name",
+             "time",
+             "split",
+             "save"))
+        get_data(
+            self.__data,
+            settings,
+            ("music",
+             "cookie",
+             "dynamic",
+             "original",
+             "proxies"),
+            True)
         self.record.info("读取配置文件成功")
         return True
 

@@ -14,12 +14,12 @@ class Settings:
             "name": "create_time author desc",
             "time": "%Y-%m-%d %H.%M.%S",
             "split": "-",
-            "music": False,
+            "music": [False, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
             "save": None,
-            "cookie": "",
-            "dynamic": False,
-            "original": False,
-            "proxies": None,
+            "cookie": ["", ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
+            "dynamic": [False, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
+            "original": [False, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
+            "proxies": [None, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
         }  # 默认配置
 
     def create(self):
