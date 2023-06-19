@@ -308,13 +308,14 @@ class MsToken:
     """代码参考: https://github.com/B1gM8c/X-Bogus"""
 
     @staticmethod
-    def get_ms_token(size=107):
+    def get_ms_token(start="msToken=", size=107):
         """
         根据传入长度产生随机字符串
         """
         base_str = 'ABCDEFGHIGKLMNOPQRSTUVWXYZabcdefghigklmnopqrstuvwxyz0123456789='
         length = len(base_str) - 1
-        return "".join(base_str[randint(0, length)] for _ in range(size))
+        return start + "".join(base_str[randint(0, length)]
+                               for _ in range(size))
 
 
 class TtWid:
