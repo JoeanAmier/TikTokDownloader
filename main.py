@@ -122,7 +122,11 @@ class TikTok:
         self.set_parameters()
         link = input("请输入直播链接：")
         if data := self.request.get_live_data(link):
-            self.request.deal_live_data(data)
+            data = self.request.deal_live_data(data)
+            self.record.info(f"主播昵称: {data[0]}")
+            self.record.info(f"直播名称: {data[1]}")
+            self.record.info("推流地址: \n" +
+                             "\n".join([f"{i}: {j}" for i, j in data[2].items()]))
             self.record.info("直播数据获取结束！")
         else:
             self.record.warning("获取直播数据失败！")
@@ -155,7 +159,8 @@ class TikTok:
         self.record.info("程序开始运行")
         if not self.check_config():
             return False
-        select = input("请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n3. 直播下载\n输入序号：")
+        select = input(
+            "请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n3. 获取直播推流地址\n输入序号：")
         match select:
             case "1":
                 self.record.info("已选择批量下载作品模式")

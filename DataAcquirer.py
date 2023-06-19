@@ -405,11 +405,10 @@ class UserData:
             return False
 
     def deal_live_data(self, data):
-        if data['data']['data'][0]['status'] == 4:
+        if data["data"]["data"][0]["status"] == 4:
             self.log.info("当前直播已结束！")
         nickname = self.clean.filter(
-            data['data']['data'][0]['owner']['nickname'])
-        title = self.clean.filter(data['data']['data'][0]['title'])
-        url = data['data']['data'][0]['stream_url']['flv_pull_url']
-        self.log.info(f"直播数据: {nickname}, {title}")
-        self.log.info(f"推流地址: {url}")
+            data["data"]["data"][0]["owner"]["nickname"])
+        title = self.clean.filter(data["data"]["data"][0]["title"])
+        url = data["data"]["data"][0]["stream_url"]["flv_pull_url"]
+        return nickname, title, url
