@@ -18,7 +18,7 @@
 
 ```text
 TikTokDownloader
-├─ Log                    //运行日志记录文件夹，用于 Bug 分析，可删除
+├─ Log                    //运行日志记录文件夹，用于Bug分析，可删除
 ├─ Data                   //详细数据记录文件夹，可删除
 ├─ Configuration.py       //配置文件处理模块
 ├─ Cookie_tool.py         //Cookie处理模块，可删除
@@ -119,11 +119,11 @@ TikTokDownloader
 ```
 
 **单线程模式**
-music、cookie、dynamic、original、proxies参数仅第一个值生效，下载多个账号的作品均使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), null(不使用代理)`
+：music、cookie、dynamic、original、proxies参数仅第一个值生效，下载多个账号的作品均使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), null(不使用代理)`
 参数
 
 **多线程模式**
-accounts、music、cookie、dynamic、original、proxies的元素个数必须相同，下载第一个账号的作品使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), null(不使用代理)`
+：accounts、music、cookie、dynamic、original、proxies的元素个数必须相同，下载第一个账号的作品使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), null(不使用代理)`
 参数，下载第二个账号的作品使用`true(下载音乐), cookie_2, true(下载动态封面图), false(不下载静态封面图), http://127.0.0.1:9999(使用代理)`
 参数，每个账号按照索引对应的参数单独生效
 
