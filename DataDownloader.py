@@ -57,6 +57,7 @@ class Download:
         self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量
         self.image_id = None  # 临时记录图集ID，用于下载计数
+        self.proxies = None  # 代理
 
     @property
     def time(self):
@@ -246,6 +247,7 @@ class Download:
                 response = requests.get(
                     self.item_ids_api,
                     params=params,
+                    proxies=self.proxies,
                     headers=self.headers, timeout=10)
                 sleep()
                 if response.status_code == 200 and response.text:
@@ -318,6 +320,7 @@ class Download:
                 with requests.get(
                         image,
                         stream=True,
+                        proxies=self.proxies,
                         headers=self.headers) as response:
                     name = self.get_name(item)
                     self.save_file(
@@ -341,6 +344,7 @@ class Download:
                     self.video_id_api,
                     params=params,
                     stream=True,
+                    proxies=self.proxies,
                     headers=self.headers) as response:
                 name = self.get_name(item)
                 self.save_file(response, root, name, "mp4")
@@ -354,6 +358,7 @@ class Download:
             with requests.get(
                     u,
                     stream=True,
+                    proxies=self.proxies,
                     headers=self.headers) as response:
                 self.save_file(
                     response,
@@ -371,6 +376,7 @@ class Download:
             with requests.get(
                     u,
                     stream=True,
+                    proxies=self.proxies,
                     headers=self.headers) as response:
                 self.save_file(
                     response,
@@ -381,6 +387,7 @@ class Download:
             with requests.get(
                     u,
                     stream=True,
+                    proxies=self.proxies,
                     headers=self.headers) as response:
                 self.save_file(
                     response,

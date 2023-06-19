@@ -21,7 +21,7 @@ TikTokDownloader
 ├─ Log                    //运行日志记录文件夹，用于 Bug 分析，可删除
 ├─ Data                   //详细数据记录文件夹，可删除
 ├─ Configuration.py       //配置文件处理模块
-├─ Cookie_tool.py         //Cookie处理模块
+├─ Cookie_tool.py         //Cookie处理模块，可删除
 ├─ DataAcquirer.py        //抖音数据获取模块
 ├─ DataDownloader.py      //抖音作品下载模块
 ├─ Recorder.py            //运行日志记录模块
@@ -35,7 +35,7 @@ TikTokDownloader
 # 使用说明
 
 * 首次使用前需要登录抖音网页版，并复制Cookie至配置文件
-* 建议优先使用单线程下载，避免频繁请求服务器导致IP被封禁
+* 由于Cookie包含账号登陆信息，应避免短时间内大量下载，以免账号异常
 * 程序请求输入时，不输入内容或者输入“Q”或“q”即为退出程序
 * 批量下载时，文件将会下载至账号同名文件夹（自动创建）
 * 单独下载时，文件将会下载至指定名称文件夹（默认文件夹名称：Download）
@@ -66,15 +66,16 @@ TikTokDownloader
 |                   latest                    |              str               |                作品最晚发布时间，格式: 2023/1/1，设置为空字符串代表不筛选<br>**属于 accounts 子参数**                |
 | accounts<br>\[url, mode, earliest, latest\] | list<br>\[str, str, str, str\] |                账号链接、批量下载类型、最早发布时间、最晚发布时间<br>账号批量下载时使用，支持多账号，以列表格式包含四个参数                 |
 |                    root                     |              str               |                                     文件保存路径，默认值：当前路径                                     |
-|                   folder                    |              str               |                   单独下载链接的资源时，保存的文件夹名称<br>（如果文件夹不存在会自动创建，默认值：Download）                   |
+|                   folder                    |              str               |                    单独下载作品时，保存的文件夹名称<br>（如果文件夹不存在会自动创建，默认值：Download）                     |
 |                    name                     |              str               | 文件保存时的命名规则，值之间使用空格分隔<br>默认值：发布时间-作者-描述<br>id: 唯一值；desc: 描述；create_time: 发布时间；author: 作者 |
 |                    time                     |              str               |                 发布时间的格式，默认值：年-月-日 时.分.秒<br>（注意：Windows下文件名不能包含英文冒号“:”）                  |
 |                    split                    |              str               |                                    文件命名的分隔符，默认值：“-”                                     |
 |                    music                    |              bool              |                                 是否下载视频和图集的音乐，默认值：False                                  |
-|                    save                     |              str               |                                 详细数据保存格式，目前支持: csv、xlsx                                 |
+|                    save                     |            str/null            |                          详细数据保存格式，设置为null代表不保存，目前支持: csv、xlsx                           |
 |                   cookie                    |              str               |                        抖音网页版Cookie，必需参数，使用 Cookie_tool.py 写入配置文件                        |
 |                   dynamic                   |              bool              |                                   是否下载动态封面图，默认值：False                                   |
 |                  original                   |              bool              |                                   是否下载静态封面图，默认值：False                                   |
+|                   proxies                   |            str/null            |                                   代理地址，设置为null代表不使用代理                                   |
 
 # 代码参考
 

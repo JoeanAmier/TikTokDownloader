@@ -19,6 +19,7 @@ class Settings:
             "cookie": "",
             "dynamic": False,
             "original": False,
+            "proxies": None,
         }  # 默认配置
 
     def create(self):

@@ -76,6 +76,7 @@ class UserData:
         self._latest = None  # 最晚发布时间
         self._url = None  # 账号链接
         self._api = None  # 批量下载类型
+        self._proxies = None  # 代理
 
     @property
     def url(self):
@@ -145,6 +146,33 @@ class UserData:
         except ValueError:
             self.log.warning("作品最晚发布日期无效！")
 
+    @property
+    def proxies(self):
+        return self._proxies
+
+    @proxies.setter
+    def proxies(self, value):
+        if isinstance(value, str):
+            test = {
+                "http": value,
+                "https": value,
+            }
+            try:
+                response = requests.get(
+                    "http://httpbin.org/", proxies=test, timeout=15)
+                if response.status_code == 200:
+                    self.log.info("代理测试通过！")
+                    self._proxies = test
+                    return
+            except requests.exceptions.ReadTimeout:
+                self.log.warning("代理测试超时！")
+            except requests.exceptions.ProxyError:
+                self.log.warning("代理测试失败！")
+        self._proxies = {
+            "http": None,
+            "https": None,
+        }
+
     @retry(max_num=5)
     def get_id(self, value="sec_uid", url=None):
         """获取账号ID或者作品ID"""
@@ -156,6 +184,7 @@ class UserData:
             response = requests.get(
                 url,
                 headers=self.headers,
+                proxies=self.proxies,
                 timeout=10)
         except requests.exceptions.ReadTimeout:
             return False
@@ -189,6 +218,7 @@ class UserData:
                 self.api,
                 params=params,
                 headers=self.headers,
+                proxies=self.proxies,
                 timeout=10)
         except requests.exceptions.ReadTimeout:
             print("请求超时！")

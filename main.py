@@ -54,6 +54,7 @@ class TikTok:
         self.__data["cookie"] = settings["cookie"]
         self.__data["dynamic"] = settings["dynamic"]
         self.__data["original"] = settings["original"]
+        self.__data["proxies"] = settings["proxies"]
         self.record.info("读取配置文件成功")
         return True
 
@@ -126,6 +127,8 @@ class TikTok:
         self.request.cookie = self.__data["cookie"]
         self.download.dynamic = self.__data["dynamic"]
         self.download.original = self.__data["original"]
+        self.request.proxies = self.__data["proxies"]
+        self.download.proxies = self.request.proxies
 
     def run(self, root="./", name="%Y-%m-%d %H.%M.%S"):
         self.initialize(root=root, name=name)
