@@ -28,7 +28,7 @@ TikTokDownloader
 ├─ StringCleaner.py       //过滤非法字符模块
 ├─ Parameter.py           //加密参数生成模块
 ├─ main.py                //程序单线程启动入口，适用于所有下载方式
-├─ main_concurrency.py    //程序多进程启动入口，适用于多账号批量下载
+├─ main_concurrency.py    //程序多线程启动入口，适用于多账号批量下载
 └─ settings.json          //配置文件，首次运行程序自动生成
 ```
 
@@ -58,24 +58,74 @@ TikTokDownloader
 
 # Settings.json
 
-|                     参数                      |               类型               |                                           说明                                            |
-|:-------------------------------------------:|:------------------------------:|:---------------------------------------------------------------------------------------:|
-|                     url                     |              str               |                     账号主页链接，批量下载时使用（非视频/图集链接）<br>**属于 accounts 子参数**                     |
-|                    mode                     |              str               |             批量下载类型，post 代表发布页，like 代表喜欢页<br>需要账号喜欢页公开可见，**属于 accounts 子参数**             |
-|                  earliest                   |              str               |                作品最早发布时间，格式: 2023/1/1，设置为空字符串代表不筛选<br>**属于 accounts 子参数**                |
-|                   latest                    |              str               |                作品最晚发布时间，格式: 2023/1/1，设置为空字符串代表不筛选<br>**属于 accounts 子参数**                |
-| accounts<br>\[url, mode, earliest, latest\] | list<br>\[str, str, str, str\] |                账号链接、批量下载类型、最早发布时间、最晚发布时间<br>账号批量下载时使用，支持多账号，以列表格式包含四个参数                 |
-|                    root                     |              str               |                                     文件保存路径，默认值：当前路径                                     |
-|                   folder                    |              str               |                    单独下载作品时，保存的文件夹名称<br>（如果文件夹不存在会自动创建，默认值：Download）                     |
-|                    name                     |              str               | 文件保存时的命名规则，值之间使用空格分隔<br>默认值：发布时间-作者-描述<br>id: 唯一值；desc: 描述；create_time: 发布时间；author: 作者 |
-|                    time                     |              str               |                 发布时间的格式，默认值：年-月-日 时.分.秒<br>（注意：Windows下文件名不能包含英文冒号“:”）                  |
-|                    split                    |              str               |                                    文件命名的分隔符，默认值：“-”                                     |
-|                    music                    |              bool              |                                 是否下载视频和图集的音乐，默认值：False                                  |
-|                    save                     |            str/null            |                          详细数据保存格式，设置为null代表不保存，目前支持: csv、xlsx                           |
-|                   cookie                    |              str               |                        抖音网页版Cookie，必需参数，使用 Cookie_tool.py 写入配置文件                        |
-|                   dynamic                   |              bool              |                                   是否下载动态封面图，默认值：False                                   |
-|                  original                   |              bool              |                                   是否下载静态封面图，默认值：False                                   |
-|                   proxies                   |            str/null            |                                   代理地址，设置为null代表不使用代理                                   |
+|                     参数                      |                   类型                   |                                           说明                                            |
+|:-------------------------------------------:|:--------------------------------------:|:---------------------------------------------------------------------------------------:|
+|                     url                     |                  str                   |                     账号主页链接，批量下载时使用（非视频/图集链接）<br>**属于 accounts 子参数**                     |
+|                    mode                     |                  str                   |             批量下载类型，post 代表发布页，like 代表喜欢页<br>需要账号喜欢页公开可见，**属于 accounts 子参数**             |
+|                  earliest                   |                  str                   |                作品最早发布时间，格式: 2023/1/1，设置为空字符串代表不筛选<br>**属于 accounts 子参数**                |
+|                   latest                    |                  str                   |                作品最晚发布时间，格式: 2023/1/1，设置为空字符串代表不筛选<br>**属于 accounts 子参数**                |
+| accounts<br>\[url, mode, earliest, latest\] | list\[list<br>\[str, str, str, str\]\] |                账号链接、批量下载类型、最早发布时间、最晚发布时间<br>账号批量下载时使用，支持多账号，以列表格式包含四个参数                 |
+|                    root                     |                  str                   |                                     文件保存路径，默认值：当前路径                                     |
+|                   folder                    |                  str                   |                              单独下载作品时，保存的文件夹名称，默认值：Download                              |
+|                    name                     |                  str                   | 文件保存时的命名规则，值之间使用空格分隔<br>默认值：发布时间-作者-描述<br>id: 唯一值；desc: 描述；create_time: 发布时间；author: 作者 |
+|                    time                     |                  str                   |                 发布时间的格式，默认值：年-月-日 时.分.秒<br>（注意：Windows下文件名不能包含英文冒号“:”）                  |
+|                    split                    |                  str                   |                                    文件命名的分隔符，默认值：“-”                                     |
+|                    music                    |              list\[bool\]              |                                 是否下载视频和图集的音乐，默认值：False                                  |
+|                    save                     |                str/null                |                          详细数据保存格式，设置为null代表不保存，目前支持: csv、xlsx                           |
+|                   cookie                    |              list\[str\]               |                       抖音网页版Cookie，必需参数，可以使用 Cookie_tool.py 写入配置文件                       |
+|                   dynamic                   |              list\[bool\]              |                                   是否下载动态封面图，默认值：False                                   |
+|                  original                   |              list\[bool\]              |                                   是否下载静态封面图，默认值：False                                   |
+|                   proxies                   |            list\[str/null\]            |                                   代理地址，设置为null代表不使用代理                                   |
+
+# 配置文件示例
+
+```json
+{
+  "accounts": [
+    [
+      "https://www.douyin.com/user/demo_1",
+      "post",
+      "2023/6/10",
+      ""
+    ],
+    [
+      "https://www.douyin.com/user/demo_2",
+      "post",
+      "2023/6/10",
+      ""
+    ]
+  ],
+  "music": [
+    false,
+    true
+  ],
+  "cookie": [
+    "cookie_1",
+    "cookie_2"
+  ],
+  "dynamic": [
+    false,
+    true
+  ],
+  "original": [
+    false,
+    false
+  ],
+  "proxies": [
+    null,
+    "http://127.0.0.1:9999"
+  ]
+}
+```
+
+*
+单线程模式：music、cookie、dynamic、original、proxies参数仅第一个值生效，下载多个账号的作品均使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), null(不使用代理)`
+参数
+
+*
+多线程模式：accounts、music、cookie、dynamic、original、proxies的元素个数必须相同，下载第一个账号的作品使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), null(不使用代理)`
+参数，下载第二个账号的作品使用`true(下载音乐), cookie_2, true(下载动态封面图), false(不下载静态封面图), http://127.0.0.1:9999(使用代理)`
+参数，每个账号按照索引对应的参数单独生效
 
 # 代码参考
 
