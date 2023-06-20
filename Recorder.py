@@ -107,7 +107,7 @@ class LoggerManager(BaseLogger):
 
     def run(
             self,
-            format_="%(asctime)s[%(levelname)s]%(filename)s-%(lineno)d: %(message)s"):
+            format_="%(asctime)s[%(levelname)s]:  %(message)s"):
         if not os.path.exists(dir_ := os.path.join(self.root, self.folder)):
             os.mkdir(dir_)
         self.log = logging

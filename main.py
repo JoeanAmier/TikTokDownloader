@@ -94,7 +94,7 @@ class TikTok:
             return False
         self.record.info(f"账号 {self.request.name} 开始批量下载{type_}作品")
         self.download.nickname = self.request.name
-        data_root = RecordManager.run()
+        data_root = RecordManager.run(self.__data["root"])
         save_file = self.DataLogger.get(self.__data["save"], NoneLogger)
         with save_file(data_root, self.download.nickname) as data:
             self.download.data = data
@@ -107,7 +107,7 @@ class TikTok:
 
     def single_acquisition(self):
         self.set_parameters()
-        data_root = RecordManager.run()
+        data_root = RecordManager.run(self.__data["root"])
         save_file = self.DataLogger.get(self.__data["save"], NoneLogger)
         with save_file(data_root) as data:
             self.download.data = data
