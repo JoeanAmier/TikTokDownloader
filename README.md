@@ -79,6 +79,7 @@ TikTokDownloader
 |                   dynamic                   |              list\[bool\]              |                                   是否下载动态封面图，默认值：False                                   |
 |                  original                   |              list\[bool\]              |                                   是否下载静态封面图，默认值：False                                   |
 |                   proxies                   |            list\[str/null\]            |                                   代理地址，设置为null代表不使用代理                                   |
+|                     log                     |                  bool                  |                                    是否记录日志，默认值：False                                     |
 
 # 配置文件示例
 

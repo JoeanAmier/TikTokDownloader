@@ -9,12 +9,63 @@ from openpyxl import load_workbook
 from StringCleaner import Cleaner
 
 
-class RunLogger:
+class BaseLogger:
+    """不记录日志，空白日志记录器"""
+
     def __init__(self):
         self.log = None  # 记录器主体
         self._root = "./"  # 日志记录保存根路径
         self._folder = "Log"  # 日志记录保存文件夹名称
         self._name = "%Y-%m-%d %H.%M.%S"  # 日志文件名称
+
+    @property
+    def root(self):
+        return self._root
+
+    @root.setter
+    def root(self, value):
+        pass
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        pass
+
+    @property
+    def folder(self):
+        return self._folder
+
+    @folder.setter
+    def folder(self, value: str):
+        pass
+
+    def run(self, *args, **kwargs):
+        pass
+
+    @staticmethod
+    def info(text: str, output=True):
+        if output:
+            print(text)
+
+    @staticmethod
+    def warning(text: str, output=True):
+        if output:
+            print(text)
+
+    @staticmethod
+    def error(text: str, output=True):
+        if output:
+            print(text)
+
+
+class LoggerManager(BaseLogger):
+    """日志记录"""
+
+    def __init__(self):
+        super().__init__()
 
     @property
     def root(self):
@@ -50,9 +101,9 @@ class RunLogger:
         return self._folder
 
     @folder.setter
-    def folder(self, value):
-        """未生效"""
-        pass
+    def folder(self, value: str):
+        if s := Cleaner().filter(value):
+            self._folder = s
 
     def run(
             self,
