@@ -219,11 +219,13 @@ class Download:
             self.headers["Cookie"] = cookie
             self._cookie = True
 
-    def create_folder(self, folder):
+    def create_folder(self, folder, live=False):
         """创建作品保存文件夹"""
         root = os.path.join(self.root, folder)
         if not os.path.exists(root):
             os.mkdir(root)
+        if live:
+            return
         self.type_["video"] = os.path.join(root, "video")
         if not os.path.exists(self.type_["video"]):
             os.mkdir(self.type_["video"])
@@ -461,3 +463,16 @@ class Download:
             self.get_info([id_], "Video")
             self.download_video()
         return True
+
+    def download_live(self, link: str, name: str):
+        """下载直播，不需要登录信息"""
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51",
+        }
+        self.create_folder("Live", True)
+        with requests.get(
+                link,
+                stream=True,
+                proxies=self.proxies, headers=headers) as response:
+            self.log.info("开始下载直播视频！")
+            self.save_file(response, f"{self.root}/Live", name, "flv")

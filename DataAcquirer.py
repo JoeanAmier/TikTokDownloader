@@ -407,6 +407,7 @@ class UserData:
     def deal_live_data(self, data):
         if data["data"]["data"][0]["status"] == 4:
             self.log.info("当前直播已结束！")
+            return None
         nickname = self.clean.filter(
             data["data"]["data"][0]["owner"]["nickname"])
         title = self.clean.filter(data["data"]["data"][0]["title"])

@@ -119,17 +119,29 @@ class TikTok:
                 self.download.run_alone(id_)
 
     def live_acquisition(self):
+        def choice_quality(items: dict) -> str:
+            try:
+                choice = int(input("请选择下载清晰度(输入对应索引，直接回车代表不下载): "))
+                if not 0 <= choice < len(items):
+                    raise ValueError
+            except ValueError:
+                return ""
+            keys = list(items.keys())
+            return items[keys[choice]]
+
         self.set_parameters()
         link = input("请输入直播链接：")
-        if data := self.request.get_live_data(link):
-            data = self.request.deal_live_data(data)
-            self.record.info(f"主播昵称: {data[0]}")
-            self.record.info(f"直播名称: {data[1]}")
-            self.record.info("推流地址: \n" +
-                             "\n".join([f"{i}: {j}" for i, j in data[2].items()]))
-            self.record.info("直播数据获取结束！")
-        else:
+        if not (data := self.request.get_live_data(link)):
             self.record.warning("获取直播数据失败！")
+            return
+        if not (data := self.request.deal_live_data(data)):
+            return
+        self.record.info(f"主播昵称: {data[0]}")
+        self.record.info(f"直播名称: {data[1]}")
+        self.record.info("推流地址: \n" +
+                         "\n".join([f"{i}: {j}" for i, j in data[2].items()]))
+        if l := choice_quality(data[2]):
+            self.download.download_live(l, f"{data[0]}-{data[1]}")
 
     def initialize(self, **kwargs):
         self.record = RunLogger()
