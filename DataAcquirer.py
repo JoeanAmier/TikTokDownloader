@@ -130,14 +130,12 @@ class UserData:
         return self._cookie
 
     @cookie.setter
-    def cookie(self, cookie: str | tuple):
+    def cookie(self, cookie: str):
         if not cookie:
             return
-        elif isinstance(cookie, str):
+        if isinstance(cookie, str):
             self.headers["Cookie"] = cookie
-            self._cookie = True
-        elif isinstance(cookie, tuple):
-            for i in cookie:
+            for i in (MsToken.get_ms_token(), TtWid.get_TtWid(),):
                 self.headers["Cookie"] += f"; {i}"
             self._cookie = True
 
@@ -186,7 +184,7 @@ class UserData:
             }
             try:
                 response = requests.get(
-                    "http://httpbin.org/", proxies=test, timeout=15)
+                    "https://www.baidu.com/", proxies=test, timeout=10)
                 if response.status_code == 200:
                     self.log.info("代理测试通过")
                     self._proxies = test
@@ -434,18 +432,12 @@ class UserData:
         """检查直播链接并返回直播ID"""
         return s[0] if len(s := self.live_link.findall(link)) == 1 else None
 
-    def add_cookie(self):
-        mstoken = MsToken.get_ms_token()
-        ttwid = TtWid.get_TtWid()
-        self.cookie = (mstoken, ttwid)
-
     @check_cookie
     def get_live_data(self, link: str):
         id_ = self.get_live_id(link)
         if not id_:
             self.log.warning("直播链接格式错误")
             return False
-        self.add_cookie()
         params = {
             "aid": "6383",
             "device_platform": "web",
