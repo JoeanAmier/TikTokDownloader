@@ -413,11 +413,10 @@ class Download:
         with open(file, "wb") as f:
             for chunk in data.iter_content(chunk_size=self.chunk):
                 f.write(chunk)
-        """图集下载数量汇总存在Bug，暂时停用"""
-        # if type_ == "mp4":
-        #     self.video += 1
-        # elif type_ == "webp" and id_ != self.image_id:
-        #     self.image += 1
+        if type_ == "mp4":
+            self.video += 1
+        elif type_ == "jpeg" and id_ and id_ != self.image_id:
+            self.image += 1
         self.log.info(f"{name[:self.length].strip()}.{type_} 下载成功")
         self.log.info(
             f"文件保存路径: {file}",
@@ -425,11 +424,10 @@ class Download:
 
     def summary(self):
         """汇总下载数量"""
-        return
-        # self.log.info(f"本次运行下载视频数量: {self.video}")
-        # self.log.info(f"本次运行下载图集数量: {self.image}")
-        # self.video = 0
-        # self.image = 0
+        self.log.info(f"本次运行下载视频数量: {self.video}")
+        self.log.info(f"本次运行下载图集数量: {self.image}")
+        self.video = 0
+        self.image = 0
 
     @reset
     @check_cookie
