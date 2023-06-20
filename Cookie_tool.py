@@ -11,7 +11,7 @@ class Cookie:
         data = {}
         cookie = input("请粘贴 Cookie 内容：")
         try:
-            index = int(input("请输入该 Cookie 的写入位置(索引，默认为0)：")) or 0
+            index = int(input("请输入该 Cookie 的写入位置(索引，默认为0)：") or 0)
         except ValueError:
             print("写入位置错误！")
             return
