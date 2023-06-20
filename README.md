@@ -20,18 +20,16 @@
 
 ```text
 TikTokDownloader
-├─ Log                    //运行日志记录文件夹，用于Bug分析，可删除
-├─ Data                   //详细数据记录文件夹，可删除
-├─ Configuration.py       //配置文件处理模块
-├─ Cookie_tool.py         //Cookie处理模块，可删除
-├─ DataAcquirer.py        //抖音数据获取模块
-├─ DataDownloader.py      //抖音作品下载模块
-├─ Recorder.py            //运行日志记录模块
-├─ StringCleaner.py       //过滤非法字符模块
-├─ Parameter.py           //加密参数生成模块
-├─ main.py                //程序单线程启动入口，适用于所有下载模式
-├─ main_concurrency.py    //程序多线程启动入口，适用于多账号批量下载，未生效
-└─ settings.json          //配置文件，首次运行程序自动生成
+├─ Configuration.py             //配置文件处理模块
+├─ CookieTool.py                //Cookie 处理模块
+├─ DataAcquirer.py              //抖音数据获取模块
+├─ DataDownloader.py            //抖音作品下载模块
+├─ Recorder.py                  //日志及数据记录模块
+├─ StringCleaner.py             //非法字符处理模块
+├─ Parameter.py                 //加密参数生成模块
+├─ main.py                      //程序单线程启动入口，适用于所有下载模式
+├─ main_concurrency.py          //程序多线程启动入口，适用于多账号批量下载，未完成
+└─ settings.json                //配置文件，首次运行程序自动生成
 ```
 
 # 使用说明
@@ -70,7 +68,7 @@ TikTokDownloader
 |                  earliest                   |                  str                   |                作品最早发布日期，格式: 2023/1/1，设置为空字符串代表不限制<br>**属于 accounts 子参数**                |
 |                   latest                    |                  str                   |                作品最晚发布日期，格式: 2023/1/1，设置为空字符串代表不限制<br>**属于 accounts 子参数**                |
 | accounts<br>\[url, mode, earliest, latest\] | list\[list<br>\[str, str, str, str\]\] |                账号链接、批量下载类型、最早发布日期、最晚发布日期<br>账号批量下载时使用，支持多账号，以列表格式包含四个参数                 |
-|                    root                     |                  str                   |                                     文件保存路径，默认值：当前路径                                     |
+|                    root                     |                  str                   |                                 作品文件和数据记录保存路径，默认值：当前路径                                  |
 |                   folder                    |                  str                   |                              单独下载作品时，保存的文件夹名称，默认值：Download                              |
 |                    name                     |                  str                   | 文件保存时的命名规则，值之间使用空格分隔<br>默认值：发布时间-作者-描述<br>id: 唯一值；desc: 描述；create_time: 发布时间；author: 作者 |
 |                    time                     |                  str                   |                 发布时间的格式，默认值：年-月-日 时.分.秒<br>（注意：Windows下文件名不能包含英文冒号“:”）                  |
