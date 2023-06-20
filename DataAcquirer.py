@@ -350,6 +350,12 @@ class UserData:
             self.log.warning(
                 f"响应码异常：{response.status_code}，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
 
+    def early_stop(self):
+        """如果获取数据的发布日期已经早于限制日期，就不需要再获取下一页的数据了"""
+        if self.earliest > datetime.datetime.fromtimestamp(
+                self.max_cursor / 1000).date():
+            self.finish = True
+
     @reset
     @check_cookie
     def run(self, index: int):
@@ -370,6 +376,7 @@ class UserData:
         while not self.finish:
             self.get_user_data()
             self.deal_data()
+            self.early_stop()
         if self.favorite:
             self.get_nickname()
         if not self.name:
