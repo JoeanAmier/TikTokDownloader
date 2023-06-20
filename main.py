@@ -1,10 +1,11 @@
 from Configuration import Settings
 from DataAcquirer import UserData
 from DataDownloader import Download
+from Recorder import BaseLogger
 from Recorder import CSVLogger
+from Recorder import LoggerManager
 from Recorder import NoneLogger
 from Recorder import RecordManager
-from Recorder import RunLogger
 from Recorder import XLSXLogger
 
 
@@ -27,15 +28,16 @@ class TikTok:
         self.__data = {}  # 其他配置数据
 
     def check_config(self):
+        print("正在读取配置文件！")
         settings = self.settings.read()
         if not isinstance(settings, dict):
             return False
         try:
             return self.read_data(settings)
         except KeyError as e:
-            self.record.error(f"读取配置文件发生错误：{e}")
+            print(f"读取配置文件发生错误：{e}")
             select = input(
-                "读取配置文件发生异常！是否需要重新生成默认配置文件？（Y/N）")
+                "配置文件存在错误！是否需要重新生成默认配置文件？（Y/N）")
             if select == "Y":
                 self.settings.create()
             print("程序即将关闭，请检查配置文件后再重新运行程序！")
@@ -56,7 +58,8 @@ class TikTok:
              "name",
              "time",
              "split",
-             "save"))
+             "save",
+             "log"))
         get_data(
             self.__data,
             settings,
@@ -66,7 +69,7 @@ class TikTok:
              "original",
              "proxies"),
             True)
-        self.record.info("读取配置文件成功")
+        print("读取配置文件成功！")
         return True
 
     def batch_acquisition(self):
@@ -89,7 +92,7 @@ class TikTok:
         type_ = {"post": "发布页", "like": "喜欢页"}[mode]
         if not self.request.run(num):
             return False
-        self.record.info(f"账号 {self.request.name} 开始批量下载{type_}作品！")
+        self.record.info(f"账号 {self.request.name} 开始批量下载{type_}作品")
         self.download.nickname = self.request.name
         data_root = RecordManager.run()
         save_file = self.DataLogger.get(self.__data["save"], NoneLogger)
@@ -98,7 +101,7 @@ class TikTok:
             self.download.run(
                 self.request.video_data,
                 self.request.image_data)
-        self.record.info(f"账号 {self.request.name} 批量下载{type_}作品结束！")
+        self.record.info(f"账号 {self.request.name} 批量下载{type_}作品结束")
         self.download._nickname = None
         return True
 
@@ -114,7 +117,7 @@ class TikTok:
                     break
                 id_ = self.request.run_alone(url)
                 if not id_:
-                    self.record.error(f"{url} 获取 item_ids 失败！")
+                    self.record.error(f"{url} 获取 aweme_id 失败")
                     continue
                 self.download.run_alone(id_)
 
@@ -132,7 +135,7 @@ class TikTok:
         self.set_parameters()
         link = input("请输入直播链接：")
         if not (data := self.request.get_live_data(link)):
-            self.record.warning("获取直播数据失败！")
+            self.record.warning("获取直播数据失败")
             return
         if not (data := self.request.deal_live_data(data)):
             return
@@ -143,10 +146,11 @@ class TikTok:
         if l := choice_quality(data[2]):
             self.download.download_live(l, f"{data[0]}-{data[1]}")
 
-    def initialize(self, **kwargs):
-        self.record = RunLogger()
-        self.record.root = kwargs["root"]  # 日志根目录
-        self.record.name = kwargs["name"]  # 日志文件名称格式
+    def initialize(self, root="./", folder="Log", name="%Y-%m-%d %H.%M.%S"):
+        self.record = LoggerManager() if self.__data["log"] else BaseLogger()
+        self.record.root = root  # 日志根目录
+        self.record.folder = folder  # 日志文件夹名称
+        self.record.name = name  # 日志文件名称格式
         self.record.run()
         self.request = UserData(self.record)
         self.download = Download(self.record, None)
@@ -166,11 +170,10 @@ class TikTok:
         self.request.proxies = self.__data["proxies"]
         self.download.proxies = self.request.proxies
 
-    def run(self, root="./", name="%Y-%m-%d %H.%M.%S"):
-        self.initialize(root=root, name=name)
-        self.record.info("程序开始运行")
+    def run(self):
         if not self.check_config():
             return False
+        self.initialize()
         select = input(
             "请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n3. 获取直播推流地址\n输入序号：")
         match select:

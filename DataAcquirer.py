@@ -10,7 +10,7 @@ import requests
 from Parameter import MsToken
 from Parameter import TtWid
 from Parameter import XBogus
-from Recorder import RunLogger
+from Recorder import LoggerManager
 from StringCleaner import Cleaner
 
 
@@ -77,7 +77,7 @@ class UserData:
     live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
     clean = Cleaner()  # 过滤非法字符
 
-    def __init__(self, log: RunLogger):
+    def __init__(self, log: LoggerManager):
         self.xb = XBogus()  # 加密参数对象
         self.log = log  # 日志记录对象
         self._cookie = False  # 是否设置了Cookie
@@ -151,7 +151,7 @@ class UserData:
                 value, "%Y/%m/%d").date()
             self.log.info(f"作品最早发布日期: {value}")
         except ValueError:
-            self.log.warning("作品最早发布日期无效！")
+            self.log.warning("作品最早发布日期无效")
 
     @property
     def latest(self):
@@ -166,7 +166,7 @@ class UserData:
             self._latest = datetime.datetime.strptime(value, "%Y/%m/%d").date()
             self.log.info(f"作品最晚发布日期: {value}")
         except ValueError:
-            self.log.warning("作品最晚发布日期无效！")
+            self.log.warning("作品最晚发布日期无效")
 
     @property
     def proxies(self):
@@ -178,25 +178,27 @@ class UserData:
             test = {
                 "http": value,
                 "https": value,
+                "ftp": value
             }
             try:
                 response = requests.get(
                     "http://httpbin.org/", proxies=test, timeout=15)
                 if response.status_code == 200:
-                    self.log.info("代理测试通过！")
+                    self.log.info("代理测试通过")
                     self._proxies = test
                     return
             except requests.exceptions.ReadTimeout:
-                self.log.warning("代理测试超时！")
+                self.log.warning("代理测试超时")
             except requests.exceptions.ProxyError:
-                self.log.warning("代理测试失败！")
+                self.log.warning("代理测试失败")
         self._proxies = {
             "http": None,
             "https": None,
+            "ftp": None,
         }
 
     @retry(max_num=5)
-    def get_id(self, value="sec_uid", url=None):
+    def get_id(self, value="sec_user_id", url=None):
         """获取账号ID或者作品ID"""
         if self.id_:
             self.log.info(f"{url} {value}: {self.id_}", False)
@@ -213,12 +215,13 @@ class UserData:
         sleep()
         if response.status_code == 200:
             params = urlparse(response.url)
-            self.id_ = params.path.rstrip("/").split("/")[-1]
+            url_list = params.path.rstrip("/").split("/")
+            self.id_ = url_list[-1] or url_list[-2]
             self.log.info(f"{url} {value}: {self.id_}", False)
             return True
         else:
             self.log.error(
-                f"{url} 响应码异常：{response.status_code}，获取 {value} 失败！")
+                f"{url} 响应码异常：{response.status_code}，获取 {value} 失败")
             return False
 
     def deal_params(self, params: dict) -> dict:
@@ -255,7 +258,7 @@ class UserData:
                 data = response.json()
             except requests.exceptions.JSONDecodeError:
                 self.list = []
-                self.log.error("数据接口返回内容异常！疑似接口失效！", False)
+                self.log.error("数据接口返回内容异常！疑似接口失效", False)
                 return False
             try:
                 self.max_cursor = data['max_cursor']
@@ -267,13 +270,13 @@ class UserData:
                 return False
         else:
             self.list = []
-            self.log.error(f"响应码异常：{response.status_code}，获取JSON数据失败！")
+            self.log.error(f"响应码异常：{response.status_code}，获取JSON数据失败")
             return False
 
     def deal_data(self):
         """对账号作品进行分类"""
         if len(self.list) == 0:
-            self.log.info("该账号的资源信息获取结束！")
+            self.log.info("该账号的资源信息获取结束")
             self.finish = True
         else:
             self.name = self.clean.filter(self.list[0]["author"]["nickname"])
@@ -306,22 +309,22 @@ class UserData:
                  self.earliest,
                  self.latest,
                  self.cookie)):
-            self.log.warning("请检查账号链接、批量下载类型、最早发布时间、最晚发布时间、Cookie是否正确！")
+            self.log.warning("请检查账号链接、批量下载类型、最早发布时间、最晚发布时间、Cookie是否正确")
             return False
-        self.log.info(f"正在获取第 {index} 个账号数据！")
+        self.log.info(f"正在获取第 {index} 个账号数据")
         self.get_id()
         if not self.id_:
-            self.log.error("获取账号 sec_uid 失败！")
+            self.log.error("获取账号 sec_user_id 失败")
             return False
         while not self.finish:
             self.get_user_data()
             self.deal_data()
         if not self.name:
-            self.log.error("获取账号数据失败，请稍后重试！")
+            self.log.error("获取账号数据失败，请稍后重试")
             return False
         self.date_filters()
         self.summary()
-        self.log.info(f"获取第 {index} 个账号数据成功！")
+        self.log.info(f"获取第 {index} 个账号数据成功")
         return True
 
     @reset
@@ -329,13 +332,13 @@ class UserData:
     def run_alone(self, text: str):
         """单独下载模式"""
         if not self.cookie:
-            self.log.warning("请检查Cookie是否正确！")
+            self.log.warning("请检查Cookie是否正确")
             return False
         url = self.check_url(text)
         if not url:
-            self.log.warning("无效的作品链接！")
+            self.log.warning("无效的作品链接")
             return False
-        self.get_id("item_ids", url)
+        self.get_id("aweme_id", url)
         return self.id_ or False
 
     def check_url(self, url: str):
@@ -380,7 +383,7 @@ class UserData:
     def get_live_data(self, link: str):
         id_ = self.get_live_id(link)
         if not id_:
-            self.log.warning("直播链接格式错误！")
+            self.log.warning("直播链接格式错误")
             return False
         self.add_cookie()
         params = {
@@ -401,12 +404,12 @@ class UserData:
             print("请求超时！")
             return False
         except requests.exceptions.JSONDecodeError:
-            self.log.warning("直播数据接口返回内容格式错误！")
+            self.log.warning("直播数据接口返回内容格式错误")
             return False
 
     def deal_live_data(self, data):
         if data["data"]["data"][0]["status"] == 4:
-            self.log.info("当前直播已结束！")
+            self.log.info("当前直播已结束")
             return None
         nickname = self.clean.filter(
             data["data"]["data"][0]["owner"]["nickname"])
