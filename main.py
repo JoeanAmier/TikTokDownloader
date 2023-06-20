@@ -89,7 +89,7 @@ class TikTok:
         self.request.api = mode
         self.request.earliest = earliest
         self.request.latest = latest
-        type_ = {"post": "发布页", "like": "喜欢页"}[mode]
+        type_ = {"post": "发布页", "favorite": "喜欢页"}[mode]
         if not self.request.run(num):
             return False
         self.record.info(f"账号 {self.request.name} 开始批量下载{type_}作品")
