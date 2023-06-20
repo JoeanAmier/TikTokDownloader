@@ -52,13 +52,14 @@ class Download:
         self._music = False  # 是否下载音乐
         self._dynamic = False  # 是否下载动态封面图
         self._original = False  # 是否下载静态封面图
+        self.favorite = False  # 喜欢页下载模式
         self.type_ = {"video": "", "images": ""}  # 文件保存目录
         self.video_data = []  # 视频详细信息
         self.image_data = []  # 图集详细信息
         self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量
         self.image_id = None  # 临时记录图集ID，用于下载计数
-        self.proxies = None  # 代理
+        self.proxies = None  # 代理，从DataAcquirer.py传入，无需再次验证有效性
 
     @property
     def time(self):
@@ -221,6 +222,8 @@ class Download:
 
     def create_folder(self, folder, live=False):
         """创建作品保存文件夹"""
+        if self.favorite:
+            folder = f"{folder}_favorite"
         root = os.path.join(self.root, folder)
         if not os.path.exists(root):
             os.mkdir(root)

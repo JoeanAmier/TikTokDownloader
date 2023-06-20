@@ -88,6 +88,7 @@ class UserData:
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
         self.finish = False  # 是否获取完毕
+        self.favorite = False  # 喜欢页下载模式
         self._earliest = None  # 最早发布时间
         self._latest = None  # 最晚发布时间
         self._url = None  # 账号链接
@@ -116,8 +117,11 @@ class UserData:
 
     @api.setter
     def api(self, value):
-        if value in ("post", "favorite"):
+        if value == "post":
             self._api = f"https://www.douyin.com/aweme/v1/web/aweme/{value}/"
+        elif value == "favorite":
+            self._api = f"https://www.douyin.com/aweme/v1/web/aweme/{value}/"
+            self.favorite = True
         else:
             self.log.warning(f"批量下载类型错误！必须设置为“post”或者“favorite”，错误值: {value}")
 
@@ -299,6 +303,53 @@ class UserData:
         for i in self.image_data:
             self.log.info(f"图集: {i[1]}", False)
 
+    @retry(max_num=5)
+    def get_nickname(self):
+        """喜欢页下载模式需要额外发送请求获取账号昵称"""
+        params = {
+            "aid": "6383",
+            "sec_user_id": self.id_,
+            "count": "35",
+            "max_cursor": 0,
+            "cookie_enabled": "true",
+            "platform": "PC",
+            "downlink": "10",
+        }
+        params = self.deal_params(params)
+        try:
+            response = requests.get(
+                self.api.replace("favorite", "post"),
+                params=params,
+                headers=self.headers,
+                proxies=self.proxies,
+                timeout=10)
+        except requests.exceptions.ReadTimeout:
+            self.name = str(time.time())[:10]
+            self.log.warning(
+                f"请求超时，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+            return
+        if response.status_code == 200:
+            try:
+                data = response.json()
+            except requests.exceptions.JSONDecodeError:
+                self.name = str(time.time())[:10]
+                self.log.warning(
+                    f"数据接口返回内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+                return
+            try:
+                self.name = self.clean.filter(
+                    data["aweme_list"][0]["author"]["nickname"]) or str(
+                    time.time())[
+                                                                    :10]
+            except KeyError:
+                self.name = str(time.time())[:10]
+                self.log.warning(
+                    f"响应内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+        else:
+            self.name = str(time.time())[:10]
+            self.log.warning(
+                f"响应码异常：{response.status_code}，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+
     @reset
     @check_cookie
     def run(self, index: int):
@@ -319,6 +370,8 @@ class UserData:
         while not self.finish:
             self.get_user_data()
             self.deal_data()
+        if self.favorite:
+            self.get_nickname()
         if not self.name:
             self.log.error("获取账号数据失败，请稍后重试")
             return False

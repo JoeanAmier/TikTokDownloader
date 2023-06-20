@@ -94,6 +94,7 @@ class TikTok:
             return False
         self.record.info(f"账号 {self.request.name} 开始批量下载{type_}作品")
         self.download.nickname = self.request.name
+        self.download.favorite = self.request.favorite
         data_root = RecordManager.run(self.__data["root"])
         save_file = self.DataLogger.get(self.__data["save"], NoneLogger)
         with save_file(data_root, self.download.nickname) as data:
@@ -102,7 +103,7 @@ class TikTok:
                 self.request.video_data,
                 self.request.image_data)
         self.record.info(f"账号 {self.request.name} 批量下载{type_}作品结束")
-        self.download._nickname = None
+        self.download._nickname, self.request.favorite, self.download.favorite = None, None, None  # 重置数据
         return True
 
     def single_acquisition(self):
