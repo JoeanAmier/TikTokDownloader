@@ -74,7 +74,7 @@ TikTokDownloader
 |                    time                     |                  str                   |                 发布时间的格式，默认值：年-月-日 时.分.秒<br>（注意：Windows下文件名不能包含英文冒号“:”）                  |
 |                    split                    |                  str                   |                                    文件命名的分隔符，默认值：“-”                                     |
 |                    music                    |              list\[bool\]              |                                 是否下载视频和图集的音乐，默认值：False                                  |
-|                    save                     |                  str                   |                          详细数据保存格式，设置为空字符串代表不保存，目前支持: csv、xlsx                           |
+|                    save                     |                  str                   |                    详细数据保存格式，设置为空字符串代表不保存，目前支持: csv、xlsx、sql(SQLite)                     |
 |                   cookie                    |              list\[str\]               |                       抖音网页版Cookie，必需参数，可以使用 Cookie_tool.py 写入配置文件                       |
 |                   dynamic                   |              list\[bool\]              |                                   是否下载动态封面图，默认值：False                                   |
 |                  original                   |              list\[bool\]              |                                   是否下载静态封面图，默认值：False                                   |
