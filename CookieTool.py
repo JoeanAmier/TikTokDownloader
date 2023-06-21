@@ -1,4 +1,4 @@
-from Configuration import Settings
+from src.Configuration import Settings
 
 
 class Cookie:

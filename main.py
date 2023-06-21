@@ -1,13 +1,13 @@
-from Configuration import Settings
-from DataAcquirer import UserData
-from DataDownloader import Download
-from Recorder import BaseLogger
-from Recorder import CSVLogger
-from Recorder import LoggerManager
-from Recorder import NoneLogger
-from Recorder import RecordManager
-from Recorder import SQLLogger
-from Recorder import XLSXLogger
+from src.Configuration import Settings
+from src.DataAcquirer import UserData
+from src.DataDownloader import Download
+from src.Recorder import BaseLogger
+from src.Recorder import CSVLogger
+from src.Recorder import LoggerManager
+from src.Recorder import NoneLogger
+from src.Recorder import RecordManager
+from src.Recorder import SQLLogger
+from src.Recorder import XLSXLogger
 
 
 class TikTok:
