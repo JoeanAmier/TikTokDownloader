@@ -1,8 +1,15 @@
-# TikTokDownloader
+<div style="text-align:center">
+<img src="static/TikTokDownloader.png" alt="TikTokDownloader" height="128" width="128"><br>
+<h1>TikTokDownloader</h1>
+</div>
+<hr>
+<div>
+<p>🔥 <b>抖音视频/图集/直播下载工具：</b>批量下载抖音账号发布页或者喜欢页的作品；单独下载抖音链接对应的作品；获取抖音直播推流地址；下载抖音直播视频。</p>
+<p>⭐ <b>使用者在使用本项目的代码时，请遵守 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">GNU General Public License v3.0</a> 开源协议。</b></p>
+</div>
+<hr>
 
-**抖音视频/图集/直播下载工具**，可用于批量下载抖音账号发布页或者喜欢页的视频和图集；单独下载抖音链接对应的视频和图集；获取抖音直播推流地址；下载抖音直播视频。
-
-# 项目介绍
+# 📝 功能清单
 
 * ✅ 全部代码开源，仅限学习交流
 * ✅ 下载抖音无水印视频/图集
@@ -13,32 +20,35 @@
 * ✅ 下载动态/静态封面图
 * ✅ 获取直播推流地址
 * ✅ 下载抖音直播视频
-* ❎ 用户图形交互界面 GUI
-* ❎ 下载 TikTok 无水印视频/图集
+* ☑️ 用户图形交互界面 GUI
+* ☑️ 下载 TikTok 无水印视频/图集
 
-# 项目状态
+# 📈 项目状态
 
-* 🟢 目前全部功能均可正常使用
+* 🟢 目前全部功能已通过测试，均可正常使用
 * 🟡 如果单独下载功能正常，批量下载功能异常，请尝试使用代理，可能是IP被封了（作者现状）
-* 🔴 暂未发现影响使用的Bug，如果有，请及时告知作者修复
+* 🔴 暂未发现影响使用的Bug，如果在使用过程中发现Bug，请及时告知作者修复
 
-# 项目结构
+# 📁 项目结构
 
 ```text
 TikTokDownloader
-├─ Configuration.py             //配置文件处理模块
-├─ CookieTool.py                //Cookie 处理模块
-├─ DataAcquirer.py              //抖音数据获取模块
-├─ DataDownloader.py            //抖音作品下载模块
-├─ Recorder.py                  //日志及数据记录模块
-├─ StringCleaner.py             //非法字符处理模块
-├─ Parameter.py                 //加密参数生成模块
-├─ main.py                      //程序单线程启动入口，适用于所有下载模式
-├─ main_concurrency.py          //程序多线程启动入口，适用于多账号批量下载，未完成
-└─ settings.json                //配置文件，首次运行程序自动生成
+├─ CookieTool.py                       // Cookie 处理模块，非必需
+├─ static                              // 静态资源文件夹
+├─ main.py                             // 程序单线程启动入口，适用于所有下载模式
+├─ main_concurrency.py                 // 程序多线程启动入口，适用于多账号批量下载，未完成
+├─ requirements.txt                    // 程序所需第三方模块信息
+├─ settings.json                       // 配置文件，首次运行程序自动生成
+└─ src                                 // 项目模块源码文件夹
+    ├─ Configuration.py                // 配置文件处理模块
+    ├─ DataAcquirer.py                 // 抖音数据获取模块
+    ├─ DataDownloader.py               // 抖音作品下载模块
+    ├─ Parameter.py                    // 加密参数生成模块
+    ├─ Recorder.py                     // 日志及数据记录模块
+    └─ StringCleaner.py                // 非法字符处理模块
 ```
 
-# 使用说明
+# 📋 使用说明
 
 * 首次使用前需要登录抖音网页版，并复制Cookie至配置文件
 * 由于Cookie包含账号登陆信息，应避免短时间内大量下载，以免账号异常
@@ -53,7 +63,7 @@ TikTokDownloader
 * 批量下载账号发布页作品时，如果设置了作品最早发布日期限制，早于该日期的作品无需获取数据
 * 如果需要使用批量下载模式在短时间内下载大量作品，建议使用代理
 
-# 链接类型
+# 🔗 链接类型
 
 **抖音APP**或**抖音网页版**点击分享按钮生成的链接具有时效性，过期需要重新生成使用，**抖音网页版**从浏览器地址栏复制的链接永久有效。
 
@@ -66,7 +76,7 @@ TikTokDownloader
 | `https://www.douyin.com/user/账号ID?modal_id=作品ID` | 账号、视频、图集 | 永久有效 | 批量下载、单独下载 |
 |          `https://live.douyin.com/直播ID`          |    直播    | 临时有效 |   直播下载    |
 
-# Settings.json
+# ⚙️ Settings.json
 
 |                     参数                      |                   类型                   |                                           说明                                            |
 |:-------------------------------------------:|:--------------------------------------:|:---------------------------------------------------------------------------------------:|
@@ -81,14 +91,14 @@ TikTokDownloader
 |                    time                     |                  str                   |                 发布时间的格式，默认值：年-月-日 时.分.秒<br>（注意：Windows下文件名不能包含英文冒号“:”）                  |
 |                    split                    |                  str                   |                                    文件命名的分隔符，默认值：“-”                                     |
 |                    music                    |              list\[bool\]              |                                 是否下载视频和图集的音乐，默认值：False                                  |
-|                    save                     |                  str                   |                    详细数据保存格式，设置为空字符串代表不保存，目前支持: csv、xlsx、sql(SQLite)                     |
-|                   cookie                    |              list\[str\]               |                       抖音网页版Cookie，必需参数，可以使用 Cookie_tool.py 写入配置文件                       |
+|                    save                     |                  str                   |                   详细数据保存格式，设置为空字符串代表不保存<br>目前支持: csv、xlsx、sql(SQLite)                   |
+|                   cookie                    |              list\[str\]               |                     抖音网页版Cookie，必需参数<br>可以使用 Cookie_tool.py 写入配置文件                      |
 |                   dynamic                   |              list\[bool\]              |                                   是否下载动态封面图，默认值：False                                   |
 |                  original                   |              list\[bool\]              |                                   是否下载静态封面图，默认值：False                                   |
 |                   proxies                   |              list\[str\]               |                                   代理地址，设置为空字符串代表不使用代理                                   |
 |                     log                     |                  bool                  |                                    是否记录日志，默认值：False                                     |
 
-# 配置文件示例
+# 📄 配置文件示例
 
 ```json
 {
@@ -140,7 +150,7 @@ TikTokDownloader
 
 **其余参数为全局参数**
 
-# 代码参考
+# 💡 代码参考
 
 * https://github.com/Johnserf-Seed/TikTokDownload
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
