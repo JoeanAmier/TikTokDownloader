@@ -7,6 +7,8 @@ import requests
 from DataAcquirer import check_cookie
 from DataAcquirer import retry
 from DataAcquirer import sleep
+from Parameter import MsToken
+from Parameter import TtWid
 from Parameter import XBogus
 from Recorder import LoggerManager
 from StringCleaner import Cleaner
@@ -215,9 +217,13 @@ class Download:
         return self._cookie
 
     @cookie.setter
-    def cookie(self, cookie):
-        if cookie and isinstance(cookie, str):
+    def cookie(self, cookie: str):
+        if not cookie:
+            return
+        if isinstance(cookie, str):
             self.headers["Cookie"] = cookie
+            for i in (MsToken.get_ms_token(), TtWid.get_TtWid(),):
+                self.headers["Cookie"] += f"; {i}"
             self._cookie = True
 
     def create_folder(self, folder, live=False):
@@ -293,7 +299,7 @@ class Download:
                 cover_original_scale = item["video"]["cover_original_scale"]["url_list"][0]
                 self.log.info(
                     "视频: " +
-                    ",".join(
+                    ", ".join(
                         [
                             id_,
                             desc,
@@ -303,7 +309,7 @@ class Download:
                             self.nickname,
                             video_id]),
                     False)
-                self.data.save(["视频", id_, desc, create_time.replace(
+                self.data.save(["视频", id_, desc[:self.length], create_time.replace(
                     ".", ":"), self.nickname, video_id])
                 self.video_data.append([id_, desc, create_time, self.nickname, video_id, [
                     music_name, music], dynamic_cover, cover_original_scale])
@@ -311,9 +317,9 @@ class Download:
                 images = item["images"]
                 images = [i['url_list'][3] for i in images]
                 self.log.info(
-                    "图集: " + ",".join([id_, desc, create_time.replace(".", ":"), self.nickname]), False)
-                self.data.save(
-                    ["图集", id_, desc, create_time.replace(".", ":"), self.nickname, "#"])
+                    "图集: " + ", ".join([id_, desc, create_time.replace(".", ":"), self.nickname]), False)
+                self.data.save(["图集", id_, desc[:self.length], create_time.replace(
+                    ".", ":"), self.nickname, "#"])
                 self.image_data.append(
                     [id_, desc, create_time, self.nickname, images, [music_name, music]])
             else:

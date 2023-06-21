@@ -1,6 +1,7 @@
 import csv
 import logging
 import os
+import sqlite3
 import time
 
 from openpyxl import Workbook
@@ -220,9 +221,58 @@ class XLSXLogger:
         self.sheet.append(data)
 
 
+class SQLLogger:
+    """SQLite保存数据"""
+
+    def __init__(
+            self,
+            root: str,
+            name="Download",
+            title_line=None,
+            title_type=None):
+        self.db = None  # 数据库
+        self.cursor = None  # 游标对象
+        self.root = root  # 文件路径
+        self.name = name  # 数据表名称
+        self.title_line = title_line or RecordManager.title  # 数据表列名
+        self.title_type = title_type or RecordManager.title_type  # 数据表数据类型
+
+    def __enter__(self):
+        if not os.path.exists(self.root):
+            os.mkdir(self.root)
+        self.db = sqlite3.connect(
+            os.path.join(
+                self.root,
+                "TikTokDownloader.db"))
+        self.cursor = self.db.cursor()
+        self.create()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.db.close()
+
+    def create(self):
+        create_sql = f"""CREATE TABLE IF NOT EXISTS {self.name} ({", ".join([f"{i} {j}" for i, j in zip(self.title_line, self.title_type)])});"""
+        self.cursor.execute(create_sql)
+        self.db.commit()
+
+    def save(self, data):
+        insert_sql = f"""INSERT OR IGNORE INTO {self.name} ({", ".join(self.title_line)}) VALUES ({", ".join(["?" for _ in self.title_line])});"""
+        self.cursor.execute(insert_sql, data)
+        self.db.commit()
+
+
 class RecordManager:
     """检查数据记录路径"""
     title = ("作品类型", "作品ID", "作品描述", "发布时间", "账号昵称", "Video_ID")
+    title_type = (
+        "CHARACTER(2) NOT NULL",
+        "CHARACTER(19) PRIMARY KEY",
+        "CHARACTER(128) NOT NULL",
+        "CHARACTER(19) NOT NULL",
+        "CHARACTER(20) NOT NULL",
+        "CHARACTER(64)",
+    )
 
     @staticmethod
     def run(root="./", folder="Data"):

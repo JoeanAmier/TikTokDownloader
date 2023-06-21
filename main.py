@@ -6,6 +6,7 @@ from Recorder import CSVLogger
 from Recorder import LoggerManager
 from Recorder import NoneLogger
 from Recorder import RecordManager
+from Recorder import SQLLogger
 from Recorder import XLSXLogger
 
 
@@ -16,6 +17,7 @@ class TikTok:
     DataLogger = {
         "csv": CSVLogger,
         "xlsx": XLSXLogger,
+        "sql": SQLLogger,
     }
 
     def __init__(self):
