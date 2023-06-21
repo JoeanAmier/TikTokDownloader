@@ -1,12 +1,15 @@
-<div style="text-align:center">
+<div align="center">
 <img src="static/TikTokDownloader.png" alt="TikTokDownloader" height="128" width="128"><br>
 <h1>TikTokDownloader</h1>
+<a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">
+<img src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader" alt="GNU General Public License v3.0">
+</a>
+<a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">
+<img src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader" alt="TikTokDownloader">
+</a>
 </div>
-<hr>
-<div>
 <p>🔥 <b>抖音视频/图集/直播下载工具：</b>批量下载抖音账号发布页或者喜欢页的作品；单独下载抖音链接对应的作品；获取抖音直播推流地址；下载抖音直播视频。</p>
 <p>⭐ <b>使用者在使用本项目的代码时，请遵守 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">GNU General Public License v3.0</a> 开源协议。</b></p>
-</div>
 <hr>
 
 # 📝 功能清单
