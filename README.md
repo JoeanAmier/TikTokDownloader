@@ -36,19 +36,21 @@
 
 ```text
 TikTokDownloader
-├─ CookieTool.py                       // Cookie 处理模块，非必需
-├─ static                              // 静态资源文件夹
-├─ main.py                             // 程序单线程启动入口，适用于所有下载模式
-├─ main_concurrency.py                 // 程序多线程启动入口，适用于多账号批量下载，未完成
-├─ requirements.txt                    // 程序所需第三方模块信息
-├─ settings.json                       // 配置文件，首次运行程序自动生成
-└─ src                                 // 项目模块源码文件夹
-    ├─ Configuration.py                // 配置文件处理模块
-    ├─ DataAcquirer.py                 // 抖音数据获取模块
-    ├─ DataDownloader.py               // 抖音作品下载模块
-    ├─ Parameter.py                    // 加密参数生成模块
-    ├─ Recorder.py                     // 日志及数据记录模块
-    └─ StringCleaner.py                // 非法字符处理模块
+├─ CookieTool.py                           // Cookie 写入工具
+├─ main.py                                 // 项目程序启动入口
+├─ requirements.txt                        // 程序所需第三方模块信息
+├─ settings.json                           // 运行参数配置文件
+├─ src                                     // 项目模块源码文件夹
+│    ├─ Configuration.py                   // 配置文件处理模块
+│    ├─ DataAcquirer.py                    // 抖音数据获取模块
+│    ├─ DataDownloader.py                  // 抖音作品下载模块
+│    ├─ Parameter.py                       // 加密参数生成模块
+│    ├─ Recorder.py                        // 日志及数据记录模块
+│    ├─ StringCleaner.py                   // 非法字符处理模块
+│    ├─ main_complete.py                   // 单线程启动入口，支持所有下载模式
+│    ├─ main_multiprocess.py               // 多进程启动入口，仅支持多账号批量下载，未完成
+│    └─ main_web_UI.py                     // Web UI 启动入口，不支持直播下载
+└─ static                                  // 静态资源文件夹
 ```
 
 # 📋 使用说明
