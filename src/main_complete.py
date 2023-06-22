@@ -75,7 +75,6 @@ class TikTok:
         return True
 
     def batch_acquisition(self):
-        self.set_parameters()
         self.record.info(f"共有 {self.__number} 个账号的作品等待下载")
         for index in range(self.__number):
             self.account_download(index + 1, *self.accounts[index])
@@ -109,7 +108,6 @@ class TikTok:
         return True
 
     def single_acquisition(self):
-        self.set_parameters()
         data_root = RecordManager.run(self.__data["root"])
         save_file = self.DataLogger.get(self.__data["save"], NoneLogger)
         with save_file(data_root) as data:
@@ -135,7 +133,6 @@ class TikTok:
             keys = list(items.keys())
             return items[keys[choice]]
 
-        self.set_parameters()
         link = input("请输入直播链接：")
         if not (data := self.request.get_live_data(link)):
             self.record.warning("获取直播数据失败")
@@ -177,6 +174,7 @@ class TikTok:
         if not self.check_config():
             return False
         self.initialize()
+        self.set_parameters()
         select = input(
             "请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n3. 获取直播推流地址\n输入序号：")
         match select:
