@@ -7,11 +7,11 @@ from urllib.parse import urlparse
 
 import requests
 
-from Parameter import MsToken
-from Parameter import TtWid
-from Parameter import XBogus
-from Recorder import LoggerManager
-from StringCleaner import Cleaner
+from src.Parameter import MsToken
+from src.Parameter import TtWid
+from src.Parameter import XBogus
+from src.Recorder import LoggerManager
+from src.StringCleaner import Cleaner
 
 
 def sleep():

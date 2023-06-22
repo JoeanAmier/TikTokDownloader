@@ -7,7 +7,7 @@ import time
 from openpyxl import Workbook
 from openpyxl import load_workbook
 
-from StringCleaner import Cleaner
+from src.StringCleaner import Cleaner
 
 
 class BaseLogger:

@@ -4,7 +4,7 @@ import os
 
 class Settings:
     def __init__(self):
-        self.file = "../settings.json"  # 配置文件
+        self.file = "./settings.json"  # 配置文件
         self.__default = {
             "accounts": [
                 ["https://v.douyin.com/XXXXXXX/", "post", "2016/9/20", ""],
@@ -22,6 +22,7 @@ class Settings:
             "proxies": ["", ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
             "log": False  # 是否启用日志
         }  # 默认配置
+        print(os.getcwd())
 
     def create(self):
         """创建默认配置文件"""

@@ -4,14 +4,14 @@ from urllib.parse import urlencode
 
 import requests
 
-from DataAcquirer import check_cookie
-from DataAcquirer import retry
-from DataAcquirer import sleep
-from Parameter import MsToken
-from Parameter import TtWid
-from Parameter import XBogus
-from Recorder import LoggerManager
-from StringCleaner import Cleaner
+from src.DataAcquirer import check_cookie
+from src.DataAcquirer import retry
+from src.DataAcquirer import sleep
+from src.Parameter import MsToken
+from src.Parameter import TtWid
+from src.Parameter import XBogus
+from src.Recorder import LoggerManager
+from src.StringCleaner import Cleaner
 
 
 def reset(function):

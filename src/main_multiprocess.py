@@ -1,4 +1,4 @@
-from main import TikTok
+from src.main_complete import TikTok
 
 
 class Concurrency(TikTok):
