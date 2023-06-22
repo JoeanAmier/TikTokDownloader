@@ -428,27 +428,27 @@ class Download:
             f"文件保存路径: {file}",
             False)
 
-    def summary(self):
+    def summary(self, index: int):
         """汇总下载数量"""
-        self.log.info(f"本次运行下载视频数量: {self.video}")
-        self.log.info(f"本次运行下载图集数量: {self.image}")
+        self.log.info(f"第 {index} 个账号的视频下载数量: {self.video}")
+        self.log.info(f"第 {index} 个账号的图集下载数量: {self.image}")
         self.video = 0
         self.image = 0
 
     @reset
     @check_cookie
-    def run(self, video: list[str], image: list[str]):
+    def run(self, index: int, video: list[str], image: list[str]):
         """批量下载"""
         self.create_folder(self.nickname)
-        self.log.info("开始获取作品数据")
+        self.log.info(f"开始获取第 {index} 个账号的作品数据")
         self.get_info(video, "Video")
         self.get_info(image, "Image")
-        self.log.info("获取作品数据成功")
-        self.log.info("开始下载视频/图集")
+        self.log.info(f"获取第 {index} 个账号的作品数据成功")
+        self.log.info(f"开始下载第 {index} 个账号的视频/图集")
         self.download_video()
         self.download_images()
-        self.log.info("视频/图集下载结束")
-        self.summary()
+        self.log.info(f"第 {index} 个账号的视频/图集下载结束")
+        self.summary(index)
 
     @reset
     @check_cookie

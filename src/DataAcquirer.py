@@ -371,7 +371,7 @@ class UserData:
         self.log.info(f"正在获取第 {index} 个账号数据")
         self.get_id()
         if not self.id_:
-            self.log.error("获取账号 sec_user_id 失败")
+            self.log.error(f"获取第 {index} 个账号 sec_user_id 失败")
             return False
         while not self.finish:
             self.get_user_data()
@@ -380,7 +380,7 @@ class UserData:
         if self.favorite:
             self.get_nickname()
         if not self.name:
-            self.log.error("获取账号数据失败，请稍后重试")
+            self.log.error(f"获取第 {index} 个账号数据失败，请稍后重试")
             return False
         self.date_filters()
         self.summary()
