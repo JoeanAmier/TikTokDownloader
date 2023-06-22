@@ -159,3 +159,4 @@ TikTokDownloader
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://requests.readthedocs.io/en/latest/
 * https://github.com/B1gM8c/X-Bogus
+* https://fastapi.tiangolo.com/zh/
