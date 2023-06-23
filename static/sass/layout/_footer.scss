@@ -6,33 +6,33 @@
 
 /* Footer */
 
-#footer {
-  #sidebar + #wrapper + & {
-    margin-left: _size(sidebar-width);
+	#footer {
+		#sidebar + #wrapper + & {
+			margin-left: _size(sidebar-width);
 
-    @include breakpoint('<=large') {
-      margin-left: 0;
-    }
-  }
+			@include breakpoint('<=large') {
+				margin-left: 0;
+			}
+		}
 
-  > .inner {
-    a {
-      border-bottom-color: _palette(border);
+		> .inner {
+			a {
+				border-bottom-color: _palette(border);
 
-      &:hover {
-        border-bottom-color: transparent;
-      }
-    }
+				&:hover {
+					border-bottom-color: transparent;
+				}
+			}
 
-    .menu {
-      font-size: 0.8em;
-      color: _palette(border);
-    }
-  }
+			.menu {
+				font-size: 0.8em;
+				color: _palette(border);
+			}
+		}
 
-  #header + #wrapper + & {
-    > .inner {
-      margin: 0 auto;
-    }
-  }
-}
+		#header + #wrapper + & {
+			> .inner {
+				margin: 0 auto;
+			}
+		}
+	}

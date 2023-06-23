@@ -6,68 +6,68 @@
 
 /* Icon */
 
-.icon {
-  @include icon;
-  border-bottom: none;
-  position: relative;
+	.icon {
+		@include icon;
+		border-bottom: none;
+		position: relative;
 
-  > .label {
-    display: none;
-  }
+		> .label {
+			display: none;
+		}
 
-  &:before {
-    line-height: inherit;
-  }
+		&:before {
+			line-height: inherit;
+		}
 
-  &.solid {
-    &:before {
-      font-weight: 900;
-    }
-  }
+		&.solid {
+			&:before {
+				font-weight: 900;
+			}
+		}
 
-  &.brands {
-    &:before {
-      font-family: 'Font Awesome 5 Brands';
-    }
-  }
+		&.brands {
+			&:before {
+				font-family: 'Font Awesome 5 Brands';
+			}
+		}
 
-  &.major {
-    width: 2.5em;
-    height: 2.5em;
-    display: block;
-    background: _palette(fg-bold);
-    border-radius: 100%;
-    color: _palette(bg);
-    text-align: center;
-    line-height: 2.5em;
-    margin: 0 0 (_size(element-margin) * 0.65) 0;
+		&.major {
+			width: 2.5em;
+			height: 2.5em;
+			display: block;
+			background: _palette(fg-bold);
+			border-radius: 100%;
+			color: _palette(bg);
+			text-align: center;
+			line-height: 2.5em;
+			margin: 0 0 (_size(element-margin) * 0.65) 0;
 
-    &:before {
-      font-size: 1.25em;
+			&:before {
+				font-size: 1.25em;
 
-      .wrapper.style1 & {
-        color: _palette(accent1);
-      }
+				.wrapper.style1 & {
+					color: _palette(accent1);
+				}
 
-      .wrapper.style1-alt & {
-        color: _palette(accent1-alt);
-      }
+				.wrapper.style1-alt & {
+					color: _palette(accent1-alt);
+				}
 
-      .wrapper.style2 & {
-        color: _palette(accent2);
-      }
+				.wrapper.style2 & {
+					color: _palette(accent2);
+				}
 
-      .wrapper.style2-alt & {
-        color: _palette(accent2-alt);
-      }
+				.wrapper.style2-alt & {
+					color: _palette(accent2-alt);
+				}
 
-      .wrapper.style3 & {
-        color: _palette(accent3);
-      }
+				.wrapper.style3 & {
+					color: _palette(accent3);
+				}
 
-      .wrapper.style3-alt & {
-        color: _palette(accent3-alt);
-      }
-    }
-  }
-}
+				.wrapper.style3-alt & {
+					color: _palette(accent3-alt);
+				}
+			}
+		}
+	}

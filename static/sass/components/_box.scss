@@ -6,21 +6,21 @@
 
 /* Box */
 
-.box {
-  border-radius: _size(border-radius);
-  border: solid _size(border-width) _palette(border);
-  margin-bottom: _size(element-margin);
-  padding: 1.5em;
+	.box {
+		border-radius: _size(border-radius);
+		border: solid _size(border-width) _palette(border);
+		margin-bottom: _size(element-margin);
+		padding: 1.5em;
 
-  > :last-child,
-  > :last-child > :last-child,
-  > :last-child > :last-child > :last-child {
-    margin-bottom: 0;
-  }
+		> :last-child,
+		> :last-child > :last-child,
+		> :last-child > :last-child > :last-child {
+			margin-bottom: 0;
+		}
 
-  &.alt {
-    border: 0;
-    border-radius: 0;
-    padding: 0;
-  }
-}
+		&.alt {
+			border: 0;
+			border-radius: 0;
+			padding: 0;
+		}
+	}

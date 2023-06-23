@@ -14,45 +14,45 @@
 
 // Breakpoints.
 
-@include breakpoints((
-        xlarge: (1281px, 1680px),
-        large: (981px, 1280px),
-        medium: (737px, 980px),
-        small: (481px, 736px),
-        xsmall: (361px, 480px),
-        xxsmall: (null, 360px)
-));
+	@include breakpoints((
+		xlarge:   ( 1281px,  1680px ),
+		large:    ( 981px,   1280px ),
+		medium:   ( 737px,   980px  ),
+		small:    ( 481px,   736px  ),
+		xsmall:   ( 361px,   480px  ),
+		xxsmall:  ( null,    360px  )
+	));
 
 // Base.
 
-@import 'base/reset';
-@import 'base/page';
-@import 'base/typography';
+	@import 'base/reset';
+	@import 'base/page';
+	@import 'base/typography';
 
 // Component.
 
-@import 'components/row';
-@import 'components/box';
-@import 'components/button';
-@import 'components/features';
-@import 'components/form';
-@import 'components/icon';
-@import 'components/image';
-@import 'components/list';
-@import 'components/actions';
-@import 'components/contact';
-@import 'components/icons';
-@import 'components/menu';
-@import 'components/section';
-@import 'components/split';
-@import 'components/spotlights';
-@import 'components/table';
-@import 'components/wrapper';
+	@import 'components/row';
+	@import 'components/box';
+	@import 'components/button';
+	@import 'components/features';
+	@import 'components/form';
+	@import 'components/icon';
+	@import 'components/image';
+	@import 'components/list';
+	@import 'components/actions';
+	@import 'components/contact';
+	@import 'components/icons';
+	@import 'components/menu';
+	@import 'components/section';
+	@import 'components/split';
+	@import 'components/spotlights';
+	@import 'components/table';
+	@import 'components/wrapper';
 
 // Layout.
 
-@import 'layout/header';
-@import 'layout/wrapper';
-@import 'layout/footer';
-@import 'layout/sidebar';
-@import 'layout/intro';
+	@import 'layout/header';
+	@import 'layout/wrapper';
+	@import 'layout/footer';
+	@import 'layout/sidebar';
+	@import 'layout/intro';

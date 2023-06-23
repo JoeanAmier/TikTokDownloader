@@ -6,25 +6,25 @@
 
 /* Icons */
 
-ul.icons {
-  cursor: default;
-  list-style: none;
-  padding-left: 0;
+	ul.icons {
+		cursor: default;
+		list-style: none;
+		padding-left: 0;
 
-  li {
-    display: inline-block;
-    padding: 0 0.75em 0 0;
+		li {
+			display: inline-block;
+			padding: 0 0.75em 0 0;
 
-    &:last-child {
-      padding-right: 0;
-    }
+			&:last-child {
+				padding-right: 0;
+			}
 
-    > a, > span {
-      border: 0;
+			> a, > span {
+				border: 0;
 
-      .label {
-        display: none;
-      }
-    }
-  }
-}
+				.label {
+					display: none;
+				}
+			}
+		}
+	}

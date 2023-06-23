@@ -6,55 +6,55 @@
 
 /* Image */
 
-.image {
-  border-radius: _size(border-radius);
-  border: 0;
-  display: inline-block;
-  position: relative;
+	.image {
+		border-radius: _size(border-radius);
+		border: 0;
+		display: inline-block;
+		position: relative;
 
-  img {
-    border-radius: _size(border-radius);
-    display: block;
-  }
+		img {
+			border-radius: _size(border-radius);
+			display: block;
+		}
 
-  &.left,
-  &.right {
-    max-width: 40%;
+		&.left,
+		&.right {
+			max-width: 40%;
 
-    img {
-      width: 100%;
-    }
-  }
+			img {
+				width: 100%;
+			}
+		}
 
-  &.left {
-    float: left;
-    margin: 0 1.5em 1em 0;
-    top: 0.25em;
-  }
+		&.left {
+			float: left;
+			margin: 0 1.5em 1em 0;
+			top: 0.25em;
+		}
 
-  &.right {
-    float: right;
-    margin: 0 0 1em 1.5em;
-    top: 0.25em;
-  }
+		&.right {
+			float: right;
+			margin: 0 0 1em 1.5em;
+			top: 0.25em;
+		}
 
-  &.fit {
-    display: block;
-    margin: 0 0 _size(element-margin) 0;
-    width: 100%;
+		&.fit {
+			display: block;
+			margin: 0 0 _size(element-margin) 0;
+			width: 100%;
 
-    img {
-      width: 100%;
-    }
-  }
+			img {
+				width: 100%;
+			}
+		}
 
-  &.main {
-    display: block;
-    margin: 0 0 (_size(element-margin) * 1.5) 0;
-    width: 100%;
+		&.main {
+			display: block;
+			margin: 0 0 (_size(element-margin) * 1.5) 0;
+			width: 100%;
 
-    img {
-      width: 100%;
-    }
-  }
-}
+			img {
+				width: 100%;
+			}
+		}
+	}
