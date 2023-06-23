@@ -53,7 +53,8 @@ TikTokDownloader
 │    ├─ main_complete.py                   // 单线程启动入口，支持所有功能
 │    ├─ main_multiprocess.py               // 多进程启动入口，仅支持多账号批量下载功能
 │    └─ main_web_UI.py                     // Web UI 启动入口，仅支持单独下载作品功能
-└─ static                                  // 静态资源文件夹
+├─ static                                  // 静态资源文件夹
+└─ templates                               // HTML 模板文件夹
 ```
 
 # 📋 使用说明
