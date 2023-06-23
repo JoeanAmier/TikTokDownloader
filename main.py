@@ -6,8 +6,8 @@ from src.main_web_UI import WebUI
 
 def main():
     try:
-        mode = int(input(
-            "请输入 TikTokDownloader 运行模式: \n1. 单线程终端模式: 支持所有功能\n2. 多进程终端模式: 仅支持多账号批量下载功能\n3. Web UI 交互模式: 仅支持单独下载作品功能\n"))
+        mode = int(
+            input("请输入 TikTokDownloader 运行模式: \n1. 单线程终端模式\n2. 多进程终端模式\n3. Web UI 交互模式\n"))
     except ValueError:
         return
     # mode = 3
