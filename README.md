@@ -1,5 +1,5 @@
 <div align="center">
-<img src="static/TikTokDownloader.png" alt="TikTokDownloader" height="128" width="128"><br>
+<img src="static/images/TikTokDownloader.png" alt="TikTokDownloader" height="128" width="128"><br>
 <h1>TikTokDownloader</h1>
 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">
 <img src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader" alt="GNU General Public License v3.0">
@@ -104,7 +104,7 @@ TikTokDownloader
 |                   dynamic                   |              list\[bool\]              |                                   是否下载动态封面图，默认值：False                                   |
 |                  original                   |              list\[bool\]              |                                   是否下载静态封面图，默认值：False                                   |
 |                   proxies                   |              list\[str\]               |                                   代理地址，设置为空字符串代表不使用代理                                   |
-|                     log                     |                  bool                  |                                    是否记录日志，默认值：False                                     |
+|                     log                     |                  bool                  |                                   是否记录运行日志，默认值：False                                    |
 
 # 📄 配置文件示例
 
