@@ -2372,6 +2372,7 @@ select {
 
 textarea {
     padding: 0.75em 1em;
+    resize: none;
 }
 
 body.is-ie textarea {
