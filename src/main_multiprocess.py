@@ -1,5 +1,5 @@
 from src.main_complete import TikTok
 
 
-class Concurrency(TikTok):
+class Pool(TikTok):
     pass
