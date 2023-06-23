@@ -32,7 +32,7 @@
 * 🟢 目前全部功能已通过测试，均可正常使用
 * 🟢 正在开发 Web UI 交互界面
 * 🟡 准备开发多进程模式，提高多账号批量下载效率
-* 🟡 如果单独下载功能正常，批量下载功能异常，请尝试使用代理，可能是IP被封了（作者现状）
+* 🟡 如果单独下载功能正常，批量下载功能异常，请尝试使用代理，可能是IP被封了
 * 🔴 暂未发现影响使用的Bug，如果在使用过程中发现Bug，请及时告知作者修复
 
 # 📁 项目结构
@@ -52,7 +52,7 @@ TikTokDownloader
 │    ├─ StringCleaner.py                   // 非法字符处理模块
 │    ├─ main_complete.py                   // 单线程启动入口，支持所有功能
 │    ├─ main_multiprocess.py               // 多进程启动入口，仅支持多账号批量下载功能
-│    └─ main_web_UI.py                     // Web UI 启动入口，不支持直播下载
+│    └─ main_web_UI.py                     // Web UI 启动入口，仅支持单独下载作品功能
 └─ static                                  // 静态资源文件夹
 ```
 
@@ -94,7 +94,7 @@ TikTokDownloader
 |                   latest                    |                  str                   |                作品最晚发布日期，格式: 2023/1/1，设置为空字符串代表不限制<br>**属于 accounts 子参数**                |
 | accounts<br>\[url, mode, earliest, latest\] | list\[list<br>\[str, str, str, str\]\] |                账号链接、批量下载类型、最早发布日期、最晚发布日期<br>账号批量下载时使用，支持多账号，以列表格式包含四个参数                 |
 |                    root                     |                  str                   |                                 作品文件和数据记录保存路径，默认值：当前路径                                  |
-|                   folder                    |                  str                   |                              单独下载作品时，保存的文件夹名称，默认值：Download                              |
+|                   folder                    |                  str                   |                              单独下载作品时，储存文件夹的名称，默认值：Download                              |
 |                    name                     |                  str                   | 文件保存时的命名规则，值之间使用空格分隔<br>默认值：发布时间-作者-描述<br>id: 唯一值；desc: 描述；create_time: 发布时间；author: 作者 |
 |                    time                     |                  str                   |                 发布时间的格式，默认值：年-月-日 时.分.秒<br>（注意：Windows下文件名不能包含英文冒号“:”）                  |
 |                    split                    |                  str                   |                                    文件命名的分隔符，默认值：“-”                                     |
