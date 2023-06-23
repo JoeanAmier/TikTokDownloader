@@ -30,10 +30,9 @@ def reset(function):
 
 
 class Download:
-    headers = {
+    UA = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
-        'referer': 'https://www.douyin.com/',
-    }  # 请求头
+    }  # 下载请求头
     video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"  # 官方视频下载接口
     item_ids_api = "https://www.douyin.com/aweme/v1/web/aweme/detail/"  # 官方信息接口
     clean = Cleaner()  # 过滤错误字符
@@ -41,6 +40,9 @@ class Download:
     chunk = 1048576  # 单次下载文件大小，单位字节
 
     def __init__(self, log: LoggerManager, save):
+        self.headers = self.UA | {
+            'referer': 'https://www.douyin.com/',
+        }  # 请求头
         self.xb = XBogus()
         self.log = log  # 日志记录模块
         self.data = save  # 详细数据记录模块
@@ -333,7 +335,7 @@ class Download:
                         image,
                         stream=True,
                         proxies=self.proxies,
-                        headers=self.headers) as response:
+                        headers=self.UA) as response:
                     name = self.get_name(item)
                     self.save_file(
                         response,
@@ -357,7 +359,7 @@ class Download:
                     params=params,
                     stream=True,
                     proxies=self.proxies,
-                    headers=self.headers) as response:
+                    headers=self.UA) as response:
                 name = self.get_name(item)
                 self.save_file(response, root, name, "mp4")
             sleep()
@@ -371,7 +373,7 @@ class Download:
                     u,
                     stream=True,
                     proxies=self.proxies,
-                    headers=self.headers) as response:
+                    headers=self.UA) as response:
                 self.save_file(
                     response,
                     root,
@@ -389,7 +391,7 @@ class Download:
                     u,
                     stream=True,
                     proxies=self.proxies,
-                    headers=self.headers) as response:
+                    headers=self.UA) as response:
                 self.save_file(
                     response,
                     root,
@@ -400,7 +402,7 @@ class Download:
                     u,
                     stream=True,
                     proxies=self.proxies,
-                    headers=self.headers) as response:
+                    headers=self.UA) as response:
                 self.save_file(
                     response,
                     root,
@@ -473,13 +475,10 @@ class Download:
 
     def download_live(self, link: str, name: str):
         """下载直播，不需要登录信息"""
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.51",
-        }
         self.create_folder("Live", True)
         with requests.get(
                 link,
                 stream=True,
-                proxies=self.proxies, headers=headers) as response:
+                proxies=self.proxies, headers=self.UA) as response:
             self.log.info("开始下载直播视频")
             self.save_file(response, f"{self.root}/Live", name, "flv")
