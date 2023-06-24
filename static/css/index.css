@@ -4,10 +4,18 @@
     justify-content: center;
 }
 
-#workspace {
-    flex: 1;
+#preview {
+    width: 100%;
+    max-width: 565px;
+    height: 100%;
+    max-height: 565px;
+    background-color: #fff1f0;
+    border: 1px solid #001858;
 }
 
-#preview {
-    border: 2px solid #001858;
+#preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
+
