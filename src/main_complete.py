@@ -26,8 +26,8 @@ class TikTok:
         self.download = None
         self.settings = Settings()
         self.accounts = []  # 账号数据
-        self.__number = 0  # 账号数量
-        self.__data = {}  # 其他配置数据
+        self._number = 0  # 账号数量
+        self._data = {}  # 其他配置数据
 
     def check_config(self):
         print("正在读取配置文件！")
@@ -51,9 +51,9 @@ class TikTok:
                 key[i] = value[i][0] if index else value[i]
 
         self.accounts = settings["accounts"]
-        self.__number = len(self.accounts)
+        self._number = len(self.accounts)
         get_data(
-            self.__data,
+            self._data,
             settings,
             ("root",
              "folder",
@@ -63,7 +63,7 @@ class TikTok:
              "save",
              "log"))
         get_data(
-            self.__data,
+            self._data,
             settings,
             ("music",
              "cookie",
@@ -75,8 +75,8 @@ class TikTok:
         return True
 
     def batch_acquisition(self):
-        self.record.info(f"共有 {self.__number} 个账号的作品等待下载")
-        for index in range(self.__number):
+        self.record.info(f"共有 {self._number} 个账号的作品等待下载")
+        for index in range(self._number):
             self.account_download(index + 1, *self.accounts[index])
 
     def account_download(
@@ -96,8 +96,8 @@ class TikTok:
         self.record.info(f"账号 {self.request.name} 开始批量下载{type_}作品")
         self.download.nickname = self.request.name
         self.download.favorite = self.request.favorite
-        data_root = RecordManager.run(self.__data["root"])
-        save_file = self.DataLogger.get(self.__data["save"], NoneLogger)
+        data_root = RecordManager.run(self._data["root"])
+        save_file = self.DataLogger.get(self._data["save"], NoneLogger)
         with save_file(data_root, self.download.nickname) as data:
             self.download.data = data
             self.download.run(
@@ -108,8 +108,8 @@ class TikTok:
         return True
 
     def single_acquisition(self):
-        data_root = RecordManager.run(self.__data["root"])
-        save_file = self.DataLogger.get(self.__data["save"], NoneLogger)
+        data_root = RecordManager.run(self._data["root"])
+        save_file = self.DataLogger.get(self._data["save"], NoneLogger)
         with save_file(data_root) as data:
             self.download.data = data
             while True:
@@ -147,7 +147,7 @@ class TikTok:
             self.download.download_live(l, f"{data[0]}-{data[1]}")
 
     def initialize(self, root="./", folder="Log", name="%Y-%m-%d %H.%M.%S"):
-        self.record = LoggerManager() if self.__data["log"] else BaseLogger()
+        self.record = LoggerManager() if self._data["log"] else BaseLogger()
         self.record.root = root  # 日志根目录
         self.record.folder = folder  # 日志文件夹名称
         self.record.name = name  # 日志文件名称格式
@@ -157,17 +157,17 @@ class TikTok:
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
 
     def set_parameters(self):
-        self.download.root = self.__data["root"]
-        self.download.folder = self.__data["folder"]
-        self.download.name = self.__data["name"]
-        self.download.music = self.__data["music"]
-        self.download.time = self.__data["time"]
-        self.download.split = self.__data["split"]
-        self.download.cookie = self.__data["cookie"]
-        self.request.cookie = self.__data["cookie"]
-        self.download.dynamic = self.__data["dynamic"]
-        self.download.original = self.__data["original"]
-        self.request.proxies = self.__data["proxies"]
+        self.download.root = self._data["root"]
+        self.download.folder = self._data["folder"]
+        self.download.name = self._data["name"]
+        self.download.music = self._data["music"]
+        self.download.time = self._data["time"]
+        self.download.split = self._data["split"]
+        self.download.cookie = self._data["cookie"]
+        self.request.cookie = self._data["cookie"]
+        self.download.dynamic = self._data["dynamic"]
+        self.download.original = self._data["original"]
+        self.request.proxies = self._data["proxies"]
         self.download.proxies = self.request.proxies
 
     def run(self):
