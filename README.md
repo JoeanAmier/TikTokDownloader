@@ -7,6 +7,7 @@
 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">
 <img src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader" alt="TikTokDownloader">
 </a>
+<img src="https://img.shields.io/badge/%E8%BD%BB%E9%87%8F%E7%BA%A7-%E9%A1%B9%E7%9B%AE-green" alt="轻量级项目">
 </div>
 <br>
 <p>🔥 <b>抖音视频/图集/直播下载工具：</b>批量下载抖音账号发布页或者喜欢页的作品；单独下载抖音链接对应的作品；获取抖音直播推流地址；下载抖音直播视频。</p>
@@ -76,6 +77,8 @@ TikTokDownloader
 | 下载链接对应作品  |   ❌    |
 | 提取直播推流地址  |   ❌    |
 |  下载直播视频   |   ❌    |
+
+<hr>
 
 **注意事项：**
 
