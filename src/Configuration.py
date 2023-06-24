@@ -22,7 +22,6 @@ class Settings:
             "proxies": ["", ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
             "log": False  # 是否启用日志
         }  # 默认配置
-        print(os.getcwd())
 
     def create(self):
         """创建默认配置文件"""
