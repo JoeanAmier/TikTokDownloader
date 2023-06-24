@@ -58,7 +58,7 @@
             <h2>参数配置</h2>
             <div class="style1">
                 <section>
-                    <form id="parameter">
+                    <form onsubmit="return false">
                         <div class="fields">
                             <div class="field third">
                                 <label for="root">根目录(root)</label>
@@ -143,7 +143,7 @@
             <h2>下载作品</h2>
             <div class="style1">
                 <section>
-                    <form id="solo_form">
+                    <form id="solo_form" onsubmit="return false">
                         <div class="fields">
                             <div class="field half">
                                 <label for="solo_url">请输入作品链接：</label>
@@ -152,15 +152,18 @@
                                 </label>
                                 <br>
                                 <ul class="actions">
-                                    <li><input type="button" class="button submit" value="读取剪贴板"></li>
-                                    <li><input type="reset" class="button submit" value="清空输入框"></li>
+                                    <li><input type="button" class="button submit" value="读取剪贴板"
+                                               onclick="solo_input()"></li>
+                                    <li><input type="button" class="button submit" value="清空输入框"
+                                               onclick="solo_reset()"></li>
                                 </ul>
                                 <ul class="actions">
-                                    <li><input type="button" class="button submit" value="获取下载链接"></li>
+                                    <li><input type="button" class="button submit" value="获取下载链接"
+                                               onclick="solo_post()"></li>
                                     <li><input type="button" class="button submit" value="直接下载"></li>
                                 </ul>
                                 <label for="solo_state">运行状态：</label>
-                                <textarea name="solo_state" id="solo_state" rows="8" readonly></textarea>
+                                <textarea id="solo_state" rows="8" readonly></textarea>
                             </div>
                             <div class="field half">
                                 <label>作品预览：</label>
@@ -181,7 +184,7 @@
             <h2>直播提取</h2>
             <div class="style1">
                 <section>
-                    <form id="live_form">
+                    <form id="live_form" onsubmit="return false">
                         <div class="fields">
                             <div class="field half">
                                 <label for="live_url">请输入直播链接：</label>
@@ -190,14 +193,16 @@
                                 </label>
                                 <br>
                                 <ul class="actions">
-                                    <li><input type="button" class="button submit" value="读取剪贴板"></li>
-                                    <li><input type="reset" class="button submit" value="清空输入框"></li>
+                                    <li><input type="button" class="button submit" value="读取剪贴板"
+                                               onclick="live_input()"></li>
+                                    <li><input type="button" class="button submit" value="清空输入框"
+                                               onclick="live_reset()"></li>
                                 </ul>
                                 <ul class="actions">
                                     <li><input type="button" class="button submit" value="提取直播推流地址"></li>
                                 </ul>
                                 <label for="live_state">运行状态：</label>
-                                <textarea name="live_state" id="live_state" rows="8" readonly></textarea>
+                                <textarea id="live_state" rows="8" readonly></textarea>
                             </div>
                             <div class="field half">
                                 <label>作品预览：</label>
