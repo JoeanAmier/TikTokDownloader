@@ -3,3 +3,11 @@
     align-items: center;
     justify-content: center;
 }
+
+#workspace {
+    flex: 1;
+}
+
+#preview {
+    border: 2px solid #001858;
+}

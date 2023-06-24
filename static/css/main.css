@@ -2267,7 +2267,7 @@ form > .fields > .field.quarter {
 @media screen and (max-width: 480px) {
 
     form > .fields {
-        width: calc(100% + 3em);
+        width: calc(100% + 1.5em);
         margin: -1.5em 0 2em -1.5em;
     }
 
