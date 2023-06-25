@@ -16,7 +16,7 @@ class Cookie:
         else:
             self.extract(cookie, index)
 
-    def extract(self, cookie, index):
+    def extract(self, cookie: str, index: int):
         get_key = ("passport_csrf_token", "odin_tt")
         data = {}
         for i in cookie.split('; '):
