@@ -480,7 +480,7 @@ class Download:
         return True
 
     def download_live(self, link: str, name: str):
-        """下载直播，不需要登录信息"""
+        """下载直播，不需要Cookie信息"""
         self.create_folder("Live", True)
         with requests.get(
                 link,
