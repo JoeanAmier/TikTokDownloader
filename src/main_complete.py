@@ -182,18 +182,26 @@ class TikTok:
         self.set_parameters()
         select = input(
             "请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n3. 获取直播推流地址\n输入序号：")
-        match select:
-            case "1":
-                self.record.info("已选择批量下载作品模式")
-                self.batch_acquisition()
-            case "2":
-                self.record.info("已选择单独下载作品模式")
-                self.single_acquisition()
-            case "3":
-                self.record.info("已选择直播下载模式")
-                self.live_acquisition()
-            case _:
-                pass
+        """兼容旧版本的Python，版本小于3.10不支持match语法"""
+        # match select:
+        #     case "1":
+        #         self.record.info("已选择批量下载作品模式")
+        #         self.batch_acquisition()
+        #     case "2":
+        #         self.record.info("已选择单独下载作品模式")
+        #         self.single_acquisition()
+        #     case "3":
+        #         self.record.info("已选择直播下载模式")
+        #         self.live_acquisition()
+        if select == "1":
+            self.record.info("已选择批量下载作品模式")
+            self.batch_acquisition()
+        elif select == "2":
+            self.record.info("已选择单独下载作品模式")
+            self.single_acquisition()
+        elif select == "3":
+            self.record.info("已选择直播下载模式")
+            self.live_acquisition()
         self.record.info("程序运行结束")
 
 
