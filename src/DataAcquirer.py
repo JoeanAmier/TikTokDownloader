@@ -469,4 +469,5 @@ class UserData:
             data["data"]["data"][0]["owner"]["nickname"])
         title = self.clean.filter(data["data"]["data"][0]["title"])
         url = data["data"]["data"][0]["stream_url"]["flv_pull_url"]
-        return nickname, title, url
+        cover = data["data"]["data"][0]["cover"]["url_list"][0]
+        return nickname, title, url, cover
