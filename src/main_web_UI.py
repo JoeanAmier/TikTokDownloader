@@ -36,7 +36,6 @@ class WebUI(TikTok):
         convert = {}
         for i, j in parameters.items():
             convert[i] = True if j == "on" else j
-        print(convert)
         settings = self.settings.read()
         update_settings(
             settings,
@@ -63,7 +62,6 @@ class WebUI(TikTok):
              "original",
              "proxies"), (False, False, False, ""),
             True)
-        print(settings)
         self.settings.update(settings)
         if convert.get("cookie", False):
             self.cookie.extract(convert["cookie"], 0)
