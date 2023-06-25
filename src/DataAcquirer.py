@@ -471,3 +471,41 @@ class UserData:
         url = data["data"]["data"][0]["stream_url"]["flv_pull_url"]
         cover = data["data"]["data"][0]["cover"]["url_list"][0]
         return nickname, title, url, cover
+
+
+class CommentData:
+    comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"
+    params = {
+        "device_platform": "webapp",
+        "aid": "6383",
+        "channel": "channel_pc_web",
+        "aweme_id": "7246706009123720503",
+        "cursor": "0",
+        "count": "20",
+        "item_type": "0",
+        "insert_ids": "",
+        "rcFT": "",
+        "pc_client_type": "1",
+        "version_code": "170400",
+        "version_name": "17.4.0",
+        "cookie_enabled": "true",
+        "screen_width": "1536",
+        "screen_height": "864",
+        "browser_language": "zh-CN",
+        "browser_platform": "Win32",
+        "browser_name": "Edge",
+        "browser_version": "114.0.1823.58",
+        "browser_online": "true",
+        "engine_name": "Blink",
+        "engine_version": "114.0.0.0",
+        "os_name": "Windows",
+        "os_version": "10",
+        "cpu_core_num": "16",
+        "device_memory": "8",
+        "platform": "PC",
+        "downlink": "10",
+        "effective_type": "4g",
+        "round_trip_time": "50",
+        "webid": "7248584490175383100",
+        "msToken": "FX-6vWAx3sPmINCegC_qzzS46gfcN9LHHoaaKBtf8DYrBSmGXT803q4j0uzx0fDkFFUj1bPrkfA6O1tBTwUJi4RZGz3OkqEqI8RtIBu1X1NBeT60BHItrM2gK3jRVdI=",
+        "X-Bogus": "DFSzswVL6lJANSwctnrmvGUClLxV"}

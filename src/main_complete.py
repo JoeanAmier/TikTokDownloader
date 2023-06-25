@@ -100,9 +100,9 @@ class TikTok:
         save_file = self.DataLogger.get(self._data["save"], NoneLogger)
         with save_file(data_root, self.download.nickname) as data:
             self.download.data = data
-            self.download.run(
-                self.request.video_data,
-                self.request.image_data)
+            self.download.run(num,
+                              self.request.video_data,
+                              self.request.image_data)
         self.record.info(f"账号 {self.request.name} 批量下载{type_}作品结束")
         self.download._nickname, self.request.favorite, self.download.favorite = None, None, None  # 重置数据
         return True
