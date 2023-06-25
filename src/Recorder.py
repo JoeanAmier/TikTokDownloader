@@ -121,26 +121,20 @@ class LoggerManager(BaseLogger):
             format=format_,
             encoding="UTF-8")
 
-    def info(self, text: str, output=True, web_mode=False):
+    def info(self, text: str, output=True):
         if output:
             print(text)
         self.log.info(text)
-        if web_mode:
-            return text
 
-    def warning(self, text: str, output=True, web_mode=False):
+    def warning(self, text: str, output=True):
         if output:
             print(text)
         self.log.warning(text)
-        if web_mode:
-            return text
 
-    def error(self, text: str, output=True, web_mode=False):
+    def error(self, text: str, output=True):
         if output:
             print(text)
         self.log.error(text)
-        if web_mode:
-            return text
 
 
 class NoneLogger:
