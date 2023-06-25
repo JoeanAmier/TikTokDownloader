@@ -146,12 +146,17 @@ class TikTok:
         if l := choice_quality(data[2]):
             self.download.download_live(l, f"{data[0]}-{data[1]}")
 
-    def initialize(self, root="./", folder="Log", name="%Y-%m-%d %H.%M.%S"):
+    def initialize(
+            self,
+            root="./",
+            folder="Log",
+            name="%Y-%m-%d %H.%M.%S",
+            filename=None):
         self.record = LoggerManager() if self._data["log"] else BaseLogger()
         self.record.root = root  # 日志根目录
         self.record.folder = folder  # 日志文件夹名称
         self.record.name = name  # 日志文件名称格式
-        self.record.run()
+        self.record.run(filename=filename)
         self.request = UserData(self.record)
         self.download = Download(self.record, None)
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
