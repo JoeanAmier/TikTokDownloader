@@ -280,7 +280,7 @@ class Download:
         """
         提取作品详细信息
         视频格式: 作品ID, 描述, 创建时间, 作者, 视频ID, [音乐名称, 音乐链接], 动态封面图, 静态封面图
-        图集格式: 作品ID, 描述, 创建时间, 作者, 图集链接, [音乐名称, 音乐链接]
+        图集格式: 作品ID, 描述, 创建时间, 作者, [图集链接], [音乐名称, 音乐链接]
         """
         for item in data:
             item = self.get_data(item)
@@ -467,17 +467,16 @@ class Download:
         self.nickname = self.clean.filter(data["author"]["nickname"])
         if data["images"]:
             self.get_info([id_], "Image")
-            if download:
-                self.download_images()
-            else:
+            if not download:
                 return self.image_data
+            self.download_images()
+            return self.image_data[0][4][0]
         else:
             self.get_info([id_], "Video")
-            if download:
-                self.download_video()
-            else:
+            if not download:
                 return self.video_data
-        return True
+            self.download_video()
+            return self.video_data[0][7]
 
     def download_live(self, link: str, name: str):
         """下载直播，不需要Cookie信息"""
