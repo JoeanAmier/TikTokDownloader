@@ -32,7 +32,7 @@
 
 # 📈 项目状态
 
-* 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已通过测试，所有功能均可正常使用
+* 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已通过测试，功能均可正常使用
 * 🟢 已完成 Web UI 交互界面
 * 🟡 准备开发多进程模式，提高多账号批量下载效率
 * 🟡 准备加入作品评论抓取功能
