@@ -454,7 +454,7 @@ class Download:
 
     @reset
     @check_cookie
-    def run_alone(self, id_: str):
+    def run_alone(self, id_: str, download=True):
         """单独下载"""
         if not self.folder:
             self.log.warning("未设置下载文件夹名称")
@@ -462,15 +462,21 @@ class Download:
         self.create_folder(self.folder)
         data = self.get_data(id_)
         if not data:
-            print("下载作品失败！")
+            self.log.warning("获取作品详细信息失败！")
             return False
         self.nickname = self.clean.filter(data["author"]["nickname"])
         if data["images"]:
             self.get_info([id_], "Image")
-            self.download_images()
+            if download:
+                self.download_images()
+            else:
+                return self.image_data
         else:
             self.get_info([id_], "Video")
-            self.download_video()
+            if download:
+                self.download_video()
+            else:
+                return self.video_data
         return True
 
     def download_live(self, link: str, name: str):
