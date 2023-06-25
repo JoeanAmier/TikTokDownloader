@@ -7,14 +7,17 @@ class Cookie:
 
     def run(self):
         """提取 Cookie 并写入配置文件"""
-        get_key = ("passport_csrf_token", "odin_tt")
-        data = {}
         cookie = input("请粘贴 Cookie 内容：")
         try:
             index = int(input("请输入该 Cookie 的写入位置(索引，默认为0)：") or 0)
         except ValueError:
             print("写入位置错误！")
-            return
+        else:
+            self.extract(cookie, index)
+
+    def extract(self, cookie, index):
+        get_key = ("passport_csrf_token", "odin_tt")
+        data = {}
         for i in cookie.split('; '):
             text = i.split("=", 1)
             try:
