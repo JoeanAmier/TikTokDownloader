@@ -7,7 +7,8 @@ class Cookie:
 
     def run(self):
         """提取 Cookie 并写入配置文件"""
-        cookie = input("请粘贴 Cookie 内容：")
+        if not (cookie := input("请粘贴 Cookie 内容：")):
+            return
         try:
             index = int(input("请输入该 Cookie 的写入位置(索引，默认为0)：") or 0)
         except ValueError:
