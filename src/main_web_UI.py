@@ -29,16 +29,18 @@ class WebUI(TikTok):
                 index=False):
             for i, j in enumerate(keys):
                 if index:
-                    old_data[j][0] = {
-                        "on": True, None: False, "": ""}[
-                        new_data.get(j)]
+                    old_data[j][0] = new_data.get(j, values[i])
                 else:
                     old_data[j] = new_data.get(j, values[i])
 
+        convert = {}
+        for i, j in parameters.items():
+            convert[i] = True if j == "on" else j
+        print(convert)
         settings = self.settings.read()
         update_settings(
             settings,
-            parameters,
+            convert,
             ("root",
              "folder",
              "name",
@@ -55,15 +57,16 @@ class WebUI(TikTok):
              False))
         update_settings(
             settings,
-            parameters,
+            convert,
             ("music",
              "dynamic",
              "original",
-             "proxies"), None,
+             "proxies"), (False, False, False, ""),
             True)
+        print(settings)
         self.settings.update(settings)
-        if parameters.get("cookie", False):
-            self.cookie.extract(parameters["cookie"], 0)
+        if convert.get("cookie", False):
+            self.cookie.extract(convert["cookie"], 0)
 
     def get_data(self, data) -> dict:
         def get_video_url(item):
