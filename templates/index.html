@@ -1,252 +1,252 @@
-<!DOCTYPE HTML >
+<!DOCTYPE HTML>
 <html lang="zh-Hans-CN">
 <head>
-    <title> TikTokDownloader < /title >
-        <meta charset = "utf-8" / >
-        <meta name = "viewport" content = "width=device-width, initial-scale=1, user-scalable=no" / >
-        <link rel = "shortcut icon" href = "static/images/TikTokDownloader.ico" >
-        <link rel = "stylesheet" href = "static/css/main.css" / >
-        <link rel = "stylesheet" href = "static/css/index.css" / >
-        <noscript >
-        <link rel = "stylesheet" href = "static/css/noscript.css" / >
-        < / noscript >
-        < / head >
-        <body class = "is-preload" >
+    <title>TikTokDownloader</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="shortcut icon" href="static/images/TikTokDownloader.ico">
+    <link rel="stylesheet" href="static/css/main.css"/>
+    <link rel="stylesheet" href="static/css/index.css"/>
+    <noscript>
+        <link rel="stylesheet" href="static/css/noscript.css"/>
+    </noscript>
+</head>
+<body class="is-preload">
 
-        <section id = "sidebar" >
-        <div class = "inner" >
-        <nav >
-        <ul >
-        <li > <a href = "#index" > 欢迎使用 < /a > < / li >
-        <li > <a href = "#settings" > 参数配置 < /a > < / li >
-        <li > <a href = "#solo" > 下载作品 < /a > < / li >
-        <li > <a href = "#live" > 直播提取 < /a > < / li >
-        < / ul >
-        < / nav >
-        < / div >
-        < / section >
+<section id="sidebar">
+    <div class="inner">
+        <nav>
+            <ul>
+                <li><a href="#index">欢迎使用</a></li>
+                <li><a href="#settings">参数配置</a></li>
+                <li><a href="#solo">下载作品</a></li>
+                <li><a href="#live">直播提取</a></li>
+            </ul>
+        </nav>
+    </div>
+</section>
 
-        <div id = "wrapper" >
+<div id="wrapper">
 
-        <section id = "index" class = "wrapper style1 fullscreen fade-up" >
-        <div class = "inner" >
-        <div class = "box alt" >
-        <div class = "row gtr-uniform" >
-        <div class = "col-4" > <span class = "image fit" > <img src = "static/images/TikTokDownloader.png"
-        alt = "TikTokDownloader" / > < /span >
-        < / div >
-        <h1 id = "title" class = "col-6" > TikTokDownloader < /h1 >
-        < / div >
-        < / div >
-        <p > <b > 抖音视频 / 图集 / 直播下载工具：< /b > 批量下载抖音账号发布页或者喜欢页的作品；单独下载抖音链接对应的作品；获取抖音直播推流地址；下载抖音直播视频。
-        < / p >
-        <p > <b > 使用者在使用本项目的代码时，请遵守 < a
-        href = "https://github.com/JoeanAmier/TikTokDownloader/blob/master/license" target = "_blank" > GNU
-        General Public License
-        v3.0</a> 开源协议。</b>
-        </p>
-        <ul class="actions">
-        <li><a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest" class="button scrolly"
-        target="_blank">获取最新源码</a>
-        </li>
-        </ul>
-        </div>
-        </section>
-
-        <section id="settings" class="wrapper style2 spotlights">
+    <section id="index" class="wrapper style1 fullscreen fade-up">
         <div class="inner">
-        <h2>参数配置</h2>
-        <div class="style1">
-        <section>
-        <form onsubmit="return false">
-        <div class="fields">
-        <div class="field third">
-        <label for="root">根目录(root)</label>
-        <label>
-        <input type="text" id="root" value="{{ root }}"/>
-        </label>
+            <div class="box alt">
+                <div class="row gtr-uniform">
+                    <div class="col-4"><span class="image fit"><img src="static/images/TikTokDownloader.png"
+                                                                    alt="TikTokDownloader"/></span>
+                    </div>
+                    <h1 id="title" class="col-6">TikTokDownloader</h1>
+                </div>
+            </div>
+            <p><b>抖音视频/图集/直播下载工具：</b>批量下载抖音账号发布页或者喜欢页的作品；单独下载抖音链接对应的作品；获取抖音直播推流地址；下载抖音直播视频。
+            </p>
+            <p><b>使用者在使用本项目的代码时，请遵守 <a
+                    href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license" target="_blank">GNU
+                General Public License
+                v3.0</a> 开源协议。</b>
+            </p>
+            <ul class="actions">
+                <li><a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest" class="button scrolly"
+                       target="_blank">获取最新源码</a>
+                </li>
+            </ul>
         </div>
-        <div class="field third">
-        <label for="folder">保存文件夹名称(folder)</label>
-        <label>
-        <input type="text" id="folder" value="{{ folder }}"/>
-        </label>
-        </div>
-        <div class="field third">
-        <label for="name">文件名称格式(name)</label>
-        <label>
-        <input type="text" id="name" value="{{ name }}"/>
-        </label>
-        </div>
-        <div class="field third">
-        <label for="time">发布时间格式(time)</label>
-        <label>
-        <input type="text" id="time" value="{{ time }}"/>
-        </label>
-        </div>
-        <div class="field third">
-        <label for="split">文件名称分隔符(split)</label>
-        <label>
-        <input type="text" id="split" value="{{ split }}"/>
-        </label>
-        </div>
-        <div class="field third">
-        <label for="save">数据保存格式(save)</label>
-        <select name="save" id="save">
-        <option value="" {% if save == '' %}selected="selected"{% endif %}>不保存</option>
-        <option value="csv" {% if save == 'csv' %}selected="selected"{% endif %}>CSV
-        </option>
-        <option value="xlsx" {% if save == 'xlsx' %}selected="selected"{% endif %}>XLSX
-        </option>
-        <option value="sql" {% if save == 'sql' %}selected="selected"{% endif %}>SQLite
-        </option>
-        </select>
-        </div>
-        <div class="field half">
-        <label for="cookie">Cookie</label>
-        <label>
-        <input type="text" id="cookie" value="{{ cookie }}"/>
-        </label>
-        </div>
-        <div class="field third">
-        <label for="proxies">代理设置(proxies)</label>
-        <label>
-        <input type="text" id="proxies" value="{{ proxies }}"/>
-        </label>
-        </div>
-        </div>
-        <div class="fields">
-        <div class="field quarter">
-        <input type="checkbox" id="music" name="music" {% if music %}checked{% endif %}>
-        <label for="music">下载音乐</label>
-        </div>
-        <div class="field quarter">
-        <input type="checkbox" id="dynamic" name="dynamic" {% if dynamic %}checked{% endif %}>
-        <label for="dynamic">下载动态封面图</label>
-        </div>
-        <div class="field quarter">
-        <input type="checkbox" id="original" name="original"
-        {% if original %}checked{% endif %}>
-        <label for="original">下载静态封面图</label>
-        </div>
-        <div class="field quarter">
-        <input type="checkbox" id="log" name="log" {% if log %}checked{% endif %}>
-        <label for="log">启用日志</label>
-        </div>
-        </div>
-        <ul class="actions">
-        <li><input type="button" class="button submit" value="保存配置并重新加载页面"
-        onclick="update_parameters()">
-        </li>
-        </ul>
-        </form>
-        </section>
-        </div>
-        </div>
-        </section>
+    </section>
 
-        <section id="solo" class="wrapper style1 spotlights">
+    <section id="settings" class="wrapper style2 spotlights">
         <div class="inner">
-        <h2>下载作品</h2>
-        <div class="style1">
-        <section>
-        <form id="solo_form" onsubmit="return false">
-        <div class="fields">
-        <div class="field half">
-        <label for="solo_url">请输入作品链接：</label>
-        <label>
-        <input type="text" id="solo_url"/>
-        </label>
-        <br>
-        <ul class="actions">
-        <li><input type="button" class="button submit" value="读取剪贴板并粘贴至输入框"
-        onclick="solo_input()">
-        </li>
-        </ul>
-        <ul class="actions">
-        <li><input type="button" class="button submit" value="获取下载链接"
-        onclick="solo_post()"></li>
-        <li><input type="button" class="button submit" value="直接下载"
-        onclick="solo_post(true)">
-        </li>
-        </ul>
-        <label for="solo_state">运行结果：</label>
-        <textarea id="solo_state" rows="8" readonly></textarea>
+            <h2>参数配置</h2>
+            <div class="style1">
+                <section>
+                    <form onsubmit="return false">
+                        <div class="fields">
+                            <div class="field third">
+                                <label for="root">根目录(root)</label>
+                                <label>
+                                    <input type="text" id="root" value="{{ root }}"/>
+                                </label>
+                            </div>
+                            <div class="field third">
+                                <label for="folder">保存文件夹名称(folder)</label>
+                                <label>
+                                    <input type="text" id="folder" value="{{ folder }}"/>
+                                </label>
+                            </div>
+                            <div class="field third">
+                                <label for="name">文件名称格式(name)</label>
+                                <label>
+                                    <input type="text" id="name" value="{{ name }}"/>
+                                </label>
+                            </div>
+                            <div class="field third">
+                                <label for="time">发布时间格式(time)</label>
+                                <label>
+                                    <input type="text" id="time" value="{{ time }}"/>
+                                </label>
+                            </div>
+                            <div class="field third">
+                                <label for="split">文件名称分隔符(split)</label>
+                                <label>
+                                    <input type="text" id="split" value="{{ split }}"/>
+                                </label>
+                            </div>
+                            <div class="field third">
+                                <label for="save">数据保存格式(save)</label>
+                                <select name="save" id="save">
+                                    <option value="" {% if save == '' %}selected="selected"{% endif %}>不保存</option>
+                                    <option value="csv" {% if save == 'csv' %}selected="selected"{% endif %}>CSV
+                                    </option>
+                                    <option value="xlsx" {% if save == 'xlsx' %}selected="selected"{% endif %}>XLSX
+                                    </option>
+                                    <option value="sql" {% if save == 'sql' %}selected="selected"{% endif %}>SQLite
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="field half">
+                                <label for="cookie">Cookie</label>
+                                <label>
+                                    <input type="text" id="cookie" value="{{ cookie }}"/>
+                                </label>
+                            </div>
+                            <div class="field third">
+                                <label for="proxies">代理设置(proxies)</label>
+                                <label>
+                                    <input type="text" id="proxies" value="{{ proxies }}"/>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="fields">
+                            <div class="field quarter">
+                                <input type="checkbox" id="music" name="music" {% if music %}checked{% endif %}>
+                                <label for="music">下载音乐</label>
+                            </div>
+                            <div class="field quarter">
+                                <input type="checkbox" id="dynamic" name="dynamic" {% if dynamic %}checked{% endif %}>
+                                <label for="dynamic">下载动态封面图</label>
+                            </div>
+                            <div class="field quarter">
+                                <input type="checkbox" id="original" name="original"
+                                       {% if original %}checked{% endif %}>
+                                <label for="original">下载静态封面图</label>
+                            </div>
+                            <div class="field quarter">
+                                <input type="checkbox" id="log" name="log" {% if log %}checked{% endif %}>
+                                <label for="log">启用日志</label>
+                            </div>
+                        </div>
+                        <ul class="actions">
+                            <li><input type="button" class="button submit" value="保存配置并重新加载页面"
+                                       onclick="update_parameters()">
+                            </li>
+                        </ul>
+                    </form>
+                </section>
+            </div>
         </div>
-        <div class="field half">
-        <label>作品预览：</label>
-        <span class="image fit" id="preview"><img
-        id="solo_preview"
-        src="static/images/blank.png"
-        alt="预览图"/></span>
-        </div>
-        </div>
-        </form>
-        </section>
-        </div>
-        </div>
-        </section>
+    </section>
 
-        <section id="live" class="wrapper style2 spotlights">
+    <section id="solo" class="wrapper style1 spotlights">
         <div class="inner">
-        <h2>直播提取</h2>
-        <div class="style1">
-        <section>
-        <form id="live_form" onsubmit="return false">
-        <div class="fields">
-        <div class="field half">
-        <label for="live_url">请输入直播链接：</label>
-        <label>
-        <input type="text" id="live_url"/>
-        </label>
-        <br>
-        <ul class="actions">
-        <li><input type="button" class="button submit" value="读取剪贴板并粘贴至输入框"
-        onclick="live_input()"></li>
-        </ul>
-        <ul class="actions">
-        <li><input type="button" class="button submit" value="提取直播推流地址"
-        onclick="live_post()">
-        </li>
-        </ul>
-        <label for="live_state">运行结果：</label>
-        <textarea id="live_state" rows="8" readonly></textarea>
+            <h2>下载作品</h2>
+            <div class="style1">
+                <section>
+                    <form id="solo_form" onsubmit="return false">
+                        <div class="fields">
+                            <div class="field half">
+                                <label for="solo_url">请输入作品链接：</label>
+                                <label>
+                                    <input type="text" id="solo_url"/>
+                                </label>
+                                <br>
+                                <ul class="actions">
+                                    <li><input type="button" class="button submit" value="读取剪贴板并粘贴至输入框"
+                                               onclick="solo_input()">
+                                    </li>
+                                </ul>
+                                <ul class="actions">
+                                    <li><input type="button" class="button submit" value="获取下载链接"
+                                               onclick="solo_post()"></li>
+                                    <li><input type="button" class="button submit" value="直接下载"
+                                               onclick="solo_post(true)">
+                                    </li>
+                                </ul>
+                                <label for="solo_state">运行结果：</label>
+                                <textarea id="solo_state" rows="8" readonly></textarea>
+                            </div>
+                            <div class="field half">
+                                <label>作品预览：</label>
+                                <span class="image fit" id="preview"><img
+                                        id="solo_preview"
+                                        src="static/images/blank.png"
+                                        alt="预览图"/></span>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </div>
         </div>
-        <div class="field half">
-        <label>直播封面：</label>
-        <span class="image fit" id="preview"><img
-        id="live_preview"
-        src="static/images/blank.png"
-        alt="预览图"/></span>
-        </div>
-        </div>
-        </form>
-        </section>
-        </div>
-        </div>
-        </section>
+    </section>
 
-        </div>
-
-        <footer id="footer" class="wrapper style1-alt">
+    <section id="live" class="wrapper style2 spotlights">
         <div class="inner">
+            <h2>直播提取</h2>
+            <div class="style1">
+                <section>
+                    <form id="live_form" onsubmit="return false">
+                        <div class="fields">
+                            <div class="field half">
+                                <label for="live_url">请输入直播链接：</label>
+                                <label>
+                                    <input type="text" id="live_url"/>
+                                </label>
+                                <br>
+                                <ul class="actions">
+                                    <li><input type="button" class="button submit" value="读取剪贴板并粘贴至输入框"
+                                               onclick="live_input()"></li>
+                                </ul>
+                                <ul class="actions">
+                                    <li><input type="button" class="button submit" value="提取直播推流地址"
+                                               onclick="live_post()">
+                                    </li>
+                                </ul>
+                                <label for="live_state">运行结果：</label>
+                                <textarea id="live_state" rows="8" readonly></textarea>
+                            </div>
+                            <div class="field half">
+                                <label>直播封面：</label>
+                                <span class="image fit" id="preview"><img
+                                        id="live_preview"
+                                        src="static/images/blank.png"
+                                        alt="预览图"/></span>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<footer id="footer" class="wrapper style1-alt">
+    <div class="inner">
         <ul class="menu">
-        <li>开源项目: <a href="https://github.com/JoeanAmier/TikTokDownloader" target="_blank">TikTokDownloader</a>
-        </li>
-        <li>开源协议: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license" target="_blank">GNU
-        General Public License v3.0</a></li>
+            <li>开源项目: <a href="https://github.com/JoeanAmier/TikTokDownloader" target="_blank">TikTokDownloader</a>
+            </li>
+            <li>开源协议: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license" target="_blank">GNU
+                General Public License v3.0</a></li>
         </ul>
-        </div>
-        </footer>
+    </div>
+</footer>
 
-        <script src="static/js/jquery.min.js"></script>
-        <script src="static/js/jquery.scrollex.min.js"></script>
-        <script src="static/js/jquery.scrolly.min.js"></script>
-        <script src="static/js/browser.min.js"></script>
-        <script src="static/js/breakpoints.min.js"></script>
-        <script src="static/js/util.js"></script>
-        <script src="static/js/main.js"></script>
-        <script src="static/js/index.js"></script>
+<script src="static/js/jquery.min.js"></script>
+<script src="static/js/jquery.scrollex.min.js"></script>
+<script src="static/js/jquery.scrolly.min.js"></script>
+<script src="static/js/browser.min.js"></script>
+<script src="static/js/breakpoints.min.js"></script>
+<script src="static/js/util.js"></script>
+<script src="static/js/main.js"></script>
+<script src="static/js/index.js"></script>
 
-        </body>
-        </html>
+</body>
+</html>
