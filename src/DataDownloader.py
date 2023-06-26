@@ -50,7 +50,7 @@ class Download:
         self._nickname = None  # 账号昵称
         self._root = None
         self._name = None
-        self._time = None
+        self.time = None  # 创建时间格式，从DataAcquirer.py传入
         self._split = None
         self._folder = None
         self._music = False  # 是否下载音乐
@@ -63,25 +63,7 @@ class Download:
         self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量
         self.image_id = None  # 临时记录图集ID，用于下载计数
-        self.proxies = None  # 代理，从DataAcquirer.py传入，无需再次验证有效性
-
-    @property
-    def time(self):
-        return self._time
-
-    @time.setter
-    def time(self, value):
-        if value:
-            try:
-                _ = time.strftime(value, time.localtime())
-                self._time = value
-                self.log.info(f"时间格式设置成功: {value}", False)
-            except ValueError:
-                self.log.warning(f"时间格式错误: {value}，将使用默认时间格式(年-月-日 时.分.秒)")
-                self._time = "%Y-%m-%d %H.%M.%S"
-        else:
-            self.log.warning("错误的时间格式，将使用默认时间格式(年-月-日 时.分.秒)")
-            self._time = "%Y-%m-%d %H.%M.%S"
+        self.proxies = None  # 代理，从DataAcquirer.py传入
 
     @property
     def name(self):
