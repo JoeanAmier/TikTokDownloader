@@ -8,6 +8,7 @@
 <img src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader" alt="TikTokDownloader">
 </a>
 <img src="https://img.shields.io/badge/%E8%BD%BB%E9%87%8F%E7%BA%A7-%E5%B7%A5%E5%85%B7-green" alt="轻量级工具">
+<img src="https://img.shields.io/badge/%E7%BE%A4%E8%81%8A-830227445-a6559d" alt="QQ群聊">
 </div>
 <br>
 <p>🔥 <b>抖音视频/图集/直播下载工具：</b>基于 Requests 模块实现；批量下载抖音账号发布页或者喜欢页的作品；单独下载抖音链接对应的作品；获取抖音直播推流地址；下载抖音直播视频。</p>
