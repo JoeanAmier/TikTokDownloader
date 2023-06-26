@@ -154,7 +154,13 @@ class NoneLogger:
 class CSVLogger:
     """CSV格式记录"""
 
-    def __init__(self, root: str, name="Download", title_line=None):
+    def __init__(
+            self,
+            root: str,
+            name="Download",
+            title_line=None,
+            *args,
+            **kwargs):
         self.file = None  # 文件对象
         self.writer = None  # CSV对象
         self.root = root  # 文件路径
@@ -188,7 +194,13 @@ class CSVLogger:
 class XLSXLogger:
     """XLSX格式"""
 
-    def __init__(self, root: str, name="Download", title_line=None):
+    def __init__(
+            self,
+            root: str,
+            name="Download",
+            title_line=None,
+            *args,
+            **kwargs):
         self.book = None  # XLSX数据簿
         self.sheet = None  # XLSX数据表
         self.root = root  # 文件路径
@@ -228,12 +240,14 @@ class SQLLogger:
             self,
             root: str,
             name="Download",
+            file="TikTokDownloader.db",
             title_line=None,
             title_type=None):
         self.db = None  # 数据库
         self.cursor = None  # 游标对象
         self.root = root  # 文件路径
         self.name = name  # 数据表名称
+        self.file = file  # 数据库文件名称
         self.title_line = title_line or RecordManager.title  # 数据表列名
         self.title_type = title_type or RecordManager.title_type  # 数据表数据类型
 
@@ -242,8 +256,8 @@ class SQLLogger:
             os.mkdir(self.root)
         self.db = sqlite3.connect(
             os.path.join(
-                self.root,
-                "TikTokDownloader.db"))
+                self.root, self.file
+            ))
         self.cursor = self.db.cursor()
         self.create()
         return self
@@ -269,7 +283,7 @@ class RecordManager:
         "CHARACTER(2) NOT NULL",
         "CHARACTER(19) PRIMARY KEY",
         "CHARACTER(128) NOT NULL",
-        "CHARACTER(19) NOT NULL",
+        "CHARACTER(20) NOT NULL",
         "CHARACTER(20) NOT NULL",
         "CHARACTER(64)",
     )

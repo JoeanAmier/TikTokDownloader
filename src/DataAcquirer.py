@@ -25,8 +25,11 @@ def reset(function):
     def inner(self, *args, **kwargs):
         if not isinstance(self.url, bool):
             self.id_ = None
+        self.data = None
+        self.comment = []
+        self.cursor = 0
         self.max_cursor = 0
-        self.list = None  # 未处理的数据
+        self.list = []  # 未处理的数据
         self.name = None  # 账号昵称
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
@@ -48,8 +51,8 @@ def check_cookie(function):
     return inner
 
 
-def retry(max_num=3):
-    """发生错误时尝试重新执行"""
+def retry(max_num=10):
+    """发生错误时尝试重新执行，装饰的函数需要返回布尔值"""
 
     def inner(function):
         def execute(self, *args, **kwargs):
@@ -73,17 +76,27 @@ class UserData:
         r"^https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*$")  # 账号链接
     works_link = re.compile(
         r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
-    live_link = re.compile(r"^https://live\.douyin\.com/([0-9]+)$")  # 直播链接
+    live_link = re.compile(r"^https://live\.douyin\.com/([0-9]+)\?*.+")  # 直播链接
     live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
+    comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
+    reply_api = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
+    """评论回复API参数
+    "item_id": "7248064381664136486",
+    "comment_id": "7248089935747449604",
+    """
     clean = Cleaner()  # 过滤非法字符
+    max_comment = 256  # 评论字数限制
 
     def __init__(self, log: LoggerManager):
         self.xb = XBogus()  # 加密参数对象
         self.log = log  # 日志记录对象
+        self.data = None  # 数据记录对象，仅评论抓取调用
         self._cookie = False  # 是否设置了Cookie
         self.id_ = None  # sec_uid or item_ids
-        self.max_cursor = 0
-        self.list = None  # 未处理的数据
+        self.comment = []  # 评论数据
+        self.cursor = 0  # 评论页使用
+        self.max_cursor = 0  # 发布页和喜欢页使用
+        self.list = []  # 未处理的数据
         self.name = None  # 账号昵称
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
@@ -94,6 +107,7 @@ class UserData:
         self._url = None  # 账号链接
         self._api = None  # 批量下载类型
         self._proxies = None  # 代理
+        self._time = None  # 创建时间格式
 
     @property
     def url(self):
@@ -199,6 +213,24 @@ class UserData:
             "ftp": None,
         }
 
+    @property
+    def time(self):
+        return self._time
+
+    @time.setter
+    def time(self, value):
+        if value:
+            try:
+                _ = time.strftime(value, time.localtime())
+                self._time = value
+                self.log.info(f"时间格式设置成功: {value}", False)
+            except ValueError:
+                self.log.warning(f"时间格式错误: {value}，将使用默认时间格式(年-月-日 时.分.秒)")
+                self._time = "%Y-%m-%d %H.%M.%S"
+        else:
+            self.log.warning("错误的时间格式，将使用默认时间格式(年-月-日 时.分.秒)")
+            self._time = "%Y-%m-%d %H.%M.%S"
+
     @retry(max_num=5)
     def get_id(self, value="sec_user_id", url=None):
         """获取账号ID或者作品ID"""
@@ -252,14 +284,13 @@ class UserData:
                 proxies=self.proxies,
                 timeout=10)
         except requests.exceptions.ReadTimeout:
-            print("请求超时！")
+            self.log.error("请求超时")
             return False
         sleep()
         if response.status_code == 200:
             try:
                 data = response.json()
             except requests.exceptions.JSONDecodeError:
-                self.list = []
                 self.log.error("数据接口返回内容异常！疑似接口失效", False)
                 return False
             try:
@@ -267,11 +298,9 @@ class UserData:
                 self.list = data["aweme_list"]
                 return True
             except KeyError:
-                self.list = []
                 self.log.error(f"响应内容异常: {data}", False)
                 return False
         else:
-            self.list = []
             self.log.error(f"响应码异常：{response.status_code}，获取JSON数据失败")
             return False
 
@@ -325,7 +354,7 @@ class UserData:
             self.name = str(time.time())[:10]
             self.log.warning(
                 f"请求超时，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
-            return
+            return False
         if response.status_code == 200:
             try:
                 data = response.json()
@@ -333,20 +362,23 @@ class UserData:
                 self.name = str(time.time())[:10]
                 self.log.warning(
                     f"数据接口返回内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
-                return
+                return False
             try:
                 self.name = self.clean.filter(
                     data["aweme_list"][0]["author"]["nickname"]) or str(
                     time.time())[
                                                                     :10]
+                return True
             except KeyError:
                 self.name = str(time.time())[:10]
                 self.log.warning(
                     f"响应内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+                return False
         else:
             self.name = str(time.time())[:10]
             self.log.warning(
                 f"响应码异常：{response.status_code}，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+            return False
 
     def early_stop(self):
         """如果获取数据的发布日期已经早于限制日期，就不需要再获取下一页的数据了"""
@@ -391,9 +423,6 @@ class UserData:
     @check_cookie
     def run_alone(self, text: str):
         """单独下载模式"""
-        if not self.cookie:
-            self.log.warning("请检查Cookie是否正确")
-            return False
         url = self.check_url(text)
         if not url:
             self.log.warning("无效的作品链接")
@@ -455,7 +484,7 @@ class UserData:
                 proxies=self.proxies)
             return response.json()
         except requests.exceptions.ReadTimeout:
-            print("请求超时！")
+            self.log.warning("请求超时")
             return False
         except requests.exceptions.JSONDecodeError:
             self.log.warning("直播数据接口返回内容格式错误")
@@ -472,40 +501,78 @@ class UserData:
         cover = data["data"]["data"][0]["cover"]["url_list"][0]
         return nickname, title, url, cover
 
+    @reset
+    @check_cookie
+    def run_comment(self, id_: str, data):
+        self.data = data
+        while not self.finish:
+            self.get_comment(id_)
+            self.deal_comment()
 
-class CommentData:
-    comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"
-    params = {
-        "device_platform": "webapp",
-        "aid": "6383",
-        "channel": "channel_pc_web",
-        "aweme_id": "7246706009123720503",
-        "cursor": "0",
-        "count": "20",
-        "item_type": "0",
-        "insert_ids": "",
-        "rcFT": "",
-        "pc_client_type": "1",
-        "version_code": "170400",
-        "version_name": "17.4.0",
-        "cookie_enabled": "true",
-        "screen_width": "1536",
-        "screen_height": "864",
-        "browser_language": "zh-CN",
-        "browser_platform": "Win32",
-        "browser_name": "Edge",
-        "browser_version": "114.0.1823.58",
-        "browser_online": "true",
-        "engine_name": "Blink",
-        "engine_version": "114.0.0.0",
-        "os_name": "Windows",
-        "os_version": "10",
-        "cpu_core_num": "16",
-        "device_memory": "8",
-        "platform": "PC",
-        "downlink": "10",
-        "effective_type": "4g",
-        "round_trip_time": "50",
-        "webid": "7248584490175383100",
-        "msToken": "FX-6vWAx3sPmINCegC_qzzS46gfcN9LHHoaaKBtf8DYrBSmGXT803q4j0uzx0fDkFFUj1bPrkfA6O1tBTwUJi4RZGz3OkqEqI8RtIBu1X1NBeT60BHItrM2gK3jRVdI=",
-        "X-Bogus": "DFSzswVL6lJANSwctnrmvGUClLxV"}
+    @retry(max_num=5)
+    def get_comment(self, id_: str):
+        params = {
+            "aid": "6383",
+            "aweme_id": id_,
+            "cursor": self.cursor,
+            "count": "20",
+            "cookie_enabled": "true",
+            "platform": "PC", }
+        params = self.deal_params(params)
+        try:
+            response = requests.get(
+                self.comment_api,
+                params=params,
+                headers=self.headers,
+                proxies=self.proxies,
+                timeout=10)
+        except requests.exceptions.ReadTimeout:
+            self.log.error("请求超时")
+            return False
+        sleep()
+        if response.status_code == 200:
+            try:
+                data = response.json()
+            except requests.exceptions.JSONDecodeError:
+                self.log.error("数据接口返回内容异常！疑似接口失效", False)
+                return False
+            try:
+                self.comment = data["comments"]
+                self.cursor = data["cursor"]
+                return True
+            except KeyError:
+                self.log.error(f"响应内容异常: {data}", False)
+                return False
+        else:
+            self.log.error(f"响应码异常：{response.status_code}，获取JSON数据失败")
+            return False
+
+    def deal_comment(self):
+        if not self.comment:
+            self.log.info("该作品的评论数据获取结束")
+            self.finish = True
+            return
+        for item in self.comment:
+            """数据格式: 评论ID, 评论时间, 用户昵称, IP归属地, 评论内容, 点赞数量, 回复数量, 回复ID"""
+            create_time = time.strftime(
+                self.time,
+                time.localtime(
+                    item["create_time"]))
+            ip_label = item["ip_label"]
+            text = item["text"][:self.max_comment]
+            nickname = item["user"]["nickname"]
+            digg_count = str(item["digg_count"])
+            cid = item["cid"]
+            reply_comment_total = str(item["reply_comment_total"])
+            reply_id = item["reply_id"]
+            result = [
+                cid,
+                create_time,
+                nickname,
+                ip_label,
+                text,
+                digg_count,
+                reply_comment_total,
+                reply_id]
+            self.log.info("评论: " + ", ".join(result))
+            self.data.save(result)

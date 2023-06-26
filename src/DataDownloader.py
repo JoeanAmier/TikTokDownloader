@@ -238,25 +238,22 @@ class Download:
         }
         xb = self.xb.get_x_bogus(urlencode(params))
         params["X-Bogus"] = xb
-        for _ in range(3):  # 获取数据为空时重新尝试
-            try:
-                response = requests.get(
-                    self.item_ids_api,
-                    params=params,
-                    proxies=self.proxies,
-                    headers=self.headers, timeout=10)
-                sleep()
-                if response.status_code == 200 and response.text:
-                    try:
-                        return response.json()["aweme_detail"]
-                    except (KeyError, IndexError):
-                        self.log.error(f"响应内容异常: {response.json()}", False)
-                        return False
-            except requests.exceptions.ReadTimeout:
-                continue
-        self.log.error(
-            f"资源 {item} 获取 item_list 失败")
-        return False
+        try:
+            response = requests.get(
+                self.item_ids_api,
+                params=params,
+                proxies=self.proxies,
+                headers=self.headers, timeout=10)
+            sleep()
+            if response.status_code == 200 and response.text:
+                try:
+                    return response.json()["aweme_detail"]
+                except (KeyError, IndexError):
+                    self.log.error(f"响应内容异常: {response.json()}", False)
+                    return False
+        except requests.exceptions.ReadTimeout:
+            self.log.error(f"请求超时，资源 {item} 获取 item_list 失败")
+            return False
 
     def get_info(self, data, type_):
         """
@@ -444,7 +441,7 @@ class Download:
         self.create_folder(self.folder)
         data = self.get_data(id_)
         if not data:
-            self.log.warning("获取作品详细信息失败！")
+            self.log.warning("获取作品详细信息失败")
             return False
         self.nickname = self.clean.filter(data["author"]["nickname"])
         if data["images"]:

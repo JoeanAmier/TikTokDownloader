@@ -19,6 +19,25 @@ class TikTok:
         "xlsx": XLSXLogger,
         "sql": SQLLogger,
     }
+    Comment_Title = (
+        "评论ID",
+        "评论时间",
+        "用户昵称",
+        "IP归属地",
+        "评论内容",
+        "点赞数量",
+        "回复数量",
+        "回复ID")
+    Comment_Type = (
+        "CHARACTER(19) PRIMARY KEY",
+        "CHARACTER(20) NOT NULL",
+        "CHARACTER(20) NOT NULL",
+        "CHARACTER(10) NOT NULL",
+        "CHARACTER(256) NOT NULL",
+        "INTEGER NOT NULL",
+        "INTEGER NOT NULL",
+        "CHARACTER(19) NOT NULL",
+    )
 
     def __init__(self):
         self.record = None
@@ -114,7 +133,7 @@ class TikTok:
             self.download.data = data
             while True:
                 url = input("请输入分享链接：")
-                if url in ("Q", "q", ""):
+                if not url:
                     break
                 id_ = self.request.run_alone(url)
                 if not id_:
@@ -166,7 +185,8 @@ class TikTok:
         self.download.folder = self._data["folder"]
         self.download.name = self._data["name"]
         self.download.music = self._data["music"]
-        self.download.time = self._data["time"]
+        self.request.time = self._data["time"]
+        self.download.time = self.request.time
         self.download.split = self._data["split"]
         self.download.cookie = self._data["cookie"]
         self.request.cookie = self._data["cookie"]
@@ -175,13 +195,28 @@ class TikTok:
         self.request.proxies = self._data["proxies"]
         self.download.proxies = self.request.proxies
 
+    def comment_acquisition(self):
+        data_root = RecordManager.run(self._data["root"], "Comment")
+        save_file = self.DataLogger.get(self._data["save"], NoneLogger)
+        while True:
+            url = input("请输入作品链接：")
+            if not url:
+                break
+            id_ = self.request.run_alone(url)
+            if not id_:
+                self.record.error(f"{url} 获取 aweme_id 失败")
+                continue
+            with save_file(data_root, f"作品_{id_}", file="CommentData.db", title_line=self.Comment_Title,
+                           title_type=self.Comment_Type) as data:
+                self.request.run_comment(id_, data)
+
     def run(self):
         if not self.check_config():
             return False
         self.initialize()
         self.set_parameters()
         select = input(
-            "请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n3. 获取直播推流地址\n输入序号：")
+            "请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n3. 获取直播推流地址\n4. 抓取作品评论数据\n输入序号：")
         """兼容旧版本的Python，版本小于3.10不支持match语法"""
         # match select:
         #     case "1":
@@ -202,6 +237,9 @@ class TikTok:
         elif select == "3":
             self.record.info("已选择直播下载模式")
             self.live_acquisition()
+        elif select == "4":
+            self.record.info("已选择评论抓取模式")
+            self.comment_acquisition()
         self.record.info("程序运行结束")
 
 

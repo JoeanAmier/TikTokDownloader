@@ -8,10 +8,10 @@
 <img src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader" alt="TikTokDownloader">
 </a>
 <img src="https://img.shields.io/badge/%E8%BD%BB%E9%87%8F%E7%BA%A7-%E5%B7%A5%E5%85%B7-green" alt="轻量级工具">
-<img src="https://img.shields.io/badge/%E7%BE%A4%E8%81%8A-830227445-a6559d" alt="QQ群聊">
+<img src="https://img.shields.io/badge/QQ%E7%BE%A4%E8%81%8A-830227445-b44c97" alt="QQ群聊">
 </div>
 <br>
-<p>🔥 <b>抖音视频/图集/直播下载工具：</b>基于 Requests 模块实现；批量下载抖音账号发布页或者喜欢页的作品；单独下载抖音链接对应的作品；获取抖音直播推流地址；下载抖音直播视频。</p>
+<p>🔥 <b>抖音视频/图集/直播下载工具：</b>基于 Requests 模块实现；批量下载抖音账号发布页或者喜欢页的作品；单独下载抖音链接对应的作品；获取抖音直播推流地址；下载抖音直播视频；抓取作品评论数据。</p>
 <p>⭐ <b>使用者在使用本项目的代码时，请遵守 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">GNU General Public License v3.0</a> 开源协议。</b></p>
 <hr>
 
@@ -27,15 +27,16 @@
 * ✅ 获取直播推流地址
 * ✅ 下载抖音直播视频
 * ✅ Web UI 交互界面
-* ☑️ 抓取作品评论数据
+* ✅ 抓取作品评论数据
 * ☑️ 下载 TikTok 无水印视频/图集
 
 # 📈 项目状态
 
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已通过测试，功能均可正常使用
 * 🟢 已完成 Web UI 交互界面
+* 🟢 已完成作品评论数据抓取功能
+* 🟡 准备开发作品评论回复抓取功能
 * 🟡 准备开发多进程模式，提高多账号批量下载效率
-* 🟡 准备加入作品评论抓取功能
 * 🔴 最新版本的源码可能存在不稳定的Bug
 * 🔴 暂未发现影响使用的Bug，如果在使用过程中发现Bug，请及时告知作者修复
 
@@ -130,7 +131,7 @@ TikTokDownloader
 |                    time                     |                  str                   |                 发布时间的格式，默认值：年-月-日 时.分.秒<br>（注意：Windows下文件名不能包含英文冒号“:”）                  |
 |                    split                    |                  str                   |                                    文件命名的分隔符，默认值：“-”                                     |
 |                    music                    |              list\[bool\]              |                                 是否下载视频和图集的音乐，默认值：False                                  |
-|                    save                     |                  str                   |                   详细数据保存格式，设置为空字符串代表不保存<br>目前支持: csv、xlsx、sql(SQLite)                   |
+|                    save                     |                  str                   |                 作品和评论数据保存格式，设置为空字符串代表不保存<br>目前支持: csv、xlsx、sql(SQLite)                  |
 |                   cookie                    |              list\[str\]               |                     抖音网页版Cookie，必需参数<br>可以使用 Cookie_tool.py 写入配置文件                      |
 |                   dynamic                   |              list\[bool\]              |                                   是否下载动态封面图，默认值：False                                   |
 |                  original                   |              list\[bool\]              |                                   是否下载静态封面图，默认值：False                                   |
