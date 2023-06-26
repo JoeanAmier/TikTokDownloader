@@ -16,7 +16,6 @@
 
 # 📝 功能清单
 
-* ✅ 全部代码开源，仅限学习交流
 * ✅ 下载抖音无水印视频/图集
 * ✅ 批量下载账号发布页/喜欢页作品
 * ✅ 单独下载链接对应的作品
@@ -58,7 +57,8 @@ TikTokDownloader
 │    ├─ main_multiprocess.py               // 多进程启动入口
 │    └─ main_web_UI.py                     // Web UI 启动入口
 ├─ static                                  // 静态资源文件夹
-└─ templates                               // HTML 模板文件夹
+├─ templates                               // HTML 模板文件夹
+└─ docs                                    // 项目文档文件夹
 ```
 
 # 📋 使用说明
@@ -72,6 +72,8 @@ TikTokDownloader
 <hr>
 
 **Cookie：**
+
+[点击查看 Cookie 获取教程](https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md)
 
 |    程序功能    | 是否需要登录 |
 |:----------:|:------:|
