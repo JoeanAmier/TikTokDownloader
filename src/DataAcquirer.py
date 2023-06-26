@@ -80,9 +80,40 @@ class UserData:
     live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
     reply_api = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
-    """评论回复API参数
+    """
+    评论回复API参数
     "item_id": "7248064381664136486",
     "comment_id": "7248089935747449604",
+    """
+    collection_api = "https://www.douyin.com/aweme/v1/web/aweme/listcollection/"  # 收藏API
+    """
+    收藏API参数,POST请求
+    "device_platform": "webapp",
+    "aid": "6383",
+    "cookie_enabled": "true"
+    "platform": "PC",
+    POST数据
+    "count": "10",
+    "cursor": "0"
+    """
+    mix_api = "https://www.douyin.com/aweme/v1/web/mix/aweme/"  # 合集API
+    """
+    合集API参数
+    "aid": "6383",
+    "mix_id": "7213265845407991865",
+    "cursor": "0",
+    "count": "20",
+    "cookie_enabled": "true",
+    "platform": "PC",
+    """
+    mix_list_api = "https://www.douyin.com/aweme/v1/web/mix/listcollection/"  # 合集列表API
+    """
+    合集列表API参数
+    "aid": "6383",
+    "cursor": "0",
+    "count": "12",
+    "cookie_enabled": "true",
+    "platform": "PC",
     """
     clean = Cleaner()  # 过滤非法字符
     max_comment = 256  # 评论字数限制
