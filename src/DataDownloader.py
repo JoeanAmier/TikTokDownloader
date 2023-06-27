@@ -324,7 +324,7 @@ class Download:
                         "jpeg",
                         item[0])
                 self.image_id = item[0]
-            sleep()
+                sleep()
             self.download_music(root, item)
 
     def download_video(self):
@@ -377,6 +377,7 @@ class Download:
                     root,
                     name,
                     "webp")
+            sleep()
         if self.original and (u := item[7]):
             with requests.get(
                     u,
@@ -388,21 +389,33 @@ class Download:
                     root,
                     name,
                     "jpeg")
-        sleep()
+            sleep()
 
+    @retry(max_num=3)
     def save_file(self, data, root: str, name: str, type_: str, id_=""):
         """保存文件"""
+
+        def delete_file(error_file):
+            """清除下载失败的文件"""
+            os.remove(error_file)
+            self.log.info(f"文件: {error_file} 已删除")
+
         if not self.download:
-            return
+            return True
         file = os.path.join(root, f"{name[:self.length].strip()}.{type_}")
         if os.path.exists(file):
             self.log.info(f"{name[:self.length].strip()}.{type_} 已存在，跳过下载")
             self.log.info(
                 f"文件保存路径: {file}", False)
             return True
-        with open(file, "wb") as f:
-            for chunk in data.iter_content(chunk_size=self.chunk):
-                f.write(chunk)
+        try:
+            with open(file, "wb") as f:
+                for chunk in data.iter_content(chunk_size=self.chunk):
+                    f.write(chunk)
+        except requests.exceptions.ChunkedEncodingError:
+            self.log.warning(f"文件: {file} 由于网络异常下载中断")
+            delete_file(file)
+            return False
         if type_ == "mp4":
             self.video += 1
         elif type_ == "jpeg" and id_ and id_ != self.image_id:
@@ -411,6 +424,7 @@ class Download:
         self.log.info(
             f"文件保存路径: {file}",
             False)
+        return True
 
     def summary(self, index: int):
         """汇总下载数量"""
