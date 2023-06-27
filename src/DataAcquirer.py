@@ -607,13 +607,17 @@ class UserData:
             self.finish = True
             return
         for item in self.comment:
-            """数据格式: 评论ID, 评论时间, 用户昵称, IP归属地, 评论内容, 点赞数量, 回复数量, 回复ID"""
+            """数据格式: 评论ID, 评论时间, 用户昵称, IP归属地, 评论内容, 评论图片, 点赞数量, 回复数量, 回复ID"""
             create_time = time.strftime(
                 self.time,
                 time.localtime(
                     item["create_time"]))
             ip_label = item["ip_label"]
             text = item["text"][:self.max_comment]
+            if images := item.get("sticker", False):
+                images = images["static_url"]["url_list"][0]  # 图片链接，不确定链接是否会失效
+            else:
+                images = "#"
             nickname = item["user"]["nickname"]
             digg_count = str(item["digg_count"])
             cid = item["cid"]
@@ -628,6 +632,7 @@ class UserData:
                 nickname,
                 ip_label,
                 text,
+                images,
                 digg_count,
                 reply_comment_total,
                 reply_id]

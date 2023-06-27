@@ -25,6 +25,7 @@ class TikTok:
         "用户昵称",
         "IP归属地",
         "评论内容",
+        "评论图片",
         "点赞数量",
         "回复数量",
         "回复ID")
@@ -33,6 +34,7 @@ class TikTok:
         "CHARACTER(20) NOT NULL",
         "CHARACTER(20) NOT NULL",
         "CHARACTER(10) NOT NULL",
+        "CHARACTER(256) NOT NULL",
         "CHARACTER(256) NOT NULL",
         "INTEGER NOT NULL",
         "INTEGER NOT NULL",
