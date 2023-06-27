@@ -138,7 +138,7 @@ TikTokDownloader
 |                  original                   |              list\[bool\]              |                                   是否下载静态封面图，默认值：False                                   |
 |                   proxies                   |              list\[str\]               |                                   代理地址，设置为空字符串代表不使用代理                                   |
 |                     log                     |                  bool                  |                                   是否记录运行日志，默认值：False                                    |
-|                  download                   |              list\[bool\]              |                           是否打开下载功能，如果关闭，程序将不会下载任何文件，默认值：True                            |
+|                  download                   |              list\[bool\]              |                          是否打开下载功能，如果关闭，程序将不会下载任何文件<br>默认值：True                          |
 
 # 📄 配置文件示例
 
@@ -189,7 +189,7 @@ TikTokDownloader
 music、cookie、dynamic、original、proxies参数仅第一个值生效，下载多个账号的作品均使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), ""(不使用代理), true(下载文件)`
 参数
 
-**多线程模式（未完成）：**
+**多进程模式（未完成）：**
 accounts、music、cookie、dynamic、original、proxies的元素个数必须相同，下载第一个账号的作品使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), ""(不使用代理), true(下载文件)`
 参数，下载第二个账号的作品使用`true(下载音乐), cookie_2, true(下载动态封面图), false(不下载静态封面图), http://127.0.0.1:9999(使用代理), false(不下载文件)`
 参数，每个账号按照索引对应的参数单独生效
