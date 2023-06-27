@@ -16,7 +16,7 @@ from src.StringCleaner import Cleaner
 
 def sleep():
     """避免频繁请求"""
-    time.sleep(random.randrange(10, 40, 5) * 0.1)
+    time.sleep(random.randrange(15, 55, 5) * 0.1)
 
 
 def reset(function):
@@ -275,9 +275,9 @@ class UserData:
                 headers=self.headers,
                 proxies=self.proxies,
                 timeout=10)
+            sleep()
         except requests.exceptions.ReadTimeout:
             return False
-        sleep()
         if response.status_code == 200:
             params = urlparse(response.url)
             url_list = params.path.rstrip("/").split("/")
@@ -314,10 +314,10 @@ class UserData:
                 headers=self.headers,
                 proxies=self.proxies,
                 timeout=10)
+            sleep()
         except requests.exceptions.ReadTimeout:
             self.log.error("请求超时")
             return False
-        sleep()
         if response.status_code == 200:
             try:
                 data = response.json()
@@ -381,6 +381,7 @@ class UserData:
                 headers=self.headers,
                 proxies=self.proxies,
                 timeout=10)
+            sleep()
         except requests.exceptions.ReadTimeout:
             self.name = str(time.time())[:10]
             self.log.warning(
@@ -513,6 +514,7 @@ class UserData:
                 params=params,
                 timeout=10,
                 proxies=self.proxies)
+            sleep()
             return response.json()
         except requests.exceptions.ReadTimeout:
             self.log.warning("请求超时")
@@ -557,10 +559,10 @@ class UserData:
                 headers=self.headers,
                 proxies=self.proxies,
                 timeout=10)
+            sleep()
         except requests.exceptions.ReadTimeout:
             self.log.error("请求超时")
             return False
-        sleep()
         if response.status_code == 200:
             try:
                 data = response.json()
