@@ -27,6 +27,7 @@ def reset(function):
             self.id_ = None
         self.data = None
         self.comment = []
+        self.reply = []
         self.cursor = 0
         self.max_cursor = 0
         self.list = []  # 未处理的数据
@@ -80,11 +81,6 @@ class UserData:
     live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
     reply_api = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
-    """
-    评论回复API参数
-    "item_id": "7248064381664136486",
-    "comment_id": "7248089935747449604",
-    """
     collection_api = "https://www.douyin.com/aweme/v1/web/aweme/listcollection/"  # 收藏API
     """
     收藏API参数,POST请求
@@ -115,6 +111,12 @@ class UserData:
     "cookie_enabled": "true",
     "platform": "PC",
     """
+    info_api = "https://www.douyin.com/aweme/v1/web/im/user/info/"  # 用户信息API
+    """POST
+    "aid": "6383",
+    "cookie_enabled": "true",
+    "platform": "PC",
+    """
     clean = Cleaner()  # 过滤非法字符
     max_comment = 256  # 评论字数限制
 
@@ -126,6 +128,7 @@ class UserData:
         self.id_ = None  # sec_uid or item_ids
         self.comment = []  # 评论数据
         self.cursor = 0  # 评论页使用
+        self.reply = []  # 评论回复的ID列表
         self.max_cursor = 0  # 发布页和喜欢页使用
         self.list = []  # 未处理的数据
         self.name = None  # 账号昵称
@@ -539,22 +542,40 @@ class UserData:
     def run_comment(self, id_: str, data):
         self.data = data
         while not self.finish:
-            self.get_comment(id_)
+            self.get_comment(id_, self.comment_api)
             self.deal_comment()
+        self.log.info("开始获取楼中楼评论数据")
+        for item in self.reply:
+            self.finish = False
+            self.cursor = 0
+            while not self.finish:
+                self.get_comment(id_, self.reply_api, item)
+                self.deal_comment()
 
     @retry(max_num=5)
-    def get_comment(self, id_: str):
-        params = {
-            "aid": "6383",
-            "aweme_id": id_,
-            "cursor": self.cursor,
-            "count": "20",
-            "cookie_enabled": "true",
-            "platform": "PC", }
+    def get_comment(self, id_: str, api: str, reply=""):
+        if reply:
+            params = {
+                "aid": "6383",
+                "item_id": id_,
+                "comment_id": reply,
+                "cursor": self.cursor,
+                "count": "3",  # 每次返回数据的数量
+                "cookie_enabled": "true",
+                "platform": "PC",
+            }
+        else:
+            params = {
+                "aid": "6383",
+                "aweme_id": id_,
+                "cursor": self.cursor,
+                "count": "20",
+                "cookie_enabled": "true",
+                "platform": "PC", }
         params = self.deal_params(params)
         try:
             response = requests.get(
-                self.comment_api,
+                api,
                 params=params,
                 headers=self.headers,
                 proxies=self.proxies,
@@ -582,7 +603,7 @@ class UserData:
 
     def deal_comment(self):
         if not self.comment:
-            self.log.info("该作品的评论数据获取结束")
+            self.log.info("评论数据获取结束")
             self.finish = True
             return
         for item in self.comment:
@@ -596,7 +617,10 @@ class UserData:
             nickname = item["user"]["nickname"]
             digg_count = str(item["digg_count"])
             cid = item["cid"]
-            reply_comment_total = str(item["reply_comment_total"])
+            reply_comment_total = item.get("reply_comment_total", -1)
+            if reply_comment_total > 0:
+                self.reply.append(cid)
+            reply_comment_total = str(reply_comment_total)
             reply_id = item["reply_id"]
             result = [
                 cid,
