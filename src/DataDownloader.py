@@ -263,7 +263,8 @@ class Download:
         图集格式: 作品ID, 描述, 创建时间, 作者, [图集链接], [音乐名称, 音乐链接]
         """
         for item in data:
-            item = self.get_data(item)
+            if isinstance(item, str):
+                item = self.get_data(item)
             id_ = item["aweme_id"]
             desc = self.clean.filter(item["desc"] or id_)
             create_time = time.strftime(

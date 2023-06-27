@@ -345,10 +345,10 @@ class UserData:
             for item in self.list:
                 if t := item["aweme_type"] == 68:
                     self.image_data.append(
-                        [item["create_time"], item["aweme_id"]])
+                        [item["create_time"], item])
                 elif t == 0:
                     self.video_data.append(
-                        [item["create_time"], item["aweme_id"]])
+                        [item["create_time"], item])
                 else:
                     self.log.warning(f"无法判断资源类型, 详细数据: {item}")
 
