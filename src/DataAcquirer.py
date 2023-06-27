@@ -28,6 +28,8 @@ def reset(function):
         self.data = None
         self.comment = []
         self.reply = []
+        self.mix_total = []
+        self.mix_data = []
         self.cursor = 0
         self.max_cursor = 0
         self.list = []  # 未处理的数据
@@ -93,15 +95,7 @@ class UserData:
     "cursor": "0"
     """
     mix_api = "https://www.douyin.com/aweme/v1/web/mix/aweme/"  # 合集API
-    """
-    合集API参数
-    "aid": "6383",
-    "mix_id": "7213265845407991865",
-    "cursor": "0",
-    "count": "20",
-    "cookie_enabled": "true",
-    "platform": "PC",
-    """
+    mix_link = re.compile(r"")  # 合集链接
     mix_list_api = "https://www.douyin.com/aweme/v1/web/mix/listcollection/"  # 合集列表API
     """
     合集列表API参数
@@ -127,8 +121,10 @@ class UserData:
         self._cookie = False  # 是否设置了Cookie
         self.id_ = None  # sec_uid or item_ids
         self.comment = []  # 评论数据
-        self.cursor = 0  # 评论页使用
+        self.cursor = 0  # 评论和合集使用
         self.reply = []  # 评论回复的ID列表
+        self.mix_total = []  # 合集作品数据
+        self.mix_data = []  # 合集作品数据未处理JSON
         self.max_cursor = 0  # 发布页和喜欢页使用
         self.list = []  # 未处理的数据
         self.name = None  # 账号昵称
@@ -638,3 +634,64 @@ class UserData:
                 reply_id]
             self.log.info("评论: " + ", ".join(result))
             self.data.save(result)
+
+    @reset
+    @check_cookie
+    def run_mix(self, data):
+        info = self.get_mix_id(data)
+        if not info:
+            return False
+        while not self.finish:
+            self.get_mix_data(info[0])
+            self.deal_mix_data()
+        # 如果合集名称去除非法字符后为空字符串，则使用当前时间戳作为合集标识
+        return self.clean.filter(info[1]) or f"合集_{str(time.time())[:10]}"
+
+    @staticmethod
+    def get_mix_id(data):
+        data = data.get("mix_info", False)
+        return (data["mix_id"], data["mix_name"]) if data else data
+
+    @retry(max_num=5)
+    def get_mix_data(self, id_):
+        params = {"aid": "6383",
+                  "mix_id": id_,
+                  "cursor": self.cursor,
+                  "count": "20",
+                  "cookie_enabled": "true",
+                  "platform": "PC", }
+        params = self.deal_params(params)
+        try:
+            response = requests.get(
+                self.mix_api,
+                params=params,
+                headers=self.headers,
+                proxies=self.proxies,
+                timeout=10)
+            sleep()
+        except requests.exceptions.ReadTimeout:
+            self.log.error("请求超时")
+            return False
+        if response.status_code == 200:
+            try:
+                data = response.json()
+            except requests.exceptions.JSONDecodeError:
+                self.log.error("数据接口返回内容异常！疑似接口失效", False)
+                return False
+            try:
+                self.cursor = data['cursor']
+                self.mix_data = data["aweme_list"]
+                return True
+            except KeyError:
+                self.log.error(f"响应内容异常: {data}", False)
+                return False
+        else:
+            self.log.error(f"响应码异常：{response.status_code}，获取JSON数据失败")
+            return False
+
+    def deal_mix_data(self):
+        if not self.mix_data:
+            self.log.info("合集作品数据提取结束")
+            self.finish = True
+        for item in self.mix_data:
+            self.mix_total.append(item)
