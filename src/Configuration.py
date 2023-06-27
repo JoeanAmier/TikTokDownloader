@@ -20,7 +20,8 @@ class Settings:
             "dynamic": [False, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
             "original": [False, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
             "proxies": ["", ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
-            "log": False  # 是否启用日志
+            "log": False,  # 是否启用日志
+            "download": [True],  # 是否启用下载功能
         }  # 默认配置
 
     def create(self):

@@ -88,7 +88,8 @@ class TikTok:
              "cookie",
              "dynamic",
              "original",
-             "proxies"),
+             "proxies",
+             "download"),
             True)
         print("读取配置文件成功！")
         return True
@@ -194,6 +195,7 @@ class TikTok:
         self.download.original = self._data["original"]
         self.request.proxies = self._data["proxies"]
         self.download.proxies = self.request.proxies
+        self.download.download = self._data["download"]
 
     def comment_acquisition(self):
         data_root = RecordManager.run(self._data["root"], "Comment")

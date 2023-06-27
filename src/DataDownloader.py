@@ -64,6 +64,7 @@ class Download:
         self.image = 0  # 图集下载数量
         self.image_id = None  # 临时记录图集ID，用于下载计数
         self.proxies = None  # 代理，从DataAcquirer.py传入
+        self.download = None  # 是否启用下载文件功能
 
     @property
     def name(self):
@@ -391,6 +392,8 @@ class Download:
 
     def save_file(self, data, root: str, name: str, type_: str, id_=""):
         """保存文件"""
+        if not self.download:
+            return
         file = os.path.join(root, f"{name[:self.length].strip()}.{type_}")
         if os.path.exists(file):
             self.log.info(f"{name[:self.length].strip()}.{type_} 已存在，跳过下载")
