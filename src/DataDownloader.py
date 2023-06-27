@@ -228,7 +228,7 @@ class Download:
             os.mkdir(self.type_["images"])
 
     @retry(max_num=5)
-    def get_data(self, item: str | dict):
+    def get_data(self, item: str) -> dict:
         """获取作品详细信息"""
         params = {
             "aweme_id": item,
@@ -256,7 +256,7 @@ class Download:
             self.log.error(f"请求超时，资源 {item} 获取 item_list 失败")
             return False
 
-    def get_info(self, data, type_):
+    def get_info(self, data: list[str | dict], type_=None):
         """
         提取作品详细信息
         视频格式: 作品ID, 描述, 创建时间, 作者, 视频ID, [音乐名称, 音乐链接], 动态封面图, 静态封面图
@@ -265,6 +265,8 @@ class Download:
         for item in data:
             if isinstance(item, str):
                 item = self.get_data(item)
+            else:
+                type_ = {68: "Image", 0: "Video"}[item["aweme_type"]]
             id_ = item["aweme_id"]
             desc = self.clean.filter(item["desc"] or id_)
             create_time = time.strftime(
