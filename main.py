@@ -1,5 +1,3 @@
-from platform import python_version
-
 from flask import Flask
 
 from src.CookieTool import Cookie
@@ -15,7 +13,6 @@ def main():
                 "请输入 TikTokDownloader 运行模式: \n0. 写入 Cookie 信息\n1. 单线程终端模式\n2. 多进程终端模式\n3. Web UI 交互模式\n"))
     except ValueError:
         return
-    # mode = 3  # 调试使用
     compatible(mode)
 
 
@@ -41,19 +38,7 @@ def web_ui():
 
 
 def compatible(mode: int):
-    """兼容旧版本的Python，将来可能会被移除"""
-    version = int(python_version().split(".")[1])
-    if version >= 10:
-        match mode:
-            case 0:
-                Cookie().run()
-            case 1:
-                complete()
-            case 2:
-                multiprocess()
-            case 3:
-                web_ui()
-    elif mode == 0:
+    if mode == 0:
         Cookie().run()
     elif mode == 1:
         complete()
