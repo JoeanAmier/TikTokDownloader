@@ -113,8 +113,8 @@ TikTokDownloader
 |           `https://v.douyin.com/分享码/`            | 账号、视频、图集 | 临时有效 | 批量下载、单独下载 |
 |        `https://www.douyin.com/note/作品ID`        |    图集    | 永久有效 |   单独下载    |
 |       `https://www.douyin.com/video/作品ID`        |    视频    | 永久有效 |   单独下载    |
-|        `https://www.douyin.com/user/账号ID`        |    账号    | 永久有效 |   批量下载    |
-| `https://www.douyin.com/user/账号ID?modal_id=作品ID` | 账号、视频、图集 | 永久有效 | 批量下载、单独下载 |
+|        `https://www.douyin.com/user/账号ID`        |    账号    | 临时有效 |   批量下载    |
+| `https://www.douyin.com/user/账号ID?modal_id=作品ID` | 账号、视频、图集 | 临时有效 | 批量下载、单独下载 |
 |          `https://live.douyin.com/直播ID`          |    直播    | 临时有效 |   直播下载    |
 
 # ⚙️ Settings.json
