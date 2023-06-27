@@ -515,7 +515,7 @@ class UserData:
                 timeout=10,
                 proxies=self.proxies)
             sleep()
-            return response.json()
+            return r if (r := response.json()) else False
         except requests.exceptions.ReadTimeout:
             self.log.warning("请求超时")
             return False
@@ -524,15 +524,19 @@ class UserData:
             return False
 
     def deal_live_data(self, data):
-        if data["data"]["data"][0]["status"] == 4:
-            self.log.info("当前直播已结束")
+        try:
+            if data["data"]["data"][0]["status"] == 4:
+                self.log.info("当前直播已结束")
+                return None
+            nickname = self.clean.filter(
+                data["data"]["data"][0]["owner"]["nickname"])
+            title = self.clean.filter(data["data"]["data"][0]["title"])
+            url = data["data"]["data"][0]["stream_url"]["flv_pull_url"]
+            cover = data["data"]["data"][0]["cover"]["url_list"][0]
+            return nickname, title, url, cover
+        except KeyError as e:
+            self.log.error(f"发生错误: {e}, 数据: {data}")
             return None
-        nickname = self.clean.filter(
-            data["data"]["data"][0]["owner"]["nickname"])
-        title = self.clean.filter(data["data"]["data"][0]["title"])
-        url = data["data"]["data"][0]["stream_url"]["flv_pull_url"]
-        cover = data["data"]["data"][0]["cover"]["url_list"][0]
-        return nickname, title, url, cover
 
     @reset
     @check_cookie
