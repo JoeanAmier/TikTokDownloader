@@ -261,8 +261,8 @@ class Download:
     def get_info(self, data: list[str | dict], type_=None):
         """
         提取作品详细信息
-        视频格式: 作品ID, 描述, 创建时间, 作者, 视频ID, [音乐名称, 音乐链接], 动态封面图, 静态封面图
-        图集格式: 作品ID, 描述, 创建时间, 作者, [图集链接], [音乐名称, 音乐链接]
+        视频格式: 作品ID, 描述, 创建时间, 作者, 视频ID, [音乐名称, 音乐链接], 动态封面图, 静态封面图, 点赞数量, 评论数量, 收藏数量, 分享数量
+        图集格式: 作品ID, 描述, 创建时间, 作者, [图集链接], [音乐名称, 音乐链接], 点赞数量, 评论数量, 收藏数量, 分享数量
         """
         for item in data:
             if isinstance(item, str):
@@ -278,6 +278,18 @@ class Download:
             music_name = f'{item["music"]["author"]}-{item["music"]["title"]}'
             music = u[0] if (u := item["music"]["play_url"]
             ["url_list"]) else None  # 部分作品的数据没有音乐下载地址
+            digg_count = item["statistics"]["digg_count"]
+            comment_count = item["statistics"]["comment_count"]
+            collect_count = item["statistics"]["collect_count"]
+            share_count = item["statistics"]["share_count"]
+            statistics = [
+                str(i) for i in (
+                    digg_count,
+                    comment_count,
+                    collect_count,
+                    share_count) if isinstance(
+                    i,
+                    int)]
             if type_ == "Video":
                 video_id = item["video"]["play_addr"]["uri"]
                 # 动态封面图链接
@@ -294,19 +306,29 @@ class Download:
                                 ".",
                                 ":"),
                             self.nickname,
-                            video_id]),
+                            video_id] + statistics),
                     False)
                 self.data.save(["视频", id_, desc[:self.length], create_time.replace(
-                    ".", ":"), self.nickname, video_id])
+                    ".", ":"), self.nickname, video_id] + statistics)
                 self.video_data.append([id_, desc, create_time, self.nickname, video_id, [
                     music_name, music], dynamic_cover, cover_original_scale])
             elif type_ == "Image":
                 images = item["images"]
                 images = [i['url_list'][3] for i in images]
                 self.log.info(
-                    "图集: " + ", ".join([id_, desc, create_time.replace(".", ":"), self.nickname]), False)
+                    "图集: " +
+                    ", ".join(
+                        [
+                            id_,
+                            desc,
+                            create_time.replace(
+                                ".",
+                                ":"),
+                            self.nickname] +
+                        statistics),
+                    False)
                 self.data.save(["图集", id_, desc[:self.length], create_time.replace(
-                    ".", ":"), self.nickname, "#"])
+                    ".", ":"), self.nickname, "#"] + statistics)
                 self.image_data.append(
                     [id_, desc, create_time, self.nickname, images, [music_name, music]])
             else:

@@ -278,7 +278,17 @@ class SQLLogger:
 
 class RecordManager:
     """检查数据记录路径"""
-    title = ("作品类型", "作品ID", "作品描述", "发布时间", "账号昵称", "Video_ID")
+    title = (
+        "作品类型",
+        "作品ID",
+        "作品描述",
+        "发布时间",
+        "账号昵称",
+        "Video_ID",
+        "点赞数量",
+        "评论数量",
+        "收藏数量",
+        "分享数量")
     title_type = (
         "CHARACTER(2) NOT NULL",
         "CHARACTER(19) PRIMARY KEY",
@@ -286,6 +296,10 @@ class RecordManager:
         "CHARACTER(20) NOT NULL",
         "CHARACTER(20) NOT NULL",
         "CHARACTER(64)",
+        "INTEGER NOT NULL",
+        "INTEGER NOT NULL",
+        "INTEGER NOT NULL",
+        "INTEGER NOT NULL",
     )
 
     @staticmethod
