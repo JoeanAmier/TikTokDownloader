@@ -645,7 +645,7 @@ class UserData:
             self.get_mix_data(info[0])
             self.deal_mix_data()
         # 如果合集名称去除非法字符后为空字符串，则使用当前时间戳作为合集标识
-        return self.clean.filter(info[1]) or f"合集_{str(time.time())[:10]}"
+        return f"合集_{self.clean.filter(info[1]) or str(time.time())[:10]}"
 
     @staticmethod
     def get_mix_id(data):

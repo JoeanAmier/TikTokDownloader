@@ -23,6 +23,7 @@ def reset(function):
         self.image_data = []
         self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量
+        self.mix_data = []
         self.image_id = None  # 临时记录图集ID，用于下载计数
         return function(self, *args, **kwargs)
 
@@ -60,6 +61,7 @@ class Download:
         self.type_ = {"video": "", "images": ""}  # 文件保存目录
         self.video_data = []  # 视频详细信息
         self.image_data = []  # 图集详细信息
+        self.mix_data = []  # 合集详细信息
         self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量
         self.image_id = None  # 临时记录图集ID，用于下载计数
@@ -486,3 +488,13 @@ class Download:
                 proxies=self.proxies, headers=self.UA) as response:
             self.log.info("开始下载直播视频")
             self.save_file(response, f"{self.root}/Live", name, "flv")
+
+    @reset
+    @check_cookie
+    def run_mix(self, items: list[dict]):
+        self.create_folder(self.nickname)
+        self.get_info(items)
+        self.log.info(f"{self.nickname} 开始下载")
+        self.download_video()
+        self.download_images()
+        self.log.info(f"{self.nickname} 下载结束")

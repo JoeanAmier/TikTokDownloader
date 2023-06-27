@@ -115,7 +115,6 @@ class TikTok:
         type_ = {"post": "发布页", "favorite": "喜欢页"}[mode]
         if not self.request.run(num):
             return False
-        self.record.info(f"账号 {self.request.name} 开始批量下载{type_}作品")
         self.download.nickname = self.request.name
         self.download.favorite = self.request.favorite
         data_root = RecordManager.run(self._data["root"])
@@ -125,7 +124,6 @@ class TikTok:
             self.download.run(num,
                               self.request.video_data,
                               self.request.image_data)
-        self.record.info(f"账号 {self.request.name} 批量下载{type_}作品结束")
         self.download._nickname, self.request.favorite, self.download.favorite = None, None, None  # 重置数据
         return True
 
@@ -200,7 +198,7 @@ class TikTok:
         self.download.download = self._data["download"]
 
     def comment_acquisition(self):
-        data_root = RecordManager.run(self._data["root"], "Comment")
+        data_root = RecordManager.run(self._data["root"])
         save_file = self.DataLogger.get(self._data["save"], NoneLogger)
         while True:
             url = input("请输入作品链接：")
@@ -214,13 +212,34 @@ class TikTok:
                            title_type=self.Comment_Type) as data:
                 self.request.run_comment(id_, data)
 
+    def mix_acquisition(self):
+        data_root = RecordManager.run(self._data["root"])
+        save_file = self.DataLogger.get(self._data["save"], NoneLogger)
+        while True:
+            url = input("请输入合集作品链接：")
+            if not url:
+                break
+            id_ = self.request.run_alone(url)
+            if not id_:
+                self.record.error(f"{url} 获取 aweme_id 失败")
+                continue
+            mix_data = self.download.get_data(id_)
+            mix_name = self.request.run_mix(mix_data)
+            if not mix_name:
+                self.record.info(f"作品 {id_} 不属于任何合集")
+                continue
+            self.download.nickname = mix_name
+            with save_file(data_root, self.download.nickname, file="MixData.db") as data:
+                self.download.data = data
+                self.download.run_mix(self.request.mix_total)
+
     def run(self):
         if not self.check_config():
             return False
         self.initialize()
         self.set_parameters()
         select = input(
-            "请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n3. 获取直播推流地址\n4. 抓取作品评论数据\n输入序号：")
+            "请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n3. 获取直播推流地址\n4. 抓取作品评论数据\n5. 批量下载合集作品\n输入序号：")
         """兼容旧版本的Python，版本小于3.10不支持match语法"""
         # match select:
         #     case "1":
@@ -244,6 +263,9 @@ class TikTok:
         elif select == "4":
             self.record.info("已选择评论抓取模式")
             self.comment_acquisition()
+        elif select == "5":
+            self.record.info("已选择合集下载模式")
+            self.mix_acquisition()
         self.record.info("程序运行结束")
 
 
