@@ -39,12 +39,12 @@ class Download:
     clean = Cleaner()  # 过滤错误字符
     length = 128  # 文件名称长度限制
     chunk = 1048576  # 单次下载文件大小，单位字节
+    xb = XBogus()
 
     def __init__(self, log: LoggerManager, save):
         self.headers = self.UA | {
             'referer': 'https://www.douyin.com/',
         }  # 请求头
-        self.xb = XBogus()
         self.log = log  # 日志记录模块
         self.data = save  # 详细数据记录模块
         self._cookie = False

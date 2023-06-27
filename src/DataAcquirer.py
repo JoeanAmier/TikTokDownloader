@@ -112,10 +112,10 @@ class UserData:
     "platform": "PC",
     """
     clean = Cleaner()  # 过滤非法字符
+    xb = XBogus()  # 加密参数对象
     max_comment = 256  # 评论字数限制
 
     def __init__(self, log: LoggerManager):
-        self.xb = XBogus()  # 加密参数对象
         self.log = log  # 日志记录对象
         self.data = None  # 数据记录对象，仅评论抓取调用
         self._cookie = False  # 是否设置了Cookie
@@ -163,6 +163,7 @@ class UserData:
     def api(self, value):
         if value == "post":
             self._api = f"https://www.douyin.com/aweme/v1/web/aweme/{value}/"
+            self.favorite = False
         elif value == "favorite":
             self._api = f"https://www.douyin.com/aweme/v1/web/aweme/{value}/"
             self.favorite = True

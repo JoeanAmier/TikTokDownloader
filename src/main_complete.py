@@ -112,7 +112,6 @@ class TikTok:
         self.request.api = mode
         self.request.earliest = earliest
         self.request.latest = latest
-        type_ = {"post": "发布页", "favorite": "喜欢页"}[mode]
         if not self.request.run(num):
             return False
         self.download.nickname = self.request.name
@@ -124,8 +123,6 @@ class TikTok:
             self.download.run(num,
                               self.request.video_data,
                               self.request.image_data)
-        self.download._nickname, self.request.favorite, self.download.favorite = None, None, None  # 重置数据
-        return True
 
     def single_acquisition(self):
         data_root = RecordManager.run(self._data["root"])
@@ -153,18 +150,22 @@ class TikTok:
             keys = list(items.keys())
             return items[keys[choice]]
 
-        link = input("请输入直播链接：")
-        if not (data := self.request.get_live_data(link)):
-            self.record.warning("获取直播数据失败")
-            return
-        if not (data := self.request.deal_live_data(data)):
-            return
-        self.record.info(f"主播昵称: {data[0]}")
-        self.record.info(f"直播名称: {data[1]}")
-        self.record.info("推流地址: \n" +
-                         "\n".join([f"{i}: {j}" for i, j in data[2].items()]))
-        if l := choice_quality(data[2]):
-            self.download.download_live(l, f"{data[0]}-{data[1]}")
+        while True:
+            link = input("请输入直播链接：")
+            if not link:
+                break
+            if not (data := self.request.get_live_data(link)):
+                self.record.warning("获取直播数据失败")
+                continue
+            if not (data := self.request.deal_live_data(data)):
+                continue
+            self.record.info(f"主播昵称: {data[0]}")
+            self.record.info(f"直播名称: {data[1]}")
+            self.record.info("推流地址: \n" +
+                             "\n".join([f"{i}: {j}" for i, j in data[2].items()]))
+            if l := choice_quality(data[2]):
+                self.download.download_live(l, f"{data[0]}-{data[1]}")
+                break
 
     def initialize(
             self,
@@ -256,13 +257,3 @@ class TikTok:
             self.record.info("已选择合集下载模式")
             self.mix_acquisition()
         self.record.info("程序运行结束")
-
-
-def main():
-    """单线程版本，支持所有功能"""
-    example = TikTok()
-    example.run()
-
-
-if __name__ == '__main__':
-    main()
