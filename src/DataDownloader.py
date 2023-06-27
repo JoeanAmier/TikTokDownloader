@@ -228,7 +228,7 @@ class Download:
             os.mkdir(self.type_["images"])
 
     @retry(max_num=5)
-    def get_data(self, item):
+    def get_data(self, item: str | dict):
         """获取作品详细信息"""
         params = {
             "aweme_id": item,
