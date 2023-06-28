@@ -650,6 +650,7 @@ class UserData:
         while not self.finish:
             self.get_mix_data(info[0])
             self.deal_mix_data()
+        self.log.info("合集作品数据提取结束")
         # 如果合集名称去除非法字符后为空字符串，则使用当前时间戳作为合集标识
         return f"合集_{self.clean.filter(info[1]) or str(time.time())[:10]}"
 
@@ -687,6 +688,7 @@ class UserData:
             try:
                 self.cursor = data['cursor']
                 self.mix_data = data["aweme_list"]
+                self.finish = not data["has_more"]
                 return True
             except KeyError:
                 self.log.error(f"响应内容异常: {data}", False)
@@ -696,8 +698,5 @@ class UserData:
             return False
 
     def deal_mix_data(self):
-        if not self.mix_data:
-            self.log.info("合集作品数据提取结束")
-            self.finish = True
         for item in self.mix_data:
             self.mix_total.append(item)
