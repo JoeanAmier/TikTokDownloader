@@ -150,6 +150,7 @@ class TikTok:
             keys = list(items.keys())
             return items[keys[choice]]
 
+        del self.request.headers['referer']
         while True:
             link = input("请输入直播链接：")
             if not link:

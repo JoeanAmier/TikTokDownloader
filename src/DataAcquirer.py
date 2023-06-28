@@ -79,7 +79,7 @@ class UserData:
         r"^https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*$")  # 账号链接
     works_link = re.compile(
         r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
-    live_link = re.compile(r"^https://live\.douyin\.com/([0-9]+)\?*.+")  # 直播链接
+    live_link = re.compile(r"^https://live\.douyin\.com/([0-9]+)")  # 直播链接
     live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
     reply_api = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
