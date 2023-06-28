@@ -294,8 +294,8 @@ class Download:
                 video_id = item["video"]["play_addr"]["uri"]
                 # 动态封面图链接
                 dynamic_cover = item["video"]["dynamic_cover"]["url_list"][0]
-                # 封面图链接
-                cover_original_scale = item["video"]["cover_original_scale"]["url_list"][0]
+                # 静态封面图链接
+                origin_cover = item["video"]["origin_cover"]["url_list"][0]
                 self.log.info(
                     "视频: " +
                     ", ".join(
@@ -311,7 +311,7 @@ class Download:
                 self.data.save(["视频", id_, desc[:self.length], create_time.replace(
                     ".", ":"), self.nickname, video_id] + statistics)
                 self.video_data.append([id_, desc, create_time, self.nickname, video_id, [
-                    music_name, music], dynamic_cover, cover_original_scale])
+                    music_name, music], dynamic_cover, origin_cover])
             elif type_ == "Image":
                 images = item["images"]
                 images = [i['url_list'][3] for i in images]

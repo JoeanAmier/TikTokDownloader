@@ -356,10 +356,10 @@ class UserData:
         """汇总账号作品数量"""
         self.log.info(f"账号 {self.name} 的视频总数: {len(self.video_data)}")
         for i in self.video_data:
-            self.log.info(f"视频: {i[1]}", False)
+            self.log.info(f"视频: {i['aweme_id']}", False)
         self.log.info(f"账号 {self.name} 的图集总数: {len(self.image_data)}")
         for i in self.image_data:
-            self.log.info(f"图集: {i[1]}", False)
+            self.log.info(f"图集: {i['aweme_id']}", False)
 
     @retry(max_num=5)
     def get_nickname(self):
