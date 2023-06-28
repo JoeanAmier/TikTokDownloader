@@ -616,8 +616,8 @@ class UserData:
                     item["create_time"]))
             ip_label = item["ip_label"]
             text = item["text"][:self.max_comment]
-            if images := item.get("sticker", False):
-                images = images["static_url"]["url_list"][0]  # 图片链接，不确定链接是否会失效
+            if images := item.get("image_list", False):
+                images = images[0]["origin_url"]["url_list"][0]  # 图片链接
             else:
                 images = "#"
             nickname = item["user"]["nickname"]
