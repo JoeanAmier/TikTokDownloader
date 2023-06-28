@@ -20,6 +20,7 @@ class TikTok:
         "sql": SQLLogger,
     }
     Comment_Title = (
+        "采集时间",
         "评论ID",
         "评论时间",
         "用户昵称",
@@ -30,6 +31,7 @@ class TikTok:
         "回复数量",
         "回复ID")
     Comment_Type = (
+        "CHARACTER(20) NOT NULL",
         "CHARACTER(19) PRIMARY KEY",
         "CHARACTER(20) NOT NULL",
         "CHARACTER(20) NOT NULL",
