@@ -263,7 +263,7 @@ class UserData:
             self._time = "%Y-%m-%d %H.%M.%S"
 
     @retry(max_num=5)
-    def get_id(self, value="sec_user_id", url=None):
+    def get_id(self, value="sec_user_id", url=""):
         """获取账号ID或者作品ID"""
         if self.id_:
             self.log.info(f"{url} {value}: {self.id_}", False)
