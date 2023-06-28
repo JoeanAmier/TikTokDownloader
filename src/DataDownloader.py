@@ -1,5 +1,6 @@
 import os
 import time
+from datetime import datetime
 from urllib.parse import urlencode
 
 import requests
@@ -261,14 +262,15 @@ class Download:
     def get_info(self, data: list[str | dict], type_=None):
         """
         提取作品详细信息
-        视频格式: 作品ID, 描述, 创建时间, 作者, 视频ID, [音乐名称, 音乐链接], 动态封面图, 静态封面图, 点赞数量, 评论数量, 收藏数量, 分享数量
-        图集格式: 作品ID, 描述, 创建时间, 作者, [图集链接], [音乐名称, 音乐链接], 点赞数量, 评论数量, 收藏数量, 分享数量
+        视频格式: 采集时间, 作品ID, 描述, 创建时间, 作者, 视频ID, [音乐名称, 音乐链接], 动态封面图, 静态封面图, 点赞数量, 评论数量, 收藏数量, 分享数量
+        图集格式: 采集时间, 作品ID, 描述, 创建时间, 作者, [图集链接], [音乐名称, 音乐链接], 点赞数量, 评论数量, 收藏数量, 分享数量
         """
         for item in data:
             if isinstance(item, str):
                 item = self.get_data(item)
             else:
                 type_ = {68: "Image", 0: "Video"}[item["aweme_type"]]
+            collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             id_ = item["aweme_id"]
             desc = self.clean.filter(item["desc"] or id_)
             create_time = time.strftime(
@@ -308,8 +310,14 @@ class Download:
                             self.nickname,
                             video_id] + statistics),
                     False)
-                self.data.save(["视频", id_, desc[:self.length], create_time.replace(
-                    ".", ":"), self.nickname, video_id] + statistics)
+                self.data.save(["视频",
+                                collection_time,
+                                id_,
+                                desc[:self.length],
+                                create_time.replace(".",
+                                                    ":"),
+                                self.nickname,
+                                video_id] + statistics)
                 self.video_data.append([id_, desc, create_time, self.nickname, video_id, [
                     music_name, music], dynamic_cover, origin_cover])
             elif type_ == "Image":
@@ -327,8 +335,14 @@ class Download:
                             self.nickname] +
                         statistics),
                     False)
-                self.data.save(["图集", id_, desc[:self.length], create_time.replace(
-                    ".", ":"), self.nickname, "#"] + statistics)
+                self.data.save(["图集",
+                                collection_time,
+                                id_,
+                                desc[:self.length],
+                                create_time.replace(".",
+                                                    ":"),
+                                self.nickname,
+                                "#"] + statistics)
                 self.image_data.append(
                     [id_, desc, create_time, self.nickname, images, [music_name, music]])
             else:
@@ -466,8 +480,8 @@ class Download:
         """批量下载"""
         self.create_folder(self.nickname)
         self.log.info(f"开始获取第 {index} 个账号的作品数据")
-        self.get_info(video, "Video")
-        self.get_info(image, "Image")
+        self.get_info(video)
+        self.get_info(image)
         self.log.info(f"获取第 {index} 个账号的作品数据成功")
         self.log.info(f"开始下载第 {index} 个账号的视频/图集")
         self.download_video()
