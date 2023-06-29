@@ -277,9 +277,12 @@ class Download:
                 self.time,
                 time.localtime(
                     item["create_time"]))
-            music_name = f'{item["music"]["author"]}-{item["music"]["title"]}'
-            music = u[0] if (u := item["music"]["play_url"]
-            ["url_list"]) else None  # 部分作品的数据没有音乐下载地址
+            if music_data := item.get("music", False):
+                music_name = f'{music_data["author"]}-{music_data["title"]}'
+                music = u[0] if (u := music_data["play_url"]
+                ["url_list"]) else None  # 部分作品的数据没有音乐下载地址
+            else:
+                music_name, music = None, None
             digg_count = item["statistics"]["digg_count"]
             comment_count = item["statistics"]["comment_count"]
             collect_count = item["statistics"]["collect_count"]
