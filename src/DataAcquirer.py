@@ -1,7 +1,8 @@
-import datetime
 import random
 import re
 import time
+from datetime import date
+from datetime import datetime
 from urllib.parse import urlencode
 from urllib.parse import urlparse
 
@@ -191,10 +192,10 @@ class UserData:
     @earliest.setter
     def earliest(self, value):
         if not value:
-            self._earliest = datetime.date(2016, 9, 20)
+            self._earliest = date(2016, 9, 20)
             return
         try:
-            self._earliest = datetime.datetime.strptime(
+            self._earliest = datetime.strptime(
                 value, "%Y/%m/%d").date()
             self.log.info(f"作品最早发布日期: {value}")
         except ValueError:
@@ -207,10 +208,10 @@ class UserData:
     @latest.setter
     def latest(self, value):
         if not value:
-            self._latest = datetime.date.today()
+            self._latest = date.today()
             return
         try:
-            self._latest = datetime.datetime.strptime(value, "%Y/%m/%d").date()
+            self._latest = datetime.strptime(value, "%Y/%m/%d").date()
             self.log.info(f"作品最晚发布日期: {value}")
         except ValueError:
             self.log.warning("作品最晚发布日期无效")
@@ -417,7 +418,7 @@ class UserData:
         """如果获取数据的发布日期已经早于限制日期，就不需要再获取下一页的数据了"""
         if not self.favorite:
             return
-        if self.earliest > datetime.datetime.fromtimestamp(
+        if self.earliest > datetime.fromtimestamp(
                 self.max_cursor / 1000).date():
             self.finish = True
 
@@ -481,13 +482,13 @@ class UserData:
         latest_date = self.latest
         filtered = []
         for item in self.video_data:
-            date = datetime.datetime.fromtimestamp(item[0]).date()
+            date = datetime.fromtimestamp(item[0]).date()
             if earliest_date <= date <= latest_date:
                 filtered.append(item[1])
         self.video_data = filtered
         filtered = []
         for item in self.image_data:
-            date = datetime.datetime.fromtimestamp(item[0]).date()
+            date = datetime.fromtimestamp(item[0]).date()
             if earliest_date <= date <= latest_date:
                 filtered.append(item[1])
         self.image_data = filtered
@@ -609,7 +610,8 @@ class UserData:
             self.finish = True
             return
         for item in self.comment:
-            """数据格式: 评论ID, 评论时间, 用户昵称, IP归属地, 评论内容, 评论图片, 点赞数量, 回复数量, 回复ID"""
+            """数据格式: 采集时间, 评论ID, 评论时间, 用户昵称, IP归属地, 评论内容, 评论图片, 点赞数量, 回复数量, 回复ID"""
+            collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             create_time = time.strftime(
                 self.time,
                 time.localtime(
@@ -629,6 +631,7 @@ class UserData:
             reply_comment_total = str(reply_comment_total)
             reply_id = item["reply_id"]
             result = [
+                collection_time,
                 cid,
                 create_time,
                 nickname,
