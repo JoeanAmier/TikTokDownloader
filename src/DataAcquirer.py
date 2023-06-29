@@ -89,7 +89,7 @@ class UserData:
     mix_list_api = "https://www.douyin.com/aweme/v1/web/mix/listcollection/"  # 合集列表API
     info_api = "https://www.douyin.com/aweme/v1/web/im/user/info/"  # 账号简略数据API
     feed_api = "https://www.douyin.com/aweme/v1/web/tab/feed/"  # 推荐页API
-    user_api = "https://www.douyin.com/aweme/v1/web/user/profile/self/"  # 账号详细数据API
+    user_api = "https://www.douyin.com/aweme/v1/web/user/profile/other/"  # 账号详细数据API
     hot_api = "https://www.douyin.com/aweme/v1/web/hot/search/list/"  # 热点API
     spotlight_api = "https://www.douyin.com/aweme/v1/web/im/spotlight/relation/"  # 关注账号API
     familiar_api = "https://www.douyin.com/aweme/v1/web/familiar/feed/"  # 朋友作品推荐API
