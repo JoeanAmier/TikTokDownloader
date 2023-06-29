@@ -87,9 +87,14 @@ class UserData:
     collection_api = "https://www.douyin.com/aweme/v1/web/aweme/listcollection/"  # 收藏API
     mix_api = "https://www.douyin.com/aweme/v1/web/mix/aweme/"  # 合集API
     mix_list_api = "https://www.douyin.com/aweme/v1/web/mix/listcollection/"  # 合集列表API
-    info_api = "https://www.douyin.com/aweme/v1/web/im/user/info/"  # 账号信息API
+    info_api = "https://www.douyin.com/aweme/v1/web/im/user/info/"  # 账号简略数据API
     feed_api = "https://www.douyin.com/aweme/v1/web/tab/feed/"  # 推荐页API
-    user_api = "https://www.douyin.com/aweme/v1/web/user/profile/self/"  # 账号数据API
+    user_api = "https://www.douyin.com/aweme/v1/web/user/profile/self/"  # 账号详细数据API
+    hot_api = "https://www.douyin.com/aweme/v1/web/hot/search/list/"  # 热点API
+    spotlight_api = "https://www.douyin.com/aweme/v1/web/im/spotlight/relation/"  # 关注账号API
+    familiar_api = "https://www.douyin.com/aweme/v1/web/familiar/feed/"  # 朋友作品推荐API
+    follow_api = "https://www.douyin.com/aweme/v1/web/follow/feed/"  # 关注账号作品推荐API
+    history_api = "https://www.douyin.com/aweme/v1/web/history/read/"  # 观看历史API
     clean = Cleaner()  # 过滤非法字符
     xb = XBogus()  # 加密参数对象
     max_comment = 256  # 评论字数限制
