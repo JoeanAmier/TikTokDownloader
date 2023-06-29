@@ -85,33 +85,11 @@ class UserData:
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
     reply_api = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
     collection_api = "https://www.douyin.com/aweme/v1/web/aweme/listcollection/"  # 收藏API
-    """
-    收藏API参数,POST请求
-    "device_platform": "webapp",
-    "aid": "6383",
-    "cookie_enabled": "true"
-    "platform": "PC",
-    POST数据
-    "count": "10",
-    "cursor": "0"
-    """
     mix_api = "https://www.douyin.com/aweme/v1/web/mix/aweme/"  # 合集API
-    mix_link = re.compile(r"")  # 合集链接
     mix_list_api = "https://www.douyin.com/aweme/v1/web/mix/listcollection/"  # 合集列表API
-    """
-    合集列表API参数
-    "aid": "6383",
-    "cursor": "0",
-    "count": "12",
-    "cookie_enabled": "true",
-    "platform": "PC",
-    """
-    info_api = "https://www.douyin.com/aweme/v1/web/im/user/info/"  # 用户信息API
-    """POST
-    "aid": "6383",
-    "cookie_enabled": "true",
-    "platform": "PC",
-    """
+    info_api = "https://www.douyin.com/aweme/v1/web/im/user/info/"  # 账号信息API
+    feed_api = "https://www.douyin.com/aweme/v1/web/tab/feed/"  # 推荐页API
+    user_api = "https://www.douyin.com/aweme/v1/web/user/profile/self/"  # 账号数据API
     clean = Cleaner()  # 过滤非法字符
     xb = XBogus()  # 加密参数对象
     max_comment = 256  # 评论字数限制
