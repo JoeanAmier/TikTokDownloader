@@ -8,10 +8,12 @@
 <img src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader" alt="TikTokDownloader">
 </a>
 <img src="https://img.shields.io/badge/%E8%BD%BB%E9%87%8F%E7%BA%A7-%E5%B7%A5%E5%85%B7-green" alt="轻量级工具">
+<a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A.jpg">
 <img src="https://img.shields.io/badge/QQ%E7%BE%A4%E8%81%8A-830227445-b44c97" alt="QQ群聊">
+</a>
 </div>
 <br>
-<p>🔥 <b>抖音视频/图集/直播下载工具：</b>基于 Requests 模块实现；批量下载抖音账号发布页或者喜欢页的作品；单独下载抖音链接对应的作品；获取抖音直播推流地址；下载抖音直播视频；抓取作品评论数据；批量下载合集作品。</p>
+<p>🔥 <b>抖音视频/图集/直播下载工具：</b>完全开源，开箱即用，基于 Requests 模块实现；批量下载抖音账号发布页或者喜欢页的作品；单独下载抖音链接对应的作品；获取抖音直播推流地址；下载抖音直播视频；抓取作品评论数据；批量下载合集作品。</p>
 <p>⭐ <b>使用者在使用本项目的代码时，请遵守 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">GNU General Public License v3.0</a> 开源协议。</b></p>
 <hr>
 
@@ -117,6 +119,7 @@ TikTokDownloader
 * 批量下载账号发布页作品时，如果设置了作品最早发布日期限制，早于该日期的作品无需获取数据
 * 如果单独下载功能正常，批量下载功能异常，请尝试使用代理
 * 直播推流地址可以复制到下载工具进行下载，也可以直接使用本项目的程序进行下载
+* 使用 `SQLite` 格式储存数据时，重复获取作品的数据将会更新点赞收藏等统计数据
 
 # 🔗 链接类型
 
