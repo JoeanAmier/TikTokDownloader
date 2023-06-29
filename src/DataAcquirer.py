@@ -647,6 +647,7 @@ class UserData:
 
     @retry(max_num=5)
     def get_mix_data(self, id_):
+        """获取合集作品数据"""
         params = {"aid": "6383",
                   "mix_id": id_,
                   "cursor": self.cursor,
@@ -686,3 +687,45 @@ class UserData:
     def deal_mix_data(self):
         for item in self.mix_data:
             self.mix_total.append(item)
+
+    @reset
+    @check_cookie
+    def run_user(self):
+        if not all((self.url, self.cookie)):
+            self.log.warning("请检查账号链接、Cookie是否正确")
+            return False
+        self.get_id()
+        if not self.id_:
+            self.log.warning(f"{self.url} 获取 sec_user_id 失败")
+            return False
+        return self.get_user_info()
+
+    @retry(max_num=5)
+    def get_user_info(self):
+        params = {
+            "aid": "6383",
+            "sec_user_id": self.id_,
+            "cookie_enabled": "true",
+            "platform": "PC",
+        }
+        params = self.deal_params(params)
+        try:
+            response = requests.get(
+                self.user_api,
+                params=params,
+                headers=self.headers,
+                proxies=self.proxies,
+                timeout=10)
+            sleep()
+        except requests.exceptions.ReadTimeout:
+            self.log.error("请求超时")
+            return False
+        if response.status_code == 200:
+            try:
+                return response.json()
+            except requests.exceptions.JSONDecodeError:
+                self.log.error("数据接口返回内容异常！疑似接口失效", False)
+                return False
+        else:
+            self.log.error(f"响应码异常：{response.status_code}，获取JSON数据失败")
+            return False
