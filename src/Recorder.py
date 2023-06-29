@@ -292,7 +292,7 @@ class RecordManager:
         "分享数量")
     title_type = (
         "CHARACTER(2) NOT NULL",
-        "CHARACTER(20) NOT NULL"
+        "CHARACTER(20) NOT NULL",
         "CHARACTER(19) PRIMARY KEY",
         "CHARACTER(128) NOT NULL",
         "CHARACTER(20) NOT NULL",

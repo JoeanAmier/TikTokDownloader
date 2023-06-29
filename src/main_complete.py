@@ -29,7 +29,8 @@ class TikTok:
         "评论图片",
         "点赞数量",
         "回复数量",
-        "回复ID")
+        "回复ID",
+    )
     Comment_Type = (
         "CHARACTER(20) NOT NULL",
         "CHARACTER(19) PRIMARY KEY",
