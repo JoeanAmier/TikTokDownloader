@@ -695,7 +695,12 @@ class UserData:
     @reset
     @check_cookie
     def run_user(self):
-        return self.get_user_info() if self.get_user_id() else False
+        if not self.get_user_id():
+            return
+        if data := self.get_user_info():
+            self.deal_user(data)
+        else:
+            return
 
     @retry(max_num=5)
     def get_user_info(self):
@@ -727,3 +732,26 @@ class UserData:
         else:
             self.log.error(f"响应码异常：{response.status_code}，获取JSON数据失败")
             return False
+
+    @staticmethod
+    def deal_user(self, data):
+        data = data["user"]
+        collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 采集时间
+        avatar_larger = data["avatar_larger"]["url_list"][0]  # 头像
+        cover = c[0]["url_list"][0] if (
+            c := data.get("cover_url")) else ""  # 背景图片链接
+        favoriting_count = data["favoriting_count"]  # 喜欢作品数量
+        follower_count = data["follower_count"]  # 粉丝数量
+        following_count = data["following_count"]  # 关注数量
+        max_follower_count = data["max_follower_count"]  # 粉丝数量最大值
+        signature = data["signature"]  # 简介
+        total_favorited = data["total_favorited"]  # 获赞数量
+        nickname = data["nickname"]  # 账号昵称
+        sec_uid = data["sec_uid"]
+        unique_id = data["unique_id"]  # 抖音号
+        user_age = data["user_age"] or ""  # 年龄
+        aweme_count = data["aweme_count"]  # 作品数量
+        room_data = data.get("room_data")  # 直播数据
+        custom_verify = data["custom_verify"]  # 认证标签
+        uid = data["uid"]
+        short_id = data["short_id"]
