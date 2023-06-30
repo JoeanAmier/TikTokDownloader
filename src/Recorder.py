@@ -103,8 +103,7 @@ class LoggerManager(BaseLogger):
 
     @folder.setter
     def folder(self, value: str):
-        if s := Cleaner().filter(value):
-            self._folder = s
+        self._folder = s if (s := Cleaner().filter(value)) else "Log"
 
     def run(
             self,
@@ -157,15 +156,15 @@ class CSVLogger:
     def __init__(
             self,
             root: str,
+            title_line,
             name="Download",
-            title_line=None,
             *args,
             **kwargs):
         self.file = None  # 文件对象
         self.writer = None  # CSV对象
         self.root = root  # 文件路径
         self.name = name  # 文件名称
-        self.title_line = title_line or RecordManager.title  # 标题行
+        self.title_line = title_line  # 标题行
 
     def __enter__(self):
         if not os.path.exists(self.root):
@@ -197,15 +196,15 @@ class XLSXLogger:
     def __init__(
             self,
             root: str,
+            title_line,
             name="Download",
-            title_line=None,
             *args,
             **kwargs):
         self.book = None  # XLSX数据簿
         self.sheet = None  # XLSX数据表
         self.root = root  # 文件路径
         self.name = name  # 文件名称
-        self.title_line = title_line or RecordManager.title  # 标题行
+        self.title_line = title_line  # 标题行
 
     def __enter__(self):
         if not os.path.exists(self.root):
@@ -239,17 +238,17 @@ class SQLLogger:
     def __init__(
             self,
             root: str,
-            name="Download",
-            file="TikTokDownloader.db",
-            title_line=None,
-            title_type=None):
+            file,
+            title_line,
+            title_type,
+            name="Download", ):
         self.db = None  # 数据库
         self.cursor = None  # 游标对象
         self.root = root  # 文件路径
         self.name = name  # 数据表名称
         self.file = file  # 数据库文件名称
-        self.title_line = title_line or RecordManager.title  # 数据表列名
-        self.title_type = title_type or RecordManager.title_type  # 数据表数据类型
+        self.title_line = title_line  # 数据表列名
+        self.title_type = title_type  # 数据表数据类型
 
     def __enter__(self):
         if not os.path.exists(self.root):
@@ -277,8 +276,9 @@ class SQLLogger:
 
 
 class RecordManager:
-    """检查数据记录路径"""
-    title = (
+    """检查数据储存路径和文件夹"""
+    clean = Cleaner()
+    Title = (
         "作品类型",
         "采集时间",
         "作品ID",
@@ -290,7 +290,7 @@ class RecordManager:
         "评论数量",
         "收藏数量",
         "分享数量")
-    title_type = (
+    Type_ = (
         "CHARACTER(2) NOT NULL",
         "CHARACTER(20) NOT NULL",
         "CHARACTER(19) PRIMARY KEY",
@@ -303,11 +303,57 @@ class RecordManager:
         "INTEGER NOT NULL",
         "INTEGER NOT NULL",
     )
+    Comment_Title = (
+        "采集时间",
+        "评论ID",
+        "评论时间",
+        "用户昵称",
+        "IP归属地",
+        "评论内容",
+        "评论图片",
+        "点赞数量",
+        "回复数量",
+        "回复ID",
+    )
+    Comment_Type = (
+        "CHARACTER(20) NOT NULL",
+        "CHARACTER(19) PRIMARY KEY",
+        "CHARACTER(20) NOT NULL",
+        "CHARACTER(20) NOT NULL",
+        "CHARACTER(10) NOT NULL",
+        "CHARACTER(256) NOT NULL",
+        "CHARACTER(256) NOT NULL",
+        "INTEGER NOT NULL",
+        "INTEGER NOT NULL",
+        "CHARACTER(19) NOT NULL",
+    )
+    User_Title = ()
+    User_Type = ()
+    DataSheet = {
+        "comment": {
+            "file": "CommentData.db",
+            "title_line": Comment_Title,
+            "title_type": Comment_Type},
+        "user": {
+            "file": "UserData.db",
+            "title_line": User_Title,
+            "title_type": User_Type},
+        "": {
+            "file": "TikTokDownloader.db",
+            "title_line": Title,
+            "title_type": Type_
+        }
+    }
+    DataLogger = {
+        "csv": CSVLogger,
+        "xlsx": XLSXLogger,
+        "sql": SQLLogger,
+        "": NoneLogger,
+    }
 
-    @staticmethod
-    def run(root="./", folder="Data"):
-        if not os.path.exists(root):
-            return False
-        return os.path.join(
-            root, r) if (
-            r := Cleaner().filter(folder)) else False
+    def run(self, root="./", folder="Data", type_="", format_=""):
+        root = root if os.path.exists(root) else "./"
+        name = os.path.join(root, self.clean.filter(folder) or "Data")
+        type_ = self.DataSheet.get(type_, {})
+        format_ = self.DataLogger.get(format_)
+        return format_, name, type_
