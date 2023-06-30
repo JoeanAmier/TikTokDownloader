@@ -410,9 +410,8 @@ class UserData:
                 (self.api,
                  self.url,
                  self.earliest,
-                 self.latest,
-                 self.cookie)):
-            self.log.warning("请检查账号链接、批量下载类型、最早发布时间、最晚发布时间、Cookie是否正确")
+                 self.latest,)):
+            self.log.warning("请检查账号链接、批量下载类型、最早发布日期、最晚发布日期是否正确")
             return False
         self.get_id()
         if not self.id_:
@@ -696,14 +695,7 @@ class UserData:
     @reset
     @check_cookie
     def run_user(self):
-        if not all((self.url, self.cookie)):
-            self.log.warning("请检查账号链接、Cookie是否正确")
-            return False
-        self.get_id()
-        if not self.id_:
-            self.log.warning(f"{self.url} 获取 sec_user_id 失败")
-            return False
-        return self.get_user_info()
+        return self.get_user_info() if self.get_user_id() else False
 
     @retry(max_num=5)
     def get_user_info(self):
