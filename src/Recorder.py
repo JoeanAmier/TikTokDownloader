@@ -342,6 +342,11 @@ class RecordManager:
             "file": "TikTokDownloader.db",
             "title_line": Title,
             "title_type": Type_
+        },
+        "mix": {
+            "file": "MixData.db",
+            "title_line": Title,
+            "title_type": Type_
         }
     }
     DataLogger = {
