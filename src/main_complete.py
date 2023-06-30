@@ -2,52 +2,20 @@ from src.Configuration import Settings
 from src.DataAcquirer import UserData
 from src.DataDownloader import Download
 from src.Recorder import BaseLogger
-from src.Recorder import CSVLogger
 from src.Recorder import LoggerManager
-from src.Recorder import NoneLogger
 from src.Recorder import RecordManager
-from src.Recorder import SQLLogger
-from src.Recorder import XLSXLogger
 
 
 class TikTok:
     CLEAN_PATCH = {
         " ": " ",
     }  # 过滤字符
-    DataLogger = {
-        "csv": CSVLogger,
-        "xlsx": XLSXLogger,
-        "sql": SQLLogger,
-    }
-    Comment_Title = (
-        "采集时间",
-        "评论ID",
-        "评论时间",
-        "用户昵称",
-        "IP归属地",
-        "评论内容",
-        "评论图片",
-        "点赞数量",
-        "回复数量",
-        "回复ID",
-    )
-    Comment_Type = (
-        "CHARACTER(20) NOT NULL",
-        "CHARACTER(19) PRIMARY KEY",
-        "CHARACTER(20) NOT NULL",
-        "CHARACTER(20) NOT NULL",
-        "CHARACTER(10) NOT NULL",
-        "CHARACTER(256) NOT NULL",
-        "CHARACTER(256) NOT NULL",
-        "INTEGER NOT NULL",
-        "INTEGER NOT NULL",
-        "CHARACTER(19) NOT NULL",
-    )
 
     def __init__(self):
-        self.record = None
+        self.logger = None
         self.request = None
         self.download = None
+        self.record = RecordManager()
         self.settings = Settings()
         self.accounts = []  # 账号数据
         self._number = 0  # 账号数量
@@ -100,7 +68,7 @@ class TikTok:
         return True
 
     def batch_acquisition(self):
-        self.record.info(f"共有 {self._number} 个账号的作品等待下载")
+        self.logger.info(f"共有 {self._number} 个账号的作品等待下载")
         for index in range(self._number):
             self.account_download(index + 1, *self.accounts[index])
 
@@ -119,18 +87,18 @@ class TikTok:
             return False
         self.download.nickname = self.request.name
         self.download.favorite = self.request.favorite
-        data_root = RecordManager.run(self._data["root"])
-        save_file = self.DataLogger.get(self._data["save"], NoneLogger)
-        with save_file(data_root, self.download.nickname) as data:
+        save, root, params = self.record.run(
+            self._data["root"], format_=self._data["save"])
+        with save(root, name=self.download.nickname, **params) as data:
             self.download.data = data
             self.download.run(num,
                               self.request.video_data,
                               self.request.image_data)
 
     def single_acquisition(self):
-        data_root = RecordManager.run(self._data["root"])
-        save_file = self.DataLogger.get(self._data["save"], NoneLogger)
-        with save_file(data_root) as data:
+        save, root, params = self.record.run(
+            self._data["root"], format_=self._data["save"])
+        with save(root, **params) as data:
             self.download.data = data
             while True:
                 url = input("请输入分享链接：")
@@ -138,7 +106,7 @@ class TikTok:
                     break
                 id_ = self.request.run_alone(url)
                 if not id_:
-                    self.record.error(f"{url} 获取 aweme_id 失败")
+                    self.logger.error(f"{url} 获取 aweme_id 失败")
                     continue
                 self.download.run_alone(id_)
 
@@ -159,13 +127,13 @@ class TikTok:
             if not link:
                 break
             if not (data := self.request.get_live_data(link)):
-                self.record.warning("获取直播数据失败")
+                self.logger.warning("获取直播数据失败")
                 continue
             if not (data := self.request.deal_live_data(data)):
                 continue
-            self.record.info(f"主播昵称: {data[0]}")
-            self.record.info(f"直播名称: {data[1]}")
-            self.record.info("推流地址: \n" +
+            self.logger.info(f"主播昵称: {data[0]}")
+            self.logger.info(f"直播名称: {data[1]}")
+            self.logger.info("推流地址: \n" +
                              "\n".join([f"{i}: {j}" for i, j in data[2].items()]))
             if l := choice_quality(data[2]):
                 self.download.download_live(l, f"{data[0]}-{data[1]}")
@@ -177,13 +145,13 @@ class TikTok:
             folder="Log",
             name="%Y-%m-%d %H.%M.%S",
             filename=None):
-        self.record = LoggerManager() if self._data["log"] else BaseLogger()
-        self.record.root = root  # 日志根目录
-        self.record.folder = folder  # 日志文件夹名称
-        self.record.name = name  # 日志文件名称格式
-        self.record.run(filename=filename)
-        self.request = UserData(self.record)
-        self.download = Download(self.record, None)
+        self.logger = LoggerManager() if self._data["log"] else BaseLogger()
+        self.logger.root = root  # 日志根目录
+        self.logger.folder = folder  # 日志文件夹名称
+        self.logger.name = name  # 日志文件名称格式
+        self.logger.run(filename=filename)
+        self.request = UserData(self.logger)
+        self.download = Download(self.logger, None)
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
 
     def set_parameters(self):
@@ -203,40 +171,56 @@ class TikTok:
         self.download.download = self._data["download"]
 
     def comment_acquisition(self):
-        data_root = RecordManager.run(self._data["root"])
-        save_file = self.DataLogger.get(self._data["save"], NoneLogger)
+        save, root, params = self.record.run(
+            self._data["root"], type_="comment", format_=self._data["save"])
         while True:
             url = input("请输入作品链接：")
             if not url:
                 break
             id_ = self.request.run_alone(url)
             if not id_:
-                self.record.error(f"{url} 获取 aweme_id 失败")
+                self.logger.error(f"{url} 获取 aweme_id 失败")
                 continue
-            with save_file(data_root, f"作品_{id_}", file="CommentData.db", title_line=self.Comment_Title,
-                           title_type=self.Comment_Type) as data:
+            with save(root, name=f"作品_{id_}", **params) as data:
                 self.request.run_comment(id_, data)
 
     def mix_acquisition(self):
-        data_root = RecordManager.run(self._data["root"])
-        save_file = self.DataLogger.get(self._data["save"], NoneLogger)
+        save, root, params = self.record.run(
+            self._data["root"], type_="mix", format_=self._data["save"])
         while True:
             url = input("请输入合集作品链接：")
             if not url:
                 break
             id_ = self.request.run_alone(url)
             if not id_:
-                self.record.error(f"{url} 获取 aweme_id 失败")
+                self.logger.error(f"{url} 获取 aweme_id 失败")
                 continue
             mix_data = self.download.get_data(id_)
             mix_name = self.request.run_mix(mix_data)
             if not mix_name:
-                self.record.info(f"作品 {id_} 不属于任何合集")
+                self.logger.info(f"作品 {id_} 不属于任何合集")
                 continue
             self.download.nickname = mix_name
-            with save_file(data_root, self.download.nickname, file="MixData.db") as data:
+            with save(root, name=self.download.nickname, **params) as data:
                 self.download.data = data
                 self.download.run_mix(self.request.mix_total)
+
+    def accounts_user(self):
+        pass
+
+    def alone_user(self):
+        pass
+
+    def user_acquisition(self):
+        def choose_mode() -> str:
+            return input(
+                "请选择账号链接来源: \n1. 使用 accounts 参数内的账号链接\n2. 手动输入待采集的账号链接\n")
+
+        if (m := choose_mode()) == "1":
+            self.accounts_user()
+        elif m == "2":
+            self.alone_user()
+        return
 
     def run(self):
         if not self.check_config():
@@ -244,20 +228,23 @@ class TikTok:
         self.initialize()
         self.set_parameters()
         select = input(
-            "请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n3. 获取直播推流地址\n4. 抓取作品评论数据\n5. 批量下载合集作品\n输入序号：")
+            "请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n3. 获取直播推流地址\n4. 抓取作品评论数据\n5. 批量下载合集作品\n6. 批量提取账号数据\n输入序号：")
         if select == "1":
-            self.record.info("已选择批量下载作品模式")
+            self.logger.info("已选择批量下载作品模式")
             self.batch_acquisition()
         elif select == "2":
-            self.record.info("已选择单独下载作品模式")
+            self.logger.info("已选择单独下载作品模式")
             self.single_acquisition()
         elif select == "3":
-            self.record.info("已选择直播下载模式")
+            self.logger.info("已选择直播下载模式")
             self.live_acquisition()
         elif select == "4":
-            self.record.info("已选择评论抓取模式")
+            self.logger.info("已选择评论抓取模式")
             self.comment_acquisition()
         elif select == "5":
-            self.record.info("已选择合集下载模式")
+            self.logger.info("已选择合集下载模式")
             self.mix_acquisition()
-        self.record.info("程序运行结束")
+        elif select == "6":
+            self.logger.info("已选择批量提取账号数据模式")
+            self.user_acquisition()
+        self.logger.info("程序运行结束")

@@ -99,7 +99,7 @@ class WebUI(TikTok):
             self.download.data = data
             id_ = self.request.run_alone(self.solo_url[0])
             if not id_:
-                self.record.error(f"{self.solo_url[0]} 获取 aweme_id 失败")
+                self.logger.error(f"{self.solo_url[0]} 获取 aweme_id 失败")
                 return {
                     "text": "获取作品ID失败",
                     "preview": "static/images/blank.png"}
@@ -111,7 +111,7 @@ class WebUI(TikTok):
 
     def live_acquisition(self):
         if not (data := self.request.get_live_data(self.live_url)):
-            self.record.warning("获取直播数据失败")
+            self.logger.warning("获取直播数据失败")
             return {
                 "text": "获取直播数据失败",
                 "preview": "static/images/blank.png"}
@@ -121,7 +121,7 @@ class WebUI(TikTok):
                 "preview": "static/images/blank.png"}
         result = {"主播昵称": data[0], "直播名称": data[1]} | data[2]
         for i, j in result.items():
-            self.record.info(f"{i}: {j}", False)
+            self.logger.info(f"{i}: {j}", False)
         return {
             "text": "\n".join([f"{i}: {j}" for i, j in result.items()]),
             "preview": data[3]}
