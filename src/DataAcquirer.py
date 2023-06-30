@@ -406,26 +406,19 @@ class UserData:
             self.finish = True
 
     def get_user_id(self, index=0):
-        if index:
-            if not all(
-                    (self.api,
-                     self.url,
-                     self.earliest,
-                     self.latest,
-                     self.cookie)):
-                self.log.warning("请检查账号链接、批量下载类型、最早发布时间、最晚发布时间、Cookie是否正确")
-                return False
-            self.get_id()
-            if not self.id_:
-                self.log.error("获取账号 sec_user_id 失败")
-                return False
-            return True
-        else:
-            self.get_id()
-            if not self.id_:
-                self.log.error("获取账号 sec_user_id 失败")
-                return False
-            return self.id_
+        if index and not all(
+                (self.api,
+                 self.url,
+                 self.earliest,
+                 self.latest,
+                 self.cookie)):
+            self.log.warning("请检查账号链接、批量下载类型、最早发布时间、最晚发布时间、Cookie是否正确")
+            return False
+        self.get_id()
+        if not self.id_:
+            self.log.error("获取账号 sec_user_id 失败")
+            return False
+        return True
 
     @reset
     @check_cookie
