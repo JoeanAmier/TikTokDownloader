@@ -304,14 +304,14 @@ class Download:
                 self.log.info(
                     "视频: " +
                     ", ".join(
-                        [
-                            id_,
-                            desc,
-                            create_time.replace(
-                                ".",
-                                ":"),
-                            self.nickname,
-                            video_id] + statistics),
+                        [collection_time,
+                         id_,
+                         desc,
+                         create_time.replace(
+                             ".",
+                             ":"),
+                         self.nickname,
+                         video_id] + statistics),
                     False)
                 self.data.save(["视频",
                                 collection_time,
@@ -329,13 +329,13 @@ class Download:
                 self.log.info(
                     "图集: " +
                     ", ".join(
-                        [
-                            id_,
-                            desc,
-                            create_time.replace(
-                                ".",
-                                ":"),
-                            self.nickname] +
+                        [collection_time,
+                         id_,
+                         desc,
+                         create_time.replace(
+                             ".",
+                             ":"),
+                         self.nickname] +
                         statistics),
                     False)
                 self.data.save(["图集",
