@@ -405,22 +405,34 @@ class UserData:
                 self.max_cursor / 1000).date():
             self.finish = True
 
+    def get_user_id(self, index=0):
+        if index:
+            if not all(
+                    (self.api,
+                     self.url,
+                     self.earliest,
+                     self.latest,
+                     self.cookie)):
+                self.log.warning("请检查账号链接、批量下载类型、最早发布时间、最晚发布时间、Cookie是否正确")
+                return False
+            self.get_id()
+            if not self.id_:
+                self.log.error("获取账号 sec_user_id 失败")
+                return False
+            return True
+        else:
+            self.get_id()
+            if not self.id_:
+                self.log.error("获取账号 sec_user_id 失败")
+                return False
+            return self.id_
+
     @reset
     @check_cookie
     def run(self, index: int):
         """批量下载模式"""
-        if not all(
-                (self.api,
-                 self.url,
-                 self.earliest,
-                 self.latest,
-                 self.cookie)):
-            self.log.warning("请检查账号链接、批量下载类型、最早发布时间、最晚发布时间、Cookie是否正确")
-            return False
         self.log.info(f"正在获取第 {index} 个账号数据")
-        self.get_id()
-        if not self.id_:
-            self.log.error(f"获取第 {index} 个账号 sec_user_id 失败")
+        if not self.get_user_id(index):
             return False
         while not self.finish:
             self.get_user_data()
