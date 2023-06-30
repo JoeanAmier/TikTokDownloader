@@ -231,7 +231,7 @@ class Download:
             os.mkdir(self.type_["images"])
 
     @retry(max_num=5)
-    def get_data(self, item: str):
+    def get_data(self, item: str) -> dict | bool:
         """获取作品详细信息"""
         params = {
             "aweme_id": item,
@@ -259,7 +259,7 @@ class Download:
             self.log.error(f"请求超时，资源 {item} 获取 item_list 失败")
             return False
 
-    def get_info(self, data: list[str | dict], type_=None):
+    def get_info(self, data: list[str | dict]):
         """
         提取作品详细信息
         视频格式: 采集时间, 作品ID, 描述, 创建时间, 作者, 视频ID, [音乐名称, 音乐链接], 动态封面图, 静态封面图, 点赞数量, 评论数量, 收藏数量, 分享数量
@@ -268,8 +268,6 @@ class Download:
         for item in data:
             if isinstance(item, str):
                 item = self.get_data(item)
-            else:
-                type_ = "Image" if item["images"] else "Video"
             collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             id_ = item["aweme_id"]
             desc = self.clean.filter(item["desc"] or id_)
@@ -295,7 +293,31 @@ class Download:
                     share_count) if isinstance(
                     i,
                     int)]
-            if type_ == "Video":
+            if images := item["images"]:
+                images = [i['url_list'][0] for i in images]
+                self.log.info(
+                    "图集: " +
+                    ", ".join(
+                        [collection_time,
+                         id_,
+                         desc,
+                         create_time.replace(
+                             ".",
+                             ":"),
+                         self.nickname] +
+                        statistics),
+                    False)
+                self.data.save(["图集",
+                                collection_time,
+                                id_,
+                                desc[:self.length],
+                                create_time.replace(".",
+                                                    ":"),
+                                self.nickname,
+                                "#"] + statistics)
+                self.image_data.append(
+                    [id_, desc, create_time, self.nickname, images, [music_name, music]])
+            else:
                 video_id = item["video"]["play_addr"]["uri"]
                 # 动态封面图链接
                 dynamic_cover = item["video"]["dynamic_cover"]["url_list"][0]
@@ -323,33 +345,6 @@ class Download:
                                 video_id] + statistics)
                 self.video_data.append([id_, desc, create_time, self.nickname, video_id, [
                     music_name, music], dynamic_cover, origin_cover])
-            elif type_ == "Image":
-                images = item["images"]
-                images = [i['url_list'][3] for i in images]
-                self.log.info(
-                    "图集: " +
-                    ", ".join(
-                        [collection_time,
-                         id_,
-                         desc,
-                         create_time.replace(
-                             ".",
-                             ":"),
-                         self.nickname] +
-                        statistics),
-                    False)
-                self.data.save(["图集",
-                                collection_time,
-                                id_,
-                                desc[:self.length],
-                                create_time.replace(".",
-                                                    ":"),
-                                self.nickname,
-                                "#"] + statistics)
-                self.image_data.append(
-                    [id_, desc, create_time, self.nickname, images, [music_name, music]])
-            else:
-                raise ValueError("type_ 参数错误！应该为 Video 或 Image 其中之一！")
 
     def download_images(self):
         root = self.type_["images"]
@@ -506,13 +501,13 @@ class Download:
             return False
         self.nickname = self.clean.filter(data["author"]["nickname"])
         if data["images"]:
-            self.get_info([id_], "Image")
+            self.get_info([data])
             if not download:
                 return self.image_data
             self.download_images()
             return self.image_data[0][4][0]
         else:
-            self.get_info([id_], "Video")
+            self.get_info([data])
             if not download:
                 return self.video_data
             self.download_video()
