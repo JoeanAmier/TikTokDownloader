@@ -465,14 +465,14 @@ class UserData:
         latest_date = self.latest
         filtered = []
         for item in self.video_data:
-            date = datetime.fromtimestamp(item[0]).date()
-            if earliest_date <= date <= latest_date:
+            date_ = datetime.fromtimestamp(item[0]).date()
+            if earliest_date <= date_ <= latest_date:
                 filtered.append(item[1])
         self.video_data = filtered
         filtered = []
         for item in self.image_data:
-            date = datetime.fromtimestamp(item[0]).date()
-            if earliest_date <= date <= latest_date:
+            date_ = datetime.fromtimestamp(item[0]).date()
+            if earliest_date <= date_ <= latest_date:
                 filtered.append(item[1])
         self.image_data = filtered
 
