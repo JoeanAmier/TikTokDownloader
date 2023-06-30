@@ -700,6 +700,7 @@ class UserData:
     @retry(max_num=5)
     def get_user_info(self):
         params = {
+            "device_platform": "webapp",
             "aid": "6383",
             "sec_user_id": self.id_,
             "cookie_enabled": "true",

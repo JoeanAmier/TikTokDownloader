@@ -69,8 +69,15 @@ class TikTok:
 
     def batch_acquisition(self):
         self.logger.info(f"共有 {self._number} 个账号的作品等待下载")
+        save, root, params = self.record.run(
+            self._data["root"], format_=self._data["save"])
         for index in range(self._number):
-            self.account_download(index + 1, *self.accounts[index])
+            self.account_download(
+                index + 1,
+                *self.accounts[index],
+                save,
+                root,
+                params)
 
     def account_download(
             self,
@@ -78,7 +85,7 @@ class TikTok:
             url: str,
             mode: str,
             earliest: str,
-            latest: str):
+            latest: str, save, root: str, params: dict):
         self.request.url = url
         self.request.api = mode
         self.request.earliest = earliest
@@ -87,8 +94,6 @@ class TikTok:
             return False
         self.download.nickname = self.request.name
         self.download.favorite = self.request.favorite
-        save, root, params = self.record.run(
-            self._data["root"], format_=self._data["save"])
         with save(root, name=self.download.nickname, **params) as data:
             self.download.data = data
             self.download.run(num,
@@ -209,7 +214,17 @@ class TikTok:
         pass
 
     def alone_user(self):
-        pass
+        save, root, params = self.record.run(
+            self._data["root"], type_="user", format_=self._data["save"])
+        while True:
+            url = input("请输入账号链接: ")
+            if not url:
+                break
+            self.request.url = url
+            data = self.request.run_user()
+            if not data:
+                continue
+            print(data)
 
     def user_acquisition(self):
         def choose_mode() -> str:
