@@ -327,14 +327,12 @@ class UserData:
         else:
             self.name = self.clean.filter(self.list[0]["author"]["nickname"])
             for item in self.list:
-                if t := item["aweme_type"] == 68:
+                if item["images"]:
                     self.image_data.append(
                         [item["create_time"], item])
-                elif t == 0:
+                else:
                     self.video_data.append(
                         [item["create_time"], item])
-                else:
-                    self.log.warning(f"无法判断资源类型, 详细数据: {item}")
 
     def summary(self):
         """汇总账号作品数量"""
@@ -696,11 +694,12 @@ class UserData:
     @check_cookie
     def run_user(self):
         if not self.get_user_id():
-            return
+            return False
         if data := self.get_user_info():
             self.deal_user(data)
-        else:
             return
+        else:
+            return False
 
     @retry(max_num=5)
     def get_user_info(self):
@@ -737,13 +736,13 @@ class UserData:
     def deal_user(self, data):
         data = data["user"]
         collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 采集时间
-        avatar_larger = data["avatar_larger"]["url_list"][0]  # 头像
+        avatar_larger = data["avatar_larger"]["url_list"][0]  # 头像链接
         cover = c[0]["url_list"][0] if (
             c := data.get("cover_url")) else ""  # 背景图片链接
         favoriting_count = data["favoriting_count"]  # 喜欢作品数量
         follower_count = data["follower_count"]  # 粉丝数量
         following_count = data["following_count"]  # 关注数量
-        max_follower_count = data["max_follower_count"]  # 粉丝数量最大值
+        # max_follower_count = data["max_follower_count"]  # 粉丝数量最大值
         signature = data["signature"]  # 简介
         total_favorited = data["total_favorited"]  # 获赞数量
         nickname = data["nickname"]  # 账号昵称
@@ -751,7 +750,8 @@ class UserData:
         unique_id = data["unique_id"]  # 抖音号
         user_age = data["user_age"] or ""  # 年龄
         aweme_count = data["aweme_count"]  # 作品数量
-        room_data = data.get("room_data")  # 直播数据
+        # room_data = data.get("room_data")  # 直播数据
         custom_verify = data["custom_verify"]  # 认证标签
         uid = data["uid"]
         short_id = data["short_id"]
+        result = [nickname]

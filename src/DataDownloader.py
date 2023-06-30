@@ -269,7 +269,7 @@ class Download:
             if isinstance(item, str):
                 item = self.get_data(item)
             else:
-                type_ = {68: "Image", 0: "Video"}[item["aweme_type"]]
+                type_ = "Image" if item["images"] else "Video"
             collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             id_ = item["aweme_id"]
             desc = self.clean.filter(item["desc"] or id_)
