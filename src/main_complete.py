@@ -78,6 +78,7 @@ class TikTok:
                 save,
                 root,
                 params)
+            # break  # 测试使用
 
     def account_download(
             self,
