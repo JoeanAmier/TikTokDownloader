@@ -224,7 +224,7 @@ class TikTok:
             data = self.request.run_user()
             if not data:
                 continue
-            with save(root, name=data[1], **params) as file:
+            with save(root, name="UserData", **params) as file:
                 self.request.save_user(file, data)
 
     def user_acquisition(self):

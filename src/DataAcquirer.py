@@ -758,7 +758,7 @@ class UserData:
             nickname,
             signature,
             unique_id,
-            user_age,
+            str(user_age),
             custom_verify,
             enterprise,
             sec_uid,
@@ -766,12 +766,15 @@ class UserData:
             short_id,
             avatar_larger,
             cover,
-            aweme_count,
-            total_favorited,
-            favoriting_count,
-            follower_count,
-            following_count,
-            max_follower_count]
+            str(aweme_count),
+            str(total_favorited),
+            str(favoriting_count),
+            str(follower_count),
+            str(following_count),
+            str(max_follower_count), ]
 
     def save_user(self, file, data):
         self.data = file
+        self.log.info("账号数据: " + ", ".join(data), False)
+        self.data.save(data, key=1)
+        self.log.info("账号数据获取结束")
