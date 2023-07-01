@@ -280,7 +280,7 @@ class UserData:
 
     @retry(max_num=5)
     def get_user_data(self):
-        """获取账号作品信息"""
+        """获取账号作品数据"""
         params = {
             "aid": "6383",
             "sec_user_id": self.id_,
@@ -300,23 +300,23 @@ class UserData:
                 timeout=10)
             sleep()
         except requests.exceptions.ReadTimeout:
-            self.log.error("请求超时")
+            self.log.error("获取账号作品数据超时")
             return False
         if response.status_code == 200:
             try:
                 data = response.json()
             except requests.exceptions.JSONDecodeError:
-                self.log.error("数据接口返回内容异常！疑似接口失效", False)
+                self.log.error("账号作品数据返回内容异常！疑似接口失效", False)
                 return False
             try:
                 self.max_cursor = data['max_cursor']
                 self.list = data["aweme_list"]
                 return True
             except KeyError:
-                self.log.error(f"响应内容异常: {data}", False)
+                self.log.error(f"账号作品数据响应内容异常: {data}", False)
                 return False
         else:
-            self.log.error(f"响应码异常：{response.status_code}，获取JSON数据失败")
+            self.log.error(f"响应码异常：{response.status_code}，获取账号作品数据失败")
             return False
 
     def deal_data(self):
@@ -444,7 +444,7 @@ class UserData:
         """单独下载模式"""
         url = self.check_url(text)
         if not url:
-            self.log.warning("无效的作品链接")
+            self.log.warning(f"无效的作品链接: {url}")
             return False
         self.get_id("aweme_id", url)
         return self.id_ or False
@@ -486,7 +486,7 @@ class UserData:
     def get_live_data(self, link: str):
         id_ = self.get_live_id(link)
         if not id_:
-            self.log.warning("直播链接格式错误")
+            self.log.warning(f"直播链接格式错误: {link}")
             return False
         params = {
             "aid": "6383",
@@ -504,10 +504,10 @@ class UserData:
             sleep()
             return r if (r := response.json()) else False
         except requests.exceptions.ReadTimeout:
-            self.log.warning("请求超时")
+            self.log.warning("获取直播数据超时")
             return False
         except requests.exceptions.JSONDecodeError:
-            self.log.warning("直播数据接口返回内容格式错误")
+            self.log.warning("直播数据内容格式错误")
             return False
 
     def deal_live_data(self, data):
@@ -542,6 +542,7 @@ class UserData:
 
     @retry(max_num=5)
     def get_comment(self, id_: str, api: str, reply=""):
+        """获取评论数据"""
         if reply:
             params = {
                 "aid": "6383",
@@ -570,23 +571,23 @@ class UserData:
                 timeout=10)
             sleep()
         except requests.exceptions.ReadTimeout:
-            self.log.error("请求超时")
+            self.log.error("获取评论数据超时")
             return False
         if response.status_code == 200:
             try:
                 data = response.json()
             except requests.exceptions.JSONDecodeError:
-                self.log.error("数据接口返回内容异常！疑似接口失效", False)
+                self.log.error("评论数据返回内容异常！疑似接口失效", False)
                 return False
             try:
                 self.comment = data["comments"]
                 self.cursor = data["cursor"]
                 return True
             except KeyError:
-                self.log.error(f"响应内容异常: {data}", False)
+                self.log.error(f"评论数据内容异常: {data}", False)
                 return False
         else:
-            self.log.error(f"响应码异常：{response.status_code}，获取JSON数据失败")
+            self.log.error(f"响应码异常：{response.status_code}，获取评论数据失败")
             return False
 
     def deal_comment(self):
@@ -666,13 +667,13 @@ class UserData:
                 timeout=10)
             sleep()
         except requests.exceptions.ReadTimeout:
-            self.log.error("请求超时")
+            self.log.error("获取合集作品数据超时")
             return False
         if response.status_code == 200:
             try:
                 data = response.json()
             except requests.exceptions.JSONDecodeError:
-                self.log.error("数据接口返回内容异常！疑似接口失效", False)
+                self.log.error("合集作品数据返回内容异常！疑似接口失效", False)
                 return False
             try:
                 self.cursor = data['cursor']
@@ -680,10 +681,10 @@ class UserData:
                 self.finish = not data["has_more"]
                 return True
             except KeyError:
-                self.log.error(f"响应内容异常: {data}", False)
+                self.log.error(f"合集作品数据内容异常: {data}", False)
                 return False
         else:
-            self.log.error(f"响应码异常：{response.status_code}，获取JSON数据失败")
+            self.log.error(f"响应码异常：{response.status_code}，获取合集作品数据失败")
             return False
 
     def deal_mix_data(self):
@@ -717,16 +718,16 @@ class UserData:
                 timeout=10)
             sleep()
         except requests.exceptions.ReadTimeout:
-            self.log.error("请求超时")
+            self.log.error("获取账号数据超时")
             return False
         if response.status_code == 200:
             try:
                 return response.json()
             except requests.exceptions.JSONDecodeError:
-                self.log.error("数据接口返回内容异常！疑似接口失效", False)
+                self.log.error("账号数据内容异常！疑似接口失效", False)
                 return False
         else:
-            self.log.error(f"响应码异常：{response.status_code}，获取JSON数据失败")
+            self.log.error(f"响应码异常：{response.status_code}，获取账号数据失败")
             return False
 
     @staticmethod
