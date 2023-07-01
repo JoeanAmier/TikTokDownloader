@@ -299,7 +299,7 @@ class Download:
             music_name, music_url = get_music()
             statistics = get_statistics()
             if images := item["images"]:
-                images = [i['url_list'][0] for i in images]
+                images = [i['url_list'][-1] for i in images]
                 self.log.info(
                     "图集: " +
                     ", ".join(
@@ -351,86 +351,54 @@ class Download:
                 self.video_data.append([id_, desc, create_time, self.nickname, video_url, [
                     music_name, music_url], dynamic_cover, origin_cover])
 
+    @retry(max_num=5)
+    def request_file(self, url: str, root: str, name: str, type_: str, id_=""):
+        """发送请求获取文件内容"""
+        with requests.get(
+                url,
+                stream=True,
+                proxies=self.proxies,
+                headers=self.UA) as response:
+            sleep()
+            return bool(self.save_file(response, root, name, type_, id_))
+
     def download_images(self):
         root = self.type_["images"]
         for item in self.image_data:
             for index, image in enumerate(item[4]):
-                with requests.get(
-                        image,
-                        stream=True,
-                        proxies=self.proxies,
-                        headers=self.UA) as response:
-                    name = self.get_name(item)
-                    self.save_file(
-                        response,
-                        root,
-                        f"{name}_{index + 1}",
-                        "jpeg",
-                        item[0])
+                name = self.get_name(item)
+                self.request_file(
+                    image,
+                    root,
+                    f"{name}_{index + 1}",
+                    type_="jpeg",
+                    id_=item[0])
                 self.image_id = item[0]
-                sleep()
             self.download_music(root, item)
 
     def download_video(self):
         root = self.type_["video"]
         for item in self.video_data:
-            with requests.get(
-                    item[4],
-                    stream=True,
-                    proxies=self.proxies,
-                    headers=self.UA) as response:
-                name = self.get_name(item)
-                self.save_file(response, root, name, "mp4")
-            sleep()
+            name = self.get_name(item)
+            self.request_file(item[4], root, name, type_="mp4")
             self.download_music(root, item)
             self.download_cover(root, name, item)
 
     def download_music(self, root: str, item: list):
         """下载音乐"""
         if self.music and (u := item[5][1]):
-            with requests.get(
-                    u,
-                    stream=True,
-                    proxies=self.proxies,
-                    headers=self.UA) as response:
-                self.save_file(
-                    response,
-                    root,
-                    self.clean.filter(f"{f'{item[0]}-{item[5][0]}'}"),
-                    "mp3",
-                )
-            sleep()
+            self.request_file(u, root, self.clean.filter(
+                f"{f'{item[0]}-{item[5][0]}'}"), type_="mp3")
 
     def download_cover(self, root: str, name: str, item: list):
         """下载静态/动态封面图"""
         if not self.dynamic and not self.original:
             return
         if self.dynamic and (u := item[6]):
-            with requests.get(
-                    u,
-                    stream=True,
-                    proxies=self.proxies,
-                    headers=self.UA) as response:
-                self.save_file(
-                    response,
-                    root,
-                    name,
-                    "webp")
-            sleep()
+            self.request_file(u, root, name, type_="webp")
         if self.original and (u := item[7]):
-            with requests.get(
-                    u,
-                    stream=True,
-                    proxies=self.proxies,
-                    headers=self.UA) as response:
-                self.save_file(
-                    response,
-                    root,
-                    name,
-                    "jpeg")
-            sleep()
+            self.request_file(u, root, name, type_="jpeg")
 
-    @retry(max_num=3)
     def save_file(self, data, root: str, name: str, type_: str, id_=""):
         """保存文件"""
 
@@ -448,7 +416,7 @@ class Download:
                 f"文件保存路径: {file}", False)
             return True
         try:
-            if data == b"":
+            if data.content == b"":
                 self.log.warning(f"{file} 获取文件内容失败")
                 return False
             with open(file, "wb") as f:
