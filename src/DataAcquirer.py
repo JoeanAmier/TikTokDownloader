@@ -746,12 +746,13 @@ class UserData:
         nickname = data["nickname"]  # 账号昵称
         sec_uid = data["sec_uid"]
         unique_id = data["unique_id"]  # 抖音号
-        user_age = data["user_age"] or ""  # 年龄
+        short_id = data["short_id"]
+        user_age = data["user_age"]  # 年龄
         aweme_count = data["aweme_count"]  # 作品数量
         room_data = data.get("room_data")  # 直播数据
-        custom_verify = data["custom_verify"] or "无"  # 认证标签
+        custom_verify = data["custom_verify"] or "无"  # 标签认证
         uid = data["uid"]
-        short_id = data["short_id"]
+        enterprise = data["enterprise_verify_reason"] or "无"  # 企业认证
         return [
             collection_time,
             nickname,
@@ -759,6 +760,7 @@ class UserData:
             unique_id,
             user_age,
             custom_verify,
+            enterprise,
             sec_uid,
             uid,
             short_id,

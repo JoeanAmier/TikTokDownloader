@@ -327,8 +327,48 @@ class RecordManager:
         "INTEGER NOT NULL",
         "CHARACTER(19) NOT NULL",
     )
-    User_Title = ()
-    User_Type = ()
+    User_Title = (
+        "ID",
+        "采集时间",
+        "昵称",
+        "简介",
+        "抖音号",
+        "年龄",
+        "标签",
+        "企业",
+        "sec_uid",
+        "uid",
+        "short_id",
+        "头像",
+        "背景图",
+        "作品数量",
+        "获赞数量",
+        "喜欢作品数量",
+        "粉丝数量",
+        "关注数量",
+        "粉丝最多数量",
+    )
+    User_Type = (
+        "INTEGER PRIMARY KEY",
+        "CHARACTER(20) NOT NULL",
+        "CHARACTER(20) NOT NULL",
+        "TEXT",
+        "TEXT",
+        "INTEGER",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "CHARACTER(256) NOT NULL",
+        "CHARACTER(256) NOT NULL",
+        "INTEGER",
+        "INTEGER",
+        "INTEGER",
+        "INTEGER",
+        "INTEGER",
+        "INTEGER",
+    )
     DataSheet = {
         "comment": {
             "file": "CommentData.db",
