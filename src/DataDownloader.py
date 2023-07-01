@@ -265,34 +265,39 @@ class Download:
         视频格式: 采集时间, 作品ID, 描述, 创建时间, 作者, 视频ID, [音乐名称, 音乐链接], 动态封面图, 静态封面图, 点赞数量, 评论数量, 收藏数量, 分享数量
         图集格式: 采集时间, 作品ID, 描述, 创建时间, 作者, [图集链接], [音乐名称, 音乐链接], 点赞数量, 评论数量, 收藏数量, 分享数量
         """
+
+        def get_music():
+            nonlocal item
+            if music_data := item.get("music", False):
+                name = f'{music_data["author"]}-{music_data["title"]}'
+                url = u[0] if (u := music_data["play_url"]
+                ["url_list"]) else None  # 部分作品的数据没有音乐下载地址
+                return name, url
+            return None, None
+
+        def get_statistics():
+            nonlocal item
+            result = []
+            for i in (
+                    "digg_count",
+                    "comment_count",
+                    "collect_count",
+                    "share_count"):
+                result.append(str(item["statistics"][i]))
+            return result
+
         for item in data:
             if isinstance(item, str):
                 item = self.get_data(item)
             collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             id_ = item["aweme_id"]
-            desc = self.clean.filter(item["desc"] or id_)
+            desc = self.clean.filter(item["desc"]) or id_
             create_time = time.strftime(
                 self.time,
                 time.localtime(
                     item["create_time"]))
-            if music_data := item.get("music", False):
-                music_name = f'{music_data["author"]}-{music_data["title"]}'
-                music = u[0] if (u := music_data["play_url"]
-                ["url_list"]) else None  # 部分作品的数据没有音乐下载地址
-            else:
-                music_name, music = None, None
-            digg_count = item["statistics"]["digg_count"]
-            comment_count = item["statistics"]["comment_count"]
-            collect_count = item["statistics"]["collect_count"]
-            share_count = item["statistics"]["share_count"]
-            statistics = [
-                str(i) for i in (
-                    digg_count,
-                    comment_count,
-                    collect_count,
-                    share_count) if isinstance(
-                    i,
-                    int)]
+            music_name, music_url = get_music()
+            statistics = get_statistics()
             if images := item["images"]:
                 images = [i['url_list'][0] for i in images]
                 self.log.info(
@@ -316,7 +321,7 @@ class Download:
                                 self.nickname,
                                 "#"] + statistics)
                 self.image_data.append(
-                    [id_, desc, create_time, self.nickname, images, [music_name, music]])
+                    [id_, desc, create_time, self.nickname, images, [music_name, music_url]])
             else:
                 video_id = item["video"]["play_addr"]["uri"]
                 # 动态封面图链接
@@ -344,7 +349,7 @@ class Download:
                                 self.nickname,
                                 video_id] + statistics)
                 self.video_data.append([id_, desc, create_time, self.nickname, video_id, [
-                    music_name, music], dynamic_cover, origin_cover])
+                    music_name, music_url], dynamic_cover, origin_cover])
 
     def download_images(self):
         root = self.type_["images"]
@@ -500,14 +505,13 @@ class Download:
             self.log.warning("获取作品详细信息失败")
             return False
         self.nickname = self.clean.filter(data["author"]["nickname"])
+        self.get_info([data])
         if data["images"]:
-            self.get_info([data])
             if not download:
                 return self.image_data
             self.download_images()
             return self.image_data[0][4][0]
         else:
-            self.get_info([data])
             if not download:
                 return self.video_data
             self.download_video()
