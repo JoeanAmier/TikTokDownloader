@@ -110,6 +110,7 @@ class UserData:
         self.mix_total = []  # 合集作品数据
         self.mix_data = []  # 合集作品数据未处理JSON
         self.max_cursor = 0  # 发布页和喜欢页使用
+        self.has_more = 0  # 下一页分页标志
         self.list = []  # 未处理的数据
         self.name = None  # 账号昵称
         self.video_data = []  # 视频ID数据
@@ -311,6 +312,7 @@ class UserData:
             try:
                 self.max_cursor = data['max_cursor']
                 self.list = data["aweme_list"]
+                self.has_more = data["has_more"]
                 return True
             except KeyError:
                 self.log.error(f"账号作品数据响应内容异常: {data}", False)
@@ -321,10 +323,14 @@ class UserData:
 
     def deal_data(self):
         """对账号作品进行分类"""
-        if len(self.list) == 0:
+        if self.has_more == 0:
             self.log.info("该账号的资源信息获取结束")
             self.finish = True
         else:
+            """该分页无数据"""
+            if len(self.list) == 0:
+                return
+            """该分页有数据"""
             self.name = self.clean.filter(self.list[0]["author"]["nickname"])
             for item in self.list:
                 if item["images"]:
