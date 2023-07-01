@@ -269,8 +269,8 @@ class SQLLogger:
         self.cursor.execute(create_sql)
         self.db.commit()
 
-    def save(self, data):
-        insert_sql = f"""REPLACE INTO {self.name} ({", ".join(self.title_line)}) VALUES ({", ".join(["?" for _ in self.title_line])});"""
+    def save(self, data, key=0):
+        insert_sql = f"""REPLACE INTO {self.name} ({", ".join(self.title_line[key:])}) VALUES ({", ".join(["?" for _ in self.title_line[key:]])});"""
         self.cursor.execute(insert_sql, data)
         self.db.commit()
 
