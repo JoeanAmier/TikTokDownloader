@@ -78,7 +78,7 @@ class TikTok:
                 save,
                 root,
                 params)
-            # break  # 测试使用
+            break  # 测试使用
 
     def account_download(
             self,
@@ -212,7 +212,17 @@ class TikTok:
                 self.download.run_mix(self.request.mix_total)
 
     def accounts_user(self):
-        pass
+        save, root, params = self.record.run(
+            self._data["root"], type_="user", format_=self._data["save"])
+        for i in self.accounts:
+            self.request.url = i[0]
+            self.logger.info(f"{i[0]} 开始获取账号数据")
+            data = self.request.run_user()
+            if not data:
+                self.logger.warning(f"{i[0]} 获取账号数据失败")
+                continue
+            with save(root, name="UserData", **params) as file:
+                self.request.save_user(file, data)
 
     def alone_user(self):
         save, root, params = self.record.run(
@@ -222,8 +232,10 @@ class TikTok:
             if not url:
                 break
             self.request.url = url
+            self.logger.info(f"{url} 开始获取账号数据")
             data = self.request.run_user()
             if not data:
+                self.logger.warning(f"{url} 获取账号数据失败")
                 continue
             with save(root, name="UserData", **params) as file:
                 self.request.save_user(file, data)
