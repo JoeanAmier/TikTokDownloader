@@ -486,6 +486,8 @@ class Download:
         self.get_info(video)
         self.get_info(image)
         self.log.info(f"获取第 {index} 个账号的作品数据成功")
+        if not self.download:
+            return
         self.log.info(f"开始下载第 {index} 个账号的视频/图集")
         self.download_video()
         self.download_images()
