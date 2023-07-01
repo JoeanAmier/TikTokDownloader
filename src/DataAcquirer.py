@@ -695,11 +695,8 @@ class UserData:
     def run_user(self):
         if not self.get_user_id():
             return False
-        if data := self.get_user_info():
-            self.deal_user(data)
-            return
-        else:
-            return False
+        return self.deal_user(data) if (
+            data := self.get_user_info()) else False
 
     @retry(max_num=5)
     def get_user_info(self):
@@ -733,7 +730,7 @@ class UserData:
             return False
 
     @staticmethod
-    def deal_user(self, data):
+    def deal_user(data):
         data = data["user"]
         collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 采集时间
         avatar_larger = data["avatar_larger"]["url_list"][0]  # 头像链接
@@ -742,7 +739,7 @@ class UserData:
         favoriting_count = data["favoriting_count"]  # 喜欢作品数量
         follower_count = data["follower_count"]  # 粉丝数量
         following_count = data["following_count"]  # 关注数量
-        # max_follower_count = data["max_follower_count"]  # 粉丝数量最大值
+        max_follower_count = data["max_follower_count"]  # 粉丝数量最大值
         signature = data["signature"]  # 简介
         total_favorited = data["total_favorited"]  # 获赞数量
         nickname = data["nickname"]  # 账号昵称
@@ -750,8 +747,28 @@ class UserData:
         unique_id = data["unique_id"]  # 抖音号
         user_age = data["user_age"] or ""  # 年龄
         aweme_count = data["aweme_count"]  # 作品数量
-        # room_data = data.get("room_data")  # 直播数据
-        custom_verify = data["custom_verify"]  # 认证标签
+        room_data = data.get("room_data")  # 直播数据
+        custom_verify = data["custom_verify"] or "无"  # 认证标签
         uid = data["uid"]
         short_id = data["short_id"]
-        result = [nickname]
+        return [
+            collection_time,
+            nickname,
+            signature,
+            unique_id,
+            user_age,
+            custom_verify,
+            sec_uid,
+            uid,
+            short_id,
+            avatar_larger,
+            cover,
+            aweme_count,
+            total_favorited,
+            favoriting_count,
+            follower_count,
+            following_count,
+            max_follower_count]
+
+    def save_user(self, file, data):
+        self.data = file
