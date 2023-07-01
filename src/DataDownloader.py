@@ -35,8 +35,8 @@ class Download:
     UA = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
     }  # 下载请求头
-    video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"  # 官方视频下载接口
-    item_ids_api = "https://www.douyin.com/aweme/v1/web/aweme/detail/"  # 官方信息接口
+    # video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"  # 官方视频下载接口，已弃用
+    item_ids_api = "https://www.douyin.com/aweme/v1/web/aweme/detail/"  # 作品数据接口
     clean = Cleaner()  # 过滤错误字符
     length = 128  # 文件名称长度限制
     chunk = 1048576  # 单次下载文件大小，单位字节
@@ -374,13 +374,8 @@ class Download:
     def download_video(self):
         root = self.type_["video"]
         for item in self.video_data:
-            params = {
-                "video_id": item[4],
-                "ratio": "1080p",
-            }
             with requests.get(
-                    self.video_id_api,
-                    params=params,
+                    item[4],
                     stream=True,
                     proxies=self.proxies,
                     headers=self.UA) as response:
@@ -453,6 +448,9 @@ class Download:
                 f"文件保存路径: {file}", False)
             return True
         try:
+            if data == b"":
+                self.log.warning(f"{file} 获取文件内容失败")
+                return False
             with open(file, "wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
