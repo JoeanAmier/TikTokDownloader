@@ -323,7 +323,7 @@ class Download:
                 self.image_data.append(
                     [id_, desc, create_time, self.nickname, images, [music_name, music_url]])
             else:
-                video_id = item["video"]["play_addr"]["uri"]
+                video_url = item["video"]["play_addr"]["url_list"][-1]
                 # 动态封面图链接
                 dynamic_cover = item["video"]["dynamic_cover"]["url_list"][-1]
                 # 静态封面图链接
@@ -338,7 +338,7 @@ class Download:
                              ".",
                              ":"),
                          self.nickname,
-                         video_id] + statistics),
+                         video_url] + statistics),
                     False)
                 self.data.save(["视频",
                                 collection_time,
@@ -347,8 +347,8 @@ class Download:
                                 create_time.replace(".",
                                                     ":"),
                                 self.nickname,
-                                video_id] + statistics)
-                self.video_data.append([id_, desc, create_time, self.nickname, video_id, [
+                                video_url] + statistics)
+                self.video_data.append([id_, desc, create_time, self.nickname, video_url, [
                     music_name, music_url], dynamic_cover, origin_cover])
 
     def download_images(self):
