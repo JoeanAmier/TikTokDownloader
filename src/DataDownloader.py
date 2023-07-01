@@ -325,9 +325,9 @@ class Download:
             else:
                 video_id = item["video"]["play_addr"]["uri"]
                 # 动态封面图链接
-                dynamic_cover = item["video"]["dynamic_cover"]["url_list"][0]
+                dynamic_cover = item["video"]["dynamic_cover"]["url_list"][-1]
                 # 静态封面图链接
-                origin_cover = item["video"]["origin_cover"]["url_list"][0]
+                origin_cover = item["video"]["cover"]["url_list"][-1]
                 self.log.info(
                     "视频: " +
                     ", ".join(
