@@ -232,7 +232,7 @@ class Download:
 
     @retry(max_num=5)
     def get_data(self, item: str) -> dict | bool:
-        """获取作品详细信息"""
+        """获取作品详细数据"""
         params = {
             "aweme_id": item,
             "aid": "6383",
@@ -253,10 +253,10 @@ class Download:
                 try:
                     return response.json()["aweme_detail"]
                 except (KeyError, IndexError):
-                    self.log.error(f"响应内容异常: {response.json()}", False)
+                    self.log.error(f"作品详细数据内容异常: {response.json()}", False)
                     return False
         except requests.exceptions.ReadTimeout:
-            self.log.error(f"请求超时，资源 {item} 获取 item_list 失败")
+            self.log.error(f"请求超时，资源 {item} 获取详细数据失败")
             return False
 
     def get_info(self, data: list[str | dict]):
