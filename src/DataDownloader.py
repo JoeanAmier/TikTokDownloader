@@ -249,12 +249,14 @@ class Download:
                 proxies=self.proxies,
                 headers=self.headers, timeout=10)
             sleep()
-            if response.status_code == 200 and response.text:
-                try:
-                    return response.json()["aweme_detail"]
-                except (KeyError, IndexError):
-                    self.log.error(f"作品详细数据内容异常: {response.json()}", False)
-                    return False
+            if response.content == b"":
+                self.log.warning("作品详细数据响应内容为空，请尝试更新 Cookie")
+                return False
+            try:
+                return response.json()["aweme_detail"]
+            except KeyError:
+                self.log.error(f"作品详细数据内容异常: {response.json()}", False)
+                return False
         except requests.exceptions.ReadTimeout:
             self.log.error(f"请求超时，资源 {item} 获取详细数据失败")
             return False
@@ -360,6 +362,9 @@ class Download:
                 proxies=self.proxies,
                 headers=self.UA) as response:
             sleep()
+            if response.content == b"":
+                self.log.warning(f"{url} 返回内容为空，请尝试更新 Cookie")
+                return False
             return bool(self.save_file(response, root, name, type_, id_))
 
     def download_images(self):
@@ -416,9 +421,6 @@ class Download:
                 f"文件保存路径: {file}", False)
             return True
         try:
-            if data.content == b"":
-                self.log.warning(f"{file} 获取文件内容失败")
-                return False
             with open(file, "wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
