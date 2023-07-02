@@ -32,8 +32,6 @@ def reset(function):
         self.mix_total = []
         self.mix_data = []
         self.cursor = 0
-        self.max_cursor = 0
-        self.list = []  # 未处理的数据
         self.name = None  # 账号昵称
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
@@ -60,9 +58,10 @@ def retry(max_num=10):
 
     def inner(function):
         def execute(self, *args, **kwargs):
-            for i in range(max_num):
+            for i in range(max_num - 1):
                 if r := function(self, *args, **kwargs):
                     return r
+            return function(self, *args, **kwargs)
 
         return execute
 
@@ -105,11 +104,10 @@ class UserData:
         self._cookie = False  # 是否设置了Cookie
         self.id_ = None  # sec_uid or item_ids
         self.comment = []  # 评论数据
-        self.cursor = 0  # 评论和合集使用
+        self.cursor = 0  # 最早创建日期，时间戳
         self.reply = []  # 评论回复的ID列表
         self.mix_total = []  # 合集作品数据
         self.mix_data = []  # 合集作品数据未处理JSON
-        self.max_cursor = 0  # 发布页和喜欢页使用
         self.list = []  # 未处理的数据
         self.name = None  # 账号昵称
         self.video_data = []  # 视频ID数据
@@ -261,17 +259,16 @@ class UserData:
                 timeout=10)
             sleep()
         except requests.exceptions.ReadTimeout:
+            self.log.warning(f"获取 {value} 超时")
             return False
-        if response.status_code == 200:
-            params = urlparse(response.url)
-            url_list = params.path.rstrip("/").split("/")
-            self.id_ = url_list[-1] or url_list[-2]
-            self.log.info(f"{url} {value}: {self.id_}", False)
-            return True
-        else:
-            self.log.error(
-                f"{url} 响应码异常：{response.status_code}，获取 {value} 失败")
+        if response.content == b"":
+            self.log.warning(f"{url} {value} 响应内容为空，请尝试更新 Cookie")
             return False
+        params = urlparse(response.url)
+        url_list = params.path.rstrip("/").split("/")
+        self.id_ = url_list[-1] or url_list[-2]
+        self.log.info(f"{url} {value}: {self.id_}", False)
+        return True
 
     def deal_params(self, params: dict) -> dict:
         xb = self.xb.get_x_bogus(urlencode(params))
@@ -286,12 +283,13 @@ class UserData:
             "aid": "6383",
             "sec_user_id": self.id_,
             "count": "18",
-            "max_cursor": self.max_cursor,
+            "max_cursor": self.cursor,
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
         }
         params = self.deal_params(params)
+        self.list = []
         try:
             response = requests.get(
                 self.api,
@@ -303,22 +301,25 @@ class UserData:
         except requests.exceptions.ReadTimeout:
             self.log.error("获取账号作品数据超时")
             return False
-        if response.status_code == 200:
-            try:
-                data = response.json()
-            except requests.exceptions.JSONDecodeError:
-                self.log.error("账号作品数据返回内容异常！疑似接口失效", False)
-                return False
-            try:
-                self.max_cursor = data['max_cursor']
-                self.list = data["aweme_list"]
+        if response.content == b"":
+            self.log.warning("账号作品数据响应内容为空，请尝试更新 Cookie")
+            return False
+        try:
+            data = response.json()
+        except requests.exceptions.JSONDecodeError:
+            self.log.error("账号作品数据返回内容异常！疑似接口失效", False)
+            return False
+        try:
+            if (list_ := data["aweme_list"]) is None:
+                self.log.info("该账号为私密账号，需要使用登陆后的 Cookie，且登录的账号需要关注该私密账号")
+                self.finish = True
+            else:
+                self.cursor = data['max_cursor']
+                self.list = list_
                 self.finish = not data["has_more"]
-                return True
-            except KeyError:
-                self.log.error(f"账号作品数据响应内容异常: {data}", False)
-                return False
-        else:
-            self.log.error(f"响应码异常：{response.status_code}，获取账号作品数据失败")
+            return True
+        except KeyError:
+            self.log.error(f"账号作品数据响应内容异常: {data}", False)
             return False
 
     def deal_data(self):
@@ -357,6 +358,7 @@ class UserData:
             "downlink": "10",
         }
         params = self.deal_params(params)
+        self.name = str(time.time())[:10]
         try:
             response = requests.get(
                 self.api.replace("favorite", "post"),
@@ -366,33 +368,27 @@ class UserData:
                 timeout=10)
             sleep()
         except requests.exceptions.ReadTimeout:
-            self.name = str(time.time())[:10]
             self.log.warning(
                 f"请求超时，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
             return False
-        if response.status_code == 200:
-            try:
-                data = response.json()
-            except requests.exceptions.JSONDecodeError:
-                self.name = str(time.time())[:10]
-                self.log.warning(
-                    f"数据接口返回内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
-                return False
-            try:
-                self.name = self.clean.filter(
-                    data["aweme_list"][0]["author"]["nickname"]) or str(
-                    time.time())[
-                                                                    :10]
-                return True
-            except KeyError:
-                self.name = str(time.time())[:10]
-                self.log.warning(
-                    f"响应内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
-                return False
-        else:
-            self.name = str(time.time())[:10]
+        if response.content == b"":
             self.log.warning(
-                f"响应码异常：{response.status_code}，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+                f"账号昵称响应内容为空，请尝试更新 Cookie，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+            return False
+        try:
+            data = response.json()
+        except requests.exceptions.JSONDecodeError:
+            self.log.warning(
+                f"数据接口返回内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+            return False
+        try:
+            if n := self.clean.filter(
+                    data["aweme_list"][0]["author"]["nickname"]):
+                self.name = n
+            return True
+        except KeyError:
+            self.log.warning(
+                f"响应内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
             return False
 
     def early_stop(self):
@@ -400,7 +396,7 @@ class UserData:
         if not self.favorite:
             return
         if self.earliest > datetime.fromtimestamp(
-                self.max_cursor / 1000).date():
+                self.cursor / 1000).date():
             self.finish = True
 
     def get_user_id(self, index=0):
@@ -416,6 +412,17 @@ class UserData:
             self.log.error("获取账号 sec_user_id 失败")
             return False
         return True
+
+    def get_public_num(self):
+        """获取公开作品数量"""
+        if self.video_data:
+            self.log.info(
+                f'{self.name} 公开作品数量: {self.video_data[0][1]["author"]["aweme_count"]}')
+        elif self.image_data:
+            self.log.info(
+                f'{self.name} 公开作品数量: {self.image_data[0][1]["author"]["aweme_count"]}')
+        else:
+            self.log.info(f"{self.name} 没有公开作品")
 
     @reset
     @check_cookie
@@ -434,6 +441,7 @@ class UserData:
         if not self.name:
             self.log.error(f"获取第 {index} 个账号数据失败，请稍后重试")
             return False
+        self.get_public_num()
         self.date_filters()
         self.summary()
         self.log.info(f"获取第 {index} 个账号数据成功")
@@ -503,13 +511,16 @@ class UserData:
                 timeout=10,
                 proxies=self.proxies)
             sleep()
-            return r if (r := response.json()) else False
         except requests.exceptions.ReadTimeout:
             self.log.warning("获取直播数据超时")
             return False
         except requests.exceptions.JSONDecodeError:
             self.log.warning("直播数据内容格式错误")
             return False
+        if response.content == b"":
+            self.log.warning("直播数据响应内容为空，请尝试更新 Cookie")
+            return False
+        return response.json()
 
     def deal_live_data(self, data):
         try:
@@ -563,6 +574,7 @@ class UserData:
                 "cookie_enabled": "true",
                 "platform": "PC", }
         params = self.deal_params(params)
+        self.comment = []
         try:
             response = requests.get(
                 api,
@@ -574,22 +586,21 @@ class UserData:
         except requests.exceptions.ReadTimeout:
             self.log.error("获取评论数据超时")
             return False
-        if response.status_code == 200:
-            try:
-                data = response.json()
-            except requests.exceptions.JSONDecodeError:
-                self.log.error("评论数据返回内容异常！疑似接口失效", False)
-                return False
-            try:
-                self.comment = data["comments"]
-                self.cursor = data["cursor"]
-                self.finish = not data["has_more"]
-                return True
-            except KeyError:
-                self.log.error(f"评论数据内容异常: {data}", False)
-                return False
-        else:
-            self.log.error(f"响应码异常：{response.status_code}，获取评论数据失败")
+        if response.content == b"":
+            self.log.warning("账号作品数据响应内容为空，请尝试更新 Cookie")
+            return False
+        try:
+            data = response.json()
+        except requests.exceptions.JSONDecodeError:
+            self.log.error("评论数据返回内容异常！疑似接口失效", False)
+            return False
+        try:
+            self.comment = data["comments"]
+            self.cursor = data["cursor"]
+            self.finish = not data["has_more"]
+            return True
+        except KeyError:
+            self.log.error(f"评论数据内容异常: {data}", False)
             return False
 
     def deal_comment(self):
@@ -658,6 +669,7 @@ class UserData:
                   "cookie_enabled": "true",
                   "platform": "PC", }
         params = self.deal_params(params)
+        self.mix_data = []
         try:
             response = requests.get(
                 self.mix_api,
@@ -669,22 +681,21 @@ class UserData:
         except requests.exceptions.ReadTimeout:
             self.log.error("获取合集作品数据超时")
             return False
-        if response.status_code == 200:
-            try:
-                data = response.json()
-            except requests.exceptions.JSONDecodeError:
-                self.log.error("合集作品数据返回内容异常！疑似接口失效", False)
-                return False
-            try:
-                self.cursor = data['cursor']
-                self.mix_data = data["aweme_list"]
-                self.finish = not data["has_more"]
-                return True
-            except KeyError:
-                self.log.error(f"合集作品数据内容异常: {data}", False)
-                return False
-        else:
-            self.log.error(f"响应码异常：{response.status_code}，获取合集作品数据失败")
+        if response.content == b"":
+            self.log.warning("合集作品数据响应内容为空，请尝试更新 Cookie")
+            return False
+        try:
+            data = response.json()
+        except requests.exceptions.JSONDecodeError:
+            self.log.error("合集作品数据返回内容异常！疑似接口失效", False)
+            return False
+        try:
+            self.cursor = data['cursor']
+            self.mix_data = data["aweme_list"]
+            self.finish = not data["has_more"]
+            return True
+        except KeyError:
+            self.log.error(f"合集作品数据内容异常: {data}", False)
             return False
 
     def deal_mix_data(self):
@@ -720,14 +731,13 @@ class UserData:
         except requests.exceptions.ReadTimeout:
             self.log.error("获取账号数据超时")
             return False
-        if response.status_code == 200:
-            try:
-                return response.json()
-            except requests.exceptions.JSONDecodeError:
-                self.log.error("账号数据内容异常！疑似接口失效", False)
-                return False
-        else:
-            self.log.error(f"响应码异常：{response.status_code}，获取账号数据失败")
+        if response.content == b"":
+            self.log.warning("账号数据响应内容为空，请尝试更新 Cookie")
+            return False
+        try:
+            return response.json()
+        except requests.exceptions.JSONDecodeError:
+            self.log.error("账号数据内容异常！疑似接口失效", False)
             return False
 
     @staticmethod
@@ -749,7 +759,7 @@ class UserData:
         short_id = data["short_id"]
         user_age = data["user_age"]  # 年龄
         aweme_count = data["aweme_count"]  # 作品数量
-        room_data = data.get("room_data")  # 直播数据
+        # room_data = data.get("room_data")  # 直播数据
         custom_verify = data["custom_verify"] or "无"  # 标签认证
         uid = data["uid"]
         enterprise = data["enterprise_verify_reason"] or "无"  # 企业认证
