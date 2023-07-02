@@ -17,19 +17,20 @@ class Cookie:
             self.extract(cookie, index)
 
     def extract(self, cookie: str, index: int):
-        get_key = ("passport_csrf_token", "odin_tt")
-        data = {}
+        get_key = {"passport_csrf_token": None, "odin_tt": None, }
         for i in cookie.split('; '):
             text = i.split("=", 1)
             try:
-                data[text[0]] = text[1]
+                if (k := text[0]) in get_key:
+                    get_key[k] = text[1]
             except IndexError:
                 continue
-        if result := "; ".join(f"{i}={data.get(i, '')}" for i in get_key):
-            self.write(result, index)
-            print(f"已写入 Cookie: {result}")
+        if None in get_key.values():
+            print("Cookie 缺少必需的键值对！")
         else:
-            print("写入 Cookie 失败！")
+            self.write("; ".join(
+                [f"{key}={value}" for key, value in get_key.items()]), index)
+            print("写入 Cookie 成功！")
 
     def write(self, text, index):
         data = self.settings.read()
