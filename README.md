@@ -155,6 +155,7 @@ TikTokDownloader
 | accounts<br>\[url, mode, earliest, latest\] | list\[list<br>\[str, str, str, str\]\] |                账号链接、批量下载类型、最早发布日期、最晚发布日期<br>账号批量下载时使用，支持多账号，以列表格式包含四个参数                 |
 |                    root                     |                  str                   |                                 作品文件和数据记录保存路径，默认值：当前路径                                  |
 |                   folder                    |                  str                   |                             下载单独链接作品时，储存文件夹的名称，默认值：Download                             |
+|                 mark\(未生效\)                 |              list\[str\]               |                 账号标识，目前支持: nickname\(账号昵称\)、uid\(纯数字ID\)，默认值: nickname                  |
 |                    name                     |                  str                   | 文件保存时的命名规则，值之间使用空格分隔<br>默认值：发布时间-作者-描述<br>id: 唯一值；desc: 描述；create_time: 发布时间；author: 作者 |
 |                    time                     |                  str                   |                 发布时间的格式，默认值：年-月-日 时.分.秒<br>（注意：Windows下文件名不能包含英文冒号“:”）                  |
 |                    split                    |                  str                   |                                    文件命名的分隔符，默认值：“-”                                     |
