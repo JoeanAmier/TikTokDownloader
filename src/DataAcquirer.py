@@ -583,6 +583,7 @@ class UserData:
             try:
                 self.comment = data["comments"]
                 self.cursor = data["cursor"]
+                self.finish = not data["has_more"]
                 return True
             except KeyError:
                 self.log.error(f"评论数据内容异常: {data}", False)
@@ -593,8 +594,6 @@ class UserData:
 
     def deal_comment(self):
         if not self.comment:
-            self.log.info("评论数据获取结束")
-            self.finish = True
             return
         for item in self.comment:
             """数据格式: 采集时间, 评论ID, 评论时间, 用户昵称, IP归属地, 评论内容, 评论图片, 点赞数量, 回复数量, 回复ID"""
