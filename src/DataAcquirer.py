@@ -326,11 +326,12 @@ class UserData:
         if self.has_more == 0:
             self.log.info("该账号的资源信息获取结束")
             self.finish = True
-        else:
-            """该分页无数据"""
-            if len(self.list) == 0:
-                return
-            """该分页有数据"""
+
+        # 该分页无数据
+        if len(self.list) == 0:
+            return
+        # 该分页有数据
+        if len(self.list) > 0:
             self.name = self.clean.filter(self.list[0]["author"]["nickname"])
             for item in self.list:
                 if item["images"]:
