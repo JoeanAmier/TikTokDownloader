@@ -289,7 +289,7 @@ class UserData:
             "max_cursor": self.max_cursor,
             "cookie_enabled": "true",
             "platform": "PC",
-            "downlink": "1.45",
+            "downlink": "10",
         }
         params = self.deal_params(params)
         try:
