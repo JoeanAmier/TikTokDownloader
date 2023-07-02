@@ -11,6 +11,7 @@ class Settings:
             ],
             "root": "./",
             "folder": "Download",
+            "mark": "nickname",
             "name": "create_time author desc",
             "time": "%Y-%m-%d %H.%M.%S",
             "split": "-",
