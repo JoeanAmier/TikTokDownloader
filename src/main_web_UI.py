@@ -6,8 +6,6 @@ from flask import request
 from flask import url_for
 
 from src.CookieTool import Cookie
-from src.Recorder import NoneLogger
-from src.Recorder import RecordManager
 from src.main_complete import TikTok
 
 
@@ -93,9 +91,9 @@ class WebUI(TikTok):
         raise ValueError
 
     def single_acquisition(self):
-        data_root = RecordManager.run(self._data["root"])
-        save_file = self.DataLogger.get(self._data["save"], NoneLogger)
-        with save_file(data_root) as data:
+        save, root, params = self.record.run(
+            self._data["root"], format_=self._data["save"])
+        with save(root, **params) as data:
             self.download.data = data
             id_ = self.request.run_alone(self.solo_url[0])
             if not id_:
