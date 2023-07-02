@@ -1,5 +1,4 @@
 from datetime import date
-from urllib.parse import urlencode
 
 from flask import render_template
 from flask import request
@@ -64,14 +63,11 @@ class WebUI(TikTok):
         if convert.get("cookie", False):
             self.cookie.extract(convert["cookie"], 0)
 
-    def get_data(self, data) -> dict:
+    @staticmethod
+    def get_data(data) -> dict:
         def get_video_url(item):
-            params = {
-                "video_id": item[4],
-                "ratio": "1080p",
-            }
             result = {
-                "视频下载地址": f"{self.download.video_id_api}?{urlencode(params)}",
+                "视频下载地址": item[4],
                 "原声下载地址": item[5][1],
                 "动态封面图地址": item[6],
                 "静态封面图地址": item[7],
