@@ -175,13 +175,13 @@ TikTokDownloader
     [
       "https://www.douyin.com/user/demo_1",
       "post",
-      "2023/6/10",
+      "2023/7/1",
       ""
     ],
     [
       "https://www.douyin.com/user/demo_2",
       "post",
-      "2023/6/10",
+      "2023/7/1",
       ""
     ]
   ],
@@ -213,11 +213,11 @@ TikTokDownloader
 ```
 
 **单线程模式：**
-music、cookie、dynamic、original、proxies参数仅第一个值生效，下载多个账号的作品均使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), ""(不使用代理), true(下载文件)`
+music、cookie、dynamic、original、proxies、download参数仅第一个值生效，下载多个账号的作品均使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), ""(不使用代理), true(下载文件)`
 参数
 
 **多进程模式\(未完成\)：**
-accounts、music、cookie、dynamic、original、proxies的元素个数必须相同，下载第一个账号的作品使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), ""(不使用代理), true(下载文件)`
+accounts、music、cookie、dynamic、original、proxies、download的元素个数必须相同，下载第一个账号的作品使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), ""(不使用代理), true(下载文件)`
 参数，下载第二个账号的作品使用`true(下载音乐), cookie_2, true(下载动态封面图), false(不下载静态封面图), http://127.0.0.1:9999(使用代理), false(不下载文件)`
 参数，每个账号按照索引对应的参数单独生效
 
