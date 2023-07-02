@@ -4,6 +4,15 @@ from src.CookieTool import Cookie
 from src.main_complete import TikTok
 from src.main_web_UI import WebUI
 
+VERSION = "2.1 beta"
+
+
+def version():
+    project = f"TikTokDownloader v{VERSION}"
+    width = 33
+    line = ">" * width
+    print(f"{line}\n\n{project.center(width)}\n\n{line}\n")
+
 
 def main():
     """选择运行模式"""
@@ -49,4 +58,5 @@ def compatible(mode: int):
 
 
 if __name__ == '__main__':
+    version()
     main()
