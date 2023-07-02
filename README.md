@@ -38,6 +38,16 @@
 * ✅ 采集账号详细数据
 * ☑️ 批量下载账号收藏作品
 
+# 💻程序界面
+
+* 单线程终端模式
+  ![终端模式截图](docs/终端模式截图.png)
+
+<hr>
+
+* Web UI 交互模式
+  ![WebUI模式截图](docs/WebUI模式截图.png)
+
 # 📈 项目状态
 
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已通过测试，功能均可正常使用
@@ -206,7 +216,7 @@ TikTokDownloader
 music、cookie、dynamic、original、proxies参数仅第一个值生效，下载多个账号的作品均使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), ""(不使用代理), true(下载文件)`
 参数
 
-**多进程模式（未完成）：**
+**多进程模式\(未完成\)：**
 accounts、music、cookie、dynamic、original、proxies的元素个数必须相同，下载第一个账号的作品使用`false(不下载音乐), cookie_1, false(不下载动态封面图), false(不下载静态封面图), ""(不使用代理), true(下载文件)`
 参数，下载第二个账号的作品使用`true(下载音乐), cookie_2, true(下载动态封面图), false(不下载静态封面图), http://127.0.0.1:9999(使用代理), false(不下载文件)`
 参数，每个账号按照索引对应的参数单独生效
