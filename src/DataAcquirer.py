@@ -282,13 +282,14 @@ class UserData:
     def get_user_data(self):
         """获取账号作品数据"""
         params = {
+            "device_platform": "webapp",
             "aid": "6383",
             "sec_user_id": self.id_,
-            "count": "35",
+            "count": "18",
             "max_cursor": self.max_cursor,
             "cookie_enabled": "true",
             "platform": "PC",
-            "downlink": "10",
+            "downlink": "1.45",
         }
         params = self.deal_params(params)
         try:
@@ -311,6 +312,7 @@ class UserData:
             try:
                 self.max_cursor = data['max_cursor']
                 self.list = data["aweme_list"]
+                self.finish = not data["has_more"]
                 return True
             except KeyError:
                 self.log.error(f"账号作品数据响应内容异常: {data}", False)
@@ -322,17 +324,15 @@ class UserData:
     def deal_data(self):
         """对账号作品进行分类"""
         if len(self.list) == 0:
-            self.log.info("该账号的资源信息获取结束")
-            self.finish = True
-        else:
-            self.name = self.clean.filter(self.list[0]["author"]["nickname"])
-            for item in self.list:
-                if item["images"]:
-                    self.image_data.append(
-                        [item["create_time"], item])
-                else:
-                    self.video_data.append(
-                        [item["create_time"], item])
+            return
+        self.name = self.clean.filter(self.list[0]["author"]["nickname"])
+        for item in self.list:
+            if item["images"]:
+                self.image_data.append(
+                    [item["create_time"], item])
+            else:
+                self.video_data.append(
+                    [item["create_time"], item])
 
     def summary(self):
         """汇总账号作品数量"""
@@ -428,6 +428,7 @@ class UserData:
             self.get_user_data()
             self.deal_data()
             self.early_stop()
+        self.log.info("该账号的作品数据获取结束")
         if self.favorite:
             self.get_nickname()
         if not self.name:
