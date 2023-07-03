@@ -116,6 +116,7 @@ class UserData:
         self.mix_data = []  # 合集作品数据未处理JSON
         self.list = []  # 未处理的数据
         self.name = None  # 账号昵称
+        self._mark = "nickname"  # 账号标识
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
         self.finish = False  # 是否获取完毕
@@ -251,6 +252,14 @@ class UserData:
             self.log.warning("错误的时间格式，将使用默认时间格式(年-月-日 时.分.秒)")
             self._time = "%Y-%m-%d %H.%M.%S"
 
+    @property
+    def mark(self):
+        return self._mark
+
+    @mark.setter
+    def mark(self, value):
+        self._mark = value if value in ("nickname", "uid") else "nickname"
+
     @retry(max_num=MAX_RETRY)
     def get_id(self, value="sec_user_id", url=""):
         """获取账号ID或者作品ID"""
@@ -333,7 +342,7 @@ class UserData:
         """对账号作品进行分类"""
         if len(self.list) == 0:
             return
-        self.name = self.clean.filter(self.list[0]["author"]["nickname"])
+        self.name = self.clean.filter(self.list[0]["author"][self.mark])
         for item in self.list:
             if item["images"]:
                 self.image_data.append(
@@ -390,7 +399,7 @@ class UserData:
             return False
         try:
             if n := self.clean.filter(
-                    data["aweme_list"][0]["author"]["nickname"]):
+                    data["aweme_list"][0]["author"][self.mark]):
                 self.name = n
             return True
         except KeyError:
