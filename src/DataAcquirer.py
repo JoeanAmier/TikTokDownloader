@@ -247,7 +247,7 @@ class UserData:
             self.log.warning("错误的时间格式，将使用默认时间格式(年-月-日 时.分.秒)")
             self._time = "%Y-%m-%d %H.%M.%S"
 
-    @retry(max_num=5)
+    @retry(max_num=10)
     def get_id(self, value="sec_user_id", url=""):
         """获取账号ID或者作品ID"""
         if self.id_:
@@ -278,7 +278,7 @@ class UserData:
         params["X-Bogus"] = xb
         return params
 
-    @retry(max_num=5)
+    @retry(max_num=10)
     def get_user_data(self):
         """获取账号作品数据"""
         params = {
@@ -348,7 +348,7 @@ class UserData:
         for i in self.image_data:
             self.log.info(f"图集: {i['aweme_id']}", False)
 
-    @retry(max_num=5)
+    @retry(max_num=10)
     def get_nickname(self):
         """喜欢页下载模式需要额外发送请求获取账号昵称"""
         params = {
@@ -555,7 +555,7 @@ class UserData:
                 self.get_comment(id_, self.reply_api, item)
                 self.deal_comment()
 
-    @retry(max_num=5)
+    @retry(max_num=10)
     def get_comment(self, id_: str, api: str, reply=""):
         """获取评论数据"""
         if reply:
@@ -662,7 +662,7 @@ class UserData:
         data = data.get("mix_info", False)
         return (data["mix_id"], data["mix_name"]) if data else data
 
-    @retry(max_num=5)
+    @retry(max_num=10)
     def get_mix_data(self, id_):
         """获取合集作品数据"""
         params = {"aid": "6383",
@@ -713,7 +713,7 @@ class UserData:
         return self.deal_user(data) if (
             data := self.get_user_info()) else False
 
-    @retry(max_num=5)
+    @retry(max_num=10)
     def get_user_info(self):
         params = {
             "device_platform": "webapp",

@@ -229,7 +229,7 @@ class Download:
         if not os.path.exists(self.type_["images"]):
             os.mkdir(self.type_["images"])
 
-    @retry(max_num=5)
+    @retry(max_num=10)
     def get_data(self, item: str) -> dict | bool:
         """获取作品详细数据"""
         params = {
@@ -354,7 +354,7 @@ class Download:
                 self.video_data.append([id_, desc, create_time, self.nickname, video_url, [
                     music_name, music_url], dynamic_cover, origin_cover])
 
-    @retry(max_num=5)
+    @retry(max_num=10)
     def request_file(self, url: str, root: str, name: str, type_: str, id_=""):
         """发送请求获取文件内容"""
         with requests.get(
