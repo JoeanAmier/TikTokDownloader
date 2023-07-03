@@ -372,6 +372,7 @@ class Download:
                 return bool(self.save_file(response, root, name, type_, id_))
         except requests.exceptions.ConnectionError as e:
             self.log.warning(f"网络异常: {e}")
+            return False
 
     def download_images(self):
         root = self.type_["images"]
