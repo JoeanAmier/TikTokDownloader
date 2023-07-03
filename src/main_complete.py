@@ -83,11 +83,13 @@ class TikTok:
 
     def account_download(
             self,
+            mark: str,
             num: int,
             url: str,
             mode: str,
             earliest: str,
             latest: str, save, root: str, params: dict):
+        self.request.mark = mark
         self.request.url = url
         self.request.api = mode
         self.request.earliest = earliest
