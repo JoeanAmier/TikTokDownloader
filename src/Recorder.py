@@ -157,7 +157,7 @@ class CSVLogger:
             self,
             root: str,
             title_line,
-            name="Download",
+            name="Solo_Download",
             *args,
             **kwargs):
         self.file = None  # 文件对象
@@ -197,7 +197,7 @@ class XLSXLogger:
             self,
             root: str,
             title_line,
-            name="Download",
+            name="Solo_Download",
             *args,
             **kwargs):
         self.book = None  # XLSX数据簿
@@ -241,7 +241,7 @@ class SQLLogger:
             file,
             title_line,
             title_type,
-            name="Download", ):
+            name="Solo_Download", ):
         self.db = None  # 数据库
         self.cursor = None  # 游标对象
         self.root = root  # 文件路径
