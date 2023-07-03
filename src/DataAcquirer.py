@@ -61,6 +61,9 @@ def retry(max_num=10):
             for i in range(max_num - 1):
                 if r := function(self, *args, **kwargs):
                     return r
+                else:
+                    print(f"正在第 {i + 1} 次重试")
+            print(f"正在第 {max_num} 次重试")
             return function(self, *args, **kwargs)
 
         return execute
