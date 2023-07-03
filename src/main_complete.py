@@ -100,7 +100,7 @@ class TikTok:
         self.download.uid = self.request.uid
         self.download.mark = self.request.mark
         self.download.favorite = self.request.favorite
-        with save(root, name=f"{self.download.uid}{self._data['split']}{self.download.mark}", **params) as data:
+        with save(root, name=f"{self.download.uid}_{self.download.mark}", **params) as data:
             self.download.data = data
             self.download.run(num,
                               self.request.video_data,
@@ -163,6 +163,7 @@ class TikTok:
         self.logger.run(filename=filename)
         self.request = UserData(self.logger)
         self.download = Download(self.logger, None)
+        self.request.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
 
     def set_parameters(self):
@@ -209,14 +210,16 @@ class TikTok:
                 self.logger.error(f"{url} 获取 aweme_id 失败")
                 continue
             mix_data = self.download.get_data(id_)
-            mix_name = self.request.run_mix(mix_data)
-            if not isinstance(mix_name, tuple):
+            mix_info = self.request.run_mix(mix_data)
+            if not isinstance(mix_info, tuple):
                 self.logger.info(f"作品 {id_} 不属于任何合集")
                 continue
-            self.download.nickname = mix_name[1]
-            with save(root, name=self.download.nickname, **params) as data:
+            self.download.nickname = mix_info[2]
+            with save(root, name=f"合集{mix_info[0]}_{mix_info[1]}", **params) as data:
                 self.download.data = data
-                self.download.run_mix(self.request.mix_total)
+                self.download.run_mix(
+                    f"合集{mix_info[0]}_{mix_info[1]}",
+                    self.request.mix_total)
 
     def accounts_user(self):
         save, root, params = self.record.run(
