@@ -81,6 +81,7 @@ class Download:
                 "desc": 1,
                 "create_time": 2,
                 "author": 3,
+                "uid": 5,
             }
             name = value.strip().split(" ")
             try:
@@ -483,6 +484,7 @@ class Download:
         if not data:
             self.log.warning("获取作品详细信息失败")
             return False
+        self.uid = data["author"]["uid"]
         self.nickname = self.clean.filter(data["author"]["nickname"])
         self.get_info([data])
         if data["images"]:
