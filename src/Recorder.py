@@ -378,11 +378,6 @@ class RecordManager:
             "file": "UserData.db",
             "title_line": User_Title,
             "title_type": User_Type},
-        "": {
-            "file": "TikTokDownloader.db",
-            "title_line": Title,
-            "title_type": Type_
-        },
         "mix": {
             "file": "MixData.db",
             "title_line": Title,
@@ -393,12 +388,15 @@ class RecordManager:
         "csv": CSVLogger,
         "xlsx": XLSXLogger,
         "sql": SQLLogger,
-        "": NoneLogger,
     }
 
     def run(self, root="./", folder="Data", type_="", format_=""):
         root = root if os.path.exists(root) else "./"
         name = os.path.join(root, self.clean.filter(folder) or "Data")
-        type_ = self.DataSheet.get(type_, {})
-        format_ = self.DataLogger.get(format_)
+        type_ = self.DataSheet.get(type_, {
+            "file": "TikTokDownloader.db",
+            "title_line": self.Title,
+            "title_type": self.Type_,
+        })
+        format_ = self.DataLogger.get(format_, NoneLogger)
         return format_, name, type_
