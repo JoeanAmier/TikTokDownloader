@@ -345,7 +345,8 @@ class UserData:
         """对账号作品进行分类"""
         if len(self.list) == 0:
             return
-        self.name = self.clean.filter(self.list[0]["author"]["nickname"])
+        self.name = self.mark or self.clean.filter(
+            self.list[0]["author"]["nickname"])
         for item in self.list:
             if item["images"]:
                 self.image_data.append(
@@ -367,6 +368,9 @@ class UserData:
     @retry(max_num=MAX_RETRY)
     def get_nickname(self):
         """喜欢页下载模式需要额外发送请求获取账号昵称"""
+        if self.mark:
+            self.name = self.mark
+            return True
         params = {
             "aid": "6383",
             "sec_user_id": self.id_,
