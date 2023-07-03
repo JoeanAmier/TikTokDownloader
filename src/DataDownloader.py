@@ -320,7 +320,7 @@ class Download:
                 self.data.save(["图集",
                                 collection_time,
                                 id_,
-                                desc[:self.length],
+                                desc,
                                 create_time.replace(".",
                                                     ":"),
                                 self.nickname,
@@ -348,7 +348,7 @@ class Download:
                 self.data.save(["视频",
                                 collection_time,
                                 id_,
-                                desc[:self.length],
+                                desc,
                                 create_time.replace(".",
                                                     ":"),
                                 self.nickname,
@@ -417,27 +417,28 @@ class Download:
 
         if not self.download:
             return True
-        file = os.path.join(root, f"{name[:self.length].strip()}.{type_}")
-        if os.path.exists(file):
-            self.log.info(f"{name[:self.length].strip()}.{type_} 已存在，跳过下载")
+        file = f"{name.strip()}.{type_}"
+        full_path = os.path.join(root, file)
+        if os.path.exists(full_path):
+            self.log.info(f"{file} 已存在，跳过下载")
             self.log.info(
-                f"文件保存路径: {file}", False)
+                f"文件保存路径: {full_path}", False)
             return True
         try:
-            with open(file, "wb") as f:
+            with open(full_path, "wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
         except requests.exceptions.ChunkedEncodingError:
             self.log.warning(f"文件: {file} 由于网络异常下载中断")
-            delete_file(file)
+            delete_file(full_path)
             return False
         if type_ == "mp4":
             self.video += 1
         elif type_ == "jpeg" and id_ and id_ != self.image_id:
             self.image += 1
-        self.log.info(f"{name[:self.length].strip()}.{type_} 下载成功")
+        self.log.info(f"{file} 下载成功")
         self.log.info(
-            f"文件保存路径: {file}",
+            f"文件保存路径: {full_path}",
             False)
         return True
 
@@ -493,12 +494,7 @@ class Download:
     def download_live(self, link: str, name: str):
         """下载直播，不需要Cookie信息"""
         self.create_folder("Live", True)
-        with requests.get(
-                link,
-                stream=True,
-                proxies=self.proxies, headers=self.headers) as response:
-            self.log.info("开始下载直播视频")
-            self.save_file(response, f"{self.root}/Live", name, "flv")
+        self.request_file(link, f"{self.root}/Live", name[:self.length], "flv")
 
     @reset
     @check_cookie
