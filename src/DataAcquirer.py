@@ -347,6 +347,7 @@ class UserData:
         """对账号作品进行分类"""
         if len(self.list) == 0:
             return
+        self.uid = self.list[0]["author"]["uid"]
         self.name = self.mark or self.clean.filter(
             self.list[0]["author"]["nickname"])
         for item in self.list:
@@ -367,12 +368,12 @@ class UserData:
         for i in self.image_data:
             self.log.info(f"图集: {i['aweme_id']}", False)
 
+    def get_uid(self):
+        pass
+
     @retry(max_num=MAX_RETRY)
     def get_nickname(self):
-        """喜欢页下载模式需要额外发送请求获取账号昵称"""
-        if self.mark:
-            self.name = self.mark
-            return True
+        """喜欢页下载模式需要额外发送请求获取账号昵称和UID"""
         params = {
             "aid": "6383",
             "sec_user_id": self.id_,
@@ -407,9 +408,15 @@ class UserData:
                 f"数据接口返回内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
             return False
         try:
-            if n := self.clean.filter(
+            self.uid = data["aweme_list"][0]["author"]["uid"]
+            if self.mark:
+                self.name = self.mark
+            elif n := self.clean.filter(
                     data["aweme_list"][0]["author"]["nickname"]):
                 self.name = n
+            else:
+                self.log.warning(
+                    f"数据接口返回内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
             return True
         except KeyError:
             self.log.warning(
