@@ -26,14 +26,11 @@ def reset(function):
     def inner(self, *args, **kwargs):
         if not isinstance(self.url, bool):
             self.id_ = None
-        self.data = None
         self.comment = []
         self.reply = []
         self.mix_total = []
         self.mix_data = []
         self.cursor = 0
-        self.uid = None
-        self.name = None  # 账号昵称
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
         self.finish = False  # 是否获取完毕
@@ -104,30 +101,30 @@ class UserData:
     max_comment = 256  # 评论字数限制
 
     def __init__(self, log: LoggerManager):
-        self.log = log  # 日志记录对象
-        self.data = None  # 数据记录对象，仅评论抓取调用
-        self._cookie = False  # 是否设置了Cookie
+        self.log = log  # 日志记录对象，通用
+        self.data = None  # 数据记录对象，评论抓取和账号数据抓取调用，调用前赋值
+        self._cookie = False  # 是否设置了Cookie，通用
         self.id_ = None  # sec_uid or item_ids
         self.comment = []  # 评论数据
         self.cursor = 0  # 最早创建日期，时间戳
         self.reply = []  # 评论回复的ID列表
         self.mix_total = []  # 合集作品数据
         self.mix_data = []  # 合集作品数据未处理JSON
-        self.uid = None  # 账号UID
-        self.list = []  # 未处理的数据
-        self.name = None  # 账号昵称
-        self._mark = None  # 账号标识
+        self.uid = None  # 账号UID，运行时获取
+        self.list = []  # 未处理的数据，循环时重置
+        self.name = None  # 账号昵称，运行时获取
+        self._mark = None  # 账号标识，调用前赋值
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
         self.finish = False  # 是否获取完毕
-        self.favorite = False  # 喜欢页下载模式
-        self._earliest = None  # 最早发布时间
-        self._latest = None  # 最晚发布时间
-        self._url = None  # 账号链接
-        self._api = None  # 批量下载类型
-        self._proxies = None  # 代理
-        self._time = None  # 创建时间格式
-        self.retry = 10  # 重试最大次数
+        self.favorite = False  # 喜欢页下载模式，调用前赋值
+        self._earliest = None  # 最早发布时间，调用前赋值
+        self._latest = None  # 最晚发布时间，调用前赋值
+        self._url = None  # 账号链接，调用前赋值
+        self._api = None  # 批量下载类型，调用前赋值
+        self._proxies = None  # 代理，通用
+        self._time = None  # 创建时间格式，通用
+        self.retry = 10  # 重试最大次数，通用
 
     @property
     def url(self):
@@ -473,6 +470,8 @@ class UserData:
         self.date_filters()
         self.summary()
         self.log.info(f"获取第 {index} 个账号数据成功")
+        if not self.mark:
+            self.mark = self.name
         return True
 
     @reset
