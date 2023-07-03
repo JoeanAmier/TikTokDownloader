@@ -54,8 +54,7 @@ class TikTok:
              "split",
              "save",
              "log",
-             "retry",
-             "mark"))
+             "retry",))
         get_data(
             self._data,
             settings,
@@ -219,11 +218,11 @@ class TikTok:
         save, root, params = self.record.run(
             self._data["root"], type_="user", format_=self._data["save"])
         for i in self.accounts:
-            self.request.url = i[0]
-            self.logger.info(f"{i[0]} 开始获取账号数据")
+            self.request.url = i[1]
+            self.logger.info(f"{i[1]} 开始获取账号数据")
             data = self.request.run_user()
             if not data:
-                self.logger.warning(f"{i[0]} 获取账号数据失败")
+                self.logger.warning(f"{i[1]} 获取账号数据失败")
                 continue
             with save(root, name="UserData", **params) as file:
                 self.request.save_user(file, data)
