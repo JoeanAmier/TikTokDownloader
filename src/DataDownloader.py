@@ -359,16 +359,19 @@ class Download:
     @retry(max_num=MAX_RETRY)
     def request_file(self, url: str, root: str, name: str, type_: str, id_=""):
         """发送请求获取文件内容"""
-        with requests.get(
-                url,
-                stream=True,
-                proxies=self.proxies,
-                headers=self.headers) as response:
-            sleep()
-            if response.content == b"":
-                self.log.warning(f"{url} 返回内容为空")
-                return False
-            return bool(self.save_file(response, root, name, type_, id_))
+        try:
+            with requests.get(
+                    url,
+                    stream=True,
+                    proxies=self.proxies,
+                    headers=self.headers) as response:
+                sleep()
+                if response.content == b"":
+                    self.log.warning(f"{url} 返回内容为空")
+                    return False
+                return bool(self.save_file(response, root, name, type_, id_))
+        except requests.exceptions.ConnectionError as e:
+            self.log.warning(f"网络异常: {e}")
 
     def download_images(self):
         root = self.type_["images"]
