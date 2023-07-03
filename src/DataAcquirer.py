@@ -34,6 +34,7 @@ def reset(function):
         self.mix_total = []
         self.mix_data = []
         self.cursor = 0
+        self.uid = None
         self.name = None  # 账号昵称
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
@@ -114,6 +115,7 @@ class UserData:
         self.reply = []  # 评论回复的ID列表
         self.mix_total = []  # 合集作品数据
         self.mix_data = []  # 合集作品数据未处理JSON
+        self.uid = None  # 账号UID
         self.list = []  # 未处理的数据
         self.name = None  # 账号昵称
         self._mark = None  # 账号标识
