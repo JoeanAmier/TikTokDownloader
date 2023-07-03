@@ -378,7 +378,7 @@ class Download:
                 self.request_file(
                     image,
                     root,
-                    f"{name}_{index + 1}",
+                    f"{name[:self.length]}_{index + 1}",
                     type_="jpeg",
                     id_=item[0])
                 self.image_id = item[0]
@@ -388,7 +388,7 @@ class Download:
         root = self.type_["video"]
         for item in self.video_data:
             name = self.get_name(item)
-            self.request_file(item[4], root, name, type_="mp4")
+            self.request_file(item[4], root, name[:self.length], type_="mp4")
             self.download_music(root, item)
             self.download_cover(root, name, item)
 
@@ -396,16 +396,16 @@ class Download:
         """下载音乐"""
         if self.music and (u := item[5][1]):
             self.request_file(u, root, self.clean.filter(
-                f"{f'{item[0]}-{item[5][0]}'}"), type_="mp3")
+                f"{f'{item[0]}-{item[5][0]}'}")[:self.length], type_="mp3")
 
     def download_cover(self, root: str, name: str, item: list):
         """下载静态/动态封面图"""
         if not self.dynamic and not self.original:
             return
         if self.dynamic and (u := item[6]):
-            self.request_file(u, root, name, type_="webp")
+            self.request_file(u, root, name[:self.length], type_="webp")
         if self.original and (u := item[7]):
-            self.request_file(u, root, name, type_="jpeg")
+            self.request_file(u, root, name[:self.length], type_="jpeg")
 
     def save_file(self, data, root: str, name: str, type_: str, id_=""):
         """保存文件"""
