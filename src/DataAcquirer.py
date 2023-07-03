@@ -482,7 +482,7 @@ class UserData:
         if not url:
             self.log.warning(f"无效的作品链接: {url}")
             return False
-        self.get_id("aweme_id", url)
+        self.get_id(value="aweme_id", url=url)
         return self.id_ or False
 
     def check_url(self, url: str):
