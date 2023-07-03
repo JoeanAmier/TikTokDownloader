@@ -60,7 +60,7 @@ class Download:
         self.video_data = []  # 视频详细信息
         self.image_data = []  # 图集详细信息
         self.mix_data = []  # 合集详细信息
-        self.uid = None  # 账号UID，从DataAcquirer.py传入，调用前赋值
+        self.uid = None  # 账号UID，从DataAcquirer.py传入，提取数据时赋值
         self.mark = None  # 账号标识，从DataAcquirer.py传入，调用前赋值
         self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量
@@ -80,8 +80,8 @@ class Download:
                 "id": 0,
                 "desc": 1,
                 "create_time": 2,
-                "author": 3,
-                "uid": 5,
+                "author": 4,
+                "uid": 3,
             }
             name = value.strip().split(" ")
             try:
@@ -220,7 +220,7 @@ class Download:
     def create_folder(self, folder, live=False):
         """创建作品保存文件夹"""
         if self.favorite:
-            folder = f"{folder}_favorite"
+            folder = f"{folder}_喜欢页"
         root = os.path.join(self.root, folder)
         if not os.path.exists(root):
             os.mkdir(root)
@@ -297,6 +297,7 @@ class Download:
             if isinstance(item, str):
                 item = self.get_data(item)
             collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            self.uid = item["author"]["uid"]
             id_ = item["aweme_id"]
             desc = self.clean.filter(item["desc"]) or id_
             create_time = time.strftime(
@@ -328,7 +329,7 @@ class Download:
                                 self.nickname,
                                 "#"] + statistics)
                 self.image_data.append(
-                    [id_, desc, create_time, self.nickname, images, [music_name, music_url]])
+                    [id_, desc, create_time, self.uid, self.nickname, images, [music_name, music_url]])
             else:
                 video_url = item["video"]["play_addr"]["url_list"][-1]
                 # 动态封面图链接
@@ -355,7 +356,7 @@ class Download:
                                                     ":"),
                                 self.nickname,
                                 video_url] + statistics)
-                self.video_data.append([id_, desc, create_time, self.nickname, video_url, [
+                self.video_data.append([id_, desc, create_time, self.uid, self.nickname, video_url, [
                     music_name, music_url], dynamic_cover, origin_cover])
 
     @retry(finish=False)
@@ -379,7 +380,7 @@ class Download:
     def download_images(self):
         root = self.type_["images"]
         for item in self.image_data:
-            for index, image in enumerate(item[4]):
+            for index, image in enumerate(item[5]):
                 name = self.get_name(item)
                 self.request_file(
                     image,
@@ -394,23 +395,23 @@ class Download:
         root = self.type_["video"]
         for item in self.video_data:
             name = self.get_name(item)
-            self.request_file(item[4], root, name[:self.length], type_="mp4")
+            self.request_file(item[5], root, name[:self.length], type_="mp4")
             self.download_music(root, item)
             self.download_cover(root, name, item)
 
     def download_music(self, root: str, item: list):
         """下载音乐"""
-        if self.music and (u := item[5][1]):
+        if self.music and (u := item[6][1]):
             self.request_file(u, root, self.clean.filter(
-                f"{f'{item[0]}-{item[5][0]}'}")[:self.length], type_="mp3")
+                f"{f'{item[0]}-{item[6][0]}'}")[:self.length], type_="mp3")
 
     def download_cover(self, root: str, name: str, item: list):
         """下载静态/动态封面图"""
         if not self.dynamic and not self.original:
             return
-        if self.dynamic and (u := item[6]):
+        if self.dynamic and (u := item[7]):
             self.request_file(u, root, name[:self.length], type_="webp")
-        if self.original and (u := item[7]):
+        if self.original and (u := item[8]):
             self.request_file(u, root, name[:self.length], type_="jpeg")
 
     def save_file(self, data, root: str, name: str, type_: str, id_=""):
@@ -484,7 +485,6 @@ class Download:
         if not data:
             self.log.warning("获取作品详细信息失败")
             return False
-        self.uid = data["author"]["uid"]
         self.nickname = self.clean.filter(data["author"]["nickname"])
         self.get_info([data])
         if data["images"]:
@@ -505,8 +505,8 @@ class Download:
 
     @reset
     @check_cookie
-    def run_mix(self, items: list[dict]):
-        self.create_folder(self.nickname)
+    def run_mix(self, folder: str, items: list[dict]):
+        self.create_folder(folder)
         self.get_info(items)
         self.log.info(f"{self.nickname} 开始下载")
         self.download_video()
