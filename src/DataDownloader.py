@@ -14,6 +14,8 @@ from src.Parameter import XBogus
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
 
+MAX_RETRY = 10
+
 
 def reset(function):
     """重置数据"""
@@ -229,7 +231,7 @@ class Download:
         if not os.path.exists(self.type_["images"]):
             os.mkdir(self.type_["images"])
 
-    @retry(max_num=10)
+    @retry(max_num=MAX_RETRY)
     def get_data(self, item: str) -> dict | bool:
         """获取作品详细数据"""
         params = {
@@ -251,7 +253,7 @@ class Download:
                 }, timeout=10)
             sleep()
             if response.content == b"":
-                self.log.warning("作品详细数据响应内容为空，请尝试更新 Cookie")
+                self.log.warning("作品详细数据响应内容为空")
                 return False
             try:
                 return response.json()["aweme_detail"]
@@ -354,7 +356,7 @@ class Download:
                 self.video_data.append([id_, desc, create_time, self.nickname, video_url, [
                     music_name, music_url], dynamic_cover, origin_cover])
 
-    @retry(max_num=10)
+    @retry(max_num=MAX_RETRY)
     def request_file(self, url: str, root: str, name: str, type_: str, id_=""):
         """发送请求获取文件内容"""
         with requests.get(
@@ -364,7 +366,7 @@ class Download:
                 headers=self.headers) as response:
             sleep()
             if response.content == b"":
-                self.log.warning(f"{url} 返回内容为空，请尝试更新 Cookie")
+                self.log.warning(f"{url} 返回内容为空")
                 return False
             return bool(self.save_file(response, root, name, type_, id_))
 
@@ -507,3 +509,8 @@ class Download:
         self.download_video()
         self.download_images()
         self.log.info(f"{self.nickname} 下载结束")
+
+    @staticmethod
+    def set_max_retry(num: int):
+        global MAX_RETRY
+        MAX_RETRY = num

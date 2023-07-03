@@ -167,6 +167,7 @@ TikTokDownloader
 |                   proxies                   |              list\[str\]               |                                   代理地址，设置为空字符串代表不使用代理                                   |
 |                     log                     |                  bool                  |                                   是否记录运行日志，默认值：False                                    |
 |                  download                   |              list\[bool\]              |                          是否打开下载功能，如果关闭，程序将不会下载任何文件<br>默认值：True                          |
+|                    retry                    |                  int                   |                         发送请求获取数据发生异常时重试的最大次数，设置为0代表关闭重试，默认值: 10                         |
 
 # 📄 配置文件示例
 

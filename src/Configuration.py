@@ -23,6 +23,7 @@ class Settings:
             "proxies": ["", ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
             "log": False,  # 是否启用日志
             "download": [True],  # 是否启用下载功能
+            "retry": 10,  # 重试最大次数
         }  # 默认配置
 
     def create(self):

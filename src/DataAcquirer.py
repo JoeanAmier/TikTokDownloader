@@ -14,6 +14,8 @@ from src.Parameter import XBogus
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
 
+MAX_RETRY = 10
+
 
 def sleep():
     """避免频繁请求"""
@@ -124,6 +126,7 @@ class UserData:
         self._api = None  # 批量下载类型
         self._proxies = None  # 代理
         self._time = None  # 创建时间格式
+        self.retry = None  # 重试最大次数
 
     @property
     def url(self):
@@ -248,7 +251,7 @@ class UserData:
             self.log.warning("错误的时间格式，将使用默认时间格式(年-月-日 时.分.秒)")
             self._time = "%Y-%m-%d %H.%M.%S"
 
-    @retry(max_num=10)
+    @retry(max_num=MAX_RETRY)
     def get_id(self, value="sec_user_id", url=""):
         """获取账号ID或者作品ID"""
         if self.id_:
@@ -266,7 +269,7 @@ class UserData:
             self.log.warning(f"获取 {value} 超时")
             return False
         if response.content == b"":
-            self.log.warning(f"{url} {value} 响应内容为空，请尝试更新 Cookie")
+            self.log.warning(f"{url} {value} 响应内容为空")
             return False
         params = urlparse(response.url)
         url_list = params.path.rstrip("/").split("/")
@@ -279,7 +282,7 @@ class UserData:
         params["X-Bogus"] = xb
         return params
 
-    @retry(max_num=10, finish=True)
+    @retry(max_num=MAX_RETRY, finish=True)
     def get_user_data(self):
         """获取账号作品数据"""
         params = {
@@ -306,7 +309,7 @@ class UserData:
             self.log.error("获取账号作品数据超时")
             return False
         if response.content == b"":
-            self.log.warning("账号作品数据响应内容为空，请尝试更新 Cookie")
+            self.log.warning("账号作品数据响应内容为空")
             return False
         try:
             data = response.json()
@@ -349,7 +352,7 @@ class UserData:
         for i in self.image_data:
             self.log.info(f"图集: {i['aweme_id']}", False)
 
-    @retry(max_num=10)
+    @retry(max_num=MAX_RETRY)
     def get_nickname(self):
         """喜欢页下载模式需要额外发送请求获取账号昵称"""
         params = {
@@ -377,7 +380,7 @@ class UserData:
             return False
         if response.content == b"":
             self.log.warning(
-                f"账号昵称响应内容为空，请尝试更新 Cookie，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+                f"账号昵称响应内容为空，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
             return False
         try:
             data = response.json()
@@ -522,7 +525,7 @@ class UserData:
             self.log.warning("直播数据内容格式错误")
             return False
         if response.content == b"":
-            self.log.warning("直播数据响应内容为空，请尝试更新 Cookie")
+            self.log.warning("直播数据响应内容为空")
             return False
         return response.json()
 
@@ -556,7 +559,7 @@ class UserData:
                 self.get_comment(id_, self.reply_api, item)
                 self.deal_comment()
 
-    @retry(max_num=10, finish=True)
+    @retry(max_num=MAX_RETRY, finish=True)
     def get_comment(self, id_: str, api: str, reply=""):
         """获取评论数据"""
         if reply:
@@ -591,7 +594,7 @@ class UserData:
             self.log.error("获取评论数据超时")
             return False
         if response.content == b"":
-            self.log.warning("账号作品数据响应内容为空，请尝试更新 Cookie")
+            self.log.warning("账号作品数据响应内容为空")
             return False
         try:
             data = response.json()
@@ -663,7 +666,7 @@ class UserData:
         data = data.get("mix_info", False)
         return (data["mix_id"], data["mix_name"]) if data else data
 
-    @retry(max_num=10, finish=True)
+    @retry(max_num=MAX_RETRY, finish=True)
     def get_mix_data(self, id_):
         """获取合集作品数据"""
         params = {"aid": "6383",
@@ -686,7 +689,7 @@ class UserData:
             self.log.error("获取合集作品数据超时")
             return False
         if response.content == b"":
-            self.log.warning("合集作品数据响应内容为空，请尝试更新 Cookie")
+            self.log.warning("合集作品数据响应内容为空")
             return False
         try:
             data = response.json()
@@ -714,7 +717,7 @@ class UserData:
         return self.deal_user(data) if (
             data := self.get_user_info()) else False
 
-    @retry(max_num=10)
+    @retry(max_num=MAX_RETRY)
     def get_user_info(self):
         params = {
             "device_platform": "webapp",
@@ -736,7 +739,7 @@ class UserData:
             self.log.error("获取账号数据超时")
             return False
         if response.content == b"":
-            self.log.warning("账号数据响应内容为空，请尝试更新 Cookie")
+            self.log.warning("账号数据响应内容为空")
             return False
         try:
             return response.json()
@@ -792,3 +795,8 @@ class UserData:
         self.log.info("账号数据: " + ", ".join(data), False)
         self.data.save(data, key=1)
         self.log.info("账号数据获取结束")
+
+    @staticmethod
+    def set_max_retry(num: int):
+        global MAX_RETRY
+        MAX_RETRY = num
