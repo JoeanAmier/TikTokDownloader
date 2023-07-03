@@ -1,6 +1,7 @@
 from src.Configuration import Settings
 from src.DataAcquirer import UserData
 from src.DataDownloader import Download
+from src.FileManager import File
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.Recorder import RecordManager
@@ -17,6 +18,7 @@ class TikTok:
         self.download = None
         self.record = RecordManager()
         self.settings = Settings()
+        self.manager = File()
         self.accounts = []  # 账号数据
         self._number = 0  # 账号数量
         self._data = {}  # 其他配置数据
