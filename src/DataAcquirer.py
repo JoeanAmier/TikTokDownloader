@@ -569,14 +569,14 @@ class UserData:
     def run_comment(self, id_: str, data):
         self.data = data
         while not self.finish:
-            self.get_comment(id_, self.comment_api)
+            self.get_comment(id_=id_, api=self.comment_api)
             self.deal_comment()
         self.log.info("开始获取楼中楼评论数据")
         for item in self.reply:
             self.finish = False
             self.cursor = 0
             while not self.finish:
-                self.get_comment(id_, self.reply_api, item)
+                self.get_comment(id_=id_, api=self.reply_api, reply=item)
                 self.deal_comment()
 
     @retry(finish=True)
