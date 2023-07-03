@@ -24,6 +24,8 @@ def reset(function):
         self.type_ = {"video": "", "images": ""}  # 文件保存目录
         self.video_data = []
         self.image_data = []
+        self.uid = None
+        self.mark = None
         self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量
         self.mix_data = []
@@ -51,7 +53,7 @@ class Download:
         self._cookie = False
         self._nickname = None  # 账号昵称
         self._root = None
-        self._name = None
+        self._name = None  # 文件命名格式
         self.time = None  # 创建时间格式，从DataAcquirer.py传入
         self._split = None
         self._folder = None
@@ -63,11 +65,14 @@ class Download:
         self.video_data = []  # 视频详细信息
         self.image_data = []  # 图集详细信息
         self.mix_data = []  # 合集详细信息
+        self.uid = None  # 账号UID，从DataAcquirer.py传入
+        self.mark = None  # 账号标识，从DataAcquirer.py传入
         self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量
         self.image_id = None  # 临时记录图集ID，用于下载计数
         self.proxies = None  # 代理，从DataAcquirer.py传入
         self.download = None  # 是否启用下载文件功能
+        self.retry = 10  # 重试最大次数
 
     @property
     def name(self):
@@ -103,6 +108,7 @@ class Download:
 
     @split.setter
     def split(self, value):
+        # 有Bug
         if value:
             for s in value:
                 if s in self.clean.rule.keys():
@@ -231,7 +237,7 @@ class Download:
         if not os.path.exists(self.type_["images"]):
             os.mkdir(self.type_["images"])
 
-    @retry(max_num=MAX_RETRY)
+    @retry(finish=False)
     def get_data(self, item: str) -> dict | bool:
         """获取作品详细数据"""
         params = {
@@ -356,7 +362,7 @@ class Download:
                 self.video_data.append([id_, desc, create_time, self.nickname, video_url, [
                     music_name, music_url], dynamic_cover, origin_cover])
 
-    @retry(max_num=MAX_RETRY)
+    @retry(finish=False)
     def request_file(self, url: str, root: str, name: str, type_: str, id_=""):
         """发送请求获取文件内容"""
         try:
@@ -457,7 +463,7 @@ class Download:
     @check_cookie
     def run(self, index: int, video: list[str], image: list[str]):
         """批量下载"""
-        self.create_folder(self.nickname)
+        self.create_folder(f"{self.uid}{self.split}{self.mark}")
         self.log.info(f"开始获取第 {index} 个账号的作品数据")
         self.get_info(video)
         self.get_info(image)

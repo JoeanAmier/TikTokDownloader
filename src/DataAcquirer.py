@@ -14,8 +14,6 @@ from src.Parameter import XBogus
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
 
-MAX_RETRY = 10
-
 
 def sleep():
     """避免频繁请求"""
@@ -56,12 +54,12 @@ def check_cookie(function):
     return inner
 
 
-def retry(max_num=10, finish=False):
+def retry(finish=False):
     """发生错误时尝试重新执行，装饰的函数需要返回布尔值"""
 
     def inner(function):
         def execute(self, *args, **kwargs):
-            for i in range(max_num - 1):
+            for i in range(self.retry):
                 if result := function(self, *args, **kwargs):
                     return result
                 else:
@@ -129,7 +127,7 @@ class UserData:
         self._api = None  # 批量下载类型
         self._proxies = None  # 代理
         self._time = None  # 创建时间格式
-        self.retry = None  # 重试最大次数
+        self.retry = 10  # 重试最大次数
 
     @property
     def url(self):
@@ -265,7 +263,7 @@ class UserData:
         else:
             self._mark = s if (s := self.clean.filter(value)) else None
 
-    @retry(max_num=MAX_RETRY)
+    @retry(finish=False)
     def get_id(self, value="sec_user_id", url=""):
         """获取账号ID或者作品ID"""
         if self.id_:
@@ -296,7 +294,7 @@ class UserData:
         params["X-Bogus"] = xb
         return params
 
-    @retry(max_num=MAX_RETRY, finish=True)
+    @retry(finish=True)
     def get_user_data(self):
         """获取账号作品数据"""
         params = {
@@ -348,7 +346,7 @@ class UserData:
         if len(self.list) == 0:
             return
         self.uid = f'UID{self.list[0]["author"]["uid"]}'
-        self.name = self.mark or self.clean.filter(
+        self.name = self.clean.filter(
             self.list[0]["author"]["nickname"])
         for item in self.list:
             if item["images"]:
@@ -371,7 +369,7 @@ class UserData:
     def get_uid(self):
         pass
 
-    @retry(max_num=MAX_RETRY)
+    @retry(finish=False)
     def get_nickname(self):
         """喜欢页下载模式需要额外发送请求获取账号昵称和UID"""
         params = {
@@ -409,9 +407,7 @@ class UserData:
             return False
         try:
             self.uid = f'UID{data["aweme_list"][0]["author"]["uid"]}'
-            if self.mark:
-                self.name = self.mark
-            elif n := self.clean.filter(
+            if n := self.clean.filter(
                     data["aweme_list"][0]["author"]["nickname"]):
                 self.name = n
             else:
@@ -470,7 +466,7 @@ class UserData:
         self.log.info("该账号的作品数据获取结束")
         if self.favorite:
             self.get_nickname()
-        if not self.name:
+        if not all((self.name, self.uid)):
             self.log.error(f"获取第 {index} 个账号数据失败，请稍后重试")
             return False
         self.get_public_num()
@@ -584,7 +580,7 @@ class UserData:
                 self.get_comment(id_, self.reply_api, item)
                 self.deal_comment()
 
-    @retry(max_num=MAX_RETRY, finish=True)
+    @retry(finish=True)
     def get_comment(self, id_: str, api: str, reply=""):
         """获取评论数据"""
         if reply:
@@ -684,14 +680,15 @@ class UserData:
             self.deal_mix_data()
         self.log.info("合集作品数据提取结束")
         # 如果合集名称去除非法字符后为空字符串，则使用当前时间戳作为合集标识
-        return f"合集{info[0]}_{self.clean.filter(info[1]) or str(time.time())[:10]}"
+        return f"合集{info[0]}_{self.clean.filter(info[1]) or str(time.time())[:10]}", info[2]
 
     @staticmethod
     def get_mix_id(data):
+        nickname = data["author"]["nickname"]
         data = data.get("mix_info", False)
-        return (data["mix_id"], data["mix_name"]) if data else data
+        return (data["mix_id"], data["mix_name"], nickname) if data else None
 
-    @retry(max_num=MAX_RETRY, finish=True)
+    @retry(finish=True)
     def get_mix_data(self, id_):
         """获取合集作品数据"""
         params = {"aid": "6383",
@@ -742,7 +739,7 @@ class UserData:
         return self.deal_user(data) if (
             data := self.get_user_info()) else False
 
-    @retry(max_num=MAX_RETRY)
+    @retry(finish=False)
     def get_user_info(self):
         params = {
             "device_platform": "webapp",
@@ -820,8 +817,3 @@ class UserData:
         self.log.info("账号数据: " + ", ".join(data), False)
         self.data.save(data, key=1)
         self.log.info("账号数据获取结束")
-
-    @staticmethod
-    def set_max_retry(num: int):
-        global MAX_RETRY
-        MAX_RETRY = num
