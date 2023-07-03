@@ -325,7 +325,7 @@ class Download:
                 self.image_data.append(
                     [id_, desc, create_time, self.nickname, images, [music_name, music_url]])
             else:
-                video_url = item["video"]["play_addr"]["url_list"][0]
+                video_url = item["video"]["play_addr"]["url_list"][-1]
                 # 动态封面图链接
                 dynamic_cover = item["video"]["dynamic_cover"]["url_list"][-1]
                 # 静态封面图链接
