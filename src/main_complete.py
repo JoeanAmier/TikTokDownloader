@@ -96,7 +96,6 @@ class TikTok:
         self.request.latest = latest
         if not self.request.run(num):
             return False
-        # TODO: 三个变量
         self.download.nickname = self.request.name
         self.download.uid = self.request.uid
         self.download.mark = self.request.mark
