@@ -53,18 +53,19 @@ def check_cookie(function):
     return inner
 
 
-def retry(max_num=10):
+def retry(max_num=10, finish=False):
     """发生错误时尝试重新执行，装饰的函数需要返回布尔值"""
 
     def inner(function):
         def execute(self, *args, **kwargs):
             for i in range(max_num - 1):
-                if r := function(self, *args, **kwargs):
-                    return r
+                if result := function(self, *args, **kwargs):
+                    return result
                 else:
-                    print(f"正在第 {i + 1} 次重试")
-            print(f"正在第 {max_num} 次重试")
-            return function(self, *args, **kwargs)
+                    print(f"正在尝试第 {i + 1} 次重试")
+            if not (result := function(self, *args, **kwargs)) and finish:
+                self.finish = True
+            return result
 
         return execute
 
@@ -278,7 +279,7 @@ class UserData:
         params["X-Bogus"] = xb
         return params
 
-    @retry(max_num=10)
+    @retry(max_num=10, finish=True)
     def get_user_data(self):
         """获取账号作品数据"""
         params = {
@@ -555,7 +556,7 @@ class UserData:
                 self.get_comment(id_, self.reply_api, item)
                 self.deal_comment()
 
-    @retry(max_num=10)
+    @retry(max_num=10, finish=True)
     def get_comment(self, id_: str, api: str, reply=""):
         """获取评论数据"""
         if reply:
@@ -662,7 +663,7 @@ class UserData:
         data = data.get("mix_info", False)
         return (data["mix_id"], data["mix_name"]) if data else data
 
-    @retry(max_num=10)
+    @retry(max_num=10, finish=True)
     def get_mix_data(self, id_):
         """获取合集作品数据"""
         params = {"aid": "6383",
