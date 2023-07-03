@@ -43,9 +43,7 @@ class Download:
     xb = XBogus()
 
     def __init__(self, log: LoggerManager, save):
-        self.headers = self.UA | {
-            'referer': 'https://www.douyin.com/',
-        }  # 请求头
+        self.headers = {}  # 请求头
         self.log = log  # 日志记录模块
         self.data = save  # 详细数据记录模块
         self._cookie = False
@@ -212,6 +210,7 @@ class Download:
             self.headers["Cookie"] = cookie
             for i in (MsToken.get_ms_token(), TtWid.get_TtWid(),):
                 self.headers["Cookie"] += f"; {i}"
+            self.headers.update(self.UA)
             self._cookie = True
 
     def create_folder(self, folder, live=False):
@@ -247,7 +246,9 @@ class Download:
                 self.item_ids_api,
                 params=params,
                 proxies=self.proxies,
-                headers=self.headers, timeout=10)
+                headers=self.headers | {
+                    'referer': 'https://www.douyin.com/',
+                }, timeout=10)
             sleep()
             if response.content == b"":
                 self.log.warning("作品详细数据响应内容为空，请尝试更新 Cookie")
@@ -360,7 +361,7 @@ class Download:
                 url,
                 stream=True,
                 proxies=self.proxies,
-                headers=self.UA) as response:
+                headers=self.headers) as response:
             sleep()
             if response.content == b"":
                 self.log.warning(f"{url} 返回内容为空，请尝试更新 Cookie")
@@ -493,7 +494,7 @@ class Download:
         with requests.get(
                 link,
                 stream=True,
-                proxies=self.proxies, headers=self.UA) as response:
+                proxies=self.proxies, headers=self.headers) as response:
             self.log.info("开始下载直播视频")
             self.save_file(response, f"{self.root}/Live", name, "flv")
 
