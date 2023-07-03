@@ -83,8 +83,8 @@ class TikTok:
 
     def account_download(
             self,
-            mark: str,
             num: int,
+            mark: str,
             url: str,
             mode: str,
             earliest: str,
@@ -96,9 +96,12 @@ class TikTok:
         self.request.latest = latest
         if not self.request.run(num):
             return False
+        # TODO: 三个变量
         self.download.nickname = self.request.name
+        self.download.uid = self.request.uid
+        self.download.mark = self.request.mark
         self.download.favorite = self.request.favorite
-        with save(root, name=self.download.nickname, **params) as data:
+        with save(root, name=f"{self.download.uid}{self._data['split']}{self.download.mark}", **params) as data:
             self.download.data = data
             self.download.run(num,
                               self.request.video_data,
@@ -162,8 +165,6 @@ class TikTok:
         self.request = UserData(self.logger)
         self.download = Download(self.logger, None)
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
-        self.request.set_max_retry(self._data["retry"])
-        self.download.set_max_retry(self._data["retry"])
 
     def set_parameters(self):
         self.download.root = self._data["root"]
@@ -180,6 +181,8 @@ class TikTok:
         self.request.proxies = self._data["proxies"]
         self.download.proxies = self.request.proxies
         self.download.download = self._data["download"]
+        self.request.retry = self._data["retry"]
+        self.download.retry = self._data["retry"]
 
     def comment_acquisition(self):
         save, root, params = self.record.run(
@@ -208,10 +211,10 @@ class TikTok:
                 continue
             mix_data = self.download.get_data(id_)
             mix_name = self.request.run_mix(mix_data)
-            if not mix_name:
+            if not isinstance(mix_name, tuple):
                 self.logger.info(f"作品 {id_} 不属于任何合集")
                 continue
-            self.download.nickname = mix_name
+            self.download.nickname = mix_name[1]
             with save(root, name=self.download.nickname, **params) as data:
                 self.download.data = data
                 self.download.run_mix(self.request.mix_total)
