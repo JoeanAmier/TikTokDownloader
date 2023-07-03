@@ -347,7 +347,7 @@ class UserData:
         """对账号作品进行分类"""
         if len(self.list) == 0:
             return
-        self.uid = self.list[0]["author"]["uid"]
+        self.uid = f'UID{self.list[0]["author"]["uid"]}'
         self.name = self.mark or self.clean.filter(
             self.list[0]["author"]["nickname"])
         for item in self.list:
@@ -408,7 +408,7 @@ class UserData:
                 f"数据接口返回内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
             return False
         try:
-            self.uid = data["aweme_list"][0]["author"]["uid"]
+            self.uid = f'UID{data["aweme_list"][0]["author"]["uid"]}'
             if self.mark:
                 self.name = self.mark
             elif n := self.clean.filter(
@@ -684,7 +684,7 @@ class UserData:
             self.deal_mix_data()
         self.log.info("合集作品数据提取结束")
         # 如果合集名称去除非法字符后为空字符串，则使用当前时间戳作为合集标识
-        return f"合集_{self.clean.filter(info[1]) or str(time.time())[:10]}"
+        return f"合集{info[0]}_{self.clean.filter(info[1]) or str(time.time())[:10]}"
 
     @staticmethod
     def get_mix_id(data):
