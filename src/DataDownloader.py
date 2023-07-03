@@ -14,18 +14,13 @@ from src.Parameter import XBogus
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
 
-MAX_RETRY = 10
-
 
 def reset(function):
     """重置数据"""
 
     def inner(self, *args, **kwargs):
-        self.type_ = {"video": "", "images": ""}  # 文件保存目录
         self.video_data = []
         self.image_data = []
-        self.uid = None
-        self.mark = None
         self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量
         self.mix_data = []
@@ -47,32 +42,32 @@ class Download:
     xb = XBogus()
 
     def __init__(self, log: LoggerManager, save):
-        self.headers = {}  # 请求头
-        self.log = log  # 日志记录模块
-        self.data = save  # 详细数据记录模块
-        self._cookie = False
-        self._nickname = None  # 账号昵称
-        self._root = None
-        self._name = None  # 文件命名格式
-        self.time = None  # 创建时间格式，从DataAcquirer.py传入
-        self._split = None
-        self._folder = None
-        self._music = False  # 是否下载音乐
-        self._dynamic = False  # 是否下载动态封面图
-        self._original = False  # 是否下载静态封面图
-        self.favorite = False  # 喜欢页下载模式
-        self.type_ = {"video": "", "images": ""}  # 文件保存目录
+        self.headers = {}  # 请求头，通用
+        self.log = log  # 日志记录模块，通用
+        self.data = save  # 详细数据记录模块，调用前赋值
+        self._cookie = False  # 通用
+        self._nickname = None  # 账号昵称，调用前赋值
+        self._root = None  # 根目录，通用
+        self._name = None  # 文件命名格式，通用
+        self.time = None  # 创建时间格式，从DataAcquirer.py传入，通用
+        self._split = None  # 分隔符，通用
+        self._folder = None  # 单独下载作品保存文件夹名称，通用
+        self._music = False  # 是否下载音乐，通用
+        self._dynamic = False  # 是否下载动态封面图，通用
+        self._original = False  # 是否下载静态封面图，通用
+        self.favorite = False  # 喜欢页下载模式，调用前赋值
+        self.type_ = {"video": "", "images": ""}  # 文件保存目录，运行时赋值
         self.video_data = []  # 视频详细信息
         self.image_data = []  # 图集详细信息
         self.mix_data = []  # 合集详细信息
-        self.uid = None  # 账号UID，从DataAcquirer.py传入
-        self.mark = None  # 账号标识，从DataAcquirer.py传入
+        self.uid = None  # 账号UID，从DataAcquirer.py传入，调用前赋值
+        self.mark = None  # 账号标识，从DataAcquirer.py传入，调用前赋值
         self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量
         self.image_id = None  # 临时记录图集ID，用于下载计数
-        self.proxies = None  # 代理，从DataAcquirer.py传入
-        self.download = None  # 是否启用下载文件功能
-        self.retry = 10  # 重试最大次数
+        self.proxies = None  # 代理，从DataAcquirer.py传入，通用
+        self.download = None  # 是否启用下载文件功能，通用
+        self.retry = 10  # 重试最大次数，通用
 
     @property
     def name(self):
@@ -376,7 +371,7 @@ class Download:
                     self.log.warning(f"{url} 返回内容为空")
                     return False
                 return bool(self.save_file(response, root, name, type_, id_))
-        except requests.exceptions.ConnectionError as e:
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
             self.log.warning(f"网络异常: {e}")
             return False
 
@@ -463,7 +458,7 @@ class Download:
     @check_cookie
     def run(self, index: int, video: list[str], image: list[str]):
         """批量下载"""
-        self.create_folder(f"{self.uid}{self.split}{self.mark}")
+        self.create_folder(f"{self.uid}_{self.mark}")
         self.log.info(f"开始获取第 {index} 个账号的作品数据")
         self.get_info(video)
         self.get_info(image)
@@ -515,8 +510,3 @@ class Download:
         self.download_video()
         self.download_images()
         self.log.info(f"{self.nickname} 下载结束")
-
-    @staticmethod
-    def set_max_retry(num: int):
-        global MAX_RETRY
-        MAX_RETRY = num
