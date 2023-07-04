@@ -2,6 +2,16 @@ import json
 import os
 
 
+def retry(function):
+    def inner(self, *args, **kwargs):
+        while True:
+            if function(self, *args, **kwargs):
+                return
+            _ = input("请关闭所有正在访问作品保存文件夹的窗口和程序，按下回车继续运行")
+
+    return inner
+
+
 class Cache:
     def __init__(self, record, root: str, type_: str):
         self.log = record  # 日志记录对象
@@ -35,19 +45,19 @@ class Cache:
         self.log.info(f"更新缓存: {uid, mark, name}", False)
 
     def check_file(self, uid: str, mark: str, name: str):
-        if self.cache[uid]["mark"] != mark and not self.rename_folder(
-                uid, mark):
-            return
-        if self.cache[uid]["name"] != name:
-            self.rename_file(uid, mark, name)
-
-    def rename_folder(self, uid: str, mark: str):
         if not os.path.exists(
                 old_folder := os.path.join(
                     self.root,
                     f"{self.type_}{uid}_{self.cache[uid]['mark']}")):
             self.log.info(f"{old_folder} 不存在，自动跳过")
-            return False
+            return
+        if self.cache[uid]["mark"] != mark:
+            self.rename_folder(old_folder, uid, mark)
+        if self.cache[uid]["name"] != name:
+            self.rename_file(uid, mark, name)
+
+    @retry
+    def rename_folder(self, old_folder, uid: str, mark: str):
         new_folder = os.path.join(self.root, f"{self.type_}{uid}_{mark}")
         try:
             os.rename(old_folder, new_folder)
