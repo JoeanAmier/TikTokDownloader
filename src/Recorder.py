@@ -149,6 +149,10 @@ class NoneLogger:
     def save(self, *args, **kwargs):
         pass
 
+    @staticmethod
+    def rename(*args, **kwargs):
+        pass
+
 
 class CSVLogger:
     """CSV格式记录"""
@@ -157,13 +161,14 @@ class CSVLogger:
             self,
             root: str,
             title_line,
+            old="Download",
             name="Solo_Download",
             *args,
             **kwargs):
         self.file = None  # 文件对象
         self.writer = None  # CSV对象
         self.root = root  # 文件路径
-        self.name = name  # 文件名称
+        self.name = self.rename(root, old, name)  # 文件名称
         self.title_line = title_line  # 标题行
 
     def __enter__(self):
@@ -189,6 +194,17 @@ class CSVLogger:
     def save(self, data):
         self.writer.writerow(data)
 
+    @staticmethod
+    def rename(root, old, new_):
+        mark = new_.split("_", 1)
+        if mark[-1] == old:
+            return new_
+        mark[-1] = old
+        old_file = os.path.join(root, "_".join(mark))
+        new_file = os.path.join(root, new_)
+        os.rename(old_file, new_file)
+        return new_
+
 
 class XLSXLogger:
     """XLSX格式"""
@@ -197,13 +213,14 @@ class XLSXLogger:
             self,
             root: str,
             title_line,
+            old="Download",
             name="Solo_Download",
             *args,
             **kwargs):
         self.book = None  # XLSX数据簿
         self.sheet = None  # XLSX数据表
         self.root = root  # 文件路径
-        self.name = name  # 文件名称
+        self.name = CSVLogger.rename(root, old, name)  # 文件名称
         self.title_line = title_line  # 标题行
 
     def __enter__(self):
@@ -241,6 +258,7 @@ class SQLLogger:
             file,
             title_line,
             title_type,
+            old="Download",
             name="Solo_Download", ):
         self.db = None  # 数据库
         self.cursor = None  # 游标对象
@@ -273,6 +291,9 @@ class SQLLogger:
         insert_sql = f"""REPLACE INTO {self.name} ({", ".join(self.title_line[key:])}) VALUES ({", ".join(["?" for _ in self.title_line[key:]])});"""
         self.cursor.execute(insert_sql, data)
         self.db.commit()
+
+    def update_sheet(self):
+        pass
 
 
 class RecordManager:
