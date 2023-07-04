@@ -80,7 +80,7 @@ class Download:
                 "id": 0,
                 "desc": 1,
                 "create_time": 2,
-                "author": 4,
+                "nickname": 4,
                 "uid": 3,
             }
             name = value.strip().split(" ")
@@ -88,11 +88,11 @@ class Download:
                 self._name = [dict_[i] for i in name]
                 self.log.info(f"命名格式设置成功: {value}", False)
             except KeyError:
-                self.log.warning(f"命名格式错误: {value}，将使用默认命名格式(创建时间 作者 描述)")
-                self._name = [2, 3, 1]
+                self.log.warning(f"命名格式错误: {value}，将使用默认命名格式(创建时间 账号昵称 描述)")
+                self._name = [2, 4, 1]
         else:
-            self.log.warning("错误的命名格式，将使用默认命名格式(创建时间 作者 描述)")
-            self._name = [2, 3, 1]
+            self.log.warning("错误的命名格式，将使用默认命名格式(创建时间 账号昵称 描述)")
+            self._name = [2, 4, 1]
 
     def get_name(self, data: list) -> str:
         """生成文件名称"""

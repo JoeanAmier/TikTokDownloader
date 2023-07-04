@@ -11,7 +11,7 @@ class Settings:
             ],
             "root": "./",
             "folder": "Download",
-            "name": "create_time author desc",
+            "name": "create_time nickname desc",
             "time": "%Y-%m-%d %H.%M.%S",
             "split": "-",
             "music": [False, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
