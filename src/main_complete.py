@@ -100,6 +100,10 @@ class TikTok:
         self.request.latest = latest
         if not self.request.run(num):
             return False
+        self.manager.update_cache(
+            self.request.uid,
+            self.request.mark,
+            self.request.name)
         self.download.nickname = self.request.name
         self.download.uid = self.request.uid
         self.download.mark = self.request.mark
