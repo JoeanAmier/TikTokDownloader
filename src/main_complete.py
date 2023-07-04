@@ -71,7 +71,7 @@ class TikTok:
         return True
 
     def batch_acquisition(self):
-        self.manager = File(self._data["root"], self._data["folder"])
+        self.manager = File(self._data["root"])
         self.logger.info(f"共有 {self._number} 个账号的作品等待下载")
         save, root, params = self.record.run(
             self._data["root"], format_=self._data["save"])
