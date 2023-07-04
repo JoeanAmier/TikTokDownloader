@@ -3,10 +3,11 @@ import os
 
 
 class Cache:
-    def __init__(self, record, root: str):
+    def __init__(self, record, root: str, type_: str):
         self.log = record  # 日志记录对象
         self.file = "./src/FileCache.json"  # 缓存文件
-        self.root = root  # 批量下载作品文件保存根目录
+        self.root = root  # 作品文件保存根目录
+        self.type_ = type_
         self.cache = self.read_cache()
 
     def read_cache(self):
@@ -44,10 +45,10 @@ class Cache:
         if not os.path.exists(
                 old_folder := os.path.join(
                     self.root,
-                    f"UID{uid}_{self.cache[uid]['mark']}")):
+                    f"{self.type_}{uid}_{self.cache[uid]['mark']}")):
             self.log.info(f"{old_folder} 不存在，自动跳过")
             return False
-        new_folder = os.path.join(self.root, f"UID{uid}_{mark}")
+        new_folder = os.path.join(self.root, f"{self.type_}{uid}_{mark}")
         os.rename(old_folder, new_folder)
         self.log.info(f"文件夹 {old_folder} 重命名为 {new_folder}")
         return True
@@ -65,6 +66,6 @@ class Cache:
                 os.rename(old_path, new_path)
                 self.log.info(f"文件 {old_path} 重命名为 {new_path}")
 
-        folder = os.path.join(self.root, f"UID{uid}_{mark}")
+        folder = os.path.join(self.root, f"{self.type_}{uid}_{mark}")
         rename("video")
         rename("images")

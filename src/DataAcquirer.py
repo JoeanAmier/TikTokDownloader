@@ -673,18 +673,23 @@ class UserData:
     @check_cookie
     def run_mix(self, data):
         info = self.get_mix_id(data)
-        if not info:
+        if not isinstance(info, tuple):
             return False
         while not self.finish:
             self.get_mix_data(info[0])
             self.deal_mix_data()
         self.log.info("合集作品数据提取结束")
         # 如果合集名称去除非法字符后为空字符串，则使用当前时间戳作为合集标识
-        return f"合集{info[0]}_{self.clean.filter(info[1]) or str(time.time())[:10]}", info[2]
+        return [
+            info[0],
+            self.clean.filter(
+                info[1]) or str(
+                time.time())[
+                            :10],
+            info[2]]
 
-    @staticmethod
-    def get_mix_id(data):
-        nickname = data["author"]["nickname"]
+    def get_mix_id(self, data):
+        nickname = self.clean.filter(data["author"]["nickname"])
         data = data.get("mix_info", False)
         return (data["mix_id"], data["mix_name"], nickname) if data else None
 
