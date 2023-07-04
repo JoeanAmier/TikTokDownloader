@@ -1,7 +1,7 @@
 from src.Configuration import Settings
 from src.DataAcquirer import UserData
 from src.DataDownloader import Download
-from src.FileManager import File
+from src.FileManager import Cache
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.Recorder import RecordManager
@@ -71,7 +71,7 @@ class TikTok:
         return True
 
     def batch_acquisition(self):
-        self.manager = File(self._data["root"])
+        self.manager = Cache(self.logger, self._data["root"])
         self.logger.info(f"共有 {self._number} 个账号的作品等待下载")
         save, root, params = self.record.run(
             self._data["root"], format_=self._data["save"])
@@ -83,6 +83,7 @@ class TikTok:
                 root,
                 params)
             # break  # 测试使用
+        self.manager.save_cache()
 
     def account_download(
             self,
