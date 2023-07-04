@@ -207,7 +207,7 @@ class TikTok:
                 self.request.run_comment(id_, data)
 
     def mix_acquisition(self):
-        self.manager = Cache(self.logger, self._data["root"], type_="合集")
+        self.manager = Cache(self.logger, self._data["root"], type_="MIX")
         save, root, params = self.record.run(
             self._data["root"], type_="mix", format_=self._data["save"])
         while True:
@@ -226,10 +226,10 @@ class TikTok:
             self.download.nickname = mix_info[2]
             mix_info[1] = input("请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
             self.manager.update_cache(*mix_info)
-            with save(root, name=f"合集{mix_info[0]}_{mix_info[1]}", **params) as data:
+            with save(root, name=f"MIX{mix_info[0]}_{mix_info[1]}", **params) as data:
                 self.download.data = data
                 self.download.run_mix(
-                    f"合集{mix_info[0]}_{mix_info[1]}",
+                    f"MIX{mix_info[0]}_{mix_info[1]}",
                     self.request.mix_total)
         self.manager.save_cache()
 
