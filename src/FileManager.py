@@ -49,7 +49,11 @@ class Cache:
             self.log.info(f"{old_folder} 不存在，自动跳过")
             return False
         new_folder = os.path.join(self.root, f"{self.type_}{uid}_{mark}")
-        os.rename(old_folder, new_folder)
+        try:
+            os.rename(old_folder, new_folder)
+        except PermissionError as e:
+            self.log.warning(f"文件夹被占用，重命名失败: {e}")
+            return False
         self.log.info(f"文件夹 {old_folder} 重命名为 {new_folder}")
         return True
 
