@@ -508,7 +508,7 @@ class Download:
     def run_mix(self, folder: str, items: list[dict]):
         self.create_folder(folder)
         self.get_info(items)
-        self.log.info(f"{self.nickname} 开始下载")
+        self.log.info(f"{self.nickname} 的合集开始下载")
         self.download_video()
         self.download_images()
-        self.log.info(f"{self.nickname} 下载结束")
+        self.log.info(f"{self.nickname} 的合集下载结束")

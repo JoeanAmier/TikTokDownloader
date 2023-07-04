@@ -225,6 +225,7 @@ class TikTok:
                 continue
             self.download.nickname = mix_info[2]
             mix_info[1] = input("请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
+            self.manager.update_cache(*mix_info)
             with save(root, name=f"合集{mix_info[0]}_{mix_info[1]}", **params) as data:
                 self.download.data = data
                 self.download.run_mix(

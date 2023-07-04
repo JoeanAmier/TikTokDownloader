@@ -481,7 +481,7 @@ class UserData:
         """单独下载模式"""
         url = self.check_url(text)
         if not url:
-            self.log.warning(f"无效的作品链接: {url}")
+            self.log.warning(f"无效的作品链接: {text}")
             return False
         self.get_id(value="aweme_id", url=url)
         return self.id_ or False
