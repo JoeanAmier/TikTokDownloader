@@ -318,6 +318,9 @@ class UserData:
         except requests.exceptions.ReadTimeout:
             self.log.error("获取账号作品数据超时")
             return False
+        except requests.exceptions.ConnectionError:
+            self.log.error("获取账号作品数据时网络异常")
+            return False
         if response.content == b"":
             self.log.warning("账号作品数据响应内容为空")
             return False
