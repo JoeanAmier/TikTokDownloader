@@ -69,7 +69,7 @@ class Cache:
 
     def rename_file(self, uid, mark, name):
         def rename(type_: str):
-            nonlocal folder, uid, name
+            nonlocal folder, uid, mark, name
             deal_folder = os.path.join(folder, type_)
             file_list = os.listdir(deal_folder)
             for item in file_list:
@@ -77,6 +77,13 @@ class Cache:
                     break
                 old_path = os.path.join(deal_folder, item)
                 new_path = os.path.join(deal_folder, item.replace(s, name, 1))
+                os.rename(old_path, new_path)
+                self.log.info(f"文件 {old_path} 重命名为 {new_path}")
+            for item in file_list:
+                if (s := self.cache[uid]["mark"]) not in item:
+                    break
+                old_path = os.path.join(deal_folder, item)
+                new_path = os.path.join(deal_folder, item.replace(s, mark, 1))
                 os.rename(old_path, new_path)
                 self.log.info(f"文件 {old_path} 重命名为 {new_path}")
 
