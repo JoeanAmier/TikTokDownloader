@@ -37,7 +37,7 @@ class Download:
     # video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"  # 官方视频下载接口，已弃用
     item_ids_api = "https://www.douyin.com/aweme/v1/web/aweme/detail/"  # 作品数据接口
     clean = Cleaner()  # 过滤错误字符
-    length = 128  # 文件名称长度限制
+    length = 64  # 作品描述长度限制
     chunk = 1048576  # 单次下载文件大小，单位字节
     xb = XBogus()
 
@@ -300,7 +300,7 @@ class Download:
             collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             self.uid = item["author"]["uid"]
             id_ = item["aweme_id"]
-            desc = self.clean.filter(item["desc"]) or id_
+            desc = self.clean.filter(item["desc"])[:self.length] or id_
             create_time = time.strftime(
                 self.time,
                 time.localtime(
@@ -391,7 +391,7 @@ class Download:
                 self.request_file(
                     image,
                     root,
-                    f"{name[:self.length]}_{index + 1}",
+                    f"{name}_{index + 1}",
                     type_="jpeg",
                     id_=item[0])
                 self.image_id = item[0]
@@ -401,7 +401,7 @@ class Download:
         root = self.type_["video"]
         for item in self.video_data:
             name = self.get_name(item)
-            self.request_file(item[6], root, name[:self.length], type_="mp4")
+            self.request_file(item[6], root, name, type_="mp4")
             self.download_music(root, item)
             self.download_cover(root, name, item)
 
@@ -409,16 +409,16 @@ class Download:
         """下载音乐"""
         if self.music and (u := item[6][1]):
             self.request_file(u, root, self.clean.filter(
-                f"{f'{item[0]}-{item[6][0]}'}")[:self.length], type_="mp3")
+                f"{f'{item[0]}-{item[6][0]}'}"), type_="mp3")
 
     def download_cover(self, root: str, name: str, item: list):
         """下载静态/动态封面图"""
         if not self.dynamic and not self.original:
             return
         if self.dynamic and (u := item[7]):
-            self.request_file(u, root, name[:self.length], type_="webp")
+            self.request_file(u, root, name, type_="webp")
         if self.original and (u := item[8]):
-            self.request_file(u, root, name[:self.length], type_="jpeg")
+            self.request_file(u, root, name, type_="jpeg")
 
     def save_file(self, data, root: str, name: str, type_: str, id_=""):
         """保存文件"""
@@ -508,7 +508,7 @@ class Download:
     def download_live(self, link: str, name: str):
         """下载直播，不需要Cookie信息"""
         self.create_folder("Live", True)
-        self.request_file(link, f"{self.root}/Live", name[:self.length], "flv")
+        self.request_file(link, f"{self.root}/Live", name, "flv")
 
     @reset
     @check_cookie
