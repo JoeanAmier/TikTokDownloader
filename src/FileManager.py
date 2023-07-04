@@ -34,9 +34,9 @@ class Cache:
         self.log.info(f"更新缓存: {uid, mark, name}", False)
 
     def check_file(self, uid: str, mark: str, name: str):
-        if self.cache[uid]["mark"] != mark:
-            if not self.rename_folder(uid, mark):
-                return
+        if self.cache[uid]["mark"] != mark and not self.rename_folder(
+                uid, mark):
+            return
         if self.cache[uid]["name"] != name:
             self.rename_file(uid, mark, name)
 
