@@ -67,22 +67,22 @@ class WebUI(TikTok):
     def get_data(data) -> dict:
         def get_video_url(item):
             result = {
-                "视频下载地址": item[5],
-                "原声下载地址": item[6][1],
-                "动态封面图地址": item[7],
+                "视频下载地址": item[6],
+                "原声下载地址": item[7][1],
                 "静态封面图地址": item[8],
+                "动态封面图地址": item[9],
             }
             return {"text": "\n".join(
                 [f"{i}: {j}" for i, j in result.items()]), "preview": item[7]}
 
         def get_image_url(item):
             return {"text": "\n".join([f"{i}: {j}" for i, j in (
-                    {f"Image_{i + 1} 下载地址": j for i, j in enumerate(item[5])} | {
-                "原声下载地址": item[6][1]}).items()]), "preview": item[5][0]}
+                    {f"Image_{i + 1} 下载地址": j for i, j in enumerate(item[6])} | {
+                "原声下载地址": item[6][1]}).items()]), "preview": item[6][0]}
 
-        if len(data) == 8:
+        if len(data) == 10:
             return get_video_url(data)
-        elif len(data) == 6:
+        elif len(data) == 8:
             return get_image_url(data)
         raise ValueError
 

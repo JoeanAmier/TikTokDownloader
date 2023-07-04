@@ -82,6 +82,7 @@ class Download:
                 "create_time": 2,
                 "nickname": 4,
                 "uid": 3,
+                "mark": 5,
             }
             name = value.strip().split(" ")
             try:
@@ -276,11 +277,11 @@ class Download:
         def get_music():
             nonlocal item
             if music_data := item.get("music", False):
-                name = f'{music_data["author"]}-{music_data["title"]}'
+                name = music_data["title"]
                 url = u[0] if (u := music_data["play_url"]
-                ["url_list"]) else None  # 部分作品的数据没有音乐下载地址
+                ["url_list"]) else ""  # 部分作品的数据没有音乐下载地址
                 return name, url
-            return None, None
+            return "", ""
 
         def get_statistics():
             nonlocal item
@@ -307,57 +308,62 @@ class Download:
             music_name, music_url = get_music()
             statistics = get_statistics()
             if images := item["images"]:
+                type_ = "图集"
                 images = [i['url_list'][-1] for i in images]
-                self.log.info(
-                    "图集: " +
-                    ", ".join(
-                        [collection_time,
-                         id_,
-                         desc,
-                         create_time.replace(
-                             ".",
-                             ":"),
-                         self.nickname] +
-                        statistics),
-                    False)
-                self.data.save(["图集",
-                                collection_time,
-                                id_,
-                                desc,
-                                create_time.replace(".",
-                                                    ":"),
-                                self.nickname,
-                                "#"] + statistics)
-                self.image_data.append(
-                    [id_, desc, create_time, self.uid, self.nickname, images, [music_name, music_url]])
+                download_link = " ".join(images)
+                dynamic_cover = ""
+                origin_cover = ""
+                self.image_data.append([id_,
+                                        desc,
+                                        create_time,
+                                        self.uid,
+                                        self.nickname,
+                                        self.mark,
+                                        images,
+                                        [music_name,
+                                         music_url]])
             else:
-                video_url = item["video"]["play_addr"]["url_list"][-1]
+                type_ = "视频"
+                download_link = item["video"]["play_addr"]["url_list"][-1]
                 # 动态封面图链接
                 dynamic_cover = item["video"]["dynamic_cover"]["url_list"][-1]
                 # 静态封面图链接
                 origin_cover = item["video"]["origin_cover"]["url_list"][-1]
-                self.log.info(
-                    "视频: " +
-                    ", ".join(
-                        [collection_time,
-                         id_,
-                         desc,
-                         create_time.replace(
-                             ".",
-                             ":"),
-                         self.nickname,
-                         video_url] + statistics),
-                    False)
-                self.data.save(["视频",
-                                collection_time,
-                                id_,
-                                desc,
-                                create_time.replace(".",
-                                                    ":"),
-                                self.nickname,
-                                video_url] + statistics)
-                self.video_data.append([id_, desc, create_time, self.uid, self.nickname, video_url, [
-                    music_name, music_url], dynamic_cover, origin_cover])
+                self.video_data.append([id_,
+                                        desc,
+                                        create_time,
+                                        self.uid,
+                                        self.nickname,
+                                        self.mark,
+                                        download_link,
+                                        [music_name,
+                                         music_url],
+                                        origin_cover,
+                                        dynamic_cover])
+            self.log.info(
+                f"{type_}: " +
+                ", ".join(
+                    [id_,
+                     desc,
+                     create_time.replace(
+                         ".",
+                         ":"), music_name] +
+                    statistics),
+                False)
+            self.data.save([type_,
+                            collection_time,
+                            self.uid,
+                            id_,
+                            desc,
+                            create_time.replace(".",
+                                                ":"),
+                            self.nickname,
+                            download_link,
+                            music_name,
+                            music_url,
+                            origin_cover,
+                            dynamic_cover,
+                            ] + statistics)
 
     @retry(finish=False)
     def request_file(self, url: str, root: str, name: str, type_: str, id_=""):
@@ -380,7 +386,7 @@ class Download:
     def download_images(self):
         root = self.type_["images"]
         for item in self.image_data:
-            for index, image in enumerate(item[5]):
+            for index, image in enumerate(item[6]):
                 name = self.get_name(item)
                 self.request_file(
                     image,
@@ -395,7 +401,7 @@ class Download:
         root = self.type_["video"]
         for item in self.video_data:
             name = self.get_name(item)
-            self.request_file(item[5], root, name[:self.length], type_="mp4")
+            self.request_file(item[6], root, name[:self.length], type_="mp4")
             self.download_music(root, item)
             self.download_cover(root, name, item)
 
@@ -486,17 +492,18 @@ class Download:
             self.log.warning("获取作品详细信息失败")
             return False
         self.nickname = self.clean.filter(data["author"]["nickname"])
+        self.mark = self.nickname
         self.get_info([data])
         if data["images"]:
             if not download:
                 return self.image_data
             self.download_images()
-            return self.image_data[0][4][0]
+            return self.image_data[0][6][0]
         else:
             if not download:
                 return self.video_data
             self.download_video()
-            return self.video_data[0][7]
+            return self.video_data[0][8]
 
     def download_live(self, link: str, name: str):
         """下载直播，不需要Cookie信息"""
