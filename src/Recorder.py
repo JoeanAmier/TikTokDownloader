@@ -263,7 +263,7 @@ class SQLLogger:
         self.db = None  # 数据库
         self.cursor = None  # 游标对象
         self.root = root  # 文件路径
-        self.name = name  # 数据表名称
+        self.name = (old, name)  # 数据表名称
         self.file = file  # 数据库文件名称
         self.title_line = title_line  # 数据表列名
         self.title_type = title_type  # 数据表数据类型
@@ -276,6 +276,7 @@ class SQLLogger:
                 self.root, self.file
             ))
         self.cursor = self.db.cursor()
+        self.update_sheet()
         self.create()
         return self
 
@@ -293,7 +294,17 @@ class SQLLogger:
         self.db.commit()
 
     def update_sheet(self):
-        pass
+        old_sheet, new_sheet = self.name
+        mark = new_sheet.split("_", 1)
+        if mark[-1] == old_sheet:
+            self.name = new_sheet
+            return
+        mark[-1] = old_sheet
+        old_sheet = "_".join(mark)
+        update_sql = f"ALTER TABLE {old_sheet} RENAME TO {new_sheet};"
+        self.cursor.execute(update_sql)
+        self.db.commit()
+        self.name = new_sheet
 
 
 class RecordManager:
