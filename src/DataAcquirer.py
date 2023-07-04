@@ -96,6 +96,7 @@ class UserData:
     familiar_api = "https://www.douyin.com/aweme/v1/web/familiar/feed/"  # 朋友作品推荐API
     follow_api = "https://www.douyin.com/aweme/v1/web/follow/feed/"  # 关注账号作品推荐API
     history_api = "https://www.douyin.com/aweme/v1/web/history/read/"  # 观看历史API
+    following_api = "https://www.douyin.com/aweme/v1/web/user/following/list/"  # 关注列表API
     clean = Cleaner()  # 过滤非法字符
     xb = XBogus()  # 加密参数对象
     max_comment = 256  # 评论字数限制
