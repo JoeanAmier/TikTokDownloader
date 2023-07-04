@@ -54,6 +54,7 @@ class Cache:
             return
         if self.cache[uid]["mark"] != mark:
             self.rename_folder(old_folder, uid, mark)
+            self.rename_file(uid, mark, name, field="mark")
         if self.cache[uid]["name"] != name:
             self.rename_file(uid, mark, name)
 
@@ -71,23 +72,17 @@ class Cache:
         self.log.info(f"文件夹 {old_folder} 重命名为 {new_folder}")
         return True
 
-    def rename_file(self, uid, mark, name):
+    def rename_file(self, uid, mark, name, field="name"):
         def rename(type_: str):
-            nonlocal folder, uid, mark, name
+            nonlocal folder, uid, mark, name, field
             deal_folder = os.path.join(folder, type_)
             file_list = os.listdir(deal_folder)
             for item in file_list:
-                if (s := self.cache[uid]["name"]) not in item:
+                if (s := self.cache[uid][field]) not in item:
                     break
                 old_path = os.path.join(deal_folder, item)
-                new_path = os.path.join(deal_folder, item.replace(s, name, 1))
-                os.rename(old_path, new_path)
-                self.log.info(f"文件 {old_path} 重命名为 {new_path}")
-            for item in file_list:
-                if (s := self.cache[uid]["mark"]) not in item:
-                    break
-                old_path = os.path.join(deal_folder, item)
-                new_path = os.path.join(deal_folder, item.replace(s, mark, 1))
+                new_path = os.path.join(deal_folder, item.replace(
+                    s, {"name": name, "mark": mark}[field], 1))
                 os.rename(old_path, new_path)
                 self.log.info(f"文件 {old_path} 重命名为 {new_path}")
 
