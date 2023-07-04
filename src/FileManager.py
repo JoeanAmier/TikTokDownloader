@@ -63,7 +63,10 @@ class Cache:
         try:
             os.rename(old_folder, new_folder)
         except PermissionError as e:
-            self.log.warning(f"文件夹被占用，重命名失败: {e}")
+            self.log.warning(f"文件已被占用，重命名失败: {e}")
+            return False
+        except FileExistsError as e:
+            self.log.warning(f"文件名称重复，重命名失败: {e}")
             return False
         self.log.info(f"文件夹 {old_folder} 重命名为 {new_folder}")
         return True
