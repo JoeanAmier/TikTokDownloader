@@ -101,7 +101,7 @@ class TikTok:
         if not self.request.run(num):
             return False
         self.manager.update_cache(
-            self.request.uid,
+            self.request.uid.lstrip("UID"),
             self.request.mark,
             self.request.name)
         self.download.nickname = self.request.name
