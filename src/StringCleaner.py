@@ -1,4 +1,4 @@
-import platform
+from platform import system
 from string import whitespace
 
 
@@ -12,24 +12,27 @@ class Cleaner:
     @staticmethod
     def default_rule():
         """根据系统类型生成默认非法字符字典"""
-        system = platform.system()
-        match system:
-            case "Windows":
-                rule = {
-                    "/": "",
-                    "\\": "",
-                    "|": "",
-                    "<": "",
-                    ">": "",
-                    '"': "",
-                    "?": "",
-                    ":": "",
-                    "*": "",
-                }  # Windows 系统
-            case "Linux":
-                rule = {}  # Linux 系统，待完善
-            case _:
-                rule = {}  # 其他系统需要自行设置
+        if (s := system()) in ("Windows", "Darwin"):
+            rule = {
+                "/": "",
+                "\\": "",
+                "|": "",
+                "<": "",
+                ">": "",
+                "\"": "",
+                "?": "",
+                ":": "",
+                "*": "",
+                "\x00": "",
+            }  # Windows 系统和 Mac 系统
+        elif s == "Linux":
+            rule = {
+                "/": "",
+                "\x00": "",
+            }  # Linux 系统
+        else:
+            print("不受支持的操作系统类型，可能无法正常去除非法字符！")
+            rule = {}
         cache = {i: "" for i in whitespace[1:]}  # 补充换行符等非法字符
         return rule | cache
 
