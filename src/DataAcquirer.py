@@ -224,7 +224,7 @@ class UserData:
                     return
             except requests.exceptions.ReadTimeout:
                 self.log.warning("代理测试超时")
-            except requests.exceptions.ProxyError:
+            except (requests.exceptions.ProxyError, requests.exceptions.SSLError):
                 self.log.warning("代理测试失败")
         self._proxies = {
             "http": None,
