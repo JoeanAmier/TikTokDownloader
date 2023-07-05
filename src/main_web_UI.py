@@ -73,7 +73,7 @@ class WebUI(TikTok):
                 "动态封面图地址": item[9],
             }
             return {"text": "\n".join(
-                [f"{i}: {j}" for i, j in result.items()]), "preview": item[7]}
+                [f"{i}: {j}" for i, j in result.items()]), "preview": item[8]}
 
         def get_image_url(item):
             return {"text": "\n".join([f"{i}: {j}" for i, j in (
