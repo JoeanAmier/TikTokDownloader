@@ -100,6 +100,9 @@ class TikTok:
         self.request.latest = latest
         if not self.request.run(num):
             return False
+        old_mark = m["mark"] if (
+            m := self.manager.cache.get(
+                self.request.uid.lstrip("UID"))) else None
         self.manager.update_cache(
             self.request.uid.lstrip("UID"),
             self.request.mark,
@@ -108,7 +111,7 @@ class TikTok:
         self.download.uid = self.request.uid
         self.download.mark = self.request.mark
         self.download.favorite = self.request.favorite
-        with save(root, name=f"{self.download.uid}_{self.download.mark}", **params) as data:
+        with save(root, name=f"{self.download.uid}_{self.download.mark}", old=old_mark, **params) as data:
             self.download.data = data
             self.download.run(num,
                               self.request.video_data,
@@ -203,7 +206,7 @@ class TikTok:
             if not id_:
                 self.logger.error(f"{url} 获取 aweme_id 失败")
                 continue
-            with save(root, name=f"作品_{id_}", **params) as data:
+            with save(root, name=f"作品评论_{id_}", **params) as data:
                 self.request.run_comment(id_, data)
 
     def mix_acquisition(self):
@@ -223,10 +226,14 @@ class TikTok:
             if not isinstance(mix_info, list):
                 self.logger.info(f"作品 {id_} 不属于任何合集")
                 continue
-            self.download.nickname = mix_info[2]
             mix_info[1] = input("请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
+            self.download.nickname = mix_info[2]
+            self.download.mark = mix_info[1]
+            old_mark = m["mark"] if (
+                m := self.manager.cache.get(
+                    mix_info[0])) else None
             self.manager.update_cache(*mix_info)
-            with save(root, name=f"MIX{mix_info[0]}_{mix_info[1]}", **params) as data:
+            with save(root, name=f"MIX{mix_info[0]}_{mix_info[1]}", old=old_mark, **params) as data:
                 self.download.data = data
                 self.download.run_mix(
                     f"MIX{mix_info[0]}_{mix_info[1]}",

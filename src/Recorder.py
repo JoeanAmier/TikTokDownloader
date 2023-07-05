@@ -161,20 +161,21 @@ class CSVLogger:
             self,
             root: str,
             title_line,
-            old="Download",
+            old=None,
             name="Solo_Download",
             *args,
             **kwargs):
         self.file = None  # 文件对象
+        self.__type = "csv"
         self.writer = None  # CSV对象
         self.root = root  # 文件路径
-        self.name = self.rename(root, old, name)  # 文件名称
+        self.name = self.rename(root, self.__type, old, name)  # 文件名称
         self.title_line = title_line  # 标题行
 
     def __enter__(self):
         if not os.path.exists(self.root):
             os.mkdir(self.root)
-        self.root = os.path.join(self.root, f"{self.name}.csv")
+        self.root = os.path.join(self.root, f"{self.name}.{self.__type}")
         self.file = open(self.root,
                          "a",
                          encoding="UTF-8",
@@ -195,14 +196,14 @@ class CSVLogger:
         self.writer.writerow(data)
 
     @staticmethod
-    def rename(root, old, new_):
+    def rename(root, type_, old, new_):
         mark = new_.split("_", 1)
-        if mark[-1] == old:
+        if not old or mark[-1] == old:
             return new_
         mark[-1] = old
         old_file = os.path.join(root, "_".join(mark))
         new_file = os.path.join(root, new_)
-        os.rename(old_file, new_file)
+        os.rename(f"{old_file}.{type_}", f"{new_file}.{type_}")
         return new_
 
 
@@ -213,20 +214,21 @@ class XLSXLogger:
             self,
             root: str,
             title_line,
-            old="Download",
+            old=None,
             name="Solo_Download",
             *args,
             **kwargs):
         self.book = None  # XLSX数据簿
         self.sheet = None  # XLSX数据表
         self.root = root  # 文件路径
-        self.name = CSVLogger.rename(root, old, name)  # 文件名称
+        self.__type = "xlsx"
+        self.name = CSVLogger.rename(root, self.__type, old, name)  # 文件名称
         self.title_line = title_line  # 标题行
 
     def __enter__(self):
         if not os.path.exists(self.root):
             os.mkdir(self.root)
-        self.root = os.path.join(self.root, f"{self.name}.xlsx")
+        self.root = os.path.join(self.root, f"{self.name}.{self.__type}")
         if os.path.exists(self.root):
             self.book = load_workbook(self.root)
         else:
@@ -258,7 +260,7 @@ class SQLLogger:
             file,
             title_line,
             title_type,
-            old="Download",
+            old=None,
             name="Solo_Download", ):
         self.db = None  # 数据库
         self.cursor = None  # 游标对象
@@ -296,7 +298,7 @@ class SQLLogger:
     def update_sheet(self):
         old_sheet, new_sheet = self.name
         mark = new_sheet.split("_", 1)
-        if mark[-1] == old_sheet:
+        if not old_sheet or mark[-1] == old_sheet:
             self.name = new_sheet
             return
         mark[-1] = old_sheet
