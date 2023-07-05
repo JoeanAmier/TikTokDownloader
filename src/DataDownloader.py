@@ -274,6 +274,10 @@ class Download:
         图集格式: 采集时间, 作品ID, 描述, 创建时间, 作者, [图集链接], [音乐名称, 音乐链接], 点赞数量, 评论数量, 收藏数量, 分享数量
         """
 
+        def clear_spaces(string: str):
+            """将连续的空格转换为单个空格"""
+            return " ".join(string.split())
+
         def get_music():
             nonlocal item
             if music_data := item.get("music", False):
@@ -300,7 +304,10 @@ class Download:
             collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             self.uid = item["author"]["uid"]
             id_ = item["aweme_id"]
-            desc = self.clean.filter(item["desc"])[:self.length] or id_
+            desc = clear_spaces(
+                self.clean.filter(
+                    item["desc"])[
+                :self.length]) or id_
             create_time = time.strftime(
                 self.time,
                 time.localtime(
