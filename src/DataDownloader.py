@@ -355,23 +355,26 @@ class Download:
                      desc,
                      create_time.replace(
                          ".",
-                         ":"), music_name] +
+                         ":"), self.uid, self.clean.filter(nickname) if self.favorite else self.nickname, music_name] +
                     statistics),
                 False)
-            self.data.save([type_,
-                            collection_time,
-                            self.uid,
-                            id_,
-                            desc,
-                            create_time.replace(".",
-                                                ":"),
-                            self.nickname,
-                            download_link,
-                            music_name,
-                            music_url,
-                            origin_cover,
-                            dynamic_cover,
-                            ] + statistics)
+            self.data.save(
+                [
+                    type_,
+                    collection_time,
+                    self.uid,
+                    id_,
+                    desc,
+                    create_time.replace(
+                        ".",
+                        ":"),
+                    self.clean.filter(nickname) if self.favorite else self.nickname,
+                    download_link,
+                    music_name,
+                    music_url,
+                    origin_cover,
+                    dynamic_cover,
+                ] + statistics)
 
     @retry(finish=False)
     def request_file(self, url: str, root: str, name: str, type_: str, id_=""):
