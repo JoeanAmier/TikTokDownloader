@@ -58,6 +58,7 @@ function solo_post(download = false) {
 }
 */
 function solo_post(download = false) {
+    document.getElementById('Button_Post').value = 'Waiting...';
     $.post("/solo/", {url: $("#solo_url").val(), download: download}, function (result) {
         var text = result["text"];
 
@@ -73,6 +74,7 @@ function solo_post(download = false) {
         inputElement.value = extractedTitle;
         var inputElement = document.getElementById("acc");
         inputElement.value = extractedText;
+        document.getElementById('Button_Post').value = '解析视频';
     });
 }
 
@@ -123,3 +125,17 @@ copyPlayApiButton.addEventListener("click", function() {
   window.getSelection().removeAllRanges();
   alert("视频链接已复制！");
 });
+var openLinkButton = document.getElementById("openLinkButton");
+var playApiInputElement = document.getElementById("playApi");
+openLinkButton.addEventListener("click", function() {
+  var link = playApiInputElement.value;
+  openLinkWithoutReferer(link);
+});
+
+function openLinkWithoutReferer(link) {
+  var a = document.createElement("a");
+  a.href = link;
+  a.rel = "noreferrer";
+  a.target = "_blank";
+  a.click();
+}
