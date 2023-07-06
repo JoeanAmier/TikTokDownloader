@@ -644,7 +644,7 @@ class UserData:
                 self.time,
                 time.localtime(
                     item["create_time"]))
-            ip_label = item["ip_label"]
+            ip_label = item.get("ip_label", "未知")
             text = item["text"][:self.max_comment]
             if images := item.get("image_list", False):
                 images = images[0]["origin_url"]["url_list"][0]  # 图片链接
