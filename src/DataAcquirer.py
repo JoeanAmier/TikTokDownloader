@@ -651,6 +651,7 @@ class UserData:
                 images = images[0]["origin_url"]["url_list"][0]  # 图片链接
             else:
                 images = "#"
+            uid = item["user"]["uid"]
             nickname = item["user"]["nickname"]
             digg_count = str(item["digg_count"])
             cid = item["cid"]
@@ -663,6 +664,7 @@ class UserData:
                 collection_time,
                 cid,
                 create_time,
+                uid,
                 nickname,
                 ip_label,
                 text,
