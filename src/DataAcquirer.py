@@ -428,8 +428,8 @@ class UserData:
                 self.cursor / 1000).date():
             self.finish = True
 
-    def get_user_id(self, index=0):
-        if index and not all(
+    def get_user_id(self, check=False):
+        if check and not all(
                 (self.api,
                  self.url,
                  self.earliest,
@@ -455,10 +455,10 @@ class UserData:
 
     @reset
     @check_cookie
-    def run(self, index: int):
+    def run(self, tip: str):
         """批量下载模式"""
-        self.log.info(f"正在获取第 {index} 个账号数据")
-        if not self.get_user_id(index):
+        self.log.info(f"正在获取{tip}账号数据")
+        if not self.get_user_id(True):
             return False
         while not self.finish:
             self.get_user_data()
@@ -468,12 +468,12 @@ class UserData:
         if self.favorite:
             self.get_nickname()
         if not all((self.name, self.uid)):
-            self.log.error(f"获取第 {index} 个账号数据失败，请稍后重试")
+            self.log.error(f"获取{tip}账号数据失败，请稍后重试")
             return False
         self.get_public_num()
         self.date_filters()
         self.summary()
-        self.log.info(f"获取第 {index} 个账号数据成功")
+        self.log.info(f"获取{tip}账号数据成功")
         if not self.mark:
             self.mark = self.name
         return True

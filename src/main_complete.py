@@ -98,7 +98,7 @@ class TikTok:
         self.request.api = mode
         self.request.earliest = earliest
         self.request.latest = latest
-        if not self.request.run(num):
+        if not self.request.run(f"第 {num} 个"):
             return False
         old_mark = m["mark"] if (
             m := self.manager.cache.get(
