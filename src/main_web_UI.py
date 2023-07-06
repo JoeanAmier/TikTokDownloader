@@ -67,11 +67,13 @@ class WebUI(TikTok):
     def get_data(data) -> dict:
         def get_video_url(item):
             result = {
+                "标题": item[1],
                 "视频下载地址": item[6],
                 "原声下载地址": item[7][1],
                 "静态封面图地址": item[8],
                 "动态封面图地址": item[9],
             }
+            print(item)
             return {"text": "\n".join(
                 [f"{i}: {j}" for i, j in result.items()]), "preview": item[8]}
 

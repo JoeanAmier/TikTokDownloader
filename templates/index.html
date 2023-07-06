@@ -165,14 +165,102 @@
                                     </li>
                                 </ul>
                                 <ul class="actions">
-                                    <li><input type="button" class="button submit" value="获取下载链接"
+                                    <li><input type="button" class="button submit" value="下载视频"
+                                        onclick="solo_post_downvido()"></li>
+                                    <li><input type="button" class="button submit" value="下载音频"
+                                            onclick="solo_post_downyy()"></li>
+                                        </ul>
+                                <ul class="actions">
+                                    <li><input type="button" class="button submit" value="获取视频&音乐链接"
                                                onclick="solo_post()"></li>
-                                    <li><input type="button" class="button submit" value="直接下载"
-                                               onclick="solo_post(true)">
+                                    <!--
+                                    <li><input type="button" class="button submit" value="云端下载"
+                                                onclick="solo_post(true)">
                                     </li>
+                                    -->
                                 </ul>
-                                <label for="solo_state">运行结果：</label>
-                                <textarea id="solo_state" rows="8" readonly></textarea>
+                                <div class="col-sm-12 mt-2">
+                                    <label>抖音视频信息：</label>
+                                    <div class="input-group mb-3">
+                                      <span class="input-group-text">UP主昵称：</span>
+                                      <input type="text" id="nickname" readonly="readonly" class="form-control" />
+                                      <button
+                                        data-clipboard-action="copy"
+                                        data-clipboard-target="#nickname"
+                                        class="btn btn-outline-secondary btn-sm"
+                                      >
+                                        复制
+                                      </button>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                      <span class="input-group-text">UP主头像：</span>
+                                      <input
+                                        type="text"
+                                        id="avatarUri"
+                                        readonly="readonly"
+                                        class="form-control"
+                                      />
+                                      <button
+                                        data-clipboard-action="copy"
+                                        data-clipboard-target="#avatarUri"
+                                        class="btn btn-outline-secondary btn-sm"
+                                      >
+                                        复制
+                                      </button>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                      <span class="input-group-text">视频简介：</span>
+                                      <input type="text" id="desc" readonly="readonly" class="form-control" />
+                                      <button
+                                        data-clipboard-action="copy"
+                                        data-clipboard-target="#desc"
+                                        class="btn btn-outline-secondary btn-sm"
+                                      >
+                                        复制
+                                      </button>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                      <span class="input-group-text">标签集合：</span>
+                                      <input
+                                        type="text"
+                                        id="hashtagNames"
+                                        readonly="readonly"
+                                        class="form-control"
+                                      />
+                                      <button
+                                        data-clipboard-action="copy"
+                                        data-clipboard-target="#hashtagNames"
+                                        class="btn btn-outline-secondary btn-sm"
+                                      >
+                                        复制
+                                      </button>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                      <span class="input-group-text">视频链接：</span>
+                                      <input type="text" id="playApi" readonly="readonly" class="form-control" />
+                                      <button
+                                        data-clipboard-action="copy"
+                                        data-clipboard-target="#playApi"
+                                        class="btn btn-outline-secondary btn-sm"
+                                      >
+                                        复制
+                                      </button>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                      <span class="input-group-text">视频封面：</span>
+                                      <input type="text" id="cover" readonly="readonly" class="form-control" />
+                                      <button
+                                        data-clipboard-action="copy"
+                                        data-clipboard-target="#cover"
+                                        class="btn btn-outline-secondary btn-sm"
+                                      >
+                                        复制
+                                      </button>
+                                    </div>
+                                  </div>
+                                  
+                                <label for="solo_state">Log：</label>
+                                <textarea id="solo_state" rows="8" readonly style="width: 300px; height: 150px;"></textarea>
                             </div>
                             <div class="field half">
                                 <label>作品预览：</label>

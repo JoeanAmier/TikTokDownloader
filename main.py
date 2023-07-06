@@ -15,14 +15,7 @@ def version():
 
 
 def main():
-    """选择运行模式"""
-    try:
-        mode = int(
-            input(
-                "请输入 TikTokDownloader 运行模式: \n0. 写入 Cookie 信息\n1. 单线程终端模式\n2. 多进程终端模式\n3. Web UI 交互模式\n"))
-    except ValueError:
-        return
-    compatible(mode)
+    compatible(3)
 
 
 def complete():
