@@ -450,7 +450,7 @@ class UserData:
             self.log.info(
                 f'{self.name} 公开作品数量: {self.image_data[0][1]["author"]["aweme_count"]}')
         else:
-            self.log.info(f"{self.name} 没有公开作品")
+            self.log.info(f"{self.name or self.url} 没有公开作品")
 
     @reset
     @check_cookie
