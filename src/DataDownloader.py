@@ -281,8 +281,8 @@ class Download:
         def get_music():
             nonlocal item
             if music_data := item.get("music", False):
-                name = music_data["title"]
-                url = u[0] if (u := music_data["play_url"]
+                name = music_data.get("title", "")
+                url = u[-1] if (u := music_data["play_url"]
                 ["url_list"]) else ""  # 部分作品的数据没有音乐下载地址
                 return name, url
             return "", ""
@@ -319,8 +319,8 @@ class Download:
                 type_ = "图集"
                 images = [i['url_list'][-1] for i in images]
                 download_link = " ".join(images)
-                dynamic_cover = ""
-                origin_cover = ""
+                dynamic_cover = "#"
+                origin_cover = "#"
                 self.image_data.append([id_,
                                         desc,
                                         create_time,
@@ -422,7 +422,7 @@ class Download:
         """下载音乐"""
         if self.music and (u := item[7][1]):
             self.request_file(u, root, self.clean.filter(
-                f"{f'{item[0]}-{item[7][0]}'}"), type_="mp3")
+                f"{f'{item[0]}-{item[7][0]}'}"), type_="m4a")
 
     def download_cover(self, root: str, name: str, item: list):
         """下载静态/动态封面图"""
