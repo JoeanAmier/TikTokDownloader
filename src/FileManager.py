@@ -69,7 +69,7 @@ class Cache:
         except FileExistsError as e:
             self.log.warning(f"文件名称重复，重命名失败: {e}")
             return False
-        self.log.info(f"文件夹 {old_folder} 重命名为 {new_folder}")
+        self.log.info(f"文件夹 {old_folder} 重命名为 {new_folder}", False)
         return True
 
     def rename_file(self, uid, mark, name, field="name"):
@@ -84,7 +84,7 @@ class Cache:
                 new_path = os.path.join(deal_folder, item.replace(
                     s, {"name": name, "mark": mark}[field], 1))
                 os.rename(old_path, new_path)
-                self.log.info(f"文件 {old_path} 重命名为 {new_path}")
+                self.log.info(f"文件 {old_path} 重命名为 {new_path}", False)
 
         folder = os.path.join(self.root, f"{self.type_}{uid}_{mark}")
         rename("video")

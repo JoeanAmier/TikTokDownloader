@@ -364,7 +364,7 @@ class UserData:
         self.log.info(f"账号 {self.name} 的视频总数: {len(self.video_data)}")
         for i in self.video_data:
             self.log.info(
-                f"视频: {i['aweme_id']} {i['video']['play_addr']['uri']}", False)
+                f"视频: {i['aweme_id']}", False)
         self.log.info(f"账号 {self.name} 的图集总数: {len(self.image_data)}")
         for i in self.image_data:
             self.log.info(f"图集: {i['aweme_id']}", False)
