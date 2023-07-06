@@ -334,9 +334,11 @@ class Download:
                 type_ = "视频"
                 download_link = item["video"]["play_addr"]["url_list"][-1]
                 # 动态封面图链接
-                dynamic_cover = item["video"]["dynamic_cover"]["url_list"][-1]
+                dynamic_cover = u["url_list"][-1] if (
+                    u := item["video"].get("dynamic_cover")) else "#"
                 # 静态封面图链接
-                origin_cover = item["video"]["origin_cover"]["url_list"][-1]
+                origin_cover = u["url_list"][-1] if (
+                    u := item["video"].get("origin_cover")) else "#"
                 self.video_data.append([id_,
                                         desc,
                                         create_time,
@@ -418,15 +420,15 @@ class Download:
 
     def download_music(self, root: str, item: list):
         """下载音乐"""
-        if self.music and (u := item[6][1]):
+        if self.music and (u := item[7][1]):
             self.request_file(u, root, self.clean.filter(
-                f"{f'{item[0]}-{item[6][0]}'}"), type_="mp3")
+                f"{f'{item[0]}-{item[7][0]}'}"), type_="mp3")
 
     def download_cover(self, root: str, name: str, item: list):
         """下载静态/动态封面图"""
         if not self.dynamic and not self.original:
             return
-        if self.dynamic and (u := item[7]):
+        if self.dynamic and (u := item[9]):
             self.request_file(u, root, name, type_="webp")
         if self.original and (u := item[8]):
             self.request_file(u, root, name, type_="jpeg")

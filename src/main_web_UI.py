@@ -77,8 +77,8 @@ class WebUI(TikTok):
 
         def get_image_url(item):
             return {"text": "\n".join([f"{i}: {j}" for i, j in (
-                    {f"Image_{i + 1} 下载地址": j for i, j in enumerate(item[6])} | {
-                "原声下载地址": item[6][1]}).items()]), "preview": item[6][0]}
+                    {f"Image-{i + 1} 下载地址": j for i, j in enumerate(item[6])} | {
+                "原声下载地址": item[7][1]}).items()]), "preview": item[6][0]}
 
         if len(data) == 10:
             return get_video_url(data)
