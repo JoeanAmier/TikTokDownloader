@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="zh-Hans-CN">
 <head>
-    <title>TikTokDownloader</title>
+    <title>TikTokDownloaderWeb</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
     <link rel="shortcut icon" href="static/images/TikTokDownloader.ico">
@@ -19,7 +19,7 @@
             <ul>
                 <li><a href="#index">欢迎使用</a></li>
                 <li><a href="#solo">下载作品</a></li>
-                <li><a href="#live">直播提取</a></li>
+                <li><a href="#picture">下载图集</a></li>
             </ul>
         </nav>
     </div>
@@ -54,9 +54,9 @@
     </section>
 
     
-    <section id="solo" class="wrapper style1 spotlights">
+    <section id="solo" class="wrapper style2 spotlights">
         <div class="inner">
-            <h2>下载作品</h2>
+            <h2>视频下载</h2>
             <div class="style1">
                 <section>
                     <form id="solo_form" onsubmit="return false">
@@ -72,22 +72,11 @@
                                                onclick="solo_input()">
                                     </li>
                                 </ul>
-                                <!--
-                                <ul class="actions">
-                                    <li><input type="button" class="button submit" value="下载视频"
-                                        onclick="solo_post_downvido()"></li>
-                                    <li><input type="button" class="button submit" value="下载音频"
-                                            onclick="solo_post_downyy()"></li>
-                                        </ul>
-                         -->
+                                
                                 <ul class="actions">
                                     <li><input type="button" id="Button_Post" class="button submit" value="解析视频" onclick="solo_post()"></li>
                                                
-                                               <!--
-                                    <li><input type="button" class="button submit" value="云端下载"
-                                                onclick="solo_post(true)">
-                                    </li>
-                                    -->
+                                              
                                 </ul>
                                 <div class="col-sm-12 mt-2">
                                     <label>抖音视频信息：</label>
@@ -98,60 +87,19 @@
 
                                     </div>
                                     <div class="input-group mb-3">
+                                        <span class="input-group-text">视频链接：</span>
+                                        <input type="text" id="playApi" readonly="readonly" class="form-control" />
+                                        <button id="copyPlayApiButton" class="btn btn-primary">复制</button>
+                                        <button id="openLinkButton" class="btn btn-outline-secondary btn-sm">打开链接</button>
+                                    </div>
+                                    <div class="input-group mb-3">
                                         <span class="input-group-text">原声链接：</span>
                                         <input type="text" id="acc" readonly="readonly" class="form-control" />
                                         <button id="copyAccButton" class="btn btn-primary">复制</button>
   
                                       </div>
-                                    <div class="input-group mb-3">
-                                      <span class="input-group-text">视频链接：</span>
-                                      <input type="text" id="playApi" readonly="readonly" class="form-control" />
-                                      <button id="copyPlayApiButton" class="btn btn-primary">复制</button>
-                                      <button id="openLinkButton" class="btn btn-outline-secondary btn-sm">打开链接</button>
-
-<!--
-<script>
-  var openLinkButton = document.getElementById("openLinkButton");
-  var playApiInputElement = document.getElementById("playApi");
-  openLinkButton.addEventListener("click", function() {
-    var link = playApiInputElement.value;
-    openLinkWithoutReferer(link);
-  });
-
-  function openLinkWithoutReferer(link) {
-    // 创建一个新的 <a> 元素
-    var a = document.createElement("a");
-    a.href = link;
-
-    // 添加 rel="noreferrer" 属性以禁用 Referer
-    a.rel = "noreferrer";
-    a.target = "_blank";
-
-    // 模拟点击 <a> 元素来进行跳转
-    a.click();
-  }
-</script>
--->
-<!-- 
-<script>
-  var openLinkButton = document.getElementById("openLinkButton");
-  var playApiInputElement = document.getElementById("playApi");
-
-  openLinkButton.addEventListener("click", function() {
-    var link = playApiInputElement.value;
-    window.open(link);
-  });
-</script>
--->
-                                    
-                    
-                            </div>
-                            <div class="field half">
-                                <label>作品预览：</label>
-                                <span class="image fit" id="preview"><img
-                                        id="solo_preview"
-                                        src="static/images/blank.png"
-                                        alt="预览图"/></span>
+                                
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -160,46 +108,67 @@
         </div>
     </section>
 
-    <section id="live" class="wrapper style2 spotlights">
+    <section id="picture" class="wrapper style1 spotlights">
         <div class="inner">
-            <h2>直播提取</h2>
+            <h2>下载图集</h2>
             <div class="style1">
                 <section>
                     <form id="live_form" onsubmit="return false">
                         <div class="fields">
                             <div class="field half">
-                                <label for="live_url">请输入直播链接：</label>
+                                
+                                <label for="live_url">请输入图集链接：</label>
                                 <label>
-                                    <input type="text" id="live_url"/>
+                                    <input type="text" id="picture_url"/>
                                 </label>
                                 <br>
                                 <ul class="actions">
                                     <li><input type="button" class="button submit" value="读取剪贴板并粘贴至输入框"
-                                               onclick="live_input()"></li>
+                                               onclick="picter_input()"></li>
                                 </ul>
                                 <ul class="actions">
-                                    <li><input type="button" class="button submit" value="提取直播推流地址"
-                                               onclick="live_post()">
+                                    <li><input type="button" id="Button_picter_jiexi" class="button submit" value="解析图集"
+                                               onclick="picter_post()">
                                     </li>
                                 </ul>
-                                <label for="live_state">运行结果：</label>
-                                <textarea id="live_state" rows="8" readonly></textarea>
+                                
                             </div>
-                            <div class="field half">
-                                <label>直播封面：</label>
-                                <span class="image fit" id="preview"><img
-                                        id="live_preview"
-                                        src="static/images/blank.png"
-                                        alt="预览图"/></span>
+                            <br>
+                            <div class="col-sm-12 mt-2">
+                                <label>图集信息：</label>
+                                <div class="input-group mb-3">
+                                  <span class="input-group-text">图集标题：</span>
+                                  <input type="text" id="desc2" readonly="readonly" class="form-control" />
+                                  <button id="copyDescButton" class="btn btn-primary">复制</button>
+
+                                </div>
+                                
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">原声链接：</span>
+                                    <input type="text" id="acc2" readonly="readonly" class="form-control" />
+                                    <button id="copyAccButton" class="btn btn-primary">复制</button>
+
+                                </div>
+                            
                             </div>
                         </div>
-                    </form>
-                </section>
-            </div>
+                    </div>
+                </form>
+                <div class="field half">
+                    <label>Pictures：</label>
+                    <span class="image fit" id="preview"><img
+                            id="live_preview"
+                            src="static/images/blank.png"
+                            alt="预览图"/></span>
+                </div>
+            </section>
+            
         </div>
-    </section>
+    </div>
+</section>
+                            
 
-</div>
+
 
 <footer id="footer" class="wrapper style1-alt">
     <div class="inner">

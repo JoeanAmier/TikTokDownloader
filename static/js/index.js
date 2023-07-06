@@ -11,7 +11,7 @@ function solo_input() {
         });
 }
 
-function live_input() {
+function picter_input() {
     navigator.clipboard.readText()
         .then(function (text) {
             $('#live_url').val(text);
@@ -48,15 +48,6 @@ function update_parameters() {
         }
     });
 }
-
-/*
-function solo_post(download = false) {
-    $.post("/solo/", {url: $("#solo_url").val(), download: download}, function (result) {
-        $("#solo_state").val(result["text"]);
-        $("#solo_preview").attr("src", result["preview"]);
-    });
-}
-*/
 function solo_post(download = false) {
     document.getElementById('Button_Post').value = 'Waiting...';
     $.post("/solo/", {url: $("#solo_url").val(), download: download}, function (result) {
@@ -79,23 +70,15 @@ function solo_post(download = false) {
 }
 
 
-//solo_post_downyy
-/*
-function solo_post_downyy(download = false) {
-    $.post("/solo/", {url: $("#solo_url").val(), download: download}, function (result) {
-        var text = result["text"];
-        var regex = /原声下载地址:(.*?)\n/;
-        var extractedText = regex.exec(text)[1];
-        console.log(extractedText);
-    });
-}
-*/
 
-function live_post() {
+function picter_post() {
+    alert("Making...");
+    /*
     $.post("/live/", {url: $("#live_url").val()}, function (result) {
         $("#live_state").val(result["text"]);
         $("#live_preview").attr("src", result["preview"]);
     });
+    */
 }
 
 
