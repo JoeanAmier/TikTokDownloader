@@ -467,10 +467,11 @@ class UserData:
         self.log.info("该账号的作品数据获取结束")
         if self.favorite:
             self.get_nickname()
+        else:
+            self.get_public_num()
         if not all((self.name, self.uid)):
             self.log.error(f"获取{tip}账号数据失败，请稍后重试")
             return False
-        self.get_public_num()
         self.date_filters()
         self.summary()
         self.log.info(f"获取{tip}账号数据成功")
