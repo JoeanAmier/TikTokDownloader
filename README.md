@@ -96,6 +96,10 @@ TikTokDownloader
 6. 根据下载需求修改 settings.json 配置文件
 7. 再次运行 main.py 即可正常使用
 
+<b>
+更多项目说明可以查看&nbsp;<a href="https://github.com/JoeanAmier/TikTokDownloader/issues?q=is%3Aopen+is%3Aissue+label%3Adocumentation">issues</a>
+</b>
+
 <hr>
 
 **程序运行模式:**
