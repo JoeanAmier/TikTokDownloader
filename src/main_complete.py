@@ -113,7 +113,7 @@ class TikTok:
         self.download.favorite = self.request.favorite
         with save(root, name=f"{self.download.uid}_{self.download.mark}", old=old_mark, **params) as data:
             self.download.data = data
-            self.download.run(num,
+            self.download.run(f"第 {num} 个",
                               self.request.video_data,
                               self.request.image_data)
 

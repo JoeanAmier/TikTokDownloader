@@ -462,29 +462,29 @@ class Download:
             False)
         return True
 
-    def summary(self, index: int):
+    def summary(self, tip: str):
         """汇总下载数量"""
-        self.log.info(f"第 {index} 个账号的视频下载数量: {self.video}")
-        self.log.info(f"第 {index} 个账号的图集下载数量: {self.image}")
+        self.log.info(f"{tip}账号的视频下载数量: {self.video}")
+        self.log.info(f"{tip}账号的图集下载数量: {self.image}")
         self.video = 0
         self.image = 0
 
     @reset
     @check_cookie
-    def run(self, index: int, video: list[str], image: list[str]):
+    def run(self, tip: str, video: list[str], image: list[str]):
         """批量下载"""
         self.create_folder(f"{self.uid}_{self.mark}")
-        self.log.info(f"开始获取第 {index} 个账号的作品数据")
+        self.log.info(f"开始获取{tip}账号的作品数据")
         self.get_info(video)
         self.get_info(image)
-        self.log.info(f"获取第 {index} 个账号的作品数据成功")
+        self.log.info(f"获取{tip}账号的作品数据成功")
         if not self.download:
             return
-        self.log.info(f"开始下载第 {index} 个账号的视频/图集")
+        self.log.info(f"开始下载{tip}账号的视频/图集")
         self.download_video()
         self.download_images()
-        self.log.info(f"第 {index} 个账号的视频/图集下载结束")
-        self.summary(index)
+        self.log.info(f"{tip}账号的视频/图集下载结束")
+        self.summary(tip)
 
     @reset
     @check_cookie
