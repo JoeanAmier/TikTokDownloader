@@ -303,6 +303,7 @@ class Download:
                 item = self.get_data(item)
             collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             self.uid = item["author"]["uid"]
+            nickname = item["author"]["nickname"]
             id_ = item["aweme_id"]
             desc = clear_spaces(
                 self.clean.filter(
@@ -324,7 +325,7 @@ class Download:
                                         desc,
                                         create_time,
                                         self.uid,
-                                        self.nickname,
+                                        self.clean.filter(nickname) if self.favorite else self.nickname,
                                         self.mark,
                                         images,
                                         [music_name,
@@ -340,7 +341,7 @@ class Download:
                                         desc,
                                         create_time,
                                         self.uid,
-                                        self.nickname,
+                                        self.clean.filter(nickname) if self.favorite else self.nickname,
                                         self.mark,
                                         download_link,
                                         [music_name,
