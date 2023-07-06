@@ -192,7 +192,7 @@ class CSVLogger:
             # 如果文件没有任何数据，则写入标题行
             self.save(self.title_line)
 
-    def save(self, data):
+    def save(self, data, *args, **kwargs):
         self.writer.writerow(data)
 
     @staticmethod
@@ -247,7 +247,7 @@ class XLSXLogger:
             for col, value in enumerate(self.title_line, start=1):
                 self.sheet.cell(row=1, column=col, value=value)
 
-    def save(self, data):
+    def save(self, data, *args, **kwargs):
         self.sheet.append(data)
 
 
@@ -290,7 +290,7 @@ class SQLLogger:
         self.cursor.execute(create_sql)
         self.db.commit()
 
-    def save(self, data, key=0):
+    def save(self, data, key=0, *args, **kwargs):
         insert_sql = f"""REPLACE INTO {self.name} ({", ".join(self.title_line[key:])}) VALUES ({", ".join(["?" for _ in self.title_line[key:]])});"""
         self.cursor.execute(insert_sql, data)
         self.db.commit()
