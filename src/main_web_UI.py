@@ -138,10 +138,10 @@ class WebUI(TikTok):
             return render_template('index.html', **self._data)
 
         @app.route('/save/', methods=['POST'])
-        def save():
-            """保存配置并重新加载首页"""
-            self.update_parameters(request.form)
-            return url_for("index")
+        #def save():
+        #    """保存配置并重新加载首页"""
+        #    self.update_parameters(request.form)
+        #    return url_for("index")
 
         @app.route('/solo/', methods=['POST'])
         def solo():

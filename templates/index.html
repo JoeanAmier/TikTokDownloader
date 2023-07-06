@@ -18,7 +18,6 @@
         <nav>
             <ul>
                 <li><a href="#index">欢迎使用</a></li>
-                <li><a href="#settings">参数配置</a></li>
                 <li><a href="#solo">下载作品</a></li>
                 <li><a href="#live">直播提取</a></li>
             </ul>
@@ -54,99 +53,7 @@
         </div>
     </section>
 
-    <section id="settings" class="wrapper style2 spotlights">
-        <div class="inner">
-            <h2>参数配置</h2>
-            <div class="style1">
-                <section>
-                    <form onsubmit="return false">
-                        <div class="fields">
-                            <div class="field third">
-                                <label for="root">根目录(root)</label>
-                                <label>
-                                    <input type="text" id="root" value="{{ root }}"/>
-                                </label>
-                            </div>
-                            <div class="field third">
-                                <label for="folder">保存文件夹名称(folder)</label>
-                                <label>
-                                    <input type="text" id="folder" value="{{ folder }}"/>
-                                </label>
-                            </div>
-                            <div class="field third">
-                                <label for="name">文件名称格式(name)</label>
-                                <label>
-                                    <input type="text" id="name" value="{{ name }}"/>
-                                </label>
-                            </div>
-                            <div class="field third">
-                                <label for="time">发布时间格式(time)</label>
-                                <label>
-                                    <input type="text" id="time" value="{{ time }}"/>
-                                </label>
-                            </div>
-                            <div class="field third">
-                                <label for="split">文件名称分隔符(split)</label>
-                                <label>
-                                    <input type="text" id="split" value="{{ split }}"/>
-                                </label>
-                            </div>
-                            <div class="field third">
-                                <label for="save">数据保存格式(save)</label>
-                                <select name="save" id="save">
-                                    <option value="" {% if save == '' %}selected="selected"{% endif %}>不保存</option>
-                                    <option value="csv" {% if save == 'csv' %}selected="selected"{% endif %}>CSV
-                                    </option>
-                                    <option value="xlsx" {% if save == 'xlsx' %}selected="selected"{% endif %}>XLSX
-                                    </option>
-                                    <option value="sql" {% if save == 'sql' %}selected="selected"{% endif %}>SQLite
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="field half">
-                                <label for="cookie">Cookie</label>
-                                <label>
-                                    <input type="text" id="cookie" value="{{ cookie }}"/>
-                                </label>
-                            </div>
-                            <div class="field third">
-                                <label for="proxies">代理设置(proxies)</label>
-                                <label>
-                                    <input type="text" id="proxies" value="{{ proxies }}"/>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="fields">
-                            <div class="field quarter">
-                                <input type="checkbox" id="music" name="music" {% if music %}checked{% endif %}>
-                                <label for="music">下载音乐</label>
-                            </div>
-                            <div class="field quarter">
-                                <input type="checkbox" id="dynamic" name="dynamic" {% if dynamic %}checked{% endif %}>
-                                <label for="dynamic">下载动态封面图</label>
-                            </div>
-                            <div class="field quarter">
-                                <input type="checkbox" id="original" name="original"
-                                       {% if original %}checked{% endif %}>
-                                <label for="original">下载静态封面图</label>
-                            </div>
-                            <div class="field quarter">
-                                <input type="checkbox" id="log" name="log" {% if log %}checked{% endif %}>
-                                <label for="log">启用日志</label>
-                            </div>
-                        </div>
-                        <ul class="actions">
-                            <li><input type="button" class="button submit" value="保存配置并重新加载页面"
-                                       onclick="update_parameters()">
-                            </li>
-                        </ul>
-                    </form>
-                </section>
-            </div>
-        </div>
-    </section>
-
+    
     <section id="solo" class="wrapper style1 spotlights">
         <div class="inner">
             <h2>下载作品</h2>
