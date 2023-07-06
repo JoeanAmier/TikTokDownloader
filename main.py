@@ -4,7 +4,7 @@ from src.CookieTool import Cookie
 from src.main_complete import TikTok
 from src.main_web_UI import WebUI
 
-VERSION = "2.4"
+VERSION = "2.5 beta"
 
 
 def version():
