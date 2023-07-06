@@ -369,9 +369,6 @@ class UserData:
         for i in self.image_data:
             self.log.info(f"图集: {i['aweme_id']}", False)
 
-    def get_uid(self):
-        pass
-
     @retry(finish=False)
     def get_nickname(self):
         """喜欢页下载模式需要额外发送请求获取账号昵称和UID"""
