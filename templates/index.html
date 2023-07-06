@@ -116,6 +116,7 @@
                                 </label>
                             </div>
                         </div>
+
                         <div class="fields">
                             <div class="field quarter">
                                 <input type="checkbox" id="music" name="music" {% if music %}checked{% endif %}>
@@ -164,14 +165,16 @@
                                                onclick="solo_input()">
                                     </li>
                                 </ul>
+                                <!--
                                 <ul class="actions">
                                     <li><input type="button" class="button submit" value="下载视频"
                                         onclick="solo_post_downvido()"></li>
                                     <li><input type="button" class="button submit" value="下载音频"
                                             onclick="solo_post_downyy()"></li>
                                         </ul>
+                         -->
                                 <ul class="actions">
-                                    <li><input type="button" class="button submit" value="获取视频&音乐链接"
+                                    <li><input type="button" class="button submit" value="解析视频"
                                                onclick="solo_post()"></li>
                                     <!--
                                     <li><input type="button" class="button submit" value="云端下载"
@@ -182,85 +185,59 @@
                                 <div class="col-sm-12 mt-2">
                                     <label>抖音视频信息：</label>
                                     <div class="input-group mb-3">
-                                      <span class="input-group-text">UP主昵称：</span>
-                                      <input type="text" id="nickname" readonly="readonly" class="form-control" />
-                                      <button
-                                        data-clipboard-action="copy"
-                                        data-clipboard-target="#nickname"
-                                        class="btn btn-outline-secondary btn-sm"
-                                      >
-                                        复制
-                                      </button>
-                                    </div>
-                                    <div class="input-group mb-3">
-                                      <span class="input-group-text">UP主头像：</span>
-                                      <input
-                                        type="text"
-                                        id="avatarUri"
-                                        readonly="readonly"
-                                        class="form-control"
-                                      />
-                                      <button
-                                        data-clipboard-action="copy"
-                                        data-clipboard-target="#avatarUri"
-                                        class="btn btn-outline-secondary btn-sm"
-                                      >
-                                        复制
-                                      </button>
-                                    </div>
-                                    <div class="input-group mb-3">
                                       <span class="input-group-text">视频简介：</span>
                                       <input type="text" id="desc" readonly="readonly" class="form-control" />
-                                      <button
-                                        data-clipboard-action="copy"
-                                        data-clipboard-target="#desc"
-                                        class="btn btn-outline-secondary btn-sm"
-                                      >
-                                        复制
-                                      </button>
+                                      <button id="copyDescButton" class="btn btn-primary">复制</button>
+
                                     </div>
                                     <div class="input-group mb-3">
-                                      <span class="input-group-text">标签集合：</span>
-                                      <input
-                                        type="text"
-                                        id="hashtagNames"
-                                        readonly="readonly"
-                                        class="form-control"
-                                      />
-                                      <button
-                                        data-clipboard-action="copy"
-                                        data-clipboard-target="#hashtagNames"
-                                        class="btn btn-outline-secondary btn-sm"
-                                      >
-                                        复制
-                                      </button>
-                                    </div>
+                                        <span class="input-group-text">原声链接：</span>
+                                        <input type="text" id="acc" readonly="readonly" class="form-control" />
+                                        <button id="copyAccButton" class="btn btn-primary">复制</button>
+  
+                                      </div>
                                     <div class="input-group mb-3">
                                       <span class="input-group-text">视频链接：</span>
                                       <input type="text" id="playApi" readonly="readonly" class="form-control" />
-                                      <button
-                                        data-clipboard-action="copy"
-                                        data-clipboard-target="#playApi"
-                                        class="btn btn-outline-secondary btn-sm"
-                                      >
-                                        复制
-                                      </button>
-                                    </div>
-                                    <div class="input-group mb-3">
-                                      <span class="input-group-text">视频封面：</span>
-                                      <input type="text" id="cover" readonly="readonly" class="form-control" />
-                                      <button
-                                        data-clipboard-action="copy"
-                                        data-clipboard-target="#cover"
-                                        class="btn btn-outline-secondary btn-sm"
-                                      >
-                                        复制
-                                      </button>
-                                    </div>
-                                  </div>
-                                  
-                                <label for="solo_state">Log：</label>
-                                <textarea id="solo_state" rows="8" readonly style="width: 300px; height: 150px;"></textarea>
+                                      <button id="copyPlayApiButton" class="btn btn-primary">复制</button>
+                                      <button id="openLinkButton" class="btn btn-outline-secondary btn-sm">打开链接</button>
+
+
+<script>
+  var openLinkButton = document.getElementById("openLinkButton");
+  var playApiInputElement = document.getElementById("playApi");
+  openLinkButton.addEventListener("click", function() {
+    var link = playApiInputElement.value;
+    openLinkWithoutReferer(link);
+  });
+
+  function openLinkWithoutReferer(link) {
+    // 创建一个新的 <a> 元素
+    var a = document.createElement("a");
+    a.href = link;
+
+    // 添加 rel="noreferrer" 属性以禁用 Referer
+    a.rel = "noreferrer";
+    a.target = "_blank";
+
+    // 模拟点击 <a> 元素来进行跳转
+    a.click();
+  }
+</script>
+
+<!-- 
+<script>
+  var openLinkButton = document.getElementById("openLinkButton");
+  var playApiInputElement = document.getElementById("playApi");
+
+  openLinkButton.addEventListener("click", function() {
+    var link = playApiInputElement.value;
+    window.open(link);
+  });
+</script>
+-->
+                                    
+                    
                             </div>
                             <div class="field half">
                                 <label>作品预览：</label>

@@ -276,7 +276,7 @@ class UserData:
                 headers=self.headers,
                 proxies=self.proxies,
                 timeout=10)
-            sleep()
+            #sleep()
         except requests.exceptions.ReadTimeout:
             self.log.warning(f"获取 {value} 超时")
             return False
@@ -316,7 +316,7 @@ class UserData:
                 headers=self.headers,
                 proxies=self.proxies,
                 timeout=10)
-            sleep()
+            #sleep()
         except requests.exceptions.ReadTimeout:
             self.log.error("获取账号作品数据超时")
             return False
@@ -390,7 +390,7 @@ class UserData:
                 headers=self.headers,
                 proxies=self.proxies,
                 timeout=10)
-            sleep()
+            #sleep()
         except requests.exceptions.ReadTimeout:
             self.log.warning(
                 f"请求超时，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
@@ -541,7 +541,7 @@ class UserData:
                 params=params,
                 timeout=10,
                 proxies=self.proxies)
-            sleep()
+            #sleep()
         except requests.exceptions.ReadTimeout:
             self.log.warning("获取直播数据超时")
             return False
@@ -613,7 +613,7 @@ class UserData:
                 headers=self.headers,
                 proxies=self.proxies,
                 timeout=10)
-            sleep()
+            #sleep()
         except requests.exceptions.ReadTimeout:
             self.log.error("获取评论数据超时")
             return False
@@ -716,7 +716,7 @@ class UserData:
                 headers=self.headers,
                 proxies=self.proxies,
                 timeout=10)
-            sleep()
+            #sleep()
         except requests.exceptions.ReadTimeout:
             self.log.error("获取合集作品数据超时")
             return False
