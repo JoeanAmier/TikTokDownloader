@@ -422,7 +422,7 @@ class UserData:
 
     def early_stop(self):
         """如果获取数据的发布日期已经早于限制日期，就不需要再获取下一页的数据了"""
-        if not self.favorite:
+        if self.favorite:
             return
         if self.earliest > datetime.fromtimestamp(
                 self.cursor / 1000).date():
