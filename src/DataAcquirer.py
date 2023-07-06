@@ -31,6 +31,8 @@ def reset(function):
         self.mix_total = []
         self.mix_data = []
         self.cursor = 0
+        self.name = None
+        self.uid = None
         self.video_data = []  # 视频ID数据
         self.image_data = []  # 图集ID数据
         self.finish = False  # 是否获取完毕
