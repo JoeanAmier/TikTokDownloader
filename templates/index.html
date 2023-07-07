@@ -173,7 +173,24 @@
                                     </li>
                                 </ul>
                                 <label for="solo_state">运行结果：</label>
-                                <textarea id="solo_state" rows="8" readonly></textarea>
+                                <input id="solo_state" type="text" readonly>
+                                <br>
+                                <ul class="actions">
+                                    <li><input type="button" class="button submit" value="下载作品"
+                                               onclick="get_download()" id="download_url">
+                                    </li>
+                                    <li><input type="button" class="button submit" value="下载静态封面"
+                                               onclick="get_origin()" id="origin_url">
+                                    </li>
+                                </ul>
+                                <ul class="actions">
+                                    <li><input type="button" class="button submit" value="下载原声"
+                                               onclick="get_music()" id="music_url">
+                                    </li>
+                                    <li><input type="button" class="button submit" value="下载动态封面"
+                                               onclick="get_dynamic()" id="dynamic_url">
+                                    </li>
+                                </ul>
                             </div>
                             <div class="field half">
                                 <label>作品预览：</label>
@@ -212,7 +229,9 @@
                                     </li>
                                 </ul>
                                 <label for="live_state">运行结果：</label>
-                                <textarea id="live_state" rows="8" readonly></textarea>
+                                <input id="live_state" type="text" readonly>
+                                <ul class="actions">
+                                </ul>
                             </div>
                             <div class="field half">
                                 <label>直播封面：</label>

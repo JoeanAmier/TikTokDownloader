@@ -67,24 +67,37 @@ class WebUI(TikTok):
     def get_data(data) -> dict:
         def get_video_url(item):
             result = {
-                "视频下载地址": item[6],
-                "原声下载地址": item[7][1],
-                "静态封面图地址": item[8],
-                "动态封面图地址": item[9],
+                "text": "提取作品下载地址成功！",
+                "download": item[6],
+                "music": item[7][1],
+                "origin": item[8],
+                "dynamic": item[9],
+                "preview": item[8]
             }
-            return {"text": "\n".join(
-                [f"{i}: {j}" for i, j in result.items()]), "preview": item[8]}
+            return result
 
         def get_image_url(item):
-            return {"text": "\n".join([f"{i}: {j}" for i, j in (
-                    {f"Image-{i + 1} 下载地址": j for i, j in enumerate(item[6])} | {
-                "原声下载地址": item[7][1]}).items()]), "preview": item[6][0]}
+            result = {
+                "text": "提取作品下载地址成功！",
+                "download": item[6],
+                "music": item[7][1],
+                "origin": False,
+                "dynamic": False,
+                "preview": item[6][0],
+            }
+            return result
 
         if len(data) == 10:
             return get_video_url(data)
         elif len(data) == 8:
             return get_image_url(data)
-        raise ValueError
+        raise {
+            "text": "服务器发生异常！",
+            "download": False,
+            "music": False,
+            "origin": False,
+            "dynamic": False,
+            "preview": "static/images/blank.png"}
 
     def single_acquisition(self):
         save, root, params = self.record.run(
@@ -95,13 +108,22 @@ class WebUI(TikTok):
             if not id_:
                 self.logger.error(f"{self.solo_url[0]} 获取 aweme_id 失败")
                 return {
-                    "text": "获取作品ID失败",
+                    "text": "获取作品ID失败！",
+                    "download": False,
+                    "music": False,
+                    "origin": False,
+                    "dynamic": False,
                     "preview": "static/images/blank.png"}
             result = self.download.run_alone(id_, self.solo_url[1])
             if isinstance(result, list):
                 return self.get_data(result[0])
             if isinstance(result, str):
-                return {"text": f"作品 {id_} 下载成功", "preview": result}
+                return {"text": f"作品 {id_} 下载成功！",
+                        "download": False,
+                        "music": False,
+                        "origin": False,
+                        "dynamic": False,
+                        "preview": result}
 
     def live_acquisition(self):
         if not (data := self.request.get_live_data(self.live_url)):
@@ -151,7 +173,11 @@ class WebUI(TikTok):
                 request.form.get("download")]
             if not url:
                 return {
-                    "text": "无效的作品链接",
+                    "text": "无效的作品链接！",
+                    "download": False,
+                    "music": False,
+                    "origin": False,
+                    "dynamic": False,
                     "preview": "static/images/blank.png"}
             self.solo_url = (url, download)
             return self.single_acquisition()

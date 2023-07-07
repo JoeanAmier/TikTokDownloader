@@ -52,9 +52,46 @@ function update_parameters() {
 
 function solo_post(download = false) {
     $.post("/solo/", {url: $("#solo_url").val(), download: download}, function (result) {
+        console.log(result);
         $("#solo_state").val(result["text"]);
+        $("#download_url").data("link", result["download"]);
+        $("#music_url").data("link", result["music"]);
+        $("#origin_url").data("link", result["origin"]);
+        $("#dynamic_url").data("link", result["dynamic"]);
         $("#solo_preview").attr("src", result["preview"]);
     });
+}
+
+function get_download() {
+    let link = $("#download_url").data("link");
+    open_link(link);
+}
+
+function get_music() {
+    let link = $("#music_url").data("link");
+    open_link(link);
+}
+
+function get_origin() {
+    let link = $("#origin_url").data("link");
+    open_link(link);
+}
+
+function get_dynamic() {
+    let link = $("#dynamic_url").data("link");
+    open_link(link);
+}
+
+function open_link(link) {
+    if (link) {
+        const a = document.createElement("a");
+        a.href = link;
+        a.setAttribute("rel", "noreferrer noopener");
+        a.setAttribute("target", "_blank");
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
 }
 
 function live_post() {
