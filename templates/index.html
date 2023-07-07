@@ -1,68 +1,44 @@
-<!DOCTYPE HTML>
-<html lang="zh-Hans-CN">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>TikTokDownloaderWeb</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-    <link rel="shortcut icon" href="static/images/TikTokDownloader.ico">
-    <link rel="stylesheet" href="static/css/main.css"/>
-    <link rel="stylesheet" href="static/css/index.css"/>
-    <noscript>
-        <link rel="stylesheet" href="static/css/noscript.css"/>
-    </noscript>
-    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抖音解析</title>
+	<link rel="shortcut icon" href="/static/images/TikTokDownloader.ico">
+    <link rel="stylesheet" href="/static/css/main.css"/>
+    <link rel="stylesheet" href="/static/css/index.css"/>
+
 </head>
+<body>
 <body class="is-preload">
-    <script src="static/js/jquery.min.js"></script>
-    <script src="static/js/jquery.scrollex.min.js"></script>
-    <script src="static/js/jquery.scrolly.min.js"></script>
-    <script src="static/js/browser.min.js"></script>
-    <script src="static/js/breakpoints.min.js"></script>
-    <script src="static/js/util.js"></script>
-    <script src="static/js/main.js"></script>
-    <script src="static/js/index.js"></script>
-<section id="sidebar">
-    <div class="inner">
-        <nav>
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/jquery.scrollex.min.js"></script>
+    <script src="/static/js/jquery.scrolly.min.js"></script>
+    <script src="/static/js/browser.min.js"></script>
+    <script src="/static/js/breakpoints.min.js"></script>
+    <script src="/static/js/util.js"></script>
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/index.js"></script>
+    <header>
+        <div class="main">
             <ul>
-                <li><a href="#index">欢迎使用</a></li>
-                <li><a href="#solo">下载作品</a></li>
-                <li><a href="#picture">下载图集</a></li>
-            </ul>
-        </nav>
-    </div>
-</section>
-
-<div id="wrapper">
-
-    <section id="index" class="wrapper style1 fullscreen fade-up">
-        <div class="inner">
-            <div class="box alt">
-                <div class="row gtr-uniform">
-                    <div class="col-4"><span class="image fit"><img src="static/images/TikTokDownloader.png"
-                                                                    alt="TikTokDownloader"/></span>
-                    </div>
-                    <h1 id="title" class="col-6">TikTokDownloaderWeb</h1>
-                </div>
-            </div>
-            <p><b>抖音视频/图集/直播下载工具：</b>基于 Requests
-                模块实现；批量下载抖音账号发布页或者喜欢页的作品；单独下载抖音链接对应的作品；获取抖音直播推流地址；下载抖音直播视频。
-            </p>
-            <p><b>使用者在使用本项目的代码时，请遵守 <a
-                    href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license" target="_blank">GNU
-                General Public License
-                v3.0</a> 开源协议。</b>
-            </p>
-            <ul class="actions">
-                <li><a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest" class="button scrolly"
-                       target="_blank">获取最新源码</a>
-                </li>
+                <li class="index"><a href="#">首页</a></li>
+				<li><a href="#solo">下载作品</a></li>
+                
             </ul>
         </div>
-    </section>
-
-    
-    <section id="solo" class="wrapper style2 spotlights">
+        <div class="title">
+            <h1><span style="color: crimson;">My</span> Homepage</h1>
+        </div>
+		
+		
+		
+		
+		
+    </header>
+	
+	<section id="solo" class="wrapper style2 spotlights">
         <div class="inner">
             <h2>视频下载</h2>
             <div class="style1">
@@ -106,95 +82,23 @@
                                         <button id="copyAccButton" class="btn btn-primary">复制</button>
   
                                       </div>
-                                
                                 </div>
+                                
                             </div>
                         </div>
                     </form>
+                    <div class="container"></div>
                 </section>
             </div>
         </div>
     </section>
 
-    <section id="picture" class="wrapper style1 spotlights">
-        <div class="inner">
-            <h2>下载图集</h2>
-            <div class="style1">
-                <section>
-                    <form id="live_form" onsubmit="return false">
-                        <div class="fields">
-                            <div class="field half">
-                                
-                                <label for="live_url">请输入图集链接：</label>
-                                <label>
-                                    <input type="text" id="picture_url"/>
-                                </label>
-                                <br>
-                                <ul class="actions">
-                                    <li><input type="button" class="button submit" value="读取剪贴板并粘贴至输入框"
-                                               onclick="picter_input()"></li>
-                                </ul>
-                                <ul class="actions">
-                                    <li><input type="button" id="Button_picter_jiexi" class="button submit" value="解析图集"
-                                               onclick="picter_post()">
-                                    </li>
-                                </ul>
-                                
-                            
-                            
-                              <div class="col-sm-12 mt-2">
-                                <label>图集信息：</label>
-                                <div class="input-group mb-3">
-                                  <span class="input-group-text">图集标题：</span>
-                                  <input type="text" id="desc2" readonly="readonly" class="form-control" />
-                                  <button id="copyDescButton" class="btn btn-primary">复制</button>
-
-                                </div>
-                                
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text">原声链接：</span>
-                                    <input type="text" id="acc2" readonly="readonly" class="form-control" />
-                                    <button id="copyAccButton" class="btn btn-primary">复制</button>
-
-                                </div>
-                                <div class="container"></div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-                <!--
-
-                
-                <div class="field half">
-                    <label>Pictures：</label>
-                    <span class="image fit" id="preview"><img
-                            id="live_preview"
-                            src="static/images/blank.png"
-                            alt="预览图"/></span>
-                </div>
-                -->
-                
-            </section>
-            
-        </div>
-    </div>
-</section>
-                            
-
-
-
-<footer id="footer" class="wrapper style1-alt">
-    <div class="inner">
-        <ul class="menu">
-            <li>开源项目: <a href="https://github.com/JoeanAmier/TikTokDownloader" target="_blank">TikTokDownloader</a>
-            </li>
-            <li>开源协议: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license" target="_blank">GNU
-                General Public License v3.0</a></li>
-        </ul>
-    </div>
-</footer>
-
-
-
+    
+	
+	
+	
+	
+	
+	
 </body>
 </html>

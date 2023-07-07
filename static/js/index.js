@@ -22,7 +22,7 @@ function picter_input() {
 }
 
 function get_parameters() {
-    // 获取当前参数设置
+    
     return {
         root: $("#root").val(),
         folder: $("#folder").val(),
@@ -49,33 +49,48 @@ function update_parameters() {
     });
 }
 function solo_post(download = false) {
+    const container = document.querySelector(".container");
+    container.innerHTML = "";
     document.getElementById('Button_Post').value = 'Waiting...';
+    var inputElement = document.getElementById("playApi");
+    inputElement.value = '';
+    var inputElement = document.getElementById("desc");
+    inputElement.value = '';
+    var inputElement = document.getElementById("acc");
+    inputElement.value = '';
     $.post("/solo/", {url: $("#solo_url").val(), download: download}, function (result) {
+        document.getElementById('Button_Post').value = '解析视频';
+        
         var data = JSON.parse(result);
-        if(data.happen = 1){
+        console.log(data.happen);
+        if(data.happen == 1){
+            console.log('图集');
             var imageUrls = data.image_urls;
             var description = data.description;
             console.log(imageUrls);
-            /*
-            imageUrls.forEach((imageUrls, index) => {
-                createImageCard(imageUrls,"文案:",description + index , 5 );
-              });
-              */
-              for (var i = 0; i < imageUrls.length; i++) {
-                console.log(imageUrls[i]);
-                createImageCard(imageUrls[i], "文案:",description + i);
-            }
-            /*
-            console.log("地址：");
-            for (var i = 0; i < imageUrls.length; i++) {
-                console.log(imageUrls[i]);
-            }
-            console.log("标题：");
-            console.log(description);
-            */
+                if(imageUrls.length > 15){
+                    console.log('你妹的解析那么多干什么');
+                }else{
+                    for (var i = 0; i < imageUrls.length; i++) {
+                    createImageCard(imageUrls[i], "文案:",description + i);
+                    }
+                }
+            
         }else{
-        if(data.happen = 0){
-            document.getElementById('Button_Post').value = '解析视频';
+            var data = JSON.parse(result);
+        if(data.happen == 0){
+            console.log('视频');
+            var extractedVideoUrl = data.video_url;
+            var extractedTitle = data.description;
+            var extractedText = data.music_info;
+            //console.log(imageUrls);
+            var inputElement = document.getElementById("playApi");
+            inputElement.value = extractedVideoUrl;
+            var inputElement = document.getElementById("desc");
+            inputElement.value = extractedTitle;
+            var inputElement = document.getElementById("acc");
+            inputElement.value = extractedText;
+            
         }     
         }
         
@@ -193,15 +208,23 @@ function createImageCard(imageLink, name, cost, starRating) {
     foodCost.className = "cost";
     foodCost.innerText = cost;
   
-  
     colRight.appendChild(foodCost);
-    colRight.appendChild(starRatingContainer);
+  
+    foodCost.addEventListener("click", function() {
+      const link = document.createElement("a");
+      link.href = imageLink; // 替换为你要下载的图片链接变量
+      link.download = "image.jpg"; // 替换为你要下载的图片文件名
+      link.target = "_blank";
+      link.click();
+    });
+  
     detail.appendChild(colRight);
   
     foodCard.appendChild(detail);
   
     container.appendChild(foodCard);
   }
+  
   // 根据图片链接数量创建图片卡片
   /*
   imageLinks.forEach((link, index) => {

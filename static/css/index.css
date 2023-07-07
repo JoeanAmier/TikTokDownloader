@@ -1,252 +1,277 @@
-/*
-#title {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+*{
+  padding: 0;
+  margin: 0;
+  font-family: "Mi Sans";
+}
+header{
+  background-image:linear-gradient(rgba(0,0,0,0.5),rgba(0,0,0,0.5)), url(https://images.pexels.com/photos/1083822/pexels-photo-1083822.jpeg?cs=srgb&dl=pexels-lisa-1083822.jpg&fm=jpg);
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
 }
 
-
-#preview {
-    width: 100%;
-    max-width: 565px;
-    height: 100%;
-    max-height: 565px;
-    background-color: #ffffff;
-    border: 1px solid #001858;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
-    background-size: 25px 25px;
+ul{
+  float: right;
+  list-style-type: none;
+  margin: 15px;
+}
+ul li{
+  display: inline-block;
 }
 
-#preview img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+ul li a{
+  text-decoration: none;
+  color: #fff;
+  padding: 5px 20px;
+  border: 1px solid transparent;
+  transition: .6s ease;
+  border-radius: 20px;
 }
-*/
+
+ul li a:hover{
+  background-color: #fff;
+  color: #000;
+}
+ul li.active a{
+  background-color: #fff;
+  color: #000;
+}
+.title{
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+}
+.title h1{
+  color: #fff;
+  font-size: 70px;
+  font-family: Century Gothic;
+}
 :root{
-    --background-color:#e8e6e7;
-  }
-  
-  *{
-    margin: 0;padding: 0;
-  }
-  
-  html{
-    font-size: 14px;
-  }
-  
-  body{
-    width: 100vw;height: 100vh;
-    background-color: var(--background-color);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Montserrat', sans-serif;
-    perspective: 1000px;
-  }
-  
-  .container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-  }
-  
-  .food-card{
-    position: absolute;
-    width: 325px;
-    border-radius: 30px;
-    box-shadow: -30px 70px 150px -20px rgba(51, 51, 51, 0.25);
-    background-color: #fff;
-    overflow: hidden;
-    transform-style: preserve-3d;
-    transition: 0.5S;
-  }
-  
-  .food-card:nth-of-type(1) {
-    transform: translate(-40%, 25%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(2) {
-    transform: translate(-30%, 15%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(3) {
-    transform: translate(-20%, 5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(4) {
-    transform: translate(-10%, -5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(5) {
-    transform: translate(0%, -15%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(6) {
-    transform: translate(10%, -5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(7) {
-    transform: translate(20%, 5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(8) {
-    transform: translate(30%, 15%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(9) {
-    transform: translate(40%, 25%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(10) {
-    transform: translate(50%, 35%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(11) {
-    transform: translate(60%, 45%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(12) {
-    transform: translate(70%, 55%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(13) {
-    transform: translate(80%, 65%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(14) {
-    transform: translate(90%, 75%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:nth-of-type(15) {
-    transform: translate(100%, 85%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
-  }
-  
-  .food-card:hover:nth-of-type(1) {
-    transform: translate(-40%, 25%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(2) {
-    transform: translate(-30%, 15%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(3) {
-    transform: translate(-20%, 5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(4) {
-    transform: translate(-10%, -5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(5) {
-    transform: translate(0%, -15%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(6) {
-    transform: translate(10%, -5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(7) {
-    transform: translate(20%, 5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(8) {
-    transform: translate(30%, 15%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(9) {
-    transform: translate(40%, 25%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(10) {
-    transform: translate(50%, 35%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(11) {
-    transform: translate(60%, 45%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(12) {
-    transform: translate(70%, 55%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(13) {
-    transform: translate(80%, 65%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(14) {
-    transform: translate(90%, 75%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  .food-card:hover:nth-of-type(15) {
-    transform: translate(100%, 85%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
-    z-index: 1;
-  }
-  
-  
-  
-  .pic{
-    height: 160px;
-  }
-  .pic img{
-    width: 100%;
-    transform: rotate(8deg) translate(-10px,-55px);
-    border-radius: 30px;
-  }
-  
-  .detail{
-    padding: 8px 30px 20px;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .col .name{
-    font-size: 18px;
-    font-weight: bold;
-    color: #11313c;
-  }
-  .col .texture{
-    font-size: 14px;
-    font-weight: 500;
-    color: #949a98;
-  }
-  .col .cost{
-    font-size: 18px;
-    font-weight: bold;
-    color: #f7736e;
-    text-align: right;
-  }
-  
-  .col .star{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .col .star span{
-    display: block;
-    width: 20px;height: 20px;
-    background-color: #dadada;
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-  }
-  .col .star span.light{
-    background-color: #e6c356;
-  }
-  
-  
+--background-color:#e8e6e7;
+}
+
+*{
+margin: 0;padding: 0;
+}
+
+html{
+font-size: 14px;
+}
+/*
+body{
+width: 100vw;height: 100vh;
+background-color: var(--background-color);
+display: flex;
+justify-content: center;
+align-items: center;
+font-family: 'Montserrat', sans-serif;
+perspective: 1000px;
+}
+*/ 
+.container{
+display: flex;
+justify-content: center;
+align-items: center;
+position: relative;
+}
+
+.food-card{
+position: absolute;
+width: 325px;
+border-radius: 30px;
+
+background-color: #fff;
+overflow: hidden;
+transform-style: preserve-3d;
+transition: 0.5S;
+}
+
+.food-card:nth-of-type(1) {
+transform: translate(-40%, 25%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(2) {
+transform: translate(-30%, 15%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(3) {
+transform: translate(-20%, 5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(4) {
+transform: translate(-10%, -5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(5) {
+transform: translate(0%, -15%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(6) {
+transform: translate(10%, -5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(7) {
+transform: translate(20%, 5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(8) {
+transform: translate(30%, 15%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(9) {
+transform: translate(40%, 25%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(10) {
+transform: translate(50%, 35%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(11) {
+transform: translate(60%, 45%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(12) {
+transform: translate(70%, 55%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(13) {
+transform: translate(80%, 65%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(14) {
+transform: translate(90%, 75%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:nth-of-type(15) {
+transform: translate(100%, 85%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg);
+}
+
+.food-card:hover:nth-of-type(1) {
+transform: translate(-40%, 25%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(2) {
+transform: translate(-30%, 15%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(3) {
+transform: translate(-20%, 5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(4) {
+transform: translate(-10%, -5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(5) {
+transform: translate(0%, -15%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(6) {
+transform: translate(10%, -5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(7) {
+transform: translate(20%, 5%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(8) {
+transform: translate(30%, 15%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(9) {
+transform: translate(40%, 25%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(10) {
+transform: translate(50%, 35%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(11) {
+transform: translate(60%, 45%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(12) {
+transform: translate(70%, 55%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(13) {
+transform: translate(80%, 65%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(14) {
+transform: translate(90%, 75%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+.food-card:hover:nth-of-type(15) {
+transform: translate(100%, 85%) rotateX(22deg) rotateZ(-14deg) rotateY(17deg) translateZ(30px);
+z-index: 1;
+}
+
+
+
+.pic{
+height: 160px;
+}
+.pic img{
+transform: rotate(8deg) translate(-10px,-55px);
+border-radius: 30px;
+width: 350px;
+height: 210px;
+
+}
+
+.detail{
+padding: 8px 30px 20px;
+display: flex;
+justify-content: space-between;
+}
+
+.col .name{
+font-size: 18px;
+font-weight: bold;
+color: #11313c;
+}
+.col .texture{
+font-size: 14px;
+font-weight: 500;
+color: #949a98;
+}
+.col .cost{
+font-size: 18px;
+font-weight: bold;
+color: #f7736e;
+text-align: right;
+}
+
+.col .star{
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.col .star span{
+display: block;
+width: 20px;height: 20px;
+background-color: #dadada;
+clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+.col .star span.light{
+background-color: #e6c356;
+}
+
+

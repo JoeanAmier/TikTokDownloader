@@ -154,11 +154,11 @@ a {
 
 a:hover {
     border-bottom-color: transparent;
-    color: #001858;
+    color: #111111;
 }
 
 strong, b {
-    color: #001858;
+    color: #111111;
     font-weight: bold;
 }
 
@@ -171,7 +171,7 @@ p {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: #001858;
+    color: #111111;
     font-weight: bold;
     line-height: 1.5;
     margin: 0 0 0.5em 0;
@@ -3237,7 +3237,7 @@ table.alt tfoot {
 }
 
 .wrapper.style1 {
-    background-color: #fef6e4;
+    background-color: #ffffff;
 }
 
 .wrapper.style1-alt {
@@ -3245,7 +3245,7 @@ table.alt tfoot {
 }
 
 .wrapper.style2 {
-    background-color: #fee9e4;
+    background-color: #ffffff;
 }
 
 .wrapper.style2-alt {
@@ -3253,7 +3253,7 @@ table.alt tfoot {
 }
 
 .wrapper.style3 {
-    background-color: #b74e91;
+    background-color: #ffffff;
 }
 
 .wrapper.style3-alt {
