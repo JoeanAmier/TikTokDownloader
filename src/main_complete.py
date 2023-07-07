@@ -76,13 +76,13 @@ class TikTok:
         save, root, params = self.record.run(
             self._data["root"], format_=self._data["save"])
         for index in range(self._number):
-            self.account_download(
-                index + 1,
-                *self.accounts[index],
-                save,
-                root,
-                params)
-            # break  # 测试使用
+            if not self.account_download(
+                    index + 1,
+                    *self.accounts[index],
+                    save,
+                    root,
+                    params):
+                break
         self.manager.save_cache()
 
     def account_download(
@@ -116,6 +116,7 @@ class TikTok:
             self.download.run(f"第 {num} 个",
                               self.request.video_data,
                               self.request.image_data)
+        return True
 
     def single_acquisition(self):
         save, root, params = self.record.run(
