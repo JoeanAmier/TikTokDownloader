@@ -94,7 +94,7 @@ html {
 }
 
 body {
-    background: #312450;
+    background: #fef6e4;
 }
 
 body.is-preload *, body.is-preload *:before, body.is-preload *:after {
@@ -111,7 +111,7 @@ body.is-preload *, body.is-preload *:before, body.is-preload *:after {
 /* Type */
 
 body, input, select, textarea {
-    color: rgba(0, 24, 88, 0.55);
+    color: #001858;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 16.5pt;
     font-weight: normal;
@@ -196,7 +196,7 @@ h1.major:after {
     background-image: -moz-linear-gradient(to right, #5e42a6, #b74e91);
     background-image: -webkit-linear-gradient(to right, #5e42a6, #b74e91);
     background-image: -ms-linear-gradient(to right, #5e42a6, #b74e91);
-    background-image: linear-gradient(to right, #5e42a6, #b74e91);
+    background-image: linear-gradient(to right, #fd6585, #ffd3a5);
     -moz-transition: max-width 0.2s ease;
     -webkit-transition: max-width 0.2s ease;
     -ms-transition: max-width 0.2s ease;
@@ -204,7 +204,7 @@ h1.major:after {
     border-radius: 0.2em;
     bottom: 0;
     content: '';
-    height: 0.05em;
+    height: 0.1em;
     position: absolute;
     right: 0;
     width: 100%;
@@ -3233,7 +3233,7 @@ table.alt tfoot {
 }
 
 .wrapper.alt {
-    background-color: #261c3e;
+    background-color: #f3d2c1;
 }
 
 .wrapper.style1 {
@@ -3367,17 +3367,17 @@ body.is-preload .wrapper.fade > .inner {
     display: -webkit-flex;
     display: -ms-flex;
     display: flex;
-    background-color: #5e42a6;
+    background-color: #f3d2c1;
     cursor: default;
     padding: 1.75em 2em;
 }
 
 #header > .title {
     border: 0;
-    color: #ffffff;
+    color: #172c66;
     display: block;
     font-size: 1.25em;
-    font-weight: bold;
+    font-weight: normal;
 }
 
 #header > nav {
@@ -3408,8 +3408,8 @@ body.is-preload .wrapper.fade > .inner {
     border: 0;
     color: rgba(255, 255, 255, 0.35);
     display: inline-block;
-    font-size: 0.6em;
-    font-weight: bold;
+    font-size: 0.9em;
+    font-weight: normal;
     letter-spacing: 0.25em;
     text-transform: uppercase;
 }
@@ -3419,7 +3419,7 @@ body.is-preload .wrapper.fade > .inner {
 }
 
 #header > nav > ul > li a.active {
-    color: #ffffff;
+    color: #172c66;
 }
 
 @media screen and (max-width: 736px) {
