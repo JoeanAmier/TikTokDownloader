@@ -156,8 +156,8 @@ class TikTok:
                 continue
             self.logger.info(f"主播昵称: {data[0]}")
             self.logger.info(f"直播标题: {data[1]}")
-            self.logger.info("推流地址: \n" +
-                             "\n".join([f"{i}: {j}" for i, j in data[2].items()]))
+            self.logger.info(
+                "推流地址: \n" + "\n".join([f"清晰度{i}: {j}" for i, j in data[2].items()]))
             if l := choice_quality(data[2]):
                 self.download.download_live(l, f"{data[0]}-{data[1]}")
                 break
