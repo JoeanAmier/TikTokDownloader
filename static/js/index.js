@@ -91,7 +91,13 @@ function solo_post(download = false) {
             var inputElement = document.getElementById("acc");
             inputElement.value = extractedText;
             
-        }     
+        }else{
+            if(data.happen == 400){
+                var data = JSON.parse(result);
+                console.log(data.text);
+                alert(data.text);
+            }
+        }   
         }
         
 

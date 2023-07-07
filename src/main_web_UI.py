@@ -115,31 +115,16 @@ class WebUI(TikTok):
             id_ = self.request.run_alone(self.solo_url[0])
             if not id_:
                 self.logger.error(f"{self.solo_url[0]} 获取 aweme_id 失败")
-                return {
+                a = {
+                    "happen": 400 ,
                     "text": "获取作品ID失败",
                     "preview": "static/images/blank.png"}
+                return json.dumps(a)
             result = self.download.run_alone(id_, self.solo_url[1])
             if isinstance(result, list):
                 return self.get_data(result[0])
             if isinstance(result, str):
                 return {"text": f"作品 {id_} 下载成功", "preview": result}
-
-    def live_acquisition(self):
-        if not (data := self.request.get_live_data(self.live_url)):
-            self.logger.warning("获取直播数据失败")
-            return {
-                "text": "获取直播数据失败",
-                "preview": "static/images/blank.png"}
-        if not (data := self.request.deal_live_data(data)):
-            return {
-                "text": "提取直播推流地址失败",
-                "preview": "static/images/blank.png"}
-        result = {"主播昵称": data[0], "直播名称": data[1]} | data[2]
-        for i, j in result.items():
-            self.logger.info(f"{i}: {j}", False)
-        return {
-            "text": "\n".join([f"{i}: {j}" for i, j in result.items()]),
-            "preview": data[3]}
 
     def webui_run(self, app):
 
@@ -171,9 +156,11 @@ class WebUI(TikTok):
                 None: False}[
                 request.form.get("download")]
             if not url:
-                return {
+                a = {
+                    "happen": 400,
                     "text": "无效的作品链接",
                     "preview": "static/images/blank.png"}
+                return JSON.jumps(a)
             self.solo_url = (url, download)
             return self.single_acquisition()
 
