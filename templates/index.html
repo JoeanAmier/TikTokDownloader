@@ -229,9 +229,20 @@
                                     </li>
                                 </ul>
                                 <label for="live_state">运行结果：</label>
-                                <input id="live_state" type="text" readonly>
+                                <textarea id="live_state" rows="2" readonly></textarea>
+                                <br>
                                 <ul class="actions">
+                                    <li><input type="button" class="button submit" value="显示/隐藏全部下载地址"
+                                               onclick="get_all()" id="all_url">
+                                    </li>
                                 </ul>
+                                <ul class="actions">
+                                    <li><input type="button" class="button submit" value="下载最高画质录像"
+                                               onclick="get_best()" id="best_url">
+                                    </li>
+                                </ul>
+                                <div id="url_text" style="display: none;">
+                                </div>
                             </div>
                             <div class="field half">
                                 <label>直播封面：</label>

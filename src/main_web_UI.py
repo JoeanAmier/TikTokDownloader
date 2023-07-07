@@ -129,17 +129,22 @@ class WebUI(TikTok):
         if not (data := self.request.get_live_data(self.live_url)):
             self.logger.warning("获取直播数据失败")
             return {
-                "text": "获取直播数据失败",
+                "text": "获取直播数据失败！",
+                "urls": {},
+                "best": "",
                 "preview": "static/images/blank.png"}
         if not (data := self.request.deal_live_data(data)):
             return {
-                "text": "提取直播推流地址失败",
+                "text": "提取直播推流地址失败！",
+                "urls": {},
+                "best": "",
                 "preview": "static/images/blank.png"}
-        result = {"主播昵称": data[0], "直播名称": data[1]} | data[2]
-        for i, j in result.items():
+        for i, j in ({"主播昵称": data[0], "直播名称": data[1]} | data[2]).items():
             self.logger.info(f"{i}: {j}", False)
         return {
-            "text": "\n".join([f"{i}: {j}" for i, j in result.items()]),
+            "text": f"主播昵称: {data[0]}\n直播标题: {data[1]}",
+            "urls": data[2],
+            "best": min(data[2].values(), key=lambda x: x[0]),
             "preview": data[3]}
 
     def webui_run(self, app):
@@ -187,7 +192,9 @@ class WebUI(TikTok):
             url = request.form.get("url", False)
             if not url:
                 return {
-                    "text": "无效的直播链接",
+                    "text": "无效的直播链接！",
+                    "url": {},
+                    "best": "",
                     "preview": "static/images/blank.png"}
             self.live_url = url
             return self.live_acquisition()

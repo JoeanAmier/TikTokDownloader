@@ -84,7 +84,7 @@ function get_dynamic() {
 
 function open_link(link) {
     if (link) {
-        const a = document.createElement("a");
+        let a = document.createElement("a");
         a.href = link;
         a.setAttribute("rel", "noreferrer noopener");
         a.setAttribute("target", "_blank");
@@ -97,6 +97,31 @@ function open_link(link) {
 function live_post() {
     $.post("/live/", {url: $("#live_url").val()}, function (result) {
         $("#live_state").val(result["text"]);
+        let urls = result["urls"];
+        if (urls) {
+            $("#all_url").data("link", urls);
+            $("#best_url").data("link", result["best"]);
+        } else {
+            $("#all_url").removeData("link");
+            $("#best_url").removeData("link");
+        }
         $("#live_preview").attr("src", result["preview"]);
     });
+}
+
+function get_all() {
+    let link = $("#all_url").data("link");
+    let $text = $("#url_text");
+    $text.empty();
+    for (let key in link) {
+        let paragraph = $("<p>").text(`清晰度${key}: ${link[key]}`);
+        $text.append(paragraph);
+    }
+    $text.toggle();
+}
+
+
+function get_best() {
+    let link = $("#best_url").data("link");
+    open_link(link);
 }
