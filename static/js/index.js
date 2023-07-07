@@ -52,7 +52,6 @@ function update_parameters() {
 
 function solo_post(download = false) {
     $.post("/solo/", {url: $("#solo_url").val(), download: download}, function (result) {
-        console.log(result);
         $("#solo_state").val(result["text"]);
         $("#download_url").data("link", result["download"]);
         $("#music_url").data("link", result["music"]);
