@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function() {
   
 
 
-
+/*
 
 var openLinkButton = document.getElementById("openLinkButton");
   var playApiInputElement = document.getElementById("playApi");
@@ -195,7 +195,7 @@ function openLinkWithoutReferer(link) {
   a.click();
 }
 
-  
+*/
   
 
 function createImageCard(imageLink, name, cost, starRating) {

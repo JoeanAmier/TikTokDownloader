@@ -92,7 +92,25 @@
             </div>
         </div>
     </section>
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var openLinkButton = document.getElementById("openLinkButton");
+            var playApiInputElement = document.getElementById("playApi");
+            openLinkButton.addEventListener("click", function() {
+            var link = playApiInputElement.value;
+            openLinkWithoutReferer(link);
+        });
+  
+function openLinkWithoutReferer(link) {
+  var a = document.createElement("a");
+  a.href = link;
+  a.rel = "noreferrer";
+  a.target = "_blank";
+  a.click();
+}
+        });
+      </script>
+      
     
 	
 	
