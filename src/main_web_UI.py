@@ -1,5 +1,5 @@
 from datetime import date
-
+import json
 from flask import render_template
 from flask import request
 from flask import url_for
@@ -66,21 +66,40 @@ class WebUI(TikTok):
     @staticmethod
     def get_data(data) -> dict:
         def get_video_url(item):
-            result = {
-                "标题": item[1],
-                "视频下载地址": item[6],
-                "原声下载地址": item[7][1],
-                "静态封面图地址": item[8],
-                "动态封面图地址": item[9],
+            video_url = item[6]
+            json_data = {
+                'happen' : 0,
+                'item_id': item[0],
+                'description': item[1],
+                'timestamp': item[2],
+                'user_id': item[3],
+                'username': item[4],
+                'nickname': item[5],
+                'video_url': video_url,
+                'music_info': item[7],
+                'cover_image': item[8],
+                'large_cover_image': item[9]
             }
-            print(item)
-            return {"text": "\n".join(
-                [f"{i}: {j}" for i, j in result.items()]), "preview": item[8]}
+            return json.dumps(json_data)
 
         def get_image_url(item):
-            return {"text": "\n".join([f"{i}: {j}" for i, j in (
-                    {f"Image_{i + 1} 下载地址": j for i, j in enumerate(item[6])} | {
-                "原声下载地址": item[6][1]}).items()]), "preview": item[6][0]}
+            image_urls = item[6]
+            json_data = {
+            'happen' : 1,
+            'item_id': item[0],
+            'description': item[1],
+            'timestamp': item[2],
+            'user_id': item[3],
+            'username': item[4],
+            'nickname': item[5],
+            'image_urls': image_urls,
+            'song_info': item[7]
+            }
+            return json.dumps(json_data)
+            #print(item)
+            #return {"text": "\n".join([f"{i}: {j}" for i, j in (
+            #        {f"Image_{i + 1} 下载地址": j for i, j in enumerate(item[6])} | {
+            #    "原声下载地址": item[6][1]}).items()]), "preview": item[6][0]}
 
         if len(data) == 10:
             return get_video_url(data)

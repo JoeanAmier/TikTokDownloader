@@ -14,7 +14,7 @@ function solo_input() {
 function picter_input() {
     navigator.clipboard.readText()
         .then(function (text) {
-            $('#live_url').val(text);
+            $('#picture_url').val(text);
         })
         .catch(function (error) {
             console.error('读取剪贴板失败: ', error);
@@ -51,6 +51,36 @@ function update_parameters() {
 function solo_post(download = false) {
     document.getElementById('Button_Post').value = 'Waiting...';
     $.post("/solo/", {url: $("#solo_url").val(), download: download}, function (result) {
+        var data = JSON.parse(result);
+        if(data.happen = 1){
+            var imageUrls = data.image_urls;
+            var description = data.description;
+            console.log(imageUrls);
+            /*
+            imageUrls.forEach((imageUrls, index) => {
+                createImageCard(imageUrls,"文案:",description + index , 5 );
+              });
+              */
+              for (var i = 0; i < imageUrls.length; i++) {
+                console.log(imageUrls[i]);
+                createImageCard(imageUrls[i], "文案:",description + i);
+            }
+            /*
+            console.log("地址：");
+            for (var i = 0; i < imageUrls.length; i++) {
+                console.log(imageUrls[i]);
+            }
+            console.log("标题：");
+            console.log(description);
+            */
+        }else{
+        if(data.happen = 0){
+            document.getElementById('Button_Post').value = '解析视频';
+        }     
+        }
+        
+
+        /*
         var text = result["text"];
 
         var videoUrlRegex = /视频下载地址: (.*?)\n/;
@@ -66,6 +96,7 @@ function solo_post(download = false) {
         var inputElement = document.getElementById("acc");
         inputElement.value = extractedText;
         document.getElementById('Button_Post').value = '解析视频';
+        */
     });
 }
 
@@ -122,3 +153,58 @@ function openLinkWithoutReferer(link) {
   a.target = "_blank";
   a.click();
 }
+
+  
+  
+
+function createImageCard(imageLink, name, cost, starRating) {
+    const container = document.querySelector(".container");
+  
+    const foodCard = document.createElement("div");
+    foodCard.className = "food-card";
+  
+    const pic = document.createElement("div");
+    pic.className = "pic";
+  
+    const img = document.createElement("img");
+    img.src = imageLink;
+  
+    pic.appendChild(img);
+    foodCard.appendChild(pic);
+  
+    // 创建详情部分
+    const detail = document.createElement("div");
+    detail.className = "detail";
+  
+    const colLeft = document.createElement("div");
+    colLeft.className = "col left";
+  
+    const foodName = document.createElement("div");
+    foodName.className = "name";
+    foodName.innerText = name;
+  
+    colLeft.appendChild(foodName);
+    detail.appendChild(colLeft);
+  
+    const colRight = document.createElement("div");
+    colRight.className = "col right";
+  
+    const foodCost = document.createElement("div");
+    foodCost.className = "cost";
+    foodCost.innerText = cost;
+  
+  
+    colRight.appendChild(foodCost);
+    colRight.appendChild(starRatingContainer);
+    detail.appendChild(colRight);
+  
+    foodCard.appendChild(detail);
+  
+    container.appendChild(foodCard);
+  }
+  // 根据图片链接数量创建图片卡片
+  /*
+  imageLinks.forEach((link, index) => {
+    createImageCard(link,"文案:","[文案内容]" + index , 5 );
+  });
+  */
