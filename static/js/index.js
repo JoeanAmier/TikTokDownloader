@@ -135,39 +135,58 @@ function picter_post() {
 }
 
 
-var copyDescButton = document.getElementById("copyDescButton");
-var descInputElement = document.getElementById("desc");
-copyDescButton.addEventListener("click", function() {
-  descInputElement.select();
-  document.execCommand("copy");
-  window.getSelection().removeAllRanges();
-  alert("视频标题已复制！");
-});
+document.addEventListener("DOMContentLoaded", function() {
+    var copyDescButton = document.getElementById("copyDescButton");
+    var descInputElement = document.getElementById("desc");
+    copyDescButton.addEventListener("click", function() {
+      descInputElement.select();
+      navigator.clipboard.writeText(descInputElement.value)
+        .then(function() {
+          alert("视频简介已复制！");
+        })
+        .catch(function(err) {
+          console.error("复制失败:", err);
+        });
+    });
+  
+    var copyPlayApiButton = document.getElementById("copyPlayApiButton");
+    var playApiInputElement = document.getElementById("playApi");
+    copyPlayApiButton.addEventListener("click", function() {
+      playApiInputElement.select();
+      navigator.clipboard.writeText(playApiInputElement.value)
+        .then(function() {
+          alert("视频链接已复制！");
+        })
+        .catch(function(err) {
+          console.error("复制失败:", err);
+        });
+    });
+  
+    var copyAccButton = document.getElementById("copyAccButton");
+    var accInputElement = document.getElementById("acc");
+    copyAccButton.addEventListener("click", function() {
+      accInputElement.select();
+      navigator.clipboard.writeText(accInputElement.value)
+        .then(function() {
+          alert("原声链接已复制！");
+        })
+        .catch(function(err) {
+          console.error("复制失败:", err);
+        });
+    });
+  });
+  
 
-var copyAccButton = document.getElementById("copyAccButton");
-var accInputElement = document.getElementById("acc");
-copyAccButton.addEventListener("click", function() {
-  accInputElement.select();
-  document.execCommand("copy");
-  window.getSelection().removeAllRanges();
-  alert("原声链接已复制！");
-});
 
-var copyPlayApiButton = document.getElementById("copyPlayApiButton");
-var playApiInputElement = document.getElementById("playApi");
-copyPlayApiButton.addEventListener("click", function() {
-  playApiInputElement.select();
-  document.execCommand("copy");
-  window.getSelection().removeAllRanges();
-  alert("视频链接已复制！");
-});
+
+
 var openLinkButton = document.getElementById("openLinkButton");
-var playApiInputElement = document.getElementById("playApi");
-openLinkButton.addEventListener("click", function() {
+  var playApiInputElement = document.getElementById("playApi");
+  openLinkButton.addEventListener("click", function() {
   var link = playApiInputElement.value;
   openLinkWithoutReferer(link);
 });
-
+  
 function openLinkWithoutReferer(link) {
   var a = document.createElement("a");
   a.href = link;
