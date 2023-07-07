@@ -38,6 +38,7 @@
 * ✅ 采集账号详细数据
 * ✅ 作品统计数据更新
 * ✅ 自动更新账号昵称
+* ☑️ 直接部署至公开服务器
 * ☑️ 批量下载账号收藏作品
 * ☑️ 获取账号收藏合集列表
 
@@ -80,6 +81,7 @@ TikTokDownloader
 │    ├─ StringCleaner.py                   // 非法字符处理模块
 │    ├─ main_complete.py                   // 单线程启动入口
 │    ├─ main_multiprocess.py               // 多进程启动入口
+│    ├─ main_server.py                     // 服务器启动入口
 │    └─ main_web_UI.py                     // Web UI 启动入口
 ├─ static                                  // 静态资源文件夹
 ├─ templates                               // HTML 模板文件夹
