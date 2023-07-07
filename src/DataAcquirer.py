@@ -651,7 +651,7 @@ class UserData:
             else:
                 images = "#"
             uid = item["user"]["uid"]
-            nickname = item["user"]["nickname"]
+            nickname = item["user"].get("nickname", "已注销账号")
             digg_count = str(item["digg_count"])
             cid = item["cid"]
             reply_comment_total = item.get("reply_comment_total", -1)
