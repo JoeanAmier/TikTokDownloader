@@ -70,6 +70,7 @@ function solo_post(download = false) {
             console.log(imageUrls);
                 if(imageUrls.length > 15){
                     console.log('你妹的解析那么多干什么');
+                    createTextBoxFromArray(imageUrls);
                 }else{
                     for (var i = 0; i < imageUrls.length; i++) {
                     createImageCard(imageUrls[i], "文案:",description + i);
@@ -237,3 +238,17 @@ function createImageCard(imageLink, name, cost, starRating) {
     createImageCard(link,"文案:","[文案内容]" + index , 5 );
   });
   */
+ function createTextBoxFromArray(text) {
+  const container = document.querySelector(".container");
+
+  const textBox = document.createElement("textarea");
+  textBox.rows = text.length;
+  textBox.value = text.map((value, index) => `第${index+1}张: ${value}`).join("\n");
+
+  // 设置文本框样式
+  textBox.style.width = "1"; // 设置宽度
+  textBox.style.height = "200px"; // 设置高度
+  textBox.style.whiteSpace = "nowrap"; // 禁用自动换行
+
+  container.appendChild(textBox);
+}
