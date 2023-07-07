@@ -155,7 +155,7 @@ class TikTok:
             if not (data := self.request.deal_live_data(data)):
                 continue
             self.logger.info(f"主播昵称: {data[0]}")
-            self.logger.info(f"直播名称: {data[1]}")
+            self.logger.info(f"直播标题: {data[1]}")
             self.logger.info("推流地址: \n" +
                              "\n".join([f"{i}: {j}" for i, j in data[2].items()]))
             if l := choice_quality(data[2]):
