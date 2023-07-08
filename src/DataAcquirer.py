@@ -828,3 +828,13 @@ class UserData:
         self.log.info("账号数据: " + ", ".join(data), False)
         self.data.save(data, key=1)
         self.log.info("账号数据获取结束")
+
+
+class UserDataTikTok:
+    home_api = "https://www.tiktok.com/api/post/item_list/"  # 发布页API
+    user_api = "https://www.tiktok.com/api/user/detail/"  # 账号数据API
+    related_api = "https://www.tiktok.com/api/related/item_list/"  # 猜你喜欢API
+    comment_api = "https://www.tiktok.com/api/comment/list/"  # 评论API
+
+    def __init__(self):
+        pass
