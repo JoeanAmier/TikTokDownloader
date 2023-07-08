@@ -108,7 +108,7 @@ class WebUI(TikTok):
             if not id_:
                 self.logger.error(f"{self.solo_url[0]} 获取 aweme_id 失败")
                 return {
-                    "text": "获取作品ID失败！",
+                    "text": "获取作品数据失败！",
                     "download": False,
                     "music": False,
                     "origin": False,
