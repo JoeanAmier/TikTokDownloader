@@ -497,10 +497,11 @@ class Download:
     @check_cookie
     def run_alone(self, id_: str, download=True):
         """单独下载"""
-        if not self.folder:
+        if download and not self.folder:
             self.log.warning("未设置下载文件夹名称")
             return False
-        self.create_folder(self.folder)
+        elif download:
+            self.create_folder(self.folder)
         data = self.get_data(id_)
         if not data:
             self.log.warning("获取作品详细信息失败")
