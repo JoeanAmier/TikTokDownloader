@@ -168,7 +168,7 @@
                                 <ul class="actions">
                                     <li><input type="button" class="button submit" value="获取下载链接"
                                                onclick="solo_post()"></li>
-                                    <li><input type="button" class="button submit" value="直接下载"
+                                    <li><input type="button" class="button submit" value="后台下载"
                                                onclick="solo_post(true)">
                                     </li>
                                 </ul>
@@ -176,7 +176,7 @@
                                 <input id="solo_state" type="text" readonly>
                                 <br>
                                 <ul class="actions">
-                                    <li><input type="button" class="button submit" value="下载作品"
+                                    <li><input type="button" class="button submit" value="下载视频"
                                                onclick="get_download()" id="download_url">
                                     </li>
                                     <li><input type="button" class="button submit" value="下载静态封面"
@@ -191,6 +191,13 @@
                                                onclick="get_dynamic()" id="dynamic_url">
                                     </li>
                                 </ul>
+                                <ul class="actions">
+                                    <li><input type="button" class="button submit" value="显示/隐藏图片下载地址"
+                                               onclick="get_images()" id="images_url">
+                                    </li>
+                                </ul>
+                                <div id="solo_url_text" style="display: none;">
+                                </div>
                             </div>
                             <div class="field half">
                                 <label>作品预览：</label>
@@ -232,16 +239,16 @@
                                 <textarea id="live_state" rows="2" readonly></textarea>
                                 <br>
                                 <ul class="actions">
-                                    <li><input type="button" class="button submit" value="显示/隐藏全部下载地址"
+                                    <li><input type="button" class="button submit" value="显示/隐藏全部推流地址"
                                                onclick="get_all()" id="all_url">
                                     </li>
                                 </ul>
                                 <ul class="actions">
-                                    <li><input type="button" class="button submit" value="下载最高画质录像"
+                                    <li><input type="button" class="button submit" value="下载最高画质视频"
                                                onclick="get_best()" id="best_url">
                                     </li>
                                 </ul>
-                                <div id="url_text" style="display: none;">
+                                <div id="live_url_text" style="display: none;">
                                 </div>
                             </div>
                             <div class="field half">

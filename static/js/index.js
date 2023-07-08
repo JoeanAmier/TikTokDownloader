@@ -63,7 +63,22 @@ function solo_post(download = false) {
 
 function get_download() {
     let link = $("#download_url").data("link");
-    open_link(link);
+    if (!Array.isArray(link)) {
+        open_link(link);
+    }
+}
+
+function get_images() {
+    let link = $("#download_url").data("link");
+    let $text = $("#solo_url_text");
+    $text.empty();
+    if (Array.isArray(link)) {
+        link.forEach(function (element, index) {
+            let paragraph = $("<p>").text(`图片-${index}: ${element}`);
+            $text.append(paragraph);
+        });
+        $text.toggle();
+    }
 }
 
 function get_music() {
@@ -110,7 +125,7 @@ function live_post() {
 
 function get_all() {
     let link = $("#all_url").data("link");
-    let $text = $("#url_text");
+    let $text = $("#live_url_text");
     $text.empty();
     for (let key in link) {
         let paragraph = $("<p>").text(`清晰度${key}: ${link[key]}`);
