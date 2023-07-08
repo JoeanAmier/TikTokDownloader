@@ -1,5 +1,5 @@
 import json
-import os
+from pathlib import Path
 
 
 class Settings:
@@ -34,7 +34,7 @@ class Settings:
     def read(self):
         """读取配置文件，如果没有配置文件，则生成配置文件"""
         try:
-            if os.path.exists(self.file):
+            if Path(self.file).exists():
                 with open(self.file, "r", encoding="UTF-8") as f:
                     return json.load(f)
             else:
