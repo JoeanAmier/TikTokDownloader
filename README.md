@@ -7,7 +7,6 @@
 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">
 <img src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader" alt="TikTokDownloader">
 </a>
-<img src="https://img.shields.io/badge/%E8%BD%BB%E9%87%8F%E7%BA%A7-%E5%B7%A5%E5%85%B7-green" alt="轻量级工具">
 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A.jpg">
 <img src="https://img.shields.io/badge/QQ%E7%BE%A4%E8%81%8A-830227445-b44c97" alt="群聊">
 </a>
@@ -38,7 +37,7 @@
 * ✅ 采集账号详细数据
 * ✅ 作品统计数据更新
 * ✅ 自动更新账号昵称
-* ☑️ 直接部署至公开服务器
+* ✅ 直接部署至公开服务器
 * ☑️ 批量下载账号收藏作品
 * ☑️ 获取账号收藏合集列表
 
@@ -57,10 +56,8 @@
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已通过测试，功能均可正常使用
 * 🟡 准备开发批量下载账号收藏作品功能
 * 🟡 准备开发多进程模式，提高多账号批量下载效率
-* 🟡 准备开发服务器部署模式，可直接部署至公开服务器
 * 🔴 最新版本的源码可能存在不稳定的 Bug
 * 🔴 如果在使用过程中发现 Bug，请及时告知作者修复
-* 🔴 评论数据无 IP 归属地信息导致异常退出，最新版已修复，未发布 Releases
 
 # 📁 项目结构
 
@@ -111,7 +108,7 @@ TikTokDownloader
 * 单线程终端模式: 支持所有功能
 * 多进程终端模式\(未完成\): 仅支持多账号批量下载功能
 * Web UI 交互模式: 仅支持单独下载功能和获取直播推流地址功能
-* 服务器部署模式\(未完成\): 仅支持单独下载功能，可直接部署至公开服务器
+* 服务器部署模式: 仅支持单独下载功能，可直接部署至公开服务器
 
 <hr>
 
@@ -146,6 +143,8 @@ TikTokDownloader
 * 获取私密账号的发布页数据需要登录后的 Cookie，且登录的账号需要关注该私密账号
 * 批量下载账号作品或合集作品时，如果对应的昵称或标识发生变化，程序会自动更新已下载作品文件名称中的昵称和标识
 * 单独下载链接作品时，如果在 `name` 参数中设置了 `mark` ，程序会自动替换为 `nickname`
+* 为保护访客隐私，`服务器部署模式` 禁用了日志记录和数据存储功能，不会记录任何作品提取数据
+* `服务器部署模式` 基础功能已经完成，但在网页交互和用户体验方面仍有改进空间，需要进一步优化
 
 # 🔗 链接类型
 

@@ -5,7 +5,7 @@ from src.main_complete import TikTok
 from src.main_server import Server
 from src.main_web_UI import WebUI
 
-VERSION = "2.5 beta"
+VERSION = "3.0"
 
 
 def version():
@@ -34,7 +34,7 @@ def complete():
 
 def multiprocess():
     """多进程终端模式"""
-    pass
+    print("敬请期待！")
 
 
 def web_ui():
@@ -50,7 +50,7 @@ def server():
     服务器部署模式
     """
     app = Server().server_run(Flask(__name__))
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0", debug=False)
 
 
 def compatible(mode: int):
