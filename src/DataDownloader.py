@@ -11,6 +11,7 @@ from src.DataAcquirer import sleep
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.Parameter import XBogus
+from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
 
@@ -41,7 +42,7 @@ class Download:
     chunk = 1048576  # 单次下载文件大小，单位字节
     xb = XBogus()
 
-    def __init__(self, log: LoggerManager, save):
+    def __init__(self, log: LoggerManager | BaseLogger, save):
         self.headers = {}  # 请求头，通用
         self.log = log  # 日志记录模块，通用
         self.data = save  # 详细数据记录模块，调用前赋值

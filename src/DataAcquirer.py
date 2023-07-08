@@ -11,6 +11,7 @@ import requests
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.Parameter import XBogus
+from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
 
@@ -103,7 +104,7 @@ class UserData:
     xb = XBogus()  # 加密参数对象
     max_comment = 256  # 评论字数限制
 
-    def __init__(self, log: LoggerManager):
+    def __init__(self, log: LoggerManager | BaseLogger):
         self.log = log  # 日志记录对象，通用
         self.data = None  # 数据记录对象，评论抓取和账号数据抓取调用，调用前赋值
         self._cookie = False  # 是否设置了Cookie，通用
