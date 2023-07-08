@@ -22,42 +22,56 @@
     <section id="main" class="wrapper">
         <div class="inner">
             <h1 class="major">抖音作品下载地址提取</h1>
-            <form onsubmit="return false">
-                <div class="row gtr-uniform">
-                    <div class="col-12">
-                        <label for="link">请输入抖音作品链接：</label>
-                        <input type="text" name="link" id="link" value=""/>
-                    </div>
-                    <br>
-                    <div class="col-12">
+            <form id="solo_form" onsubmit="return false">
+                <div class="fields">
+                    <div class="field half">
+                        <label for="solo_url">请输入抖音作品链接：</label>
+                        <label>
+                            <input type="text" id="solo_url"/>
+                        </label>
+                        <br>
                         <ul class="actions">
-                            <li><input type="button" class="button submit" value="读取剪贴板并粘贴至输入框"/></li>
-                            <li><input type="button" class="button submit" value="提取地址"/></li>
+                            <li><input type="button" class="button submit" value="读取剪贴板并粘贴至输入框"
+                                       onclick="solo_input()">
+                            </li>
                         </ul>
+                        <ul class="actions">
+                            <li><input type="button" class="button submit" value="提取下载链接"
+                                       onclick="solo_post()"></li>
+                        </ul>
+                        <label for="solo_state">运行结果：</label>
+                        <input id="solo_state" type="text" readonly>
+                        <br>
+                        <ul class="actions">
+                            <li><input type="button" class="button submit" value="下载视频"
+                                       onclick="get_download()" id="download_url">
+                            </li>
+                            <li><input type="button" class="button submit" value="下载静态封面"
+                                       onclick="get_origin()" id="origin_url">
+                            </li>
+                        </ul>
+                        <ul class="actions">
+                            <li><input type="button" class="button submit" value="下载原声"
+                                       onclick="get_music()" id="music_url">
+                            </li>
+                            <li><input type="button" class="button submit" value="下载动态封面"
+                                       onclick="get_dynamic()" id="dynamic_url">
+                            </li>
+                        </ul>
+                        <ul class="actions">
+                            <li><input type="button" class="button submit" value="显示/隐藏图集下载地址"
+                                       onclick="get_images()" id="images_url">
+                            </li>
+                        </ul>
+                        <div id="solo_url_text" style="display: none;">
+                        </div>
                     </div>
-                    <div class="col-9 col-12-xsmall">
-                        <input type="text" name="link" id="link" value=""/>
-                    </div>
-                    <div class="col-3 col-12-xsmall">
-                        <input type="button" class="button submit" value="下载作品"/>
-                    </div>
-                    <div class="col-9 col-12-xsmall">
-                        <input type="text" name="link" id="link" value=""/>
-                    </div>
-                    <div class="col-3 col-12-xsmall">
-                        <input type="button" class="button submit" value="下载原声"/>
-                    </div>
-                    <div class="col-9 col-12-xsmall">
-                        <input type="text" name="link" id="link" value=""/>
-                    </div>
-                    <div class="col-3 col-12-xsmall">
-                        <input type="button" class="button submit" value="下载静态图"/>
-                    </div>
-                    <div class="col-9 col-12-xsmall">
-                        <input type="text" name="link" id="link" value=""/>
-                    </div>
-                    <div class="col-3 col-12-xsmall">
-                        <input type="button" class="button submit" value="下载动态图"/>
+                    <div class="field half">
+                        <label>作品预览：</label>
+                        <span class="image fit" id="preview"><img
+                                id="solo_preview"
+                                src="static/images/blank.png"
+                                alt="预览图"/></span>
                     </div>
                 </div>
             </form>
