@@ -1,5 +1,6 @@
 from src.Configuration import Settings
 from src.DataAcquirer import UserData
+from src.DataAcquirer import UserDataTikTok
 from src.DataDownloader import Download
 from src.FileManager import Cache
 from src.Recorder import BaseLogger
@@ -133,6 +134,20 @@ class TikTok:
                     continue
                 self.download.run_alone(id_)
 
+    def single_acquisition_tiktok(self):
+        save, root, params = self.record.run(
+            self._data["root"], format_=self._data["save"])
+        with save(root, **params) as data:
+            self.download.data = data
+            while True:
+                url = input("请输入作品链接：")
+                if not url:
+                    break
+                data = self.request.run_alone(url)
+                if not data:
+                    self.logger.error(f"{url} 获取作品数据失败")
+                print(data)
+
     def live_acquisition(self):
         def choice_quality(items: dict) -> str:
             try:
@@ -167,13 +182,17 @@ class TikTok:
             root="./",
             folder="Log",
             name="%Y-%m-%d %H.%M.%S",
-            filename=None):
+            filename=None,
+            tiktok=False,
+    ):
         self.logger = LoggerManager() if self._data["log"] else BaseLogger()
         self.logger.root = root  # 日志根目录
         self.logger.folder = folder  # 日志文件夹名称
         self.logger.name = name  # 日志文件名称格式
         self.logger.run(filename=filename)
-        self.request = UserData(self.logger)
+        self.request = UserDataTikTok(
+            self.logger) if tiktok else UserData(
+            self.logger)
         self.download = Download(self.logger, None)
         self.request.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
@@ -307,3 +326,14 @@ class TikTok:
             self.logger.info("已选择提取账号数据模式")
             self.user_acquisition()
         self.logger.info("程序运行结束")
+
+    def run_tiktok(self):
+        if not self.check_config():
+            return False
+        self.initialize(tiktok=True)
+        self.set_parameters()
+        select = input(
+            "请选择下载模式：\n1. 单独下载链接作品\n输入序号：")
+        if select == "1":
+            self.logger.info("已选择单独下载作品模式")
+            self.single_acquisition_tiktok()

@@ -5,7 +5,7 @@ from src.main_complete import TikTok
 from src.main_server import Server
 from src.main_web_UI import WebUI
 
-VERSION = "3.0"
+VERSION = "3.1 beta"
 
 
 def version():
@@ -28,8 +28,13 @@ def main():
 
 def complete():
     """单线程终端模式"""
-    example = TikTok()
-    example.run()
+    tiktok = input("请选择平台: \n1. 国内版 抖音\n2. 国外版 TikTok\n")
+    if tiktok == "1":
+        example = TikTok()
+        example.run()
+    elif tiktok == "2":
+        example = TikTok()
+        example.run_tiktok()
 
 
 def multiprocess():
