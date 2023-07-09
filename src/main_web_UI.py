@@ -106,7 +106,7 @@ class WebUI(TikTok):
             self.download.data = data
             id_ = self.request.run_alone(self.solo_url[0])
             if not id_:
-                self.logger.error(f"{self.solo_url[0]} 获取 aweme_id 失败")
+                self.logger.error(f"{self.solo_url[0]} 获取作品ID失败")
                 return {
                     "text": "获取作品数据失败！",
                     "download": False,
@@ -114,6 +114,7 @@ class WebUI(TikTok):
                     "origin": False,
                     "dynamic": False,
                     "preview": "static/images/blank.png"}
+            self.download.tiktok = self.request.tiktok
             result = self.download.run_alone(id_, self.solo_url[1])
             if isinstance(result, list):
                 return self.get_data(result[0])
@@ -124,6 +125,13 @@ class WebUI(TikTok):
                         "origin": False,
                         "dynamic": False,
                         "preview": result}
+            return {
+                "text": "获取作品数据失败！",
+                "download": False,
+                "music": False,
+                "origin": False,
+                "dynamic": False,
+                "preview": "static/images/blank.png"}
 
     def live_acquisition(self):
         if not (data := self.request.get_live_data(self.live_url)):

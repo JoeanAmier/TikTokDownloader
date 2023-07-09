@@ -2,7 +2,6 @@ from flask import render_template
 from flask import request
 
 from src.DataAcquirer import UserData
-from src.DataAcquirer import UserDataTikTok
 from src.DataDownloader import Download
 from src.Recorder import BaseLogger
 from src.Recorder import NoneLogger
@@ -26,12 +25,9 @@ class Server(WebUI):
             root="./",
             folder="Log",
             name="%Y-%m-%d %H.%M.%S",
-            filename=None,
-            tiktok=False, ):
+            filename=None, ):
         self.logger = BaseLogger()
-        self.request = UserDataTikTok(
-            self.logger) if tiktok else UserData(
-            self.logger)
+        self.request = UserData(self.logger)
         self.download = Download(self.logger, None)
 
     def set_parameters(self):
@@ -49,6 +45,7 @@ class Server(WebUI):
         with NoneLogger() as data:
             self.download.data = data
             id_ = self.request.run_alone(self.solo_url)
+            self.download.tiktok = self.request.tiktok
             if not id_:
                 return {
                     "text": "获取作品数据失败！",
@@ -57,7 +54,14 @@ class Server(WebUI):
                     "origin": False,
                     "dynamic": False,
                     "preview": "static/images/blank.png"}
-            result = self.download.run_alone(id_, False)
+            if not (result := self.download.run_alone(id_, False)):
+                return {
+                    "text": "提取作品数据失败！",
+                    "download": False,
+                    "music": False,
+                    "origin": False,
+                    "dynamic": False,
+                    "preview": "static/images/blank.png"}
             return self.get_data(result[0])
 
     def server_run(self, app):
