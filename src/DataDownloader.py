@@ -1,7 +1,6 @@
 import time
 from datetime import datetime
 from pathlib import Path
-from pathlib import PurePath
 from urllib.parse import urlencode
 
 import requests
@@ -224,15 +223,15 @@ class Download:
         """创建作品保存文件夹"""
         if self.favorite:
             folder = f"{folder}_喜欢页"
-        root = PurePath.joinpath(self.root, folder)
+        root = self.root.joinpath(folder)
         if not root.is_dir():
             root.mkdir()
         if live:
             return
-        self.type_["video"] = PurePath.joinpath(root, "video")
+        self.type_["video"] = root.joinpath("video")
         if not self.type_["video"].is_dir():
             self.type_["video"].mkdir()
-        self.type_["images"] = PurePath.joinpath(root, "images")
+        self.type_["images"] = root.joinpath("images")
         if not self.type_["images"].is_dir():
             self.type_["images"].mkdir()
 
@@ -435,7 +434,7 @@ class Download:
         if self.original and (u := item[8]):
             self.request_file(u, root, name, type_="jpeg")
 
-    def save_file(self, data, root: str, name: str, type_: str, id_=""):
+    def save_file(self, data, root, name: str, type_: str, id_=""):
         """保存文件"""
 
         def delete_file(error_file):
@@ -446,7 +445,7 @@ class Download:
         if not self.download:
             return True
         file = f"{name.strip()}.{type_}"
-        full_path = PurePath.joinpath(root, file)
+        full_path = root.joinpath(file)
         if full_path.exists():
             self.log.info(f"{file} 已存在，跳过下载")
             self.log.info(
