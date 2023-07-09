@@ -58,7 +58,7 @@ class Download:
         self._dynamic = False  # 是否下载动态封面图，通用
         self._original = False  # 是否下载静态封面图，通用
         self.favorite = False  # 喜欢页下载模式，调用前赋值
-        self.type_ = {"video": "", "images": ""}  # 文件保存目录，运行时赋值
+        self.type_ = {"video": None, "images": None}  # 文件保存目录，运行时赋值
         self.video_data = []  # 视频详细信息
         self.image_data = []  # 图集详细信息
         self.mix_data = []  # 合集详细信息
@@ -145,8 +145,8 @@ class Download:
 
     @root.setter
     def root(self, value):
-        if Path(value).is_dir():
-            self._root = value
+        if (r := Path(value)).is_dir():
+            self._root = r
             self.log.info(f"文件保存路径设置成功: {value}", False)
         else:
             self.log.warning(f"文件保存路径错误: {value}，将使用当前路径作为保存路径")
@@ -225,16 +225,16 @@ class Download:
         if self.favorite:
             folder = f"{folder}_喜欢页"
         root = PurePath.joinpath(self.root, folder)
-        if not Path(root).is_dir():
-            Path(root).mkdir()
+        if not root.is_dir():
+            root.mkdir()
         if live:
             return
         self.type_["video"] = PurePath.joinpath(root, "video")
-        if not Path(self.type_["video"]).is_dir():
-            Path(self.type_["video"]).mkdir()
+        if not self.type_["video"].is_dir():
+            self.type_["video"].mkdir()
         self.type_["images"] = PurePath.joinpath(root, "images")
-        if not Path(self.type_["images"]).is_dir():
-            Path(self.type_["images"]).mkdir()
+        if not self.type_["images"].is_dir():
+            self.type_["images"].mkdir()
 
     @retry(finish=False)
     def get_data(self, item: str) -> dict | bool:
@@ -440,14 +440,14 @@ class Download:
 
         def delete_file(error_file):
             """清除下载失败的文件"""
-            Path(error_file).unlink()
+            error_file.unlink()
             self.log.info(f"文件: {error_file} 已删除")
 
         if not self.download:
             return True
         file = f"{name.strip()}.{type_}"
         full_path = PurePath.joinpath(root, file)
-        if Path(full_path).is_file():
+        if full_path.exists():
             self.log.info(f"{file} 已存在，跳过下载")
             self.log.info(
                 f"文件保存路径: {full_path}", False)
