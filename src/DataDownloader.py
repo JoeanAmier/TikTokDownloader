@@ -458,7 +458,7 @@ class Download:
         if not self.download:
             return True
         try:
-            with open(full_path, "wb") as f:
+            with full_path.open("wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
         except requests.exceptions.ChunkedEncodingError:
