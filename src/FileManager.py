@@ -25,7 +25,7 @@ class Cache:
     def read_cache(self):
         try:
             if self.file.exists():
-                with open(self.file, "r", encoding="UTF-8") as f:
+                with self.file.open("r", encoding="UTF-8") as f:
                     cache = json.load(f)
                     self.log.info("缓存文件读取成功")
                     return cache
@@ -37,7 +37,7 @@ class Cache:
             return {}
 
     def save_cache(self):
-        with open(self.file, "w", encoding="UTF-8") as f:
+        with self.file.open("w", encoding="UTF-8") as f:
             json.dump(self.cache, f)
         self.log.info("缓存文件已保存")
 
