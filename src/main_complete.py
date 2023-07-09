@@ -155,10 +155,10 @@ class TikTok:
                 url = input("请输入作品链接：")
                 if not url:
                     break
-                data = self.request.run_alone(url)
-                if not data:
-                    self.logger.error(f"{url} 获取作品数据失败")
-                print(data)
+                id_ = self.request.run_alone(url)
+                if not id_:
+                    self.logger.error(f"{url} 获取作品ID失败")
+                self.download.run_alone(id_, tiktok=True)
 
     def live_acquisition(self):
         def choice_quality(items: dict) -> str:

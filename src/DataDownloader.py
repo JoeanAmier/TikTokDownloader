@@ -35,8 +35,12 @@ class Download:
     UA = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
     }  # 下载请求头
+    phone_UA = {
+        'User-Agent': 'com.ss.android.ugc.trill/494+Mozilla/5.0+(Linux;+Android+12;+2112123G+Build/SKQ1.211006.001;+wv)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Version/4.0+Chrome/107.0.5304.105+Mobile+Safari/537.36'
+    }  # 移动端请求头
     # video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"  # 官方视频下载接口，已弃用
-    item_ids_api = "https://www.douyin.com/aweme/v1/web/aweme/detail/"  # 作品数据接口
+    item_api = "https://www.douyin.com/aweme/v1/web/aweme/detail/"  # 作品数据接口
+    item_tiktok_api = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"  # 作品数据接口
     clean = Cleaner()  # 过滤错误字符
     length = 64  # 作品描述长度限制
     chunk = 1048576  # 单次下载文件大小，单位字节
@@ -236,31 +240,41 @@ class Download:
             self.type_["images"].mkdir()
 
     @retry(finish=False)
-    def get_data(self, item: str) -> dict | bool:
+    def get_data(self, item: str, tiktok=False) -> dict | bool:
         """获取作品详细数据"""
-        params = {
-            "aweme_id": item,
-            "aid": "6383",
-            "cookie_enabled": "true",
-            "platform": "PC",
-            "downlink": "10"
-        }
-        xb = self.xb.get_x_bogus(urlencode(params))
-        params["X-Bogus"] = xb
+        if tiktok:
+            params = {
+                "aweme_id": item,
+            }
+            api = self.item_tiktok_api
+            headers = self.phone_UA
+        else:
+            params = {
+                "aweme_id": item,
+                "aid": "6383",
+                "cookie_enabled": "true",
+                "platform": "PC",
+                "downlink": "10"
+            }
+            xb = self.xb.get_x_bogus(urlencode(params))
+            params["X-Bogus"] = xb
+            api = self.item_api
+            headers = self.headers | {
+                'referer': 'https://www.douyin.com/',
+            }
         try:
             response = requests.get(
-                self.item_ids_api,
+                api,
                 params=params,
                 proxies=self.proxies,
-                headers=self.headers | {
-                    'referer': 'https://www.douyin.com/',
-                }, timeout=10)
+                headers=headers, timeout=10)
             sleep()
             if response.content == b"":
                 self.log.warning("作品详细数据响应内容为空")
                 return False
             try:
-                return response.json()["aweme_detail"]
+                return response.json()["aweme_list"][0] if tiktok else response.json()[
+                    "aweme_detail"]
             except KeyError:
                 self.log.error(f"作品详细数据内容异常: {response.json()}", False)
                 return False
@@ -316,7 +330,7 @@ class Download:
                     item["create_time"]))
             music_name, music_url = get_music()
             statistics = get_statistics()
-            if images := item["images"]:
+            if images := item.get("images"):
                 type_ = "图集"
                 images = [i['url_list'][-1] for i in images]
                 download_link = " ".join(images)
@@ -501,21 +515,21 @@ class Download:
 
     @reset
     @check_cookie
-    def run_alone(self, id_: str, download=True):
+    def run_alone(self, id_: str, download=True, tiktok=False):
         """单独下载"""
         if download and not self.folder:
             self.log.warning("未设置下载文件夹名称")
             return False
         elif download:
             self.create_folder(self.folder)
-        data = self.get_data(id_)
+        data = self.get_data(id_, tiktok)
         if not data:
             self.log.warning("获取作品详细信息失败")
             return False
         self.nickname = self.clean.filter(data["author"]["nickname"])
         self.mark = self.nickname
         self.get_info([data])
-        if data["images"]:
+        if data.get("images"):
             if not download:
                 return self.image_data
             self.download_images()

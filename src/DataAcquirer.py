@@ -828,14 +828,11 @@ class UserData:
 
 
 class UserDataTikTok(UserData):
-    headers = {
-        'User-Agent': 'com.ss.android.ugc.trill/494+Mozilla/5.0+(Linux;+Android+12;+2112123G+Build/SKQ1.211006.001;+wv)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Version/4.0+Chrome/107.0.5304.105+Mobile+Safari/537.36'
-    }
     works_link = re.compile(
         r"https://www\.tiktok\.com/@.+/video/(\d+)")  # 匹配作品链接
     home_api = "https://www.tiktok.com/api/post/item_list/"  # 发布页API
     user_api = "https://www.tiktok.com/api/user/detail/"  # 账号数据API
-    works_api = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"  # 作品数据API
+    recommend_api = "https://www.tiktok.com/api/recommend/item_list/"  # 推荐页API
     related_api = "https://www.tiktok.com/api/related/item_list/"  # 猜你喜欢API
     comment_api = "https://www.tiktok.com/api/comment/list/"  # 评论API
 
@@ -843,15 +840,4 @@ class UserDataTikTok(UserData):
         super().__init__(log)
 
     def run_alone(self, text: str):
-        if not (u := self.works_link.findall(text)):
-            return False
-        params = {
-            "aweme_id": u[0]
-        }
-        response = requests.get(
-            self.works_api,
-            headers=self.headers,
-            params=params,
-            proxies=self.proxies,
-            timeout=10)
-        return response.json()
+        return u[0] if (u := self.works_link.findall(text)) else False
