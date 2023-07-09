@@ -1,8 +1,9 @@
 import csv
 import logging
-import os
 import sqlite3
 import time
+from os import path
+from pathlib import Path
 
 from openpyxl import Workbook
 from openpyxl import load_workbook
@@ -74,8 +75,8 @@ class LoggerManager(BaseLogger):
 
     @root.setter
     def root(self, value):
-        if os.path.exists(value) and os.path.isdir(value):
-            self._root = value
+        if (r := Path(value)).exists():
+            self._root = r
         else:
             print("日志保存路径错误！将使用当前路径作为日志保存路径！")
             self._root = "./"
@@ -108,12 +109,11 @@ class LoggerManager(BaseLogger):
     def run(
             self,
             format_="%(asctime)s[%(levelname)s]:  %(message)s", filename=None):
-        if not os.path.exists(dir_ := os.path.join(self.root, self.folder)):
-            os.mkdir(dir_)
+        if not (dir_ := self.root.joinpath(self.folder)).exists():
+            dir_.mkdir()
         self.log = logging
         self.log.basicConfig(
-            filename=os.path.join(
-                dir_,
+            filename=dir_.joinpath(
                 filename or f"{time.strftime(self.name, time.localtime())}.log"),
             level=logging.INFO,
             datefmt='%Y-%m-%d %H:%M:%S',
@@ -168,14 +168,14 @@ class CSVLogger:
         self.file = None  # 文件对象
         self.__type = "csv"
         self.writer = None  # CSV对象
-        self.root = root  # 文件路径
+        self.root = Path(root)  # 文件路径
         self.name = self.rename(root, self.__type, old, name)  # 文件名称
         self.title_line = title_line  # 标题行
 
     def __enter__(self):
-        if not os.path.exists(self.root):
-            os.mkdir(self.root)
-        self.root = os.path.join(self.root, f"{self.name}.{self.__type}")
+        if not self.root.exists():
+            self.root.mkdir()
+        self.root = self.root.joinpath(f"{self.name}.{self.__type}")
         self.file = open(self.root,
                          "a",
                          encoding="UTF-8",
@@ -188,7 +188,7 @@ class CSVLogger:
         self.file.close()
 
     def title(self):
-        if os.path.getsize(self.root) == 0:
+        if path.getsize(self.root) == 0:
             # 如果文件没有任何数据，则写入标题行
             self.save(self.title_line)
 
@@ -201,9 +201,9 @@ class CSVLogger:
         if not old or mark[-1] == old:
             return new_
         mark[-1] = old
-        old_file = os.path.join(root, "_".join(mark))
-        new_file = os.path.join(root, new_)
-        os.rename(f"{old_file}.{type_}", f"{new_file}.{type_}")
+        old_file = root.join(f'{"_".join(mark)}.{type_}')
+        new_file = root.join(f"new_.{type_}")
+        old_file.rename(new_file)
         return new_
 
 
@@ -220,19 +220,17 @@ class XLSXLogger:
             **kwargs):
         self.book = None  # XLSX数据簿
         self.sheet = None  # XLSX数据表
-        self.root = root  # 文件路径
+        self.root = Path(root)  # 文件路径
         self.__type = "xlsx"
         self.name = CSVLogger.rename(root, self.__type, old, name)  # 文件名称
         self.title_line = title_line  # 标题行
 
     def __enter__(self):
-        if not os.path.exists(self.root):
-            os.mkdir(self.root)
-        self.root = os.path.join(self.root, f"{self.name}.{self.__type}")
-        if os.path.exists(self.root):
-            self.book = load_workbook(self.root)
-        else:
-            self.book = Workbook()
+        if not self.root.exists():
+            self.root.exists()
+        self.root = self.root.joinpath(f"{self.name}.{self.__type}")
+        self.book = load_workbook(
+            self.root) if self.root.exists() else Workbook()
         self.sheet = self.book.active
         self.title()
         return self
@@ -264,19 +262,16 @@ class SQLLogger:
             name="Solo_Download", ):
         self.db = None  # 数据库
         self.cursor = None  # 游标对象
-        self.root = root  # 文件路径
+        self.root = Path(root)  # 文件路径
         self.name = (old, name)  # 数据表名称
         self.file = file  # 数据库文件名称
         self.title_line = title_line  # 数据表列名
         self.title_type = title_type  # 数据表数据类型
 
     def __enter__(self):
-        if not os.path.exists(self.root):
-            os.mkdir(self.root)
-        self.db = sqlite3.connect(
-            os.path.join(
-                self.root, self.file
-            ))
+        if not self.root.exists():
+            self.root.mkdir()
+        self.db = sqlite3.connect(self.root.joinpath(self.file))
         self.cursor = self.db.cursor()
         self.update_sheet()
         self.create()
@@ -437,8 +432,8 @@ class RecordManager:
     }
 
     def run(self, root="./", folder="Data", type_="", format_=""):
-        root = root if os.path.exists(root) else "./"
-        name = os.path.join(root, self.clean.filter(folder) or "Data")
+        root = r if (r := Path(root)).exists() else Path("./")
+        name = root.joinpath(self.clean.filter(folder) or "Data")
         type_ = self.DataSheet.get(type_, {
             "file": "TikTokDownloader.db",
             "title_line": self.Title,
