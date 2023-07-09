@@ -52,11 +52,9 @@ class Cleaner:
         :param text: 待处理的字符串
         :return: 替换后的字符串，如果替换后字符串为空，则返回 None
         """
-        if not text:
-            return text
         for i in self.rule:
             text = text.replace(i, self.rule[i])
-        return text or None
+        return text
 
 
 if __name__ == "__main__":
