@@ -73,6 +73,7 @@ class Download:
         self.proxies = None  # 代理，从DataAcquirer.py传入，通用
         self.download = None  # 是否启用下载文件功能，通用
         self.retry = 10  # 重试最大次数，通用
+        self.tiktok = False  # TikTok 平台
 
     @property
     def name(self):
@@ -240,9 +241,9 @@ class Download:
             self.type_["images"].mkdir()
 
     @retry(finish=False)
-    def get_data(self, item: str, tiktok=False) -> dict | bool:
+    def get_data(self, item: str) -> dict | bool:
         """获取作品详细数据"""
-        if tiktok:
+        if self.tiktok:
             params = {
                 "aweme_id": item,
             }
@@ -273,7 +274,7 @@ class Download:
                 self.log.warning("作品详细数据响应内容为空")
                 return False
             try:
-                return response.json()["aweme_list"][0] if tiktok else response.json()[
+                return response.json()["aweme_list"][0] if self.tiktok else response.json()[
                     "aweme_detail"]
             except KeyError:
                 self.log.error(f"作品详细数据内容异常: {response.json()}", False)
@@ -531,14 +532,14 @@ class Download:
 
     @reset
     @check_cookie
-    def run_alone(self, id_: str, download=True, tiktok=False):
+    def run_alone(self, id_: str, download=True):
         """单独下载"""
         if download and not self.folder:
             self.log.warning("未设置下载文件夹名称")
             return False
         elif download:
             self.create_folder(self.folder)
-        data = self.get_data(id_, tiktok)
+        data = self.get_data(id_)
         if not data:
             self.log.warning("获取作品详细信息失败")
             return False

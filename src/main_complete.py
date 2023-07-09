@@ -158,7 +158,7 @@ class TikTok:
                 id_ = self.request.run_alone(url)
                 if not id_:
                     self.logger.error(f"{url} 获取作品ID失败")
-                self.download.run_alone(id_, tiktok=True)
+                self.download.run_alone(id_)
 
     def live_acquisition(self):
         def choice_quality(items: dict) -> str:
@@ -206,6 +206,7 @@ class TikTok:
             self.logger) if tiktok else UserData(
             self.logger)
         self.download = Download(self.logger, None)
+        self.download.tiktok = tiktok
         self.request.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
 
