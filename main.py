@@ -2,6 +2,7 @@ from flask import Flask
 
 from src.CookieTool import Cookie
 from src.main_complete import TikTok
+from src.main_complete import prompt
 from src.main_server import Server
 from src.main_web_UI import WebUI
 
@@ -17,18 +18,15 @@ def version():
 
 def main():
     """选择运行模式"""
-    try:
-        mode = int(
-            input(
-                "请输入 TikTokDownloader 运行模式: \n0. 写入 Cookie 信息\n1. 单线程终端模式\n2. 多进程终端模式\n3. Web UI 交互模式\n4. 服务器部署模式\n"))
-    except ValueError:
-        return
+    mode = prompt(
+        "请输入 TikTokDownloader 运行模式",
+        ("写入 Cookie 信息", "单线程终端模式", "多进程终端模式", ''"Web UI 交互模式", "服务器部署模式"), 0)
     compatible(mode)
 
 
 def complete():
     """单线程终端模式"""
-    tiktok = input("请选择平台: \n1. 国内版 抖音\n2. 国外版 TikTok\n")
+    tiktok = prompt("请选择平台", ("国内版 抖音", "国外版 TikTok"))
     if tiktok == "1":
         example = TikTok()
         example.run()
@@ -58,16 +56,16 @@ def server():
     app.run(host="0.0.0.0", debug=False)
 
 
-def compatible(mode: int):
-    if mode == 0:
+def compatible(mode: str):
+    if mode == "0":
         Cookie().run()
-    elif mode == 1:
+    elif mode == "1":
         complete()
-    elif mode == 2:
+    elif mode == "2":
         multiprocess()
-    elif mode == 3:
+    elif mode == "3":
         web_ui()
-    elif mode == 4:
+    elif mode == "4":
         server()
 
 

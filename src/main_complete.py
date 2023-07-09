@@ -11,7 +11,7 @@ from src.Recorder import RecordManager
 def prompt(tip: str, choose: tuple | list, start=1) -> str:
     screen = f"{tip}:\n"
     for i, j in enumerate(choose):
-        screen += f"{i + start}: {j}\n"
+        screen += f"{i + start}. {j}\n"
     return input(screen)
 
 
