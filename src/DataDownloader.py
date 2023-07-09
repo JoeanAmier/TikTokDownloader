@@ -380,8 +380,15 @@ class Download:
                 ] + statistics)
 
     @retry(finish=False)
-    def request_file(self, url: str, root: str, name: str, type_: str, id_=""):
+    def request_file(self, url: str, root, name: str, type_: str, id_=""):
         """发送请求获取文件内容"""
+        file = f"{name.strip()}.{type_}"
+        full_path = root.joinpath(file)
+        if full_path.exists():
+            self.log.info(f"{file} 已存在，跳过下载")
+            self.log.info(
+                f"文件保存路径: {full_path}", False)
+            return True
         try:
             with requests.get(
                     url,
@@ -434,7 +441,7 @@ class Download:
         if self.original and (u := item[8]):
             self.request_file(u, root, name, type_="jpeg")
 
-    def save_file(self, data, root, name: str, type_: str, id_=""):
+    def save_file(self, data, file, full_path, type_: str, id_=""):
         """保存文件"""
 
         def delete_file(error_file):
@@ -443,13 +450,6 @@ class Download:
             self.log.info(f"文件: {error_file} 已删除")
 
         if not self.download:
-            return True
-        file = f"{name.strip()}.{type_}"
-        full_path = root.joinpath(file)
-        if full_path.exists():
-            self.log.info(f"{file} 已存在，跳过下载")
-            self.log.info(
-                f"文件保存路径: {full_path}", False)
             return True
         try:
             with open(full_path, "wb") as f:
