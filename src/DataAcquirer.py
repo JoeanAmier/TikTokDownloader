@@ -444,6 +444,7 @@ class UserData:
 
     def get_public_num(self):
         """获取公开作品数量"""
+        # 公开作品数量不准确
         if self.video_data:
             self.log.info(
                 f'{self.name} 公开作品数量: {self.video_data[0][1]["author"]["aweme_count"]}')
