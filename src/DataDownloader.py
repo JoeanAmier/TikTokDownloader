@@ -219,7 +219,7 @@ class Download:
             self.headers.update(self.UA)
             self._cookie = True
 
-    def create_folder(self, folder, live=False):
+    def create_folder(self, folder: str, live=False):
         """创建作品保存文件夹"""
         if self.favorite:
             folder = f"{folder}_喜欢页"
@@ -283,7 +283,7 @@ class Download:
             nonlocal item
             if music_data := item.get("music", False):
                 name = music_data.get("title", "")
-                url = u[-1] if (u := music_data["play_url"]
+                url = m[-1] if (m := music_data["play_url"]
                 ["url_list"]) else ""  # 部分作品的数据没有音乐下载地址
                 return name, url
             return "", ""
@@ -399,7 +399,13 @@ class Download:
                 if response.content == b"":
                     self.log.warning(f"{url} 返回内容为空")
                     return False
-                return bool(self.save_file(response, root, name, type_, id_))
+                return bool(
+                    self.save_file(
+                        response,
+                        file,
+                        full_path,
+                        type_,
+                        id_))
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
             self.log.warning(f"网络异常: {e}")
             return False
@@ -426,13 +432,13 @@ class Download:
             self.download_music(root, item)
             self.download_cover(root, name, item)
 
-    def download_music(self, root: str, item: list):
+    def download_music(self, root, item: list):
         """下载音乐"""
         if self.music and (u := item[7][1]):
             self.request_file(u, root, self.clean.filter(
                 f"{f'{item[0]}-{item[7][0]}'}"), type_="m4a")
 
-    def download_cover(self, root: str, name: str, item: list):
+    def download_cover(self, root, name: str, item: list):
         """下载静态/动态封面图"""
         if not self.dynamic and not self.original:
             return
@@ -523,7 +529,7 @@ class Download:
     def download_live(self, link: str, name: str):
         """下载直播，不需要Cookie信息"""
         self.create_folder("Live", True)
-        self.request_file(link, f"{self.root}/Live", name, "flv")
+        self.request_file(link, self.root.joinpath("Live"), name, "flv")
 
     @reset
     @check_cookie
