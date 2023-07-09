@@ -26,13 +26,8 @@ def main():
 
 def complete():
     """单线程终端模式"""
-    tiktok = prompt("请选择平台", ("国内版 抖音", "国外版 TikTok"))
-    if tiktok == "1":
-        example = TikTok()
-        example.run()
-    elif tiktok == "2":
-        example = TikTok()
-        example.run_tiktok()
+    example = TikTok()
+    example.run()
 
 
 def multiprocess():

@@ -86,7 +86,11 @@ class UserData:
         r"^https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*$")  # 账号链接
     works_link = re.compile(
         r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
+    works_tiktok_link = re.compile(
+        r"https://www\.tiktok\.com/@.+/video/(\d+)")  # 匹配作品链接
     live_link = re.compile(r"^https://live\.douyin\.com/([0-9]+)")  # 直播链接
+    home_tiktok_api = "https://www.tiktok.com/api/post/item_list/"  # 发布页API
+    user_tiktok_api = "https://www.tiktok.com/api/user/detail/"  # 账号数据API
     live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
     reply_api = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
@@ -102,6 +106,10 @@ class UserData:
     follow_api = "https://www.douyin.com/aweme/v1/web/follow/feed/"  # 关注账号作品推荐API
     history_api = "https://www.douyin.com/aweme/v1/web/history/read/"  # 观看历史API
     following_api = "https://www.douyin.com/aweme/v1/web/user/following/list/"  # 关注列表API
+    recommend_api = "https://www.tiktok.com/api/recommend/item_list/"  # 推荐页API
+    related_api = "https://www.tiktok.com/api/related/item_list/"  # 猜你喜欢API
+    comment_tiktok_api = "https://www.tiktok.com/api/comment/list/"  # 评论API
+    reply_tiktok_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
     clean = Cleaner()  # 过滤非法字符
     xb = XBogus()  # 加密参数对象
     max_comment = 256  # 评论字数限制
@@ -131,6 +139,7 @@ class UserData:
         self._proxies = None  # 代理，通用
         self._time = None  # 创建时间格式，通用
         self.retry = 10  # 重试最大次数，通用
+        self.tiktok = False  # TikTok 平台
 
     @property
     def url(self):
@@ -490,15 +499,20 @@ class UserData:
         return self.id_ or False
 
     def check_url(self, url: str):
+        self.tiktok = False
         if len(s := self.works_link.findall(url)) == 1:
             self.id_ = s[0]
-            return url
+            return True
         elif len(s := self.share.findall(url)) == 1:
             return s[0]
         elif len(s := self.account_link.findall(url)) == 1:
             if s := s[0][1]:
                 self.id_ = s
-                return url
+                return True
+        elif len(u := self.works_tiktok_link.findall(url)) == 1:
+            self.id_ = u[0]
+            self.tiktok = True
+            return True
         return False
 
     def date_filters(self):
@@ -827,20 +841,3 @@ class UserData:
         self.log.info("账号数据: " + ", ".join(data), False)
         self.data.save(data, key=1)
         self.log.info("账号数据获取结束")
-
-
-class UserDataTikTok(UserData):
-    works_link = re.compile(
-        r"https://www\.tiktok\.com/@.+/video/(\d+)")  # 匹配作品链接
-    home_api = "https://www.tiktok.com/api/post/item_list/"  # 发布页API
-    user_api = "https://www.tiktok.com/api/user/detail/"  # 账号数据API
-    recommend_api = "https://www.tiktok.com/api/recommend/item_list/"  # 推荐页API
-    related_api = "https://www.tiktok.com/api/related/item_list/"  # 猜你喜欢API
-    comment_api = "https://www.tiktok.com/api/comment/list/"  # 评论API
-    reply_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
-
-    def __init__(self, log: LoggerManager | BaseLogger):
-        super().__init__(log)
-
-    def run_alone(self, text: str):
-        return u[0] if (u := self.works_link.findall(text)) else False
