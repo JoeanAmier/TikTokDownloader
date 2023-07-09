@@ -158,6 +158,7 @@ class TikTok:
                 id_ = self.request.run_alone(url)
                 if not id_:
                     self.logger.error(f"{url} 获取作品ID失败")
+                    continue
                 self.download.run_alone(id_)
 
     def live_acquisition(self):
