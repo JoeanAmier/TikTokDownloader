@@ -425,7 +425,7 @@ class Download:
                     url,
                     stream=True,
                     proxies=self.proxies,
-                    headers=self.headers) as response:
+                    headers=self.phone_UA if self.tiktok else self.headers) as response:
                 sleep()
                 if response.content == b"":
                     self.log.warning(f"{url} 返回内容为空")
