@@ -72,7 +72,7 @@ TikTokDownloader
 ├─ src                                     // 项目模块源码文件夹
 │    ├─ CookieTool.py                      // Cookie 写入模块
 │    ├─ Configuration.py                   // 配置文件处理模块
-│    ├─ DataAcquirer.py                    // 抖音数据获取模块
+│    ├─ DataAcquirer.py                    // 接口数据获取模块
 │    ├─ DataDownloader.py                  // 作品文件下载模块
 │    ├─ FileCache.json                     // 文件管理缓存数据
 │    ├─ FileManager.py                     // 作品文件管理模块
@@ -92,7 +92,7 @@ TikTokDownloader
 
 **使用方法:**
 
-1. 下载最新的源代码或 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源代码至本地
+1. 下载最新源码或 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码至本地
 2. 安装 requirements.txt 包含的第三方模块
 3. 运行 main.py 并选择`单线程终端模式`，生成默认配置文件
 4. 阅读 README.md 了解项目介绍和配置文件规则
@@ -148,7 +148,6 @@ TikTokDownloader
 * 单独下载链接作品时，如果在 `name` 参数中设置了 `mark` ，程序会自动替换为 `nickname`
 * 为保护访客隐私，`服务器部署模式` 禁用了日志记录和数据存储功能，不会记录任何作品提取数据
 * `服务器部署模式` 基础功能已经完成，但在网页交互和用户体验方面仍有改进空间，需要进一步优化
-* TikTok 平台已支持单独下载链接作品功能，暂不支持批量下载功能
 
 # 🔗 链接类型
 
