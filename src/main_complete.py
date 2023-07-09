@@ -72,7 +72,12 @@ class TikTok:
         return True
 
     def batch_acquisition(self):
-        self.manager = Cache(self.logger, self._data["root"], type_="UID")
+        mark = "mark" in self._data["name"]
+        self.manager = Cache(
+            self.logger,
+            self._data["root"],
+            type_="UID",
+            mark=mark)
         self.logger.info(f"共有 {self._number} 个账号的作品等待下载")
         save, root, params = self.record.run(
             self._data["root"], format_=self._data["save"])
@@ -230,7 +235,12 @@ class TikTok:
                 self.request.run_comment(id_, data)
 
     def mix_acquisition(self):
-        self.manager = Cache(self.logger, self._data["root"], type_="MIX")
+        mark = "mark" in self._data["name"]
+        self.manager = Cache(
+            self.logger,
+            self._data["root"],
+            type_="MIX",
+            mark=mark)
         save, root, params = self.record.run(
             self._data["root"], type_="mix", format_=self._data["save"])
         while True:
@@ -246,7 +256,9 @@ class TikTok:
             if not isinstance(mix_info, list):
                 self.logger.info(f"作品 {id_} 不属于任何合集")
                 continue
-            mix_info[1] = input("请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
+            if mark:
+                mix_info[1] = input(
+                    "请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
             self.download.nickname = mix_info[2]
             self.download.mark = mix_info[1]
             old_mark = m["mark"] if (

@@ -14,11 +14,12 @@ def retry(function):
 
 
 class Cache:
-    def __init__(self, record, root: str, type_: str):
+    def __init__(self, record, root: str, type_: str, mark: bool):
         self.log = record  # 日志记录对象
         self.file = Path("./src/FileCache.json")  # 缓存文件
         self.root = Path(root)  # 作品文件保存根目录
         self.type_ = type_
+        self.mark = mark
         self.cache = self.read_cache()
 
     def read_cache(self):
@@ -54,7 +55,8 @@ class Cache:
             return
         if self.cache[uid]["mark"] != mark:
             self.rename_folder(old_folder, uid, mark)
-            self.rename_file(uid, mark, name, field="mark")
+            if self.mark:
+                self.rename_file(uid, mark, name, field="mark")
         if self.cache[uid]["name"] != name:
             self.rename_file(uid, mark, name)
 
