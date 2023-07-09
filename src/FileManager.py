@@ -1,5 +1,6 @@
 import json
-import os
+from pathlib import Path
+from pathlib import PurePath
 
 
 def retry(function):
@@ -15,14 +16,14 @@ def retry(function):
 class Cache:
     def __init__(self, record, root: str, type_: str):
         self.log = record  # 日志记录对象
-        self.file = "./src/FileCache.json"  # 缓存文件
-        self.root = root  # 作品文件保存根目录
+        self.file = Path("./src/FileCache.json")  # 缓存文件
+        self.root = Path(root)  # 作品文件保存根目录
         self.type_ = type_
         self.cache = self.read_cache()
 
     def read_cache(self):
         try:
-            if os.path.exists(self.file):
+            if self.file.exists():
                 with open(self.file, "r", encoding="UTF-8") as f:
                     cache = json.load(f)
                     self.log.info("缓存文件读取成功")
@@ -46,10 +47,9 @@ class Cache:
         self.log.info(f"更新缓存: {uid, mark, name}", False)
 
     def check_file(self, uid: str, mark: str, name: str):
-        if not os.path.exists(
-                old_folder := os.path.join(
-                    self.root,
-                    f"{self.type_}{uid}_{self.cache[uid]['mark']}")):
+        if not (old_folder := PurePath.joinpath(
+                self.root,
+                f"{self.type_}{uid}_{self.cache[uid]['mark']}")).is_dir():
             self.log.info(f"{old_folder} 不存在，自动跳过")
             return
         if self.cache[uid]["mark"] != mark:
@@ -60,9 +60,9 @@ class Cache:
 
     @retry
     def rename_folder(self, old_folder, uid: str, mark: str):
-        new_folder = os.path.join(self.root, f"{self.type_}{uid}_{mark}")
+        new_folder = PurePath.joinpath(self.root, f"{self.type_}{uid}_{mark}")
         try:
-            os.rename(old_folder, new_folder)
+            old_folder.rename(new_folder)
         except PermissionError as e:
             self.log.warning(f"文件已被占用，重命名失败: {e}")
             return False
@@ -75,17 +75,16 @@ class Cache:
     def rename_file(self, uid, mark, name, field="name"):
         def rename(type_: str):
             nonlocal folder, uid, mark, name, field
-            deal_folder = os.path.join(folder, type_)
-            file_list = os.listdir(deal_folder)
-            for item in file_list:
-                if (s := self.cache[uid][field]) not in item:
+            deal_folder = PurePath.joinpath(folder, type_)
+            file_list = deal_folder.iterdir()
+            for old_file in file_list:
+                if (s := self.cache[uid][field]) not in old_file.name:
                     break
-                old_path = os.path.join(deal_folder, item)
-                new_path = os.path.join(deal_folder, item.replace(
+                new_file = PurePath.joinpath(deal_folder, old_file.name.replace(
                     s, {"name": name, "mark": mark}[field], 1))
-                os.rename(old_path, new_path)
-                self.log.info(f"文件 {old_path} 重命名为 {new_path}", False)
+                old_file.rename(new_file)
+                self.log.info(f"文件 {old_file} 重命名为 {new_file}", False)
 
-        folder = os.path.join(self.root, f"{self.type_}{uid}_{mark}")
+        folder = PurePath.joinpath(self.root, f"{self.type_}{uid}_{mark}")
         rename("video")
         rename("images")
