@@ -345,6 +345,22 @@ class Download:
                                         images,
                                         [music_name,
                                          music_url]])
+            elif images := item.get("image_post_info"):
+                type_ = "图集"
+                images = [i["display_image"]["url_list"][-1]
+                          for i in images["images"]]
+                download_link = " ".join(images)
+                dynamic_cover = "#"
+                origin_cover = "#"
+                self.image_data.append([id_,
+                                        desc,
+                                        create_time,
+                                        self.uid,
+                                        self.clean.filter(nickname) if self.favorite else self.nickname,
+                                        self.mark,
+                                        images,
+                                        [music_name,
+                                         music_url]])
             else:
                 type_ = "视频"
                 download_link = item["video"]["play_addr"]["url_list"][-1]
@@ -529,7 +545,7 @@ class Download:
         self.nickname = self.clean.filter(data["author"]["nickname"])
         self.mark = self.nickname
         self.get_info([data])
-        if data.get("images"):
+        if data.get("images") or data.get("image_post_info"):
             if not download:
                 return self.image_data
             self.download_images()
