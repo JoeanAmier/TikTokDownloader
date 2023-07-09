@@ -8,6 +8,13 @@ from src.Recorder import LoggerManager
 from src.Recorder import RecordManager
 
 
+def prompt(tip: str, choose: tuple | list, start=1) -> str:
+    screen = f"{tip}:\n"
+    for i, j in enumerate(choose):
+        screen += f"{i + start}: {j}\n"
+    return input(screen)
+
+
 class TikTok:
     CLEAN_PATCH = {
         " ": " ",
@@ -303,8 +310,10 @@ class TikTok:
 
     def user_acquisition(self):
         def choose_mode() -> str:
-            return input(
-                "请选择账号链接来源: \n1. 使用 accounts 参数内的账号链接\n2. 手动输入待采集的账号链接\n")
+            return prompt(
+                "请选择账号链接来源",
+                ("使用 accounts 参数内的账号链接",
+                 "手动输入待采集的账号链接"))
 
         if (m := choose_mode()) == "1":
             self.accounts_user()
@@ -317,8 +326,9 @@ class TikTok:
             return False
         self.initialize()
         self.set_parameters()
-        select = input(
-            "请选择下载模式：\n1. 批量下载账号作品\n2. 单独下载链接作品\n3. 获取直播推流地址\n4. 抓取作品评论数据\n5. 批量下载合集作品\n6. 批量提取账号数据\n输入序号：")
+        select = prompt("请选择下载模式", (
+            "批量下载账号作品", "单独下载链接作品", "获取直播推流地址", "抓取作品评论数据", "批量下载合集作品",
+            "批量提取账号数据"))
         if select == "1":
             self.logger.info("已选择批量下载作品模式")
             self.batch_acquisition()
@@ -344,8 +354,8 @@ class TikTok:
             return False
         self.initialize(tiktok=True)
         self.set_parameters()
-        select = input(
-            "请选择下载模式：\n1. 单独下载链接作品\n输入序号：")
+        select = prompt(
+            "请选择下载模式", ("单独下载链接作品",))
         if select == "1":
             self.logger.info("已选择单独下载作品模式")
             self.single_acquisition_tiktok()

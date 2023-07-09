@@ -2,6 +2,7 @@ from flask import render_template
 from flask import request
 
 from src.DataAcquirer import UserData
+from src.DataAcquirer import UserDataTikTok
 from src.DataDownloader import Download
 from src.Recorder import BaseLogger
 from src.Recorder import NoneLogger
@@ -25,9 +26,12 @@ class Server(WebUI):
             root="./",
             folder="Log",
             name="%Y-%m-%d %H.%M.%S",
-            filename=None):
+            filename=None,
+            tiktok=False, ):
         self.logger = BaseLogger()
-        self.request = UserData(self.logger)
+        self.request = UserDataTikTok(
+            self.logger) if tiktok else UserData(
+            self.logger)
         self.download = Download(self.logger, None)
 
     def set_parameters(self):

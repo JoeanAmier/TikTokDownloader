@@ -24,11 +24,11 @@ class WebUI(TikTok):
                 keys: tuple,
                 values: tuple | None,
                 index=False):
-            for i, j in enumerate(keys):
+            for x, y in enumerate(keys):
                 if index:
-                    old_data[j][0] = new_data.get(j, values[i])
+                    old_data[y][0] = new_data.get(y, values[x])
                 else:
-                    old_data[j] = new_data.get(j, values[i])
+                    old_data[y] = new_data.get(y, values[x])
 
         convert = {}
         for i, j in parameters.items():
