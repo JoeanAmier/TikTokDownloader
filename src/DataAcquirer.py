@@ -1,3 +1,4 @@
+import contextlib
 import random
 import re
 import time
@@ -60,10 +61,11 @@ def retry(finish=False):
     def inner(function):
         def execute(self, *args, **kwargs):
             for i in range(self.retry):
-                if result := function(self, *args, **kwargs):
-                    return result
-                else:
-                    print(f"正在尝试第 {i + 1} 次重试")
+                with contextlib.suppress(requests.exceptions.ConnectTimeout):
+                    if result := function(self, *args, **kwargs):
+                        return result
+                    else:
+                        print(f"正在尝试第 {i + 1} 次重试")
             if not (result := function(self, *args, **kwargs)) and finish:
                 self.finish = True
             return result
@@ -835,6 +837,7 @@ class UserDataTikTok(UserData):
     recommend_api = "https://www.tiktok.com/api/recommend/item_list/"  # 推荐页API
     related_api = "https://www.tiktok.com/api/related/item_list/"  # 猜你喜欢API
     comment_api = "https://www.tiktok.com/api/comment/list/"  # 评论API
+    reply_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
 
     def __init__(self, log: LoggerManager | BaseLogger):
         super().__init__(log)
