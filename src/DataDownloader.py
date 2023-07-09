@@ -1,6 +1,7 @@
-import os
 import time
 from datetime import datetime
+from pathlib import Path
+from pathlib import PurePath
 from urllib.parse import urlencode
 
 import requests
@@ -144,7 +145,7 @@ class Download:
 
     @root.setter
     def root(self, value):
-        if os.path.exists(value) and os.path.isdir(value):
+        if Path(value).is_dir():
             self._root = value
             self.log.info(f"文件保存路径设置成功: {value}", False)
         else:
@@ -223,17 +224,17 @@ class Download:
         """创建作品保存文件夹"""
         if self.favorite:
             folder = f"{folder}_喜欢页"
-        root = os.path.join(self.root, folder)
-        if not os.path.exists(root):
-            os.mkdir(root)
+        root = PurePath.joinpath(self.root, folder)
+        if not Path(root).is_dir():
+            Path(root).mkdir()
         if live:
             return
-        self.type_["video"] = os.path.join(root, "video")
-        if not os.path.exists(self.type_["video"]):
-            os.mkdir(self.type_["video"])
-        self.type_["images"] = os.path.join(root, "images")
-        if not os.path.exists(self.type_["images"]):
-            os.mkdir(self.type_["images"])
+        self.type_["video"] = PurePath.joinpath(root, "video")
+        if not Path(self.type_["video"]).is_dir():
+            Path(self.type_["video"]).mkdir()
+        self.type_["images"] = PurePath.joinpath(root, "images")
+        if not Path(self.type_["images"]).is_dir():
+            Path(self.type_["images"]).mkdir()
 
     @retry(finish=False)
     def get_data(self, item: str) -> dict | bool:
@@ -439,14 +440,14 @@ class Download:
 
         def delete_file(error_file):
             """清除下载失败的文件"""
-            os.remove(error_file)
+            Path(error_file).unlink()
             self.log.info(f"文件: {error_file} 已删除")
 
         if not self.download:
             return True
         file = f"{name.strip()}.{type_}"
-        full_path = os.path.join(root, file)
-        if os.path.exists(full_path):
+        full_path = PurePath.joinpath(root, file)
+        if Path(full_path).is_file():
             self.log.info(f"{file} 已存在，跳过下载")
             self.log.info(
                 f"文件保存路径: {full_path}", False)
