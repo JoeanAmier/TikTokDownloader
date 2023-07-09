@@ -176,10 +176,10 @@ class CSVLogger:
         if not self.root.exists():
             self.root.mkdir()
         self.root = self.root.joinpath(f"{self.name}.{self.__type}")
-        self.file = open(self.root,
-                         "a",
-                         encoding="UTF-8",
-                         newline="")
+        self.file = self.root.open(
+            "a",
+            encoding="UTF-8",
+            newline="")
         self.writer = csv.writer(self.file)
         self.title()
         return self
