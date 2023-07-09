@@ -351,7 +351,7 @@ class UserData:
             return
         self.uid = f'UID{self.list[0]["author"]["uid"]}'
         self.name = self.clean.filter(
-            self.list[0]["author"]["nickname"])
+            self.list[0]["author"]["nickname"]) or self.uid
         for item in self.list:
             if item["images"]:
                 self.image_data.append(
@@ -408,12 +408,8 @@ class UserData:
             return False
         try:
             self.uid = f'UID{data["aweme_list"][0]["author"]["uid"]}'
-            if n := self.clean.filter(
-                    data["aweme_list"][0]["author"]["nickname"]):
-                self.name = n
-            else:
-                self.log.warning(
-                    f"数据接口返回内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+            self.name = self.clean.filter(
+                data["aweme_list"][0]["author"]["nickname"]) or self.uid
             return True
         except KeyError:
             self.log.warning(
@@ -452,7 +448,7 @@ class UserData:
             self.log.info(
                 f'{self.name} 公开作品数量: {self.image_data[0][1]["author"]["aweme_count"]}')
         else:
-            self.log.info(f"{self.name or self.url} 没有公开作品")
+            self.log.info(f"{self.name or '该账号'}未获取到公开作品")
 
     @reset
     @check_cookie
