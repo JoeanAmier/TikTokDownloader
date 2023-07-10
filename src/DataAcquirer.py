@@ -1,8 +1,8 @@
 import contextlib
-import random
 import time
 from datetime import date
 from datetime import datetime
+from random import randrange
 from re import compile
 from urllib.parse import urlencode
 from urllib.parse import urlparse
@@ -20,7 +20,7 @@ from src.StringCleaner import Cleaner
 
 def sleep():
     """避免频繁请求"""
-    time.sleep(random.randrange(15, 55, 5) * 0.1)
+    time.sleep(randrange(15, 55, 5) * 0.1)
 
 
 def reset(function):
@@ -283,7 +283,7 @@ class UserData:
             self._mark = s if (s := self.clean.filter(value)) else None
 
     @retry(finish=False)
-    def get_id(self, value="sec_user_id", url="", return_=False):
+    def get_id(self, value="sec_user_id", url="", return_=False) -> bool | str:
         """获取账号ID或者作品ID"""
         if self.id_:
             self.log.info(f"{url} {value}: {self.id_}", False)
@@ -317,7 +317,7 @@ class UserData:
         return params
 
     @retry(finish=True)
-    def get_user_data(self):
+    def get_user_data(self) -> bool:
         """获取账号作品数据"""
         params = {
             "device_platform": "webapp",
@@ -505,7 +505,7 @@ class UserData:
 
     @reset
     @check_cookie
-    def run_alone(self, text: str, alone=True, user=False):
+    def run_alone(self, text: str, alone=True, user=False) -> list | bool:
         """单独下载模式"""
         url = self.check_url(text, alone, user)
         if not url:
@@ -525,7 +525,7 @@ class UserData:
             result = [i for i in result if i]
             return result or False
 
-    def check_url(self, url: str, alone, user):
+    def check_url(self, url: str, alone, user) -> bool | str | list:
         self.tiktok = False
         if len(s := self.works_link.findall(url)) >= 1:
             self.id_ = s[0] if alone else s
