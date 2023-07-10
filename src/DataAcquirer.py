@@ -11,6 +11,7 @@ import requests
 
 from src.Parameter import MsToken
 from src.Parameter import TtWid
+from src.Parameter import WedID
 from src.Parameter import XBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
@@ -140,6 +141,11 @@ class UserData:
         self._time = None  # 创建时间格式，通用
         self.retry = 10  # 重试最大次数，通用
         self.tiktok = False  # TikTok 平台
+        self.__web = None
+
+    def set_web_id(self):
+        if not self.__web:
+            self.__web = WedID.generate_random_number(19)
 
     @property
     def url(self):
@@ -320,7 +326,7 @@ class UserData:
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
-            "webid": "7252929240114267706",
+            "webid": self.__web,
         }
         params = self.deal_params(params)
         self.list = []
@@ -388,13 +394,17 @@ class UserData:
     def get_nickname(self):
         """喜欢页下载模式需要额外发送请求获取账号昵称和UID"""
         params = {
+            "device_platform": "webapp",
             "aid": "6383",
+            "channel": "channel_pc_web",
             "sec_user_id": self.id_,
-            "count": "35",
+            "count": "18",
             "max_cursor": 0,
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
+            "webid": self.__web,
+
         }
         params = self.deal_params(params)
         self.name = str(time.time())[:10]
@@ -547,7 +557,9 @@ class UserData:
             return False
         params = {
             "aid": "6383",
+            "app_name": "douyin_web",
             "device_platform": "web",
+            "cookie_enabled": "true",
             "web_rid": id_
         }
         params = self.deal_params(params)
@@ -605,22 +617,30 @@ class UserData:
         """获取评论数据"""
         if reply:
             params = {
+                "device_platform": "webapp",
                 "aid": "6383",
+                "channel": "channel_pc_web",
                 "item_id": id_,
                 "comment_id": reply,
                 "cursor": self.cursor,
                 "count": "3",  # 每次返回数据的数量
                 "cookie_enabled": "true",
                 "platform": "PC",
+                "downlink": "10",
+                "webid": self.__web,
             }
         else:
             params = {
+                "device_platform": "webapp",
                 "aid": "6383",
+                "channel": "channel_pc_web",
                 "aweme_id": id_,
                 "cursor": self.cursor,
                 "count": "20",
                 "cookie_enabled": "true",
-                "platform": "PC", }
+                "platform": "PC",
+                "downlink": "10",
+                "webid": self.__web, }
         params = self.deal_params(params)
         self.comment = []
         try:
@@ -718,12 +738,18 @@ class UserData:
     @retry(finish=True)
     def get_mix_data(self, id_):
         """获取合集作品数据"""
-        params = {"aid": "6383",
-                  "mix_id": id_,
-                  "cursor": self.cursor,
-                  "count": "20",
-                  "cookie_enabled": "true",
-                  "platform": "PC", }
+        params = {
+            "device_platform": "webapp",
+            "aid": "6383",
+            "channel": "channel_pc_web",
+            "mix_id": id_,
+            "cursor": self.cursor,
+            "count": "20",
+            "cookie_enabled": "true",
+            "platform": "PC",
+            "downlink": "10",
+            "webid": self.__web,
+        }
         params = self.deal_params(params)
         self.mix_data = []
         try:
@@ -771,9 +797,13 @@ class UserData:
         params = {
             "device_platform": "webapp",
             "aid": "6383",
+            "channel": "channel_pc_web",
+            "source": "channel_pc_web",
             "sec_user_id": self.id_,
             "cookie_enabled": "true",
             "platform": "PC",
+            "downlink": "10",
+            "webid": self.__web,
         }
         params = self.deal_params(params)
         try:

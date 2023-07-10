@@ -29,6 +29,8 @@ class Server(WebUI):
         self.logger = BaseLogger()
         self.request = UserData(self.logger)
         self.download = Download(self.logger, None)
+        self.request.set_web_id()
+        self.download.set_web_id()
 
     def set_parameters(self):
         self.download.cookie = self._data["cookie"]

@@ -190,6 +190,8 @@ class TikTok:
         self.download = Download(self.logger, None)
         self.request.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
+        self.request.set_web_id()
+        self.download.set_web_id()
 
     def set_parameters(self):
         self.download.root = self._data["root"]
