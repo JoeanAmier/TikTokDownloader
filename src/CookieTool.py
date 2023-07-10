@@ -51,7 +51,3 @@ class Cookie:
             data["cookie"].append("")
         data["cookie"][index] = text
         self.settings.update(data)
-
-
-if __name__ == '__main__':
-    Cookie().run()
