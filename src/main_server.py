@@ -46,7 +46,7 @@ class Server(WebUI):
     def single_acquisition(self):
         with NoneLogger() as data:
             self.download.data = data
-            id_ = self.request.run_alone(self.solo_url)
+            id_ = self.request.run_alone(self.solo_url, solo=True)
             self.download.tiktok = self.request.tiktok
             if not id_:
                 return {
