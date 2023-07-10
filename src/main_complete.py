@@ -138,7 +138,7 @@ class TikTok:
                 url = input("请输入分享链接：")
                 if not url:
                     break
-                ids = self.request.run_alone(url, alone=False)
+                ids = self.request.run_alone(url)
                 if not ids:
                     self.logger.error(f"{url} 获取作品ID失败")
                     continue
@@ -223,7 +223,7 @@ class TikTok:
             url = input("请输入作品链接：")
             if not url:
                 break
-            ids = self.request.run_alone(url, alone=False)
+            ids = self.request.run_alone(url)
             if not ids:
                 self.logger.error(f"{url} 获取作品ID失败")
                 continue
@@ -244,7 +244,7 @@ class TikTok:
             url = input("请输入合集作品链接：")
             if not url:
                 break
-            ids = self.request.run_alone(url, alone=False)
+            ids = self.request.run_alone(url)
             if not ids:
                 self.logger.error(f"{url} 获取作品ID失败")
                 continue
@@ -288,7 +288,7 @@ class TikTok:
             url = input("请输入账号链接: ")
             if not url:
                 break
-            ids = self.request.run_alone(url, alone=False, user=True)
+            ids = self.request.run_alone(url, user=True)
             if not ids:
                 continue
             for i in ids:

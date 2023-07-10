@@ -505,18 +505,17 @@ class UserData:
 
     @reset
     @check_cookie
-    def run_alone(self, text: str, alone=True, user=False) -> list | bool:
+    def run_alone(self, text: str, solo=False, user=False) -> list | bool:
         """单独下载模式"""
-        url = self.check_url(text, alone, user)
+        url = self.check_url(text, user)
         if not url:
             self.log.warning(f"提取账号链接或作品链接失败: {text}")
             return False
         if isinstance(url, bool):
-            return self.id_
-        elif isinstance(url, str):
-            self.get_id(value="aweme_id", url=url)
-            return [self.id_] if self.id_ else False
-        else:
+            return self.id_[:1] if solo else self.id_
+        elif isinstance(url, list):
+            if solo:
+                url = url[:1]
             result = [
                 self.get_id(
                     value="aweme_id",
@@ -524,24 +523,25 @@ class UserData:
                     return_=True) for i in url]
             result = [i for i in result if i]
             return result or False
+        else:
+            raise TypeError
 
-    def check_url(self, url: str, alone, user) -> bool | str | list:
+    def check_url(self, url: str, user) -> bool | list:
         self.tiktok = False
         if len(s := self.works_link.findall(url)) >= 1:
-            self.id_ = s[0] if alone else s
+            self.id_ = s
             return True
         elif len(s := self.share.findall(url)) >= 1:
-            return s[0] if alone else s
+            return s
         elif len(s := self.account_link.findall(url)) >= 1:
-            if user:
-                base = "https://www.douyin.com/user/"
-                self.id_ = base + \
-                           s[0][0] if alone else [base + i[0] for i in s]
-            else:
-                self.id_ = s[0][1] if alone else [i[1] for i in s]
+            self.id_ = (
+                [f"https://www.douyin.com/user/{i[0]}" for i in s]
+                if user
+                else [i[1] for i in s]
+            )
             return True
         elif len(u := self.works_tiktok_link.findall(url)) >= 1:
-            self.id_ = u[0] if alone else u
+            self.id_ = u
             self.tiktok = True
             return True
         return False
@@ -563,18 +563,16 @@ class UserData:
                 filtered.append(item[1])
         self.image_data = filtered
 
-    def get_live_id(self, link: str, alone=True) -> str | list:
+    def get_live_id(self, link: str) -> list:
         """检查直播链接并返回直播ID"""
-        if len(s := self.live_link.findall(link)) >= 1:
-            return s[0] if alone else s
-        return ""
+        return s if len(s := self.live_link.findall(link)) >= 1 else []
 
-    def return_live_ids(self, text, alone=False) -> bool | str:
-        id_ = self.get_live_id(text, alone=alone)
+    def return_live_ids(self, text, solo=False) -> bool | list:
+        id_ = self.get_live_id(text)
         if not id_:
             self.log.warning(f"直播链接格式错误: {text}")
             return False
-        return id_
+        return id_[:1] if solo else id_
 
     @check_cookie
     def get_live_data(self, id_: str):
