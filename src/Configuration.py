@@ -49,7 +49,3 @@ class Settings:
         with self.file.open("w", encoding="UTF-8") as f:
             json.dump(settings, f)
         print("保存配置成功！")
-
-
-if __name__ == "__main__":
-    print(Settings().read())
