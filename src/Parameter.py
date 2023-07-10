@@ -1,7 +1,7 @@
 import contextlib
-import time
 from hashlib import md5
 from random import randint
+from time import time
 
 from requests import exceptions
 from requests import post
@@ -243,7 +243,7 @@ class XBogus:
             self.md5(self.md5_str_to_array("d41d8cd98f00b204e9800998ecf8427e")))
         url_path_array = self.md5_encrypt(url_path)
 
-        timer = int(time.time())
+        timer = int(time())
         ct = 536919696
         array3 = []
         array4 = []
@@ -322,7 +322,7 @@ class TtWid:
     """代码参考: https://github.com/B1gM8c/X-Bogus"""
 
     @staticmethod
-    def get_TtWid():
+    def get_tt_wid():
         def clean(value):
             if s := value.get("Set-Cookie", None):
                 try:
