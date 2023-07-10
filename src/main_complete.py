@@ -138,12 +138,13 @@ class TikTok:
                 url = input("请输入分享链接：")
                 if not url:
                     break
-                id_ = self.request.run_alone(url)
+                id_ = self.request.run_alone(url, alone=False)
                 if not id_:
                     self.logger.error(f"{url} 获取作品ID失败")
                     continue
                 self.download.tiktok = self.request.tiktok
-                self.download.run_alone(id_)
+                for i in id_:
+                    self.download.run_alone(i)
 
     def live_acquisition(self):
         def choice_quality(items: dict) -> str:
@@ -156,7 +157,7 @@ class TikTok:
             keys = list(items.keys())
             return items[keys[choice]]
 
-        del self.request.headers['referer']
+        self.request.headers['referer'] = "https://live.douyin.com"
         while True:
             link = input("请输入直播链接：")
             if not link:
@@ -218,12 +219,13 @@ class TikTok:
             url = input("请输入作品链接：")
             if not url:
                 break
-            id_ = self.request.run_alone(url)
+            id_ = self.request.run_alone(url, alone=False)
             if not id_:
                 self.logger.error(f"{url} 获取作品ID失败")
                 continue
-            with save(root, name=f"作品评论_{id_}", **params) as data:
-                self.request.run_comment(id_, data)
+            for i in id_:
+                with save(root, name=f"作品评论_{i}", **params) as data:
+                    self.request.run_comment(i, data)
 
     def mix_acquisition(self):
         mark = "mark" in self._data["name"]

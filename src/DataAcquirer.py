@@ -1,9 +1,9 @@
 import contextlib
 import random
-import re
 import time
 from datetime import date
 from datetime import datetime
+from re import compile
 from urllib.parse import urlencode
 from urllib.parse import urlparse
 
@@ -81,15 +81,15 @@ class UserData:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
         'referer': 'https://www.douyin.com/',
     }
-    share = re.compile(
+    share = compile(
         r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")  # 分享短链
-    account_link = re.compile(
-        r"^https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*$")  # 账号链接
-    works_link = re.compile(
-        r"^https://www\.douyin\.com/(?:video|note)/([0-9]{19})$")  # 作品链接
-    works_tiktok_link = re.compile(
-        r"https://www\.tiktok\.com/@.+/video/(\d+)")  # 匹配作品链接
-    live_link = re.compile(r"^https://live\.douyin\.com/([0-9]+)")  # 直播链接
+    account_link = compile(
+        r".*?https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*?")  # 账号链接
+    works_link = compile(
+        r".*?https://www\.douyin\.com/(?:video|note)/([0-9]{19}).*?")  # 作品链接
+    works_tiktok_link = compile(
+        r".*?https://www\.tiktok\.com/@.+/video/(\d+).*?")  # 匹配作品链接
+    live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
     home_tiktok_api = "https://www.tiktok.com/api/post/item_list/"  # 发布页API
     user_tiktok_api = "https://www.tiktok.com/api/user/detail/"  # 账号数据API
     live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
@@ -283,7 +283,7 @@ class UserData:
             self._mark = s if (s := self.clean.filter(value)) else None
 
     @retry(finish=False)
-    def get_id(self, value="sec_user_id", url=""):
+    def get_id(self, value="sec_user_id", url="", set=False):
         """获取账号ID或者作品ID"""
         if self.id_:
             self.log.info(f"{url} {value}: {self.id_}", False)
@@ -304,7 +304,10 @@ class UserData:
             return False
         params = urlparse(response.url)
         url_list = params.path.rstrip("/").split("/")
-        self.id_ = url_list[-1] or url_list[-2]
+        if set:
+            return url_list[-1] or url_list[-2]
+        else:
+            self.id_ = url_list[-1] or url_list[-2]
         self.log.info(f"{url} {value}: {self.id_}", False)
         return True
 
@@ -502,28 +505,39 @@ class UserData:
 
     @reset
     @check_cookie
-    def run_alone(self, text: str):
+    def run_alone(self, text: str, alone=True, user=False):
         """单独下载模式"""
-        url = self.check_url(text)
+        url = self.check_url(text, alone, user)
         if not url:
-            self.log.warning(f"无效的作品链接: {text}")
+            self.log.warning(f"提取作品链接失败: {text}")
             return False
-        self.get_id(value="aweme_id", url=url)
-        return self.id_ or False
+        if isinstance(url, bool):
+            return self.id_
+        elif isinstance(url, str):
+            self.get_id(value="aweme_id", url=url)
+            return [self.id_] if self.id_ else False
+        else:
+            result = []
+            for i in url:
+                result.append(self.get_id(value="aweme_id", url=i, set=True))
+            result = [i for i in result if i]
+            return result if all(result) else False
 
-    def check_url(self, url: str):
+    def check_url(self, url: str, alone, user):
         self.tiktok = False
-        if len(s := self.works_link.findall(url)) == 1:
-            self.id_ = s[0]
+        if len(s := self.works_link.findall(url)) >= 1:
+            self.id_ = s[0] if alone else s
             return True
-        elif len(s := self.share.findall(url)) == 1:
-            return s[0]
-        elif len(s := self.account_link.findall(url)) == 1:
-            if s := s[0][1]:
-                self.id_ = s
-                return True
-        elif len(u := self.works_tiktok_link.findall(url)) == 1:
-            self.id_ = u[0]
+        elif len(s := self.share.findall(url)) >= 1:
+            return s[0] if alone else s
+        elif len(s := self.account_link.findall(url)) >= 1:
+            if user:
+                self.id_ = s[0][0] if alone else [i[0] for i in s]
+            else:
+                self.id_ = s[0][1] if alone else [i[1] for i in s]
+            return True
+        elif len(u := self.works_tiktok_link.findall(url)) >= 1:
+            self.id_ = u[0] if alone else u
             self.tiktok = True
             return True
         return False
