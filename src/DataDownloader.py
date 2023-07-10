@@ -326,7 +326,8 @@ class Download:
                 item = self.get_data(item)
             collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             self.uid = item["author"]["uid"]
-            nickname = item["author"]["nickname"]
+            sec_uid = item["author"]["sec_uid"]
+            nickname = item["author"]["nickname"] or "已注销账号"
             id_ = item["aweme_id"]
             desc = clear_spaces(
                 self.clean.filter(
@@ -392,18 +393,22 @@ class Download:
             self.log.info(
                 f"{type_}: " +
                 ", ".join(
-                    [id_,
-                     desc,
-                     create_time.replace(
-                         ".",
-                         ":"), self.uid, self.clean.filter(nickname) if self.favorite else self.nickname, music_name] +
-                    statistics),
+                    [
+                        id_,
+                        desc,
+                        create_time.replace(
+                            ".",
+                            ":"),
+                        self.uid,
+                        self.clean.filter(nickname) if self.favorite else self.nickname,
+                        music_name]),
                 False)
             self.data.save(
                 [
                     type_,
                     collection_time,
                     self.uid,
+                    sec_uid,
                     id_,
                     desc,
                     create_time.replace(
