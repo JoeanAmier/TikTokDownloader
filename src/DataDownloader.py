@@ -420,6 +420,8 @@ class Download:
     @retry(finish=False)
     def request_file(self, url: str, root, name: str, type_: str, id_=""):
         """发送请求获取文件内容"""
+        if not self.download:
+            return True
         file = f"{name.strip()}.{type_}"
         full_path = root.joinpath(file)
         if full_path.exists():
@@ -493,8 +495,6 @@ class Download:
             error_file.unlink()
             self.log.info(f"文件: {error_file} 已删除")
 
-        if not self.download:
-            return True
         try:
             with full_path.open("wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):

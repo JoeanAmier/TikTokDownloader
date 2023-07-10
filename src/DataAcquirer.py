@@ -509,7 +509,7 @@ class UserData:
         """单独下载模式"""
         url = self.check_url(text, alone, user)
         if not url:
-            self.log.warning(f"提取作品链接失败: {text}")
+            self.log.warning(f"提取账号链接或作品链接失败: {text}")
             return False
         if isinstance(url, bool):
             return self.id_
@@ -517,11 +517,13 @@ class UserData:
             self.get_id(value="aweme_id", url=url)
             return [self.id_] if self.id_ else False
         else:
-            result = []
-            for i in url:
-                result.append(self.get_id(value="aweme_id", url=i, set=True))
+            result = [
+                self.get_id(
+                    value="aweme_id",
+                    url=i,
+                    set=True) for i in url]
             result = [i for i in result if i]
-            return result if all(result) else False
+            return result or False
 
     def check_url(self, url: str, alone, user):
         self.tiktok = False
@@ -532,7 +534,9 @@ class UserData:
             return s[0] if alone else s
         elif len(s := self.account_link.findall(url)) >= 1:
             if user:
-                self.id_ = s[0][0] if alone else [i[0] for i in s]
+                base = "https://www.douyin.com/user/"
+                self.id_ = base + \
+                           s[0][0] if alone else [base + i[0] for i in s]
             else:
                 self.id_ = s[0][1] if alone else [i[1] for i in s]
             return True
@@ -559,16 +563,21 @@ class UserData:
                 filtered.append(item[1])
         self.image_data = filtered
 
-    def get_live_id(self, link: str):
+    def get_live_id(self, link: str, alone=True):
         """检查直播链接并返回直播ID"""
-        return s[0] if len(s := self.live_link.findall(link)) == 1 else None
+        if len(s := self.live_link.findall(link)) >= 1:
+            return s[0] if alone else s
+        return []
+
+    def return_live_ids(self, text):
+        id_ = self.get_live_id(text, alone=False)
+        if not id_:
+            self.log.warning(f"直播链接格式错误: {text}")
+            return False
+        return id_
 
     @check_cookie
-    def get_live_data(self, link: str):
-        id_ = self.get_live_id(link)
-        if not id_:
-            self.log.warning(f"直播链接格式错误: {link}")
-            return False
+    def get_live_data(self, id_: str):
         params = {
             "aid": "6383",
             "app_name": "douyin_web",
@@ -625,6 +634,7 @@ class UserData:
             while not self.finish:
                 self.get_comment(id_=id_, api=self.reply_api, reply=item)
                 self.deal_comment()
+        self.log.info("楼中楼评论数据获取结束")
 
     @retry(finish=True)
     def get_comment(self, id_: str, api: str, reply=""):

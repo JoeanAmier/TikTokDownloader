@@ -138,12 +138,12 @@ class TikTok:
                 url = input("请输入分享链接：")
                 if not url:
                     break
-                id_ = self.request.run_alone(url, alone=False)
-                if not id_:
+                ids = self.request.run_alone(url, alone=False)
+                if not ids:
                     self.logger.error(f"{url} 获取作品ID失败")
                     continue
                 self.download.tiktok = self.request.tiktok
-                for i in id_:
+                for i in ids:
                     self.download.run_alone(i)
 
     def live_acquisition(self):
@@ -162,18 +162,22 @@ class TikTok:
             link = input("请输入直播链接：")
             if not link:
                 break
-            if not (data := self.request.get_live_data(link)):
-                self.logger.warning("获取直播数据失败")
+            ids = self.request.return_live_ids(link)
+            if not ids:
                 continue
-            if not (data := self.request.deal_live_data(data)):
-                continue
-            self.logger.info(f"主播昵称: {data[0]}")
-            self.logger.info(f"直播标题: {data[1]}")
-            self.logger.info(
-                "推流地址: \n" + "\n".join([f"清晰度{i}: {j}" for i, j in data[2].items()]))
-            if l := choice_quality(data[2]):
-                self.download.download_live(l, f"{data[0]}-{data[1]}")
-                break
+            for i in ids:
+                if not (data := self.request.get_live_data(i)):
+                    self.logger.warning("获取直播数据失败")
+                    continue
+                if not (data := self.request.deal_live_data(data)):
+                    continue
+                self.logger.info(f"主播昵称: {data[0]}")
+                self.logger.info(f"直播标题: {data[1]}")
+                self.logger.info(
+                    "推流地址: \n" + "\n".join([f"清晰度{i}: {j}" for i, j in data[2].items()]))
+                if len(ids) == 1 and (l := choice_quality(data[2])):
+                    self.download.download_live(l, f"{data[0]}-{data[1]}")
+                    break
 
     def initialize(
             self,
@@ -219,11 +223,11 @@ class TikTok:
             url = input("请输入作品链接：")
             if not url:
                 break
-            id_ = self.request.run_alone(url, alone=False)
-            if not id_:
+            ids = self.request.run_alone(url, alone=False)
+            if not ids:
                 self.logger.error(f"{url} 获取作品ID失败")
                 continue
-            for i in id_:
+            for i in ids:
                 with save(root, name=f"作品评论_{i}", **params) as data:
                     self.request.run_comment(i, data)
 
@@ -240,29 +244,30 @@ class TikTok:
             url = input("请输入合集作品链接：")
             if not url:
                 break
-            id_ = self.request.run_alone(url)
-            if not id_:
+            ids = self.request.run_alone(url, alone=False)
+            if not ids:
                 self.logger.error(f"{url} 获取作品ID失败")
                 continue
-            mix_data = self.download.get_data(id_)
-            mix_info = self.request.run_mix(mix_data)
-            if not isinstance(mix_info, list):
-                self.logger.info(f"作品 {id_} 不属于任何合集")
-                continue
-            if mark:
-                mix_info[1] = input(
-                    "请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
-            self.download.nickname = mix_info[2]
-            self.download.mark = mix_info[1]
-            old_mark = m["mark"] if (
-                m := self.manager.cache.get(
-                    mix_info[0])) else None
-            self.manager.update_cache(*mix_info)
-            with save(root, name=f"MIX{mix_info[0]}_{mix_info[1]}", old=old_mark, **params) as data:
-                self.download.data = data
-                self.download.run_mix(
-                    f"MIX{mix_info[0]}_{mix_info[1]}",
-                    self.request.mix_total)
+            for i in ids:
+                mix_data = self.download.get_data(i)
+                mix_info = self.request.run_mix(mix_data)
+                if not isinstance(mix_info, list):
+                    self.logger.info(f"作品 {i} 不属于任何合集")
+                    continue
+                if mark:
+                    mix_info[1] = input(
+                        "请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
+                self.download.nickname = mix_info[2]
+                self.download.mark = mix_info[1]
+                old_mark = m["mark"] if (
+                    m := self.manager.cache.get(
+                        mix_info[0])) else None
+                self.manager.update_cache(*mix_info)
+                with save(root, name=f"MIX{mix_info[0]}_{mix_info[1]}", old=old_mark, **params) as data:
+                    self.download.data = data
+                    self.download.run_mix(
+                        f"MIX{mix_info[0]}_{mix_info[1]}",
+                        self.request.mix_total)
 
     def accounts_user(self):
         save, root, params = self.record.run(
@@ -284,14 +289,18 @@ class TikTok:
             url = input("请输入账号链接: ")
             if not url:
                 break
-            self.request.url = url
-            self.logger.info(f"{url} 开始获取账号数据")
-            data = self.request.run_user()
-            if not data:
-                self.logger.warning(f"{url} 获取账号数据失败")
+            ids = self.request.run_alone(url, alone=False, user=True)
+            if not ids:
                 continue
-            with save(root, name="UserData", **params) as file:
-                self.request.save_user(file, data)
+            for i in ids:
+                self.request.url = i
+                self.logger.info(f"{i} 开始获取账号数据")
+                data = self.request.run_user()
+                if not data:
+                    self.logger.warning(f"{i} 获取账号数据失败")
+                    continue
+                with save(root, name="UserData", **params) as file:
+                    self.request.save_user(file, data)
 
     def user_acquisition(self):
         def choose_mode() -> str:
@@ -304,7 +313,6 @@ class TikTok:
             self.accounts_user()
         elif m == "2":
             self.alone_user()
-        return
 
     def run(self):
         if not self.check_config():
