@@ -254,9 +254,8 @@ class TikTok:
                 if not isinstance(mix_info, list):
                     self.logger.info(f"作品 {i} 不属于任何合集")
                     continue
-                if mark:
-                    mix_info[1] = input(
-                        "请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
+                mix_info[1] = input(
+                    "请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
                 self.download.nickname = mix_info[2]
                 self.download.mark = mix_info[1]
                 old_mark = m["mark"] if (
