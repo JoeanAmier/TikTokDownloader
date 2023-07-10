@@ -1,6 +1,8 @@
-import contextlib
+from contextlib import suppress
 from hashlib import md5
+from random import choice
 from random import randint
+from string import digits
 from time import time
 
 from requests import exceptions
@@ -281,7 +283,7 @@ class XBogus:
         idx = 0
         while idx < len(new_array):
             array3.append(new_array[idx])
-            with contextlib.suppress(IndexError):
+            with suppress(IndexError):
                 array4.append(new_array[idx + 1])
             idx += 2
 
@@ -335,10 +337,18 @@ class TtWid:
         data = '{"region":"cn","aid":1768,"needFid":false,"service":"www.ixigua.com","migrate_info":{"ticket":"","source":"node"},"cbUrlProtocol":"https","union":true}'
         try:
             response = post(api, data=data, timeout=10)
-        except exceptions.ReadTimeout:
+        except (exceptions.ReadTimeout, exceptions.ConnectionError):
             print("获取 ttwid 参数失败！")
             return False
         return clean(response.headers) or False
+
+
+class WedID:
+    @staticmethod
+    # 定义生成随机数字的函数
+    def generate_random_number(length):
+        # 从数字字符集合中随机选择指定长度的字符
+        return ''.join(choice(digits) for _ in range(length))
 
 
 if __name__ == "__main__":

@@ -220,7 +220,8 @@ class Download:
         if isinstance(cookie, str):
             self.headers["Cookie"] = cookie
             for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
-                self.headers["Cookie"] += f"; {i}"
+                if i:
+                    self.headers["Cookie"] += f"; {i}"
             self.headers.update(self.UA)
             self._cookie = True
 
