@@ -675,7 +675,7 @@ class UserData:
         if not self.comment:
             return
         for item in self.comment:
-            """数据格式: 采集时间, 评论ID, 评论时间, 用户昵称, IP归属地, 评论内容, 评论图片, 点赞数量, 回复数量, 回复ID"""
+            """数据格式: 采集时间, 评论ID, 评论时间, UID, 用户昵称, IP归属地, 评论内容, 评论图片, 点赞数量, 回复数量, 回复ID"""
             collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             create_time = time.strftime(
                 self.time,
@@ -688,6 +688,7 @@ class UserData:
             else:
                 images = "#"
             uid = item["user"]["uid"]
+            sec_uid = item["user"]["sec_uid"]
             nickname = item["user"].get("nickname", "已注销账号")
             digg_count = str(item["digg_count"])
             cid = item["cid"]
@@ -701,6 +702,7 @@ class UserData:
                 cid,
                 create_time,
                 uid,
+                sec_uid,
                 nickname,
                 ip_label,
                 text,

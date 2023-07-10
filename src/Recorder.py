@@ -347,6 +347,7 @@ class RecordManager:
         "评论ID",
         "评论时间",
         "UID",
+        "sec_uid",
         "用户昵称",
         "IP归属地",
         "评论内容",
@@ -358,6 +359,7 @@ class RecordManager:
     Comment_Type = (
         "TEXT NOT NULL",
         "TEXT PRIMARY KEY",
+        "TEXT NOT NULL",
         "TEXT NOT NULL",
         "TEXT NOT NULL",
         "TEXT NOT NULL",
