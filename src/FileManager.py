@@ -46,6 +46,7 @@ class Cache:
             self.check_file(uid, mark, name)
         self.cache[uid] = {"mark": mark, "name": name}
         self.log.info(f"更新缓存: {uid, mark, name}", False)
+        self.save_cache()
 
     def check_file(self, uid: str, mark: str, name: str):
         if not (old_folder := PurePath.joinpath(
