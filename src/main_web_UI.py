@@ -104,7 +104,7 @@ class WebUI(TikTok):
             self._data["root"], format_=self._data["save"])
         with save(root, **params) as data:
             self.download.data = data
-            id_ = self.request.run_alone(self.solo_url[0])
+            id_ = self.request.run_alone(self.solo_url[0], solo=True)
             if not id_:
                 self.logger.error(f"{self.solo_url[0]} 获取作品ID失败")
                 return {
@@ -119,7 +119,7 @@ class WebUI(TikTok):
             if isinstance(result, list):
                 return self.get_data(result[0])
             if isinstance(result, str):
-                return {"text": f"作品 {id_} 下载成功！",
+                return {"text": f"作品 {id_[0]} 下载成功！",
                         "download": False,
                         "music": False,
                         "origin": False,
@@ -137,14 +137,14 @@ class WebUI(TikTok):
         if not (
                 id_ := self.request.return_live_ids(
                     self.live_url,
-                    alone=True)):
+                    solo=True)):
             self.logger.warning("提取直播链接失败")
             return {
                 "text": "提取直播链接失败！",
                 "urls": {},
                 "best": "",
                 "preview": "static/images/blank.png"}
-        if not (data := self.request.get_live_data(id_)):
+        if not (data := self.request.get_live_data(id_[0])):
             self.logger.warning("获取直播数据失败")
             return {
                 "text": "获取直播数据失败！",
