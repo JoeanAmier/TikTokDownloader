@@ -563,14 +563,14 @@ class UserData:
                 filtered.append(item[1])
         self.image_data = filtered
 
-    def get_live_id(self, link: str, alone=True):
+    def get_live_id(self, link: str, alone=True) -> str | list:
         """检查直播链接并返回直播ID"""
         if len(s := self.live_link.findall(link)) >= 1:
             return s[0] if alone else s
-        return []
+        return ""
 
-    def return_live_ids(self, text):
-        id_ = self.get_live_id(text, alone=False)
+    def return_live_ids(self, text, alone=False) -> bool | str:
+        id_ = self.get_live_id(text, alone=alone)
         if not id_:
             self.log.warning(f"直播链接格式错误: {text}")
             return False

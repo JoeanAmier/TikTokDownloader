@@ -115,7 +115,7 @@ class WebUI(TikTok):
                     "dynamic": False,
                     "preview": "static/images/blank.png"}
             self.download.tiktok = self.request.tiktok
-            result = self.download.run_alone(id_, self.solo_url[1])
+            result = self.download.run_alone(id_[0], self.solo_url[1])
             if isinstance(result, list):
                 return self.get_data(result[0])
             if isinstance(result, str):
@@ -134,7 +134,17 @@ class WebUI(TikTok):
                 "preview": "static/images/blank.png"}
 
     def live_acquisition(self):
-        if not (data := self.request.get_live_data(self.live_url)):
+        if not (
+                id_ := self.request.return_live_ids(
+                    self.live_url,
+                    alone=True)):
+            self.logger.warning("提取直播链接失败")
+            return {
+                "text": "提取直播链接失败！",
+                "urls": {},
+                "best": "",
+                "preview": "static/images/blank.png"}
+        if not (data := self.request.get_live_data(id_)):
             self.logger.warning("获取直播数据失败")
             return {
                 "text": "获取直播数据失败！",
@@ -164,6 +174,7 @@ class WebUI(TikTok):
                     return False
                 self.initialize(filename=f"{str(date.today())}.log")
                 self.set_parameters()
+                self.request.headers['referer'] = "https://live.douyin.com"
                 return True
 
             if not initialize():  # 初始化程序
