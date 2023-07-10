@@ -283,7 +283,7 @@ class UserData:
             self._mark = s if (s := self.clean.filter(value)) else None
 
     @retry(finish=False)
-    def get_id(self, value="sec_user_id", url="", set=False):
+    def get_id(self, value="sec_user_id", url="", return_=False):
         """获取账号ID或者作品ID"""
         if self.id_:
             self.log.info(f"{url} {value}: {self.id_}", False)
@@ -304,7 +304,7 @@ class UserData:
             return False
         params = urlparse(response.url)
         url_list = params.path.rstrip("/").split("/")
-        if set:
+        if return_:
             return url_list[-1] or url_list[-2]
         else:
             self.id_ = url_list[-1] or url_list[-2]
@@ -521,7 +521,7 @@ class UserData:
                 self.get_id(
                     value="aweme_id",
                     url=i,
-                    set=True) for i in url]
+                    return_=True) for i in url]
             result = [i for i in result if i]
             return result or False
 

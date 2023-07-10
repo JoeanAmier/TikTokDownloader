@@ -6,7 +6,7 @@ from src.main_complete import prompt
 from src.main_server import Server
 from src.main_web_UI import WebUI
 
-VERSION = "3.1 beta"
+VERSION = "3.1"
 
 
 def version():
