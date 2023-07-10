@@ -312,12 +312,14 @@ class UserData:
         params = {
             "device_platform": "webapp",
             "aid": "6383",
+            "channel": "channel_pc_web",
             "sec_user_id": self.id_,
             "count": "18",
             "max_cursor": self.cursor,
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
+            "webid": "7252929240114267706",
         }
         params = self.deal_params(params)
         self.list = []
@@ -431,8 +433,8 @@ class UserData:
         """如果获取数据的发布日期已经早于限制日期，就不需要再获取下一页的数据了"""
         if self.favorite:
             return
-        if self.earliest > datetime.fromtimestamp(
-                self.cursor / 1000).date():
+        if self.uid and self.earliest > datetime.fromtimestamp(
+                max(self.cursor / 1000, 0)).date():
             self.finish = True
 
     def get_user_id(self, check=False):
@@ -459,7 +461,7 @@ class UserData:
             self.log.info(
                 f'{self.name} 公开作品数量: {self.image_data[0][1]["author"]["aweme_count"]}')
         else:
-            self.log.info(f"{self.name or '该账号'}未获取到公开作品，或者发布时间限制范围内没有作品")
+            self.log.info(f"{self.name or '该账号'}未获取到公开作品")
 
     @reset
     @check_cookie
