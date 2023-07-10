@@ -459,7 +459,7 @@ class UserData:
             self.log.info(
                 f'{self.name} 公开作品数量: {self.image_data[0][1]["author"]["aweme_count"]}')
         else:
-            self.log.info(f"{self.name or '该账号'}未获取到公开作品")
+            self.log.info(f"{self.name or '该账号'}未获取到公开作品，或者发布时间限制范围内没有作品")
 
     @reset
     @check_cookie
