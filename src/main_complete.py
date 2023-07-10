@@ -95,7 +95,6 @@ class TikTok:
                     root,
                     params):
                 break
-        self.manager.save_cache()
 
     def account_download(
             self,
@@ -141,7 +140,7 @@ class TikTok:
                     break
                 id_ = self.request.run_alone(url)
                 if not id_:
-                    self.logger.error(f"{url} 获取 aweme_id 失败")
+                    self.logger.error(f"{url} 获取作品ID失败")
                     continue
                 self.download.tiktok = self.request.tiktok
                 self.download.run_alone(id_)
@@ -219,7 +218,7 @@ class TikTok:
                 break
             id_ = self.request.run_alone(url)
             if not id_:
-                self.logger.error(f"{url} 获取 aweme_id 失败")
+                self.logger.error(f"{url} 获取作品ID失败")
                 continue
             with save(root, name=f"作品评论_{id_}", **params) as data:
                 self.request.run_comment(id_, data)
@@ -239,7 +238,7 @@ class TikTok:
                 break
             id_ = self.request.run_alone(url)
             if not id_:
-                self.logger.error(f"{url} 获取 aweme_id 失败")
+                self.logger.error(f"{url} 获取作品ID失败")
                 continue
             mix_data = self.download.get_data(id_)
             mix_info = self.request.run_mix(mix_data)
@@ -260,7 +259,6 @@ class TikTok:
                 self.download.run_mix(
                     f"MIX{mix_info[0]}_{mix_info[1]}",
                     self.request.mix_total)
-        self.manager.save_cache()
 
     def accounts_user(self):
         save, root, params = self.record.run(
