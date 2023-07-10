@@ -56,7 +56,7 @@ class Server(WebUI):
                     "origin": False,
                     "dynamic": False,
                     "preview": "static/images/blank.png"}
-            if not (result := self.download.run_alone(id_, False)):
+            if not (result := self.download.run_alone(id_[0], False)):
                 return {
                     "text": "提取作品数据失败！",
                     "download": False,
