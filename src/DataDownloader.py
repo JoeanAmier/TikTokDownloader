@@ -290,6 +290,17 @@ class Download:
             self.log.error(f"请求超时，资源 {item} 获取详细数据失败")
             return False
 
+    @staticmethod
+    def get_author_data(data):
+        data = data["author"]
+        uid = data["uid"]
+        short_id = data["short_id"]
+        nickname = data["nickname"] or "已注销账号"
+        signature = data["signature"]
+        unique_id = data["unique_id"]
+        sec_uid = data["sec_uid"]
+        return uid, sec_uid, nickname, unique_id, short_id, signature
+
     def get_info(self, data: list[str | dict]):
         """
         提取作品详细信息

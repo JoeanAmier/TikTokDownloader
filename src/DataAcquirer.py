@@ -984,17 +984,6 @@ class UserData:
             self.log.error(f"搜索结果响应内容异常: {data}", False)
             return False
 
-    @staticmethod
-    def get_author_data(data):
-        data = data["author"]
-        uid = data["uid"]
-        short_id = data["short_id"]
-        nickname = data["nickname"] or "已注销账号"
-        signature = data["signature"]
-        unique_id = data["unique_id"]
-        sec_uid = data["sec_uid"]
-        return uid, sec_uid, nickname, unique_id, short_id, signature
-
     def deal_search_general(self):
         for item in self.list:
             self.search_data.append(item)
