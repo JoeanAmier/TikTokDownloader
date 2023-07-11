@@ -941,14 +941,15 @@ class UserData:
         self.log.info("开始获取搜索数据")
         api, first, channel = self.search_api[type_]
         for _ in range(page):
-            self.get_search_data(
-                type_,
-                api,
-                first,
-                channel,
-                keyword,
-                sort_type,
-                publish_time)
+            if not self.get_search_data(
+                    type_,
+                    api,
+                    first,
+                    channel,
+                    keyword,
+                    sort_type,
+                    publish_time):
+                break
             deal[type_]()
         self.log.info("搜索数据获取结束")
 
