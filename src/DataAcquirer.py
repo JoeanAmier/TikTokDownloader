@@ -33,6 +33,7 @@ def reset(function):
         self.reply = []
         self.mix_total = []
         self.mix_data = []
+        self.search_data = []
         self.cursor = 0
         self.name = None
         self.uid = None
@@ -105,11 +106,11 @@ class UserData:
     history_api = "https://www.douyin.com/aweme/v1/web/history/read/"  # 观看历史API
     following_api = "https://www.douyin.com/aweme/v1/web/user/following/list/"  # 关注列表API
     search_api = (
-        ("https://www.douyin.com/aweme/v1/web/general/search/single/", 15, 0,),
-        ("https://www.douyin.com/aweme/v1/web/search/item/", 20, 0, "aweme_video_web",),
-        ("https://www.douyin.com/aweme/v1/web/discover/search/", 12, 10, "aweme_user_web",),
-        ("https://www.douyin.com/aweme/v1/web/live/search/", 15, 0, "aweme_live",),
-        ("API", "首次请求返回数量", "再次请求返回数量", "search_channel")
+        ("https://www.douyin.com/aweme/v1/web/general/search/single/", 15, "aweme_general"),
+        ("https://www.douyin.com/aweme/v1/web/search/item/", 20, "aweme_video_web",),
+        ("https://www.douyin.com/aweme/v1/web/discover/search/", 12, "aweme_user_web",),
+        ("https://www.douyin.com/aweme/v1/web/live/search/", 15, "aweme_live",),
+        ("API", "首次请求返回数量", "search_channel")
     )
     # TikTok
     works_tiktok_link = compile(
@@ -134,6 +135,7 @@ class UserData:
         self.reply = []  # 评论回复的ID列表
         self.mix_total = []  # 合集作品数据
         self.mix_data = []  # 合集作品数据未处理JSON
+        self.search_data = []  # 搜索结果
         self.uid = None  # 账号UID，运行时获取
         self.list = []  # 未处理的数据，循环时重置
         self.name = None  # 账号昵称，运行时获取
@@ -921,15 +923,19 @@ class UserData:
         self.data.save(data, key=1)
         self.log.info("账号数据获取结束")
 
-    def run_search(self, keyword: str, type_=0, sort_type=0, publish_time=0):
-        pass
+    @reset
+    @check_cookie
+    def run_search(self, keyword: str, type_, page, sort_type, publish_time):
+        api, first, channel = self.search_api[type_]
+        for _ in range(page):
+            self.get_search_data(api, first, channel, keyword, sort_type, publish_time)
 
-    def get_search_data(self, data: tuple, keyword: str, type_=0, sort_type=0, publish_time=0):
+    def get_search_data(self, api, first, channel, keyword: str, sort_type, publish_time):
         params = {
             "device_platform": "webapp",
             "aid": "6383",
             "channel": "channel_pc_web",
-            "search_channel": "aweme_general",
+            "search_channel": channel,
             "sort_type": sort_type,
             "publish_time": publish_time,
             "keyword": keyword,
@@ -937,7 +943,7 @@ class UserData:
             "query_correct_type": "1",
             "is_filter_search": 0 if sort_type == 0 and publish_time == 0 else 1,
             "offset": self.cursor,
-            "count": "15",
+            "count": first if self.cursor == 0 else 10,
             "pc_client_type": "1",
             "cookie_enabled": "true",
             "platform": "PC",
@@ -945,3 +951,5 @@ class UserData:
             "webid": self.__web,
         }
         params = self.deal_params(params)
+        self.cursor += params["count"]
+        print(params)
