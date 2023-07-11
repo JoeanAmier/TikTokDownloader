@@ -1,4 +1,5 @@
 from time import time
+from urllib import parse
 
 from src.Configuration import Settings
 from src.DataAcquirer import UserData
@@ -403,11 +404,13 @@ class TikTok:
         self.download.favorite = True
         self.download.download = False
         while c := self.get_condition():
+            tag = c[0][1]
+            self.request.headers[
+                "referer"] = f"https://www.douyin.com/search/{parse.quote(c[0][0])}"
             self.request.run_search(*c[0])
             if not self.request.search_data:
                 self.logger.info("采集搜索结果失败")
                 continue
-            tag = c[0][1]
             save, root, params = self.record.run(
                 self._data["root"], type_=type_.get(
                     tag), format_=self._data["save"])
