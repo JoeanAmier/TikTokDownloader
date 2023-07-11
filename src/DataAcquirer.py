@@ -705,10 +705,14 @@ class UserData:
                     item["create_time"]))
             ip_label = item.get("ip_label", "未知")
             text = item["text"][:self.max_comment]
-            if images := item.get("image_list", False):
-                images = images[0]["origin_url"]["url_list"][0]  # 图片链接
+            if images := item.get("image_list"):
+                images = images[0]["origin_url"]["url_list"][-1]  # 图片链接
             else:
-                images = "#"
+                images = ""
+            if sticker := item.get("sticker"):
+                sticker = sticker["static_url"]["url_list"][-1]  # 表情链接
+            else:
+                sticker = ""
             uid = item["user"]["uid"]
             sec_uid = item["user"]["sec_uid"]
             nickname = item["user"].get("nickname", "已注销账号")
@@ -728,6 +732,7 @@ class UserData:
                 nickname,
                 ip_label,
                 text,
+                sticker,
                 images,
                 digg_count,
                 reply_comment_total,
