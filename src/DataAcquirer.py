@@ -105,10 +105,11 @@ class UserData:
     history_api = "https://www.douyin.com/aweme/v1/web/history/read/"  # 观看历史API
     following_api = "https://www.douyin.com/aweme/v1/web/user/following/list/"  # 关注列表API
     search_api = (
-        ("https://www.douyin.com/aweme/v1/web/general/search/single/", 15,),
-        ("https://www.douyin.com/aweme/v1/web/search/item/", 20,),
-        ("https://www.douyin.com/aweme/v1/web/discover/search/", 12,),
-        ("https://www.douyin.com/aweme/v1/web/live/search/", 15,)
+        ("https://www.douyin.com/aweme/v1/web/general/search/single/", 15, 0,),
+        ("https://www.douyin.com/aweme/v1/web/search/item/", 20, 0, "aweme_video_web",),
+        ("https://www.douyin.com/aweme/v1/web/discover/search/", 12, 10, "aweme_user_web",),
+        ("https://www.douyin.com/aweme/v1/web/live/search/", 15, 0, "aweme_live",),
+        ("API", "首次请求返回数量", "再次请求返回数量", "search_channel")
     )
     # TikTok
     works_tiktok_link = compile(
@@ -932,7 +933,7 @@ class UserData:
             "sort_type": sort_type,
             "publish_time": publish_time,
             "keyword": keyword,
-            "search_source": "tab_search",
+            "search_source": "switch_tab",
             "query_correct_type": "1",
             "is_filter_search": 0 if sort_type == 0 and publish_time == 0 else 1,
             "offset": self.cursor,
