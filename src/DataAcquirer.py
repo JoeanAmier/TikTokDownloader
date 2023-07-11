@@ -1028,6 +1028,9 @@ class UserData:
                 self.search_data.append(data)
             elif data := item.get("aweme_mix_info"):
                 self.search_data.append(data["mix_items"][0])
+            elif data := item.get("user_list"):
+                for i in data[0]["items"]:
+                    self.search_data.append(i)
             else:
                 self.log.warning("搜索结果包含未知的JSON数据，请开启日志记录并告知作者处理")
                 self.log.warning(f"不受支持的数据: {item}", False)
