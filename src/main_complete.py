@@ -1,3 +1,5 @@
+from time import time
+
 from src.Configuration import Settings
 from src.DataAcquirer import UserData
 from src.DataDownloader import Download
@@ -313,59 +315,66 @@ class TikTok:
         elif m == "2":
             self.alone_user()
 
+    @staticmethod
+    def get_condition() -> None | list:
+        condition = input("请输入搜索条件:\n(关键词 类型 页数 排序规则 时间筛选)\n")
+        if not condition:
+            return None
+        length = 5
+        type_ = {
+            "综合": 0,
+            "视频": 1,
+            "用户": 2,
+            # "直播": 3,
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            # "3": 3,
+        }
+        sort = {
+            "综合排序": 0,
+            "最新发布": 1,
+            "最多点赞": 2,
+            "0": 0,
+            "1": 1,
+            "2": 2,
+        }
+
+        # 分割字符串
+        words = condition.split()
+
+        # 如果列表长度小于指定长度，使用空字符串补齐
+        if len(words) < length:
+            words.extend([""] * (length - len(words)))
+        # 如果列表长度超出指定长度，截取指定长度
+        elif len(words) > length:
+            words = words[:length]
+
+        words[1] = type_.get(words[1], 0)
+        words[2] = max(int(words[2] or 1), 1)
+        words[3] = sort.get(words[3], 0)
+        words[4] = words[4] if words[4] in ("0", "1", "7", "182") else "0"
+
+        return words
+
     def search_acquisition(self):
-        def get_condition() -> None | list:
-            condition = input("请输入搜索条件:\n(关键词 类型 页数 排序规则 时间筛选)\n")
-            if not condition:
-                return None
-            length = 5
-            type_ = {
-                "综合": 0,
-                "视频": 1,
-                "用户": 2,
-                "直播": 3,
-                "0": 0,
-                "1": 1,
-                "2": 2,
-                "3": 3,
-            }
-            sort = {
-                "综合排序": 0,
-                "最新发布": 1,
-                "最多点赞": 2,
-                "0": 0,
-                "1": 1,
-                "2": 2,
-            }
-
-            # 分割字符串
-            words = condition.split()
-
-            # 如果列表长度小于指定长度，使用空字符串补齐
-            if len(words) < length:
-                words.extend([""] * (length - len(words)))
-            # 如果列表长度超出指定长度，截取指定长度
-            elif len(words) > length:
-                words = words[:length]
-
-            words[1] = type_.get(words[1], 0)
-            words[2] = max(int(words[2] or 1), 1)
-            words[3] = sort.get(words[3], 0)
-            words[4] = words[4] if words[4] in ("0", "1", "7", "182") else "0"
-
-            return words
-
-        save, root, params = self.record.run(
-            self._data["root"], type_="user", format_=self._data["save"])
-        while True:
-            if not (c := get_condition()):
-                break
+        type_ = {
+            0: "",
+            1: "",
+            2: "user",
+        }
+        self.download.download = False
+        while c := self.get_condition():
             self.request.run_search(*c)
             if not self.request.search_data:
                 self.logger.info("采集搜索结果失败")
                 continue
-            with save(root, name="SearchResult", **params) as data:
+            save, root, params = self.record.run(
+                self._data["root"], type_=type_.get(c[1]), format_=self._data["save"])
+            params["file"] = "SearchResult.db"
+            with save(root, name=f"关键词_{c[0]}_{str(time())[:10]}", **params) as data:
                 self.download.data = data
+                print(self.request.search_data)
 
     def run(self):
         if not self.check_config():
