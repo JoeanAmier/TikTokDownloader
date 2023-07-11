@@ -1004,6 +1004,6 @@ class UserData:
             if data := item.get("aweme_info"):
                 self.search_data.append(data)
             elif data := item.get("aweme_mix_info"):
-                self.search_data.append(data["mix_items"])
+                self.search_data.append(data["mix_items"][0])
             else:
                 self.log.warning(f"未知的JSON数据: {item}")
