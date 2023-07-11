@@ -317,6 +317,16 @@ class TikTok:
 
     @staticmethod
     def get_condition() -> None | list:
+        def extract_integer_and_compare(input_string: str) -> int:
+            try:
+                # 尝试将字符串转换为整数
+                integer = int(input_string)
+                # 如果转换成功，则返回比较大的数
+                return max(integer, 1)
+            except ValueError:
+                # 如果转换失败，则返回1
+                return 1
+
         condition = input("请输入搜索条件:\n(关键词 类型 页数 排序规则 时间筛选)\n")
         if not condition:
             return None
@@ -351,7 +361,7 @@ class TikTok:
             words = words[:length]
 
         words[1] = type_.get(words[1], 0)
-        words[2] = max(int(words[2] or 1), 1)
+        words[2] = extract_integer_and_compare(words[2])
         words[3] = sort.get(words[3], 0)
         words[4] = words[4] if words[4] in ("0", "1", "7", "182") else "0"
 

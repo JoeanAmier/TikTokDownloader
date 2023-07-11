@@ -925,7 +925,13 @@ class UserData:
 
     @reset
     @check_cookie
-    def run_search(self, keyword: str, type_, page, sort_type, publish_time):
+    def run_search(
+            self,
+            keyword: str,
+            type_: int,
+            page: int,
+            sort_type: int,
+            publish_time: str):
         self.log.info("开始获取搜索数据")
         api, first, channel = self.search_api[type_]
         for _ in range(page):
@@ -946,8 +952,8 @@ class UserData:
             first,
             channel,
             keyword: str,
-            sort_type,
-            publish_time):
+            sort_type: int,
+            publish_time: str):
         params = {
             "device_platform": "webapp",
             "aid": "6383",
@@ -958,7 +964,7 @@ class UserData:
             "keyword": keyword,
             "search_source": "switch_tab",
             "query_correct_type": "1",
-            "is_filter_search": 0 if sort_type == 0 and publish_time == 0 else 1,
+            "is_filter_search": 0 if sort_type == 0 and publish_time == "0" else 1,
             "offset": self.cursor,
             "count": first if self.cursor == 0 else 10,
             "pc_client_type": "1",
@@ -1006,4 +1012,4 @@ class UserData:
             elif data := item.get("aweme_mix_info"):
                 self.search_data.append(data["mix_items"][0])
             else:
-                self.log.warning(f"未知的JSON数据: {item}")
+                self.log.warning(f"未知的JSON数据，请及时告知作者处理: {item}")
