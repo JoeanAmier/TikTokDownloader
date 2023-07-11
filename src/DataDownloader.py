@@ -584,3 +584,6 @@ class Download:
         self.download_video()
         self.download_images()
         self.log.info(f"{self.nickname} 的合集下载结束")
+
+    def run_search(self):
+        pass

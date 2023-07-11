@@ -355,10 +355,17 @@ class TikTok:
 
             return words
 
+        save, root, params = self.record.run(
+            self._data["root"], type_="user", format_=self._data["save"])
         while True:
             if not (c := get_condition()):
                 break
             self.request.run_search(*c)
+            if not self.request.search_data:
+                self.logger.info("采集搜索结果失败")
+                continue
+            with save(root, name="SearchResult", **params) as data:
+                self.download.data = data
 
     def run(self):
         if not self.check_config():

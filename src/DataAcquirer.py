@@ -106,7 +106,7 @@ class UserData:
     history_api = "https://www.douyin.com/aweme/v1/web/history/read/"  # 观看历史API
     following_api = "https://www.douyin.com/aweme/v1/web/user/following/list/"  # 关注列表API
     search_api = (
-        ("https://www.douyin.com/aweme/v1/web/general/search/single/", 15, "aweme_general"),
+        ("https://www.douyin.com/aweme/v1/web/general/search/single/", 15, "aweme_general",),
         ("https://www.douyin.com/aweme/v1/web/search/item/", 20, "aweme_video_web",),
         ("https://www.douyin.com/aweme/v1/web/discover/search/", 12, "aweme_user_web",),
         ("https://www.douyin.com/aweme/v1/web/live/search/", 15, "aweme_live",),
@@ -929,6 +929,7 @@ class UserData:
         api, first, channel = self.search_api[type_]
         for _ in range(page):
             self.get_search_data(api, first, channel, keyword, sort_type, publish_time)
+            self.deal_search_general()
 
     @retry(finish=False)
     def get_search_data(self, api, first, channel, keyword: str, sort_type, publish_time):
@@ -963,25 +964,37 @@ class UserData:
                 timeout=10)
             sleep()
         except requests.exceptions.ReadTimeout:
-            self.log.error("获取搜索结果数据超时")
+            self.log.error("获取搜索结果超时")
             return False
         except requests.exceptions.ConnectionError:
             self.log.error("获取搜索结果时网络异常")
             return False
         if response.content == b"":
-            self.log.warning("搜索结果数据响应内容为空")
+            self.log.warning("搜索结果响应内容为空")
             return False
         try:
             data = response.json()
         except requests.exceptions.JSONDecodeError:
-            self.log.error("搜索结果数据返回内容异常！疑似接口失效", False)
+            self.log.error("搜索结果返回内容异常！疑似接口失效", False)
             return False
         try:
-            self.list = data["aweme_list"]
+            self.list = data["data"]
             return True
         except KeyError:
-            self.log.error(f"搜索结果数据响应内容异常: {data}", False)
+            self.log.error(f"搜索结果响应内容异常: {data}", False)
             return False
 
+    @staticmethod
+    def get_author_data(data):
+        data = data["author"]
+        uid = data["uid"]
+        short_id = data["short_id"]
+        nickname = data["nickname"] or "已注销账号"
+        signature = data["signature"]
+        unique_id = data["unique_id"]
+        sec_uid = data["sec_uid"]
+        return uid, sec_uid, nickname, unique_id, short_id, signature
+
     def deal_search_general(self):
-        pass
+        for item in self.list:
+            self.search_data.append(item)
