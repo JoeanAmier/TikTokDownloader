@@ -386,10 +386,10 @@ class Download:
                 download_link = item["video"]["play_addr"]["url_list"][-1]
                 # 动态封面图链接
                 dynamic_cover = u["url_list"][-1] if (
-                    u := item["video"].get("dynamic_cover")) else "#"
+                    u := item["video"].get("dynamic_cover")) else ""
                 # 静态封面图链接
                 origin_cover = u["url_list"][-1] if (
-                    u := item["video"].get("origin_cover")) else "#"
+                    u := item["video"].get("origin_cover")) else ""
                 self.video_data.append([id_,
                                         desc,
                                         create_time,
