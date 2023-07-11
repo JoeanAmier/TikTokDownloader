@@ -589,6 +589,7 @@ class Download:
     @reset
     @check_cookie
     def run_mix(self, folder: str, items: list[dict]):
+        """下载合集作品"""
         self.create_folder(folder)
         self.get_info(items)
         self.log.info(f"{self.nickname} 的合集开始下载")
@@ -596,5 +597,13 @@ class Download:
         self.download_images()
         self.log.info(f"{self.nickname} 的合集下载结束")
 
-    def run_search(self):
-        pass
+    @reset
+    @check_cookie
+    def run_search(self, keyword: str, items: list[dict]):
+        """下载搜索结果"""
+        self.create_folder(keyword)
+        self.get_info(items)
+        self.log.info(f"开始下载 {keyword} 的搜索结果")
+        self.download_video()
+        self.download_images()
+        self.log.info(f"{keyword} 的搜索结果下载结束")
