@@ -316,7 +316,44 @@ class TikTok:
             self.alone_user()
 
     @staticmethod
-    def get_condition() -> None | list:
+    def get_condition() -> None | tuple[list, str]:
+        length = 5
+        type_ = {
+            "综合": 0,
+            "视频": 1,
+            "用户": 2,
+            # "直播": 3,
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            # "3": 3,
+        }
+        type_text = {
+            0: "综合搜索",
+            1: "视频搜索",
+            2: "用户搜索",
+            # 3: "直播搜索",
+        }
+        sort = {
+            "综合排序": 0,
+            "最新发布": 1,
+            "最多点赞": 2,
+            "0": 0,
+            "1": 1,
+            "2": 2,
+        }
+        sort_text = {
+            0: "综合排序",
+            1: "最新发布",
+            2: "最多点赞",
+        }
+        publish_text = {
+            "0": "不限",
+            "1": "一天内",
+            "7": "一周内",
+            "182": "半年内",
+        }
+
         def extract_integer_and_compare(input_string: str) -> int:
             try:
                 # 尝试将字符串转换为整数
@@ -330,25 +367,6 @@ class TikTok:
         condition = input("请输入搜索条件:\n(关键词 类型 页数 排序规则 时间筛选)\n")
         if not condition:
             return None
-        length = 5
-        type_ = {
-            "综合": 0,
-            "视频": 1,
-            "用户": 2,
-            # "直播": 3,
-            "0": 0,
-            "1": 1,
-            "2": 2,
-            # "3": 3,
-        }
-        sort = {
-            "综合排序": 0,
-            "最新发布": 1,
-            "最多点赞": 2,
-            "0": 0,
-            "1": 1,
-            "2": 2,
-        }
 
         # 分割字符串
         words = condition.split()
@@ -365,7 +383,9 @@ class TikTok:
         words[3] = sort.get(words[3], 0)
         words[4] = words[4] if words[4] in ("0", "1", "7", "182") else "0"
 
-        return words
+        text = "_".join([type_text[words[1]], sort_text[words[3]], publish_text[words[4]], words[0]])
+
+        return words, text
 
     def search_acquisition(self):
         type_ = {
@@ -376,19 +396,31 @@ class TikTok:
         self.download.favorite = True
         self.download.download = False
         while c := self.get_condition():
-            self.request.run_search(*c)
+            self.request.run_search(*c[0])
             if not self.request.search_data:
                 self.logger.info("采集搜索结果失败")
                 continue
+            tag = c[0][1]
             save, root, params = self.record.run(
                 self._data["root"], type_=type_.get(
-                    c[1]), format_=self._data["save"])
+                    tag), format_=self._data["save"])
             params["file"] = "SearchResult.db"
-            with save(root, name=f"关键词_{c[0]}_{str(time())[:10]}", **params) as data:
-                self.logger.info("开始提取搜索结果")
-                self.download.data = data
-                self.download.get_info(self.request.search_data)
-                self.logger.info("搜索结果提取结束")
+            with save(root, name=f"{c[1]}_{str(time())[:10]}", **params) as data:
+                if tag in (0, 1):
+                    self.deal_search_items(data)
+                elif tag == 2:
+                    self.deal_search_user(data)
+                else:
+                    raise ValueError
+
+    def deal_search_items(self, data):
+        self.logger.info("开始提取搜索结果")
+        self.download.data = data
+        self.download.get_info(self.request.search_data)
+        self.logger.info("搜索结果提取结束")
+
+    def deal_search_user(self, data):
+        pass
 
     def run(self):
         if not self.check_config():
