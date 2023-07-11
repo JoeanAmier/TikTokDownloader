@@ -926,13 +926,28 @@ class UserData:
     @reset
     @check_cookie
     def run_search(self, keyword: str, type_, page, sort_type, publish_time):
+        self.log.info("开始获取搜索数据")
         api, first, channel = self.search_api[type_]
         for _ in range(page):
-            self.get_search_data(api, first, channel, keyword, sort_type, publish_time)
+            self.get_search_data(
+                api,
+                first,
+                channel,
+                keyword,
+                sort_type,
+                publish_time)
             self.deal_search_general()
+        self.log.info("搜索数据获取结束")
 
     @retry(finish=False)
-    def get_search_data(self, api, first, channel, keyword: str, sort_type, publish_time):
+    def get_search_data(
+            self,
+            api,
+            first,
+            channel,
+            keyword: str,
+            sort_type,
+            publish_time):
         params = {
             "device_platform": "webapp",
             "aid": "6383",
@@ -986,4 +1001,4 @@ class UserData:
 
     def deal_search_general(self):
         for item in self.list:
-            self.search_data.append(item)
+            self.search_data.append(item["aweme_info"])

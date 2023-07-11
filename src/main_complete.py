@@ -363,6 +363,7 @@ class TikTok:
             1: "",
             2: "user",
         }
+        self.download.favorite = True
         self.download.download = False
         while c := self.get_condition():
             self.request.run_search(*c)
@@ -370,11 +371,14 @@ class TikTok:
                 self.logger.info("采集搜索结果失败")
                 continue
             save, root, params = self.record.run(
-                self._data["root"], type_=type_.get(c[1]), format_=self._data["save"])
+                self._data["root"], type_=type_.get(
+                    c[1]), format_=self._data["save"])
             params["file"] = "SearchResult.db"
             with save(root, name=f"关键词_{c[0]}_{str(time())[:10]}", **params) as data:
+                self.logger.info("开始提取搜索结果")
                 self.download.data = data
-                print(self.request.search_data)
+                self.download.get_info(self.request.search_data)
+                self.logger.info("搜索结果提取结束")
 
     def run(self):
         if not self.check_config():

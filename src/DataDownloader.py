@@ -336,7 +336,7 @@ class Download:
             if isinstance(item, str):
                 item = self.get_data(item)
             collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self.uid = item["author"]["uid"]
+            uid = self.uid or item["author"]["uid"]
             sec_uid = item["author"]["sec_uid"]
             nickname = item["author"]["nickname"] or "已注销账号"
             id_ = item["aweme_id"]
@@ -359,7 +359,7 @@ class Download:
                 self.image_data.append([id_,
                                         desc,
                                         create_time,
-                                        self.uid,
+                                        uid,
                                         self.clean.filter(nickname) if self.favorite else self.nickname,
                                         self.mark,
                                         images,
@@ -375,7 +375,7 @@ class Download:
                 self.image_data.append([id_,
                                         desc,
                                         create_time,
-                                        self.uid,
+                                        uid,
                                         self.clean.filter(nickname) if self.favorite else self.nickname,
                                         self.mark,
                                         images,
@@ -393,7 +393,7 @@ class Download:
                 self.video_data.append([id_,
                                         desc,
                                         create_time,
-                                        self.uid,
+                                        uid,
                                         self.clean.filter(nickname) if self.favorite else self.nickname,
                                         self.mark,
                                         download_link,
@@ -410,7 +410,7 @@ class Download:
                         create_time.replace(
                             ".",
                             ":"),
-                        self.uid,
+                        uid,
                         self.clean.filter(nickname) if self.favorite else self.nickname,
                         music_name]),
                 False)
@@ -418,7 +418,7 @@ class Download:
                 [
                     type_,
                     collection_time,
-                    self.uid,
+                    uid,
                     sec_uid,
                     id_,
                     desc,
@@ -596,14 +596,3 @@ class Download:
         self.download_video()
         self.download_images()
         self.log.info(f"{self.nickname} 的合集下载结束")
-
-    @reset
-    @check_cookie
-    def run_search(self, keyword: str, items: list[dict]):
-        """下载搜索结果"""
-        self.create_folder(keyword)
-        self.get_info(items)
-        self.log.info(f"开始下载 {keyword} 的搜索结果")
-        self.download_video()
-        self.download_images()
-        self.log.info(f"{keyword} 的搜索结果下载结束")
