@@ -962,6 +962,12 @@ class UserData:
             keyword: str,
             sort_type: int,
             publish_time: str):
+        def user_params(metadata: dict):
+            del metadata["sort_type"]
+            del metadata["publish_time"]
+            metadata["is_filter_search"] = 0
+            metadata["from_group_id"] = ""
+
         params = {
             "device_platform": "webapp",
             "aid": "6383",
@@ -981,8 +987,9 @@ class UserData:
             "downlink": "10",
             "webid": self.__web,
         }
+        if type_ == 2:
+            user_params(params)
         params = self.deal_params(params)
-        self.cursor += params["count"]
         self.list = []
         try:
             response = requests.get(
@@ -1008,6 +1015,7 @@ class UserData:
             return False
         try:
             self.list = date["user_list"] if type_ == 2 else data["data"]
+            self.cursor += params["count"]
             return True
         except KeyError:
             self.log.error(f"搜索结果响应内容异常: {data}", False)

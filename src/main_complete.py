@@ -383,10 +383,14 @@ class TikTok:
         words[3] = sort.get(words[3], 0)
         words[4] = words[4] if words[4] in ("0", "1", "7", "182") else "0"
 
-        text = "_".join([type_text[words[1]],
-                         sort_text[words[3]],
-                         publish_text[words[4]],
-                         words[0]])
+        if words[1] == 2:
+            text = "_".join([type_text[words[1]],
+                             words[0]])
+        else:
+            text = "_".join([type_text[words[1]],
+                             sort_text[words[3]],
+                             publish_text[words[4]],
+                             words[0]])
 
         return words, text
 
