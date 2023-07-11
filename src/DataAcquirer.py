@@ -709,10 +709,10 @@ class UserData:
         data = data["user"]
         uid = data["uid"]
         sec_uid = data["sec_uid"]
-        short_id = data["short_id"]
-        unique_id = data["unique_id"]
-        user_age = data["user_age"]
-        signature = data["signature"]
+        short_id = data.get("short_id", "")
+        unique_id = data.get("unique_id", "")
+        user_age = data.get("user_age", "-1")
+        signature = data.get("signature", "")
         nickname = data.get("nickname", "已注销账号")
         return uid, sec_uid, short_id, unique_id, user_age, signature, nickname
 
@@ -743,7 +743,6 @@ class UserData:
             reply_comment_total = item.get("reply_comment_total", -1)
             if reply_comment_total > 0:
                 self.reply.append(cid)
-            reply_comment_total = str(reply_comment_total)
             reply_id = item["reply_id"]
             result = [
                 collection_time,
@@ -761,7 +760,7 @@ class UserData:
                 sticker,
                 images,
                 digg_count,
-                reply_comment_total,
+                str(reply_comment_total),
                 reply_id]
             self.log.info("评论: " + ", ".join(result), False)
             self.data.save(result)
