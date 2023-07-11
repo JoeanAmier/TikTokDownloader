@@ -81,17 +81,14 @@ class UserData:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
         'referer': 'https://www.douyin.com/',
     }
+    # 抖音
     share = compile(
         r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")  # 分享短链
     account_link = compile(
         r".*?https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*?")  # 账号链接
     works_link = compile(
         r".*?https://www\.douyin\.com/(?:video|note)/([0-9]{19}).*?")  # 作品链接
-    works_tiktok_link = compile(
-        r".*?https://www\.tiktok\.com/@.+/video/(\d+).*?")  # 匹配作品链接
     live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
-    home_tiktok_api = "https://www.tiktok.com/api/post/item_list/"  # 发布页API
-    user_tiktok_api = "https://www.tiktok.com/api/user/detail/"  # 账号数据API
     live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
     reply_api = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
@@ -107,8 +104,19 @@ class UserData:
     follow_api = "https://www.douyin.com/aweme/v1/web/follow/feed/"  # 关注账号作品推荐API
     history_api = "https://www.douyin.com/aweme/v1/web/history/read/"  # 观看历史API
     following_api = "https://www.douyin.com/aweme/v1/web/user/following/list/"  # 关注列表API
+    search_api = (
+        ("https://www.douyin.com/aweme/v1/web/general/search/single/", 15,),
+        ("https://www.douyin.com/aweme/v1/web/search/item/", 20,),
+        ("https://www.douyin.com/aweme/v1/web/discover/search/", 12,),
+        ("https://www.douyin.com/aweme/v1/web/live/search/", 15,)
+    )
+    # TikTok
+    works_tiktok_link = compile(
+        r".*?https://www\.tiktok\.com/@.+/video/(\d+).*?")  # 匹配作品链接
     recommend_api = "https://www.tiktok.com/api/recommend/item_list/"  # 推荐页API
-    related_api = "https://www.tiktok.com/api/related/item_list/"  # 猜你喜欢API
+    home_tiktok_api = "https://www.tiktok.com/api/post/item_list/"  # 发布页API
+    user_tiktok_api = "https://www.tiktok.com/api/user/detail/"  # 账号数据API
+    related_tiktok_api = "https://www.tiktok.com/api/related/item_list/"  # 猜你喜欢API
     comment_tiktok_api = "https://www.tiktok.com/api/comment/list/"  # 评论API
     reply_tiktok_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
     clean = Cleaner()  # 过滤非法字符
@@ -911,3 +919,28 @@ class UserData:
         self.log.info("账号数据: " + ", ".join(data), False)
         self.data.save(data, key=1)
         self.log.info("账号数据获取结束")
+
+    def run_search(self, keyword: str, type_=0, sort_type=0, publish_time=0):
+        pass
+
+    def get_search_data(self, data: tuple, keyword: str, type_=0, sort_type=0, publish_time=0):
+        params = {
+            "device_platform": "webapp",
+            "aid": "6383",
+            "channel": "channel_pc_web",
+            "search_channel": "aweme_general",
+            "sort_type": sort_type,
+            "publish_time": publish_time,
+            "keyword": keyword,
+            "search_source": "tab_search",
+            "query_correct_type": "1",
+            "is_filter_search": 0 if sort_type == 0 and publish_time == 0 else 1,
+            "offset": self.cursor,
+            "count": "15",
+            "pc_client_type": "1",
+            "cookie_enabled": "true",
+            "platform": "PC",
+            "downlink": "10",
+            "webid": self.__web,
+        }
+        params = self.deal_params(params)
