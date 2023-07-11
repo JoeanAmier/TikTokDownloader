@@ -867,8 +867,9 @@ class UserData:
             return False
 
     @staticmethod
-    def deal_user(data):
-        data = data["user"]
+    def deal_user(data, search=False):
+        if not search:
+            data = data["user"]
         collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 采集时间
         avatar_larger = data["avatar_larger"]["url_list"][0] or ""  # 头像链接
         cover = c[0]["url_list"][0] if (
@@ -921,7 +922,7 @@ class UserData:
         self.data = file
         self.log.info("账号数据: " + ", ".join(data), False)
         self.data.save(data, key=1)
-        self.log.info("账号数据获取结束")
+        self.log.info("账号数据储存结束")
 
     @reset
     @check_cookie
@@ -932,25 +933,32 @@ class UserData:
             page: int,
             sort_type: int,
             publish_time: str):
+        deal = {
+            0: self.deal_search_general,
+            1: self.deal_search_general,
+            2: self.deal_search_user,
+        }
         self.log.info("开始获取搜索数据")
         api, first, channel = self.search_api[type_]
         for _ in range(page):
             self.get_search_data(
+                type_,
                 api,
                 first,
                 channel,
                 keyword,
                 sort_type,
                 publish_time)
-            self.deal_search_general()
+            deal[type_]()
         self.log.info("搜索数据获取结束")
 
     @retry(finish=False)
     def get_search_data(
             self,
-            api,
-            first,
-            channel,
+            type_: int,
+            api: str,
+            first: int,
+            channel: str,
             keyword: str,
             sort_type: int,
             publish_time: str):
@@ -999,7 +1007,7 @@ class UserData:
             self.log.error("搜索结果返回内容异常！疑似接口失效", False)
             return False
         try:
-            self.list = data["data"]
+            self.list = date["user_list"] if type_ == 2 else data["data"]
             return True
         except KeyError:
             self.log.error(f"搜索结果响应内容异常: {data}", False)
@@ -1013,3 +1021,7 @@ class UserData:
                 self.search_data.append(data["mix_items"][0])
             else:
                 self.log.warning(f"未知的JSON数据，请及时告知作者处理: {item}")
+
+    def deal_search_user(self):
+        for item in self.list:
+            self.search_data.append(item["user_info"])

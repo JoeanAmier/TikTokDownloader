@@ -383,7 +383,10 @@ class TikTok:
         words[3] = sort.get(words[3], 0)
         words[4] = words[4] if words[4] in ("0", "1", "7", "182") else "0"
 
-        text = "_".join([type_text[words[1]], sort_text[words[3]], publish_text[words[4]], words[0]])
+        text = "_".join([type_text[words[1]],
+                         sort_text[words[3]],
+                         publish_text[words[4]],
+                         words[0]])
 
         return words, text
 
@@ -413,14 +416,18 @@ class TikTok:
                 else:
                     raise ValueError
 
-    def deal_search_items(self, data):
+    def deal_search_items(self, file):
         self.logger.info("开始提取搜索结果")
-        self.download.data = data
+        self.download.data = file
         self.download.get_info(self.request.search_data)
         self.logger.info("搜索结果提取结束")
 
-    def deal_search_user(self, data):
-        pass
+    def deal_search_user(self, file):
+        self.logger.info("开始提取搜索结果")
+        for i in self.request.search_data:
+            item = self.request.deal_user(i, True)
+            self.request.save_user(file, item)
+        self.logger.info("搜索结果提取结束")
 
     def run(self):
         if not self.check_config():
