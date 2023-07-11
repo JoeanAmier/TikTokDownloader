@@ -430,7 +430,7 @@ class UserData:
                 proxies=self.proxies,
                 timeout=10)
             sleep()
-        except requests.exceptions.ReadTimeout:
+        except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError):
             self.log.warning(
                 f"请求超时，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
             return False
@@ -930,6 +930,7 @@ class UserData:
         for _ in range(page):
             self.get_search_data(api, first, channel, keyword, sort_type, publish_time)
 
+    @retry(finish=False)
     def get_search_data(self, api, first, channel, keyword: str, sort_type, publish_time):
         params = {
             "device_platform": "webapp",
@@ -952,4 +953,35 @@ class UserData:
         }
         params = self.deal_params(params)
         self.cursor += params["count"]
-        print(params)
+        self.list = []
+        try:
+            response = requests.get(
+                api,
+                params=params,
+                headers=self.headers,
+                proxies=self.proxies,
+                timeout=10)
+            sleep()
+        except requests.exceptions.ReadTimeout:
+            self.log.error("获取搜索结果数据超时")
+            return False
+        except requests.exceptions.ConnectionError:
+            self.log.error("获取搜索结果时网络异常")
+            return False
+        if response.content == b"":
+            self.log.warning("搜索结果数据响应内容为空")
+            return False
+        try:
+            data = response.json()
+        except requests.exceptions.JSONDecodeError:
+            self.log.error("搜索结果数据返回内容异常！疑似接口失效", False)
+            return False
+        try:
+            self.list = data["aweme_list"]
+            return True
+        except KeyError:
+            self.log.error(f"搜索结果数据响应内容异常: {data}", False)
+            return False
+
+    def deal_search_general(self):
+        pass
