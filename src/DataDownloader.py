@@ -290,10 +290,9 @@ class Download:
             self.log.error(f"请求超时，资源 {item} 获取详细数据失败")
             return False
 
-    @staticmethod
-    def get_author_data(data):
+    def get_author_data(self, data):
         data = data["author"]
-        uid = data["uid"]
+        uid = self.uid or data["uid"]
         short_id = data["short_id"]
         nickname = data["nickname"] or "已注销账号"
         signature = data["signature"]
@@ -336,10 +335,9 @@ class Download:
             if isinstance(item, str):
                 item = self.get_data(item)
             collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            uid = self.uid or item["author"]["uid"]
-            sec_uid = item["author"]["sec_uid"]
-            nickname = item["author"]["nickname"] or "已注销账号"
             id_ = item["aweme_id"]
+            uid, sec_uid, nickname, unique_id, short_id, signature = self.get_author_data(
+                item)
             desc = clear_spaces(
                 self.clean.filter(
                     item["desc"])[
@@ -420,12 +418,15 @@ class Download:
                     collection_time,
                     uid,
                     sec_uid,
+                    unique_id,
+                    short_id,
                     id_,
                     desc,
                     create_time.replace(
                         ".",
                         ":"),
                     self.clean.filter(nickname) if self.favorite else self.nickname,
+                    signature,
                     download_link,
                     music_name,
                     music_url,

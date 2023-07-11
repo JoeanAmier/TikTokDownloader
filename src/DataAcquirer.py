@@ -1001,4 +1001,9 @@ class UserData:
 
     def deal_search_general(self):
         for item in self.list:
-            self.search_data.append(item["aweme_info"])
+            if data := item.get("aweme_info"):
+                self.search_data.append(data)
+            elif data := item.get("aweme_mix_info"):
+                self.search_data.append(data["mix_items"])
+            else:
+                self.log.warning(f"未知的JSON数据: {item}")
