@@ -704,6 +704,18 @@ class UserData:
             self.log.error(f"评论数据内容异常: {data}", False)
             return False
 
+    @staticmethod
+    def get_author_data(data):
+        data = data["user"]
+        uid = data["uid"]
+        sec_uid = data["sec_uid"]
+        short_id = data["short_id"]
+        unique_id = data["unique_id"]
+        user_age = data["user_age"]
+        signature = data["signature"]
+        nickname = data.get("nickname", "已注销账号")
+        return uid, sec_uid, short_id, unique_id, user_age, signature, nickname
+
     def deal_comment(self):
         if not self.comment:
             return
@@ -724,9 +736,8 @@ class UserData:
                 sticker = sticker["static_url"]["url_list"][-1]  # 表情链接
             else:
                 sticker = ""
-            uid = item["user"]["uid"]
-            sec_uid = item["user"]["sec_uid"]
-            nickname = item["user"].get("nickname", "已注销账号")
+            uid, sec_uid, short_id, unique_id, user_age, signature, nickname = self.get_author_data(
+                item)
             digg_count = str(item["digg_count"])
             cid = item["cid"]
             reply_comment_total = item.get("reply_comment_total", -1)
@@ -740,7 +751,11 @@ class UserData:
                 create_time,
                 uid,
                 sec_uid,
+                short_id,
+                unique_id,
                 nickname,
+                signature,
+                user_age,
                 ip_label,
                 text,
                 sticker,
@@ -748,7 +763,7 @@ class UserData:
                 digg_count,
                 reply_comment_total,
                 reply_id]
-            self.log.info("评论: " + ", ".join(result))
+            self.log.info("评论: " + ", ".join(result), False)
             self.data.save(result)
 
     @reset
