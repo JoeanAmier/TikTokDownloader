@@ -223,10 +223,12 @@ class Download:
     @cookie.setter
     def cookie(self, cookie: dict):
         if isinstance(cookie, dict):
-            self._cookie = cookie
             self.headers |= self.PC_UA
-            self.headers["Cookie"] = "; ".join(
-                [f"{i}={j}" for i, j in self._cookie.items()])
+            self._cookie = cookie
+            self.headers["Cookie"] = (
+                    "; ".join([f"{i}={j}" for i, j in self._cookie.items()])
+                    + "; douyin.com"
+            )
 
     def deal_url_params(self, params: dict):
         xb = self.xb.get_x_bogus(urlencode(params))

@@ -205,6 +205,7 @@ class UserData:
                     self._cookie |= i
             self.headers["Cookie"] = "; ".join(
                 [f"{i}={j}" for i, j in self._cookie.items()])
+            self.headers["Cookie"] += "; douyin.com"
 
     @property
     def earliest(self):
