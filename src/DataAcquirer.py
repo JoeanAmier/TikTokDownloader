@@ -892,7 +892,7 @@ class UserData:
         city = data.get("city") or ""
         country = data.get("country") or ""
         district = data.get("district") or ""
-        ip_location = data.get("ip_location") or ""
+        # ip_location = data.get("ip_location") or ""
         signature = data.get("signature") or ""  # 简介
         total_favorited = data["total_favorited"]  # 获赞数量
         nickname = data.get("nickname") or "已注销账号"  # 账号昵称
@@ -914,7 +914,7 @@ class UserData:
             country,
             city,
             district,
-            ip_location,
+            # ip_location,
             custom_verify,
             enterprise,
             sec_uid,
