@@ -12,7 +12,7 @@
 </a>
 </div>
 <br>
-<p>🔥 <b>TikTok 视频/图集/原声；抖音视频/图集/直播/原声/合集/评论/账号数据采集工具：</b>完全开源，开箱即用，基于 Requests 模块实现；批量下载抖音账号发布页或者喜欢页的作品；单独下载抖音链接或 TikTok 链接对应的作品；获取抖音直播推流地址；下载抖音直播视频；抓取抖音作品评论数据；批量下载抖音合集作品，采集抖音账号详细数据。</p>
+<p>🔥 <b>TikTok 视频/图集/原声；抖音视频/图集/直播/原声/合集/评论/账号/搜索数据采集工具：</b>完全开源，轻量级工具，开箱即用，基于 Requests 模块实现；批量下载抖音账号发布页或者喜欢页的作品；单独下载抖音链接或 TikTok 链接对应的作品；获取抖音直播推流地址；下载抖音直播视频；抓取抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音作品搜索结果。</p>
 <p>⭐ <b>使用者在使用本项目的代码时，请遵守 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">GNU General Public License v3.0</a> 开源协议。</b></p>
 <hr>
 
@@ -41,6 +41,7 @@
 * ✅ 作品统计数据更新
 * ✅ 自动更新账号昵称
 * ✅ 直接部署至公开服务器
+* ✅ 采集抖音搜索结果
 * ☑️ 批量下载抖音账号收藏作品
 * ☑️ 获取抖音账号收藏合集列表
 
@@ -57,8 +58,7 @@
 # 📈 项目状态
 
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已通过测试，功能均可正常使用
-* 🟢 已支持 TikTok 平台单独下载链接作品功能
-* 🟡 准备开发抖音搜索数据采集功能
+* 🟢 正在完善抖音搜索数据采集功能
 * 🟡 准备开发获取账号关注列表功能
 * 🟡 准备开发批量下载账号收藏作品功能
 * 🟡 准备开发获取账号收藏合集列表功能
@@ -94,7 +94,7 @@ TikTokDownloader
 
 # 📋 使用说明
 
-**使用方法:**
+**使用方法：**
 
 1. 下载最新源码或 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码至本地
 2. 安装 requirements.txt 包含的第三方模块
@@ -110,7 +110,7 @@ TikTokDownloader
 
 <hr>
 
-**程序运行模式:**
+**程序运行模式：**
 
 * 单线程终端模式: 支持所有功能
 * 多进程终端模式\(未完成\): 支持多账号批量下载功能
@@ -119,7 +119,7 @@ TikTokDownloader
 
 <hr>
 
-**Cookie:**
+**Cookie：**
 
 [点击查看 Cookie 获取教程](https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md)
 
@@ -135,9 +135,11 @@ TikTokDownloader
 |  获取账号数据   |   ❌    |
 | 采集作品搜索结果  |   ❌    |
 
+**程序获取接口数据失败时，可以尝试使用已登录的 Cookie 运行！**
+
 <hr>
 
-**注意事项:**
+**使用说明：**
 
 * 批量下载账号作品时，每个账号的作品会下载至对应的 `账号标识` 文件夹
 * 单独下载链接作品时，所有作品均下载至 `folder` 参数指定的文件夹
@@ -153,8 +155,6 @@ TikTokDownloader
 * 单独下载链接作品时，如果在 `name` 参数中设置了 `mark` ，程序会自动替换为 `nickname`
 * 为保护访客隐私，`服务器部署模式` 禁用了日志记录和数据存储功能，不会记录任何作品提取数据
 * `服务器部署模式` 基础功能已经完成，但在网页交互和用户体验方面仍有改进空间，需要进一步优化
-* 程序请求输入链接时，支持单次输入多个链接，详细说明请查看
-  [issues](https://github.com/JoeanAmier/TikTokDownloader/issues/27)
 
 # 🔗 链接类型
 
