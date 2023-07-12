@@ -100,7 +100,7 @@ class TikTok:
                 if input("输入任意字符继续运行，直接回车结束运行: "):
                     continue
                 break
-            # break  # 调试使用
+            break  # 调试使用
 
     def account_download(
             self,
@@ -201,8 +201,8 @@ class TikTok:
         self.download = Download(self.logger, None)
         self.request.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
-        self.request.set_web_id()
-        self.download.set_web_id()
+        # self.request.set_web_id()
+        # self.download.set_web_id()
 
     def set_parameters(self):
         self.download.root = self._data["root"]

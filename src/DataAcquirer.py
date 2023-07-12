@@ -332,13 +332,11 @@ class UserData:
     def get_user_data(self) -> bool:
         """获取账号作品数据"""
         params = {
-            "device_platform": "webapp",
             "aid": "6383",
             "channel": "channel_pc_web",
             "sec_user_id": self.id_,
             "max_cursor": self.cursor,
             "count": "18",
-            "pc_client_type": "1",
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
