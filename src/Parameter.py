@@ -353,6 +353,6 @@ class WedID:
 
 
 if __name__ == "__main__":
-    # print(XBogus().get_x_bogus(input("输入URL: ")))
+    print(XBogus().get_x_bogus(input("输入URL: ")))
     print(MsToken.get_ms_token())
     print(TtWid.get_tt_wid())
