@@ -310,25 +310,26 @@ class MsToken:
     """代码参考: https://github.com/B1gM8c/X-Bogus"""
 
     @staticmethod
-    def get_ms_token(start="msToken=", size=107):
+    def get_ms_token(start="msToken", size=107) -> dict:
         """
         根据传入长度产生随机字符串
         """
         base_str = 'ABCDEFGHIGKLMNOPQRSTUVWXYZabcdefghigklmnopqrstuvwxyz0123456789='
         length = len(base_str) - 1
-        return start + "".join(base_str[randint(0, length)]
-                               for _ in range(size))
+        return {start: "".join(base_str[randint(0, length)]
+                               for _ in range(size))}
 
 
 class TtWid:
     """代码参考: https://github.com/B1gM8c/X-Bogus"""
 
     @staticmethod
-    def get_tt_wid():
+    def get_tt_wid() -> dict:
         def clean(value):
             if s := value.get("Set-Cookie", None):
                 try:
-                    return s.split("; ")[0]
+                    temp = s.split("; ")[0].split("=", 1)
+                    return {temp[0]: temp[1]}
                 except IndexError:
                     print("提取 ttwid 参数失败！")
                     return False
@@ -354,4 +355,4 @@ class WedID:
 if __name__ == "__main__":
     # print(XBogus().get_x_bogus(input("输入URL: ")))
     print(MsToken.get_ms_token())
-    # print(TtWid.get_TtWid())
+    print(TtWid.get_tt_wid())
