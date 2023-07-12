@@ -60,7 +60,7 @@ class WebUI(TikTok):
              "proxies"), (False, False, False, ""),
             True)
         self.settings.update(settings)
-        if convert.get("cookie", False):
+        if convert.get("cookie"):
             self.cookie.extract(convert["cookie"], 0)
 
     @staticmethod
