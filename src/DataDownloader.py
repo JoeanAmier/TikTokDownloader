@@ -77,7 +77,10 @@ class Download:
 
     def set_web_id(self):
         if not self.__web:
-            self.__web = WebID.get_web_id(self.PC_UA["User-Agent"])
+            if w := WebID.get_web_id(self.headers["User-Agent"]):
+                self.__web = w
+            else:
+                self.__web = WebID.generate_random_number(19)
 
     @property
     def name(self):
