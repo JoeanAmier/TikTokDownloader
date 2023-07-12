@@ -19,8 +19,12 @@ class Cookie:
     def extract(self, cookie: str, index: int):
         get_key = {
             "passport_csrf_token": None,
+            "passport_csrf_token_default": None,
+            "csrf_session_id": None,
             "odin_tt": None,
-            "sessionid_ss": None}
+            "sessionid": None,
+            "sessionid_ss": None,
+        }
         for i in cookie.split('; '):
             text = i.split("=", 1)
             if (k := text[0]) in get_key:
@@ -30,19 +34,22 @@ class Cookie:
                 value in get_key.items() if key in (
                         'passport_csrf_token',
                         'odin_tt')):
-            self.get_login_token(get_key)
+            self.check_key(get_key)
             self.write(get_key, index)
             print("写入 Cookie 成功！")
         else:
             print("Cookie 缺少必需的键值对！")
 
     @staticmethod
-    def get_login_token(items):
+    def check_key(items):
         if not items["sessionid_ss"]:
             del items["sessionid_ss"]
             print("当前 Cookie 未登录")
         else:
             print("当前 Cookie 已登录")
+        keys_to_remove = [key for key, value in items.items() if value is None]
+        for key in keys_to_remove:
+            del items[key]
 
     def write(self, text, index):
         data = self.settings.read()
