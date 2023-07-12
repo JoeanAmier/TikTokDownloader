@@ -322,10 +322,9 @@ class UserData:
         self.log.info(f"{url} {value}: {self.id_}", False)
         return True
 
-    def deal_url_params(self, url: str, params: dict) -> dict:
+    def deal_url_params(self, url: str, params: dict):
         xb = self.xb.get_x_bogus(urljoin(url, urlencode(params)))
         params["X-Bogus"] = xb
-        return params
 
     @retry(finish=True)
     def get_user_data(self) -> bool:
