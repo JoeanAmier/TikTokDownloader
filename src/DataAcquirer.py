@@ -720,6 +720,7 @@ class UserData:
 
     @staticmethod
     def get_author_data(data):
+        """部分数据需要已登录的 Cookie 才可获取"""
         data = data["user"]
         uid = data["uid"]
         sec_uid = data["sec_uid"]
