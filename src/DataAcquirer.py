@@ -978,10 +978,11 @@ class UserData:
             del metadata["sort_type"]
             del metadata["publish_time"]
             metadata["is_filter_search"] = 0
-            metadata["from_group_id"] = ""
 
         params = {
+            "device_platform": "webapp",
             "aid": "6383",
+            "channel": "channel_pc_web",
             "search_channel": channel,
             "sort_type": sort_type,
             "publish_time": publish_time,
