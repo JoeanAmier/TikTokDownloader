@@ -8,6 +8,10 @@ from time import time
 from requests import exceptions
 from requests import post
 
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
+}
+
 
 class XBogus:
     """代码参考: https://github.com/Johnserf-Seed/TikTokDownload/blob/main/Util/XB.py"""
@@ -324,35 +328,50 @@ class TtWid:
     """代码参考: https://github.com/B1gM8c/X-Bogus"""
 
     @staticmethod
-    def get_tt_wid() -> dict:
-        def clean(value):
+    def get_tt_wid() -> dict | None:
+        def clean(value) -> dict | None:
             if s := value.get("Set-Cookie", None):
                 try:
                     temp = s.split("; ")[0].split("=", 1)
                     return {temp[0]: temp[1]}
                 except IndexError:
                     print("提取 ttwid 参数失败！")
-                    return False
+                    return None
 
         api = "https://ttwid.bytedance.com/ttwid/union/register/"
         data = '{"region":"cn","aid":1768,"needFid":false,"service":"www.ixigua.com","migrate_info":{"ticket":"","source":"node"},"cbUrlProtocol":"https","union":true}'
         try:
-            response = post(api, data=data, timeout=10)
+            response = post(api, data=data, headers=HEADERS, timeout=10)
         except (exceptions.ReadTimeout, exceptions.ConnectionError):
             print("获取 ttwid 参数失败！")
-            return False
-        return clean(response.headers) or False
+            return None
+        return clean(response.headers) or None
 
 
-class WedID:
+class WebID:
     @staticmethod
     # 定义生成随机数字的函数
     def generate_random_number(length):
         # 从数字字符集合中随机选择指定长度的字符
         return ''.join(choice(digits) for _ in range(length))
 
+    @staticmethod
+    def get_web_id(ua: str) -> str | None:
+        url = "https://mcs.zijieapi.com/webid"
+        data = f'{{"app_id":6383,"url":"https://www.douyin.com/","user_agent":"{ua}","referer":"https://www.douyin.com/","user_unique_id":""}}'
+        try:
+            response = post(url, data=data, headers=HEADERS, timeout=10)
+            return response.json()["web_id"]
+        except (exceptions.ReadTimeout, exceptions.ConnectionError):
+            print("获取 web_id 参数失败！")
+            return None
+        except (exceptions.JSONDecodeError, KeyError):
+            print("web_id 参数格式异常，疑似失效！")
+            return None
+
 
 if __name__ == "__main__":
     print(XBogus().get_x_bogus(input("输入URL: ")))
     print(MsToken.get_ms_token())
     print(TtWid.get_tt_wid())
+    print(WebID.get_web_id(HEADERS["User-Agent"]))
