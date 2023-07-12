@@ -8,7 +8,7 @@ import requests
 from src.DataAcquirer import check_cookie
 from src.DataAcquirer import retry
 from src.DataAcquirer import sleep
-from src.Parameter import WedID
+from src.Parameter import WebID
 from src.Parameter import XBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
@@ -77,7 +77,7 @@ class Download:
 
     def set_web_id(self):
         if not self.__web:
-            self.__web = WedID.generate_random_number(19)
+            self.__web = WebID.get_web_id(self.PC_UA["User-Agent"])
 
     @property
     def name(self):

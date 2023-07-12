@@ -11,7 +11,7 @@ import requests
 
 from src.Parameter import MsToken
 from src.Parameter import TtWid
-from src.Parameter import WedID
+from src.Parameter import WebID
 from src.Parameter import XBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
@@ -156,7 +156,7 @@ class UserData:
 
     def set_web_id(self):
         if not self.__web:
-            self.__web = WedID.generate_random_number(19)
+            self.__web = WebID.get_web_id(self.headers["User-Agent"])
 
     @property
     def url(self):
