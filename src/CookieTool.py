@@ -24,6 +24,7 @@ class Cookie:
             "sso_auth_status_ss": None,
             "passport_auth_status": None,
             "passport_auth_status_ss": None,
+            "passport_assist_user": None,
             "sso_uid_tt": None,
             "sso_uid_tt_ss": None,
             "toutiao_sso_user": None,
@@ -37,6 +38,8 @@ class Cookie:
             "odin_tt": None,
             "sessionid": None,
             "sessionid_ss": None,
+            "sid_ucp_v1": None,
+            "ssid_ucp_v1": None,
         }
         for i in cookie.split('; '):
             text = i.split("=", 1)
