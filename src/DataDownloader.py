@@ -292,10 +292,10 @@ class Download:
         data = data["author"]
         uid = self.uid or data["uid"]
         sec_uid = data["sec_uid"]
-        short_id = data.get("short_id", "")
-        unique_id = data.get("unique_id", "")
-        signature = data.get("signature", "")
-        nickname = data.get("nickname", "已注销账号")
+        short_id = data.get("short_id") or ""
+        unique_id = data.get("unique_id") or ""
+        signature = data.get("signature") or ""
+        nickname = data.get("nickname") or "已注销账号"
         return uid, sec_uid, nickname, unique_id, short_id, signature
 
     def get_info(self, data: list[str | dict]):
@@ -310,9 +310,9 @@ class Download:
             return " ".join(string.split())
 
         def get_music():
-            nonlocal item
+            nonlocal item, id_
             if music_data := item.get("music", False):
-                name = music_data.get("title", "")
+                name = music_data.get("title") or id_
                 url = m[-1] if (m := music_data["play_url"]
                 ["url_list"]) else ""  # 部分作品的数据没有音乐下载地址
                 return name, url

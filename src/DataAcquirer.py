@@ -707,11 +707,11 @@ class UserData:
         data = data["user"]
         uid = data["uid"]
         sec_uid = data["sec_uid"]
-        short_id = data.get("short_id", "")
-        unique_id = data.get("unique_id", "")
-        user_age = data.get("user_age", "-1")
-        signature = data.get("signature", "")
-        nickname = data.get("nickname", "已注销账号")
+        short_id = data.get("short_id") or ""
+        unique_id = data.get("unique_id") or ""
+        user_age = data.get("user_age") or "-1"
+        signature = data.get("signature") or ""
+        nickname = data.get("nickname") or "已注销账号"
         return uid, sec_uid, short_id, unique_id, user_age, signature, nickname
 
     def deal_comment(self):
@@ -724,7 +724,7 @@ class UserData:
                 self.time,
                 time.localtime(
                     item["create_time"]))
-            ip_label = item.get("ip_label", "未知")
+            ip_label = item.get("ip_label") or "未知"
             text = item["text"][:self.max_comment]
             if images := item.get("image_list"):
                 images = images[0]["origin_url"]["url_list"][-1]  # 图片链接
@@ -738,7 +738,7 @@ class UserData:
                 item)
             digg_count = str(item["digg_count"])
             cid = item["cid"]
-            reply_comment_total = item.get("reply_comment_total", -1)
+            reply_comment_total = item.get("reply_comment_total") or -1
             if reply_comment_total > 0:
                 self.reply.append(cid)
             reply_id = item["reply_id"]
@@ -888,22 +888,22 @@ class UserData:
         follower_count = data["follower_count"]  # 粉丝数量
         following_count = data["following_count"]  # 关注数量
         max_follower_count = data["max_follower_count"]  # 粉丝数量最大值
-        city = data.get("city", "")
-        country = data.get("country", "")
-        district = data.get("district", "")
-        ip_location = data.get("ip_location", "")
-        signature = data.get("signature", "")  # 简介
+        city = data.get("city") or ""
+        country = data.get("country") or ""
+        district = data.get("district") or ""
+        ip_location = data.get("ip_location") or ""
+        signature = data.get("signature") or ""  # 简介
         total_favorited = data["total_favorited"]  # 获赞数量
-        nickname = data.get("nickname", "")  # 账号昵称
+        nickname = data.get("nickname") or "已注销账号"  # 账号昵称
         sec_uid = data["sec_uid"]
         unique_id = data["unique_id"]  # 抖音号
         short_id = data["short_id"]
         user_age = data["user_age"]  # 年龄
         aweme_count = data["aweme_count"]  # 作品数量
         # room_data = data.get("room_data")  # 直播数据
-        custom_verify = data.get("custom_verify", "")  # 标签认证
+        custom_verify = data.get("custom_verify") or ""  # 标签认证
         uid = data["uid"]
-        enterprise = data.get("enterprise_verify_reason", "")  # 企业认证
+        enterprise = data.get("enterprise_verify_reason") or ""  # 企业认证
         return [
             collection_time,
             nickname,
