@@ -128,7 +128,7 @@ class UserData:
     def __init__(self, log: LoggerManager | BaseLogger):
         self.log = log  # 日志记录对象，通用
         self.data = None  # 数据记录对象，评论抓取和账号数据抓取调用，调用前赋值
-        self._cookie = False  # 是否设置了Cookie，通用
+        self._cookie = {}  # Cookie，通用
         self.id_ = None  # sec_uid or item_ids
         self.comment = []  # 评论数据
         self.cursor = 0  # 最早创建日期，时间戳
@@ -194,15 +194,14 @@ class UserData:
         return self._cookie
 
     @cookie.setter
-    def cookie(self, cookie: str):
-        if not cookie:
-            return
-        if isinstance(cookie, str):
-            self.headers["Cookie"] = cookie
+    def cookie(self, cookie: dict):
+        if isinstance(cookie, dict):
+            self._cookie = cookie
             for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
-                if i:
-                    self.headers["Cookie"] += f"; {i}"
-            self._cookie = True
+                if isinstance(i, dict):
+                    self._cookie |= i
+            self.headers["Cookie"] = "; ".join(
+                [f"{i}={j}" for i, j in self._cookie.items()])
 
     @property
     def earliest(self):
@@ -754,7 +753,7 @@ class UserData:
                 unique_id,
                 nickname,
                 signature,
-                user_age,
+                str(user_age),
                 ip_label,
                 text,
                 sticker,

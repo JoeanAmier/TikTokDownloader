@@ -209,8 +209,8 @@ class TikTok:
         self.request.time = self._data["time"]
         self.download.time = self.request.time
         self.download.split = self._data["split"]
-        self.download.cookie = self._data["cookie"]
         self.request.cookie = self._data["cookie"]
+        self.download.cookie = self.request.cookie
         self.download.dynamic = self._data["dynamic"]
         self.download.original = self._data["original"]
         self.request.proxies = self._data["proxies"]

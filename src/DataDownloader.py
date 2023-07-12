@@ -8,8 +8,6 @@ import requests
 from src.DataAcquirer import check_cookie
 from src.DataAcquirer import retry
 from src.DataAcquirer import sleep
-from src.Parameter import MsToken
-from src.Parameter import TtWid
 from src.Parameter import WedID
 from src.Parameter import XBogus
 from src.Recorder import BaseLogger
@@ -51,7 +49,7 @@ class Download:
         self.headers = {}  # 请求头，通用
         self.log = log  # 日志记录模块，通用
         self.data = save  # 详细数据记录模块，调用前赋值
-        self._cookie = False  # 通用
+        self._cookie = {}  # 从DataAcquirer.py传入，通用
         self._nickname = None  # 账号昵称，调用前赋值
         self._root = None  # 根目录，通用
         self._name = None  # 文件命名格式，通用
@@ -220,16 +218,12 @@ class Download:
         return self._cookie
 
     @cookie.setter
-    def cookie(self, cookie: str):
-        if not cookie:
-            return
-        if isinstance(cookie, str):
-            self.headers["Cookie"] = cookie
-            for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
-                if i:
-                    self.headers["Cookie"] += f"; {i}"
-            self.headers.update(self.UA)
-            self._cookie = True
+    def cookie(self, cookie: dict):
+        if isinstance(cookie, dict):
+            self._cookie = cookie
+            self.headers |= self.UA
+            self.headers["Cookie"] = "; ".join(
+                [f"{i}={j}" for i, j in self._cookie.items()])
 
     def create_folder(self, folder: str, live=False):
         """创建作品保存文件夹"""
