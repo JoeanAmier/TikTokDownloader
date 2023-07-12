@@ -26,13 +26,12 @@ class Cookie:
             if (k := text[0]) in get_key:
                 get_key[k] = text[1]
         if all(
-                value for _,
-                value in get_key.items() if _ in (
+                value for key,
+                value in get_key.items() if key in (
                         'passport_csrf_token',
                         'odin_tt')):
             self.get_login_token(get_key)
-            self.write("; ".join(
-                [f"{key}={value}" for key, value in get_key.items()]), index)
+            self.write(get_key, index)
             print("写入 Cookie 成功！")
         else:
             print("Cookie 缺少必需的键值对！")
@@ -48,6 +47,6 @@ class Cookie:
     def write(self, text, index):
         data = self.settings.read()
         while len(data["cookie"]) < index + 1:
-            data["cookie"].append("")
+            data["cookie"].append({})
         data["cookie"][index] = text
         self.settings.update(data)
