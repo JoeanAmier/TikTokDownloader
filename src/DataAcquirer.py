@@ -5,6 +5,7 @@ from datetime import datetime
 from random import randrange
 from re import compile
 from urllib.parse import urlencode
+from urllib.parse import urljoin
 from urllib.parse import urlparse
 
 import requests
@@ -321,8 +322,8 @@ class UserData:
         self.log.info(f"{url} {value}: {self.id_}", False)
         return True
 
-    def deal_params(self, params: dict) -> dict:
-        xb = self.xb.get_x_bogus(urlencode(params))
+    def deal_url_params(self, url: str, params: dict) -> dict:
+        xb = self.xb.get_x_bogus(urljoin(url, urlencode(params)))
         params["X-Bogus"] = xb
         return params
 
@@ -334,14 +335,15 @@ class UserData:
             "aid": "6383",
             "channel": "channel_pc_web",
             "sec_user_id": self.id_,
-            "count": "18",
             "max_cursor": self.cursor,
+            "count": "18",
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
             "webid": self.__web,
+            "msToken": self.cookie["msToken"],
         }
-        params = self.deal_params(params)
+        self.deal_url_params(self.api, params)
         self.list = []
         try:
             response = requests.get(
@@ -411,15 +413,16 @@ class UserData:
             "aid": "6383",
             "channel": "channel_pc_web",
             "sec_user_id": self.id_,
-            "count": "18",
             "max_cursor": 0,
+            "count": "18",
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
             "webid": self.__web,
+            "msToken": self.cookie["msToken"],
 
         }
-        params = self.deal_params(params)
+        self.deal_url_params(self.api.replace("favorite", "post"), params)
         self.name = str(time.time())[:10]
         try:
             response = requests.get(
@@ -590,10 +593,13 @@ class UserData:
             "aid": "6383",
             "app_name": "douyin_web",
             "device_platform": "web",
+            "language": "zh-CN",
+            "enter_from": "web_live",
             "cookie_enabled": "true",
-            "web_rid": id_
+            "web_rid": id_,
+            "msToken": self.cookie["msToken"],
         }
-        params = self.deal_params(params)
+        self.deal_url_params(self.live_api, params)
         try:
             response = requests.get(
                 self.live_api,
@@ -656,10 +662,13 @@ class UserData:
                 "comment_id": reply,
                 "cursor": self.cursor,
                 "count": "3",  # 每次返回数据的数量
+                "item_type": "0",
+                "pc_client_type": "1",
                 "cookie_enabled": "true",
                 "platform": "PC",
                 "downlink": "10",
                 "webid": self.__web,
+                "msToken": self.cookie["msToken"],
             }
         else:
             params = {
@@ -669,11 +678,17 @@ class UserData:
                 "aweme_id": id_,
                 "cursor": self.cursor,
                 "count": "20",
+                "item_type": "0",
+                "insert_ids": "",
+                "rcFT": "",
+                "pc_client_type": "1",
                 "cookie_enabled": "true",
                 "platform": "PC",
                 "downlink": "10",
-                "webid": self.__web, }
-        params = self.deal_params(params)
+                "webid": self.__web,
+                "msToken": self.cookie["msToken"],
+            }
+        self.deal_url_params(api, params)
         self.comment = []
         try:
             response = requests.get(
@@ -798,12 +813,14 @@ class UserData:
             "mix_id": id_,
             "cursor": self.cursor,
             "count": "20",
+            "pc_client_type": "1",
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
             "webid": self.__web,
+            "msToken": self.cookie["msToken"],
         }
-        params = self.deal_params(params)
+        self.deal_url_params(self.mix_api, params)
         self.mix_data = []
         try:
             response = requests.get(
@@ -857,8 +874,9 @@ class UserData:
             "platform": "PC",
             "downlink": "10",
             "webid": self.__web,
+            "msToken": self.cookie["msToken"],
         }
-        params = self.deal_params(params)
+        self.deal_url_params(self.user_api, params)
         try:
             response = requests.get(
                 self.user_api,
@@ -1000,10 +1018,11 @@ class UserData:
             "platform": "PC",
             "downlink": "10",
             "webid": self.__web,
+            "msToken": self.cookie["msToken"],
         }
         if type_ == 2:
             user_params(params)
-        params = self.deal_params(params)
+        self.deal_url_params(api, params)
         self.list = []
         try:
             response = requests.get(
