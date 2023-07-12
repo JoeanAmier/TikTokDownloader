@@ -2,6 +2,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlencode
+from urllib.parse import urljoin
 
 import requests
 
@@ -31,10 +32,10 @@ def reset(function):
 
 
 class Download:
-    UA = {
+    PC_UA = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
     }  # 下载请求头
-    phone_UA = {
+    Phone_UA = {
         'User-Agent': 'com.ss.android.ugc.trill/494+Mozilla/5.0+(Linux;+Android+12;+2112123G+Build/SKQ1.211006.001;+wv)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Version/4.0+Chrome/107.0.5304.105+Mobile+Safari/537.36'
     }  # 移动端请求头
     # video_id_api = "https://aweme.snssdk.com/aweme/v1/play/"  # 官方视频下载接口，已弃用
@@ -221,9 +222,13 @@ class Download:
     def cookie(self, cookie: dict):
         if isinstance(cookie, dict):
             self._cookie = cookie
-            self.headers |= self.UA
+            self.headers |= self.PC_UA
             self.headers["Cookie"] = "; ".join(
                 [f"{i}={j}" for i, j in self._cookie.items()])
+
+    def deal_url_params(self, url: str, params: dict):
+        xb = self.xb.get_x_bogus(urljoin(url, urlencode(params)))
+        params["X-Bogus"] = xb
 
     def create_folder(self, folder: str, live=False):
         """创建作品保存文件夹"""
@@ -249,7 +254,7 @@ class Download:
                 "aweme_id": item,
             }
             api = self.item_tiktok_api
-            headers = self.phone_UA
+            headers = self.Phone_UA
         else:
             params = {
                 "aweme_id": item,
@@ -258,9 +263,8 @@ class Download:
                 "platform": "PC",
                 "downlink": "10"
             }
-            xb = self.xb.get_x_bogus(urlencode(params))
-            params["X-Bogus"] = xb
             api = self.item_api
+            self.deal_url_params(api, params)
             headers = self.headers | {
                 'referer': 'https://www.douyin.com/',
             }
@@ -445,7 +449,7 @@ class Download:
                     url,
                     stream=True,
                     proxies=self.proxies,
-                    headers=self.phone_UA if self.tiktok else self.headers) as response:
+                    headers=self.Phone_UA if self.tiktok else self.headers) as response:
                 sleep()
                 if response.content == b"":
                     self.log.warning(f"{url} 返回内容为空")
