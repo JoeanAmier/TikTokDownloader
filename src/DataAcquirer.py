@@ -332,17 +332,13 @@ class UserData:
     def get_user_data(self) -> bool:
         """获取账号作品数据"""
         params = {
-            "device_platform": "webapp",
             "aid": "6383",
-            "channel": "channel_pc_web",
             "sec_user_id": self.id_,
             "max_cursor": self.cursor,
             "count": "18",
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
-            "webid": self.__web,
-            "msToken": self.cookie["msToken"],
         }
         self.deal_url_params(params)
         self.list = []
@@ -410,18 +406,13 @@ class UserData:
     def get_nickname(self):
         """喜欢页下载模式需要额外发送请求获取账号昵称和UID"""
         params = {
-            "device_platform": "webapp",
             "aid": "6383",
-            "channel": "channel_pc_web",
             "sec_user_id": self.id_,
             "max_cursor": 0,
             "count": "18",
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
-            "webid": self.__web,
-            "msToken": self.cookie["msToken"],
-
         }
         self.deal_url_params(params)
         self.name = str(time.time())[:10]
@@ -536,6 +527,8 @@ class UserData:
                     url=i,
                     return_=True) for i in url]
             result = [i for i in result if i]
+            if user:
+                return [f"https://www.douyin.com/user/{i}" for i in result]
             return result or False
         else:
             raise TypeError
@@ -592,13 +585,9 @@ class UserData:
     def get_live_data(self, id_: str):
         params = {
             "aid": "6383",
-            "app_name": "douyin_web",
             "device_platform": "web",
-            "language": "zh-CN",
-            "enter_from": "web_live",
             "cookie_enabled": "true",
             "web_rid": id_,
-            "msToken": self.cookie["msToken"],
         }
         self.deal_url_params(params)
         try:
@@ -656,38 +645,24 @@ class UserData:
         """获取评论数据"""
         if reply:
             params = {
-                "device_platform": "webapp",
                 "aid": "6383",
-                "channel": "channel_pc_web",
                 "item_id": id_,
                 "comment_id": reply,
                 "cursor": self.cursor,
                 "count": "3",  # 每次返回数据的数量
-                "item_type": "0",
-                "pc_client_type": "1",
                 "cookie_enabled": "true",
                 "platform": "PC",
                 "downlink": "10",
-                "webid": self.__web,
-                "msToken": self.cookie["msToken"],
             }
         else:
             params = {
-                "device_platform": "webapp",
                 "aid": "6383",
-                "channel": "channel_pc_web",
                 "aweme_id": id_,
                 "cursor": self.cursor,
                 "count": "20",
-                "item_type": "0",
-                "insert_ids": "",
-                "rcFT": "",
-                "pc_client_type": "1",
                 "cookie_enabled": "true",
                 "platform": "PC",
                 "downlink": "10",
-                "webid": self.__web,
-                "msToken": self.cookie["msToken"],
             }
         self.deal_url_params(params)
         self.comment = []
@@ -809,18 +784,13 @@ class UserData:
     def get_mix_data(self, id_):
         """获取合集作品数据"""
         params = {
-            "device_platform": "webapp",
             "aid": "6383",
-            "channel": "channel_pc_web",
             "mix_id": id_,
             "cursor": self.cursor,
             "count": "20",
-            "pc_client_type": "1",
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
-            "webid": self.__web,
-            "msToken": self.cookie["msToken"],
         }
         self.deal_url_params(params)
         self.mix_data = []
@@ -875,8 +845,6 @@ class UserData:
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
-            "webid": self.__web,
-            "msToken": self.cookie["msToken"],
         }
         self.deal_url_params(params)
         try:
@@ -1003,24 +971,17 @@ class UserData:
             metadata["from_group_id"] = ""
 
         params = {
-            "device_platform": "webapp",
             "aid": "6383",
-            "channel": "channel_pc_web",
             "search_channel": channel,
             "sort_type": sort_type,
             "publish_time": publish_time,
             "keyword": keyword,
-            "search_source": "switch_tab",
-            "query_correct_type": "1",
             "is_filter_search": 0 if sort_type == 0 and publish_time == "0" else 1,
             "offset": self.cursor,
             "count": first if self.cursor == 0 else 10,
-            "pc_client_type": "1",
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
-            "webid": self.__web,
-            "msToken": self.cookie["msToken"],
         }
         if type_ == 2:
             user_params(params)
