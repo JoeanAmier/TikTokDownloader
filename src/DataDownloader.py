@@ -2,7 +2,6 @@ import time
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlencode
-from urllib.parse import urljoin
 
 import requests
 
@@ -226,8 +225,8 @@ class Download:
             self.headers["Cookie"] = "; ".join(
                 [f"{i}={j}" for i, j in self._cookie.items()])
 
-    def deal_url_params(self, url: str, params: dict):
-        xb = self.xb.get_x_bogus(urljoin(url, urlencode(params)))
+    def deal_url_params(self, params: dict):
+        xb = self.xb.get_x_bogus(urlencode(params))
         params["X-Bogus"] = xb
 
     def create_folder(self, folder: str, live=False):
@@ -264,10 +263,8 @@ class Download:
                 "downlink": "10"
             }
             api = self.item_api
-            self.deal_url_params(api, params)
-            headers = self.headers | {
-                'referer': 'https://www.douyin.com/',
-            }
+            self.deal_url_params(params)
+            headers = self.headers
         try:
             response = requests.get(
                 api,
@@ -284,7 +281,7 @@ class Download:
             except KeyError:
                 self.log.error(f"作品详细数据内容异常: {response.json()}", False)
                 return False
-        except requests.exceptions.ReadTimeout:
+        except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectTimeout):
             self.log.error(f"请求超时，资源 {item} 获取详细数据失败")
             return False
 

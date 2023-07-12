@@ -5,7 +5,6 @@ from datetime import datetime
 from random import randrange
 from re import compile
 from urllib.parse import urlencode
-from urllib.parse import urljoin
 from urllib.parse import urlparse
 
 import requests
@@ -322,8 +321,8 @@ class UserData:
         self.log.info(f"{url} {value}: {self.id_}", False)
         return True
 
-    def deal_url_params(self, url: str, params: dict):
-        xb = self.xb.get_x_bogus(urljoin(url, urlencode(params)))
+    def deal_url_params(self, params: dict):
+        xb = self.xb.get_x_bogus(urlencode(params))
         params["X-Bogus"] = xb
 
     @retry(finish=True)
@@ -342,7 +341,7 @@ class UserData:
             "webid": self.__web,
             "msToken": self.cookie["msToken"],
         }
-        self.deal_url_params(self.api, params)
+        self.deal_url_params(params)
         self.list = []
         try:
             response = requests.get(
@@ -421,7 +420,7 @@ class UserData:
             "msToken": self.cookie["msToken"],
 
         }
-        self.deal_url_params(self.api.replace("favorite", "post"), params)
+        self.deal_url_params(params)
         self.name = str(time.time())[:10]
         try:
             response = requests.get(
@@ -598,7 +597,7 @@ class UserData:
             "web_rid": id_,
             "msToken": self.cookie["msToken"],
         }
-        self.deal_url_params(self.live_api, params)
+        self.deal_url_params(params)
         try:
             response = requests.get(
                 self.live_api,
@@ -687,7 +686,7 @@ class UserData:
                 "webid": self.__web,
                 "msToken": self.cookie["msToken"],
             }
-        self.deal_url_params(api, params)
+        self.deal_url_params(params)
         self.comment = []
         try:
             response = requests.get(
@@ -820,7 +819,7 @@ class UserData:
             "webid": self.__web,
             "msToken": self.cookie["msToken"],
         }
-        self.deal_url_params(self.mix_api, params)
+        self.deal_url_params(params)
         self.mix_data = []
         try:
             response = requests.get(
@@ -876,7 +875,7 @@ class UserData:
             "webid": self.__web,
             "msToken": self.cookie["msToken"],
         }
-        self.deal_url_params(self.user_api, params)
+        self.deal_url_params(params)
         try:
             response = requests.get(
                 self.user_api,
@@ -1022,7 +1021,7 @@ class UserData:
         }
         if type_ == 2:
             user_params(params)
-        self.deal_url_params(api, params)
+        self.deal_url_params(params)
         self.list = []
         try:
             response = requests.get(
