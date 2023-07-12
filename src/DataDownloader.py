@@ -291,11 +291,11 @@ class Download:
     def get_author_data(self, data):
         data = data["author"]
         uid = self.uid or data["uid"]
-        short_id = data["short_id"]
-        nickname = data["nickname"] or "已注销账号"
-        signature = data["signature"]
-        unique_id = data["unique_id"]
         sec_uid = data["sec_uid"]
+        short_id = data.get("short_id", "")
+        unique_id = data.get("unique_id", "")
+        signature = data.get("signature", "")
+        nickname = data.get("nickname", "已注销账号")
         return uid, sec_uid, nickname, unique_id, short_id, signature
 
     def get_info(self, data: list[str | dict]):

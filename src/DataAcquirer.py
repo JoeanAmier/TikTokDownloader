@@ -332,6 +332,7 @@ class UserData:
     def get_user_data(self) -> bool:
         """获取账号作品数据"""
         params = {
+            "device_platform": "webapp",
             "aid": "6383",
             "channel": "channel_pc_web",
             "sec_user_id": self.id_,
@@ -586,6 +587,7 @@ class UserData:
     def get_live_data(self, id_: str):
         params = {
             "aid": "6383",
+            "app_name": "douyin_web",
             "device_platform": "web",
             "cookie_enabled": "true",
             "web_rid": id_,
@@ -646,7 +648,9 @@ class UserData:
         """获取评论数据"""
         if reply:
             params = {
+                "device_platform": "webapp",
                 "aid": "6383",
+                "channel": "channel_pc_web",
                 "item_id": id_,
                 "comment_id": reply,
                 "cursor": self.cursor,
@@ -657,7 +661,9 @@ class UserData:
             }
         else:
             params = {
+                "device_platform": "webapp",
                 "aid": "6383",
+                "channel": "channel_pc_web",
                 "aweme_id": id_,
                 "cursor": self.cursor,
                 "count": "20",
@@ -785,7 +791,9 @@ class UserData:
     def get_mix_data(self, id_):
         """获取合集作品数据"""
         params = {
+            "device_platform": "webapp",
             "aid": "6383",
+            "channel": "channel_pc_web",
             "mix_id": id_,
             "cursor": self.cursor,
             "count": "20",
