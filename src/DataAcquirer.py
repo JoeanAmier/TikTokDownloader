@@ -11,7 +11,7 @@ import requests
 
 from src.Parameter import MsToken
 from src.Parameter import TtWid
-from src.Parameter import WebID
+# from src.Parameter import WebID
 from src.Parameter import XBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
@@ -152,14 +152,14 @@ class UserData:
         self._time = None  # 创建时间格式，通用
         self.retry = 10  # 重试最大次数，通用
         self.tiktok = False  # TikTok 平台
-        self.__web = None
+        # self.__web = None
 
-    def set_web_id(self):
-        if not self.__web:
-            if w := WebID.get_web_id(self.headers["User-Agent"]):
-                self.__web = w
-            else:
-                self.__web = WebID.generate_random_number(19)
+    # def set_web_id(self):
+    #     if not self.__web:
+    #         if w := WebID.get_web_id(self.headers["User-Agent"]):
+    #             self.__web = w
+    #         else:
+    #             self.__web = WebID.generate_random_number(19)
 
     @property
     def url(self):
@@ -332,10 +332,13 @@ class UserData:
     def get_user_data(self) -> bool:
         """获取账号作品数据"""
         params = {
+            "device_platform": "webapp",
             "aid": "6383",
+            "channel": "channel_pc_web",
             "sec_user_id": self.id_,
             "max_cursor": self.cursor,
             "count": "18",
+            "pc_client_type": "1",
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
