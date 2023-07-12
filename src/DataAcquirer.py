@@ -633,17 +633,17 @@ class UserData:
     @check_cookie
     def run_comment(self, id_: str, data):
         self.data = data
+        self.log.info("开始获取评论数据")
         while not self.finish:
             self.get_comment(id_=id_, api=self.comment_api)
             self.deal_comment()
-        self.log.info("开始获取楼中楼评论数据")
         for item in self.reply:
             self.finish = False
             self.cursor = 0
             while not self.finish:
                 self.get_comment(id_=id_, api=self.reply_api, reply=item)
                 self.deal_comment()
-        self.log.info("楼中楼评论数据获取结束")
+        self.log.info("评论数据获取结束")
 
     @retry(finish=True)
     def get_comment(self, id_: str, api: str, reply=""):
