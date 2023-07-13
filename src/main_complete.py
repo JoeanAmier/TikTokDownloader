@@ -401,7 +401,7 @@ class TikTok:
         data_type = {
             0: "",
             1: "",
-            2: "user",
+            2: "search_user",
         }
         self.download.favorite = True
         self.download.download = False
