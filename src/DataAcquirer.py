@@ -878,11 +878,10 @@ class UserData:
             return False
 
     @staticmethod
-    def deal_user(data, search=False):
-        if not search:
-            data = data["user"]
+    def deal_user(data):
+        data = data["user"]
         collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 采集时间
-        avatar_larger = data["avatar_larger"]["url_list"][0] or ""  # 头像链接
+        avatar = data["avatar_larger"]["url_list"][0] or ""  # 头像链接
         cover = c[0]["url_list"][0] if (
             c := data.get("cover_url")) else ""  # 背景图片链接
         favoriting_count = data["favoriting_count"]  # 喜欢作品数量
@@ -920,7 +919,7 @@ class UserData:
             sec_uid,
             uid,
             short_id,
-            avatar_larger,
+            avatar,
             cover,
             str(aweme_count),
             str(total_favorited),
@@ -945,9 +944,9 @@ class UserData:
             sort_type: int,
             publish_time: str):
         deal = {
-            0: self.deal_search_general,
-            1: self.deal_search_general,
-            2: self.deal_search_user,
+            0: self.add_search_general,
+            1: self.add_search_general,
+            2: self.add_search_user,
         }
         self.log.info("开始获取搜索数据")
         api, first, channel, type_text = self.search_api[type_]
@@ -1023,14 +1022,14 @@ class UserData:
             self.log.error("搜索结果返回内容异常！疑似接口失效", False)
             return False
         try:
-            self.list = date["user_list"] if type_ == 2 else data["data"]
+            self.list = data["user_list"] if type_ == 2 else data["data"]
             self.cursor += params["count"]
             return True
         except KeyError:
             self.log.error(f"搜索结果响应内容异常: {data}", False)
             return False
 
-    def deal_search_general(self):
+    def add_search_general(self):
         for item in self.list:
             if data := item.get("aweme_info"):
                 self.search_data.append(data)
@@ -1043,6 +1042,6 @@ class UserData:
                 self.log.warning("搜索结果包含未知的JSON数据，请开启日志记录并告知作者处理")
                 self.log.warning(f"不受支持的数据: {item}", False)
 
-    def deal_search_user(self):
+    def add_search_user(self):
         for item in self.list:
             self.search_data.append(item["user_info"])
