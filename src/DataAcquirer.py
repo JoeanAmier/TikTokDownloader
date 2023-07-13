@@ -4,6 +4,7 @@ from datetime import date
 from datetime import datetime
 from random import randrange
 from re import compile
+from urllib.parse import quote
 from urllib.parse import urlencode
 from urllib.parse import urlparse
 
@@ -80,7 +81,7 @@ def retry(finish=False):
 class UserData:
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
-        'referer': 'https://www.douyin.com/',
+        'Referer': 'https://www.douyin.com/',
     }
     # 抖音
     share = compile(
@@ -106,11 +107,11 @@ class UserData:
     history_api = "https://www.douyin.com/aweme/v1/web/history/read/"  # 观看历史API
     following_api = "https://www.douyin.com/aweme/v1/web/user/following/list/"  # 关注列表API
     search_api = (
-        ("https://www.douyin.com/aweme/v1/web/general/search/single/", 15, "aweme_general",),
-        ("https://www.douyin.com/aweme/v1/web/search/item/", 20, "aweme_video_web",),
-        ("https://www.douyin.com/aweme/v1/web/discover/search/", 12, "aweme_user_web",),
-        ("https://www.douyin.com/aweme/v1/web/live/search/", 15, "aweme_live",),
-        ("API", "首次请求返回数量", "search_channel")
+        ("https://www.douyin.com/aweme/v1/web/general/search/single/", 15, "aweme_general", "general",),
+        ("https://www.douyin.com/aweme/v1/web/search/item/", 20, "aweme_video_web", "video",),
+        ("https://www.douyin.com/aweme/v1/web/discover/search/", 12, "aweme_user_web", "user",),
+        ("https://www.douyin.com/aweme/v1/web/live/search/", 15, "aweme_live", "",),
+        ("API", "首次请求返回数量", "search_channel", "type")
     )
     # TikTok
     works_tiktok_link = compile(
@@ -950,7 +951,8 @@ class UserData:
             2: self.deal_search_user,
         }
         self.log.info("开始获取搜索数据")
-        api, first, channel = self.search_api[type_]
+        api, first, channel, type_text = self.search_api[type_]
+        self.headers["Referer"] = f"https://www.douyin.com/search/{quote(keyword)}?type={type_text}"
         for _ in range(page):
             if not self.get_search_data(
                     type_,
@@ -987,6 +989,7 @@ class UserData:
             "sort_type": sort_type,
             "publish_time": publish_time,
             "keyword": keyword,
+            "search_source": "switch_tab",
             "is_filter_search": 0 if sort_type == 0 and publish_time == "0" else 1,
             "offset": self.cursor,
             "count": first if self.cursor == 0 else 10,
