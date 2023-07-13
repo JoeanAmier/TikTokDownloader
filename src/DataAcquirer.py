@@ -928,10 +928,13 @@ class UserData:
             str(following_count),
             str(max_follower_count), ]
 
-    def save_user(self, file, data):
+    def save_user(self, file, data, batch=False):
         self.data = file
-        self.log.info("账号数据: " + ", ".join(data), False)
-        self.data.save(data, key=1)
+        if not batch:
+            data = [data]
+        for i in data:
+            self.log.info("账号数据: " + ", ".join(i), False)
+            self.data.save(i, key=1)
         self.log.info("账号数据储存结束")
 
     @reset
@@ -1045,3 +1048,34 @@ class UserData:
     def add_search_user(self):
         for item in self.list:
             self.search_data.append(item["user_info"])
+
+    def deal_search_user(self) -> list[list]:
+        result = []
+        for item in self.search_data:
+            collection_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")  # 采集时间
+            uid = item.get('uid')
+            short_id = item.get('short_id')
+            nickname = item.get('nickname')
+            signature = item.get('signature')
+            avatar = item["avatar_thumb"]["url_list"][0]  # 搜索模式只能获取头像缩略图
+            follower_count = item.get("follower_count") or 0
+            total_favorited = item.get("total_favorited") or 0
+            custom_verify = item.get("custom_verify")
+            unique_id = item.get("unique_id")
+            enterprise = item.get("enterprise_verify_reason")
+            sec_uid = item.get("sec_uid")
+            result.append([
+                collection_time,
+                uid,
+                sec_uid,
+                nickname,
+                unique_id,
+                short_id,
+                avatar,
+                signature,
+                custom_verify,
+                enterprise,
+                str(follower_count),
+                str(total_favorited),
+            ])
+        return result

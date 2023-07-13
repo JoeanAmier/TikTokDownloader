@@ -431,9 +431,8 @@ class TikTok:
 
     def deal_search_user(self, file):
         self.logger.info("开始提取搜索结果")
-        for i in self.request.search_data:
-            item = self.request.deal_user(i, True)
-            self.request.save_user(file, item)
+        item = self.request.deal_search_user()
+        self.request.save_user(file, item, True)
         self.logger.info("搜索结果提取结束")
 
     def run(self):
