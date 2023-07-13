@@ -58,6 +58,9 @@ function solo_post(download = false) {
         $("#origin_url").data("link", result["origin"]);
         $("#dynamic_url").data("link", result["dynamic"]);
         $("#solo_preview").attr("src", result["preview"]);
+        if (result["download"] !== false) {
+            $('#solo_url').val("");
+        }
     });
 }
 
@@ -113,6 +116,7 @@ function live_post() {
         $("#live_state").val(result["text"]);
         let urls = result["urls"];
         if (urls) {
+            $("#live_url").val("");
             $("#all_url").data("link", urls);
             $("#best_url").data("link", result["best"]);
         } else {
