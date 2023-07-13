@@ -891,7 +891,7 @@ class UserData:
         max_follower_count = data["max_follower_count"]  # 粉丝数量最大值
         city = data.get("city") or ""
         country = data.get("country") or ""
-        district = data.get("district") or ""
+        # district = data.get("district") or ""
         # ip_location = data.get("ip_location") or ""
         signature = data.get("signature") or ""  # 简介
         total_favorited = data["total_favorited"]  # 获赞数量
@@ -913,7 +913,7 @@ class UserData:
             str(user_age),
             country,
             city,
-            district,
+            # district,
             # ip_location,
             custom_verify,
             enterprise,
