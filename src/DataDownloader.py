@@ -226,9 +226,7 @@ class Download:
             self.headers |= self.PC_UA
             self._cookie = cookie
             self.headers["Cookie"] = (
-                    "; ".join([f"{i}={j}" for i, j in self._cookie.items()])
-                    + "; douyin.com"
-            )
+                "; ".join([f"{i}={j}" for i, j in self._cookie.items()]))
 
     def deal_url_params(self, params: dict):
         xb = self.xb.get_x_bogus(urlencode(params))
