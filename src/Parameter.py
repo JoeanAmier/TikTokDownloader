@@ -318,7 +318,7 @@ class MsToken:
         """
         根据传入长度产生随机字符串
         """
-        base_str = f"{ascii_letters}{digits}="
+        base_str = ascii_letters + digits
         length = len(base_str) - 1
         return {start: "".join(base_str[randint(0, length)]
                                for _ in range(size))}
