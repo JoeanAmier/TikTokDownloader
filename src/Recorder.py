@@ -311,9 +311,9 @@ class RecordManager:
         "作品类型",
         "采集时间",
         "账号UID",
-        "sec_uid",
-        "unique_id",
-        "short_id",
+        "SEC_UID",
+        "抖音号",
+        "SHORT_ID",
         "作品ID",
         "作品描述",
         "发布时间",
@@ -355,8 +355,8 @@ class RecordManager:
         "评论ID",
         "评论时间",
         "账号UID",
-        "sec_uid",
-        "short_id",
+        "SEC_UID",
+        "SHORT_ID",
         "抖音号",
         "账号昵称",
         "账号签名",
@@ -391,8 +391,8 @@ class RecordManager:
     User_Title = (
         "ID",
         "采集时间",
-        "昵称",
-        "简介",
+        "昵称昵称",
+        "账号签名",
         "抖音号",
         "年龄",
         "国家",
@@ -401,11 +401,11 @@ class RecordManager:
         # "IP归属地",
         "标签",
         "企业",
-        "sec_uid",
-        "uid",
-        "short_id",
-        "头像",
-        "背景图",
+        "SEC_UID",
+        "账号UID",
+        "SHORT_ID",
+        "头像链接",
+        "背景图链接",
         "作品数量",
         "获赞数量",
         "喜欢作品数量",
@@ -438,6 +438,34 @@ class RecordManager:
         "INTEGER",
         "INTEGER",
     )
+    Search_User_Title = (
+        "采集时间",
+        "账号UID",
+        "SEC_UID",
+        "账号昵称",
+        "抖音号",
+        "SHORT_ID",
+        "头像缩略图",
+        "账号签名",
+        "标签",
+        "企业",
+        "粉丝数量",
+        "获赞数量",
+    )
+    Search_User_Type = (
+        "TEXT",
+        "TEXT PRIMARY KEY",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "INTEGER",
+        "INTEGER",
+    )
     DataSheet = {
         "comment": {
             "file": "CommentData.db",
@@ -451,6 +479,11 @@ class RecordManager:
             "file": "MixData.db",
             "title_line": Title,
             "title_type": Type_
+        },
+        "search_user": {
+            "file": "SearchResult.db",
+            "title_line": Search_User_Title,
+            "title_type": Search_User_Type,
         }
     }
     DataLogger = {
