@@ -439,6 +439,7 @@ class RecordManager:
         "INTEGER",
     )
     Search_User_Title = (
+        "ID",
         "采集时间",
         "账号UID",
         "SEC_UID",
@@ -453,8 +454,9 @@ class RecordManager:
         "获赞数量",
     )
     Search_User_Type = (
+        "INTEGER PRIMARY KEY",
         "TEXT",
-        "TEXT PRIMARY KEY",
+        "TEXT",
         "TEXT",
         "TEXT",
         "TEXT",
