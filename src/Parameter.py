@@ -1,6 +1,5 @@
 from contextlib import suppress
 from hashlib import md5
-from random import choice
 from random import randint
 from string import ascii_letters
 from string import digits
@@ -350,12 +349,6 @@ class TtWid:
 
 
 class WebID:
-    @staticmethod
-    # 定义生成随机数字的函数
-    def generate_random_number(length):
-        # 从数字字符集合中随机选择指定长度的字符
-        return ''.join(choice(digits) for _ in range(length))
-
     @staticmethod
     def get_web_id(ua: str) -> str | None:
         url = "https://mcs.zijieapi.com/webid"
