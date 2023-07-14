@@ -314,14 +314,14 @@ class MsToken:
     """代码参考: https://github.com/B1gM8c/X-Bogus"""
 
     @staticmethod
-    def get_ms_token(start="msToken", size=107) -> dict:
+    def get_ms_token(key="msToken", size=107) -> dict:
         """
         根据传入长度产生随机字符串
         """
         base_str = ascii_letters + digits
         length = len(base_str) - 1
-        return {start: "".join(base_str[randint(0, length)]
-                               for _ in range(size))}
+        return {key: "".join(base_str[randint(0, length)]
+                             for _ in range(size))}
 
 
 class TtWid:
