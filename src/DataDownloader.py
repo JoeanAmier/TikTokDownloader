@@ -6,6 +6,7 @@ from urllib.parse import urlencode
 import requests
 
 from src.DataAcquirer import check_cookie
+from src.DataAcquirer import generate_user_agent
 from src.DataAcquirer import retry
 from src.DataAcquirer import sleep
 # from src.Parameter import WebID
@@ -32,7 +33,7 @@ def reset(function):
 
 class Download:
     PC_UA = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.79",
+        "User-Agent": generate_user_agent()
     }  # 下载请求头
     Phone_UA = {
         'User-Agent': 'com.ss.android.ugc.trill/494+Mozilla/5.0+(Linux;+Android+12;+2112123G+Build/SKQ1.211006.001;+wv)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Version/4.0+Chrome/107.0.5304.105+Mobile+Safari/537.36'
