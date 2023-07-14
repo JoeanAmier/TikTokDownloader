@@ -2,6 +2,7 @@ from contextlib import suppress
 from hashlib import md5
 from random import choice
 from random import randint
+from string import ascii_letters
 from string import digits
 from time import time
 
@@ -318,7 +319,7 @@ class MsToken:
         """
         根据传入长度产生随机字符串
         """
-        base_str = 'ABCDEFGHIGKLMNOPQRSTUVWXYZabcdefghigklmnopqrstuvwxyz0123456789='
+        base_str = f"{ascii_letters}{digits}="
         length = len(base_str) - 1
         return {start: "".join(base_str[randint(0, length)]
                                for _ in range(size))}
