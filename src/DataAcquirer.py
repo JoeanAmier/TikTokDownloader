@@ -13,7 +13,7 @@ import requests
 
 from src.Parameter import MsToken
 from src.Parameter import TtWid
-# from src.Parameter import WebID
+from src.Parameter import WebID
 from src.Parameter import XBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
@@ -162,14 +162,12 @@ class UserData:
         self._time = None  # 创建时间格式，通用
         self.retry = 10  # 重试最大次数，通用
         self.tiktok = False  # TikTok 平台
-        # self.__web = None
+        self.__web = None
 
-    # def set_web_id(self):
-    #     if not self.__web:
-    #         if w := WebID.get_web_id(self.headers["User-Agent"]):
-    #             self.__web = w
-    #         else:
-    #             self.__web = WebID.generate_random_number(19)
+    def set_web_id(self):
+        if not self.__web:
+            self.__web = WebID.get_web_id(
+                self.headers["User-Agent"]) or "7255854455597598219"
 
     @property
     def url(self):
@@ -351,6 +349,7 @@ class UserData:
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
+            "webid": self.__web,
         }
         self.deal_url_params(params)
         self.list = []
@@ -425,6 +424,7 @@ class UserData:
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
+            "webid": self.__web,
         }
         self.deal_url_params(params)
         self.name = str(time.time())[:10]
@@ -668,6 +668,7 @@ class UserData:
                 "cookie_enabled": "true",
                 "platform": "PC",
                 "downlink": "10",
+                "webid": self.__web,
             }
         else:
             params = {
@@ -680,6 +681,7 @@ class UserData:
                 "cookie_enabled": "true",
                 "platform": "PC",
                 "downlink": "10",
+                "webid": self.__web,
             }
         self.deal_url_params(params)
         self.comment = []
@@ -810,6 +812,7 @@ class UserData:
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
+            "webid": self.__web,
         }
         self.deal_url_params(params)
         self.mix_data = []
@@ -864,6 +867,7 @@ class UserData:
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
+            "webid": self.__web,
         }
         self.deal_url_params(params)
         try:
@@ -1006,6 +1010,7 @@ class UserData:
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
+            "webid": self.__web,
         }
         if type_ == 2:
             user_params(params)

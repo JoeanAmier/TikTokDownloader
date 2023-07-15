@@ -352,11 +352,11 @@ class WebID:
     @staticmethod
     def get_web_id(ua: str) -> str | None:
         headers = HEADERS
-        headers["User-Agent":] = ua
+        headers["User-Agent"] = ua
         url = "https://mcs.zijieapi.com/webid"
         data = f'{{"app_id":6383,"url":"https://www.douyin.com/","user_agent":"{ua}","referer":"https://www.douyin.com/","user_unique_id":""}}'
         try:
-            response = post(url, data=data, headers=ua, timeout=10)
+            response = post(url, data=data, headers=headers, timeout=10)
             return response.json()["web_id"]
         except (exceptions.ReadTimeout, exceptions.ConnectionError):
             print("获取 web_id 参数失败！")

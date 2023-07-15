@@ -9,7 +9,6 @@ from src.DataAcquirer import check_cookie
 from src.DataAcquirer import generate_user_agent
 from src.DataAcquirer import retry
 from src.DataAcquirer import sleep
-# from src.Parameter import WebID
 from src.Parameter import XBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
@@ -74,14 +73,6 @@ class Download:
         self.download = None  # 是否启用下载文件功能，通用
         self.retry = 10  # 重试最大次数，通用
         self.tiktok = False  # TikTok 平台
-        # self.__web = None
-
-    # def set_web_id(self):
-    #     if not self.__web:
-    #         if w := WebID.get_web_id(self.PC_UA["User-Agent"]):
-    #             self.__web = w
-    #         else:
-    #             self.__web = WebID.generate_random_number(19)
 
     @property
     def name(self):
