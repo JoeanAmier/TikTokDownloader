@@ -9,7 +9,6 @@ from src.DataAcquirer import check_cookie
 from src.DataAcquirer import generate_user_agent
 from src.DataAcquirer import retry
 from src.DataAcquirer import sleep
-from src.Parameter import XBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
@@ -43,9 +42,8 @@ class Download:
     clean = Cleaner()  # 过滤错误字符
     length = 64  # 作品描述长度限制
     chunk = 1048576  # 单次下载文件大小，单位字节
-    xb = XBogus()
 
-    def __init__(self, log: LoggerManager | BaseLogger, save):
+    def __init__(self, log: LoggerManager | BaseLogger, save, xb):
         self.headers = {}  # 请求头，通用
         self.log = log  # 日志记录模块，通用
         self.data = save  # 详细数据记录模块，调用前赋值
@@ -73,6 +71,7 @@ class Download:
         self.download = None  # 是否启用下载文件功能，通用
         self.retry = 10  # 重试最大次数，通用
         self.tiktok = False  # TikTok 平台
+        self.xb = xb
 
     @property
     def name(self):
@@ -221,7 +220,7 @@ class Download:
                 "; ".join([f"{i}={j}" for i, j in self._cookie.items()]))
 
     def deal_url_params(self, params: dict):
-        xb = self.xb.get_x_bogus(urlencode(params))
+        xb = self.xb.get_x_bogus(urlencode(params), self.PC_UA["User-Agent"])
         params["X-Bogus"] = xb
 
     def create_folder(self, folder: str, live=False):

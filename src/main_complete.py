@@ -4,6 +4,7 @@ from src.Configuration import Settings
 from src.DataAcquirer import UserData
 from src.DataDownloader import Download
 from src.FileManager import Cache
+from src.Parameter import XBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.Recorder import RecordManager
@@ -26,6 +27,7 @@ class TikTok:
         self.request = None
         self.download = None
         self.manager = None
+        self.xb = XBogus()
         self.record = RecordManager()
         self.settings = Settings()
         self.accounts = []  # 账号数据
@@ -196,8 +198,8 @@ class TikTok:
         self.logger.folder = folder  # 日志文件夹名称
         self.logger.name = name  # 日志文件名称格式
         self.logger.run(filename=filename)
-        self.request = UserData(self.logger)
-        self.download = Download(self.logger, None)
+        self.request = UserData(self.logger, self.xb)
+        self.download = Download(self.logger, None, self.xb)
         self.request.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.request.set_web_id()
@@ -464,3 +466,4 @@ class TikTok:
             self.logger.info("已选择搜索结果采集模式")
             self.search_acquisition()
         self.logger.info("程序运行结束")
+        self.xb.file.close()

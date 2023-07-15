@@ -14,7 +14,6 @@ import requests
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.Parameter import WebID
-from src.Parameter import XBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
@@ -22,7 +21,7 @@ from src.StringCleaner import Cleaner
 
 def generate_user_agent():
     user_agent = [
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
     ]
 
     return choice(user_agent)
@@ -132,10 +131,9 @@ class UserData:
     comment_tiktok_api = "https://www.tiktok.com/api/comment/list/"  # 评论API
     reply_tiktok_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
     clean = Cleaner()  # 过滤非法字符
-    xb = XBogus()  # 加密参数对象
     max_comment = 256  # 评论字数限制
 
-    def __init__(self, log: LoggerManager | BaseLogger):
+    def __init__(self, log: LoggerManager | BaseLogger, xb):
         self.log = log  # 日志记录对象，通用
         self.data = None  # 数据记录对象，评论抓取和账号数据抓取调用，调用前赋值
         self._cookie = {}  # Cookie，通用
@@ -162,6 +160,7 @@ class UserData:
         self._time = None  # 创建时间格式，通用
         self.retry = 10  # 重试最大次数，通用
         self.tiktok = False  # TikTok 平台
+        self.xb = xb  # 加密参数对象
         self.__web = None
 
     def set_web_id(self):
@@ -333,7 +332,7 @@ class UserData:
         return True
 
     def deal_url_params(self, params: dict):
-        xb = self.xb.get_x_bogus(urlencode(params))
+        xb = self.xb.get_x_bogus(urlencode(params), self.headers["User-Agent"])
         params["X-Bogus"] = xb
 
     @retry(finish=True)
