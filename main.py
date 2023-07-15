@@ -1,3 +1,6 @@
+from atexit import register
+from functools import partial
+
 from flask import Flask
 
 from src.CookieTool import Cookie
@@ -39,7 +42,10 @@ def web_ui():
     """
     Web UI 交互模式
     """
-    app = WebUI().webui_run(Flask(__name__))
+    master = WebUI()
+    app = master.webui_run(Flask(__name__))
+    close_file_handler = partial(close_file, [master.xb.file])
+    register(close_file_handler)
     app.run(host="0.0.0.0", debug=False)
 
 
@@ -47,8 +53,16 @@ def server():
     """
     服务器部署模式
     """
-    app = Server().server_run(Flask(__name__))
+    master = Server()
+    app = master.server_run(Flask(__name__))
+    close_file_handler = partial(close_file, [master.xb.file])
+    register(close_file_handler)
     app.run(host="0.0.0.0", debug=False)
+
+
+def close_file(files: list | tuple):
+    for f in files:
+        f.close()
 
 
 def compatible(mode: str):
