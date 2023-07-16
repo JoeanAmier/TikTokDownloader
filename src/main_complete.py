@@ -101,7 +101,7 @@ class TikTok:
                 if input("输入任意字符继续运行，直接回车结束运行: "):
                     continue
                 break
-            break  # 调试使用
+            # break  # 调试使用
 
     def account_download(
             self,
