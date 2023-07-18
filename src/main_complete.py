@@ -288,7 +288,8 @@ class TikTok:
             if isinstance(ids, tuple):
                 pass
             for i in ids:
-                info = self.get_mix_info(i)
+                if not (info := self.get_mix_info(i)):
+                    continue
                 self.download_mix(info, save, root, params)
 
     def mix_batch(self, save, root, params):
