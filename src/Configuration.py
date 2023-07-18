@@ -28,7 +28,7 @@ class Settings:
     def create(self):
         """创建默认配置文件"""
         with self.file.open("w", encoding="UTF-8") as f:
-            json.dump(self.__default, f)
+            json.dump(self.__default, f, indent=4)
         print("创建默认配置文件成功，请修改“settings.json”文件后重新运行程序！")
 
     def read(self):
@@ -47,5 +47,5 @@ class Settings:
     def update(self, settings: dict):
         """更新配置文件"""
         with self.file.open("w", encoding="UTF-8") as f:
-            json.dump(settings, f)
+            json.dump(settings, f, indent=4)
         print("保存配置成功！")
