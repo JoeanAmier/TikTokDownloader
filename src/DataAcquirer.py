@@ -6,7 +6,6 @@ from random import choice
 from random import randrange
 from re import compile
 from urllib.parse import quote
-from urllib.parse import urlencode
 from urllib.parse import urlparse
 
 import requests
@@ -340,7 +339,7 @@ class UserData:
         return True
 
     def deal_url_params(self, params: dict):
-        xb = self.xb.get_x_bogus(urlencode(params), self.headers["User-Agent"])
+        xb = self.xb.get_x_bogus(params, self.headers["User-Agent"])
         params["X-Bogus"] = xb
 
     @retry(finish=True)
