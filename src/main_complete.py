@@ -246,6 +246,9 @@ class TikTok:
             mark=mark)
         save, root, params = self.record.run(
             self._data["root"], type_="mix", format_=self._data["save"])
+        self.mix_solo(save, root, params)
+
+    def mix_solo(self, save, root, params):
         while True:
             url = input("请输入合集作品链接：")
             if not url:
@@ -273,6 +276,9 @@ class TikTok:
                     self.download.run_mix(
                         f"MIX{mix_info[0]}_{mix_info[1]}",
                         self.request.mix_total)
+
+    def mix_batch(self, save, root, params):
+        pass
 
     def accounts_user(self):
         save, root, params = self.record.run(
