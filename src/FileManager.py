@@ -38,7 +38,7 @@ class Cache:
 
     def save_cache(self):
         with self.file.open("w", encoding="UTF-8") as f:
-            json.dump(self.cache, f)
+            json.dump(self.cache, f, indent=4)
         self.log.info("缓存文件已保存")
 
     def update_cache(self, uid: str, mark: str, name: str):
