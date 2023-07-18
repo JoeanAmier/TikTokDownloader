@@ -10,7 +10,7 @@ from requests import exceptions
 from requests import post
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82",
 }
 
 
@@ -32,8 +32,8 @@ class XBogus:
         self.file = self.path.open()
         self.js = compile(self.file.read())
 
-    def get_x_bogus(self, params: str, user_agent: str):
-        return self.js.call("sign", params, user_agent)
+    def get_x_bogus(self, params: dict, user_agent: str):
+        return self.js.call("sign", urlencode(params), user_agent)
 
 
 class MsToken:
@@ -127,9 +127,8 @@ if __name__ == "__main__":
         "webid": "7255592572578842152",
         "msToken": "olsNApqh7VL0M3RwGRng5MPwYkPj3FttTnESDk-umJO2EC1AoT47bDf7NcDtp5AibszMtylOpE6A2q1NabOeJvYUs3XChN6yGDmleJYaPHFavf5cMRszzsvH2LjxFVmk",
     }
-    user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82"
     example = XBogus("../static/js/X-Bogus.js")
-    print("X-Bogus", example.get_x_bogus(urlencode(params), user_agent))
+    print("X-Bogus", example.get_x_bogus(params, HEADERS["User-Agent"]))
     example.file.close()
     print(MsToken.get_ms_token())
     print(TtWid.get_tt_wid())
