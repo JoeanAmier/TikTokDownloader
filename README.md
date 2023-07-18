@@ -165,6 +165,7 @@ TikTokDownloader
 |        `https://www.douyin.com/note/作品ID`        |    图集    |
 |       `https://www.douyin.com/video/作品ID`        |    视频    |
 |        `https://www.douyin.com/user/账号ID`        |    账号    |
+|     `https://www.douyin.com/collection/合集ID`     |    合集    |
 | `https://www.douyin.com/user/账号ID?modal_id=作品ID` | 账号、视频、图集 |
 |          `https://live.douyin.com/直播ID`          |    直播    |
 |    `https://www.tiktok.com/@账号昵称/video/作品ID`     | 账号、视频、图集 |
