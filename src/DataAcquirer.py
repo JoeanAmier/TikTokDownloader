@@ -104,6 +104,8 @@ class UserData:
         r".*?https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*?")  # 账号链接
     works_link = compile(
         r".*?https://www\.douyin\.com/(?:video|note)/([0-9]{19}).*?")  # 作品链接
+    mix_link = compile(
+        r".*?https://www.douyin.com/collection/\d{19}.*?")  # 合集链接
     live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
     live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
@@ -527,9 +529,13 @@ class UserData:
 
     @reset
     @check_cookie
-    def run_alone(self, text: str, solo=False, user=False) -> list | bool:
+    def run_alone(
+            self,
+            text: str,
+            solo=False,
+            user=False, mix=False) -> list | bool | tuple:
         """单独下载模式"""
-        url = self.check_url(text, user)
+        url = self.check_url(text, user, mix)
         if not url:
             self.log.warning(f"提取账号链接或作品链接失败: {text}")
             return False
@@ -547,10 +553,16 @@ class UserData:
             if user:
                 return [f"https://www.douyin.com/user/{i}" for i in result]
             return result or False
+        elif isinstance(url, tuple):
+            return url
         else:
             raise TypeError
 
-    def check_url(self, url: str, user) -> bool | list:
+    def check_url(
+            self,
+            url: str,
+            user: bool,
+            mix=False) -> bool | list | tuple:
         self.tiktok = False
         if len(s := self.works_link.findall(url)) >= 1:
             self.id_ = s
@@ -568,6 +580,8 @@ class UserData:
             self.id_ = u
             self.tiktok = True
             return True
+        elif mix and len(u := self.mix_link.findall(url)) >= 1:
+            return "MIX_ID", u
         return False
 
     def date_filters(self):
