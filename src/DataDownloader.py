@@ -1,7 +1,6 @@
 import time
 from datetime import datetime
 from pathlib import Path
-from urllib.parse import urlencode
 
 import requests
 
@@ -220,7 +219,7 @@ class Download:
                 "; ".join([f"{i}={j}" for i, j in self._cookie.items()]))
 
     def deal_url_params(self, params: dict):
-        xb = self.xb.get_x_bogus(urlencode(params), self.PC_UA["User-Agent"])
+        xb = self.xb.get_x_bogus(params, self.PC_UA["User-Agent"])
         params["X-Bogus"] = xb
 
     def create_folder(self, folder: str, live=False):
