@@ -580,7 +580,7 @@ class UserData:
             self.tiktok = True
             return True
         elif mix and len(u := self.mix_link.findall(url)) >= 1:
-            return "MIX_ID", u
+            return (u,)
         return False
 
     def date_filters(self):

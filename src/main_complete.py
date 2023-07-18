@@ -253,34 +253,43 @@ class TikTok:
         elif select == "2":
             self.mix_solo(save, root, params)
 
+    def get_mix_info(self, id_: str):
+        data = self.download.get_data(id_)
+        mix_info = self.request.run_mix(data)
+        if not isinstance(mix_info, list):
+            self.logger.info(f"{id_} 获取合集信息失败")
+            return False
+        return mix_info
+
+    def download_mix(self, mix_info, save, root, params):
+        mix_info[1] = input(
+            "请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
+        self.download.nickname = mix_info[2]
+        self.download.mark = mix_info[1]
+        old_mark = m["mark"] if (
+            m := self.manager.cache.get(
+                mix_info[0])) else None
+        self.manager.update_cache(*mix_info)
+        with save(root, name=f"MIX{mix_info[0]}_{mix_info[1]}", old=old_mark, **params) as data:
+            self.download.data = data
+            self.download.run_mix(
+                f"MIX{mix_info[0]}_{mix_info[1]}",
+                self.request.mix_total)
+
     def mix_solo(self, save, root, params):
         while True:
             url = input("请输入合集作品链接：")
             if not url:
                 break
-            ids = self.request.run_alone(url)
+            ids = self.request.run_alone(url, mix=True)
             if not ids:
-                self.logger.error(f"{url} 获取作品ID失败")
+                self.logger.error(f"{url} 获取作品ID或合集ID失败")
                 continue
+            if isinstance(ids, tuple):
+                pass
             for i in ids:
-                mix_data = self.download.get_data(i)
-                mix_info = self.request.run_mix(mix_data)
-                if not isinstance(mix_info, list):
-                    self.logger.info(f"作品 {i} 不属于任何合集")
-                    continue
-                mix_info[1] = input(
-                    "请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
-                self.download.nickname = mix_info[2]
-                self.download.mark = mix_info[1]
-                old_mark = m["mark"] if (
-                    m := self.manager.cache.get(
-                        mix_info[0])) else None
-                self.manager.update_cache(*mix_info)
-                with save(root, name=f"MIX{mix_info[0]}_{mix_info[1]}", old=old_mark, **params) as data:
-                    self.download.data = data
-                    self.download.run_mix(
-                        f"MIX{mix_info[0]}_{mix_info[1]}",
-                        self.request.mix_total)
+                info = self.get_mix_info(i)
+                self.download_mix(info, save, root, params)
 
     def mix_batch(self, save, root, params):
         pass
