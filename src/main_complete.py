@@ -246,7 +246,12 @@ class TikTok:
             mark=mark)
         save, root, params = self.record.run(
             self._data["root"], type_="mix", format_=self._data["save"])
-        self.mix_solo(save, root, params)
+        select = prompt("请选择合集链接来源", ("使用 mix 参数内的合集链接",
+                                               "手动输入待采集的合集链接"))
+        if select == "1":
+            self.mix_batch(save, root, params)
+        elif select == "2":
+            self.mix_solo(save, root, params)
 
     def mix_solo(self, save, root, params):
         while True:
