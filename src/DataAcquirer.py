@@ -812,6 +812,11 @@ class UserData:
                             :10],
             info[2]]
 
+    @reset
+    @check_cookie
+    def run_mix_id(self, id_):
+        pass
+
     def get_mix_id(self, data):
         nickname = self.clean.filter(data["author"]["nickname"])
         data = data.get("mix_info", False)
