@@ -161,6 +161,7 @@ class CSVLogger:
             self,
             root: str,
             title_line,
+            solo_key: bool,
             old=None,
             name="Solo_Download",
             *args,
@@ -171,7 +172,7 @@ class CSVLogger:
         self.root = Path(root)  # 文件路径
         self.name = self.rename(root, self.__type, old, name)  # 文件名称
         self.title_line = title_line  # 标题行
-        self.index = 0
+        self.index = 1 if solo_key else 0
 
     def __enter__(self):
         if not self.root.exists():
@@ -215,6 +216,7 @@ class XLSXLogger:
             self,
             root: str,
             title_line,
+            solo_key: bool,
             old=None,
             name="Solo_Download",
             *args,
@@ -225,7 +227,7 @@ class XLSXLogger:
         self.__type = "xlsx"
         self.name = CSVLogger.rename(root, self.__type, old, name)  # 文件名称
         self.title_line = title_line  # 标题行
-        self.index = 0
+        self.index = 1 if solo_key else 0
 
     def __enter__(self):
         if not self.root.exists():
@@ -260,6 +262,7 @@ class SQLLogger:
             file,
             title_line,
             title_type,
+            solo_key: bool,
             old=None,
             name="Solo_Download", ):
         self.db = None  # 数据库
@@ -269,6 +272,7 @@ class SQLLogger:
         self.file = file  # 数据库文件名称
         self.title_line = title_line  # 数据表列名
         self.title_type = title_type  # 数据表数据类型
+        self.index = 1 if solo_key else 0
 
     def __enter__(self):
         if not self.root.exists():
@@ -287,8 +291,8 @@ class SQLLogger:
         self.cursor.execute(create_sql)
         self.db.commit()
 
-    def save(self, data, key=0, *args, **kwargs):
-        insert_sql = f"""REPLACE INTO {self.name} ({", ".join(self.title_line[key:])}) VALUES ({", ".join(["?" for _ in self.title_line[key:]])});"""
+    def save(self, data, *args, **kwargs):
+        insert_sql = f"""REPLACE INTO {self.name} ({", ".join(self.title_line[self.index:])}) VALUES ({", ".join(["?" for _ in self.title_line[self.index:]])});"""
         self.cursor.execute(insert_sql, data)
         self.db.commit()
 
@@ -472,20 +476,26 @@ class RecordManager:
         "comment": {
             "file": "CommentData.db",
             "title_line": Comment_Title,
-            "title_type": Comment_Type},
+            "title_type": Comment_Type,
+            "solo_key": False,
+        },
         "user": {
             "file": "UserData.db",
             "title_line": User_Title,
-            "title_type": User_Type},
+            "title_type": User_Type,
+            "solo_key": True,
+        },
         "mix": {
             "file": "MixData.db",
             "title_line": Title,
-            "title_type": Type_
+            "title_type": Type_,
+            "solo_key": False,
         },
         "search_user": {
             "file": "SearchResult.db",
             "title_line": Search_User_Title,
             "title_type": Search_User_Type,
+            "solo_key": False,
         }
     }
     DataLogger = {
