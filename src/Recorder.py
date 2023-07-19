@@ -473,6 +473,12 @@ class RecordManager:
         "INTEGER",
     )
     DataSheet = {
+        "": {
+            "file": "TikTokDownloader.db",
+            "title_line": Title,
+            "title_type": Type_,
+            "solo_key": False,
+        },
         "comment": {
             "file": "CommentData.db",
             "title_line": Comment_Title,
@@ -507,10 +513,6 @@ class RecordManager:
     def run(self, root="./", folder="Data", type_="", format_=""):
         root = r if (r := Path(root)).exists() else Path("./")
         name = root.joinpath(self.clean.filter(folder) or "Data")
-        type_ = self.DataSheet.get(type_, {
-            "file": "TikTokDownloader.db",
-            "title_line": self.Title,
-            "title_type": self.Type_,
-        })
+        type_ = self.DataSheet.get(type_)
         format_ = self.DataLogger.get(format_, NoneLogger)
         return format_, name, type_
