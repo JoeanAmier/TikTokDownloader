@@ -511,7 +511,7 @@ class Download:
         except requests.exceptions.ChunkedEncodingError:
             self.log.warning(f"文件: {file} 由于网络异常下载中断")
             delete_file(full_path)
-            print()
+            # print()
             return False
         if type_ == "mp4":
             self.video += 1
