@@ -40,7 +40,7 @@ class Download:
     item_tiktok_api = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"  # 作品数据接口
     clean = Cleaner()  # 过滤错误字符
     length = 64  # 作品描述长度限制
-    chunk = 1048576  # 单次下载文件大小，单位字节
+    chunk = 5242880  # 单次下载文件大小，单位字节
 
     def __init__(self, log: LoggerManager | BaseLogger, save, xb):
         self.headers = {}  # 请求头，通用
@@ -502,11 +502,16 @@ class Download:
 
         try:
             with full_path.open("wb") as f:
+                # total_size = int(data.headers.get('content-length', 0))
+                # progress_bar = ProgressBar(total_size)
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
+                    # time.sleep(0.1)
+                    # progress_bar.update(self.chunk)
         except requests.exceptions.ChunkedEncodingError:
             self.log.warning(f"文件: {file} 由于网络异常下载中断")
             delete_file(full_path)
+            print()
             return False
         if type_ == "mp4":
             self.video += 1
@@ -587,3 +592,27 @@ class Download:
         self.download_video()
         self.download_images()
         self.log.info(f"{self.nickname} 的合集下载结束")
+
+
+class ProgressBar:
+    def __init__(self, total, length=50, fill='█'):
+        self.total = total
+        self.length = length
+        self.fill = fill
+        self.start_time = time.time()
+        self.downloaded_size = 0
+
+    def update(self, chunk_size):
+        self.downloaded_size = min(
+            self.downloaded_size + chunk_size, self.total)
+        percent = 100 * (self.downloaded_size / float(self.total))
+        filled_length = int(self.length * self.downloaded_size // self.total)
+        bar = self.fill * filled_length + '-' * (self.length - filled_length)
+        elapsed_time = time.time() - self.start_time
+        print(
+            f'\r文件下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.1f}s',
+            end='',
+            flush=True)
+        # 下载完成后打印新行
+        if self.downloaded_size == self.total:
+            print()
