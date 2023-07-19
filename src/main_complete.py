@@ -253,8 +253,8 @@ class TikTok:
         elif select == "2":
             self.mix_solo(save, root, params)
 
-    def get_mix_info(self, id_: str):
-        data = self.download.get_data(id_)
+    def get_mix_info(self, id_: str, collection=False):
+        data = id_ if collection else self.download.get_data(id_)
         mix_info = self.request.run_mix(data)
         if not isinstance(mix_info, list):
             self.logger.info(f"{id_} 获取合集信息失败")
@@ -286,9 +286,12 @@ class TikTok:
                 self.logger.error(f"{url} 获取作品ID或合集ID失败")
                 continue
             if isinstance(ids, tuple):
-                pass
+                mix_id = True
+                ids = ids[0]
+            else:
+                mix_id = False
             for i in ids:
-                if not (info := self.get_mix_info(i)):
+                if not (info := self.get_mix_info(i, mix_id)):
                     continue
                 self.download_mix(info, save, root, params)
 

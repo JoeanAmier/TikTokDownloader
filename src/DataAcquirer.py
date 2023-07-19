@@ -104,7 +104,7 @@ class UserData:
     works_link = compile(
         r".*?https://www\.douyin\.com/(?:video|note)/([0-9]{19}).*?")  # 作品链接
     mix_link = compile(
-        r".*?https://www.douyin.com/collection/\d{19}.*?")  # 合集链接
+        r".*?https://www.douyin.com/collection/(\d{19}).*?")  # 合集链接
     live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
     live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
@@ -795,13 +795,15 @@ class UserData:
 
     @reset
     @check_cookie
-    def run_mix(self, data):
-        info = self.get_mix_id(data)
+    def run_mix(self, data: dict | str):
+        info = self.get_mix_id(data) if isinstance(data, dict) else (data,)
         if not isinstance(info, tuple):
             return False
         while not self.finish:
             self.get_mix_data(info[0])
             self.deal_mix_data()
+        if len(info) != 3:
+            info = self.get_mix_id(self.mix_total[0])
         self.log.info("合集作品数据提取结束")
         # 如果合集名称去除非法字符后为空字符串，则使用当前时间戳作为合集标识
         return [
