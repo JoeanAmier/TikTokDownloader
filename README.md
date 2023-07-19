@@ -49,7 +49,7 @@
 
 # 💻程序界面
 
-* 单线程终端模式：
+* 单进程终端模式：
   ![终端模式截图](docs/终端模式截图.png)
 
 <hr>
@@ -84,7 +84,7 @@ TikTokDownloader
 │    ├─ Parameter.py                       // 加密参数生成模块
 │    ├─ Recorder.py                        // 日志及数据记录模块
 │    ├─ StringCleaner.py                   // 非法字符处理模块
-│    ├─ main_complete.py                   // 单线程启动入口
+│    ├─ main_complete.py                   // 单进程启动入口
 │    ├─ main_multiprocess.py               // 多进程启动入口
 │    ├─ main_server.py                     // 服务器启动入口
 │    └─ main_web_UI.py                     // Web UI 启动入口
@@ -99,7 +99,7 @@ TikTokDownloader
 
 1. 下载最新源码或 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码至本地
 2. 安装 requirements.txt 包含的第三方模块
-3. 运行 main.py 并选择`单线程终端模式`，生成默认配置文件
+3. 运行 main.py 并选择`单进程终端模式`，生成默认配置文件
 4. 阅读 README.md 了解项目介绍和配置文件规则
 5. 打开抖音网页版，复制 Cookie 至配置文件\(可使用 main.py 写入\)
 6. 根据下载需求修改 settings.json 配置文件
@@ -113,7 +113,7 @@ TikTokDownloader
 
 **程序运行模式：**
 
-* 单线程终端模式: 支持所有功能
+* 单进程终端模式: 支持所有功能
 * 多进程终端模式\(未完成\): 支持多账号批量下载功能\(初步计划\)
 * Web UI 交互模式: 支持单独下载功能和获取直播推流地址功能
 * 服务器部署模式: 支持单独下载功能，可直接部署至公开服务器
