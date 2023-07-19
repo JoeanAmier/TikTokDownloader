@@ -1,7 +1,11 @@
 from atexit import register
 from functools import partial
+from pathlib import Path
+from urllib.parse import urlparse
 
 from flask import Flask
+from requests import exceptions
+from requests import get
 
 from src.CookieTool import Cookie
 from src.main_complete import TikTok
@@ -9,21 +13,41 @@ from src.main_complete import prompt
 from src.main_server import Server
 from src.main_web_UI import WebUI
 
-VERSION = "3.3 beta"
+VERSION = 3.3
+STABLE = False
+
+RELEASES = "https://github.com/JoeanAmier/TikTokDownloader/releases/latest"
+PROJECT = f"TikTokDownloader v{VERSION}{'' if STABLE else ' Beta'}"
+WIDTH = 50
+LINE = ">" * WIDTH
 
 
 def version():
-    project = f"TikTokDownloader v{VERSION}"
-    width = 33
-    line = ">" * width
-    print(f"{line}\n\n{project.center(width)}\n\n{line}\n")
+    print(f"{LINE}\n\n\n{PROJECT.center(WIDTH)}\n\n\n{LINE}\n")
+
+
+def check_update():
+    if Path("./src/Disable_Update.txt").exists():
+        return
+    print("正在检测新版本", end="", flush=True)
+    try:
+        response = get(RELEASES, timeout=10)
+        tag = float(urlparse(response.url).path.split("/")[-1])
+        if tag > VERSION:
+            print(f"\r检测到新版本: {tag}", flush=True)
+            print(response.url)
+        else:
+            print("\r当前已是最新版本", flush=True)
+    except (exceptions.ReadTimeout, exceptions.ConnectionError):
+        print("\r检测新版本失败", flush=True)
+    print("")
 
 
 def main():
     """选择运行模式"""
     mode = prompt(
         "请选择 TikTokDownloader 运行模式",
-        ("写入 Cookie 信息", "单线程终端模式", "多进程终端模式", ''"Web UI 交互模式", "服务器部署模式"), 0)
+        ("写入 Cookie 信息", "单进程终端模式", "多进程终端模式", "Web UI 交互模式", "服务器部署模式"), 0)
     compatible(mode)
 
 
@@ -80,4 +104,5 @@ def compatible(mode: str):
 
 if __name__ == '__main__':
     version()
+    check_update()
     main()
