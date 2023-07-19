@@ -966,13 +966,13 @@ class UserData:
             str(following_count),
             str(max_follower_count), ]
 
-    def save_user(self, file, data, batch=False):
+    def save_user(self, file, data, key=1, batch=False):
         self.data = file
         if not batch:
             data = [data]
         for i in data:
             self.log.info("账号数据: " + ", ".join(i), False)
-            self.data.save(i, key=1)
+            self.data.save(i, key=key)
         self.log.info("账号数据储存结束")
 
     @reset
