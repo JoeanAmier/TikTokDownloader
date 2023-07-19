@@ -103,6 +103,7 @@ class TikTok:
                     continue
                 break
             # break  # 调试使用
+        self.logger.info("已退出批量下载作品模式\n")
 
     def account_download(
             self,
@@ -156,6 +157,7 @@ class TikTok:
                 self.download.tiktok = self.request.tiktok
                 for i in ids:
                     self.download.run_alone(i)
+        self.logger.info("已退出单独下载作品模式\n")
 
     def live_acquisition(self):
         def choice_quality(items: dict) -> str:
@@ -192,6 +194,7 @@ class TikTok:
                 if len(ids) == 1 and (l := choice_quality(data[2])):
                     self.download.download_live(l, f"{data[0]}-{data[1]}")
                     break
+        self.logger.info("已退出直播下载模式\n")
 
     def initialize(
             self,
@@ -246,6 +249,7 @@ class TikTok:
             for i in ids:
                 with save(root, name=f"作品评论_{i}", **params) as data:
                     self.request.run_comment(i, data)
+        self.logger.info("已退出评论抓取模式\n")
 
     def mix_acquisition(self):
         mark = "mark" in self._data["name"]
@@ -262,6 +266,7 @@ class TikTok:
             self.mix_batch(save, root, params)
         elif select == "2":
             self.mix_solo(save, root, params)
+        self.logger.info("已退出合集下载模式\n")
 
     def get_mix_info(self, id_: str, collection=False):
         data = id_ if collection else self.download.get_data(id_)
@@ -358,6 +363,7 @@ class TikTok:
             self.accounts_user()
         elif m == "2":
             self.alone_user()
+        self.logger.info("已退出账号数据采集模式\n")
 
     def get_condition(self) -> None | tuple[list, str]:
         length = 5
@@ -465,6 +471,7 @@ class TikTok:
                     self.deal_search_user(data)
                 else:
                     raise ValueError
+        self.logger.info("已退出搜索结果采集模式\n")
 
     def deal_search_items(self, file):
         self.logger.info("开始提取搜索结果")
@@ -486,8 +493,8 @@ class TikTok:
             self.set_parameters()
             select = prompt("请选择下载模式", (
                 "批量下载账号作品", "单独下载链接作品", "获取直播推流地址", "抓取作品评论数据", "批量下载合集作品",
-                "批量提取账号数据", "采集搜索结果数据"))
-            if select in ("Q", "q",):
+                "批量采集账号数据", "采集搜索结果数据"))
+            if select in ("Q", "q", "",):
                 self.quit = True
             elif select == "1":
                 self.logger.info("已选择批量下载作品模式")
@@ -505,7 +512,7 @@ class TikTok:
                 self.logger.info("已选择合集下载模式")
                 self.mix_acquisition()
             elif select == "6":
-                self.logger.info("已选择提取账号数据模式")
+                self.logger.info("已选择账号数据采集模式")
                 self.user_acquisition()
             elif select == "7":
                 self.logger.info("已选择搜索结果采集模式")
