@@ -40,7 +40,7 @@ def check_update():
             print("\r当前已是最新版本", flush=True)
     except (exceptions.ReadTimeout, exceptions.ConnectionError):
         print("\r检测新版本失败", flush=True)
-    print("")
+    print()
 
 
 def main():
