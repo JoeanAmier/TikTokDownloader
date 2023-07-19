@@ -22,7 +22,7 @@ def version():
 def main():
     """选择运行模式"""
     mode = prompt(
-        "请输入 TikTokDownloader 运行模式",
+        "请选择 TikTokDownloader 运行模式",
         ("写入 Cookie 信息", "单线程终端模式", "多进程终端模式", ''"Web UI 交互模式", "服务器部署模式"), 0)
     compatible(mode)
 

@@ -31,6 +31,7 @@ class TikTok:
         self.record = RecordManager()
         self.settings = Settings()
         self.accounts = []  # 账号数据
+        self.quit = False
         self._number = 0  # 账号数量
         self._data = {}  # 其他配置数据
 
@@ -145,6 +146,9 @@ class TikTok:
                 url = input("请输入分享链接：")
                 if not url:
                     break
+                elif url in ("Q", "q",):
+                    self.quit = True
+                    break
                 ids = self.request.run_alone(url)
                 if not ids:
                     self.logger.error(f"{url} 获取作品ID失败")
@@ -168,6 +172,9 @@ class TikTok:
         while True:
             link = input("请输入直播链接：")
             if not link:
+                break
+            elif link in ("Q", "q",):
+                self.quit = True
                 break
             ids = self.request.return_live_ids(link)
             if not ids:
@@ -229,6 +236,9 @@ class TikTok:
             url = input("请输入作品链接：")
             if not url:
                 break
+            elif url in ("Q", "q",):
+                self.quit = True
+                break
             ids = self.request.run_alone(url)
             if not ids:
                 self.logger.error(f"{url} 获取作品ID失败")
@@ -281,6 +291,9 @@ class TikTok:
             url = input("请输入合集作品链接：")
             if not url:
                 break
+            elif url in ("Q", "q",):
+                self.quit = True
+                break
             ids = self.request.run_alone(url, mix=True)
             if not ids:
                 self.logger.error(f"{url} 获取作品ID或合集ID失败")
@@ -318,6 +331,9 @@ class TikTok:
             url = input("请输入账号链接: ")
             if not url:
                 break
+            elif url in ("Q", "q",):
+                self.quit = True
+                break
             ids = self.request.run_alone(url, user=True)
             if not ids:
                 continue
@@ -343,8 +359,7 @@ class TikTok:
         elif m == "2":
             self.alone_user()
 
-    @staticmethod
-    def get_condition() -> None | tuple[list, str]:
+    def get_condition(self) -> None | tuple[list, str]:
         length = 5
         type_ = {
             "综合": 0,
@@ -394,6 +409,9 @@ class TikTok:
 
         condition = input("请输入搜索条件:\n(关键词 类型 页数 排序规则 时间筛选)\n")
         if not condition:
+            return None
+        elif condition in ("Q", "q",):
+            self.quit = True
             return None
 
         # 分割字符串
@@ -461,33 +479,36 @@ class TikTok:
         self.logger.info("搜索结果提取结束")
 
     def run(self):
-        if not self.check_config():
-            return False
-        self.initialize()
-        self.set_parameters()
-        select = prompt("请选择下载模式", (
-            "批量下载账号作品", "单独下载链接作品", "获取直播推流地址", "抓取作品评论数据", "批量下载合集作品",
-            "批量提取账号数据", "采集搜索结果数据"))
-        if select == "1":
-            self.logger.info("已选择批量下载作品模式")
-            self.batch_acquisition()
-        elif select == "2":
-            self.logger.info("已选择单独下载作品模式")
-            self.single_acquisition()
-        elif select == "3":
-            self.logger.info("已选择直播下载模式")
-            self.live_acquisition()
-        elif select == "4":
-            self.logger.info("已选择评论抓取模式")
-            self.comment_acquisition()
-        elif select == "5":
-            self.logger.info("已选择合集下载模式")
-            self.mix_acquisition()
-        elif select == "6":
-            self.logger.info("已选择提取账号数据模式")
-            self.user_acquisition()
-        elif select == "7":
-            self.logger.info("已选择搜索结果采集模式")
-            self.search_acquisition()
+        while not self.quit:
+            if not self.check_config():
+                return False
+            self.initialize()
+            self.set_parameters()
+            select = prompt("请选择下载模式", (
+                "批量下载账号作品", "单独下载链接作品", "获取直播推流地址", "抓取作品评论数据", "批量下载合集作品",
+                "批量提取账号数据", "采集搜索结果数据"))
+            if select in ("Q", "q",):
+                self.quit = True
+            elif select == "1":
+                self.logger.info("已选择批量下载作品模式")
+                self.batch_acquisition()
+            elif select == "2":
+                self.logger.info("已选择单独下载作品模式")
+                self.single_acquisition()
+            elif select == "3":
+                self.logger.info("已选择直播下载模式")
+                self.live_acquisition()
+            elif select == "4":
+                self.logger.info("已选择评论抓取模式")
+                self.comment_acquisition()
+            elif select == "5":
+                self.logger.info("已选择合集下载模式")
+                self.mix_acquisition()
+            elif select == "6":
+                self.logger.info("已选择提取账号数据模式")
+                self.user_acquisition()
+            elif select == "7":
+                self.logger.info("已选择搜索结果采集模式")
+                self.search_acquisition()
         self.xb.file.close()
         self.logger.info("程序运行结束")
