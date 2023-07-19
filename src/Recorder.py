@@ -171,6 +171,7 @@ class CSVLogger:
         self.root = Path(root)  # 文件路径
         self.name = self.rename(root, self.__type, old, name)  # 文件名称
         self.title_line = title_line  # 标题行
+        self.index = 0
 
     def __enter__(self):
         if not self.root.exists():
@@ -190,7 +191,7 @@ class CSVLogger:
     def title(self):
         if path.getsize(self.root) == 0:
             # 如果文件没有任何数据，则写入标题行
-            self.save(self.title_line)
+            self.save(self.title_line[self.index:])
 
     def save(self, data, *args, **kwargs):
         self.writer.writerow(data)
@@ -224,6 +225,7 @@ class XLSXLogger:
         self.__type = "xlsx"
         self.name = CSVLogger.rename(root, self.__type, old, name)  # 文件名称
         self.title_line = title_line  # 标题行
+        self.index = 0
 
     def __enter__(self):
         if not self.root.exists():
@@ -242,7 +244,7 @@ class XLSXLogger:
     def title(self):
         if not self.sheet["A1"].value:
             # 如果文件没有任何数据，则写入标题行
-            for col, value in enumerate(self.title_line, start=1):
+            for col, value in enumerate(self.title_line[self.index:], start=1):
                 self.sheet.cell(row=1, column=col, value=value)
 
     def save(self, data, *args, **kwargs):
