@@ -59,10 +59,13 @@ class Cleaner:
 
 def colored_text(
         text: str,
+        disable: bool,
         font: int,
         background=None,
         bold=None,
-        default=0):
+        default="97;1"):
+    if disable:
+        return text
     code = ";".join(
         [str(i) for i in (font, background, bold) if isinstance(i, int)])
     return f"\x1b[{code}m{text}\x1b[{default}m"
