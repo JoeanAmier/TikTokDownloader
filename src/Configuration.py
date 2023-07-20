@@ -7,10 +7,14 @@ class Settings:
         self.file = Path("./settings.json")  # 配置文件
         self.__default = {
             "accounts": [
-                ["账号标识", "账号主页链接", "发布页或喜欢页", "最早发布日期", "最晚发布日期"],
+                ["account mark",
+                 "account link",
+                 "post or favorite",
+                 "2016/9/20",
+                 "2023/7/1"],
             ],
             "mix": [
-                ["合集标识", "合集链接或作品链接"],
+                ["mix mark", "mix link or video / image link"],
             ],
             "root": "./",
             "folder": "Download",
