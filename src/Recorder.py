@@ -51,7 +51,7 @@ class BaseLogger:
     @staticmethod
     def info(text: str, output=True):
         if output:
-            print(colored_text(text, 92))
+            print(colored_text(text, 97))
 
     @staticmethod
     def warning(text: str, output=True):
@@ -123,7 +123,7 @@ class LoggerManager(BaseLogger):
 
     def info(self, text: str, output=True):
         if output:
-            print(colored_text(text, 92))
+            print(colored_text(text, 97))
         self.log.info(text)
 
     def warning(self, text: str, output=True):
