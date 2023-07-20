@@ -1,3 +1,4 @@
+from pathlib import Path
 from platform import system
 from string import whitespace
 
@@ -59,12 +60,11 @@ class Cleaner:
 
 def colored_text(
         text: str,
-        disable: bool,
         font: int,
         background=None,
         bold=None,
         default="97;1"):
-    if disable:
+    if Path("./src/config/Disable_Colour").exists():
         return text
     code = ";".join(
         [str(i) for i in (font, background, bold) if isinstance(i, int)])
