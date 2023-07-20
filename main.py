@@ -40,11 +40,11 @@ def check_config():
 
 
 def check_update():
-    if Path("src/config/Disable_Update").exists():
+    if UPDATE["path"].exists():
         return
     print(colored_text("正在检测新版本", 92), end="", flush=True)
     try:
-        response = get(RELEASES, allow_redirects=False, timeout=0.01)
+        response = get(RELEASES, allow_redirects=False, timeout=10)
         tag = float(response.headers['Location'].split("/")[-1])
         if tag > VERSION:
             print(colored_text(f"\r检测到新版本: {tag}", 92), flush=True)
@@ -113,6 +113,7 @@ def change_config(file: Path):
 def compatible(mode: str):
     if mode == "1":
         Cookie().run()
+        main()
     elif mode == "2":
         complete()
     elif mode == "3":
