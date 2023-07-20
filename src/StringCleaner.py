@@ -65,7 +65,7 @@ def colored_text(
         bold=None,
         default="97;1"):
     if Path("./src/config/Disable_Colour").exists():
-        return text
+        return f"\x1b[0m{text}\x1b[0m"
     code = ";".join(
         [str(i) for i in (font, background, bold) if isinstance(i, int)])
     return f"\x1b[{code}m{text}\x1b[{default}m"
