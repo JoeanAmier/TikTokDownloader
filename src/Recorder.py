@@ -9,6 +9,7 @@ from openpyxl import Workbook
 from openpyxl import load_workbook
 
 from src.StringCleaner import Cleaner
+from src.StringCleaner import colored_text
 
 
 class BaseLogger:
@@ -50,17 +51,17 @@ class BaseLogger:
     @staticmethod
     def info(text: str, output=True):
         if output:
-            print(text)
+            print(colored_text(text, 92))
 
     @staticmethod
     def warning(text: str, output=True):
         if output:
-            print(text)
+            print(colored_text(text, 93))
 
     @staticmethod
     def error(text: str, output=True):
         if output:
-            print(text)
+            print(colored_text(text, 91))
 
 
 class LoggerManager(BaseLogger):
@@ -122,17 +123,17 @@ class LoggerManager(BaseLogger):
 
     def info(self, text: str, output=True):
         if output:
-            print(text)
+            print(colored_text(text, 92))
         self.log.info(text)
 
     def warning(self, text: str, output=True):
         if output:
-            print(text)
+            print(colored_text(text, 93))
         self.log.warning(text)
 
     def error(self, text: str, output=True):
         if output:
-            print(text)
+            print(colored_text(text, 91))
         self.log.error(text)
 
 
