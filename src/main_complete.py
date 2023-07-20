@@ -271,6 +271,9 @@ class TikTok:
 
     def get_mix_info(self, id_: str, collection=False):
         data = id_ if collection else self.download.get_data(id_)
+        if not data:
+            self.logger.info(f"{id_} 获取合集信息失败")
+            return False
         mix_info = self.request.run_mix(data)
         if not isinstance(mix_info, list):
             self.logger.info(f"{id_} 获取合集信息失败")
@@ -322,10 +325,10 @@ class TikTok:
                 continue
             if isinstance(id_, tuple):
                 mix_id = True
-                id_ = id_[0][0]
+                id_ = id_[0]
             else:
                 mix_id = False
-            if not (info := self.get_mix_info(id_, mix_id)):
+            if not (info := self.get_mix_info(id_[0], mix_id)):
                 continue
             self.download_mix(info, save, root, params)
 
