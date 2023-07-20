@@ -315,7 +315,19 @@ class TikTok:
                 self.download_mix(info, save, root, params)
 
     def mix_batch(self, save, root, params):
-        pass
+        for url in self._data["mix"]:
+            id_ = self.request.run_alone(url, solo=True, mix=True)
+            if not id_:
+                self.logger.error(f"{url} 获取作品ID或合集ID失败")
+                continue
+            if isinstance(id_, tuple):
+                mix_id = True
+                id_ = id_[0][0]
+            else:
+                mix_id = False
+            if not (info := self.get_mix_info(id_, mix_id)):
+                continue
+            self.download_mix(info, save, root, params)
 
     def accounts_user(self):
         save, root, params = self.record.run(

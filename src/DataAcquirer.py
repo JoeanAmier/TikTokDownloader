@@ -553,7 +553,7 @@ class UserData:
                 return [f"https://www.douyin.com/user/{i}" for i in result]
             return result or False
         elif isinstance(url, tuple):
-            return url
+            return (url[0][:1],) if solo else url
         else:
             raise TypeError
 
