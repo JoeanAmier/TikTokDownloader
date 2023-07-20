@@ -7,6 +7,7 @@ from requests import exceptions
 from requests import get
 
 from src.CookieTool import Cookie
+from src.StringCleaner import colored_text
 from src.main_complete import TikTok
 from src.main_complete import prompt
 from src.main_server import Server
@@ -22,23 +23,26 @@ LINE = ">" * WIDTH
 
 
 def version():
-    print(f"{LINE}\n\n\n{PROJECT.center(WIDTH)}\n\n\n{LINE}\n")
+    print(
+        colored_text(
+            f"{LINE}\n\n\n{PROJECT.center(WIDTH)}\n\n\n{LINE}\n",
+            96))
 
 
 def check_update():
     if Path("./src/Disable_Update.txt").exists():
         return
-    print("正在检测新版本", end="", flush=True)
+    print(colored_text("正在检测新版本", 92), end="", flush=True)
     try:
-        response = get(RELEASES, allow_redirects=False, timeout=10)
+        response = get(RELEASES, allow_redirects=False, timeout=0.01)
         tag = float(response.headers['Location'].split("/")[-1])
         if tag > VERSION:
-            print(f"\r检测到新版本: {tag}", flush=True)
+            print(colored_text(f"\r检测到新版本: {tag}", 92), flush=True)
             print(response.url)
         else:
-            print("\r当前已是最新版本", flush=True)
+            print(colored_text("\r当前已是最新版本", 92), flush=True)
     except (exceptions.ReadTimeout, exceptions.ConnectionError):
-        print("\r检测新版本失败", flush=True)
+        print(colored_text("\r检测新版本失败", 91), flush=True)
     print()
 
 
