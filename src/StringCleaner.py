@@ -59,12 +59,12 @@ class Cleaner:
 
 def colored_text(
         text: str,
-        color: int,
+        font: int,
         background=None,
-        size=None,
+        bold=None,
         default=0):
     code = ";".join(
-        [str(i) for i in (color, background, size) if isinstance(i, int)])
+        [str(i) for i in (font, background, bold) if isinstance(i, int)])
     return f"\x1b[{code}m{text}\x1b[{default}m"
 
 
