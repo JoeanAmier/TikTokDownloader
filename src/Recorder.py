@@ -11,6 +11,10 @@ from openpyxl import load_workbook
 from src.StringCleaner import Cleaner
 from src.StringCleaner import colored_text
 
+INFO = 97
+WARNING = 93
+ERROR = 91
+
 
 class BaseLogger:
     """不记录日志，空白日志记录器"""
@@ -51,17 +55,17 @@ class BaseLogger:
     @staticmethod
     def info(text: str, output=True):
         if output:
-            print(colored_text(text, 97))
+            print(colored_text(text, INFO))
 
     @staticmethod
     def warning(text: str, output=True):
         if output:
-            print(colored_text(text, 93))
+            print(colored_text(text, WARNING))
 
     @staticmethod
     def error(text: str, output=True):
         if output:
-            print(colored_text(text, 91))
+            print(colored_text(text, ERROR))
 
 
 class LoggerManager(BaseLogger):
@@ -123,17 +127,17 @@ class LoggerManager(BaseLogger):
 
     def info(self, text: str, output=True):
         if output:
-            print(colored_text(text, 97))
+            print(colored_text(text, INFO))
         self.log.info(text)
 
     def warning(self, text: str, output=True):
         if output:
-            print(colored_text(text, 93))
+            print(colored_text(text, WARNING))
         self.log.warning(text)
 
     def error(self, text: str, output=True):
         if output:
-            print(colored_text(text, 91))
+            print(colored_text(text, ERROR))
         self.log.error(text)
 
 
