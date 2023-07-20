@@ -41,7 +41,7 @@ class Download:
     item_tiktok_api = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"  # 作品数据接口
     clean = Cleaner()  # 过滤错误字符
     length = 64  # 作品描述长度限制
-    chunk = 1048576  # 单次下载文件大小，单位字节
+    chunk = 262144  # 单次下载文件大小，单位字节
 
     def __init__(self, log: LoggerManager | BaseLogger, save, xb):
         self.headers = {}  # 请求头，通用
@@ -507,7 +507,6 @@ class Download:
             with full_path.open("wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
-                    time.sleep(0.05)
                     progress_bar.update(len(chunk))
         except requests.exceptions.ChunkedEncodingError:
             self.log.warning(f"文件: {file} 由于网络异常下载中断")
