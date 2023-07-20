@@ -21,8 +21,8 @@ NAME = f"TikTokDownloader v{VERSION}{'' if STABLE else ' Beta'}"
 WIDTH = 50
 LINE = ">" * WIDTH
 
-UPDATE = None
-COLOUR = None
+UPDATE = {"path": Path("./src/config/Disable_Update")}
+COLOUR = {"path": Path("./src/config/Disable_Colour")}
 
 
 def version():
@@ -34,24 +34,24 @@ def version():
 
 def check_config():
     global UPDATE, COLOUR
-    UPDATE = "禁用" if Path("./src/config/Disable_Update").exists() else "启用"
-    COLOUR = "禁用" if Path("./src/config/Disable_Colour").exists() else "启用"
+    UPDATE["tip"] = "禁用" if UPDATE["path"].exists() else "启用"
+    COLOUR["tip"] = "禁用" if COLOUR["path"].exists() else "启用"
 
 
 def check_update():
     if Path("src/config/Disable_Update").exists():
         return
-    print(colored_text("正在检测新版本", 92, bold=1), end="", flush=True)
+    print(colored_text("正在检测新版本", 92), end="", flush=True)
     try:
         response = get(RELEASES, allow_redirects=False, timeout=0.01)
         tag = float(response.headers['Location'].split("/")[-1])
         if tag > VERSION:
-            print(colored_text(f"\r检测到新版本: {tag}", 92, bold=1), flush=True)
+            print(colored_text(f"\r检测到新版本: {tag}", 92), flush=True)
             print(response.url)
         else:
-            print(colored_text("\r当前已是最新版本", 92, bold=1), flush=True)
+            print(colored_text("\r当前已是最新版本", 92), flush=True)
     except (exceptions.ReadTimeout, exceptions.ConnectionError):
-        print(colored_text("\r检测新版本失败", 91, bold=1), flush=True)
+        print(colored_text("\r检测新版本失败", 91), flush=True)
     print()
 
 
@@ -60,7 +60,7 @@ def main():
     mode = prompt(
         "请选择 TikTokDownloader 运行模式",
         ("写入 Cookie 信息", "单进程终端模式", "多进程终端模式", "Web UI 交互模式", "服务器部署模式",
-         f"{UPDATE}检查更新功能", f"{COLOUR}彩色提示功能",))
+         f"{UPDATE['tip']}检查更新功能", f"{COLOUR['tip']}彩色提示功能",))
     compatible(mode)
 
 
