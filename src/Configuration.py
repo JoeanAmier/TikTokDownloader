@@ -7,9 +7,11 @@ class Settings:
         self.file = Path("./settings.json")  # 配置文件
         self.__default = {
             "accounts": [
-                ["", "https://v.douyin.com/XXXXXXX/", "post", "2016/9/20", ""],
+                ["账号标识", "账号主页链接", "发布页或喜欢页", "最早发布日期", "最晚发布日期"],
             ],
-            "mix": [],
+            "mix": [
+                ["合集标识", "合集链接或作品链接"],
+            ],
             "root": "./",
             "folder": "Download",
             "name": "create_time nickname desc",
@@ -17,7 +19,7 @@ class Settings:
             "split": "-",
             "music": [False, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
             "save": "",
-            "cookie": ["", ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
+            "cookie": [None, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
             "dynamic": [False, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
             "original": [False, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
             "proxies": ["", ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
