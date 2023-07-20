@@ -1,5 +1,6 @@
 import time
 from datetime import datetime
+from itertools import cycle
 from pathlib import Path
 
 import requests
@@ -40,7 +41,7 @@ class Download:
     item_tiktok_api = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"  # 作品数据接口
     clean = Cleaner()  # 过滤错误字符
     length = 64  # 作品描述长度限制
-    chunk = 5242880  # 单次下载文件大小，单位字节
+    chunk = 262144  # 单次下载文件大小，单位字节
 
     def __init__(self, log: LoggerManager | BaseLogger, save, xb):
         self.headers = {}  # 请求头，通用
@@ -501,13 +502,13 @@ class Download:
             self.log.info(f"文件: {error_file} 已删除")
 
         try:
+            # total_size = int(data.headers.get('content-length', 0))
+            # progress_bar = ProgressBar(total_size)
             with full_path.open("wb") as f:
-                # total_size = int(data.headers.get('content-length', 0))
-                # progress_bar = ProgressBar(total_size)
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
                     # time.sleep(0.1)
-                    # progress_bar.update(self.chunk)
+                    # progress_bar.update(len(chunk))
         except requests.exceptions.ChunkedEncodingError:
             self.log.warning(f"文件: {file} 由于网络异常下载中断")
             delete_file(full_path)
@@ -594,8 +595,21 @@ class Download:
         self.log.info(f"{self.nickname} 的合集下载结束")
 
 
-class ProgressBar:
-    def __init__(self, total, length=50, fill='█'):
+class NoneBar:
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def update(self, *args, **kwargs):
+        pass
+
+    @staticmethod
+    def bytes_to_mb(bytes_value):
+        return bytes_value / (1024 * 1024)
+
+
+class ProgressBar(NoneBar):
+    def __init__(self, total, length=10, fill='█', *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.total = total
         self.length = length
         self.fill = fill
@@ -610,9 +624,27 @@ class ProgressBar:
         bar = self.fill * filled_length + '-' * (self.length - filled_length)
         elapsed_time = time.time() - self.start_time
         print(
-            f'\r文件下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.1f}s',
+            f'\r文件下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.downloaded_size):.2f} MB',
             end='',
             flush=True)
         # 下载完成后打印新行
         if self.downloaded_size == self.total:
             print()
+
+
+class LoopingBar(NoneBar):
+    def __init__(self, length=10, fill='█', *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.spin_chars = cycle(
+            (f"{fill * i}{' ' * (length - i)}" for i in range(length)))
+        self.download_size = 0
+        self.start_time = time.time()
+
+    def update(self, size: int):
+        elapsed_time = time.time() - self.start_time
+        spin_char = next(self.spin_chars)
+        self.download_size += size
+        print(
+            f"\r文件正在下载: |{spin_char}| - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.download_size):.2f} MB",
+            end='',
+            flush=True)
