@@ -280,9 +280,9 @@ class TikTok:
             return False
         return mix_info
 
-    def download_mix(self, mix_info, save, root, params, mark=""):
-        if mark:
-            mix_info[1] = mark
+    def download_mix(self, mix_info, save, root, params, mark=None):
+        if isinstance(mark, str):
+            mix_info[1] = mark or mix_info[1]
         else:
             mix_info[1] = input(
                 "请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
