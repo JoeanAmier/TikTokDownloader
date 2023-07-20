@@ -91,3 +91,10 @@ class Cache:
         folder = PurePath.joinpath(self.root, f"{self.type_}{uid}_{mark}")
         rename("video")
         rename("images")
+
+
+def deal_config(path: Path):
+    if path.exists():
+        path.unlink()
+    else:
+        path.touch()

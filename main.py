@@ -7,6 +7,7 @@ from requests import exceptions
 from requests import get
 
 from src.CookieTool import Cookie
+from src.FileManager import deal_config
 from src.StringCleaner import colored_text
 from src.main_complete import TikTok
 from src.main_complete import prompt
@@ -34,8 +35,8 @@ def version():
 
 def check_config():
     global UPDATE, COLOUR
-    UPDATE["tip"] = "禁用" if UPDATE["path"].exists() else "启用"
-    COLOUR["tip"] = "禁用" if COLOUR["path"].exists() else "启用"
+    UPDATE["tip"] = "启用" if UPDATE["path"].exists() else "禁用"
+    COLOUR["tip"] = "启用" if COLOUR["path"].exists() else "禁用"
 
 
 def check_update():
@@ -102,21 +103,28 @@ def close_file(files: list | tuple):
         f.close()
 
 
+def change_config(file: Path):
+    deal_config(file)
+    print("修改设置成功！")
+    check_config()
+    main()
+
+
 def compatible(mode: str):
-    if mode == "0":
+    if mode == "1":
         Cookie().run()
-    elif mode == "1":
-        complete()
     elif mode == "2":
-        multiprocess()
+        complete()
     elif mode == "3":
-        web_ui()
+        multiprocess()
     elif mode == "4":
-        server()
+        web_ui()
     elif mode == "5":
-        pass
+        server()
     elif mode == "6":
-        pass
+        change_config(UPDATE["path"])
+    elif mode == "7":
+        change_config(COLOUR["path"])
 
 
 if __name__ == '__main__':
