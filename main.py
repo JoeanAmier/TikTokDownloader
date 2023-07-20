@@ -1,7 +1,6 @@
 from atexit import register
 from functools import partial
 from pathlib import Path
-from urllib.parse import urlparse
 
 from flask import Flask
 from requests import exceptions
@@ -31,8 +30,8 @@ def check_update():
         return
     print("正在检测新版本", end="", flush=True)
     try:
-        response = get(RELEASES, timeout=10)
-        tag = float(urlparse(response.url).path.split("/")[-1])
+        response = get(RELEASES, allow_redirects=False, timeout=10)
+        tag = float(response.headers['Location'].split("/")[-1])
         if tag > VERSION:
             print(f"\r检测到新版本: {tag}", flush=True)
             print(response.url)
