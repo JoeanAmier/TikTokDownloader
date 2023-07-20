@@ -34,7 +34,7 @@ def generate_user_agent():
 
 def sleep():
     """避免频繁请求"""
-    time.sleep(randrange(15, 55, 5) * 0.1)
+    time.sleep(randrange(10, 40, 5) * 0.1)
 
 
 def reset(function):
