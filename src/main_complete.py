@@ -61,7 +61,8 @@ class TikTok:
         get_data(
             self._data,
             settings,
-            ("root",
+            ("mix",
+             "root",
              "folder",
              "name",
              "time",

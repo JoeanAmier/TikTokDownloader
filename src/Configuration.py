@@ -9,6 +9,7 @@ class Settings:
             "accounts": [
                 ["", "https://v.douyin.com/XXXXXXX/", "post", "2016/9/20", ""],
             ],
+            "mix": [],
             "root": "./",
             "folder": "Download",
             "name": "create_time nickname desc",
