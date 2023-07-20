@@ -12,6 +12,7 @@ from src.DataAcquirer import sleep
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
+from src.StringCleaner import colored_text
 
 
 def reset(function):
@@ -623,7 +624,9 @@ class ProgressBar(NoneBar):
         bar = self.fill * filled_length + '-' * (self.length - filled_length)
         elapsed_time = time.time() - self.start_time
         print(
-            f'\r文件下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.downloaded_size):.2f} MB',
+            colored_text(
+                f'\r文件下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.downloaded_size):.2f} MB',
+                95),
             end='',
             flush=True)
         # 下载完成后打印新行
@@ -644,6 +647,8 @@ class LoopingBar(NoneBar):
         spin_char = next(self.spin_chars)
         self.download_size += size
         print(
-            f"\r文件正在下载: |{spin_char}| - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.download_size):.2f} MB",
+            colored_text(
+                f"\r文件正在下载: |{spin_char}| - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.download_size):.2f} MB",
+                95),
             end='',
             flush=True)

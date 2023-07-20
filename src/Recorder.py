@@ -11,7 +11,7 @@ from openpyxl import load_workbook
 from src.StringCleaner import Cleaner
 from src.StringCleaner import colored_text
 
-INFO = 97
+INFO = 94
 WARNING = 93
 ERROR = 91
 
