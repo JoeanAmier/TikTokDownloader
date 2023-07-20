@@ -26,7 +26,7 @@ def version():
     print(
         colored_text(
             f"{LINE}\n\n\n{PROJECT.center(WIDTH)}\n\n\n{LINE}\n",
-            96))
+            93))
 
 
 def check_update():

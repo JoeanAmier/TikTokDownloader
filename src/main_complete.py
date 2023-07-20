@@ -8,12 +8,13 @@ from src.Parameter import XBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.Recorder import RecordManager
+from src.StringCleaner import colored_text
 
 
 def prompt(tip: str, choose: tuple | list, start=1) -> str:
-    screen = f"{tip}:\n"
+    screen = colored_text(f"{tip}:\n", 96)
     for i, j in enumerate(choose):
-        screen += f"{i + start}. {j}\n"
+        screen += colored_text(f"{i + start}. {j}\n", 92)
     return input(screen)
 
 

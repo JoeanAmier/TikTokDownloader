@@ -57,7 +57,9 @@ class Cleaner:
         return text
 
 
-def colored_text(text: str, color_code: int, default=97):
+def colored_text(text: str, color_code: int, background=None, default=97):
+    if background:
+        color_code = f"{color_code};{background}"
     return f"\x1b[{color_code}m{text}\x1b[{default}m"
 
 
