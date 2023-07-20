@@ -280,9 +280,12 @@ class TikTok:
             return False
         return mix_info
 
-    def download_mix(self, mix_info, save, root, params):
-        mix_info[1] = input(
-            "请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
+    def download_mix(self, mix_info, save, root, params, mark=""):
+        if mark:
+            mix_info[1] = mark
+        else:
+            mix_info[1] = input(
+                "请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
         self.download.nickname = mix_info[2]
         self.download.mark = mix_info[1]
         old_mark = m["mark"] if (
@@ -318,7 +321,7 @@ class TikTok:
                 self.download_mix(info, save, root, params)
 
     def mix_batch(self, save, root, params):
-        for url in self._data["mix"]:
+        for mark, url in self._data["mix"]:
             id_ = self.request.run_alone(url, solo=True, mix=True)
             if not id_:
                 self.logger.error(f"{url} 获取作品ID或合集ID失败")
@@ -330,7 +333,7 @@ class TikTok:
                 mix_id = False
             if not (info := self.get_mix_info(id_[0], mix_id)):
                 continue
-            self.download_mix(info, save, root, params)
+            self.download_mix(info, save, root, params, mark)
 
     def accounts_user(self):
         save, root, params = self.record.run(
