@@ -505,7 +505,6 @@ class TikTok:
         self.logger.info("开始提取搜索结果")
         item = self.request.deal_search_user()
         self.request.save_user(file, item, True)
-        self.logger.info("搜索结果提取结束")
 
     def run(self):
         while not self.quit:

@@ -973,7 +973,7 @@ class UserData:
         for i in data:
             self.log.info("账号数据: " + ", ".join(i), False)
             self.data.save(i)
-        self.log.info("账号数据储存结束")
+        self.log.info("账号数据已保存")
 
     @reset
     @check_cookie
