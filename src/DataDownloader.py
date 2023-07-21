@@ -59,7 +59,7 @@ class Download:
         self._dynamic = False  # 是否下载动态封面图，通用
         self._original = False  # 是否下载静态封面图，通用
         self.favorite = False  # 喜欢页下载模式，调用前赋值
-        self.type_ = {"video": None, "images": None}  # 文件保存目录，运行时赋值
+        self.type_ = {"video": Path, "images": Path}  # 文件保存目录，运行时赋值
         self.video_data = []  # 视频详细信息
         self.image_data = []  # 图集详细信息
         self.mix_data = []  # 合集详细信息
@@ -504,11 +504,13 @@ class Download:
 
         try:
             total_size = int(data.headers.get('content-length', 0))
-            progress_bar = ProgressBar(total_size)
+            progress_bar = ProgressBar(
+                total_size) if total_size > 0 else LoopingBar()
             with full_path.open("wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
                     progress_bar.update(len(chunk))
+                print()
         except requests.exceptions.ChunkedEncodingError:
             self.log.warning(f"文件: {file} 由于网络异常下载中断")
             delete_file(full_path)
@@ -629,9 +631,6 @@ class ProgressBar(NoneBar):
                 95),
             end='',
             flush=True)
-        # 下载完成后打印新行
-        if self.downloaded_size == self.total:
-            print()
 
 
 class LoopingBar(NoneBar):
