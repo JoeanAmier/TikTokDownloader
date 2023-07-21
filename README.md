@@ -10,7 +10,7 @@
 <img src="https://img.shields.io/badge/Python-%E2%89%A53.10-ffec47" alt="Python">
 <img src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?color=green" alt="stars">
 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A.jpg">
-<img src="https://img.shields.io/badge/QQ%E7%BE%A4%E8%81%8A-830227445-b44c97" alt="群聊">
+<img src="https://img.shields.io/badge/QQ%E7%BE%A4%E8%81%8A-830227445-ba79b1" alt="群聊">
 </a>
 </div>
 <br>
@@ -45,8 +45,9 @@
 * ✅ 自动更新账号昵称
 * ✅ 直接部署至公开服务器
 * ✅ 采集抖音搜索结果
+* ☑️ 采集账号关注列表
 * ☑️ 批量下载抖音账号收藏作品
-* ☑️ 获取抖音账号收藏合集列表
+* ☑️ 采集抖音账号收藏合集列表
 
 # 💻程序界面
 
