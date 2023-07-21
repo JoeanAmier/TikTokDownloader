@@ -35,6 +35,8 @@ def version():
 
 def check_config():
     global UPDATE, COLOUR
+    if not (c := Path("./src/config")).is_dir():
+        c.mkdir()
     UPDATE["tip"] = "启用" if UPDATE["path"].exists() else "禁用"
     COLOUR["tip"] = "启用" if COLOUR["path"].exists() else "禁用"
 
