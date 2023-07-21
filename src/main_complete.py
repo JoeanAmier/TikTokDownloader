@@ -28,6 +28,7 @@ class TikTok:
         self.request = None
         self.download = None
         self.manager = None
+        self.save = False
         self.xb = XBogus()
         self.record = RecordManager()
         self.settings = Settings()
@@ -81,6 +82,7 @@ class TikTok:
              "proxies",
              "download"),
             True)
+        self.save = bool(self._data["save"])
         print("读取配置文件成功！")
         return True
 
@@ -526,15 +528,24 @@ class TikTok:
                 self.logger.info("已选择直播下载模式")
                 self.live_acquisition()
             elif select == "4":
+                if not self.save:
+                    print(colored_text("未设置 save 参数，无法正常使用该模式！", 93))
+                    continue
                 self.logger.info("已选择评论抓取模式")
                 self.comment_acquisition()
             elif select == "5":
                 self.logger.info("已选择合集下载模式")
                 self.mix_acquisition()
             elif select == "6":
+                if not self.save:
+                    print(colored_text("未设置 save 参数，无法正常使用该模式！", 93))
+                    continue
                 self.logger.info("已选择账号数据采集模式")
                 self.user_acquisition()
             elif select == "7":
+                if not self.save:
+                    print(colored_text("未设置 save 参数，无法正常使用该模式！", 93))
+                    continue
                 self.logger.info("已选择搜索结果采集模式")
                 self.search_acquisition()
         self.xb.file.close()
