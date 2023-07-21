@@ -15,7 +15,7 @@ from src.main_server import Server
 from src.main_web_UI import WebUI
 
 VERSION = 3.3
-STABLE = False
+STABLE = True
 
 RELEASES = "https://github.com/JoeanAmier/TikTokDownloader/releases/latest"
 NAME = f"TikTokDownloader v{VERSION}{'' if STABLE else ' Beta'}"
@@ -63,7 +63,7 @@ def main():
     mode = prompt(
         "请选择 TikTokDownloader 运行模式",
         ("写入 Cookie 信息", "单进程终端模式", "多进程终端模式", "Web UI 交互模式", "服务器部署模式",
-         f"{UPDATE['tip']}检查更新功能", f"{COLOUR['tip']}彩色提示功能",))
+         f"{UPDATE['tip']}检查更新功能", f"{COLOUR['tip']}彩色交互提示",))
     compatible(mode)
 
 
