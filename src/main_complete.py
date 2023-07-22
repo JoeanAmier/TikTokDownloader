@@ -309,7 +309,7 @@ class TikTok:
             elif url in ("Q", "q",):
                 self.quit = True
                 break
-            ids = self.request.run_alone(url, mix=True)
+            ids = self.request.run_alone(url, "合集ID", mix=True)
             if not ids:
                 self.logger.error(f"{url} 获取作品ID或合集ID失败")
                 continue
@@ -325,7 +325,7 @@ class TikTok:
 
     def mix_batch(self, save, root, params):
         for mark, url in self._data["mix"]:
-            id_ = self.request.run_alone(url, solo=True, mix=True)
+            id_ = self.request.run_alone(url, "合集ID", solo=True, mix=True)
             if not id_:
                 self.logger.error(f"{url} 获取作品ID或合集ID失败")
                 continue

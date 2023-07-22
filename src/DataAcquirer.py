@@ -532,6 +532,7 @@ class UserData:
     def run_alone(
             self,
             text: str,
+            value="aweme_id",
             solo=False,
             user=False, mix=False) -> list | bool | tuple:
         """单独下载模式"""
@@ -546,12 +547,14 @@ class UserData:
                 url = url[:1]
             result = [
                 self.get_id(
-                    value="aweme_id",
+                    value=value,
                     url=i,
                     return_=True) for i in url]
             result = [i for i in result if i]
             if user:
                 return [f"https://www.douyin.com/user/{i}" for i in result]
+            if mix:
+                return (result,) if result else False
             return result or False
         elif isinstance(url, tuple):
             return (url[0][:1],) if solo else url
