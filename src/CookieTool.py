@@ -1,4 +1,5 @@
 from src.Configuration import Settings
+from src.StringCleaner import colored_text
 
 
 class Cookie:
@@ -12,7 +13,7 @@ class Cookie:
         try:
             index = int(input("请输入该 Cookie 的写入位置(索引，默认为0)：") or 0)
         except ValueError:
-            print("写入位置错误！")
+            print(colored_text("写入位置错误！", 91))
         else:
             self.extract(cookie, index)
 
@@ -37,7 +38,7 @@ class Cookie:
             self.write(get_key, index)
             print("写入 Cookie 成功！")
         else:
-            print("Cookie 缺少必需的键值对！")
+            print(colored_text("Cookie 缺少必需的键值对！", 93))
 
     @staticmethod
     def check_key(items):
