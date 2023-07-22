@@ -311,7 +311,7 @@ class UserData:
 
     @retry(finish=False)
     def get_id(self, value="sec_user_id", url="", return_=False) -> bool | str:
-        """获取账号ID或者作品ID"""
+        """获取账号ID、作品ID、直播ID"""
         if self.id_:
             self.log.info(f"{url} {value}: {self.id_}", False)
             return True
@@ -321,6 +321,7 @@ class UserData:
                 url,
                 headers=self.headers,
                 proxies=self.proxies,
+                allow_redirects=False,
                 timeout=10)
             sleep()
         except requests.exceptions.ReadTimeout:
@@ -329,7 +330,7 @@ class UserData:
         if response.content == b"":
             self.log.warning(f"{url} {value} 响应内容为空")
             return False
-        params = urlparse(response.url)
+        params = urlparse(response.headers['Location'])
         url_list = params.path.rstrip("/").split("/")
         if return_:
             return url_list[-1] or url_list[-2]
@@ -602,7 +603,13 @@ class UserData:
 
     def get_live_id(self, link: str) -> list:
         """检查直播链接并返回直播ID"""
-        return s if len(s := self.live_link.findall(link)) >= 1 else []
+        if len(s := self.live_link.findall(link)) >= 1:
+            return s
+        # elif len(s := self.share.findall(link)) >= 1:
+        #     s = [self.get_id("room_id", i, True) for i in s]
+        #     s = [i for i in s if i]
+        #     return s or []
+        return []
 
     def return_live_ids(self, text, solo=False) -> bool | list:
         id_ = self.get_live_id(text)
