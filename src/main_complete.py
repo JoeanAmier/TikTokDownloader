@@ -513,39 +513,39 @@ class TikTok:
             self.initialize()
             self.set_parameters()
             select = prompt("请选择下载模式", (
-                "批量下载账号作品", "单独下载链接作品", "获取直播推流地址", "抓取作品评论数据", "批量下载合集作品",
+                "批量下载账号作品", "单独下载链接作品", "获取直播推流地址", "采集作品评论数据", "批量下载合集作品",
                 "批量采集账号数据", "采集搜索结果数据"))
             if select in ("Q", "q", "",):
                 self.quit = True
             elif select == "1":
-                self.logger.info("已选择批量下载作品模式")
+                self.logger.info("已选择批量下载账号作品模式")
                 self.batch_acquisition()
             elif select == "2":
-                self.logger.info("已选择单独下载作品模式")
+                self.logger.info("已选择单独下载链接作品模式")
                 self.single_acquisition()
             elif select == "3":
-                self.logger.info("已选择直播下载模式")
+                self.logger.info("已选择获取直播推流地址模式")
                 self.live_acquisition()
             elif select == "4":
                 if not self.save:
                     print(colored_text("未设置 save 参数，无法正常使用该模式！", 93))
                     continue
-                self.logger.info("已选择评论抓取模式")
+                self.logger.info("已选择采集作品评论数据模式")
                 self.comment_acquisition()
             elif select == "5":
-                self.logger.info("已选择合集下载模式")
+                self.logger.info("已选择批量下载合集作品模式")
                 self.mix_acquisition()
             elif select == "6":
                 if not self.save:
                     print(colored_text("未设置 save 参数，无法正常使用该模式！", 93))
                     continue
-                self.logger.info("已选择账号数据采集模式")
+                self.logger.info("已选择批量采集账号数据模式")
                 self.user_acquisition()
             elif select == "7":
                 if not self.save:
                     print(colored_text("未设置 save 参数，无法正常使用该模式！", 93))
                     continue
-                self.logger.info("已选择搜索结果采集模式")
+                self.logger.info("已选择采集搜索结果数据模式")
                 self.search_acquisition()
         self.xb.file.close()
         self.logger.info("程序运行结束")
