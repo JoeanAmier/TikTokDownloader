@@ -14,8 +14,8 @@ from src.main_complete import prompt
 from src.main_server import Server
 from src.main_web_UI import WebUI
 
-VERSION = 3.3
-STABLE = True
+VERSION = 3.4
+STABLE = False
 
 RELEASES = "https://github.com/JoeanAmier/TikTokDownloader/releases/latest"
 NAME = f"TikTokDownloader v{VERSION}{'' if STABLE else ' Beta'}"
@@ -50,7 +50,7 @@ def check_update():
         tag = float(response.headers['Location'].split("/")[-1])
         if tag > VERSION:
             print(colored_text(f"\r检测到新版本: {tag}", 92), flush=True)
-            print(response.url)
+            print(RELEASES)
         else:
             print(colored_text("\r当前已是最新版本", 92), flush=True)
     except (exceptions.ReadTimeout, exceptions.ConnectionError):
