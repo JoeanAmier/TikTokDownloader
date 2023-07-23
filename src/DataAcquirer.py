@@ -15,6 +15,7 @@ from src.Parameter import WebID
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
+from src.StringCleaner import colored_text
 
 
 def generate_user_agent():
@@ -64,7 +65,7 @@ def check_cookie(function):
     def inner(self, *args, **kwargs):
         if self.cookie:
             return function(self, *args, **kwargs)
-        print("未设置Cookie！")
+        print(colored_text("未设置Cookie！", 91))
         return False
 
     return inner
