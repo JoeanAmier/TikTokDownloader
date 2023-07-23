@@ -80,7 +80,7 @@ def retry(finish=False):
                 if result := function(self, *args, **kwargs):
                     return result
                 else:
-                    print(f"正在尝试第 {i + 1} 次重试")
+                    print(colored_text(f"正在尝试第 {i + 1} 次重试", 93))
             if not (result := function(self, *args, **kwargs)) and finish:
                 self.finish = True
             return result
