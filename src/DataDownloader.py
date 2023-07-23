@@ -523,6 +523,7 @@ class Download:
             with full_path.open("wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
+                    time.sleep(0.01)
                     progress_bar.update(len(chunk))
                 print()
         except requests.exceptions.ChunkedEncodingError:
