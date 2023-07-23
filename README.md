@@ -104,13 +104,14 @@ TikTokDownloader
 **使用方法：**
 
 1. 安装不低于 `3.10` 版本的 Python 解释器
-2. 下载最新源码或 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码至本地
-3. 安装 requirements.txt 包含的第三方模块
-4. 运行 main.py 并选择`单进程终端模式`，生成默认配置文件
-5. 阅读 README.md 了解项目介绍和配置文件规则
-6. 打开抖音网页版，复制 Cookie 至配置文件\(使用 main.py 写入\)
-7. 根据下载需求修改 settings.json 配置文件
-8. 再次运行 main.py 即可正常使用
+2. 安装 Node.js \(JavaScript 运行环境\)
+3. 下载最新源码或 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码至本地
+4. 安装 requirements.txt 包含的第三方模块
+5. 运行 main.py 并选择`单进程终端模式`，生成默认配置文件
+6. 阅读 README.md 了解项目介绍和配置文件规则
+7. 打开抖音网页版，复制 Cookie 至配置文件\(使用 main.py 写入\)
+8. 根据下载需求修改 settings.json 配置文件
+9. 再次运行 main.py 即可正常使用
 
 <b>
 更多程序说明可以查看&nbsp;<a href="https://github.com/JoeanAmier/TikTokDownloader/issues?q=is%3Aopen+is%3Aissue+label%3Adocumentation">issues</a>
