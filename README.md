@@ -103,8 +103,8 @@ TikTokDownloader
 
 **使用方法：**
 
-1. 安装不低于 `3.10` 版本的 Python 解释器
-2. 安装 Node.js \(JavaScript 运行环境\)
+1. 安装不低于 `3.10` 版本的 [Python](https://www.python.org/) 解释器
+2. 安装 [Node.js](https://nodejs.org/zh-cn) \(JavaScript 运行环境\)
 3. 下载最新源码或 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码至本地
 4. 安装 requirements.txt 包含的第三方模块
 5. 运行 main.py 并选择`单进程终端模式`，生成默认配置文件
