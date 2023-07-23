@@ -452,6 +452,10 @@ class Download:
                 if response.content == b"":
                     self.log.warning(f"{url} 返回内容为空")
                     return False
+                if response.status_code != 200:
+                    self.log.warning(
+                        f"{response.url} 响应码异常: {response.status_code}")
+                    return False
                 return bool(
                     self.save_file(
                         response,
