@@ -290,37 +290,48 @@ class Download:
         nickname = data.get("nickname") or "已注销账号"
         return uid, sec_uid, nickname, unique_id, short_id, signature
 
+    @staticmethod
+    def clear_spaces(string: str):
+        """将连续的空格转换为单个空格"""
+        return " ".join(string.split())
+
+    @staticmethod
+    def get_music(item, id_):
+        if music_data := item.get("music", False):
+            name = music_data.get("title") or id_
+            url = m[-1] if (m := music_data["play_url"]
+            ["url_list"]) else ""  # 部分作品的数据没有音乐下载地址
+            return name, url
+        return "", ""
+
+    @staticmethod
+    def get_statistics(item):
+        return [
+            str(item["statistics"][i])
+            for i in (
+                "digg_count",
+                "comment_count",
+                "collect_count",
+                "share_count",
+            )
+        ]
+
+    @staticmethod
+    def get_cover(item):
+        # 动态封面图链接
+        dynamic_cover = u["url_list"][-1] if (
+                                                 u := item["video"].get("dynamic_cover")) and u["url_list"] else ""
+        # 静态封面图链接
+        origin_cover = u["url_list"][-1] if (
+                                                u := item["video"].get("origin_cover")) and u["url_list"] else ""
+        return dynamic_cover, origin_cover
+
     def get_info(self, data: list[str | dict]):
         """
         提取作品详细信息
         视频格式: 作品ID, 描述, 发布时间, UID, 作者昵称, 账号标识, 下载链接, [音乐名称, 音乐链接], 静态封面图, 动态封面图
         图集格式: 作品ID, 描述, 发布时间, UID, 作者昵称, 账号标识, 下载链接, [音乐名称, 音乐链接]
         """
-
-        def clear_spaces(string: str):
-            """将连续的空格转换为单个空格"""
-            return " ".join(string.split())
-
-        def get_music():
-            nonlocal item, id_
-            if music_data := item.get("music", False):
-                name = music_data.get("title") or id_
-                url = m[-1] if (m := music_data["play_url"]
-                ["url_list"]) else ""  # 部分作品的数据没有音乐下载地址
-                return name, url
-            return "", ""
-
-        def get_statistics():
-            nonlocal item
-            result = []
-            for i in (
-                    "digg_count",
-                    "comment_count",
-                    "collect_count",
-                    "share_count"):
-                result.append(str(item["statistics"][i]))
-            return result
-
         for item in data:
             if isinstance(item, str):
                 item = self.get_data(item)
@@ -328,7 +339,7 @@ class Download:
             id_ = item["aweme_id"]
             uid, sec_uid, nickname, unique_id, short_id, signature = self.get_author_data(
                 item)
-            desc = clear_spaces(
+            desc = self.clear_spaces(
                 self.clean.filter(
                     item["desc"])[
                 :self.length]) or id_
@@ -336,14 +347,14 @@ class Download:
                 self.time,
                 time.localtime(
                     item["create_time"]))
-            music_name, music_url = get_music()
-            statistics = get_statistics()
+            music_name, music_url = self.get_music(item, id_)
+            statistics = self.get_statistics(item)
             if images := item.get("images"):
                 type_ = "图集"
                 images = [i['url_list'][-1] for i in images]
                 download_link = " ".join(images)
-                dynamic_cover = "#"
-                origin_cover = "#"
+                dynamic_cover = ""
+                origin_cover = ""
                 self.image_data.append([id_,
                                         desc,
                                         create_time,
@@ -358,8 +369,8 @@ class Download:
                 images = [i["display_image"]["url_list"][-1]
                           for i in images["images"]]
                 download_link = " ".join(images)
-                dynamic_cover = "#"
-                origin_cover = "#"
+                dynamic_cover = ""
+                origin_cover = ""
                 self.image_data.append([id_,
                                         desc,
                                         create_time,
@@ -372,12 +383,7 @@ class Download:
             else:
                 type_ = "视频"
                 download_link = item["video"]["play_addr"]["url_list"][-1]
-                # 动态封面图链接
-                dynamic_cover = u["url_list"][-1] if (
-                    u := item["video"].get("dynamic_cover")) else ""
-                # 静态封面图链接
-                origin_cover = u["url_list"][-1] if (
-                    u := item["video"].get("origin_cover")) else ""
+                dynamic_cover, origin_cover = self.get_cover(item)
                 self.video_data.append([id_,
                                         desc,
                                         create_time,
