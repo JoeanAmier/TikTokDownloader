@@ -1,4 +1,3 @@
-import contextlib
 import time
 from datetime import date
 from datetime import datetime
@@ -77,11 +76,10 @@ def retry(finish=False):
     def inner(function):
         def execute(self, *args, **kwargs):
             for i in range(self.retry):
-                with contextlib.suppress(requests.exceptions.ConnectTimeout):
-                    if result := function(self, *args, **kwargs):
-                        return result
-                    else:
-                        print(f"正在尝试第 {i + 1} 次重试")
+                if result := function(self, *args, **kwargs):
+                    return result
+                else:
+                    print(f"正在尝试第 {i + 1} 次重试")
             if not (result := function(self, *args, **kwargs)) and finish:
                 self.finish = True
             return result
@@ -272,7 +270,12 @@ class UserData:
                     return
             except requests.exceptions.ReadTimeout:
                 self.log.warning("代理测试超时")
-            except (requests.exceptions.ProxyError, requests.exceptions.SSLError):
+            except (
+                    requests.exceptions.ProxyError,
+                    requests.exceptions.SSLError,
+                    requests.exceptions.ChunkedEncodingError,
+                    requests.exceptions.ConnectionError,
+            ):
                 self.log.warning("代理测试失败")
         self._proxies = {
             "http": None,
@@ -309,6 +312,26 @@ class UserData:
         else:
             self._mark = s if (s := self.clean.filter(value)) else None
 
+    def send_request(self, url: str, value: str, **kwargs):
+        try:
+            response = requests.get(
+                url,
+                headers=self.headers,
+                proxies=self.proxies,
+                **kwargs,
+                timeout=10)
+            sleep()
+            if response.content == b"":
+                self.log.warning(f"{url} {value} 响应内容为空")
+                return False
+            return response
+        except requests.exceptions.ReadTimeout:
+            self.log.warning(f"获取 {value} 超时")
+            return False
+        except (requests.exceptions.ChunkedEncodingError, requests.exceptions.ConnectionError):
+            self.log.error(f"网络异常，获取 {value} 失败")
+            return False
+
     @retry(finish=False)
     def get_id(self, value="sec_user_id", url="", return_=False) -> bool | str:
         """获取账号ID、作品ID、直播ID"""
@@ -316,19 +339,11 @@ class UserData:
             self.log.info(f"{url} {value}: {self.id_}", False)
             return True
         url = url or self.url
-        try:
-            response = requests.get(
-                url,
-                headers=self.headers,
-                proxies=self.proxies,
-                allow_redirects=False,
-                timeout=10)
-            sleep()
-        except requests.exceptions.ReadTimeout:
-            self.log.warning(f"获取 {value} 超时")
-            return False
-        if response.content == b"":
-            self.log.warning(f"{url} {value} 响应内容为空")
+        if not (
+                response := self.send_request(
+                    url,
+                    value,
+                    allow_redirects=False)):
             return False
         params = urlparse(response.headers['Location'])
         url_list = params.path.rstrip("/").split("/")
@@ -360,22 +375,11 @@ class UserData:
         }
         self.deal_url_params(params)
         self.list = []
-        try:
-            response = requests.get(
-                self.api,
-                params=params,
-                headers=self.headers,
-                proxies=self.proxies,
-                timeout=10)
-            sleep()
-        except requests.exceptions.ReadTimeout:
-            self.log.error("获取账号作品数据超时")
-            return False
-        except requests.exceptions.ConnectionError:
-            self.log.error("获取账号作品数据时网络异常")
-            return False
-        if response.content == b"":
-            self.log.warning("账号作品数据响应内容为空")
+        if not (
+                response := self.send_request(
+                    self.api,
+                    "账号作品数据",
+                    params=params)):
             return False
         try:
             data = response.json()
@@ -435,21 +439,15 @@ class UserData:
         }
         self.deal_url_params(params)
         self.name = str(time.time())[:10]
-        try:
-            response = requests.get(
-                self.api.replace("favorite", "post"),
-                params=params,
-                headers=self.headers,
-                proxies=self.proxies,
-                timeout=10)
-            sleep()
-        except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError):
+        if not (
+                response := self.send_request(
+                    self.api.replace(
+                        "favorite",
+                        "post"),
+                    "账号昵称",
+                    params=params)):
             self.log.warning(
-                f"请求超时，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
-            return False
-        if response.content == b"":
-            self.log.warning(
-                f"账号昵称响应内容为空，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+                f"获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
             return False
         try:
             data = response.json()
@@ -631,22 +629,12 @@ class UserData:
             "web_rid": id_,
         }
         self.deal_url_params(params)
-        try:
-            response = requests.get(
-                self.live_api,
-                headers=self.headers,
-                params=params,
-                timeout=10,
-                proxies=self.proxies)
-            sleep()
-        except requests.exceptions.ReadTimeout:
-            self.log.warning("获取直播数据超时")
-            return False
-        except requests.exceptions.JSONDecodeError:
-            self.log.warning("直播数据内容格式错误")
-            return False
-        if response.content == b"":
-            self.log.warning("直播数据响应内容为空")
+        if not (
+                response := self.send_request(
+                    self.live_api,
+                    "直播数据",
+                    params=params,
+                )):
             return False
         return response.json()
 
@@ -713,19 +701,7 @@ class UserData:
             }
         self.deal_url_params(params)
         self.comment = []
-        try:
-            response = requests.get(
-                api,
-                params=params,
-                headers=self.headers,
-                proxies=self.proxies,
-                timeout=10)
-            sleep()
-        except requests.exceptions.ReadTimeout:
-            self.log.error("获取评论数据超时")
-            return False
-        if response.content == b"":
-            self.log.warning("账号作品数据响应内容为空")
+        if not (response := self.send_request(api, "评论数据", params=params, )):
             return False
         try:
             data = response.json()
@@ -851,24 +827,17 @@ class UserData:
         }
         self.deal_url_params(params)
         self.mix_data = []
-        try:
-            response = requests.get(
-                self.mix_api,
-                params=params,
-                headers=self.headers,
-                proxies=self.proxies,
-                timeout=10)
-            sleep()
-        except requests.exceptions.ReadTimeout:
-            self.log.error("获取合集作品数据超时")
-            return False
-        if response.content == b"":
-            self.log.warning("合集作品数据响应内容为空")
+        if not (
+                response := self.send_request(
+                    self.mix_api,
+                    "合集数据",
+                    params=params,
+                )):
             return False
         try:
             data = response.json()
         except requests.exceptions.JSONDecodeError:
-            self.log.error("合集作品数据返回内容异常！疑似接口失效", False)
+            self.log.error("合集数据返回内容异常！疑似接口失效", False)
             return False
         try:
             self.cursor = data['cursor']
@@ -876,7 +845,7 @@ class UserData:
             self.finish = not data["has_more"]
             return True
         except KeyError:
-            self.log.error(f"合集作品数据内容异常: {data}", False)
+            self.log.error(f"合集数据内容异常: {data}", False)
             return False
 
     def deal_mix_data(self):
@@ -905,19 +874,12 @@ class UserData:
             "webid": self.__web,
         }
         self.deal_url_params(params)
-        try:
-            response = requests.get(
-                self.user_api,
-                params=params,
-                headers=self.headers,
-                proxies=self.proxies,
-                timeout=10)
-            sleep()
-        except requests.exceptions.ReadTimeout:
-            self.log.error("获取账号数据超时")
-            return False
-        if response.content == b"":
-            self.log.warning("账号数据响应内容为空")
+        if not (
+                response := self.send_request(
+                    self.user_api,
+                    "账号数据",
+                    params=params,
+                )):
             return False
         try:
             return response.json()
@@ -1051,22 +1013,7 @@ class UserData:
             user_params(params)
         self.deal_url_params(params)
         self.list = []
-        try:
-            response = requests.get(
-                api,
-                params=params,
-                headers=self.headers,
-                proxies=self.proxies,
-                timeout=10)
-            sleep()
-        except requests.exceptions.ReadTimeout:
-            self.log.error("获取搜索结果超时")
-            return False
-        except requests.exceptions.ConnectionError:
-            self.log.error("获取搜索结果时网络异常")
-            return False
-        if response.content == b"":
-            self.log.warning("搜索结果响应内容为空")
+        if not (response := self.send_request(api, "搜索结果", params=params, )):
             return False
         try:
             data = response.json()
