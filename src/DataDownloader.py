@@ -276,7 +276,11 @@ class Download:
             except KeyError:
                 self.log.error(f"作品详细数据内容异常: {response.json()}", False)
                 return False
-        except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectTimeout):
+        except (
+                requests.exceptions.ReadTimeout,
+                requests.exceptions.ConnectTimeout,
+                requests.exceptions.ChunkedEncodingError,
+        ):
             self.log.error(f"请求超时，资源 {item} 获取详细数据失败")
             return False
 
