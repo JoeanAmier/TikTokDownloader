@@ -18,6 +18,15 @@ def prompt(tip: str, choose: tuple | list, start=1) -> str:
     return input(screen)
 
 
+def check_save(function):
+    def inner(self, *args, **kwargs):
+        if self.save:
+            return function(self, *args, **kwargs)
+        print(colored_text("未设置 save 参数，无法正常使用该模式！", 93))
+
+    return inner
+
+
 class TikTok:
     CLEAN_PATCH = {
         " ": " ",
@@ -236,6 +245,7 @@ class TikTok:
         self.request.retry = self._data["retry"]
         self.download.retry = self._data["retry"]
 
+    @check_save
     def comment_acquisition(self):
         save, root, params = self.record.run(
             self._data["root"], type_="comment", format_=self._data["save"])
@@ -374,6 +384,7 @@ class TikTok:
                 with save(root, name="UserData", **params) as file:
                     self.request.save_user(file, data)
 
+    @check_save
     def user_acquisition(self):
         def choose_mode() -> str:
             return prompt(
@@ -468,6 +479,7 @@ class TikTok:
 
         return words, text
 
+    @check_save
     def search_acquisition(self):
         data_type = {
             0: "",
@@ -527,24 +539,15 @@ class TikTok:
                 self.logger.info("已选择获取直播推流地址模式")
                 self.live_acquisition()
             elif select == "4":
-                if not self.save:
-                    print(colored_text("未设置 save 参数，无法正常使用该模式！", 93))
-                    continue
                 self.logger.info("已选择采集作品评论数据模式")
                 self.comment_acquisition()
             elif select == "5":
                 self.logger.info("已选择批量下载合集作品模式")
                 self.mix_acquisition()
             elif select == "6":
-                if not self.save:
-                    print(colored_text("未设置 save 参数，无法正常使用该模式！", 93))
-                    continue
                 self.logger.info("已选择批量采集账号数据模式")
                 self.user_acquisition()
             elif select == "7":
-                if not self.save:
-                    print(colored_text("未设置 save 参数，无法正常使用该模式！", 93))
-                    continue
                 self.logger.info("已选择采集搜索结果数据模式")
                 self.search_acquisition()
         self.xb.file.close()
