@@ -105,9 +105,9 @@ def close_file(files: list | tuple):
         f.close()
 
 
-def change_config(file: Path):
+def change_config(file: Path, tip="修改设置成功！"):
     deal_config(file)
-    print("修改设置成功！")
+    print(tip)
     check_config()
     main()
 
@@ -127,7 +127,7 @@ def compatible(mode: str):
     elif mode == "6":
         change_config(UPDATE["path"])
     elif mode == "7":
-        change_config(COLOUR["path"])
+        change_config(COLOUR["path"], "\x1b[0m修改设置成功！\x1b[0m")
 
 
 if __name__ == '__main__':
