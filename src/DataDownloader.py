@@ -667,3 +667,23 @@ class LoopingBar(NoneBar):
                 95),
             end='',
             flush=True)
+
+
+class LoadingAnimation:
+    def __init__(self):
+        self.animation_chars = cycle(['-', '\\', '|', '/'])
+        self.running = True
+
+    def run(self):
+        while self.running:
+            print(
+                colored_text(
+                    f"\r加载中 {next(self.animation_chars)}",
+                    95),
+                end="",
+                flush=True)
+            time.sleep(0.1)
+        print()
+
+    def stop(self):
+        self.running = False
