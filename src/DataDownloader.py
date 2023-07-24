@@ -630,8 +630,9 @@ class ProgressBar(NoneBar):
         self.total = total
         self.length = length
         self.fill = fill
-        self.start_time = time.time()
         self.downloaded_size = 0
+        self.start_time = time.time()
+        self.update(0)
 
     def update(self, chunk_size):
         self.downloaded_size = min(
@@ -655,6 +656,7 @@ class LoopingBar(NoneBar):
             (f"{fill * i}{' ' * (length - i)}" for i in range(length)))
         self.download_size = 0
         self.start_time = time.time()
+        self.update(0)
 
     def update(self, size: int):
         elapsed_time = time.time() - self.start_time
