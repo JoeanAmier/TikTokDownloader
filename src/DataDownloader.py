@@ -692,7 +692,7 @@ class LoadingAnimation:
         while self.running:
             print(
                 colored_text(
-                    f"\r{self.text}{next(self.animation_chars)}",
+                    f"\r{self.text} {next(self.animation_chars)}",
                     95),
                 end="",
                 flush=True)
