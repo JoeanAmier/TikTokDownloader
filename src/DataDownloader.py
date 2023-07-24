@@ -452,7 +452,11 @@ class Download:
                     stream=True,
                     proxies=self.proxies,
                     headers=self.Phone_UA if self.tiktok else self.headers) as response:
-                if not int(response.headers.get('content-length', 0)):
+                if not (
+                        content := int(
+                            response.headers.get(
+                                'content-length',
+                                0))):
                     self.log.warning(f"{url} 返回内容为空")
                     return False
                 if response.status_code != 200:
@@ -463,6 +467,7 @@ class Download:
                     self.save_file(
                         response,
                         file,
+                        content,
                         full_path,
                         type_,
                         id_))
@@ -507,7 +512,7 @@ class Download:
         if self.original and (u := item[8]):
             self.request_file(u, root, name, type_="jpeg")
 
-    def save_file(self, data, file, full_path, type_: str, id_=""):
+    def save_file(self, data, file, size: int, full_path, type_: str, id_=""):
         """保存文件"""
 
         def delete_file(error_file):
@@ -516,13 +521,11 @@ class Download:
             self.log.info(f"文件: {error_file} 已删除")
 
         try:
-            total_size = int(data.headers.get('content-length', 0))
             progress_bar = ProgressBar(
-                total_size) if total_size > 0 else LoopingBar()
+                size) if size > 0 else LoopingBar()
             with full_path.open("wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
-                    time.sleep(0.01)
                     progress_bar.update(len(chunk))
                 print()
         except requests.exceptions.ChunkedEncodingError:
