@@ -527,6 +527,11 @@ class Download:
             error_file.unlink()
             self.log.info(f"文件: {error_file} 已删除")
 
+        def stop_bar():
+            if not size:
+                progress_bar.update(0, True)
+            print()
+
         try:
             progress_bar = ProgressBar(
                 size) if size > 0 else LoopingBar()
@@ -534,11 +539,11 @@ class Download:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
                     progress_bar.update(len(chunk))
-                print()
+                stop_bar()
         except requests.exceptions.ChunkedEncodingError:
             self.log.warning(f"文件: {file} 由于网络异常下载中断")
             delete_file(full_path)
-            print()
+            stop_bar()
             return False
         if type_ == "mp4":
             self.video += 1
@@ -653,28 +658,38 @@ class ProgressBar(NoneBar):
         elapsed_time = time.time() - self.start_time
         print(
             colored_text(
-                f'\r文件下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.downloaded_size):.2f} MB',
+                f'\r文件下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.downloaded_size):.2f} MB / {self.bytes_to_mb(self.total):.2f} MB',
                 95),
             end='',
             flush=True)
 
 
 class LoopingBar(NoneBar):
-    def __init__(self, length=10, fill='█', *args, **kwargs):
+    def __init__(self,
+                 animation=(
+                         '⣾',
+                         '⣷',
+                         '⣯',
+                         '⣟',
+                         '⡿',
+                         '⢿',
+                         '⣻',
+                         '⣽'),
+                 *args,
+                 **kwargs):
         super().__init__(*args, **kwargs)
-        self.spin_chars = cycle(
-            (f"{fill * i}{' ' * (length - i)}" for i in range(length)))
+        self.spin_chars = cycle(animation)
         self.download_size = 0
         self.start_time = time.time()
         self.update(0)
 
-    def update(self, size: int):
+    def update(self, size: int, finished=False):
         elapsed_time = time.time() - self.start_time
         spin_char = next(self.spin_chars)
         self.download_size += size
         print(
             colored_text(
-                f"\r文件正在下载: |{spin_char}| - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.download_size):.2f} MB",
+                f"\r文件{'下载完成' if finished else '正在下载'}: {'✔️' if finished else spin_char} - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.download_size):.2f} MB",
                 95),
             end='',
             flush=True)
