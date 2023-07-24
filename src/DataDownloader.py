@@ -72,7 +72,7 @@ class Download:
         self.retry = 10  # 重试最大次数，通用
         self.tiktok = False  # TikTok 平台
         self.xb = xb
-        self._chunk = None  # 单次下载文件大小，单位字节
+        self._chunk = None  # 每次从服务器接收的数据块大小
 
     @property
     def chunk(self):
@@ -82,6 +82,7 @@ class Download:
     def chunk(self, chunk: int):
         self._chunk = chunk if isinstance(
             chunk, int) and chunk > 0 else 512 * 1024
+        self.log.info(f"每次从服务器接收的数据块大小已设置为 {self._chunk}", False)
 
     @property
     def name(self):

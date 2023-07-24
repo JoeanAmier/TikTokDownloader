@@ -80,7 +80,9 @@ class TikTok:
              "split",
              "save",
              "log",
-             "retry",))
+             "retry",
+             "chunk",
+             ))
         get_data(
             self._data,
             settings,
@@ -244,6 +246,7 @@ class TikTok:
         self.download.download = self._data["download"]
         self.request.retry = self._data["retry"]
         self.download.retry = self._data["retry"]
+        self.download.chunk = self._data["chunk"]
 
     @check_save
     def comment_acquisition(self):
