@@ -435,7 +435,14 @@ class Download:
                 ] + statistics)
 
     @retry(finish=False)
-    def request_file(self, url: str, root, name: str, type_: str, id_=""):
+    def request_file(
+            self,
+            url: str,
+            root,
+            name: str,
+            type_: str,
+            id_="",
+            unknown_size=False):
         """发送请求获取文件内容"""
         if not self.download:
             return True
@@ -456,7 +463,7 @@ class Download:
                         content := int(
                             response.headers.get(
                                 'content-length',
-                                0))):
+                                0))) and not unknown_size:
                     self.log.warning(f"{url} 返回内容为空")
                     return False
                 if response.status_code != 200:
@@ -599,7 +606,8 @@ class Download:
         self.create_folder("Live", True)
         del self.headers["Cookie"]
         self.log.info("开始下载直播视频")
-        self.request_file(link, self.root.joinpath("Live"), name, "flv")
+        self.request_file(link, self.root.joinpath(
+            "Live"), name, "flv", unknown_size=True)
         self.log.info("直播视频下载完成")
 
     @reset
