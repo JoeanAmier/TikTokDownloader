@@ -12,9 +12,9 @@ from src.StringCleaner import colored_text
 
 
 def prompt(tip: str, choose: tuple | list, start=1) -> str:
-    screen = colored_text(f"{tip}:\n", 96)
+    screen = colored_text(f"{tip}:\n", 96, bold=1)
     for i, j in enumerate(choose):
-        screen += colored_text(f"{i + start}. {j}\n", 92)
+        screen += colored_text(f"{i + start}. {j}\n", 92, bold=1)
     return input(screen)
 
 
