@@ -670,20 +670,34 @@ class LoopingBar(NoneBar):
 
 
 class LoadingAnimation:
-    def __init__(self):
-        self.animation_chars = cycle(['-', '\\', '|', '/'])
+    def __init__(
+            self,
+            text: str,
+            animation=(
+                    '⣾',
+                    '⣷',
+                    '⣯',
+                    '⣟',
+                    '⡿',
+                    '⢿',
+                    '⣻',
+                    '⣽'),
+            frequency=0.25):
+        self.text = text
+        self.animation_chars = cycle(animation)
+        self.frequency = frequency
         self.running = True
 
     def run(self):
         while self.running:
             print(
                 colored_text(
-                    f"\r加载中 {next(self.animation_chars)}",
+                    f"\r{self.text}{next(self.animation_chars)}",
                     95),
                 end="",
                 flush=True)
-            time.sleep(0.1)
-        print()
+            time.sleep(self.frequency)
+        print("\r", end="", flush=True)
 
     def stop(self):
         self.running = False
