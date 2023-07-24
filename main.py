@@ -15,7 +15,7 @@ from src.main_server import Server
 from src.main_web_UI import WebUI
 
 VERSION = 3.4
-STABLE = False
+STABLE = True
 
 RELEASES = "https://github.com/JoeanAmier/TikTokDownloader/releases/latest"
 NAME = f"TikTokDownloader v{VERSION}{'' if STABLE else ' Beta'}"
