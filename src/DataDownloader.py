@@ -452,7 +452,7 @@ class Download:
                     stream=True,
                     proxies=self.proxies,
                     headers=self.Phone_UA if self.tiktok else self.headers) as response:
-                if response.content == b"":
+                if not int(response.headers.get('content-length', 0)):
                     self.log.warning(f"{url} 返回内容为空")
                     return False
                 if response.status_code != 200:
