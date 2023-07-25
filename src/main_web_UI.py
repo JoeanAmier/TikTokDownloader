@@ -43,14 +43,16 @@ class WebUI(TikTok):
              "time",
              "split",
              "save",
-             "log"),
+             "log",
+             "chunk"),
             ("./",
              "Download",
              "create_time author desc",
              "%Y-%m-%d %H.%M.%S",
              "-",
              "",
-             False))
+             False,
+             512 * 1024))
         update_settings(
             settings,
             convert,
