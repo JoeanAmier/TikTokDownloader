@@ -50,6 +50,8 @@ class Server(WebUI):
             if not id_:
                 return {
                     "text": "获取作品数据失败！",
+                    "author": None,
+                    "describe": None,
                     "download": False,
                     "music": False,
                     "origin": False,
@@ -58,6 +60,8 @@ class Server(WebUI):
             if not (result := self.download.run_alone(id_[0], False)):
                 return {
                     "text": "提取作品数据失败！",
+                    "author": None,
+                    "describe": None,
                     "download": False,
                     "music": False,
                     "origin": False,
@@ -76,6 +80,8 @@ class Server(WebUI):
             if not url:
                 return {
                     "text": "无效的作品链接！",
+                    "author": None,
+                    "describe": None,
                     "download": False,
                     "music": False,
                     "origin": False,
