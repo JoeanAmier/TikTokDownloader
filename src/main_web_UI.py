@@ -68,6 +68,8 @@ class WebUI(TikTok):
         def get_video_url(item):
             result = {
                 "text": "提取作品下载地址成功！",
+                "author": item[4],
+                "describe": item[1],
                 "download": item[6],
                 "music": item[7][1],
                 "origin": item[8],
@@ -79,6 +81,8 @@ class WebUI(TikTok):
         def get_image_url(item):
             result = {
                 "text": "提取作品下载地址成功！",
+                "author": item[4],
+                "describe": item[1],
                 "download": item[6],
                 "music": item[7][1],
                 "origin": False,
@@ -91,8 +95,10 @@ class WebUI(TikTok):
             return get_video_url(data)
         elif len(data) == 8:
             return get_image_url(data)
-        raise {
+        return {
             "text": "服务器发生异常！",
+            "author": None,
+            "describe": None,
             "download": False,
             "music": False,
             "origin": False,
@@ -109,6 +115,8 @@ class WebUI(TikTok):
                 self.logger.error(f"{self.solo_url[0]} 获取作品ID失败")
                 return {
                     "text": "获取作品数据失败！",
+                    "author": None,
+                    "describe": None,
                     "download": False,
                     "music": False,
                     "origin": False,
@@ -120,6 +128,8 @@ class WebUI(TikTok):
                 return self.get_data(result[0])
             if isinstance(result, str):
                 return {"text": f"作品 {id_[0]} 下载成功！",
+                        "author": "不显示",
+                        "describe": "不显示",
                         "download": False,
                         "music": False,
                         "origin": False,
@@ -127,6 +137,8 @@ class WebUI(TikTok):
                         "preview": result}
             return {
                 "text": "获取作品数据失败！",
+                "author": None,
+                "describe": None,
                 "download": False,
                 "music": False,
                 "origin": False,
@@ -198,6 +210,8 @@ class WebUI(TikTok):
             if not url:
                 return {
                     "text": "无效的作品链接！",
+                    "author": None,
+                    "describe": None,
                     "download": False,
                     "music": False,
                     "origin": False,
