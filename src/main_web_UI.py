@@ -7,6 +7,8 @@ from flask import url_for
 from src.CookieTool import Cookie
 from src.main_complete import TikTok
 
+BLANK_PREVIEW = "static/images/blank.png"
+
 
 class WebUI(TikTok):
     def __init__(self):
@@ -105,7 +107,7 @@ class WebUI(TikTok):
             "music": False,
             "origin": False,
             "dynamic": False,
-            "preview": "static/images/blank.png"}
+            "preview": BLANK_PREVIEW}
 
     def single_acquisition(self):
         save, root, params = self.record.run(
@@ -123,7 +125,7 @@ class WebUI(TikTok):
                     "music": False,
                     "origin": False,
                     "dynamic": False,
-                    "preview": "static/images/blank.png"}
+                    "preview": BLANK_PREVIEW}
             self.download.tiktok = self.request.tiktok
             result = self.download.run_alone(id_[0], self.solo_url[1])
             if isinstance(result, list):
@@ -145,7 +147,7 @@ class WebUI(TikTok):
                 "music": False,
                 "origin": False,
                 "dynamic": False,
-                "preview": "static/images/blank.png"}
+                "preview": BLANK_PREVIEW}
 
     def live_acquisition(self):
         if not (
@@ -157,20 +159,20 @@ class WebUI(TikTok):
                 "text": "提取直播链接失败！",
                 "urls": {},
                 "best": "",
-                "preview": "static/images/blank.png"}
+                "preview": BLANK_PREVIEW}
         if not (data := self.request.get_live_data(id_[0])):
             self.logger.warning("获取直播数据失败")
             return {
                 "text": "获取直播数据失败！",
                 "urls": {},
                 "best": "",
-                "preview": "static/images/blank.png"}
+                "preview": BLANK_PREVIEW}
         if not (data := self.request.deal_live_data(data)):
             return {
                 "text": "提取直播推流地址失败！",
                 "urls": {},
                 "best": "",
-                "preview": "static/images/blank.png"}
+                "preview": BLANK_PREVIEW}
         for i, j in ({"主播昵称": data[0], "直播名称": data[1]} | data[2]).items():
             self.logger.info(f"{i}: {j}", False)
         return {
@@ -218,7 +220,7 @@ class WebUI(TikTok):
                     "music": False,
                     "origin": False,
                     "dynamic": False,
-                    "preview": "static/images/blank.png"}
+                    "preview": BLANK_PREVIEW}
             self.solo_url = (url, download)
             return self.single_acquisition()
 
@@ -230,7 +232,7 @@ class WebUI(TikTok):
                     "text": "无效的直播链接！",
                     "url": {},
                     "best": "",
-                    "preview": "static/images/blank.png"}
+                    "preview": BLANK_PREVIEW}
             self.live_url = url
             return self.live_acquisition()
 

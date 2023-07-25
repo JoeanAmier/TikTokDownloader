@@ -7,6 +7,8 @@ from src.Recorder import BaseLogger
 from src.Recorder import NoneLogger
 from src.main_web_UI import WebUI
 
+BLANK_PREVIEW = "static/images/blank.png"
+
 
 class Server(WebUI):
     def __init__(self):
@@ -56,7 +58,7 @@ class Server(WebUI):
                     "music": False,
                     "origin": False,
                     "dynamic": False,
-                    "preview": "static/images/blank.png"}
+                    "preview": BLANK_PREVIEW}
             if not (result := self.download.run_alone(id_[0], False)):
                 return {
                     "text": "提取作品数据失败！",
@@ -66,7 +68,7 @@ class Server(WebUI):
                     "music": False,
                     "origin": False,
                     "dynamic": False,
-                    "preview": "static/images/blank.png"}
+                    "preview": BLANK_PREVIEW}
             return self.get_data(result[0])
 
     def server_run(self, app):
@@ -86,7 +88,7 @@ class Server(WebUI):
                     "music": False,
                     "origin": False,
                     "dynamic": False,
-                    "preview": "static/images/blank.png"}
+                    "preview": BLANK_PREVIEW}
             self.solo_url = url
             return self.single_acquisition()
 
