@@ -40,7 +40,7 @@ class XBogus:
         if platform == "PC":
             return self.pc_js.call("sign", urlencode(query), user_agent)
         elif platform == "APP":
-            return
+            return ""
         raise ValueError
 
     def close(self):

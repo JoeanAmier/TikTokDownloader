@@ -230,8 +230,8 @@ class Download:
             self.headers["Cookie"] = (
                 "; ".join([f"{i}={j}" for i, j in self._cookie.items()]))
 
-    def deal_url_params(self, params: dict):
-        xb = self.xb.get_x_bogus(params, self.PC_UA["User-Agent"])
+    def deal_url_params(self, params: dict, platform="PC"):
+        xb = self.xb.get_x_bogus(params, self.PC_UA["User-Agent"], platform)
         params["X-Bogus"] = xb
 
     def create_folder(self, folder: str, live=False):

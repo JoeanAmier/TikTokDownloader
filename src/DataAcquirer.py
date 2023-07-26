@@ -366,8 +366,8 @@ class UserData:
         self.log.info(f"{url} {value}: {self.id_}", False)
         return True
 
-    def deal_url_params(self, params: dict):
-        xb = self.xb.get_x_bogus(params, self.headers["User-Agent"])
+    def deal_url_params(self, params: dict, platform="PC"):
+        xb = self.xb.get_x_bogus(params, self.headers["User-Agent"], platform)
         params["X-Bogus"] = xb
 
     @retry(finish=True)
