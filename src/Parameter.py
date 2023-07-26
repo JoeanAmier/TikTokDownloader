@@ -32,9 +32,10 @@ class XBogus:
         self.pc_file = self.pc_path.open()
         self.pc_js = compile(self.pc_file.read())
         self.app_path = Path(app_path or "")
-        self.app_file = None
-        self.app_js = None
+        # self.app_file = None
+        # self.app_js = None
 
+    # @run_time
     def get_x_bogus(self, query: dict, user_agent: str, platform="PC"):
         if platform == "PC":
             return self.pc_js.call("sign", urlencode(query), user_agent)
@@ -107,7 +108,6 @@ if __name__ == "__main__":
         "device_platform": "webapp",
         "aid": "6383",
         "channel": "channel_pc_web",
-        "aweme_id": "7253799364072721723",
         "cursor": "0",
         "count": "20",
         "item_type": "0",
@@ -134,8 +134,6 @@ if __name__ == "__main__":
         "downlink": "10",
         "effective_type": "4g",
         "round_trip_time": "150",
-        "webid": "7255592572578842152",
-        "msToken": "olsNApqh7VL0M3RwGRng5MPwYkPj3FttTnESDk-umJO2EC1AoT47bDf7NcDtp5AibszMtylOpE6A2q1NabOeJvYUs3XChN6yGDmleJYaPHFavf5cMRszzsvH2LjxFVmk",
     }
     example = XBogus("../static/js/X-Bogus.js")
     print("X-Bogus", example.get_x_bogus(params, HEADERS["User-Agent"]))
