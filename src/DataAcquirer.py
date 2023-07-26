@@ -4,6 +4,7 @@ from datetime import datetime
 from random import choice
 from random import randrange
 from re import compile
+from urllib.parse import parse_qs
 from urllib.parse import quote
 from urllib.parse import urlparse
 
@@ -106,6 +107,7 @@ class UserData:
         r".*?https://www.douyin.com/collection/(\d{19}).*?")  # 合集链接
     live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
     live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
+    live_share_api = "https://webcast.amemv.com/webcast/room/reflow/info/"  # 直播分享短链接API
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
     reply_api = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
     collection_api = "https://www.douyin.com/aweme/v1/web/aweme/listcollection/"  # 收藏API
@@ -334,7 +336,12 @@ class UserData:
             return False
 
     @retry(finish=False)
-    def get_id(self, value="sec_user_id", url="", return_=False) -> bool | str:
+    def get_id(
+            self,
+            value="sec_user_id",
+            url="",
+            return_=False,
+            *args) -> bool | str | tuple:
         """获取账号ID、作品ID、直播ID"""
         if self.id_:
             self.log.info(f"{url} {value}: {self.id_}", False)
@@ -348,10 +355,14 @@ class UserData:
             return False
         params = urlparse(response.headers['Location'])
         url_list = params.path.rstrip("/").split("/")
+        query_params = parse_qs(params.query)
+        id_ = url_list[-1] or url_list[-2]
         if return_:
-            return url_list[-1] or url_list[-2]
+            if query := {i: query_params.get(i, [""])[0] for i in args}:
+                return id_, query
+            return id_
         else:
-            self.id_ = url_list[-1] or url_list[-2]
+            self.id_ = id_
         self.log.info(f"{url} {value}: {self.id_}", False)
         return True
 
@@ -602,52 +613,85 @@ class UserData:
                 filtered.append(item[1])
         self.image_data = filtered
 
-    def get_live_id(self, link: str) -> list:
+    def run_live(self, text: str):
+        ids = self.return_live_ids(text)
+        return self.live_items(ids) if ids else False
+
+    def live_items(self, ids: tuple[bool, list]):
+        result = []
+        for i in ids[1]:
+            if not (data := self.get_live_data(i)):
+                self.log.warning("获取直播数据失败")
+                continue
+            if not (data := self.deal_live_data(data)):
+                continue
+            result.append(data)
+        return result
+
+    def get_live_id(self, link: str) -> tuple:
         """检查直播链接并返回直播ID"""
         if len(s := self.live_link.findall(link)) >= 1:
-            return s
-        # elif len(s := self.share.findall(link)) >= 1:
-        #     s = [self.get_id("room_id", i, True) for i in s]
-        #     s = [i for i in s if i]
-        #     return s or []
-        return []
+            return True, s
+        elif len(s := self.share.findall(link)) >= 1:
+            # s = [self.get_id("room_id", i, True, "sec_user_id") for i in s]
+            # s = [i for i in s if i]
+            # return (False, s) if s else ()
+            print("目前不支持直播分享短链接！")
+            return ()
+        return ()
 
-    def return_live_ids(self, text, solo=False) -> bool | list:
-        id_ = self.get_live_id(text)
-        if not id_:
+    def return_live_ids(self, text, solo=False) -> bool | tuple:
+        ids = self.get_live_id(text)
+        if not ids:
             self.log.warning(f"直播链接格式错误: {text}")
             return False
-        return id_[:1] if solo else id_
+        if solo:
+            ids[1] = ids[1][:1]
+        return ids
 
     @check_cookie
-    def get_live_data(self, id_: str):
-        params = {
-            "aid": "6383",
-            "app_name": "douyin_web",
-            "device_platform": "web",
-            "cookie_enabled": "true",
-            "web_rid": id_,
-        }
+    def get_live_data(self, id_: str | tuple):
+        if isinstance(id_, str):
+            params = {
+                "aid": "6383",
+                "app_name": "douyin_web",
+                "device_platform": "web",
+                "cookie_enabled": "true",
+                "web_rid": id_,
+            }
+            api = self.live_api
+        elif isinstance(id_, tuple):
+            params = {
+                "type_id": "0",
+                "live_id": "1",
+                "room_id": id_[0],
+                "sec_user_id": id_[1]["sec_user_id"],
+                "app_id": "1128",
+            }
+            api = self.live_share_api
+        else:
+            raise TypeError
         self.deal_url_params(params)
         if not (
                 response := self.send_request(
-                    self.live_api,
+                    api,
                     "直播数据",
                     params=params,
                 )):
             return False
         return response.json()
 
-    def deal_live_data(self, data):
+    def deal_live_data(self, data, short=False):
         try:
-            if data["data"]["data"][0]["status"] == 4:
+            data = data["data"]["room"] if short else data["data"]["data"][0]
+            if data["status"] == 4:
                 self.log.info("当前直播已结束")
                 return None
             nickname = self.clean.filter(
-                data["data"]["data"][0]["owner"]["nickname"])
-            title = self.clean.filter(data["data"]["data"][0]["title"])
-            url = data["data"]["data"][0]["stream_url"]["flv_pull_url"]
-            cover = data["data"]["data"][0]["cover"]["url_list"][0]
+                data["owner"]["nickname"])
+            title = self.clean.filter(data["title"])
+            url = data["stream_url"]["flv_pull_url"]
+            cover = data["cover"]["url_list"][0]
             return nickname, title, url, cover
         except KeyError as e:
             self.log.error(f"发生错误: {e}, 数据: {data}")

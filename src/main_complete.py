@@ -195,21 +195,15 @@ class TikTok:
             elif link in ("Q", "q",):
                 self.quit = True
                 break
-            ids = self.request.return_live_ids(link)
-            if not ids:
+            if not (data := self.request.run_live(link)):
                 continue
-            for i in ids:
-                if not (data := self.request.get_live_data(i)):
-                    self.logger.warning("获取直播数据失败")
-                    continue
-                if not (data := self.request.deal_live_data(data)):
-                    continue
-                self.logger.info(f"主播昵称: {data[0]}")
-                self.logger.info(f"直播标题: {data[1]}")
+            for item in data:
+                self.logger.info(f"主播昵称: {item[0]}")
+                self.logger.info(f"直播标题: {item[1]}")
                 self.logger.info(
-                    "推流地址: \n" + "\n".join([f"清晰度{i}: {j}" for i, j in data[2].items()]))
-                if len(ids) == 1 and (l := choice_quality(data[2])):
-                    self.download.download_live(l, f"{data[0]}-{data[1]}")
+                    "推流地址: \n" + "\n".join([f"清晰度{i}: {j}" for i, j in item[2].items()]))
+                if len(data) == 1 and (l := choice_quality(item[2])):
+                    self.download.download_live(l, f"{item[0]}-{item[1]}")
                     break
         self.logger.info("已退出直播下载模式\n")
 
