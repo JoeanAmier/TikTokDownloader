@@ -69,6 +69,7 @@ def main():
 def complete():
     """单线程终端模式"""
     example = TikTok()
+    register(example.xb.close)
     example.run()
 
 

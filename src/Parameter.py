@@ -31,13 +31,13 @@ class XBogus:
         self.pc_path = Path(pc_js or "./static/js/X-Bogus.js")
         self.pc_file = self.pc_path.open()
         self.pc_js = compile(self.pc_file.read())
-        self.app_path = Path(app_path)
+        self.app_path = Path(app_path or "")
         self.app_file = None
         self.app_js = None
 
-    def get_x_bogus(self, params: dict, user_agent: str, platform="PC"):
+    def get_x_bogus(self, query: dict, user_agent: str, platform="PC"):
         if platform == "PC":
-            return self.pc_js.call("sign", urlencode(params), user_agent)
+            return self.pc_js.call("sign", urlencode(query), user_agent)
         elif platform == "APP":
             return
         raise ValueError

@@ -551,5 +551,4 @@ class TikTok:
             elif select == "7":
                 self.logger.info("已选择采集搜索结果数据模式")
                 self.search_acquisition()
-        self.xb.close()
         self.logger.info("程序运行结束")
