@@ -7,7 +7,7 @@
 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">
 <img src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader" alt="TikTokDownloader">
 </a>
-<a href="https://sourcery.ai" target="_blank">
+<a href="https://sourcery.ai">
 <img src="https://img.shields.io/badge/Sourcery-enabled-ffd900" alt="Sourcery">
 </a>
 <img src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?color=green" alt="stars">
