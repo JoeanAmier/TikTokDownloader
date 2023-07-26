@@ -31,7 +31,7 @@ class XBogus:
         self.pc_path = Path(pc_js or "./static/js/X-Bogus.js")
         self.pc_file = self.pc_path.open()
         self.pc_js = compile(self.pc_file.read())
-        self.app_path = None
+        self.app_path = Path(app_path)
         self.app_file = None
         self.app_js = None
 

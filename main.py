@@ -1,5 +1,4 @@
 from atexit import register
-from functools import partial
 from pathlib import Path
 
 from flask import Flask
@@ -84,8 +83,7 @@ def web_ui():
     """
     master = WebUI()
     app = master.webui_run(Flask(__name__))
-    close_file_handler = partial(close_file, [master.xb.file])
-    register(close_file_handler)
+    register(master.xb.close)
     app.run(host="0.0.0.0", debug=False)
 
 
@@ -95,8 +93,7 @@ def server():
     """
     master = Server()
     app = master.server_run(Flask(__name__))
-    close_file_handler = partial(close_file, [master.xb.file])
-    register(close_file_handler)
+    register(master.xb.close)
     app.run(host="0.0.0.0", debug=False)
 
 
