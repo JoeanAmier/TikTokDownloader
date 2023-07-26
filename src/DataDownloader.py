@@ -340,6 +340,11 @@ class Download:
                                                 u := item["video"].get("origin_cover")) and u["url_list"] else ""
         return dynamic_cover, origin_cover
 
+    @staticmethod
+    def get_tags(item):
+        tags = [i["tag_name"] for i in item.get("video_tag", [])]
+        return tags or ["", "", ""]
+
     def get_info(self, data: list[str | dict]):
         """
         提取作品详细信息
@@ -363,6 +368,7 @@ class Download:
                     item["create_time"]))
             music_name, music_url = self.get_music(item, id_)
             statistics = self.get_statistics(item)
+            tags = self.get_tags(item)
             if images := item.get("images"):
                 type_ = "图集"
                 images = [i['url_list'][-1] for i in images]
@@ -442,6 +448,7 @@ class Download:
                     music_url,
                     origin_cover,
                     dynamic_cover,
+                    *tags,
                 ] + statistics)
 
     @retry(finish=False)
