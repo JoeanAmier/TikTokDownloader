@@ -27,13 +27,23 @@ def run_time(function):
 class XBogus:
     """代码参考: https://github.com/B1gM8c/X-Bogus/blob/main/X-Bogus.js"""
 
-    def __init__(self, path="./static/js/X-Bogus.js"):
-        self.path = Path(path)
-        self.file = self.path.open()
-        self.js = compile(self.file.read())
+    def __init__(self, pc_js=None, app_path=None):
+        self.pc_path = Path(pc_js or "./static/js/X-Bogus.js")
+        self.pc_file = self.pc_path.open()
+        self.pc_js = compile(self.pc_file.read())
+        self.app_path = None
+        self.app_file = None
+        self.app_js = None
 
-    def get_x_bogus(self, params: dict, user_agent: str):
-        return self.js.call("sign", urlencode(params), user_agent)
+    def get_x_bogus(self, params: dict, user_agent: str, platform="PC"):
+        if platform == "PC":
+            return self.pc_js.call("sign", urlencode(params), user_agent)
+        elif platform == "APP":
+            return
+        raise ValueError
+
+    def close(self):
+        self.pc_file.close()
 
 
 class MsToken:
@@ -129,7 +139,7 @@ if __name__ == "__main__":
     }
     example = XBogus("../static/js/X-Bogus.js")
     print("X-Bogus", example.get_x_bogus(params, HEADERS["User-Agent"]))
-    example.file.close()
+    example.close()
     print(MsToken.get_ms_token())
     print(TtWid.get_tt_wid())
     print("webid", WebID.get_web_id(HEADERS["User-Agent"]))
