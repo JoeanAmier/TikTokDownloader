@@ -342,7 +342,9 @@ class Download:
 
     @staticmethod
     def get_tags(item):
-        tags = [i["tag_name"] for i in item.get("video_tag", [])]
+        if not (t := item.get("video_tag")):
+            return ["", "", ""]
+        tags = [i["tag_name"] for i in t]
         return tags or ["", "", ""]
 
     def get_info(self, data: list[str | dict]):
