@@ -452,15 +452,14 @@ class UserData:
             return False
         try:
             data = response.json()
-        except requests.exceptions.JSONDecodeError:
-            self.log.warning(
-                f"数据接口返回内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
-            return False
-        try:
             self.uid = f'UID{data["aweme_list"][0]["author"]["uid"]}'
             self.name = self.clean.filter(
                 data["aweme_list"][0]["author"]["nickname"]) or self.uid
             return True
+        except requests.exceptions.JSONDecodeError:
+            self.log.warning(
+                f"数据接口返回内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+            return False
         except KeyError:
             self.log.warning(
                 f"响应内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
