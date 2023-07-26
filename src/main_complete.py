@@ -45,6 +45,8 @@ class TikTok:
         self.quit = False
         self._number = 0  # 账号数量
         self._data = {}  # 其他配置数据
+        self.mark = None
+        self.nickname = None
 
     def check_config(self):
         print("正在读取配置文件！")
@@ -98,12 +100,12 @@ class TikTok:
         return True
 
     def batch_acquisition(self):
-        mark = "mark" in self._data["name"]
         self.manager = Cache(
             self.logger,
             self._data["root"],
             type_="UID",
-            mark=mark)
+            mark=self.mark,
+            name=self.nickname)
         self.logger.info(f"共有 {self._number} 个账号的作品等待下载")
         save, root, params = self.record.run(
             self._data["root"], format_=self._data["save"])
@@ -228,6 +230,8 @@ class TikTok:
         self.request.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.request.set_web_id()
+        self.mark = "mark" in self._data["name"]
+        self.nickname = "nickname" in self._data["name"]
 
     def set_parameters(self):
         self.download.root = self._data["root"]
@@ -269,12 +273,12 @@ class TikTok:
         self.logger.info("已退出评论抓取模式\n")
 
     def mix_acquisition(self):
-        mark = "mark" in self._data["name"]
         self.manager = Cache(
             self.logger,
             self._data["root"],
             type_="MIX",
-            mark=mark)
+            mark=self.mark,
+            name=self.nickname)
         save, root, params = self.record.run(
             self._data["root"], type_="mix", format_=self._data["save"])
         select = prompt("请选择合集链接来源", ("使用 mix 参数内的合集链接",
