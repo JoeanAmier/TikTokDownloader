@@ -55,5 +55,5 @@ class Settings:
     def update(self, settings: dict):
         """更新配置文件"""
         with self.file.open("w", encoding="UTF-8") as f:
-            json.dump(settings, f, indent=4)
+            json.dump(settings, f, indent=4, ensure_ascii=False)
         print("保存配置成功！")
