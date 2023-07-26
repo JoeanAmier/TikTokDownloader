@@ -151,28 +151,16 @@ class WebUI(TikTok):
 
     def live_acquisition(self):
         if not (
-                id_ := self.request.return_live_ids(
+                data := self.request.run_live(
                     self.live_url,
                     solo=True)):
-            self.logger.warning("提取直播链接失败")
-            return {
-                "text": "提取直播链接失败！",
-                "urls": {},
-                "best": "",
-                "preview": BLANK_PREVIEW}
-        if not (data := self.request.get_live_data(id_[0])):
             self.logger.warning("获取直播数据失败")
             return {
                 "text": "获取直播数据失败！",
                 "urls": {},
                 "best": "",
                 "preview": BLANK_PREVIEW}
-        if not (data := self.request.deal_live_data(data)):
-            return {
-                "text": "提取直播推流地址失败！",
-                "urls": {},
-                "best": "",
-                "preview": BLANK_PREVIEW}
+        data = data[0]
         for i, j in ({"主播昵称": data[0], "直播名称": data[1]} | data[2]).items():
             self.logger.info(f"{i}: {j}", False)
         return {

@@ -613,11 +613,11 @@ class UserData:
                 filtered.append(item[1])
         self.image_data = filtered
 
-    def run_live(self, text: str):
-        ids = self.return_live_ids(text)
+    def run_live(self, text: str, solo=False):
+        ids = self.return_live_ids(text, solo)
         return self.live_items(ids) if ids else False
 
-    def live_items(self, ids: tuple[bool, list]):
+    def live_items(self, ids: list):
         result = []
         for i in ids[1]:
             if not (data := self.get_live_data(i)):
@@ -628,19 +628,19 @@ class UserData:
             result.append(data)
         return result
 
-    def get_live_id(self, link: str) -> tuple:
+    def get_live_id(self, link: str) -> list:
         """检查直播链接并返回直播ID"""
         if len(s := self.live_link.findall(link)) >= 1:
-            return True, s
+            return [True, s]
         elif len(s := self.share.findall(link)) >= 1:
             # s = [self.get_id("room_id", i, True, "sec_user_id") for i in s]
             # s = [i for i in s if i]
             # return (False, s) if s else ()
             print("目前不支持直播分享短链接！")
-            return ()
-        return ()
+            return []
+        return []
 
-    def return_live_ids(self, text, solo=False) -> bool | tuple:
+    def return_live_ids(self, text, solo=False) -> bool | list:
         ids = self.get_live_id(text)
         if not ids:
             self.log.warning(f"直播链接格式错误: {text}")
