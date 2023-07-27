@@ -10,7 +10,7 @@ from requests import exceptions
 from requests import post
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.183",
 }
 
 
@@ -26,9 +26,12 @@ def run_time(function):
 
 class NewXBogus:
     string = "Dkdpgh4ZKsQB80/Mfvw36XI1R25-WUAlEi7NLboqYTOPuzmFjJnryx9HVGcaStCe="
+    __canvas = 1256363761
 
     @staticmethod
-    def disturb_array(a, b, e, d, c, f, t, n, o, i, r, _, x, u, s, l, v, h, g):
+    def disturb_array(
+            a, b, e, d, c, f, t, n, o, i, r, _, x, u, s, l, v, h, g
+    ):
         array = [0] * 19
         array[0] = a
         array[10] = b
@@ -134,19 +137,40 @@ class NewXBogus:
         return "".join([self.string[i] for i in string])
 
     def generate_x_bogus(self, query):
-        array = [64, 0.00390625, 1, 14, 15, 115, 69, 63, 86,
-                 138, 100, 193, 209, 9, 74, 226, 150, 241, 39]
-        a = self.disturb_array(*array)
-        assert a == [64, 1, 15, 69, 86, 100, 209, 74, 150, 39,
-                     0.00390625, 14, 115, 63, 138, 193, 9, 226, 241]
-        garbled = self.generate_garbled_1(*a)
-        assert garbled == "@\u0000\u0001\u000e\u000fsE?VdÁÑ\tJâñ'"
-        garbled = self.generate_garbled_3("ÿ", garbled)
-        assert garbled == "-%.* ^oÁ÷u\u0015f~~M×"
-        garbled = self.generate_garbled_2(2, 255, garbled)
-        assert garbled == "\u0002ÿ-%.* ^oÁ÷u\u0015f~~M×"
-        print("".join(self.generate_str(i)
-                      for i in self.generate_num(garbled)))
+        zero = 0
+        # timestamp = int(time())
+        timestamp = 1690423561
+        array = [
+            64,
+            0.00390625,
+            1,
+            14,
+            15,
+            115,
+            69,
+            63,
+            86,
+            138,
+            timestamp >> 24 & 255,
+            timestamp >> 16 & 255,
+            timestamp >> 8 & 255,
+            timestamp >> 0 & 255,
+            self.__canvas >> 24 & 255,
+            self.__canvas >> 16 & 255,
+            self.__canvas >> 8 & 255,
+            self.__canvas >> 0 & 255,
+            None,
+        ]
+        for i in array[:-1]:
+            if isinstance(i, float):
+                i = int(i)
+            zero ^= i
+        array[-1] = zero
+        garbled = self.generate_garbled_1(*self.disturb_array(*array))
+        garbled = self.generate_garbled_2(
+            2, 255, self.generate_garbled_3("ÿ", garbled))
+        return "".join(self.generate_str(i)
+                       for i in self.generate_num(garbled))
 
 
 class XBogus:
@@ -266,4 +290,4 @@ if __name__ == "__main__":
     print(MsToken.get_ms_token())
     print(TtWid.get_tt_wid())
     print("webid", WebID.get_web_id(HEADERS["User-Agent"]))
-    NewXBogus().generate_x_bogus(None)
+    print(NewXBogus().generate_x_bogus(None))
