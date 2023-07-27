@@ -1,3 +1,4 @@
+from hashlib import md5
 from pathlib import Path
 from random import randint
 from string import ascii_letters
@@ -26,105 +27,8 @@ def run_time(function):
 
 class NewXBogus:
     string = "Dkdpgh4ZKsQB80/Mfvw36XI1R25-WUAlEi7NLboqYTOPuzmFjJnryx9HVGcaStCe="
-    __array = [
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15]
+    __array = [None for _ in range(
+        48)] + list(range(10)) + [None for _ in range(39)] + list(range(10, 16))
     __canvas = 1256363761
 
     @staticmethod
@@ -230,22 +134,50 @@ class NewXBogus:
             f += chr(ord(b[b_idx]) ^ d[(d[t] + d[c]) % 256])
         return f
 
+    def calculate_md5(self, input_string):
+        if isinstance(input_string, str):
+            array = self.md5_to_array(input_string)
+        elif isinstance(input_string, list):
+            array = input_string
+        else:
+            raise TypeError
+
+        md5_hash = md5()
+        md5_hash.update(bytes(array))
+        return md5_hash.hexdigest()
+
+    def md5_to_array(self, md5_str):
+        if isinstance(md5_str, str) and len(md5_str) > 32:
+            return [ord(char) for char in md5_str]
+        else:
+            return [
+                (self.__array[ord(md5_str[idx])] << 4)
+                | self.__array[ord(md5_str[idx + 1])]
+                for idx in range(0, len(md5_str), 2)
+            ]
+
+    def process_url_path(self, url_path):
+        return self.md5_to_array(
+            self.calculate_md5(self.md5_to_array(self.calculate_md5(url_path)))
+        )
+
     def generate_str(self, num):
         string = [num & 16515072, num & 258048, num & 4032, num & 63]
         string = [i >> j for i, j in zip(string, range(18, -1, -6))]
         return "".join([self.string[i] for i in string])
 
+    # @run_time
     def generate_x_bogus(self, query):
         zero = 0
-        # timestamp = int(time())
-        timestamp = 1690423561
+        timestamp = int(time())
+        query = self.process_url_path(query)
         array = [
             64,
             0.00390625,
             1,
-            14,
-            15,
-            115,
+            12,
+            query[-2],
+            query[-1],
             69,
             63,
             86,
@@ -356,11 +288,6 @@ if __name__ == "__main__":
         "device_platform": "webapp",
         "aid": "6383",
         "channel": "channel_pc_web",
-        "cursor": "0",
-        "count": "20",
-        "item_type": "0",
-        "insert_ids": "",
-        "rcFT": "",
         "pc_client_type": "1",
         "version_code": "170400",
         "version_name": "17.4.0",
@@ -370,10 +297,10 @@ if __name__ == "__main__":
         "browser_language": "zh-CN",
         "browser_platform": "Win32",
         "browser_name": "Edge",
-        "browser_version": "114.0.1823.82",
+        "browser_version": "115.0.1901.183",
         "browser_online": "true",
         "engine_name": "Blink",
-        "engine_version": "114.0.0.0",
+        "engine_version": "115.0.0.0",
         "os_name": "Windows",
         "os_version": "10",
         "cpu_core_num": "16",
@@ -381,7 +308,9 @@ if __name__ == "__main__":
         "platform": "PC",
         "downlink": "10",
         "effective_type": "4g",
-        "round_trip_time": "150",
+        "round_trip_time": "50",
+        "webid": "7255592572578842152",
+        "msToken": "Ui3F4s1tPEtozwxKgcizcCr1cx0oCVmx5NhSQqcYhiBDKnQ6O5f_PIwfhkKBw9dY6kDe8ncUSMhmkVV7ANocOdoGk2cPgiC4wWiyeVlTfyMDzFb2Kvxg3A2C2Xc1J1-H"
     }
     example = XBogus("../static/js/X-Bogus.js")
     print("X-Bogus", example.get_x_bogus(params, HEADERS["User-Agent"]))
@@ -389,4 +318,4 @@ if __name__ == "__main__":
     print(MsToken.get_ms_token())
     print(TtWid.get_tt_wid())
     print("webid", WebID.get_web_id(HEADERS["User-Agent"]))
-    print(NewXBogus().generate_x_bogus(None))
+    print(NewXBogus().generate_x_bogus(urlencode(params)))
