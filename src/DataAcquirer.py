@@ -145,6 +145,12 @@ class UserData:
         ("https://www.douyin.com/aweme/v1/web/live/search/", 15, "aweme_live", "",),
         ("API", "首次请求返回数量", "search_channel", "type")
     )
+    hot_params = (
+        (None, None),
+        (2, 2),
+        (2, 4),
+        (2, "hotspot_challenge"),
+    )
     # TikTok
     share_tiktok_link = compile(
         r".*?(https://vm\.tiktok\.com/[a-zA-Z0-9]+/).*?")
@@ -1154,7 +1160,7 @@ class UserData:
             ])
         return result
 
-    def run_hot(self):
+    def run_hot(self, board_type: int):
         pass
 
     def get_hot(self):
