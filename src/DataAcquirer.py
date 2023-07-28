@@ -113,7 +113,7 @@ class UserData:
         'Referer': 'https://www.douyin.com/',
     }
     # 抖音
-    share = compile(
+    share_link = compile(
         r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")  # 分享短链
     account_link = compile(
         r".*?https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*?")  # 账号链接
@@ -146,6 +146,8 @@ class UserData:
         ("API", "首次请求返回数量", "search_channel", "type")
     )
     # TikTok
+    share_tiktok_link = compile(
+        r".*?(https://vm\.tiktok\.com/[a-zA-Z0-9]+/).*?")
     works_tiktok_link = compile(
         r".*?https://www\.tiktok\.com/@.+/video/(\d+).*?")  # 匹配作品链接
     recommend_api = "https://www.tiktok.com/api/recommend/item_list/"  # 推荐页API
@@ -202,7 +204,7 @@ class UserData:
 
     @url.setter
     def url(self, value):
-        if self.share.match(value):
+        if self.share_link.match(value):
             self._url = value
             self.log.info(f"当前账号链接: {value}", False)
         elif len(s := self.account_link.findall(value)) == 1:
@@ -600,23 +602,26 @@ class UserData:
             user: bool,
             mix=False) -> bool | list | tuple:
         self.tiktok = False
-        if len(s := self.works_link.findall(url)) >= 1:
+        if len(s := self.works_link.findall(url)) > 0:
             self.id_ = s
             return True
-        elif len(s := self.share.findall(url)) >= 1:
+        elif len(s := self.share_link.findall(url)) > 0:
             return s
-        elif len(s := self.account_link.findall(url)) >= 1:
+        elif len(s := self.account_link.findall(url)) > 0:
             self.id_ = (
                 [f"https://www.douyin.com/user/{i[0]}" for i in s]
                 if user
                 else [i[1] for i in s]
             )
             return True
-        elif len(u := self.works_tiktok_link.findall(url)) >= 1:
+        elif len(u := self.works_tiktok_link.findall(url)) > 0:
             self.id_ = u
             self.tiktok = True
             return True
-        elif mix and len(u := self.mix_link.findall(url)) >= 1:
+        elif len(u := self.share_tiktok_link.findall(url)) > 0:
+            self.tiktok = True
+            return u
+        elif mix and len(u := self.mix_link.findall(url)) > 0:
             return (u,)
         return False
 
@@ -656,7 +661,7 @@ class UserData:
         """检查直播链接并返回直播ID"""
         if len(s := self.live_link.findall(link)) >= 1:
             return [True, s]
-        elif len(s := self.share.findall(link)) >= 1:
+        elif len(s := self.share_link.findall(link)) >= 1:
             s = [self.get_id("room_id", i, True, "sec_user_id") for i in s]
             s = [i for i in s if i]
             return [False, s] if s else []
