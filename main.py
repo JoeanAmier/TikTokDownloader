@@ -13,8 +13,8 @@ from src.main_complete import prompt
 from src.main_server import Server
 from src.main_web_UI import WebUI
 
-VERSION = 3.5
-STABLE = True
+VERSION = 3.6
+STABLE = False
 
 RELEASES = "https://github.com/JoeanAmier/TikTokDownloader/releases/latest"
 NAME = f"TikTokDownloader v{VERSION}{'' if STABLE else ' Beta'}"
