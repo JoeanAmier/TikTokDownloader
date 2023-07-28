@@ -529,7 +529,7 @@ class TikTok:
         save, root, params = self.record.run(
             self._data["root"], type_="hot", format_=self._data["save"])
         for i, j in enumerate(("热榜", "娱乐榜", "社会榜", "挑战榜")):
-            with save(root, name=f"抖音{j}_{collection_time}", **params) as data:
+            with save(root, name=f"HOT{collection_time}_{j}", **params) as data:
                 self.request.run_hot(i, j, data)
         self.logger.info("已退出采集抖音热榜数据模式")
 
