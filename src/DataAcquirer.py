@@ -1153,3 +1153,15 @@ class UserData:
                 str(total_favorited),
             ])
         return result
+
+    def run_hot(self):
+        pass
+
+    def get_hot(self):
+        pass
+
+    def deal_hot(self):
+        pass
+
+    def save_hot(self):
+        pass
