@@ -227,6 +227,8 @@ class TikTok:
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.mark = "mark" in self._data["name"]
         self.nickname = "nickname" in self._data["name"]
+        self.request.initialization()
+        self.download.initialization()
 
     def set_parameters(self):
         self.download.root = self._data["root"]

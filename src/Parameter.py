@@ -223,7 +223,7 @@ class NewXBogus:
         timestamp = int(time())
         query = self.process_url_path(urlencode(query))
         return self.generate_x_bogus(
-            query, version, user_agent[version], timestamp)
+            query, version, user_agent[self.__index[version]], timestamp)
 
 
 class XBogus:

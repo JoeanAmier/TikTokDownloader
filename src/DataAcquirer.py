@@ -158,7 +158,6 @@ class UserData:
     max_comment = 256  # 评论字数限制
 
     def __init__(self, log: LoggerManager | BaseLogger, xb):
-        self.initialization()
         self.log = log  # 日志记录对象，通用
         self.data = None  # 数据记录对象，评论抓取和账号数据抓取调用，调用前赋值
         self._cookie = {}  # Cookie，通用
@@ -387,8 +386,12 @@ class UserData:
         self.log.info(f"{url} {value}: {self.id_}", False)
         return True
 
-    def deal_url_params(self, params: dict, platform="PC"):
-        xb = self.xb.get_x_bogus(params, self.headers["User-Agent"], platform)
+    # def deal_url_params(self, params: dict, platform="PC"):
+    #     xb = self.xb.get_x_bogus(params, self.headers["User-Agent"], platform)
+    #     params["X-Bogus"] = xb
+
+    def deal_url_params(self, params: dict, version=23):
+        xb = self.xb.get_x_bogus(params, self.__code, version)
         params["X-Bogus"] = xb
 
     @retry(finish=True)

@@ -44,7 +44,6 @@ class Download:
     length = 64  # 作品描述长度限制
 
     def __init__(self, log: LoggerManager | BaseLogger, save, xb):
-        self.initialization()
         self.headers = {}  # 请求头，通用
         self.log = log  # 日志记录模块，通用
         self.data = save  # 详细数据记录模块，调用前赋值
@@ -238,8 +237,13 @@ class Download:
             self.headers["Cookie"] = (
                 "; ".join([f"{i}={j}" for i, j in self._cookie.items()]))
 
-    def deal_url_params(self, params: dict, platform="PC"):
-        xb = self.xb.get_x_bogus(params, self.PC_UA["User-Agent"], platform)
+    # def deal_url_params(self, params: dict, platform="PC"):
+    #     xb = self.xb.get_x_bogus(params, self.PC_UA["User-Agent"], platform)
+    #     params["X-Bogus"] = xb
+
+    def deal_url_params(self, params: dict, version=23):
+
+        xb = self.xb.get_x_bogus(params, self.__code, version)
         params["X-Bogus"] = xb
 
     def create_folder(self, folder: str, live=False):
