@@ -154,6 +154,7 @@ TikTokDownloader
 |                       链接格式                       |      链接内容      |  
 |:------------------------------------------------:|:--------------:|
 |           `https://v.douyin.com/分享码/`            | 账号、视频、图集、直播、合集 |
+|           `https://vm.tiktok.com/分享码/`           |     视频、图集      |
 |        `https://www.douyin.com/note/作品ID`        |       图集       |
 |       `https://www.douyin.com/video/作品ID`        |       视频       |
 |     `https://www.douyin.com/collection/合集ID`     |       合集       |
