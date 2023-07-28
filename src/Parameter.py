@@ -340,4 +340,8 @@ if __name__ == "__main__":
     print(MsToken.get_ms_token())
     print(TtWid.get_tt_wid())
     print("webid", WebID.get_web_id(HEADERS["User-Agent"]))
-    print(NewXBogus().get_x_bogus(urlencode(params), (86, 138)))
+    print(NewXBogus().get_x_bogus(params, ((86,
+                                            138),
+                                           (238,
+                                            238,
+                                            )), 23))
