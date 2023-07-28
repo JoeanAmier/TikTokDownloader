@@ -190,6 +190,7 @@ class TikTok:
             return items[keys[choice]]
 
         self.request.headers['referer'] = "https://live.douyin.com"
+        print(colored_text("如果设置了已登录的 Cookie，获取直播数据时将会导致正在观看的直播中断，刷新即可恢复！", 93))
         while True:
             link = input("请输入直播链接：")
             if not link:
