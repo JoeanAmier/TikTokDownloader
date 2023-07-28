@@ -39,6 +39,11 @@ class NewXBogus:
         174: 4,
         20: None,
     }
+    __index = {
+        23: 0,
+        174: 1,
+        20: None,
+    }
 
     @staticmethod
     def disturb_array(
@@ -217,7 +222,8 @@ class NewXBogus:
     def get_x_bogus(self, query: str, user_agent: tuple, version=23):
         timestamp = int(time())
         query = self.process_url_path(query)
-        return self.generate_x_bogus(query, version, user_agent, timestamp)
+        return self.generate_x_bogus(
+            query, version, user_agent[version], timestamp)
 
 
 class XBogus:
