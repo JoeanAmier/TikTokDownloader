@@ -524,7 +524,8 @@ class TikTok:
         self.request.save_user(file, item, True)
 
     def hot_acquisition(self):
-        self.logger.info("已退出采集抖音热点数据模式")
+        self.request.run_hot()
+        self.logger.info("已退出采集抖音热榜数据模式")
 
     def run(self):
         while not self.quit:
@@ -534,7 +535,7 @@ class TikTok:
             self.set_parameters()
             select = prompt("请选择下载模式", (
                 "批量下载账号作品", "单独下载链接作品", "获取直播推流地址", "采集作品评论数据", "批量下载合集作品",
-                "批量采集账号数据", "采集搜索结果数据", "采集抖音热点数据"))
+                "批量采集账号数据", "采集搜索结果数据", "采集抖音热榜数据"))
             if select in ("Q", "q", "",):
                 self.quit = True
             elif select == "1":
@@ -559,6 +560,6 @@ class TikTok:
                 self.logger.info("已选择采集搜索结果数据模式")
                 self.search_acquisition()
             elif select == "8":
-                self.logger.info("已选择采集抖音热点数据模式")
+                self.logger.info("已选择采集抖音热榜数据模式")
                 self.hot_acquisition()
         self.logger.info("程序运行结束")

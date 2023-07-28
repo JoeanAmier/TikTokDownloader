@@ -132,7 +132,7 @@ class UserData:
     info_api = "https://www.douyin.com/aweme/v1/web/im/user/info/"  # 账号简略数据API
     feed_api = "https://www.douyin.com/aweme/v1/web/tab/feed/"  # 推荐页API
     user_api = "https://www.douyin.com/aweme/v1/web/user/profile/other/"  # 账号详细数据API
-    hot_api = "https://www.douyin.com/aweme/v1/web/hot/search/list/"  # 热点API
+    hot_api = "https://www.douyin.com/aweme/v1/web/hot/search/list/"  # 热榜API
     spotlight_api = "https://www.douyin.com/aweme/v1/web/im/spotlight/relation/"  # 关注账号API
     familiar_api = "https://www.douyin.com/aweme/v1/web/familiar/feed/"  # 朋友作品推荐API
     follow_api = "https://www.douyin.com/aweme/v1/web/follow/feed/"  # 关注账号作品推荐API
@@ -1160,7 +1160,7 @@ class UserData:
             ])
         return result
 
-    def run_hot(self, board_type: int):
+    def run_hot(self):
         pass
 
     def get_hot(self):
