@@ -219,9 +219,9 @@ class NewXBogus:
         return "".join(self.generate_str(i)
                        for i in self.generate_num(garbled))
 
-    def get_x_bogus(self, query: str, user_agent: tuple, version=23):
+    def get_x_bogus(self, query: dict, user_agent: tuple, version=23):
         timestamp = int(time())
-        query = self.process_url_path(query)
+        query = self.process_url_path(urlencode(query))
         return self.generate_x_bogus(
             query, version, user_agent[version], timestamp)
 
