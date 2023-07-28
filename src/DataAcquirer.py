@@ -1104,6 +1104,8 @@ class UserData:
             elif data := item.get("user_list"):
                 for i in data[0]["items"]:
                     self.search_data.append(i)
+            elif item.get("music_list"):
+                self.log.warning("目前暂不支持搜索结果音乐数据采集")
             elif data := item.get("card_info"):
                 items = data["attached_info"]["aweme_list"]
                 for i in items:
