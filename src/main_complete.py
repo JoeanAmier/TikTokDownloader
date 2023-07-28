@@ -223,7 +223,6 @@ class TikTok:
         self.download = Download(self.logger, None, self.xb)
         self.request.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
-        self.request.set_web_id()
         self.mark = "mark" in self._data["name"]
         self.nickname = "nickname" in self._data["name"]
 

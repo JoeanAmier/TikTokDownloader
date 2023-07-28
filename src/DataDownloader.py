@@ -32,7 +32,7 @@ def reset(function):
 
 class Download:
     PC_UA = {
-        "User-Agent": generate_user_agent()
+        "User-Agent": ""
     }  # 下载请求头
     Phone_UA = {
         'User-Agent': 'com.ss.android.ugc.trill/494+Mozilla/5.0+(Linux;+Android+12;+2112123G+Build/SKQ1.211006.001;+wv)+AppleWebKit/537.36+(KHTML,+like+Gecko)+Version/4.0+Chrome/107.0.5304.105+Mobile+Safari/537.36'
@@ -44,6 +44,7 @@ class Download:
     length = 64  # 作品描述长度限制
 
     def __init__(self, log: LoggerManager | BaseLogger, save, xb):
+        self.initialization()
         self.headers = {}  # 请求头，通用
         self.log = log  # 日志记录模块，通用
         self.data = save  # 详细数据记录模块，调用前赋值
@@ -73,6 +74,13 @@ class Download:
         self.tiktok = False  # TikTok 平台
         self.xb = xb
         self._chunk = None  # 每次从服务器接收的数据块大小
+        self.__code = None
+
+    def initialization(self):
+        self.set_user_agent()
+
+    def set_user_agent(self):
+        self.headers["User-Agent"], self.__code = generate_user_agent()
 
     @property
     def chunk(self):

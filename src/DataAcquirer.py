@@ -1,7 +1,7 @@
 import time
 from datetime import date
 from datetime import datetime
-from random import choice
+from random import randint
 from random import randrange
 from re import compile
 from urllib.parse import parse_qs
@@ -19,23 +19,20 @@ from src.StringCleaner import Cleaner
 from src.StringCleaner import colored_text
 
 
-def generate_user_agent():
-    user_agent = [
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82",
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.79 Safari/537.36",
-        "Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
-        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.53 Safari/537.36",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36",
-    ]
+def generate_user_agent() -> tuple[str, tuple]:
+    user_agent = (
+        ("", ()),
+        ("", ()),
+        ("", ()),
+        ("", ()),
+    )
 
-    return choice(user_agent)
+    return user_agent[randint(0, len(user_agent) - 1)]
 
 
 def sleep():
     """避免频繁请求"""
-    time.sleep(randrange(10, 40, 5) * 0.1)
+    time.sleep(randrange(10, 30, 5) * 0.1)
 
 
 def reset(function):
@@ -93,7 +90,7 @@ def retry(finish=False):
 
 class UserData:
     headers = {
-        "User-Agent": generate_user_agent(),
+        "User-Agent": "",
         'Referer': 'https://www.douyin.com/',
     }
     # 抖音
@@ -142,6 +139,7 @@ class UserData:
     max_comment = 256  # 评论字数限制
 
     def __init__(self, log: LoggerManager | BaseLogger, xb):
+        self.initialization()
         self.log = log  # 日志记录对象，通用
         self.data = None  # 数据记录对象，评论抓取和账号数据抓取调用，调用前赋值
         self._cookie = {}  # Cookie，通用
@@ -170,11 +168,15 @@ class UserData:
         self.tiktok = False  # TikTok 平台
         self.xb = xb  # 加密参数对象
         self.__web = None
+        self.__code = None
 
-    def set_web_id(self):
-        if not self.__web:
-            self.__web = WebID.get_web_id(
-                self.headers["User-Agent"]) or "7255519029058029093"
+    def initialization(self):
+        self.set_user_agent()
+        self.__web = WebID.get_web_id(
+            self.headers["User-Agent"]) or "7255519029058029093"
+
+    def set_user_agent(self):
+        self.headers["User-Agent"], self.__code = generate_user_agent()
 
     @property
     def url(self):
