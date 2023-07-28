@@ -1,4 +1,4 @@
-from atexit import register
+# from atexit import register
 from pathlib import Path
 
 from flask import Flask
@@ -69,7 +69,7 @@ def main():
 def complete():
     """单线程终端模式"""
     example = TikTok()
-    register(example.xb.close)
+    # register(example.xb.close)
     example.run()
 
 
@@ -84,7 +84,7 @@ def web_ui():
     """
     master = WebUI()
     app = master.webui_run(Flask(__name__))
-    register(master.xb.close)
+    # register(master.xb.close)
     app.run(host="0.0.0.0", debug=False)
 
 
@@ -94,7 +94,7 @@ def server():
     """
     master = Server()
     app = master.server_run(Flask(__name__))
-    register(master.xb.close)
+    # register(master.xb.close)
     app.run(host="0.0.0.0", debug=False)
 
 
