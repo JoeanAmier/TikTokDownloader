@@ -484,6 +484,26 @@ class RecordManager:
         "INTEGER",
         "INTEGER",
     )
+    Hot_Title = (
+        "排名",
+        "内容",
+        "热度",
+        "浏览数量",
+        "时间",
+        "作品数量",
+        "sentence_tag",
+        "sentence_id",
+    )
+    Hot_Type = (
+        "INTEGER PRIMARY KEY"
+        "TEXT",
+        "INTEGER",
+        "INTEGER",
+        "TEXT",
+        "INTEGER",
+        "INTEGER",
+        "TEXT",
+    )
     DataSheet = {
         "": {
             "file": "TikTokDownloader.db",
@@ -514,7 +534,13 @@ class RecordManager:
             "title_line": Search_User_Title,
             "title_type": Search_User_Type,
             "solo_key": False,
-        }
+        },
+        "hot": {
+            "file": "HotBoardData.db",
+            "title_line": Hot_Title,
+            "title_type": Hot_Type,
+            "solo_key": False,
+        },
     }
     DataLogger = {
         "csv": CSVLogger,
