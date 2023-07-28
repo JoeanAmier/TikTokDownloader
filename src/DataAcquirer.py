@@ -64,6 +64,7 @@ def reset(function):
         self.reply = []
         self.mix_total = []
         self.mix_data = []
+        self.hot_data = []
         self.search_data = []
         self.cursor = 0
         self.name = None
@@ -146,7 +147,7 @@ class UserData:
         ("API", "首次请求返回数量", "search_channel", "type")
     )
     hot_params = (
-        (None, None),
+        (0, ""),
         (2, 2),
         (2, 4),
         (2, "hotspot_challenge"),
@@ -175,6 +176,7 @@ class UserData:
         self.reply = []  # 评论回复的ID列表
         self.mix_total = []  # 合集作品数据
         self.mix_data = []  # 合集作品数据未处理JSON
+        self.hot_data = []  # 热榜数据
         self.search_data = []  # 搜索结果
         self.uid = None  # 账号UID，运行时获取
         self.list = []  # 未处理的数据，循环时重置
@@ -1161,12 +1163,19 @@ class UserData:
         return result
 
     def run_hot(self):
+        self.log.info("开始采集抖音热榜数据")
+        for i in self.hot_params:
+            if not (data := self.get_hot(*i)):
+                self.log.warning("采集抖音热榜数据失败")
+                break
+            self.deal_hot(data)
+            self.save_hot()
+        self.log.info("采集抖音热榜数据结束")
+
+    def get_hot(self, type_, sub_type):
         pass
 
-    def get_hot(self):
-        pass
-
-    def deal_hot(self):
+    def deal_hot(self, items):
         pass
 
     def save_hot(self):

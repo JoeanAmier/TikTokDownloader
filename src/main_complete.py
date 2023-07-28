@@ -523,6 +523,7 @@ class TikTok:
         item = self.request.deal_search_user()
         self.request.save_user(file, item, True)
 
+    @check_save
     def hot_acquisition(self):
         self.request.run_hot()
         self.logger.info("已退出采集抖音热榜数据模式")
