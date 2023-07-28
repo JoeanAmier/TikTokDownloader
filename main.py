@@ -14,7 +14,7 @@ from src.main_server import Server
 from src.main_web_UI import WebUI
 
 VERSION = 3.5
-STABLE = False
+STABLE = True
 
 RELEASES = "https://github.com/JoeanAmier/TikTokDownloader/releases/latest"
 NAME = f"TikTokDownloader v{VERSION}{'' if STABLE else ' Beta'}"
@@ -96,11 +96,6 @@ def server():
     app = master.server_run(Flask(__name__))
     # register(master.xb.close)
     app.run(host="0.0.0.0", debug=False)
-
-
-def close_file(files: list | tuple):
-    for f in files:
-        f.close()
 
 
 def change_config(file: Path, tip="修改设置成功！"):
