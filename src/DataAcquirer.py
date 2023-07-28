@@ -21,10 +21,29 @@ from src.StringCleaner import colored_text
 
 def generate_user_agent() -> tuple[str, tuple]:
     user_agent = (
-        ("", ()),
-        ("", ()),
-        ("", ()),
-        ("", ()),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.183",
+            ((86,
+              138),
+             (238,
+              238,
+              ))),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
+            ((42,
+              110),
+             ())),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
+            ((115,
+              235,
+              ),
+             ())),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188",
+            ((155,
+              54),
+             ())),
     )
 
     return user_agent[randint(0, len(user_agent) - 1)]

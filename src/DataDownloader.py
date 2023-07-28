@@ -80,7 +80,7 @@ class Download:
         self.set_user_agent()
 
     def set_user_agent(self):
-        self.headers["User-Agent"], self.__code = generate_user_agent()
+        self.PC_UA["User-Agent"], self.__code = generate_user_agent()
 
     @property
     def chunk(self):
