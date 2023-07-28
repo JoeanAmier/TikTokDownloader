@@ -1,7 +1,6 @@
 import time
 from datetime import date
 from datetime import datetime
-from random import randint
 from random import randrange
 from re import compile
 from urllib.parse import parse_qs
@@ -46,7 +45,8 @@ def generate_user_agent() -> tuple[str, tuple]:
              ())),
     )
 
-    return user_agent[randint(0, len(user_agent) - 1)]
+    return user_agent[0]
+    # return user_agent[randint(0, len(user_agent) - 1)]
 
 
 def sleep():
@@ -657,11 +657,9 @@ class UserData:
         if len(s := self.live_link.findall(link)) >= 1:
             return [True, s]
         elif len(s := self.share.findall(link)) >= 1:
-            # s = [self.get_id("room_id", i, True, "sec_user_id") for i in s]
-            # s = [i for i in s if i]
-            # return (False, s) if s else ()
-            print("目前不支持直播分享短链接！")
-            return []
+            s = [self.get_id("room_id", i, True, "sec_user_id") for i in s]
+            s = [i for i in s if i]
+            return [False, s] if s else []
         return []
 
     def return_live_ids(self, text, solo=False) -> bool | list:
@@ -684,6 +682,7 @@ class UserData:
                 "web_rid": id_,
             }
             api = self.live_api
+            self.deal_url_params(params)
         elif isinstance(id_, tuple):
             params = {
                 "type_id": "0",
@@ -693,9 +692,9 @@ class UserData:
                 "app_id": "1128",
             }
             api = self.live_share_api
+            self.deal_url_params(params, 174)
         else:
             raise TypeError
-        self.deal_url_params(params)
         if not (
                 response := self.send_request(
                     api,
