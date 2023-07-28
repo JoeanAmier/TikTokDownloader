@@ -223,7 +223,7 @@ class Download:
         else:
             self._nickname = f"账号_{str(time.time())[:10]}"
             self.log.error(f"无效的账号昵称，原始昵称: {value}, 去除错误字符后: {name}")
-            self.log.warning(f"本次运行将默认使用当前时间戳作为帐号昵称: {self._nickname}")
+            self.log.warning(f"本次运行将默认使用当前时间戳作为账号昵称: {self._nickname}")
 
     @property
     def cookie(self):

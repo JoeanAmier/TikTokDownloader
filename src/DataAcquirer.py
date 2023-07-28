@@ -495,7 +495,7 @@ class UserData:
                     "账号昵称",
                     params=params)):
             self.log.warning(
-                f"获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+                f"获取账号昵称失败，本次运行将默认使用当前时间戳作为账号昵称: {self.name}")
             return False
         try:
             self.uid = f'UID{data["aweme_list"][0]["author"]["uid"]}'
@@ -504,7 +504,7 @@ class UserData:
             return True
         except KeyError:
             self.log.warning(
-                f"响应内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
+                f"响应内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为账号昵称: {self.name}")
             return False
 
     def early_stop(self):
