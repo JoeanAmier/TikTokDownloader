@@ -1134,15 +1134,15 @@ class UserData:
             ])
         return result
 
-    def run_hot(self, index, storage):
-        self.log.info("开始采集抖音热榜数据")
+    def run_hot(self, index, board, storage):
+        self.log.info(f"开始采集抖音 {board} 数据")
         self.data = storage
         if not (data := self.get_hot(*self.hot_params[index])):
-            self.log.warning("采集抖音热榜数据失败")
+            self.log.warning(f"采集抖音 {board} 数据失败")
             return
         self.deal_hot(data)
         self.save_hot()
-        self.log.info("采集抖音热榜数据结束")
+        self.log.info(f"采集抖音 {board} 数据结束")
 
     @retry(finish=False)
     def get_hot(self, type_, sub_type):
