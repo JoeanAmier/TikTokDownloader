@@ -11,7 +11,7 @@ from requests import exceptions
 from requests import post
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.183",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
 }
 
 
@@ -26,10 +26,19 @@ def run_time(function):
 
 
 class NewXBogus:
-    string = "Dkdpgh4ZKsQB80/Mfvw36XI1R25-WUAlEi7NLboqYTOPuzmFjJnryx9HVGcaStCe="
+    __string = "Dkdpgh4ZKsQB80/Mfvw36XI1R25-WUAlEi7NLboqYTOPuzmFjJnryx9HVGcaStCe="
     __array = [None for _ in range(
         48)] + list(range(10)) + [None for _ in range(39)] + list(range(10, 16))
-    __canvas = 1256363761
+    __canvas = {
+        23: 1256363761,
+        20: None,
+        174: 1256363761,
+    }
+    __params = {
+        23: 14,
+        174: 4,
+        20: None,
+    }
 
     @staticmethod
     def disturb_array(
@@ -151,9 +160,9 @@ class NewXBogus:
             return [ord(char) for char in md5_str]
         else:
             return [
-                (self.__array[ord(md5_str[idx])] << 4)
-                | self.__array[ord(md5_str[idx + 1])]
-                for idx in range(0, len(md5_str), 2)
+                (self.__array[ord(md5_str[index])] << 4)
+                | self.__array[ord(md5_str[index + 1])]
+                for index in range(0, len(md5_str), 2)
             ]
 
     def process_url_path(self, url_path):
@@ -164,34 +173,36 @@ class NewXBogus:
     def generate_str(self, num):
         string = [num & 16515072, num & 258048, num & 4032, num & 63]
         string = [i >> j for i, j in zip(string, range(18, -1, -6))]
-        return "".join([self.string[i] for i in string])
+        return "".join([self.__string[i] for i in string])
 
     # @run_time
-    def generate_x_bogus(self, query):
-        zero = 0
-        timestamp = int(time())
-        query = self.process_url_path(query)
+    def generate_x_bogus(
+            self,
+            query: list,
+            version: int,
+            code: tuple,
+            timestamp: int):
         array = [
             64,
             0.00390625,
             1,
-            12,
+            self.__params[version],
             query[-2],
             query[-1],
             69,
             63,
-            86,
-            138,
+            *code,
             timestamp >> 24 & 255,
             timestamp >> 16 & 255,
             timestamp >> 8 & 255,
             timestamp >> 0 & 255,
-            self.__canvas >> 24 & 255,
-            self.__canvas >> 16 & 255,
-            self.__canvas >> 8 & 255,
-            self.__canvas >> 0 & 255,
+            self.__canvas[version] >> 24 & 255,
+            self.__canvas[version] >> 16 & 255,
+            self.__canvas[version] >> 8 & 255,
+            self.__canvas[version] >> 0 & 255,
             None,
         ]
+        zero = 0
         for i in array[:-1]:
             if isinstance(i, float):
                 i = int(i)
@@ -202,6 +213,11 @@ class NewXBogus:
             2, 255, self.generate_garbled_3("ÿ", garbled))
         return "".join(self.generate_str(i)
                        for i in self.generate_num(garbled))
+
+    def get_x_bogus(self, query: str, user_agent: tuple, version=23):
+        timestamp = int(time())
+        query = self.process_url_path(query)
+        return self.generate_x_bogus(query, version, user_agent, timestamp)
 
 
 class XBogus:
@@ -318,4 +334,4 @@ if __name__ == "__main__":
     print(MsToken.get_ms_token())
     print(TtWid.get_tt_wid())
     print("webid", WebID.get_web_id(HEADERS["User-Agent"]))
-    print(NewXBogus().generate_x_bogus(urlencode(params)))
+    print(NewXBogus().get_x_bogus(urlencode(params), (86, 138)))
