@@ -1,12 +1,11 @@
 from hashlib import md5
-from pathlib import Path
 from random import randint
 from string import ascii_letters
 from string import digits
 from time import time
 from urllib.parse import urlencode
 
-from execjs import compile
+# from execjs import compile
 from requests import exceptions
 from requests import post
 
@@ -231,27 +230,27 @@ class NewXBogus:
             query, version, user_agent[self.__index[version]], timestamp)
 
 
-class XBogus:
-    """代码参考: https://github.com/B1gM8c/X-Bogus/blob/main/X-Bogus.js"""
-
-    def __init__(self, pc_js=None, app_path=None):
-        self.pc_path = Path(pc_js or "./static/js/X-Bogus.js")
-        self.pc_file = self.pc_path.open()
-        self.pc_js = compile(self.pc_file.read())
-        self.app_path = Path(app_path or "")
-        self.app_file = None
-        self.app_js = None
-
-    @run_time
-    def get_x_bogus(self, query: dict, user_agent: str, platform="PC"):
-        if platform == "PC":
-            return self.pc_js.call("sign", urlencode(query), user_agent)
-        elif platform == "APP":
-            return ""
-        raise ValueError
-
-    def close(self):
-        self.pc_file.close()
+# class XBogus:
+#     """代码参考: https://github.com/B1gM8c/X-Bogus/blob/main/X-Bogus.js"""
+#
+#     def __init__(self, pc_js=None, app_path=None):
+#         self.pc_path = Path(pc_js or "./static/js/X-Bogus.js")
+#         self.pc_file = self.pc_path.open()
+#         self.pc_js = compile(self.pc_file.read())
+#         self.app_path = Path(app_path or "")
+#         self.app_file = None
+#         self.app_js = None
+#
+#     @run_time
+#     def get_x_bogus(self, query: dict, user_agent: str, platform="PC"):
+#         if platform == "PC":
+#             return self.pc_js.call("sign", urlencode(query), user_agent)
+#         elif platform == "APP":
+#             return ""
+#         raise ValueError
+#
+#     def close(self):
+#         self.pc_file.close()
 
 
 class MsToken:
@@ -339,9 +338,9 @@ if __name__ == "__main__":
         "webid": "7255592572578842152",
         "msToken": "Ui3F4s1tPEtozwxKgcizcCr1cx0oCVmx5NhSQqcYhiBDKnQ6O5f_PIwfhkKBw9dY6kDe8ncUSMhmkVV7ANocOdoGk2cPgiC4wWiyeVlTfyMDzFb2Kvxg3A2C2Xc1J1-H"
     }
-    example = XBogus("../static/js/X-Bogus.js")
-    print("X-Bogus", example.get_x_bogus(params, HEADERS["User-Agent"]))
-    example.close()
+    # example = XBogus("../static/js/X-Bogus.js")
+    # print("X-Bogus", example.get_x_bogus(params, HEADERS["User-Agent"]))
+    # example.close()
     print(MsToken.get_ms_token())
     print(TtWid.get_tt_wid())
     print("webid", WebID.get_web_id(HEADERS["User-Agent"]))
