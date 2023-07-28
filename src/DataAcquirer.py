@@ -1,6 +1,7 @@
 import time
 from datetime import date
 from datetime import datetime
+from random import randint
 from random import randrange
 from re import compile
 from urllib.parse import parse_qs
@@ -45,8 +46,7 @@ def generate_user_agent() -> tuple[str, tuple]:
              ())),
     )
 
-    return user_agent[0]
-    # return user_agent[randint(0, len(user_agent) - 1)]
+    return user_agent[randint(0, len(user_agent) - 1)]
 
 
 def sleep():
