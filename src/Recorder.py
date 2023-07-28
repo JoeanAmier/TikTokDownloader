@@ -495,7 +495,7 @@ class RecordManager:
         "sentence_id",
     )
     Hot_Type = (
-        "INTEGER PRIMARY KEY"
+        "INTEGER PRIMARY KEY",
         "TEXT",
         "INTEGER",
         "INTEGER",

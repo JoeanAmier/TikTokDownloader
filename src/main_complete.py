@@ -525,7 +525,10 @@ class TikTok:
 
     @check_save
     def hot_acquisition(self):
-        self.request.run_hot()
+        save, root, params = self.record.run(
+            self._data["root"], type_="hot", format_=self._data["save"])
+        with save(root, name=f"抖音热榜_{str(time())[:10]}", **params) as data:
+            self.request.run_hot(data)
         self.logger.info("已退出采集抖音热榜数据模式")
 
     def run(self):

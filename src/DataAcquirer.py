@@ -1140,6 +1140,7 @@ class UserData:
         for i in self.hot_params:
             if not (data := self.get_hot(*i)):
                 self.log.warning("采集抖音热榜数据失败")
+                break
             self.deal_hot(data)
         self.save_hot()
         self.log.info("采集抖音热榜数据结束")
@@ -1167,7 +1168,7 @@ class UserData:
         items = items["data"]["word_list"]
         for i in items:
             word = i["word"]
-            view_count = i["view_count"]
+            view_count = i.get("view_count")
             hot_value = i["hot_value"]
             position = i["position"]
             event_time = time.strftime(
