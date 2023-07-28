@@ -242,7 +242,6 @@ class Download:
     #     params["X-Bogus"] = xb
 
     def deal_url_params(self, params: dict, version=23):
-
         xb = self.xb.get_x_bogus(params, self.__code, version)
         params["X-Bogus"] = xb
 
