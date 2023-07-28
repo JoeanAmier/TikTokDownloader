@@ -168,7 +168,7 @@ class UserData:
 
     def __init__(self, log: LoggerManager | BaseLogger, xb):
         self.log = log  # 日志记录对象，通用
-        self.data = None  # 数据记录对象，评论抓取和账号数据抓取调用，调用前赋值
+        self.data = None  # 数据记录对象，调用前赋值
         self._cookie = {}  # Cookie，通用
         self.id_ = None  # sec_uid or item_ids
         self.comment = []  # 评论数据
@@ -345,7 +345,7 @@ class UserData:
         else:
             self._mark = s if (s := self.clean.filter(value)) else None
 
-    def send_request(self, url: str, value: str, **kwargs):
+    def send_request(self, url: str, value: str, json=True, **kwargs):
         try:
             response = requests.get(
                 url,
@@ -357,6 +357,12 @@ class UserData:
             if response.content == b"":
                 self.log.warning(f"{url} {value} 响应内容为空")
                 return False
+            if json:
+                try:
+                    return response.json()
+                except requests.exceptions.JSONDecodeError:
+                    self.log.warning(f"{value} JSON 格式错误")
+                    return False
             return response
         except requests.exceptions.ReadTimeout:
             self.log.warning(f"获取 {value} 超时")
@@ -381,6 +387,7 @@ class UserData:
                 response := self.send_request(
                     url,
                     value,
+                    False,
                     allow_redirects=False)):
             return False
         params = urlparse(response.headers['Location'])
@@ -422,15 +429,10 @@ class UserData:
         self.deal_url_params(params)
         self.list = []
         if not (
-                response := self.send_request(
+                data := self.send_request(
                     self.api,
                     "账号作品数据",
                     params=params)):
-            return False
-        try:
-            data = response.json()
-        except requests.exceptions.JSONDecodeError:
-            self.log.error("账号作品数据返回内容异常！疑似接口失效", False)
             return False
         try:
             if (list_ := data["aweme_list"]) is None:
@@ -486,7 +488,7 @@ class UserData:
         self.deal_url_params(params)
         self.name = str(time.time())[:10]
         if not (
-                response := self.send_request(
+                data := self.send_request(
                     self.api.replace(
                         "favorite",
                         "post"),
@@ -496,15 +498,10 @@ class UserData:
                 f"获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
             return False
         try:
-            data = response.json()
             self.uid = f'UID{data["aweme_list"][0]["author"]["uid"]}'
             self.name = self.clean.filter(
                 data["aweme_list"][0]["author"]["nickname"]) or self.uid
             return True
-        except requests.exceptions.JSONDecodeError:
-            self.log.warning(
-                f"数据接口返回内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
-            return False
         except KeyError:
             self.log.warning(
                 f"响应内容异常，获取账号昵称失败，本次运行将默认使用当前时间戳作为帐号昵称: {self.name}")
@@ -684,6 +681,7 @@ class UserData:
             ids[1] = ids[1][:1]
         return ids
 
+    @retry(finish=False)
     @check_cookie
     def get_live_data(self, id_: str | tuple):
         if isinstance(id_, str):
@@ -708,14 +706,10 @@ class UserData:
             self.deal_url_params(params, 174)
         else:
             raise TypeError
-        if not (
-                response := self.send_request(
-                    api,
-                    "直播数据",
-                    params=params,
-                )):
-            return False
-        return response.json()
+        return self.send_request(
+            api,
+            "直播数据",
+            params=params, )
 
     def deal_live_data(self, data, short=False):
         try:
@@ -781,12 +775,7 @@ class UserData:
             }
         self.deal_url_params(params)
         self.comment = []
-        if not (response := self.send_request(api, "评论数据", params=params, )):
-            return False
-        try:
-            data = response.json()
-        except requests.exceptions.JSONDecodeError:
-            self.log.error("评论数据返回内容异常！疑似接口失效", False)
+        if not (data := self.send_request(api, "评论数据", params=params, )):
             return False
         try:
             self.comment = data["comments"]
@@ -908,16 +897,11 @@ class UserData:
         self.deal_url_params(params)
         self.mix_data = []
         if not (
-                response := self.send_request(
+                data := self.send_request(
                     self.mix_api,
                     "合集数据",
                     params=params,
                 )):
-            return False
-        try:
-            data = response.json()
-        except requests.exceptions.JSONDecodeError:
-            self.log.error("合集数据返回内容异常！疑似接口失效", False)
             return False
         try:
             self.cursor = data['cursor']
@@ -954,18 +938,11 @@ class UserData:
             "webid": self.__web,
         }
         self.deal_url_params(params)
-        if not (
-                response := self.send_request(
-                    self.user_api,
-                    "账号数据",
-                    params=params,
-                )):
-            return False
-        try:
-            return response.json()
-        except requests.exceptions.JSONDecodeError:
-            self.log.error("账号数据内容异常！疑似接口失效", False)
-            return False
+        return self.send_request(
+            self.user_api,
+            "账号数据",
+            params=params,
+        )
 
     @staticmethod
     def deal_user(data):
@@ -1093,12 +1070,7 @@ class UserData:
             user_params(params)
         self.deal_url_params(params)
         self.list = []
-        if not (response := self.send_request(api, "搜索结果", params=params, )):
-            return False
-        try:
-            data = response.json()
-        except requests.exceptions.JSONDecodeError:
-            self.log.error("搜索结果返回内容异常！疑似接口失效", False)
+        if not (data := self.send_request(api, "搜索结果", params=params, )):
             return False
         try:
             self.list = data["user_list"] if type_ == 2 else data["data"]
@@ -1162,21 +1134,59 @@ class UserData:
             ])
         return result
 
-    def run_hot(self):
+    def run_hot(self, storage):
         self.log.info("开始采集抖音热榜数据")
+        self.data = storage
         for i in self.hot_params:
             if not (data := self.get_hot(*i)):
                 self.log.warning("采集抖音热榜数据失败")
-                break
             self.deal_hot(data)
-            self.save_hot()
+        self.save_hot()
         self.log.info("采集抖音热榜数据结束")
 
+    @retry(finish=False)
     def get_hot(self, type_, sub_type):
-        pass
+        params = {
+            "device_platform": "webapp",
+            "aid": "6383",
+            "channel": "channel_pc_web",
+            "detail_list": "1",
+            "source": "6",
+            "board_type": type_,
+            "board_sub_type": sub_type,
+            "pc_client_type": "1",
+            "cookie_enabled": "true",
+            "platform": "PC",
+            "downlink": "10",
+            "webid": self.__web,
+        }
+        self.deal_url_params(params)
+        return self.send_request(self.hot_api, "抖音热榜", params=params, )
 
     def deal_hot(self, items):
-        pass
+        items = items["data"]["word_list"]
+        for i in items:
+            word = i["word"]
+            view_count = i["view_count"]
+            hot_value = i["hot_value"]
+            position = i["position"]
+            event_time = time.strftime(
+                self.time,
+                time.localtime(
+                    i["event_time"]))
+            sentence_tag = i.get("sentence_tag")  # 含义未知
+            video_count = i["video_count"]
+            sentence_id = i.get("sentence_id")  # 含义未知
+            self.hot_data.append([str(i) for i in (position,
+                                                   word,
+                                                   hot_value,
+                                                   view_count,
+                                                   event_time,
+                                                   video_count,
+                                                   sentence_tag,
+                                                   sentence_id)])
 
     def save_hot(self):
-        pass
+        for i in self.hot_data:
+            self.log.info(", ".join(i), False)
+            self.data.save(i)
