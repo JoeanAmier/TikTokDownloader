@@ -219,8 +219,13 @@ class NewXBogus:
         return "".join(self.generate_str(i)
                        for i in self.generate_num(garbled))
 
-    def get_x_bogus(self, query: dict, user_agent: tuple, version=23):
-        timestamp = int(time())
+    def get_x_bogus(
+            self,
+            query: dict,
+            user_agent: tuple,
+            version=23,
+            test_time=None):
+        timestamp = int(test_time or time())
         query = self.process_url_path(urlencode(query))
         return self.generate_x_bogus(
             query, version, user_agent[self.__index[version]], timestamp)
@@ -234,10 +239,10 @@ class XBogus:
         self.pc_file = self.pc_path.open()
         self.pc_js = compile(self.pc_file.read())
         self.app_path = Path(app_path or "")
-        # self.app_file = None
-        # self.app_js = None
+        self.app_file = None
+        self.app_js = None
 
-    # @run_time
+    @run_time
     def get_x_bogus(self, query: dict, user_agent: str, platform="PC"):
         if platform == "PC":
             return self.pc_js.call("sign", urlencode(query), user_agent)
