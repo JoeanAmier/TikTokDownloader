@@ -105,9 +105,18 @@ class TikTok:
             type_="UID",
             mark=self.mark,
             name=self.nickname)
-        self.logger.info(f"共有 {self._number} 个账号的作品等待下载")
         save, root, params = self.record.run(
             self._data["root"], format_=self._data["save"])
+        select = prompt("请选择账号链接来源", ("使用 accounts 参数内的账号链接",
+                                               "手动输入待采集的账号链接及参数"))
+        if select == "1":
+            self.user_works_batch(save, root, params)
+        elif select == "2":
+            self.user_works_solo(save, root, params)
+        self.logger.info("已退出批量下载作品模式\n")
+
+    def user_works_batch(self, save, root, params):
+        self.logger.info(f"共有 {self._number} 个账号的作品等待下载")
         for index in range(self._number):
             if not self.account_download(
                     index + 1,
@@ -118,8 +127,9 @@ class TikTok:
                 if input("输入任意字符继续运行，直接回车结束运行: "):
                     continue
                 break
-            # break  # 调试使用
-        self.logger.info("已退出批量下载作品模式\n")
+
+    def user_works_solo(self, save, root, params):
+        pass
 
     def account_download(
             self,
