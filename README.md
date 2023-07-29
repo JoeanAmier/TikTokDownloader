@@ -91,7 +91,6 @@ TikTokDownloader
 │    ├─ Recorder.py                        // 日志及数据记录模块
 │    ├─ StringCleaner.py                   // 非法字符处理模块
 │    ├─ main_complete.py                   // 终端命令行模式启动入口
-│    ├─ main_multiprocess.py               // 待开发
 │    ├─ main_server.py                     // 服务器部署模式启动入口
 │    └─ main_web_UI.py                     // Web UI 交互模式启动入口
 ├─ static                                  // 静态资源文件夹
