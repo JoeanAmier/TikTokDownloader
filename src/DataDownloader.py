@@ -683,8 +683,9 @@ class NoneBar:
 
 
 class ProgressBar(NoneBar):
-    def __init__(self, total, length=10, fill='█', *args, **kwargs):
+    def __init__(self, total, name="文件", length=10, fill='█', *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.name = name
         self.total = total
         self.length = length
         self.fill = fill
@@ -701,7 +702,7 @@ class ProgressBar(NoneBar):
         elapsed_time = time.time() - self.start_time
         print(
             colored_text(
-                f'\r文件下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.downloaded_size):.2f} MB / {self.bytes_to_mb(self.total):.2f} MB',
+                f'\r{self.name}下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.downloaded_size):.2f} MB / {self.bytes_to_mb(self.total):.2f} MB',
                 95),
             end='',
             flush=True)
@@ -718,9 +719,11 @@ class LoopingBar(NoneBar):
                          '⢿',
                          '⣻',
                          '⣽'),
+                 name="文件",
                  *args,
                  **kwargs):
         super().__init__(*args, **kwargs)
+        self.name = name
         self.spin_chars = cycle(animation)
         self.download_size = 0
         self.start_time = time.time()
@@ -732,7 +735,7 @@ class LoopingBar(NoneBar):
         self.download_size += size
         print(
             colored_text(
-                f"\r文件{'下载完成' if finished else '正在下载'}: {'✔️' if finished else spin_char} - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.download_size):.2f} MB",
+                f"\r{self.name}{'下载完成' if finished else '正在下载'}: {'✔️' if finished else spin_char} - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.download_size):.2f} MB",
                 95),
             end='',
             flush=True)
@@ -741,7 +744,7 @@ class LoopingBar(NoneBar):
 class LoadingAnimation:
     def __init__(
             self,
-            text: str,
+            name="文件",
             animation=(
                     '⣾',
                     '⣷',
@@ -752,7 +755,7 @@ class LoadingAnimation:
                     '⣻',
                     '⣽'),
             frequency=0.25):
-        self.text = text
+        self.name = name
         self.animation_chars = cycle(animation)
         self.frequency = frequency
         self.running = True
@@ -761,7 +764,7 @@ class LoadingAnimation:
         while self.running:
             print(
                 colored_text(
-                    f"\r{self.text} {next(self.animation_chars)}",
+                    f"\r{self.name} {next(self.animation_chars)}",
                     95),
                 end="",
                 flush=True)
