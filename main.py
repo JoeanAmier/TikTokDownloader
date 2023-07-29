@@ -51,7 +51,7 @@ def check_update():
             print(colored_text(f"\r检测到新版本: {tag}", 92), flush=True)
             print(RELEASES)
         if tag == VERSION and not STABLE:
-            print(colored_text(f"\r当前版本为测试版, 检测到稳定版: {tag}", 92), flush=True)
+            print(colored_text("\r当前版本为测试版, 可更新至稳定版", 92), flush=True)
             print(RELEASES)
         else:
             print(colored_text("\r当前已是最新版本", 92), flush=True)
