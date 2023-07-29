@@ -640,10 +640,10 @@ class Download:
         """下载直播，不需要Cookie信息"""
         self.create_folder("Live", True)
         _ = self.headers.pop("Cookie", None)
-        self.log.info("开始下载直播视频")
+        self.log.info(f"开始下载 {name} 直播视频")
         self.request_file(link, self.root.joinpath(
             "Live"), name, "flv", unknown_size=True)
-        self.log.info("直播视频下载完成")
+        self.log.info(f"{name} 直播视频下载完成")
 
     @reset
     @check_cookie
