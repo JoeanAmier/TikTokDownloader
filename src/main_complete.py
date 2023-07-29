@@ -87,17 +87,13 @@ class TikTok:
              "retry",
              "chunk",
              "max_size",
-             ))
-        get_data(
-            self._data,
-            settings,
-            ("music",
+             "music",
              "cookie",
              "dynamic",
              "original",
              "proxies",
-             "download"),
-            True)
+             "download",
+             ))
         self.save = bool(self._data["save"])
         print("读取配置文件成功！")
         return True
