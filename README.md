@@ -70,7 +70,6 @@
 * 🟡 准备开发获取账号关注列表功能
 * 🟡 准备开发批量下载账号收藏作品功能
 * 🟡 准备开发获取账号收藏合集列表功能
-* 🟡 准备开发多进程模式，提高多账号批量下载效率
 * 🔴 最新版本的源码可能存在不稳定的 Bug
 * 🔴 如果在使用过程中发现 Bug，请及时告知作者修复
 
@@ -91,10 +90,10 @@ TikTokDownloader
 │    ├─ Parameter.py                       // 加密参数生成模块
 │    ├─ Recorder.py                        // 日志及数据记录模块
 │    ├─ StringCleaner.py                   // 非法字符处理模块
-│    ├─ main_complete.py                   // 单进程启动入口
-│    ├─ main_multiprocess.py               // 多进程启动入口
-│    ├─ main_server.py                     // 服务器启动入口
-│    └─ main_web_UI.py                     // Web UI 启动入口
+│    ├─ main_complete.py                   // 终端命令行模式启动入口
+│    ├─ main_multiprocess.py               // 待开发
+│    ├─ main_server.py                     // 服务器部署模式启动入口
+│    └─ main_web_UI.py                     // Web UI 交互模式启动入口
 ├─ static                                  // 静态资源文件夹
 ├─ templates                               // HTML 模板文件夹
 └─ docs                                    // 项目文档文件夹
