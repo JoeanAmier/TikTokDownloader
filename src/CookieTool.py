@@ -51,9 +51,14 @@ class Cookie:
         for key in keys_to_remove:
             del items[key]
 
-    def write(self, text, index):
+    # def write(self, text, index):
+    #     data = self.settings.read()
+    #     while len(data["cookie"]) < index + 1:
+    #         data["cookie"].append({})
+    #     data["cookie"][index] = text
+    #     self.settings.update(data)
+
+    def write(self, text, *args, **kwargs):
         data = self.settings.read()
-        while len(data["cookie"]) < index + 1:
-            data["cookie"].append({})
-        data["cookie"][index] = text
+        data["cookie"] = text
         self.settings.update(data)
