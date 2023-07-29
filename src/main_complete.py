@@ -209,7 +209,6 @@ class TikTok:
                     "推流地址: \n" + "\n".join([f"清晰度{i}: {j}" for i, j in item[2].items()]))
                 if len(data) == 1 and (l := choice_quality(item[2])):
                     self.download.download_live(l, f"{item[0]}-{item[1]}")
-                    break
         self.logger.info("已退出直播下载模式\n")
 
     def initialize(
