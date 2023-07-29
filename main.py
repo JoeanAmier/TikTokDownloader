@@ -64,7 +64,7 @@ def main():
     """选择运行模式"""
     mode = prompt(
         "请选择 TikTokDownloader 运行模式",
-        ("写入 Cookie 信息", "终端命令行模式", "待开发", "Web UI 交互模式", "服务器部署模式",
+        ("写入 Cookie 信息", "终端命令行模式", "来自未来的新模式", "Web UI 交互模式", "服务器部署模式",
          f"{UPDATE['tip']}检查更新功能", f"{COLOUR['tip']}彩色交互提示",))
     compatible(mode)
 
