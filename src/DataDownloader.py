@@ -69,6 +69,7 @@ class Download:
         self.image_id = None  # 临时记录图集ID，用于下载计数
         self.proxies = None  # 代理，从DataAcquirer.py传入，通用
         self.download = None  # 是否启用下载文件功能，通用
+        self.max_size = 0
         self.retry = 10  # 重试最大次数，通用
         self.tiktok = False  # TikTok 平台
         self.xb = xb
@@ -500,6 +501,9 @@ class Download:
                     self.log.warning(
                         f"{response.url} 响应码异常: {response.status_code}")
                     return False
+                elif all((self.max_size, content, content > self.max_size)):
+                    self.log.info(f"{file} 文件大小超出限制，跳过下载")
+                    return True
                 return bool(
                     self.save_file(
                         response,
