@@ -112,7 +112,7 @@ TikTokDownloader
 8. 再次运行 main.py 即可正常使用
 
 <b>
-更多程序说明可以查看&nbsp;<a href="https://github.com/JoeanAmier/TikTokDownloader/issues?q=is%3Aopen+is%3Aissue+label%3Adocumentation">issues</a>
+<a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/TikTokDownloader-Documentation">点击查看项目文档</a>
 </b>
 
 <hr>
@@ -146,47 +146,6 @@ TikTokDownloader
 * 获取私密账号的发布页数据需要登录后的 Cookie，且登录的账号需要关注该私密账号
 * 批量下载账号作品或合集作品时，如果对应的昵称或标识发生变化，程序会自动更新已下载作品文件名称中的昵称和标识
 * 单独下载链接作品时，如果在 `name` 参数中设置了 `mark` ，程序会自动替换为 `nickname`
-
-# 🔗 链接类型
-
-|                       链接格式                       |      链接内容      |  
-|:------------------------------------------------:|:--------------:|
-|           `https://v.douyin.com/分享码/`            | 账号、视频、图集、直播、合集 |
-|           `https://vm.tiktok.com/分享码/`           |     视频、图集      |
-|        `https://www.douyin.com/note/作品ID`        |       图集       |
-|       `https://www.douyin.com/video/作品ID`        |       视频       |
-|     `https://www.douyin.com/collection/合集ID`     |       合集       |
-| `https://www.douyin.com/user/账号ID?modal_id=作品ID` |    账号、视频、图集    |
-|          `https://live.douyin.com/直播ID`          |       直播       |
-|    `https://www.tiktok.com/@账号昵称/video/作品ID`     |    账号、视频、图集    |
-
-# ⚙️ Settings.json
-
-|                        参数                         |                   类型                    |                                                                   说明                                                                    |
-|:-------------------------------------------------:|:---------------------------------------:|:---------------------------------------------------------------------------------------------------------------------------------------:|
-|                       mark                        |                   str                   |                                        账号/合集标识，设置为空字符串代表使用账号昵称/合集标题<br>**属于 accounts 和 mix 子参数**                                        |
-|                        url                        |                   str                   |                                            账号主页链接，批量下载时使用\(非视频/图集链接\)<br>**属于 accounts 子参数**                                            |
-|                       mode                        |                   str                   |                                 批量下载类型，`post` 代表发布页，`favorite` 代表喜欢页<br>需要账号喜欢页公开可见，**属于 accounts 子参数**                                 |
-|                     earliest                      |                   str                   |                                       作品最早发布日期，格式: `2023/1/1`，设置为空字符串代表不限制<br>**属于 accounts 子参数**                                       |
-|                      latest                       |                   str                   |                                       作品最晚发布日期，格式: `2023/1/1`，设置为空字符串代表不限制<br>**属于 accounts 子参数**                                       |
-| accounts<br>\[mark, url, mode, earliest, latest\] | list\[list\[str, str, str, str, str\]\] |                                    账号标识, 账号链接, 批量下载类型, 最早发布日期, 最晚发布日期；批量下载账号作品时使用，支持多账号，以列表格式包含五个参数                                     |
-|                 mix\[mark, url\]                  |        list\[list\[str, str\]\]         |                                            合集标识, 合集链接或作品链接<br>批量下载合集作品时使用，支持多合集，以列表格式包含两个参数                                             |
-|                       root                        |                   str                   |                                                      作品文件和数据记录保存路径，默认值: 当前路径 `./`                                                       |
-|                      folder                       |                   str                   |                                                   下载单独链接作品时，储存文件夹的名称，默认值: `Download`                                                    |
-|                       name                        |                   str                   | 文件保存时的命名规则，值之间使用空格分隔<br>默认值: 发布时间-账号昵称-描述<br>`id`: 唯一值, `desc`: 描述, `create_time`: 发布时间<br>`nickname`: 账号昵称, `mark`: 账号标识, `uid`: 账号UID |
-|                       time                        |                   str                   |                                      发布时间的格式，默认值: `年-月-日 时.分.秒`<br>注意: Windows 系统的文件名称不能包含英文冒号 `:`                                      |
-|                       split                       |                   str                   |                                                            文件命名的分隔符，默认值: `-`                                                            |
-|                       music                       |              list\[bool\]               |                                                          是否下载作品音乐，默认值: `False`                                                          |
-|                       save                        |                   str                   |                                      采集数据持久化储存格式，设置为空字符串代表不保存<br>目前支持: `csv`、`xlsx`、`sql`(SQLite)                                       |
-|                      cookie                       |              list\[dict\]               |                                                抖音网页版 Cookie，必需参数<br>使用 `main.py` 写入配置文件                                                 |
-|                      dynamic                      |              list\[bool\]               |                                                         是否下载动态封面图，默认值: `False`                                                          |
-|                     original                      |              list\[bool\]               |                                                         是否下载静态封面图，默认值: `False`                                                          |
-|                      proxies                      |               list\[str\]               |                                                           代理地址，设置为空字符串代表不使用代理                                                           |
-|                        log                        |                  bool                   |                                                          是否记录运行日志，默认值: `False`                                                          |
-|                     download                      |              list\[bool\]               |                                                是否打开下载功能，如果关闭，程序将不会下载任何文件<br>默认值: `True`                                                 |
-|                     max_size                      |                   int                   |                                              作品文件大小限制，单位字节，超出大小限制的作品文件将会跳过下载，设置为 `0` 代表无限制                                              |
-|                       chunk                       |                   int                   |                                               每次从服务器接收的数据块大小，单位字节<br>默认值：`524288`(512 KB)                                               |
-|                       retry                       |                   int                   |                                            发送请求获取数据发生异常时重试的最大次数<br>设置为 `0` 代表关闭重试，默认值: `10`                                             |
 
 # ⚠️ 免责声明
 
