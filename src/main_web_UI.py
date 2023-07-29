@@ -161,12 +161,15 @@ class WebUI(TikTok):
                 "best": "",
                 "preview": BLANK_PREVIEW}
         data = data[0]
-        for i, j in ({"主播昵称": data[0], "直播名称": data[1]} | data[2]).items():
+        for i, j in ({"主播昵称": data[0], "直播名称": data[1],
+                      "在线观众": data[5], "观看次数": data[4]} | data[2]).items():
             self.logger.info(f"{i}: {j}", False)
         return {
-            "text": f"主播昵称: {data[0]}\n直播标题: {data[1]}",
+            "text": f"主播昵称: {data[0]}\n直播标题: {data[1]}\n在线观众: {data[5]} - 观看次数: {data[4]}",
             "urls": data[2],
-            "best": min(data[2].values(), key=lambda x: x[0]),
+            "best": min(
+                data[2].values(),
+                key=lambda x: x[0]),
             "preview": data[3]}
 
     def webui_run(self, app):
