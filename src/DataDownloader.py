@@ -69,7 +69,7 @@ class Download:
         self.image_id = None  # 临时记录图集ID，用于下载计数
         self.proxies = None  # 代理，从DataAcquirer.py传入，通用
         self.download = None  # 是否启用下载文件功能，通用
-        self.max_size = 0
+        self._max_size = 0
         self.retry = 10  # 重试最大次数，通用
         self.tiktok = False  # TikTok 平台
         self.xb = xb
@@ -81,6 +81,15 @@ class Download:
 
     def set_user_agent(self):
         self.PC_UA["User-Agent"], self.__code = generate_user_agent()
+
+    @property
+    def max_size(self):
+        return self._max_size
+
+    @max_size.setter
+    def max_size(self, value: int):
+        if isinstance(value, int):
+            self._max_size = max(value, 0)
 
     @property
     def chunk(self):
