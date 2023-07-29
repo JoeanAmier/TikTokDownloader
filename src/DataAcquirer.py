@@ -712,6 +712,10 @@ class UserData:
             params=params, )
 
     def deal_live_data(self, data, short=False):
+        def get_stats():
+            stats = data["stats"]
+            return stats["total_user_str"], stats["user_count_str"]
+
         try:
             data = data["data"]["room"] if short else data["data"]["data"][0]
             if data["status"] == 4:
@@ -722,7 +726,8 @@ class UserData:
             title = self.clean.filter(data["title"])
             url = data["stream_url"]["flv_pull_url"]
             cover = data["cover"]["url_list"][0]
-            return nickname, title, url, cover
+            total, viewer = get_stats()
+            return nickname, title, url, cover, total, viewer
         except KeyError as e:
             self.log.error(f"发生错误: {e}, 数据: {data}")
             return None

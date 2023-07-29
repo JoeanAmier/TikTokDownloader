@@ -203,6 +203,8 @@ class TikTok:
             for item in data:
                 self.logger.info(f"主播昵称: {item[0]}")
                 self.logger.info(f"直播标题: {item[1]}")
+                self.logger.info(f"在线观众: {item[5]}")
+                self.logger.info(f"观看次数: {item[4]}")
                 self.logger.info(
                     "推流地址: \n" + "\n".join([f"清晰度{i}: {j}" for i, j in item[2].items()]))
                 if len(data) == 1 and (l := choice_quality(item[2])):
