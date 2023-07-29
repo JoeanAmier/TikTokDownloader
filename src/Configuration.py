@@ -21,14 +21,14 @@ class Settings:
             "name": "create_time nickname desc",
             "time": "%Y-%m-%d %H.%M.%S",
             "split": "-",
-            "music": [False, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
+            "music": False,
             "save": "",
-            "cookie": [None, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
-            "dynamic": [False, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
-            "original": [False, ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
-            "proxies": ["", ],  # 单线程模式仅第一个值生效，多线程模式按索引对应的账号生效
-            "log": False,  # 是否启用日志
-            "download": [True],  # 是否启用下载功能
+            "cookie": None,
+            "dynamic": False,
+            "original": False,
+            "proxies": "",
+            "log": False,
+            "download": True,
             "max_size": 0,
             "chunk": 512 * 1024,  # 每次从服务器接收的数据块大小
             "retry": 10,  # 重试最大次数
