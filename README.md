@@ -104,8 +104,8 @@ TikTokDownloader
 **快速入门：**
 
 <ol>
-<li>安装不低于 `3.10` 版本的 [Python](https://www.python.org/) 解释器</li>
-<li>下载最新源码或 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码至本地</li>
+<li>安装不低于 `3.10` 版本的 <a href="https://www.python.org/">Python</a> 解释器</li>
+<li>下载最新源码或 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的源码至本地</li>
 <li>安装 requirements.txt 包含的第三方模块</li>
 <li>运行 main.py 并选择 `终端命令行模式`，生成默认配置文件</li>
 <li>使用浏览器打开抖音网页版，复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a> 至剪贴板</li>
