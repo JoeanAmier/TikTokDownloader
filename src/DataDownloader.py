@@ -577,7 +577,7 @@ class Download:
 
         try:
             progress_bar = ProgressBar(
-                size) if size > 0 else LoopingBar()
+                size, file) if size > 0 else LoopingBar(file)
             with full_path.open("wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
@@ -710,6 +710,7 @@ class ProgressBar(NoneBar):
 
 class LoopingBar(NoneBar):
     def __init__(self,
+                 name="文件",
                  animation=(
                          '⣾',
                          '⣷',
@@ -719,7 +720,6 @@ class LoopingBar(NoneBar):
                          '⢿',
                          '⣻',
                          '⣽'),
-                 name="文件",
                  *args,
                  **kwargs):
         super().__init__(*args, **kwargs)
