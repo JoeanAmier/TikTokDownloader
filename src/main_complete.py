@@ -86,6 +86,7 @@ class TikTok:
              "log",
              "retry",
              "chunk",
+             "max_size",
              ))
         get_data(
             self._data,
@@ -250,6 +251,7 @@ class TikTok:
         self.request.retry = self._data["retry"]
         self.download.retry = self._data["retry"]
         self.download.chunk = self._data["chunk"]
+        self.download.max_size = self._data["max_size"]
 
     @check_save
     def comment_acquisition(self):
