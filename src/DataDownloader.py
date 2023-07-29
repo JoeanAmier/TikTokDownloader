@@ -639,7 +639,7 @@ class Download:
     def download_live(self, link: str, name: str):
         """下载直播，不需要Cookie信息"""
         self.create_folder("Live", True)
-        del self.headers["Cookie"]
+        _ = self.headers.pop("Cookie", None)
         self.log.info("开始下载直播视频")
         self.request_file(link, self.root.joinpath(
             "Live"), name, "flv", unknown_size=True)
