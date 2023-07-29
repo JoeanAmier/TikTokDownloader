@@ -10,12 +10,12 @@ class Cookie:
         """提取 Cookie 并写入配置文件"""
         if not (cookie := input("请粘贴 Cookie 内容：")):
             return
-        try:
-            index = int(input("请输入该 Cookie 的写入位置(索引，默认为0)：") or 0)
-        except ValueError:
-            print(colored_text("写入位置错误！", 91))
+        # try:
+        #     index = int(input("请输入该 Cookie 的写入位置(索引，默认为0)：") or 0)
+        # except ValueError:
+        #     print(colored_text("写入位置错误！", 91))
         else:
-            self.extract(cookie, index)
+            self.extract(cookie, 0)
 
     def extract(self, cookie: str, index: int):
         get_key = {
