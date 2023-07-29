@@ -110,6 +110,7 @@ class WebUI(TikTok):
             "preview": BLANK_PREVIEW}
 
     def single_acquisition(self):
+        self.request.headers['referer'] = "https://www.douyin.com/"
         save, root, params = self.record.run(
             self._data["root"], format_=self._data["save"])
         with save(root, **params) as data:
@@ -150,6 +151,7 @@ class WebUI(TikTok):
                 "preview": BLANK_PREVIEW}
 
     def live_acquisition(self):
+        self.request.headers['referer'] = "https://live.douyin.com"
         if not (
                 data := self.request.run_live(
                     self.live_url,
@@ -181,7 +183,6 @@ class WebUI(TikTok):
                     return False
                 self.initialize(filename=f"{str(date.today())}.log")
                 self.set_parameters()
-                self.request.headers['referer'] = "https://live.douyin.com"
                 return True
 
             if not initialize():  # 初始化程序
