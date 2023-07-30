@@ -351,11 +351,17 @@ class UserData:
         else:
             self._mark = s if (s := self.clean.filter(value)) else None
 
-    def send_request(self, url: str, value: str, json=True, **kwargs):
+    def send_request(
+            self,
+            url: str,
+            value: str,
+            json=True,
+            headers=None,
+            **kwargs):
         try:
             response = requests.get(
                 url,
-                headers=self.headers,
+                headers=headers or self.headers,
                 proxies=self.proxies,
                 **kwargs,
                 timeout=10)
@@ -699,6 +705,7 @@ class UserData:
                 "web_rid": id_,
             }
             api = self.live_api
+            headers = None
             self.deal_url_params(params)
         elif isinstance(id_, tuple):
             params = {
@@ -709,12 +716,16 @@ class UserData:
                 "app_id": "1128",
             }
             api = self.live_share_api
+            headers = {
+                key: value for key,
+                value in self.headers.items() if key != "Cookie"}
             self.deal_url_params(params, 174)
         else:
             raise TypeError
         return self.send_request(
             api,
             "直播数据",
+            headers=headers,
             params=params, )
 
     def deal_live_data(self, data, short=False):
