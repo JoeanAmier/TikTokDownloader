@@ -669,7 +669,7 @@ class UserData:
             if not (data := self.get_live_data(i)):
                 self.log.warning("获取直播数据失败")
                 continue
-            if not (data := self.deal_live_data(data)):
+            if not (data := self.deal_live_data(data, isinstance(i, tuple))):
                 continue
             result.append(data)
         return result
