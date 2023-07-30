@@ -759,7 +759,7 @@ class UserData:
                 "item_id": id_,
                 "comment_id": reply,
                 "cursor": self.cursor,
-                "count": "3",  # 每次返回数据的数量
+                "count": "10" if self.cursor else "3",  # 每次返回数据的数量
                 "cookie_enabled": "true",
                 "platform": "PC",
                 "downlink": "10",
