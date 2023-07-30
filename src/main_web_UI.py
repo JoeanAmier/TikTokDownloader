@@ -147,6 +147,7 @@ class WebUI(TikTok):
 
     def live_acquisition(self):
         self.request.headers['referer'] = "https://live.douyin.com"
+        del self.request.headers["Cookie"]
         if not (
                 data := self.request.run_live(
                     self.live_url,
