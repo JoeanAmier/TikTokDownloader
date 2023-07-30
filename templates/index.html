@@ -89,19 +89,7 @@
                                     <input type="text" id="name" value="{{ name }}"/>
                                 </label>
                             </div>
-                            <div class="field third">
-                                <label for="time">发布时间格式(time)</label>
-                                <label>
-                                    <input type="text" id="time" value="{{ time }}"/>
-                                </label>
-                            </div>
-                            <div class="field third">
-                                <label for="split">文件名称分隔符(split)</label>
-                                <label>
-                                    <input type="text" id="split" value="{{ split }}"/>
-                                </label>
-                            </div>
-                            <div class="field third">
+                            <div class="field quarter">
                                 <label for="save">数据保存格式(save)</label>
                                 <select name="save" id="save">
                                     <option value="" {% if save == '' %}selected="selected"{% endif %}>不保存</option>
@@ -113,6 +101,30 @@
                                     </option>
                                 </select>
                             </div>
+                            <div class="field quarter">
+                                <label for="split">文件名称分隔符(split)</label>
+                                <label>
+                                    <input type="text" id="split" value="{{ split }}"/>
+                                </label>
+                            </div>
+                            <div class="field quarter">
+                                <label for="chunk">数据块大小(chunk)</label>
+                                <label>
+                                    <input type="text" id="chunk" value="{{ chunk }}"/>
+                                </label>
+                            </div>
+                            <div class="field quarter">
+                                <label for="max_size">最大文件限制(max_size)</label>
+                                <label>
+                                    <input type="text" id="max_size" value="{{ max_size }}"/>
+                                </label>
+                            </div>
+                            <div class="field third">
+                                <label for="time">发布时间格式(time)</label>
+                                <label>
+                                    <input type="text" id="time" value="{{ time }}"/>
+                                </label>
+                            </div>
                             <div class="field third">
                                 <label for="cookie">Cookie</label>
                                 <label>
@@ -123,12 +135,6 @@
                                 <label for="proxies">代理设置(proxies)</label>
                                 <label>
                                     <input type="text" id="proxies" value="{{ proxies }}"/>
-                                </label>
-                            </div>
-                            <div class="field third">
-                                <label for="chunk">数据块大小(chunk)</label>
-                                <label>
-                                    <input type="text" id="chunk" value="{{ chunk }}"/>
                                 </label>
                             </div>
                         </div>
