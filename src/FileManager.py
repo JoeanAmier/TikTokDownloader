@@ -99,3 +99,8 @@ def deal_config(path: Path):
         path.unlink()
     else:
         path.touch()
+
+
+class IDRecorder:
+    def __init__(self):
+        pass
