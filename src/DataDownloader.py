@@ -137,7 +137,6 @@ class Download:
 
     @split.setter
     def split(self, value):
-        # 有Bug
         if value:
             for s in value:
                 if s in self.clean.rule.keys():
