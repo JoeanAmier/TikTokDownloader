@@ -58,7 +58,7 @@ class TikTok:
         try:
             return self.read_data(settings)
         except KeyError as e:
-            print(f"读取配置文件发生错误：{e}")
+            print(f"读取配置文件发生错误: {e}")
             select = input(
                 "配置文件存在错误！是否需要重新生成默认配置文件？（Y/N）")
             if select == "Y":
@@ -130,7 +130,28 @@ class TikTok:
             # break  # 调试使用
 
     def user_works_solo(self, save, root, params):
-        pass
+        while True:
+            url = input("请输入账号链接: ")
+            if not url:
+                break
+            elif url in ("Q", "q",):
+                self.quit = True
+                break
+            links = self.request.run_alone(url, user=True)
+            for i in links:
+                if not self.account_download(
+                        0,
+                        "",
+                        i,
+                        "post",
+                        "",
+                        "",
+                        save,
+                        root,
+                        params):
+                    if input("输入任意字符继续运行，直接回车结束运行: "):
+                        continue
+                    break
 
     def account_download(
             self,
@@ -171,7 +192,7 @@ class TikTok:
         with save(root, **params) as data:
             self.download.data = data
             while True:
-                url = input("请输入分享链接：")
+                url = input("请输入分享链接: ")
                 if not url:
                     break
                 elif url in ("Q", "q",):
@@ -200,7 +221,7 @@ class TikTok:
         self.request.headers['referer'] = "https://live.douyin.com"
         print(colored_text("如果设置了已登录的 Cookie，获取直播数据时将会导致正在观看的直播中断，刷新即可恢复！", 93))
         while True:
-            link = input("请输入直播链接：")
+            link = input("请输入直播链接: ")
             if not link:
                 break
             elif link in ("Q", "q",):
@@ -265,7 +286,7 @@ class TikTok:
         save, root, params = self.record.run(
             self._data["root"], type_="comment", format_=self._data["save"])
         while True:
-            url = input("请输入作品链接：")
+            url = input("请输入作品链接: ")
             if not url:
                 break
             elif url in ("Q", "q",):
@@ -328,7 +349,7 @@ class TikTok:
 
     def mix_solo(self, save, root, params):
         while True:
-            url = input("请输入合集作品链接：")
+            url = input("请输入合集作品链接: ")
             if not url:
                 break
             elif url in ("Q", "q",):
