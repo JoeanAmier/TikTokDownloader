@@ -36,6 +36,7 @@ function get_parameters() {
         proxies: $("#proxies").val(),
         log: $("#log:checked").val(),
         chunk: $("#chunk").val(),
+        max_size: $("#max_size").val(),
         cookie: $("#cookie").val(),
     }
 }
