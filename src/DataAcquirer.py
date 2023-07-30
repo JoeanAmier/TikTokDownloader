@@ -717,9 +717,7 @@ class UserData:
                 "app_id": "1128",
             }
             api = self.live_share_api
-            headers = {
-                key: value for key,
-                value in self.headers.items() if key != "Cookie"}
+            headers = {"User-Agent": self.headers["User-Agent"]}
             self.deal_url_params(params, 174)
         else:
             raise TypeError
