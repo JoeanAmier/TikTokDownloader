@@ -16,6 +16,9 @@ from src.main_web_UI import WebUI
 VERSION = 3.6
 STABLE = False
 
+REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
+LICENCE = "GNU General Public License v3.0"
+DOCUMENTATION = "https://github.com/JoeanAmier/TikTokDownloader/wiki/TikTokDownloader-Documentation"
 RELEASES = "https://github.com/JoeanAmier/TikTokDownloader/releases/latest"
 NAME = f"TikTokDownloader v{VERSION}{'' if STABLE else ' Beta'}"
 WIDTH = 50
@@ -30,6 +33,9 @@ def version():
         colored_text(
             f"{LINE}\n\n\n{NAME.center(WIDTH)}\n\n\n{LINE}\n",
             93, bold=1))
+    print(colored_text(f"项目仓库: {REPOSITORY}", 93))
+    print(colored_text(f"项目文档: {DOCUMENTATION}", 93))
+    print(colored_text(f"开源许可: {LICENCE}\n", 93))
 
 
 def check_config():
