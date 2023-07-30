@@ -46,10 +46,12 @@ class WebUI(TikTok):
              "split",
              "save",
              "log",
-             "chunk", "music",
+             "chunk",
+             "music",
              "dynamic",
              "original",
-             "proxies",),
+             "proxies",
+             "max_size",),
             ("./",
              "Download",
              "create_time author desc",
@@ -57,7 +59,7 @@ class WebUI(TikTok):
              "-",
              "",
              False,
-             512 * 1024, False, False, False, ""))
+             512 * 1024, False, False, False, "", 0))
         self.settings.update(settings)
         if convert.get("cookie"):
             self.cookie.extract(convert["cookie"], 0)
