@@ -108,7 +108,7 @@ class TikTok:
         save, root, params = self.record.run(
             self._data["root"], format_=self._data["save"])
         select = prompt("请选择账号链接来源", ("使用 accounts 参数内的账号链接",
-                                               "手动输入待采集的账号链接及参数"))
+                                               "手动输入待采集的账号链接"))
         if select == "1":
             self.user_works_batch(save, root, params)
         elif select == "2":
@@ -127,6 +127,7 @@ class TikTok:
                 if input("输入任意字符继续运行，直接回车结束运行: "):
                     continue
                 break
+            break  # 调试使用
 
     def user_works_solo(self, save, root, params):
         pass
@@ -144,7 +145,7 @@ class TikTok:
         self.request.api = mode
         self.request.earliest = earliest
         self.request.latest = latest
-        if not self.request.run(f"第 {num} 个"):
+        if not self.request.run(f"第 {num} 个" if num else ""):
             return False
         old_mark = m["mark"] if (
             m := self.manager.cache.get(
@@ -159,7 +160,7 @@ class TikTok:
         self.download.favorite = self.request.favorite
         with save(root, name=f"{self.download.uid}_{self.download.mark}", old=old_mark, **params) as data:
             self.download.data = data
-            self.download.run(f"第 {num} 个",
+            self.download.run(f"第 {num} 个" if num else "",
                               self.request.video_data,
                               self.request.image_data)
         return True
