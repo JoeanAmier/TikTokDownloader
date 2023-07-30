@@ -400,6 +400,7 @@ class UserData:
                     url,
                     value,
                     False,
+                    {"User-Agent": self.headers["User-Agent"]},
                     allow_redirects=False)):
             return False
         params = urlparse(response.headers['Location'])
