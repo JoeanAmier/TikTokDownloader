@@ -765,6 +765,7 @@ class UserData:
                 "downlink": "10",
                 "webid": self.__web,
             }
+            self.deal_url_params(params, 174)
         else:
             params = {
                 "device_platform": "webapp",
@@ -778,7 +779,7 @@ class UserData:
                 "downlink": "10",
                 "webid": self.__web,
             }
-        self.deal_url_params(params)
+            self.deal_url_params(params)
         self.comment = []
         if not (data := self.send_request(api, "评论数据", params=params, )):
             return False
