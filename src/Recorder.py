@@ -9,7 +9,6 @@ from openpyxl import Workbook
 from openpyxl import load_workbook
 
 from src.StringCleaner import Cleaner
-from src.StringCleaner import colored_text
 
 INFO = 94
 WARNING = 93
@@ -19,7 +18,8 @@ ERROR = 91
 class BaseLogger:
     """不记录日志，空白日志记录器"""
 
-    def __init__(self):
+    def __init__(self, colour):
+        self.colour = colour
         self.log = None  # 记录器主体
         self._root = "./"  # 日志记录保存根路径
         self._folder = "Log"  # 日志记录保存文件夹名称
@@ -52,27 +52,24 @@ class BaseLogger:
     def run(self, *args, **kwargs):
         pass
 
-    @staticmethod
-    def info(text: str, output=True):
+    def info(self, text: str, output=True):
         if output:
-            print(colored_text(text, INFO))
+            print(self.colour.colorize(text, INFO))
 
-    @staticmethod
-    def warning(text: str, output=True):
+    def warning(self, text: str, output=True):
         if output:
-            print(colored_text(text, WARNING))
+            print(self.colour.colorize(text, WARNING))
 
-    @staticmethod
-    def error(text: str, output=True):
+    def error(self, text: str, output=True):
         if output:
-            print(colored_text(text, ERROR))
+            print(self.colour.colorize(text, ERROR))
 
 
 class LoggerManager(BaseLogger):
     """日志记录"""
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, colour):
+        super().__init__(colour)
 
     @property
     def root(self):
@@ -127,17 +124,17 @@ class LoggerManager(BaseLogger):
 
     def info(self, text: str, output=True):
         if output:
-            print(colored_text(text, INFO))
+            print(self.colour.colorize(text, INFO))
         self.log.info(text)
 
     def warning(self, text: str, output=True):
         if output:
-            print(colored_text(text, WARNING))
+            print(self.colour.colorize(text, WARNING))
         self.log.warning(text)
 
     def error(self, text: str, output=True):
         if output:
-            print(colored_text(text, ERROR))
+            print(self.colour.colorize(text, ERROR))
         self.log.error(text)
 
 
