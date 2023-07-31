@@ -12,7 +12,6 @@ from src.DataAcquirer import sleep
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
-from src.StringCleaner import colored_text
 
 
 def reset(function):
@@ -43,7 +42,8 @@ class Download:
     clean = Cleaner()  # 过滤错误字符
     length = 64  # 作品描述长度限制
 
-    def __init__(self, log: LoggerManager | BaseLogger, save, xb):
+    def __init__(self, log: LoggerManager | BaseLogger, save, xb, colour):
+        self.colour = colour
         self.headers = {}  # 请求头，通用
         self.log = log  # 日志记录模块，通用
         self.data = save  # 详细数据记录模块，调用前赋值
@@ -576,7 +576,8 @@ class Download:
 
         try:
             progress_bar = ProgressBar(
-                size, file) if size > 0 else LoopingBar(file)
+                size, file, self.colour.colorize) if size > 0 else LoopingBar(
+                file, self.colour.colorize)
             with full_path.open("wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
@@ -680,10 +681,23 @@ class NoneBar:
     def bytes_to_mb(bytes_value):
         return bytes_value / (1024 * 1024)
 
+    @staticmethod
+    def direct(text, *args, **kwargs):
+        return text
+
 
 class ProgressBar(NoneBar):
-    def __init__(self, total, name="文件", length=10, fill='█', *args, **kwargs):
+    def __init__(
+            self,
+            total,
+            name="文件",
+            colorize=None,
+            length=10,
+            fill='█',
+            *args,
+            **kwargs):
         super().__init__(*args, **kwargs)
+        self.colorize = colorize or self.direct
         self.name = name
         self.total = total
         self.length = length
@@ -700,7 +714,7 @@ class ProgressBar(NoneBar):
         bar = self.fill * filled_length + '-' * (self.length - filled_length)
         elapsed_time = time.time() - self.start_time
         print(
-            colored_text(
+            self.colorize(
                 f'\r{self.name} 下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.downloaded_size):.2f} MB / {self.bytes_to_mb(self.total):.2f} MB',
                 95),
             end='',
@@ -710,6 +724,7 @@ class ProgressBar(NoneBar):
 class LoopingBar(NoneBar):
     def __init__(self,
                  name="文件",
+                 colorize=None,
                  animation=(
                          '⣾',
                          '⣷',
@@ -722,6 +737,7 @@ class LoopingBar(NoneBar):
                  *args,
                  **kwargs):
         super().__init__(*args, **kwargs)
+        self.colorize = colorize or self.direct
         self.name = name
         self.spin_chars = cycle(animation)
         self.download_size = 0
@@ -733,7 +749,7 @@ class LoopingBar(NoneBar):
         spin_char = next(self.spin_chars)
         self.download_size += size
         print(
-            colored_text(
+            self.colorize(
                 f"\r{self.name} {'下载完成' if finished else '正在下载'}: {'✔️' if finished else spin_char} - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.download_size):.2f} MB",
                 95),
             end='',
@@ -744,6 +760,7 @@ class LoadingAnimation:
     def __init__(
             self,
             name="文件",
+            colorize=None,
             animation=(
                     '⣾',
                     '⣷',
@@ -754,6 +771,7 @@ class LoadingAnimation:
                     '⣻',
                     '⣽'),
             frequency=0.25):
+        self.colorize = colorize or NoneBar.direct
         self.name = name
         self.animation_chars = cycle(animation)
         self.frequency = frequency
@@ -762,7 +780,7 @@ class LoadingAnimation:
     def run(self):
         while self.running:
             print(
-                colored_text(
+                self.colorize(
                     f"\r{self.name} {next(self.animation_chars)}",
                     95),
                 end="",
