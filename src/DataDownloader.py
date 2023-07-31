@@ -42,7 +42,13 @@ class Download:
     clean = Cleaner()  # 过滤错误字符
     length = 64  # 作品描述长度限制
 
-    def __init__(self, log: LoggerManager | BaseLogger, save, xb, colour):
+    def __init__(
+            self,
+            log: LoggerManager | BaseLogger,
+            save,
+            xb,
+            colour,
+            blacklist):
         self.colour = colour
         self.headers = {}  # 请求头，通用
         self.log = log  # 日志记录模块，通用
@@ -75,6 +81,7 @@ class Download:
         self.xb = xb
         self._chunk = None  # 每次从服务器接收的数据块大小
         self.__code = None
+        self._blacklist = blacklist
 
     def initialization(self):
         self.set_user_agent()
@@ -473,6 +480,15 @@ class Download:
                     *tags,
                 ] + statistics)
 
+    def check_blacklist(self, id_) -> bool:
+        if not id_:
+            return True
+        if id_ in self._blacklist:
+            self.log.info(f"作品 {id_} 存在下载记录，跳过下载")
+            return False
+        self._blacklist.add(id_)
+        return True
+
     @retry(finish=False)
     def request_file(
             self,
@@ -480,10 +496,13 @@ class Download:
             root,
             name: str,
             type_: str,
-            id_="",
+            word_id=None,
+            image_id="",
             unknown_size=False):
         """发送请求获取文件内容"""
         if not self.download:
+            return True
+        if not self.check_blacklist(word_id):
             return True
         file = f"{name.strip()}.{type_}"
         full_path = root.joinpath(file)
@@ -519,7 +538,7 @@ class Download:
                         content,
                         full_path,
                         type_,
-                        id_))
+                        image_id))
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
             self.log.warning(f"网络异常: {e}")
             return False
@@ -534,7 +553,8 @@ class Download:
                     root,
                     f"{name}_{index + 1}",
                     type_="jpeg",
-                    id_=item[0])
+
+                    image_id=item[0])
                 self.image_id = item[0]
             self.download_music(root, item)
 

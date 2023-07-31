@@ -90,7 +90,7 @@ class Master:
              "服务器部署模式",
              f"{self.UPDATE['tip']}检查更新功能",
              f"{self.COLOUR['tip']}彩色交互提示",
-             f"{self.RECORD['tip']}作品 ID 记录"), self.colour.colorize)
+             f"{self.RECORD['tip']}作品下载记录"), self.colour.colorize)
         self.compatible(mode)
 
     def complete(self):
