@@ -46,15 +46,17 @@ class Master:
         print(self.colour.colorize(f"开源许可: {self.LICENCE}\n", 93))
 
     def check_config(self):
-        if not (c := Path("./src/config")).is_dir():
-            c.mkdir()
+        folder = ("./src/config", "./cache", "./cache/temp")
+        for i in folder:
+            if not (c := Path(i)).is_dir():
+                c.mkdir()
         self.UPDATE["tip"] = "启用" if self.UPDATE["path"].exists() else "禁用"
         self.COLOUR["tip"] = "启用" if (
             c := self.COLOUR["path"].exists()) else "禁用"
         self.RECORD["tip"] = "禁用" if (
             b := self.RECORD["path"].exists()) else "启用"
         self.colour = Colour(not c)
-        self.blacklist = DownloadRecorder(b, "./src/config")
+        self.blacklist = DownloadRecorder(b, "./cache")
 
     def check_update(self):
         if self.UPDATE["path"].exists():

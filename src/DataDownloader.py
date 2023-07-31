@@ -2,6 +2,7 @@ import time
 from datetime import datetime
 from itertools import cycle
 from pathlib import Path
+from shutil import move
 
 import requests
 
@@ -41,6 +42,7 @@ class Download:
     item_tiktok_api = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"  # 作品数据接口
     clean = Cleaner()  # 过滤错误字符
     length = 64  # 作品描述长度限制
+    temp = Path("./cache/temp")
 
     def __init__(
             self,
@@ -602,40 +604,44 @@ class Download:
             id_=""):
         """保存文件"""
 
-        def delete_file(error_file):
+        def delete_file(name, error_file):
             """清除下载失败的文件"""
             error_file.unlink()
-            self.log.info(f"文件: {error_file} 已删除")
+            self.log.info(f"文件: {name} 已删除")
 
         def stop_bar():
             if not size:
                 progress_bar.update(0, True)
             print()
 
+        temp_path = self.temp.joinpath(file)
         try:
             progress_bar = ProgressBar(
                 size, file, self.colour.colorize) if size > 0 else LoopingBar(
                 file, self.colour.colorize)
-            with full_path.open("wb") as f:
+            with temp_path.open("wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
                     progress_bar.update(len(chunk))
                 stop_bar()
         except requests.exceptions.ChunkedEncodingError:
             self.log.warning(f"文件: {file} 由于网络异常下载中断")
-            delete_file(full_path)
+            delete_file(file, temp_path)
             stop_bar()
             return False
         if type_ == "mp4":
             self.video += 1
         elif type_ == "jpeg" and id_ and id_ != self.image_id:
             self.image += 1
+        self.remove_file(temp_path, full_path)
         self.log.info(f"{file} 下载成功")
-        self.log.info(
-            f"文件保存路径: {full_path}",
-            False)
-
         return True
+
+    def remove_file(self, temp, path):
+        move(temp.resolve(), path.resolve())
+        self.log.info(
+            f"文件保存路径: {path}",
+            False)
 
     def summary(self, tip: str):
         """汇总下载数量"""
