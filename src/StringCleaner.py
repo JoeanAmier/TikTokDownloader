@@ -62,7 +62,7 @@ class Colour:
     def __init__(self, switch):
         self.switch = switch
 
-    def colored_text(
+    def colorize(
             self,
             text: str,
             font: int,
