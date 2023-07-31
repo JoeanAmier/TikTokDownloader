@@ -500,13 +500,10 @@ class Download:
             root,
             name: str,
             type_: str,
-            works=None,
             image_id="",
             unknown_size=False):
         """发送请求获取文件内容"""
         if not self.download:
-            return True
-        if not self.check_blacklist(works):
             return True
         file = f"{name.strip()}.{type_}"
         full_path = root.joinpath(file)
@@ -551,13 +548,14 @@ class Download:
         root = self.type_["images"]
         for item in self.image_data:
             for index, image in enumerate(item[6]):
+                if not self.check_blacklist(item[0]):
+                    break
                 name = self.get_name(item)
                 self.request_file(
                     image,
                     root,
                     f"{name}_{index + 1}",
                     type_="jpeg",
-                    works=item[0],
                     image_id=item[0])
                 self.image_id = item[0]
             self.update_blacklist(item[0])
@@ -566,13 +564,14 @@ class Download:
     def download_video(self):
         root = self.type_["video"]
         for item in self.video_data:
+            if not self.check_blacklist(item[0]):
+                break
             name = self.get_name(item)
             self.request_file(
                 item[6],
                 root,
                 name,
                 type_="mp4",
-                works=item[0],
             )
             self.update_blacklist(item[0])
             self.download_music(root, item)
