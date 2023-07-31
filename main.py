@@ -110,7 +110,7 @@ class Master:
     @staticmethod
     def multiprocess():
         """待开发"""
-        print("敬请期待！")
+        print("敬请期待，欢迎提出需求和建议！")
 
     def web_ui(self):
         """
