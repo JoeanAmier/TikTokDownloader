@@ -542,8 +542,7 @@ class Download:
                         content,
                         full_path,
                         type_,
-                        image_id,
-                        works))
+                        image_id, ))
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
             self.log.warning(f"网络异常: {e}")
             return False
@@ -561,6 +560,7 @@ class Download:
                     works=item[0],
                     image_id=item[0])
                 self.image_id = item[0]
+            self.update_blacklist(item[0])
             self.download_music(root, item)
 
     def download_video(self):
@@ -574,6 +574,7 @@ class Download:
                 type_="mp4",
                 works=item[0],
             )
+            self.update_blacklist(item[0])
             self.download_music(root, item)
             self.download_cover(root, name, item)
 
@@ -599,8 +600,7 @@ class Download:
             size: int,
             full_path,
             type_: str,
-            id_="",
-            works=None):
+            id_=""):
         """保存文件"""
 
         def delete_file(error_file):
@@ -635,7 +635,7 @@ class Download:
         self.log.info(
             f"文件保存路径: {full_path}",
             False)
-        self.update_blacklist(works)
+
         return True
 
     def summary(self, tip: str):
