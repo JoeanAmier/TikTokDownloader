@@ -11,8 +11,8 @@ BLANK_PREVIEW = "static/images/blank.png"
 
 
 class Server(WebUI):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, colour):
+        super().__init__(colour)
         self.configuration()
 
     def configuration(self):
