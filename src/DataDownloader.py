@@ -550,9 +550,9 @@ class Download:
     def download_images(self):
         root = self.type_["images"]
         for item in self.image_data:
+            if not self.check_blacklist(item[0]):
+                continue
             for index, image in enumerate(item[6]):
-                if not self.check_blacklist(item[0]):
-                    break
                 name = self.get_name(item)
                 self.request_file(
                     image,
