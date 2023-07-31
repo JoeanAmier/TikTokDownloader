@@ -1,5 +1,5 @@
 <div align="center">
-<img src="static/images/TikTokDownloader.png" alt="TikTokDownloader" height="128" width="128"><br>
+<img src="static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
 <h1>TikTokDownloader</h1>
 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">
 <img src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader" alt="GNU General Public License v3.0">
@@ -112,7 +112,7 @@ TikTokDownloader
 <li>运行 main.py 并选择 <code>终端命令行模式</code>，生成默认配置文件</li>
 <li>使用浏览器打开抖音网页版，复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a> 至剪贴板</li>
 <li>再次运行 main.py，选择 <code>写入 Cookie 信息</code> 模式，按照提示将 Cookie 写入配置文件</li>
-<li>返回程序界面，依次选择 <code>终端命令行模式</code> -> <code>单独下载链接作品</code></li>
+<li>返回程序界面，依次选择 <code>终端命令行模式</code> --> <code>单独下载链接作品</code></li>
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 </ol>
 
