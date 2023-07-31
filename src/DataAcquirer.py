@@ -16,7 +16,6 @@ from src.Parameter import WebID
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
-from src.StringCleaner import colored_text
 
 
 def generate_user_agent() -> tuple[str, tuple]:
@@ -89,7 +88,7 @@ def check_cookie(function):
     def inner(self, *args, **kwargs):
         if self.cookie:
             return function(self, *args, **kwargs)
-        print(colored_text("未设置Cookie！", 91))
+        print(self.colour.colorize("未设置Cookie！", 91))
         return False
 
     return inner
@@ -104,7 +103,7 @@ def retry(finish=False):
                 if result := function(self, *args, **kwargs):
                     return result
                 else:
-                    print(colored_text(f"正在尝试第 {i + 1} 次重试", 93))
+                    print(self.colour.colorize(f"正在尝试第 {i + 1} 次重试", 93))
             if not (result := function(self, *args, **kwargs)) and finish:
                 self.finish = True
             return result
@@ -172,7 +171,8 @@ class UserData:
     clean = Cleaner()  # 过滤非法字符
     max_comment = 256  # 评论字数限制
 
-    def __init__(self, log: LoggerManager | BaseLogger, xb):
+    def __init__(self, log: LoggerManager | BaseLogger, xb, colour):
+        self.colour = colour
         self.log = log  # 日志记录对象，通用
         self.data = None  # 数据记录对象，调用前赋值
         self._cookie = {}  # Cookie，通用
