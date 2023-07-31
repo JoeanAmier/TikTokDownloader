@@ -26,6 +26,7 @@ LINE = ">" * WIDTH
 
 UPDATE = {"path": Path("./src/config/Disable_Update")}
 COLOUR = {"path": Path("./src/config/Disable_Colour")}
+RECORD = {"path": Path("./src/config/Enable_Record")}
 
 
 def version():
@@ -44,6 +45,7 @@ def check_config():
         c.mkdir()
     UPDATE["tip"] = "启用" if UPDATE["path"].exists() else "禁用"
     COLOUR["tip"] = "启用" if COLOUR["path"].exists() else "禁用"
+    RECORD["tip"] = "禁用" if RECORD["path"].exists() else "启用"
 
 
 def check_update():
@@ -70,8 +72,14 @@ def main():
     """选择运行模式"""
     mode = prompt(
         "请选择 TikTokDownloader 运行模式",
-        ("写入 Cookie 信息", "终端命令行模式", "来自未来的新模式", "Web UI 交互模式", "服务器部署模式",
-         f"{UPDATE['tip']}检查更新功能", f"{COLOUR['tip']}彩色交互提示", "作品 ID 记录"))
+        ("写入 Cookie 信息",
+         "终端命令行模式",
+         "来自未来的新模式",
+         "Web UI 交互模式",
+         "服务器部署模式",
+         f"{UPDATE['tip']}检查更新功能",
+         f"{COLOUR['tip']}彩色交互提示",
+         f"{RECORD['tip']}作品 ID 记录"))
     compatible(mode)
 
 
@@ -130,6 +138,8 @@ def compatible(mode: str):
         change_config(UPDATE["path"])
     elif mode == "7":
         change_config(COLOUR["path"], "\x1b[0m修改设置成功！\x1b[0m")
+    elif mode == "8":
+        change_config(RECORD["path"])
 
 
 if __name__ == '__main__':
