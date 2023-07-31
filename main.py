@@ -35,13 +35,13 @@ class Master:
 
     def version(self):
         print(
-            self.colour.colored_text(
+            self.colour.colorize(
                 f"{self.LINE}\n\n\n{self.NAME.center(self.WIDTH)}\n\n\n{self.LINE}\n",
                 93,
                 bold=1))
-        print(self.colour.colored_text(f"项目仓库: {self.REPOSITORY}", 93))
-        print(self.colour.colored_text(f"项目文档: {self.DOCUMENTATION}", 93))
-        print(self.colour.colored_text(f"开源许可: {self.LICENCE}\n", 93))
+        print(self.colour.colorize(f"项目仓库: {self.REPOSITORY}", 93))
+        print(self.colour.colorize(f"项目文档: {self.DOCUMENTATION}", 93))
+        print(self.colour.colorize(f"开源许可: {self.LICENCE}\n", 93))
 
     def check_config(self):
         if not (c := Path("./src/config")).is_dir():
@@ -55,28 +55,28 @@ class Master:
     def check_update(self):
         if self.UPDATE["path"].exists():
             return
-        print(self.colour.colored_text("正在检测新版本", 92), end="", flush=True)
+        print(self.colour.colorize("正在检测新版本", 92), end="", flush=True)
         try:
             response = get(self.RELEASES, allow_redirects=False, timeout=10)
             tag = float(response.headers['Location'].split("/")[-1])
             if tag > self.VERSION:
                 print(
-                    self.colour.colored_text(
+                    self.colour.colorize(
                         f"\r检测到新版本: {tag}",
                         92),
                     flush=True)
                 print(self.RELEASES)
             if tag == self.VERSION and not self.STABLE:
                 print(
-                    self.colour.colored_text(
+                    self.colour.colorize(
                         "\r当前版本为测试版, 可更新至稳定版",
                         92),
                     flush=True)
                 print(self.RELEASES)
             else:
-                print(self.colour.colored_text("\r当前已是最新版本", 92), flush=True)
+                print(self.colour.colorize("\r当前已是最新版本", 92), flush=True)
         except (exceptions.ReadTimeout, exceptions.ConnectionError):
-            print(self.colour.colored_text("\r检测新版本失败", 91), flush=True)
+            print(self.colour.colorize("\r检测新版本失败", 91), flush=True)
         print()
 
     def main(self):
@@ -90,7 +90,7 @@ class Master:
              "服务器部署模式",
              f"{self.UPDATE['tip']}检查更新功能",
              f"{self.COLOUR['tip']}彩色交互提示",
-             f"{self.RECORD['tip']}作品 ID 记录"), self.colour.colored_text)
+             f"{self.RECORD['tip']}作品 ID 记录"), self.colour.colorize)
         self.compatible(mode)
 
     def complete(self):
