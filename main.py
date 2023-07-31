@@ -1,5 +1,6 @@
 from atexit import register
 from pathlib import Path
+from shutil import rmtree
 
 from flask import Flask
 from requests import exceptions
@@ -166,6 +167,11 @@ class Master:
         self.check_update()
         self.main()
 
+    @staticmethod
+    def delete_temp():
+        rmtree(Path("./cache/temp").resolve())
+
 
 if __name__ == '__main__':
     Master().run()
+    Master.delete_temp()
