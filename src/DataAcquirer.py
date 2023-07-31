@@ -398,7 +398,7 @@ class UserData:
                 try:
                     return response.json()
                 except requests.exceptions.JSONDecodeError:
-                    self.log.warning(f"{value} JSON 格式错误")
+                    self.log.warning(f"{value} JSON 格式错误: {response.text}")
                     return False
             return response
         except requests.exceptions.ReadTimeout:
