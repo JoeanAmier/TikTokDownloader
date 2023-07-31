@@ -81,7 +81,7 @@ def generate_user_agent() -> tuple[str, tuple]:
 
 def sleep():
     """避免频繁请求"""
-    time.sleep(randrange(10, 30, 5) * 0.1)
+    time.sleep(randrange(20, 60, 5) * 0.1)
 
 
 def reset(function):
