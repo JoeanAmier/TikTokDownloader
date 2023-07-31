@@ -82,6 +82,7 @@ class Download:
         self._chunk = None  # 每次从服务器接收的数据块大小
         self.__code = None
         self._blacklist = blacklist
+        self._id_set = self._blacklist.get_set()
 
     def initialization(self):
         self.set_user_agent()
@@ -483,11 +484,14 @@ class Download:
     def check_blacklist(self, id_) -> bool:
         if not id_:
             return True
-        if id_ in self._blacklist:
+        if id_ in self._id_set:
             self.log.info(f"作品 {id_} 存在下载记录，跳过下载")
             return False
-        self._blacklist.add(id_)
         return True
+
+    def update_blacklist(self, id_):
+        self._id_set.add(id_)
+        self._blacklist.update_id(id_)
 
     @retry(finish=False)
     def request_file(
@@ -496,13 +500,13 @@ class Download:
             root,
             name: str,
             type_: str,
-            word_id=None,
+            works=None,
             image_id="",
             unknown_size=False):
         """发送请求获取文件内容"""
         if not self.download:
             return True
-        if not self.check_blacklist(word_id):
+        if not self.check_blacklist(works):
             return True
         file = f"{name.strip()}.{type_}"
         full_path = root.joinpath(file)
@@ -538,7 +542,8 @@ class Download:
                         content,
                         full_path,
                         type_,
-                        image_id))
+                        image_id,
+                        works))
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
             self.log.warning(f"网络异常: {e}")
             return False
@@ -553,7 +558,7 @@ class Download:
                     root,
                     f"{name}_{index + 1}",
                     type_="jpeg",
-
+                    works=item[0],
                     image_id=item[0])
                 self.image_id = item[0]
             self.download_music(root, item)
@@ -562,7 +567,13 @@ class Download:
         root = self.type_["video"]
         for item in self.video_data:
             name = self.get_name(item)
-            self.request_file(item[6], root, name, type_="mp4")
+            self.request_file(
+                item[6],
+                root,
+                name,
+                type_="mp4",
+                works=item[0],
+            )
             self.download_music(root, item)
             self.download_cover(root, name, item)
 
@@ -581,7 +592,15 @@ class Download:
         if self.original and (u := item[8]):
             self.request_file(u, root, name, type_="jpeg")
 
-    def save_file(self, data, file, size: int, full_path, type_: str, id_=""):
+    def save_file(
+            self,
+            data,
+            file,
+            size: int,
+            full_path,
+            type_: str,
+            id_="",
+            works=None):
         """保存文件"""
 
         def delete_file(error_file):
@@ -616,6 +635,7 @@ class Download:
         self.log.info(
             f"文件保存路径: {full_path}",
             False)
+        self.update_blacklist(works)
         return True
 
     def summary(self, tip: str):
