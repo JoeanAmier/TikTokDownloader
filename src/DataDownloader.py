@@ -568,7 +568,7 @@ class Download:
         root = self.type_["video"]
         for item in self.video_data:
             if not self.check_blacklist(item[0]):
-                break
+                continue
             name = self.get_name(item)
             self.request_file(
                 item[6],
