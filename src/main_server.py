@@ -11,8 +11,8 @@ BLANK_PREVIEW = "static/images/blank.png"
 
 
 class Server(WebUI):
-    def __init__(self, colour):
-        super().__init__(colour)
+    def __init__(self, colour, blacklist):
+        super().__init__(colour, blacklist)
         self.configuration()
 
     def configuration(self):
@@ -28,9 +28,14 @@ class Server(WebUI):
             folder="Log",
             name="%Y-%m-%d %H.%M.%S",
             filename=None, ):
-        self.logger = BaseLogger()
-        self.request = UserData(self.logger, self.xb)
-        self.download = Download(self.logger, None, self.xb)
+        self.logger = BaseLogger(self.colour)
+        self.request = UserData(self.logger, self.xb, self.colour)
+        self.download = Download(
+            self.logger,
+            None,
+            self.xb,
+            self.colour,
+            self.blacklist)
         self.request.initialization()
         self.download.initialization()
 
