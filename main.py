@@ -30,7 +30,7 @@ class Master:
 
     UPDATE = {"path": Path("./src/config/Disable_Update")}
     COLOUR = {"path": Path("./src/config/Disable_Colour")}
-    RECORD = {"path": Path("./src/config/Enable_Record")}
+    RECORD = {"path": Path("./src/config/Disable_Record")}
 
     def __init__(self):
         self.colour = None
@@ -54,10 +54,10 @@ class Master:
         self.UPDATE["tip"] = "启用" if self.UPDATE["path"].exists() else "禁用"
         self.COLOUR["tip"] = "启用" if (
             c := self.COLOUR["path"].exists()) else "禁用"
-        self.RECORD["tip"] = "禁用" if (
-            b := self.RECORD["path"].exists()) else "启用"
+        self.RECORD["tip"] = "启用" if (
+            b := self.RECORD["path"].exists()) else "禁用"
         self.colour = Colour(not c)
-        self.blacklist = DownloadRecorder(b, "./cache")
+        self.blacklist = DownloadRecorder(not b, "./cache")
 
     def check_update(self):
         if self.UPDATE["path"].exists():
