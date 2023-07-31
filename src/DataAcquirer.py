@@ -1214,20 +1214,20 @@ class UserData:
         items = items["data"]["word_list"]
         for i in items:
             word = i["word"]
-            view_count = i.get("view_count")
+            # view_count = i.get("view_count")
             hot_value = i["hot_value"]
             position = i["position"]
             event_time = time.strftime(
                 self.time,
                 time.localtime(
                     i["event_time"]))
-            sentence_tag = i.get("sentence_tag")  # 含义未知
+            sentence_tag = i.get("sentence_tag") or ""  # 含义未知
             video_count = i["video_count"]
             sentence_id = i.get("sentence_id")  # 含义未知
             self.hot_data.append([str(i) for i in (position,
                                                    word,
                                                    hot_value,
-                                                   view_count,
+                                                   # view_count,
                                                    event_time,
                                                    video_count,
                                                    sentence_tag,
