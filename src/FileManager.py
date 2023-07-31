@@ -101,6 +101,33 @@ def deal_config(path: Path):
         path.touch()
 
 
-class IDRecorder:
-    def __init__(self):
-        pass
+class DownloadRecorder:
+    def __init__(self, switch, folder):
+        self.switch = switch
+        self.path = Path(f"{folder}").joinpath("IDRecorder.txt")
+        self.file = None
+
+    def get_set(self) -> set:
+        return self.read_file() if self.switch else set()
+
+    def read_file(self):
+        if not self.path.is_file():
+            blacklist = set()
+        else:
+            with self.path.open("r") as f:
+                blacklist = {line.strip() for line in f}
+        self.file = self.path.open("w")
+        self.save_file(blacklist)
+        return blacklist
+
+    def save_file(self, data):
+        result = [f"{i}\n" for i in data]
+        self.file.write("".join(result))
+
+    def update_id(self, id_):
+        if self.switch:
+            self.file.write(f"{id_}\n")
+
+    def close(self):
+        if self.switch:
+            self.file.close()
