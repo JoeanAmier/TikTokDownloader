@@ -1115,7 +1115,7 @@ class UserData:
         }
         if type_ == 2:
             user_params(params)
-        self.deal_url_params(params)
+        self.deal_url_params(params, 23 if self.cursor == 0 else 174)
         self.list = []
         if not (data := self.send_request(api, "搜索结果", params=params, )):
             return False
