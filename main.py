@@ -1,4 +1,4 @@
-# from atexit import register
+from atexit import register
 from pathlib import Path
 
 from flask import Flask
@@ -6,6 +6,7 @@ from requests import exceptions
 from requests import get
 
 from src.CookieTool import Cookie
+from src.FileManager import DownloadRecorder
 from src.FileManager import deal_config
 from src.StringCleaner import Colour
 from src.main_complete import TikTok
@@ -32,6 +33,7 @@ class Master:
 
     def __init__(self):
         self.colour = None
+        self.blacklist = None
 
     def version(self):
         print(
@@ -49,8 +51,10 @@ class Master:
         self.UPDATE["tip"] = "启用" if self.UPDATE["path"].exists() else "禁用"
         self.COLOUR["tip"] = "启用" if (
             c := self.COLOUR["path"].exists()) else "禁用"
-        self.RECORD["tip"] = "禁用" if self.RECORD["path"].exists() else "启用"
+        self.RECORD["tip"] = "禁用" if (
+            b := self.RECORD["path"].exists()) else "启用"
         self.colour = Colour(not c)
+        self.blacklist = DownloadRecorder(b, "./src/config")
 
     def check_update(self):
         if self.UPDATE["path"].exists():
@@ -95,8 +99,9 @@ class Master:
 
     def complete(self):
         """终端命令行模式"""
-        example = TikTok(self.colour)
+        example = TikTok(self.colour, self.blacklist)
         # register(example.xb.close)
+        register(self.blacklist.close)
         example.run()
 
     @staticmethod
@@ -108,18 +113,20 @@ class Master:
         """
         Web UI 交互模式
         """
-        master = WebUI(self.colour)
+        master = WebUI(self.colour, self.blacklist)
         app = master.webui_run(Flask(__name__))
         # register(master.xb.close)
+        register(self.blacklist.close)
         app.run(host="0.0.0.0", debug=False)
 
     def server(self):
         """
         服务器部署模式
         """
-        master = Server(self.colour)
+        master = Server(self.colour, self.blacklist)
         app = master.server_run(Flask(__name__))
         # register(master.xb.close)
+        register(self.blacklist.close)
         app.run(host="0.0.0.0", debug=False)
 
     def change_config(self, file: Path, tip="修改设置成功！"):
