@@ -358,13 +358,13 @@
 <li>影响下载速度：较大的 chunk 会增加每次下载的数据量，从而提高下载速度。相反，较小的 chunk 会降低每次下载的数据量，可能导致下载速度稍慢。</li>
 <li>影响内存占用：较大的 chunk 会一次性加载更多的数据到内存中，可能导致内存占用增加。相反，较小的 chunk 会减少每次加载的数据量，从而降低内存占用。</li>
 </ul>
-<h1 id="功能介绍">功能介绍</h1>
-<h2 id="写入-cookie-信息">写入 Cookie 信息</h2>
+<h1>功能介绍</h1>
+<h2>写入 Cookie 信息</h2>
 <p>从浏览器复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a>
 至剪贴板，按照程序提示输入 Cookie 后回车确认，程序会自动提取并写入配置文件。</p>
-<h2 id="终端命令行模式">终端命令行模式</h2>
+<h2>终端命令行模式</h2>
 <p>功能最全面的模式，支持全部功能。</p>
-<h3 id="批量下载账号作品">批量下载账号作品</h3>
+<h3>批量下载账号作品</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts</code> 参数中的账号链接。</li>
 <li>手动输入待采集的账号链接；此选项仅支持批量下载账号发布页作品，且不支持参数设置。</li>
@@ -412,7 +412,7 @@
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
 <p>支持采集评论回复、评论表情、评论图片；必须设置 <code>save</code> 参数才能正常使用。</p>
-<h3 id="批量下载合集作品">批量下载合集作品</h3>
+<h3>批量下载合集作品</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>mix</code> 参数中的合集链接或作品链接。</li>
 <li>输入合集链接，或者属于合集的任意一个作品链接。</li>
