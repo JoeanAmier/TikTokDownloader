@@ -639,7 +639,7 @@ class Download:
         return True
 
     def remove_file(self, temp, path):
-        move(temp.resolve(), path.resolve())
+        move(temp.resolve(), path)
         self.log.info(
             f"文件保存路径: {path}",
             False)
