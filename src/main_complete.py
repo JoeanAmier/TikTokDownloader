@@ -9,13 +9,12 @@ from src.Parameter import NewXBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.Recorder import RecordManager
-from src.StringCleaner import colored_text
 
 
-def prompt(tip: str, choose: tuple | list, start=1) -> str:
-    screen = colored_text(f"{tip}:\n", 96, bold=1)
+def prompt(tip: str, choose: tuple | list, colorize, start=1) -> str:
+    screen = colorize(f"{tip}:\n", 96, bold=1)
     for i, j in enumerate(choose):
-        screen += colored_text(f"{i + start}. {j}\n", 92, bold=1)
+        screen += colorize(f"{i + start}. {j}\n", 92, bold=1)
     return input(screen)
 
 
@@ -23,7 +22,7 @@ def check_save(function):
     def inner(self, *args, **kwargs):
         if self.save:
             return function(self, *args, **kwargs)
-        print(colored_text("未设置 save 参数，无法正常使用该模式！", 93))
+        print(self.colour.colorize("未设置 save 参数，无法正常使用该模式！", 93))
 
     return inner
 
@@ -33,7 +32,8 @@ class TikTok:
         " ": " ",
     }  # 过滤字符
 
-    def __init__(self):
+    def __init__(self, colour):
+        self.colour = colour
         self.logger = None
         self.request = None
         self.download = None
@@ -108,7 +108,7 @@ class TikTok:
         save, root, params = self.record.run(
             self._data["root"], format_=self._data["save"])
         select = prompt("请选择账号链接来源", ("使用 accounts 参数内的账号链接",
-                                               "手动输入待采集的账号链接"))
+                                               "手动输入待采集的账号链接"), self.colour.colorize)
         if select == "1":
             self.user_works_batch(save, root, params)
         elif select == "2":
@@ -219,7 +219,10 @@ class TikTok:
             return items[keys[choice]]
 
         self.request.headers['referer'] = "https://live.douyin.com"
-        print(colored_text("如果设置了已登录的 Cookie，获取直播数据时将会导致正在观看的直播中断，刷新即可恢复！", 93))
+        print(
+            self.colour.colorize(
+                "如果设置了已登录的 Cookie，获取直播数据时将会导致正在观看的直播中断，刷新即可恢复！",
+                93))
         while True:
             link = input("请输入直播链接: ")
             if not link:
@@ -247,13 +250,15 @@ class TikTok:
             name="%Y-%m-%d %H.%M.%S",
             filename=None,
     ):
-        self.logger = LoggerManager() if self._data["log"] else BaseLogger()
+        self.logger = LoggerManager(
+            self.colour) if self._data["log"] else BaseLogger(
+            self.colour)
         self.logger.root = root  # 日志根目录
         self.logger.folder = folder  # 日志文件夹名称
         self.logger.name = name  # 日志文件名称格式
         self.logger.run(filename=filename)
-        self.request = UserData(self.logger, self.xb)
-        self.download = Download(self.logger, None, self.xb)
+        self.request = UserData(self.logger, self.xb, self.colour)
+        self.download = Download(self.logger, None, self.xb, self.colour)
         self.request.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.mark = "mark" in self._data["name"]
@@ -311,7 +316,7 @@ class TikTok:
         save, root, params = self.record.run(
             self._data["root"], type_="mix", format_=self._data["save"])
         select = prompt("请选择合集链接来源", ("使用 mix 参数内的合集链接",
-                                               "手动输入待采集的合集链接"))
+                                               "手动输入待采集的合集链接"), self.colour.colorize)
         if select == "1":
             self.mix_batch(save, root, params)
         elif select == "2":
@@ -426,7 +431,7 @@ class TikTok:
             return prompt(
                 "请选择账号链接来源",
                 ("使用 accounts 参数内的账号链接",
-                 "手动输入待采集的账号链接"))
+                 "手动输入待采集的账号链接"), self.colour.colorize)
 
         if (m := choose_mode()) == "1":
             self.accounts_user()
@@ -572,7 +577,7 @@ class TikTok:
             self.set_parameters()
             select = prompt("请选择下载模式", (
                 "批量下载账号作品", "单独下载链接作品", "获取直播推流地址", "采集作品评论数据", "批量下载合集作品",
-                "批量采集账号数据", "采集搜索结果数据", "采集抖音热榜数据"))
+                "批量采集账号数据", "采集搜索结果数据", "采集抖音热榜数据"), self.colour.colorize)
             if select in ("Q", "q", "",):
                 self.quit = True
             elif select == "1":
