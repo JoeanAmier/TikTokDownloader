@@ -11,9 +11,9 @@ BLANK_PREVIEW = "static/images/blank.png"
 
 
 class WebUI(TikTok):
-    def __init__(self):
-        super().__init__()
-        self.cookie = Cookie()
+    def __init__(self, colour):
+        super().__init__(colour)
+        self.cookie = Cookie(colour)
         self.solo_url = None
         self.live_url = None
 
