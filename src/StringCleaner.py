@@ -57,7 +57,7 @@ class Cleaner:
         return text
 
 
-class Color:
+class Colour:
 
     def __init__(self, switch):
         self.switch = switch
