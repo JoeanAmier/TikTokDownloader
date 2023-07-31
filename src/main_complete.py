@@ -31,6 +31,43 @@ class TikTok:
     CLEAN_PATCH = {
         " ": " ",
     }  # 过滤字符
+    SEARCH = {
+        "type": {
+            "综合": 0,
+            "视频": 1,
+            "用户": 2,
+            # "直播": 3,
+            "0": 0,
+            "1": 1,
+            "2": 2,
+            # "3": 3,
+        },
+        "type_text": {
+            0: "综合搜索",
+            1: "视频搜索",
+            2: "用户搜索",
+            # 3: "直播搜索",
+        },
+        "sort": {
+            "综合排序": 0,
+            "最新发布": 1,
+            "最多点赞": 2,
+            "0": 0,
+            "1": 1,
+            "2": 2,
+        },
+        "sort_text": {
+            0: "综合排序",
+            1: "最新发布",
+            2: "最多点赞",
+        },
+        "publish_text": {
+            "0": "不限",
+            "1": "一天内",
+            "7": "一周内",
+            "182": "半年内",
+        },
+    }
 
     def __init__(self, colour, blacklist):
         self.colour = colour
@@ -446,49 +483,10 @@ class TikTok:
         self.logger.info("已退出账号数据采集模式\n")
 
     def get_condition(self) -> None | tuple[list, str]:
-        length = 5
-        type_ = {
-            "综合": 0,
-            "视频": 1,
-            "用户": 2,
-            # "直播": 3,
-            "0": 0,
-            "1": 1,
-            "2": 2,
-            # "3": 3,
-        }
-        type_text = {
-            0: "综合搜索",
-            1: "视频搜索",
-            2: "用户搜索",
-            # 3: "直播搜索",
-        }
-        sort = {
-            "综合排序": 0,
-            "最新发布": 1,
-            "最多点赞": 2,
-            "0": 0,
-            "1": 1,
-            "2": 2,
-        }
-        sort_text = {
-            0: "综合排序",
-            1: "最新发布",
-            2: "最多点赞",
-        }
-        publish_text = {
-            "0": "不限",
-            "1": "一天内",
-            "7": "一周内",
-            "182": "半年内",
-        }
-
         def extract_integer_and_compare(input_string: str) -> int:
             try:
-                # 尝试将字符串转换为整数
-                integer = int(input_string)
-                # 如果转换成功，则返回比较大的数
-                return max(integer, 1)
+                # 尝试将字符串转换为整数，如果转换成功，则返回比较大的数
+                return max(int(input_string), 1)
             except ValueError:
                 # 如果转换失败，则返回1
                 return 1
@@ -504,24 +502,21 @@ class TikTok:
         words = condition.split()
 
         # 如果列表长度小于指定长度，使用空字符串补齐
-        if len(words) < length:
-            words.extend([""] * (length - len(words)))
-        # 如果列表长度超出指定长度，截取指定长度
-        elif len(words) > length:
-            words = words[:length]
+        while len(words) < 5:
+            words.append("")
 
-        words[1] = type_.get(words[1], 0)
+        words[1] = self.SEARCH["type"].get(words[1], 0)
         words[2] = extract_integer_and_compare(words[2])
-        words[3] = sort.get(words[3], 0)
+        words[3] = self.SEARCH["sort"].get(words[3], 0)
         words[4] = words[4] if words[4] in ("0", "1", "7", "182") else "0"
 
         if words[1] == 2:
-            text = "_".join([type_text[words[1]],
+            text = "_".join([self.SEARCH["type_text"][words[1]],
                              words[0]])
         else:
-            text = "_".join([type_text[words[1]],
-                             sort_text[words[3]],
-                             publish_text[words[4]],
+            text = "_".join([self.SEARCH["type_text"][words[1]],
+                             self.SEARCH["sort_text"][words[3]],
+                             self.SEARCH["publish_text"][words[4]],
                              words[0]])
 
         return words, text
@@ -537,7 +532,7 @@ class TikTok:
         self.download.download = False
         while c := self.get_condition():
             tag = c[0][1]
-            self.request.run_search(*c[0])
+            self.request.run_search(*c[0][:5])
             if not self.request.search_data:
                 self.logger.info("采集搜索结果失败")
                 continue
