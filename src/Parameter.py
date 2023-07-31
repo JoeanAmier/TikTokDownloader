@@ -315,28 +315,6 @@ if __name__ == "__main__":
         "aid": "6383",
         "channel": "channel_pc_web",
         "pc_client_type": "1",
-        "version_code": "170400",
-        "version_name": "17.4.0",
-        "cookie_enabled": "true",
-        "screen_width": "1536",
-        "screen_height": "864",
-        "browser_language": "zh-CN",
-        "browser_platform": "Win32",
-        "browser_name": "Edge",
-        "browser_version": "115.0.1901.183",
-        "browser_online": "true",
-        "engine_name": "Blink",
-        "engine_version": "115.0.0.0",
-        "os_name": "Windows",
-        "os_version": "10",
-        "cpu_core_num": "16",
-        "device_memory": "8",
-        "platform": "PC",
-        "downlink": "10",
-        "effective_type": "4g",
-        "round_trip_time": "50",
-        "webid": "7255592572578842152",
-        "msToken": "Ui3F4s1tPEtozwxKgcizcCr1cx0oCVmx5NhSQqcYhiBDKnQ6O5f_PIwfhkKBw9dY6kDe8ncUSMhmkVV7ANocOdoGk2cPgiC4wWiyeVlTfyMDzFb2Kvxg3A2C2Xc1J1-H"
     }
     # example = XBogus("../static/js/X-Bogus.js")
     # print("X-Bogus", example.get_x_bogus(params, HEADERS["User-Agent"]))
