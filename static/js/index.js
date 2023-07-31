@@ -60,7 +60,7 @@ function solo_post(download = false) {
         $("#origin_url").data("link", result["origin"]);
         $("#dynamic_url").data("link", result["dynamic"]);
         $("#solo_preview").attr("src", result["preview"]);
-        if (result["download"] !== false) {
+        if (result["author"] !== null) {
             $('#solo_url').val("");
         }
     });
