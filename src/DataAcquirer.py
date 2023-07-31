@@ -49,6 +49,31 @@ def generate_user_agent() -> tuple[str, tuple]:
               54),
              (11,
               101))),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1788.0",
+            ((56,
+              22),
+             (77,
+              86)),
+        ),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.0.0",
+            ((116,
+              247),
+             (11,
+              146))),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; WOW64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5666.197 Safari/537.36",
+            ((244,
+              163),
+             (18,
+              102))),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+            ((107,
+              91),
+             (236,
+              31))),
     )
 
     return user_agent[randint(0, len(user_agent) - 1)]
