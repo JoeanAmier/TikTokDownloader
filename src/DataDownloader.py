@@ -320,6 +320,7 @@ class Download:
                 requests.exceptions.ReadTimeout,
                 requests.exceptions.ConnectTimeout,
                 requests.exceptions.ChunkedEncodingError,
+                requests.exceptions.SSLError,
         ):
             self.log.error(f"请求超时，资源 {item} 获取详细数据失败")
             return False
@@ -583,7 +584,7 @@ class Download:
         """下载音乐"""
         if self.music and (u := item[7][1]):
             self.request_file(u, root, self.clean.filter(
-                f"{f'{item[0]}-{item[7][0]}'}"), type_="m4a")
+                f"{f'{item[0]}-{item[7][0]}'}"), type_="mp3")
 
     def download_cover(self, root, name: str, item: list):
         """下载静态/动态封面图"""
