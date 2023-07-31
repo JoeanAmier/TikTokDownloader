@@ -1,4 +1,3 @@
-from pathlib import Path
 from platform import system
 from string import whitespace
 
@@ -58,17 +57,23 @@ class Cleaner:
         return text
 
 
-def colored_text(
-        text: str,
-        font: int,
-        background=None,
-        bold=None,
-        default="97;1"):
-    if Path("./src/config/Disable_Colour").exists():
-        return text
-    code = ";".join(
-        [str(i) for i in (font, background, bold) if isinstance(i, int)])
-    return f"\x1b[{code}m{text}\x1b[{default}m"
+class Color:
+
+    def __init__(self, switch):
+        self.switch = switch
+
+    def colored_text(
+            self,
+            text: str,
+            font: int,
+            background=None,
+            bold=None,
+            default="97;1"):
+        if not self.switch:
+            return text
+        code = ";".join(
+            [str(i) for i in (font, background, bold) if isinstance(i, int)])
+        return f"\x1b[{code}m{text}\x1b[{default}m"
 
 
 if __name__ == "__main__":
