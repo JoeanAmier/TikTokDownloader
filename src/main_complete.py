@@ -540,13 +540,15 @@ class TikTok:
                 self._data["root"], type_=data_type.get(
                     tag), format_=self._data["save"])
             params["file"] = "SearchResult.db"
-            with save(root, name=f"{c[1]}_{str(time())[:10]}", **params) as data:
+            name = f"{c[1]}_{str(time())[:10]}"
+            with save(root, name=name, **params) as data:
                 if tag in (0, 1):
                     self.deal_search_items(data)
                 elif tag == 2:
                     self.deal_search_user(data)
                 else:
                     raise ValueError
+                self.logger.info(f"搜索结果数据储存至 {name}")
         self.logger.info("已退出搜索结果采集模式\n")
 
     def deal_search_items(self, file):
