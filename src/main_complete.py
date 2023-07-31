@@ -32,7 +32,7 @@ class TikTok:
         " ": " ",
     }  # 过滤字符
 
-    def __init__(self, colour):
+    def __init__(self, colour, blacklist):
         self.colour = colour
         self.logger = None
         self.request = None
@@ -49,6 +49,7 @@ class TikTok:
         self._data = {}  # 其他配置数据
         self.mark = None
         self.nickname = None
+        self.blacklist = blacklist
 
     def check_config(self):
         print("正在读取配置文件！")
@@ -258,7 +259,12 @@ class TikTok:
         self.logger.name = name  # 日志文件名称格式
         self.logger.run(filename=filename)
         self.request = UserData(self.logger, self.xb, self.colour)
-        self.download = Download(self.logger, None, self.xb, self.colour)
+        self.download = Download(
+            self.logger,
+            None,
+            self.xb,
+            self.colour,
+            self.blacklist)
         self.request.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.mark = "mark" in self._data["name"]
