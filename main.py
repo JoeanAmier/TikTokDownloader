@@ -166,6 +166,7 @@ class Master:
         self.version()
         self.check_update()
         self.main()
+        self.delete_temp()
 
     @staticmethod
     def delete_temp():
@@ -174,4 +175,3 @@ class Master:
 
 if __name__ == '__main__':
     Master().run()
-    Master.delete_temp()
