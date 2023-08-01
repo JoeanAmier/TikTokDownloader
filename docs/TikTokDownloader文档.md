@@ -412,6 +412,7 @@
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
 <p>支持采集评论回复、评论表情、评论图片；必须设置 <code>save</code> 参数才能正常使用。</p>
+<p>储存名称格式：<code>作品123456789评论数据</code></p>
 <h3>批量下载合集作品</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>mix</code> 参数中的合集链接或作品链接。</li>
@@ -437,34 +438,35 @@
 <li><code>https://www.douyin.com/user/账号ID</code></li>
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
-<p>必须设置 <code>save</code> 参数才能正常使用。</p>
+<p>重复获取相同账号数据时会储存为新的数据行，不会覆盖原有数据；必须设置 <code>save</code> 参数才能正常使用。</p>
 <h3>采集搜索结果数据</h3>
 <h4>输入格式</h4>
 <p><strong>格式：</strong><code>关键词</code> <code>类型</code> <code>页数</code> <code>排序规则</code> <code>时间筛选</code></p>
 <ul>
-<li>类型：<code>综合搜索</code> <code>视频搜索</code> <code>用户搜索</code></li>
-<li>排序规则：<code>综合排序</code> <code>最新发布</code> <code>最多点赞</code></li>
-<li>时间筛选：<code>0</code>：不限；<code>1</code>：一天内；<code>7</code>：一周内；<code>182</code>：半年内</li>
+<li>搜索类型：<code>综合搜索</code> <code>视频搜索</code> <code>用户搜索</code></li>
+<li>排序依据：<code>综合排序</code> <code>最新发布</code> <code>最多点赞</code></li>
+<li>发布时间：<code>0</code>：不限；<code>1</code>：一天内；<code>7</code>：一周内；<code>182</code>：半年内</li>
 </ul>
 <p>参数之间使用空格分隔，<code>类型</code> 和 <code>排序规则</code> 支持输入中文或者对应索引，<code>页数</code> 和 <code>时间筛选</code> 仅支持输入整数。</p>
-<p>程序采集的抖音搜索结果会储存至文件，不支持直接下载搜索结果作品；必须设置 <code>save</code> 参数才能正常使用。</p>
+<p>程序采集的抖音搜索结果会储存至文件，储存名称格式：<code>搜索类型_排序依据_发布时间_关键词_时间戳</code>；不支持直接下载搜索结果作品；必须设置 <code>save</code> 参数才能正常使用。</p>
 <h4>输入示例</h4>
 <p><strong>输入：</strong><code>猫咪</code></p>
-<p><strong>含义：</strong> 关键词：<code>猫咪</code>；类型：<code>综合搜索</code>；页数：<code>1</code>；排序规则：<code>综合排序</code>；时间筛选：<code>不限</code></p>
+<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>综合搜索</code>；页数：<code>1</code>；排序依据：<code>综合排序</code>；发布时间：<code>不限</code></p>
 <hr>
 <p><strong>输入：</strong><code>猫咪 1 2 1</code> 等效于 <code>猫咪 视频搜索 2 最新发布</code></p>
-<p><strong>含义：</strong> 关键词：<code>猫咪</code>；类型：<code>视频搜索</code>；页数：<code>2</code>；排序规则：<code>最新发布</code>；时间筛选：<code>不限</code></p>
+<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>视频搜索</code>；页数：<code>2</code>；排序依据：<code>最新发布</code>；发布时间：<code>不限</code></p>
 <hr>
 <p><strong>输入：</strong><code>猫咪 0 10 0 7</code> 等效于 <code>猫咪 综合搜索 10 综合排序 7</code></p>
-<p><strong>含义：</strong> 关键词：<code>猫咪</code>；类型：<code>综合搜索</code>；页数：<code>10</code>；排序规则：<code>综合排序</code>；时间筛选：<code>一周内</code></p>
+<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>综合搜索</code>；页数：<code>10</code>；排序依据：<code>综合排序</code>；发布时间：<code>一周内</code></p>
 <hr>
 <p><strong>输入：</strong><code>猫咪 1 5 2 182</code> 等效于 <code>猫咪 视频搜索 5 最多点赞 182</code></p>
-<p><strong>含义：</strong> 关键词：<code>猫咪</code>；类型：<code>视频搜索</code>；页数：<code>5</code>；排序规则：<code>最多点赞</code>；时间筛选：<code>半年内</code></p>
+<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>视频搜索</code>；页数：<code>5</code>；排序依据：<code>最多点赞</code>；发布时间：<code>半年内</code></p>
 <hr>
 <p><strong>输入：</strong><code>猫咪 2 2</code> 等效于 <code>猫咪 用户搜索 2</code></p>
-<p><strong>含义：</strong> 关键词：<code>猫咪</code>；类型：<code>用户搜索</code>；页数：<code>2</code></p>
+<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>用户搜索</code>；页数：<code>2</code></p>
 <h3>采集抖音热榜数据</h3>
 <p>采集 <code>热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>save</code> 参数才能正常使用。</p>
+<p>储存名称格式：<code>HOT时间戳_热榜名称</code></p>
 <h2>来自未来的新模式</h2>
 <p><strong>功能待定，欢迎提出需求和建议。</strong></p>
 <h2>Web UI 交互模式</h2>
