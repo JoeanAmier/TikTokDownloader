@@ -1137,13 +1137,15 @@ class UserData:
                 for i in data[0]["items"]:
                     self.search_data.append(i)
             elif item.get("music_list"):
-                self.log.warning("目前暂不支持搜索结果音乐数据采集")
+                self.log.warning("提取到音乐数据，暂不支持音乐数据采集")
             elif data := item.get("card_info"):
                 items = data["attached_info"]["aweme_list"]
                 for i in items:
                     self.search_data.append(i)
+            elif data := item.get("common_aladdin"):
+                self.log.info(f"提取到百科数据，暂不支持百科数据采集: {data['display']}")
             else:
-                self.log.warning("搜索结果包含未知的JSON数据，请开启日志记录并告知作者处理")
+                self.log.warning("搜索结果包含未知的数据，请开启日志记录并告知作者处理")
                 self.log.warning(f"不受支持的数据: {item}", False)
 
     def add_search_user(self):
