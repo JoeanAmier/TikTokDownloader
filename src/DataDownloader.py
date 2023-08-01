@@ -493,8 +493,9 @@ class Download:
         return True
 
     def update_blacklist(self, id_):
-        self._id_set.add(id_)
-        self._blacklist.update_id(id_)
+        if self._blacklist.switch:
+            self._id_set.add(id_)
+            self._blacklist.update_id(id_)
 
     @retry(finish=False)
     def request_file(
