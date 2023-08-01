@@ -12,7 +12,6 @@ import requests
 
 from src.Parameter import MsToken
 from src.Parameter import TtWid
-from src.Parameter import WebID
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
@@ -226,13 +225,13 @@ class UserData:
         self.retry = 10  # 重试最大次数，通用
         self.tiktok = False  # TikTok 平台
         self.xb = xb  # 加密参数对象
-        self.__web = None
+        # self.__web = None
         self.__code = None
 
     def initialization(self):
         self.set_user_agent()
-        self.__web = WebID.get_web_id(
-            self.headers["User-Agent"]) or "7255519029058029093"
+        # self.__web = WebID.get_web_id(
+        #     self.headers["User-Agent"]) or "7255519029058029093"
 
     def set_user_agent(self):
         self.headers["User-Agent"], self.__code = generate_user_agent()
@@ -462,7 +461,7 @@ class UserData:
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
-            "webid": self.__web,
+            # "webid": self.__web,
         }
         self.deal_url_params(params)
         self.list = []
@@ -521,7 +520,7 @@ class UserData:
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
-            "webid": self.__web,
+            # "webid": self.__web,
         }
         self.deal_url_params(params)
         self.name = str(time.time())[:10]
@@ -804,7 +803,7 @@ class UserData:
                 "cookie_enabled": "true",
                 "platform": "PC",
                 "downlink": "10",
-                "webid": self.__web,
+                # "webid": self.__web,
             }
             self.deal_url_params(params, 174)
         else:
@@ -818,7 +817,7 @@ class UserData:
                 "cookie_enabled": "true",
                 "platform": "PC",
                 "downlink": "10",
-                "webid": self.__web,
+                # "webid": self.__web,
             }
             self.deal_url_params(params)
         self.comment = []
@@ -939,7 +938,7 @@ class UserData:
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
-            "webid": self.__web,
+            # "webid": self.__web,
         }
         self.deal_url_params(params)
         self.mix_data = []
@@ -982,7 +981,7 @@ class UserData:
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
-            "webid": self.__web,
+            # "webid": self.__web,
         }
         self.deal_url_params(params)
         return self.send_request(
@@ -1111,7 +1110,7 @@ class UserData:
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
-            "webid": self.__web,
+            # "webid": self.__web,
         }
         if type_ == 2:
             user_params(params)
@@ -1207,7 +1206,7 @@ class UserData:
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
-            "webid": self.__web,
+            # "webid": self.__web,
         }
         self.deal_url_params(params)
         return self.send_request(self.hot_api, "抖音热榜", params=params, )
