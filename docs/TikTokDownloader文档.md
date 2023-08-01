@@ -322,6 +322,10 @@
 ```
 
 <p>代表作品文件名称格式为: <code>发布时间 @ 作者UID @ 作品ID</code></p>
+<ul>
+<li>如果作品没有描述，保存时文件名称的描述内容将替换为作品 ID</li>
+<li>单独下载链接作品时，如果在 <code>name</code> 参数中设置了 <code>mark</code>，程序会自动替换为 <code>nickname</code></li>
+</ul>
 
 ```json
 {
