@@ -348,7 +348,7 @@ class TikTok:
                 name = f"作品{i}评论数据"
                 with save(root, name=name, **params) as data:
                     self.request.run_comment(i, data)
-                self.logger.info(f"已储存至 {name}")
+                self.logger.info(f"作品评论数据已储存至 {name}")
         self.logger.info("已退出采集作品评论数据模式\n")
 
     def mix_acquisition(self):
@@ -550,7 +550,7 @@ class TikTok:
                     self.deal_search_user(data)
                 else:
                     raise ValueError
-                self.logger.info(f"搜索结果数据储存至 {name}")
+            self.logger.info(f"搜索结果数据已储存至 {name}")
         self.logger.info("已退出采集搜索结果数据模式\n")
 
     def deal_search_items(self, file):
@@ -572,6 +572,7 @@ class TikTok:
         for i, j in enumerate(("热榜", "娱乐榜", "社会榜", "挑战榜")):
             with save(root, name=f"HOT{collection_time}_{j}", **params) as data:
                 self.request.run_hot(i, j, data)
+        self.logger.info(f"抖音热榜数据已储存至 榜单类型 + {collection_time}")
         self.logger.info("已退出采集抖音热榜数据模式\n")
 
     def run(self):
