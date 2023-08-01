@@ -1001,6 +1001,7 @@ class UserData:
         follower_count = data["follower_count"]  # 粉丝数量
         following_count = data["following_count"]  # 关注数量
         max_follower_count = data["max_follower_count"]  # 粉丝数量最大值
+        gender = {2: "女", 1: "男", }.get(data.get("gender"), "未知")
         city = data.get("city") or ""
         country = data.get("country") or ""
         # district = data.get("district") or ""
@@ -1023,6 +1024,7 @@ class UserData:
             signature,
             unique_id,
             str(user_age),
+            gender,
             country,
             city,
             # district,
