@@ -416,7 +416,7 @@
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
 <p>支持采集评论回复、评论表情、评论图片；必须设置 <code>save</code> 参数才能正常使用。</p>
-<p>储存名称格式：<code>作品123456789评论数据</code></p>
+<p>储存名称格式：<code>作品123456789_评论数据</code></p>
 <h3>批量下载合集作品</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>mix</code> 参数中的合集链接或作品链接。</li>
@@ -470,7 +470,7 @@
 <p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>用户搜索</code>；页数：<code>2</code></p>
 <h3>采集抖音热榜数据</h3>
 <p>采集 <code>热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>save</code> 参数才能正常使用。</p>
-<p>储存名称格式：<code>HOT时间戳_热榜名称</code></p>
+<p>储存名称格式：<code>HOT_时间戳_热榜名称</code></p>
 <h2>来自未来的新模式</h2>
 <p><strong>功能待定，欢迎提出需求和建议。</strong></p>
 <h2>Web UI 交互模式</h2>
