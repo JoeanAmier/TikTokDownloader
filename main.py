@@ -17,8 +17,8 @@ from src.main_web_UI import WebUI
 
 
 class Master:
-    VERSION = 3.6
-    STABLE = True
+    VERSION = 4.0
+    STABLE = False
 
     REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
     LICENCE = "GNU General Public License v3.0"

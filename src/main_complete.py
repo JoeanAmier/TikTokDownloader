@@ -345,7 +345,7 @@ class TikTok:
                 self.logger.error(f"{url} 获取作品ID失败")
                 continue
             for i in ids:
-                name = f"作品{i}评论数据"
+                name = f"作品{i}_评论数据"
                 with save(root, name=name, **params) as data:
                     self.request.run_comment(i, data)
                 self.logger.info(f"作品评论数据已储存至 {name}")
@@ -570,9 +570,9 @@ class TikTok:
         save, root, params = self.record.run(
             self._data["root"], type_="hot", format_=self._data["save"])
         for i, j in enumerate(("热榜", "娱乐榜", "社会榜", "挑战榜")):
-            with save(root, name=f"HOT{collection_time}_{j}", **params) as data:
+            with save(root, name=f"HOT_{collection_time}_{j}", **params) as data:
                 self.request.run_hot(i, j, data)
-        self.logger.info(f"抖音热榜数据已储存至 榜单类型 + {collection_time}")
+        self.logger.info(f"抖音热榜数据已储存至 HOT + 榜单类型 + {collection_time}")
         self.logger.info("已退出采集抖音热榜数据模式\n")
 
     def run(self):
