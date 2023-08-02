@@ -186,3 +186,19 @@ TikTokDownloader
 * https://github.com/B1gM8c/X-Bogus
 * https://github.com/aithedev/X-Bogus
 * https://html5up.net/hyperspace
+
+# ♥️ 赞助项目
+
+<table>
+<thead>
+<tr>
+<th align="center">微信(WeChat)</th>
+<th align="center">支付宝(Alipay)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><img src="./docs/微信赞助二维码.png" alt="微信赞助二维码" height="200" width="200"></td>
+<td align="center"><img src="./docs/支付宝赞助二维码.png" alt="支付宝赞助二维码" height="200" width="200"></td>
+</tr>
+</tbody>
+</table>
