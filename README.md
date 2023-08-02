@@ -176,17 +176,6 @@ TikTokDownloader
 </ul>
 <b>在使用本项目的代码和功能之前，请您认真考虑并接受以上免责声明。如果您对上述声明有任何疑问或不同意，请不要使用本项目的代码和功能。如果您使用了本项目的代码和功能，则视为您已完全理解并接受上述免责声明，并自愿承担使用本项目的一切风险和后果。</b>
 
-# 💡 代码参考
-
-* https://github.com/Evil0ctal/Douyin_TikTok_Download_API
-* https://github.com/Johnserf-Seed/TikTokDownload
-* https://github.com/davidteather/TikTok-Api
-* https://requests.readthedocs.io/en/latest/
-* https://dormousehole.readthedocs.io/en/latest/
-* https://github.com/B1gM8c/X-Bogus
-* https://github.com/aithedev/X-Bogus
-* https://html5up.net/hyperspace
-
 # ♥️ 赞助项目
 
 <table>
@@ -202,3 +191,14 @@ TikTokDownloader
 </tr>
 </tbody>
 </table>
+
+# 💡 代码参考
+
+* https://github.com/Evil0ctal/Douyin_TikTok_Download_API
+* https://github.com/Johnserf-Seed/TikTokDownload
+* https://github.com/davidteather/TikTok-Api
+* https://requests.readthedocs.io/en/latest/
+* https://dormousehole.readthedocs.io/en/latest/
+* https://github.com/B1gM8c/X-Bogus
+* https://github.com/aithedev/X-Bogus
+* https://html5up.net/hyperspace
