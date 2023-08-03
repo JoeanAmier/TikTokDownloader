@@ -2,17 +2,15 @@
 <img src="static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
 <h1>TikTokDownloader</h1>
 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">
-<img src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader" alt="GNU General Public License v3.0">
-</a>
-<a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">
-<img src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader" alt="TikTokDownloader">
+<img src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader?color=f39800" alt="GNU General Public License v3.0">
 </a>
 <a href="https://sourcery.ai">
 <img src="https://img.shields.io/badge/Sourcery-enabled-ffd900" alt="Sourcery">
 </a>
-<img src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?color=green" alt="stars">
-<a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">
-<img src="https://img.shields.io/badge/QQ%E7%BE%A4%E8%81%8A-830227445-ba79b1" alt="群聊">
+<img src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?color=9ebc19" alt="stars">
+<img src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?color=ba79b1" alt="forks">
+<a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">
+<img src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader?color=6f94cd" alt="TikTokDownloader">
 </a>
 </div>
 <br>
