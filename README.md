@@ -4,10 +4,10 @@
 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">
 <img src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader?color=f39800" alt="GNU General Public License v3.0">
 </a>
+<img src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?color=9ebc19" alt="stars">
 <a href="https://sourcery.ai">
 <img src="https://img.shields.io/badge/Sourcery-enabled-ffd900" alt="Sourcery">
 </a>
-<img src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?color=9ebc19" alt="stars">
 <img src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?color=ba79b1" alt="forks">
 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">
 <img src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader?color=6f94cd" alt="TikTokDownloader">
