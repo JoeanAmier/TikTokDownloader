@@ -192,6 +192,13 @@ TikTokDownloader
 </tbody>
 </table>
 
+# ✉️ 联系作者
+
+<ul>
+<li>QQ Group: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">830227445</a></li>
+<li>Email: yonglelolu@gmail.com</li>
+</ul>
+
 # 💡 代码参考
 
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
