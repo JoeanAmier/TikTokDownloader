@@ -11,7 +11,7 @@
 <img src="https://img.shields.io/badge/Sourcery-enabled-ffd900" alt="Sourcery">
 </a>
 <img src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?color=green" alt="stars">
-<a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A.jpg">
+<a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">
 <img src="https://img.shields.io/badge/QQ%E7%BE%A4%E8%81%8A-830227445-ba79b1" alt="群聊">
 </a>
 </div>
