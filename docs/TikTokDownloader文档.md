@@ -1,5 +1,5 @@
 <div align="center">
-<img src="../static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
+<img src="https://github.com/JoeanAmier/TikTokDownloader/blob/master/static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
 <h1>TikTokDownloader 文档</h1>
 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">
 <img src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader" alt="GNU General Public License v3.0">
