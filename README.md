@@ -187,6 +187,10 @@ TikTokDownloader
 
 # ✉️ 联系作者
 
+<p>
+<b>TikTokDownloader 是我个人独立维护的开源项目，鉴于个人精力有限，请理解项目进展可能较为缓慢，但我会继续致力于持续更新与维护，以确保项目的稳定性和功能的不断改进。</b>
+</p>
+
 <ul>
 <li>QQ Group: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">830227445</a></li>
 <li>Email: yonglelolu@gmail.com</li>
