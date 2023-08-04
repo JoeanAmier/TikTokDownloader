@@ -31,9 +31,9 @@ class WebUI(TikTok):
             else:
                 old_data[y] = new_data.get(y, values[x] if values else None)
 
-    def update_parameters(self, parameters, value="on"):
+    def update_parameters(self, parameters):
         """更新前端返回的 parameters"""
-        convert = {i: j == value or j for i, j in parameters.items()}
+        convert = {i: j == "on" or j for i, j in parameters.items()}
         settings = self.settings.read()
         self.update_settings(
             settings,
