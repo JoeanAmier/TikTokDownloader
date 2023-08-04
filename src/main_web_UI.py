@@ -177,7 +177,6 @@ class WebUI(TikTok):
         def index():
             def initialize():
                 if not self.check_config():
-                    self.blacklist.get_set()
                     return False
                 self.initialize(filename=f"{str(date.today())}.log")
                 self.set_parameters()

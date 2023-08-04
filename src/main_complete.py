@@ -578,7 +578,6 @@ class TikTok:
     def run(self):
         while not self.quit:
             if not self.check_config():
-                self.blacklist.get_set()
                 return False
             self.initialize()
             self.set_parameters()

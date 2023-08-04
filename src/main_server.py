@@ -17,7 +17,6 @@ class Server(WebUI):
 
     def configuration(self):
         if not self.check_config():
-            self.blacklist.get_set()
             return False
         self.initialize()
         self.set_parameters()

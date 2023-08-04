@@ -129,5 +129,5 @@ class DownloadRecorder:
             self.file.write(f"{id_}\n")
 
     def close(self):
-        if self.switch:
+        if self.file:
             self.file.close()
