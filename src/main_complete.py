@@ -88,6 +88,13 @@ class TikTok:
         self.nickname = None
         self.blacklist = blacklist
 
+    def configuration(self, **kwargs):
+        if not self.check_config():
+            self.quit = True
+            return
+        self.initialize(**kwargs)
+        self.set_parameters()
+
     def check_config(self):
         print("正在读取配置文件！")
         settings = self.settings.read()
@@ -576,11 +583,8 @@ class TikTok:
         self.logger.info("已退出采集抖音热榜数据模式\n")
 
     def run(self):
+        self.configuration()
         while not self.quit:
-            if not self.check_config():
-                return False
-            self.initialize()
-            self.set_parameters()
             select = prompt("请选择下载模式", (
                 "批量下载账号作品", "单独下载链接作品", "获取直播推流地址", "采集作品评论数据", "批量下载合集作品",
                 "批量采集账号数据", "采集搜索结果数据", "采集抖音热榜数据"), self.colour.colorize)
