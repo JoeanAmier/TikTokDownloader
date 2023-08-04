@@ -74,7 +74,7 @@ class Server(WebUI):
 
         @app.route('/solo/', methods=['POST'])
         def solo():
-            url = request.form.get("url", False)
+            url = request.json.get("url")
             if not url:
                 return {
                     "text": "无效的作品链接！",
