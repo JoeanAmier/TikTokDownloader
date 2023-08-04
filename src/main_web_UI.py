@@ -53,7 +53,7 @@ class WebUI(TikTok):
              "max_size",),
             ("./",
              "Download",
-             "create_time author desc",
+             "create_time nickname desc",
              "%Y-%m-%d %H.%M.%S",
              "-",
              "",
