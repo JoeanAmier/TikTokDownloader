@@ -115,6 +115,7 @@ class Master:
         """
         master = server(self.colour, self.blacklist)
         app = master.run_server(Flask(__name__))
+        master.configuration(filename=master.filename)
         # register(master.xb.close)
         register(self.blacklist.close)
         app.run(host="0.0.0.0", debug=False)
