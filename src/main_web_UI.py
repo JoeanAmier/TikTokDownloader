@@ -32,7 +32,7 @@ class WebUI(TikTok):
                 old_data[y] = new_data.get(y, values[x] if values else None)
 
     def update_parameters(self, parameters, value="on"):
-        """更新前端返回的parameters"""
+        """更新前端返回的 parameters"""
         convert = {i: j == value or j for i, j in parameters.items()}
         settings = self.settings.read()
         self.update_settings(
@@ -58,7 +58,12 @@ class WebUI(TikTok):
              "-",
              "",
              False,
-             512 * 1024, False, False, False, "", 0))
+             512 * 1024,
+             False,
+             False,
+             False,
+             "",
+             0))
         self.settings.update(settings)
         if convert.get("cookie"):
             self.cookie.extract(convert["cookie"], 0)
