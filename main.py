@@ -6,6 +6,7 @@ from flask import Flask
 from requests import exceptions
 from requests import get
 
+from src.Configuration import Settings
 from src.CookieTool import Cookie
 from src.FileManager import DownloadRecorder
 from src.FileManager import deal_config
@@ -161,10 +162,20 @@ class Master:
         elif mode == "8":
             self.change_config(self.RECORD["path"])
 
+    @staticmethod
+    def check_settings():
+        if not Path("./settings.json").exists():
+            print("未检测到 settings.json 配置文件！")
+            Settings().create()
+            return False
+        return True
+
     def run(self):
         self.check_config()
         self.version()
         self.check_update()
+        if not self.check_settings():
+            return
         self.main()
         self.delete_temp()
 
