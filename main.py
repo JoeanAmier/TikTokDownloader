@@ -114,8 +114,6 @@ class Master:
         服务器模式
         """
         master = server(self.colour, self.blacklist)
-        if not master.running:
-            return
         app = master.run_server(Flask(__name__))
         # register(master.xb.close)
         register(self.blacklist.close)
