@@ -17,7 +17,7 @@ class WebUI(TikTok):
         self.solo_url = None
         self.live_url = None
 
-    def update_parameters(self, parameters):
+    def update_parameters(self, parameters, value="on"):
         """更新前端返回的parameters"""
 
         def update_settings(
@@ -34,7 +34,7 @@ class WebUI(TikTok):
 
         convert = {}
         for i, j in parameters.items():
-            convert[i] = True if j == "on" else j
+            convert[i] = True if j == value else j
         settings = self.settings.read()
         update_settings(
             settings,
