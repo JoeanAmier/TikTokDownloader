@@ -14,8 +14,16 @@ class WebUI(TikTok):
     def __init__(self, colour, blacklist):
         super().__init__(colour, blacklist)
         self.cookie = Cookie(colour)
+        self.running = self.configuration()
         self.solo_url = None
         self.live_url = None
+
+    def configuration(self):
+        if not self.check_config():
+            return False
+        self.initialize(filename=f"{str(date.today())}.log")
+        self.set_parameters()
+        return True
 
     def update_parameters(self, parameters, value="on"):
         """更新前端返回的parameters"""
@@ -63,6 +71,7 @@ class WebUI(TikTok):
         self.settings.update(settings)
         if convert.get("cookie"):
             self.cookie.extract(convert["cookie"], 0)
+        self.running = self.configuration()
 
     @staticmethod
     def get_data(data) -> dict:
@@ -171,18 +180,11 @@ class WebUI(TikTok):
                 key=lambda x: x[0]),
             "preview": data[3]}
 
-    def webui_run(self, app):
+    def run_server(self, app):
 
         @app.route("/", methods=["GET"])
         def index():
-            def initialize():
-                if not self.check_config():
-                    return False
-                self.initialize(filename=f"{str(date.today())}.log")
-                self.set_parameters()
-                return True
-
-            if not initialize():  # 初始化程序
+            if not self.running:
                 return "读取程序配置文件发生错误，请检查配置文件！"
             return render_template('index.html', **self._data)
 

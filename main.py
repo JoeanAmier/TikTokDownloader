@@ -116,7 +116,7 @@ class Master:
         master = server(self.colour, self.blacklist)
         if not master.running:
             return
-        app = master.server_run(Flask(__name__))
+        app = master.run_server(Flask(__name__))
         # register(master.xb.close)
         register(self.blacklist.close)
         app.run(host="0.0.0.0", debug=False)

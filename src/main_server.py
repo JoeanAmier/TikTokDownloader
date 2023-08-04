@@ -13,14 +13,6 @@ BLANK_PREVIEW = "static/images/blank.png"
 class Server(WebUI):
     def __init__(self, colour, blacklist):
         super().__init__(colour, blacklist)
-        self.configuration()
-
-    def configuration(self):
-        if not self.check_config():
-            return False
-        self.initialize()
-        self.set_parameters()
-        return True
 
     def initialize(
             self,
@@ -77,7 +69,7 @@ class Server(WebUI):
                     "preview": BLANK_PREVIEW}
             return self.get_data(result[0])
 
-    def server_run(self, app):
+    def run_server(self, app):
         @app.route("/", methods=["GET"])
         def index():
             return render_template('server.html')
