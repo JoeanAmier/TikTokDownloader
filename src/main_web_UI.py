@@ -33,7 +33,7 @@ class WebUI(TikTok):
 
     def update_parameters(self, parameters, value="on"):
         """更新前端返回的parameters"""
-        convert = {i: True if j == value else j for i, j in parameters.items()}
+        convert = {i: j == value or j for i, j in parameters.items()}
         settings = self.settings.read()
         self.update_settings(
             settings,
@@ -179,17 +179,13 @@ class WebUI(TikTok):
         @app.route('/save/', methods=['POST'])
         def save():
             """保存配置并重新加载首页"""
-            self.update_parameters(request.form)
+            self.update_parameters(request.json)
             return url_for("index")
 
         @app.route('/solo/', methods=['POST'])
         def solo():
-            url = request.form.get("url", False)
-            download = {
-                "true": True,
-                "false": False,
-                None: False}[
-                request.form.get("download")]
+            url = request.json.get("url", False)
+            download = request.json.get("download", False)
             if not url:
                 return {
                     "text": "无效的作品链接！",
@@ -205,7 +201,7 @@ class WebUI(TikTok):
 
         @app.route('/live/', methods=['POST'])
         def live():
-            url = request.form.get("url", False)
+            url = request.json.get("url")
             if not url:
                 return {
                     "text": "无效的直播链接！",
