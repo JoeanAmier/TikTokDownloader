@@ -43,9 +43,14 @@ function get_parameters() {
 
 function update_parameters() {
     $.ajax({
-        type: "POST", url: "/save/", data: get_parameters(), success: function () {
+        type: "POST",
+        url: "/save/",
+        contentType: "application/json",
+        data: JSON.stringify(get_parameters()),
+        success: function () {
             window.location.href = "/";
-        }, error: function () {
+        },
+        error: function () {
             alert("保存配置文件失败！");
         }
     });
@@ -53,18 +58,28 @@ function update_parameters() {
 
 
 function solo_post(download = false) {
-    $.post("/solo/", {url: $("#solo_url").val(), download: download}, function (result) {
-        $("#solo_state").val(result["text"]);
-        $("#download_url").data("link", result["download"]);
-        $("#music_url").data("link", result["music"]);
-        $("#origin_url").data("link", result["origin"]);
-        $("#dynamic_url").data("link", result["dynamic"]);
-        $("#solo_preview").attr("src", result["preview"]);
-        if (result["author"] !== null) {
-            $('#solo_url').val("");
+    const data = {
+        url: $("#solo_url").val(), download: download
+    };
+    $.ajax({
+        type: "POST", url: "/solo/", contentType: "application/json",  // 设置请求的 Content-Type 为 JSON
+        data: JSON.stringify(data),  // 将 JSON 对象转为字符串
+        success: function (result) {
+            $("#solo_state").val(result["text"]);
+            $("#download_url").data("link", result["download"]);
+            $("#music_url").data("link", result["music"]);
+            $("#origin_url").data("link", result["origin"]);
+            $("#dynamic_url").data("link", result["dynamic"]);
+            $("#solo_preview").attr("src", result["preview"]);
+            if (result["author"] !== null) {
+                $('#solo_url').val("");
+            }
+        }, error: function () {
+            alert("请求失败！");
         }
     });
 }
+
 
 function get_download() {
     let link = $("#download_url").data("link");
@@ -114,20 +129,30 @@ function open_link(link) {
 }
 
 function live_post() {
-    $.post("/live/", {url: $("#live_url").val()}, function (result) {
-        $("#live_state").val(result["text"]);
-        let urls = result["urls"];
-        if (urls) {
-            $("#live_url").val("");
-            $("#all_url").data("link", urls);
-            $("#best_url").data("link", result["best"]);
-        } else {
-            $("#all_url").removeData("link");
-            $("#best_url").removeData("link");
+    const data = {
+        url: $("#live_url").val()
+    };
+    $.ajax({
+        type: "POST", url: "/live/", contentType: "application/json",  // 设置请求的 Content-Type 为 JSON
+        data: JSON.stringify(data),  // 将 JSON 对象转为字符串
+        success: function (result) {
+            $("#live_state").val(result["text"]);
+            let urls = result["urls"];
+            if (urls) {
+                $("#live_url").val("");
+                $("#all_url").data("link", urls);
+                $("#best_url").data("link", result["best"]);
+            } else {
+                $("#all_url").removeData("link");
+                $("#best_url").removeData("link");
+            }
+            $("#live_preview").attr("src", result["preview"]);
+        }, error: function () {
+            alert("请求失败！");
         }
-        $("#live_preview").attr("src", result["preview"]);
     });
 }
+
 
 function get_all() {
     let link = $("#all_url").data("link");
