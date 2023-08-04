@@ -14,30 +14,28 @@ class WebUI(TikTok):
     def __init__(self, colour, blacklist):
         super().__init__(colour, blacklist)
         self.cookie = Cookie(colour)
-        self.configuration(filename=f"{str(date.today())}.log")
+        self.filename = f"{str(date.today())}.log"
         self.solo_url = None
         self.live_url = None
 
+    @staticmethod
+    def update_settings(
+            old_data: dict,
+            new_data: dict,
+            keys: tuple,
+            values: tuple | None,
+            index=False):
+        for x, y in enumerate(keys):
+            if index:
+                old_data[y][0] = new_data.get(y, values[x] if values else None)
+            else:
+                old_data[y] = new_data.get(y, values[x] if values else None)
+
     def update_parameters(self, parameters, value="on"):
         """更新前端返回的parameters"""
-
-        def update_settings(
-                old_data: dict,
-                new_data: dict,
-                keys: tuple,
-                values: tuple | None,
-                index=False):
-            for x, y in enumerate(keys):
-                if index:
-                    old_data[y][0] = new_data.get(y, values[x])
-                else:
-                    old_data[y] = new_data.get(y, values[x])
-
-        convert = {}
-        for i, j in parameters.items():
-            convert[i] = True if j == value else j
+        convert = {i: True if j == value else j for i, j in parameters.items()}
         settings = self.settings.read()
-        update_settings(
+        self.update_settings(
             settings,
             convert,
             ("root",
@@ -64,7 +62,7 @@ class WebUI(TikTok):
         self.settings.update(settings)
         if convert.get("cookie"):
             self.cookie.extract(convert["cookie"], 0)
-        self.configuration(filename=f"{str(date.today())}.log")
+        self.configuration(filename=self.filename)
 
     @staticmethod
     def get_data(data) -> dict:
