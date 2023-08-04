@@ -1,9 +1,6 @@
-from src.Configuration import Settings
-
-
 class Cookie:
-    def __init__(self, colour):
-        self.settings = Settings()
+    def __init__(self, settings, colour):
+        self.settings = settings
         self.colour = colour
 
     def run(self):
