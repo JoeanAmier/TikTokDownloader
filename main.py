@@ -109,31 +109,13 @@ class Master:
         register(self.blacklist.close)
         example.run()
 
-    def api_server(self):
+    def server(self, server):
         """
-        Web API 接口模式
+        服务器模式
         """
-        master = APIServer(self.colour, self.blacklist)
-        app = master.server_run(Flask(__name__))
-        # register(master.xb.close)
-        register(self.blacklist.close)
-        app.run(host="0.0.0.0", debug=True)
-
-    def web_ui(self):
-        """
-        Web UI 交互模式
-        """
-        master = WebUI(self.colour, self.blacklist)
-        app = master.webui_run(Flask(__name__))
-        # register(master.xb.close)
-        register(self.blacklist.close)
-        app.run(host="0.0.0.0", debug=False)
-
-    def server(self):
-        """
-        服务器部署模式
-        """
-        master = Server(self.colour, self.blacklist)
+        master = server(self.colour, self.blacklist)
+        if not master.running:
+            return
         app = master.server_run(Flask(__name__))
         # register(master.xb.close)
         register(self.blacklist.close)
@@ -156,11 +138,11 @@ class Master:
         elif mode == "2":
             self.complete()
         elif mode == "3":
-            self.api_server()
+            self.server(APIServer)
         elif mode == "4":
-            self.web_ui()
+            self.server(WebUI)
         elif mode == "5":
-            self.server()
+            self.server(Server)
         elif mode == "6":
             self.change_config(self.UPDATE["path"])
         elif mode == "7":
