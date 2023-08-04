@@ -126,7 +126,7 @@ class Master:
         self.main()
 
     def cookie(self):
-        cookie = Cookie(self.colour)
+        cookie = Cookie(Settings(), self.colour)
         cookie.run()
         self.main()
 
