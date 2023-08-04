@@ -618,9 +618,10 @@ class Download:
 
         temp_path = self.temp.joinpath(file)
         try:
+            self.log.info(f"{file} 开始下载")
             progress_bar = ProgressBar(
-                size, file, self.colour.colorize) if size > 0 else LoopingBar(
-                file, self.colour.colorize)
+                size, colorize=self.colour.colorize) if size > 0 else LoopingBar(
+                colorize=self.colour.colorize)
             with temp_path.open("wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
@@ -700,10 +701,8 @@ class Download:
         """下载直播，不需要Cookie信息"""
         self.create_folder("Live", True)
         _ = self.headers.pop("Cookie", None)
-        self.log.info(f"开始下载 {name} 直播视频")
         self.request_file(link, self.root.joinpath(
             "Live"), name, "flv", unknown_size=True)
-        self.log.info(f"{name} 直播视频下载完成")
 
     @reset
     @check_cookie
@@ -737,7 +736,7 @@ class ProgressBar(NoneBar):
     def __init__(
             self,
             total,
-            name="文件",
+            text="文件",
             colorize=None,
             length=10,
             fill='█',
@@ -745,7 +744,7 @@ class ProgressBar(NoneBar):
             **kwargs):
         super().__init__(*args, **kwargs)
         self.colorize = colorize or self.direct
-        self.name = name
+        self.text = text
         self.total = total
         self.length = length
         self.fill = fill
@@ -762,7 +761,7 @@ class ProgressBar(NoneBar):
         elapsed_time = time.time() - self.start_time
         print(
             self.colorize(
-                f'\r{self.name} 下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.downloaded_size):.2f} MB / {self.bytes_to_mb(self.total):.2f} MB',
+                f'\r{self.text}下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.downloaded_size):.2f} MB / {self.bytes_to_mb(self.total):.2f} MB',
                 95),
             end='',
             flush=True)
@@ -770,7 +769,7 @@ class ProgressBar(NoneBar):
 
 class LoopingBar(NoneBar):
     def __init__(self,
-                 name="文件",
+                 text="文件",
                  colorize=None,
                  animation=(
                          '⣾',
@@ -785,7 +784,7 @@ class LoopingBar(NoneBar):
                  **kwargs):
         super().__init__(*args, **kwargs)
         self.colorize = colorize or self.direct
-        self.name = name
+        self.text = text
         self.spin_chars = cycle(animation)
         self.download_size = 0
         self.start_time = time.time()
@@ -797,7 +796,7 @@ class LoopingBar(NoneBar):
         self.download_size += size
         print(
             self.colorize(
-                f"\r{self.name} {'下载完成' if finished else '正在下载'}: {'✔️' if finished else spin_char} - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.download_size):.2f} MB",
+                f"\r{self.text}{'下载完成' if finished else '正在下载'}: {'✔️' if finished else spin_char} - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.download_size):.2f} MB",
                 95),
             end='',
             flush=True)
@@ -806,7 +805,7 @@ class LoopingBar(NoneBar):
 class LoadingAnimation:
     def __init__(
             self,
-            name="文件",
+            text="文件正在下载",
             colorize=None,
             animation=(
                     '⣾',
@@ -819,7 +818,7 @@ class LoadingAnimation:
                     '⣽'),
             frequency=0.25):
         self.colorize = colorize or NoneBar.direct
-        self.name = name
+        self.text = text
         self.animation_chars = cycle(animation)
         self.frequency = frequency
         self.running = True
@@ -828,7 +827,7 @@ class LoadingAnimation:
         while self.running:
             print(
                 self.colorize(
-                    f"\r{self.name} {next(self.animation_chars)}",
+                    f"\r{self.text}: {next(self.animation_chars)}",
                     95),
                 end="",
                 flush=True)
