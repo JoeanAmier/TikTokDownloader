@@ -158,7 +158,7 @@ class TikTok:
             self.user_works_batch(save, root, params)
         elif select == "2":
             self.user_works_solo(save, root, params)
-        self.logger.info("已退出批量下载账号作品模式\n")
+        self.logger.info("已退出批量下载账号作品模式")
 
     def user_works_batch(self, save, root, params):
         self.logger.info(f"共有 {self._number} 个账号的作品等待下载")
@@ -250,7 +250,7 @@ class TikTok:
                 self.download.tiktok = self.request.tiktok
                 for i in ids:
                     self.download.run_alone(i)
-        self.logger.info("已退出单独下载链接作品模式\n")
+        self.logger.info("已退出单独下载链接作品模式")
 
     def live_acquisition(self):
         def choice_quality(items: dict) -> str:
@@ -286,7 +286,7 @@ class TikTok:
                     "推流地址: \n" + "\n".join([f"清晰度{i}: {j}" for i, j in item[2].items()]))
                 if len(data) == 1 and (l := choice_quality(item[2])):
                     self.download.download_live(l, f"{item[0]}-{item[1]}")
-        self.logger.info("已退出获取直播推流地址模式\n")
+        self.logger.info("已退出获取直播推流地址模式")
 
     def initialize(
             self,
@@ -356,7 +356,7 @@ class TikTok:
                 with save(root, name=name, **params) as data:
                     self.request.run_comment(i, data)
                 self.logger.info(f"作品评论数据已储存至 {name}")
-        self.logger.info("已退出采集作品评论数据模式\n")
+        self.logger.info("已退出采集作品评论数据模式")
 
     def mix_acquisition(self):
         self.manager = Cache(
@@ -373,7 +373,7 @@ class TikTok:
             self.mix_batch(save, root, params)
         elif select == "2":
             self.mix_solo(save, root, params)
-        self.logger.info("已退出批量下载合集作品模式\n")
+        self.logger.info("已退出批量下载合集作品模式")
 
     def get_mix_info(self, id_: str, collection=False):
         data = id_ if collection else self.download.get_data(id_)
@@ -489,7 +489,7 @@ class TikTok:
             self.accounts_user()
         elif m == "2":
             self.alone_user()
-        self.logger.info("已退出批量采集账号数据模式\n")
+        self.logger.info("已退出批量采集账号数据模式")
 
     def get_condition(self) -> None | tuple[list, str]:
         def extract_integer_and_compare(input_string: str) -> int:
@@ -558,7 +558,7 @@ class TikTok:
                 else:
                     raise ValueError
             self.logger.info(f"搜索结果数据已储存至 {name}")
-        self.logger.info("已退出采集搜索结果数据模式\n")
+        self.logger.info("已退出采集搜索结果数据模式")
 
     def deal_search_items(self, file):
         self.logger.info("开始提取搜索结果")
@@ -580,7 +580,7 @@ class TikTok:
             with save(root, name=f"HOT_{collection_time}_{j}", **params) as data:
                 self.request.run_hot(i, j, data)
         self.logger.info(f"抖音热榜数据已储存至 HOT + {collection_time} + 榜单类型")
-        self.logger.info("已退出采集抖音热榜数据模式\n")
+        self.logger.info("已退出采集抖音热榜数据模式")
 
     def run(self):
         self.configuration()
