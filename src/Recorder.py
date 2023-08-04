@@ -113,14 +113,14 @@ class LoggerManager(BaseLogger):
             format_="%(asctime)s[%(levelname)s]:  %(message)s", filename=None):
         if not (dir_ := self.root.joinpath(self.folder)).exists():
             dir_.mkdir()
-        self.log = logging
-        self.log.basicConfig(
+        logging.basicConfig(
             filename=dir_.joinpath(
                 filename or f"{time.strftime(self.name, time.localtime())}.log"),
             level=logging.INFO,
             datefmt='%Y-%m-%d %H:%M:%S',
             format=format_,
             encoding="UTF-8")
+        self.log = logging.getLogger(__name__)
 
     def info(self, text: str, output=True):
         if output:
