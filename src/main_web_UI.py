@@ -184,7 +184,7 @@ class WebUI(TikTok):
 
         @app.route('/solo/', methods=['POST'])
         def solo():
-            url = request.json.get("url", False)
+            url = request.json.get("url")
             download = request.json.get("download", False)
             if not url:
                 return {
