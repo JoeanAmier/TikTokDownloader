@@ -586,6 +586,7 @@ class UserData:
         if not self.get_user_id(True):
             return False
         while not self.finish:
+            print(self.colour.colorize("获取数据中...", 94))
             self.get_user_data()
             self.deal_data()
             self.early_stop()
@@ -778,12 +779,14 @@ class UserData:
         self.data = data
         self.log.info("开始获取评论数据")
         while not self.finish:
+            print(self.colour.colorize("获取数据中...", 94))
             self.get_comment(id_=id_, api=self.comment_api)
             self.deal_comment()
         for item in self.reply:
             self.finish = False
             self.cursor = 0
             while not self.finish:
+                print(self.colour.colorize("获取数据中...", 94))
                 self.get_comment(id_=id_, api=self.reply_api, reply=item)
                 self.deal_comment()
         self.log.info("评论数据获取结束")
@@ -901,6 +904,7 @@ class UserData:
         if not isinstance(info, tuple):
             return False
         while not self.finish:
+            print(self.colour.colorize("获取数据中...", 94))
             self.get_mix_data(info[0])
             self.deal_mix_data()
         if len(info) != 3:
