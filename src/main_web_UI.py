@@ -11,9 +11,10 @@ from src.main_complete import TikTok
 class WebUI(TikTok):
     def __init__(self, colour, blacklist):
         super().__init__(colour, blacklist)
-        self.cookie = Cookie(colour)
+        self.cookie = Cookie(self.settings, colour)
         self.preview = "static/images/blank.png"
         self.filename = f"{str(date.today())}.log"
+        self.configuration(filename=self.filename)
         self.solo_url = None
         self.live_url = None
 
