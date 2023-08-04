@@ -93,7 +93,7 @@ class Master:
             "请选择 TikTokDownloader 运行模式",
             ("写入 Cookie 信息",
              "终端命令行模式",
-             "来自未来的新模式",
+             "Web API 接口模式",
              "Web UI 交互模式",
              "服务器部署模式",
              f"{self.UPDATE['tip']}检查更新功能",
@@ -108,10 +108,9 @@ class Master:
         register(self.blacklist.close)
         example.run()
 
-    @staticmethod
-    def multiprocess():
+    def api_server(self):
         """待开发"""
-        print("敬请期待，欢迎提出需求和建议！")
+        pass
 
     def web_ui(self):
         """
@@ -150,7 +149,7 @@ class Master:
         elif mode == "2":
             self.complete()
         elif mode == "3":
-            self.multiprocess()
+            self.api_server()
         elif mode == "4":
             self.web_ui()
         elif mode == "5":
