@@ -11,6 +11,7 @@ from src.CookieTool import Cookie
 from src.FileManager import DownloadRecorder
 from src.FileManager import deal_config
 from src.StringCleaner import Colour
+from src.main_api_server import APIServer
 from src.main_complete import TikTok
 from src.main_complete import prompt
 from src.main_server import Server
@@ -109,8 +110,14 @@ class Master:
         example.run()
 
     def api_server(self):
-        """待开发"""
-        pass
+        """
+        Web API 接口模式
+        """
+        master = APIServer(self.colour, self.blacklist)
+        app = master.server_run(Flask(__name__))
+        # register(master.xb.close)
+        register(self.blacklist.close)
+        app.run(host="0.0.0.0", debug=True)
 
     def web_ui(self):
         """
