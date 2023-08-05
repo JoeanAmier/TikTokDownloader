@@ -64,6 +64,7 @@
 # 📈 项目状态
 
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已通过测试，功能均可正常使用
+* 🟢 正在开发 Web API 接口模式
 * 🟡 未来准备开发获取账号关注列表功能
 * 🟡 未来准备开发批量下载账号收藏作品功能
 * 🟡 未来准备开发获取账号收藏合集列表功能
