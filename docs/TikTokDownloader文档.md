@@ -481,7 +481,36 @@
 <p>采集 <code>热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>save</code> 参数才能正常使用。</p>
 <p>储存名称格式：<code>HOT_时间戳_热榜名称</code></p>
 <h2>Web API 接口模式</h2>
-<p><strong>正在开发！</strong></p>
+<p>提供 API 调用功能，发送请求获取数据，可部署至私有服务器。</p>
+<p><strong>API 接口通用说明：</strong></p>
+<ul>
+<li>请求类型：<code>POST</code></li>
+<li>请求格式：<code>JSON</code></li>
+<li>响应格式：<code>JSON</code></li>
+</ul>
+<h3>账号作品数据接口</h3>
+<p>请求参数</p>
+
+```json
+{
+  "mark": "字符串，可选",
+  "url": "字符串，必需",
+  "mode": "字符串，可选",
+  "earliest": "字符串，可选",
+  "latest": "字符串，可选"
+}
+```
+
+<p>响应参数</p>
+
+```json
+{
+  "video": "视频作品数据，由 JSON 组成的列表",
+  "image": "图集作品数据，由 JSON 组成的列表",
+  "message": "success"
+}
+```
+
 <h2>Web UI 交互模式</h2>
 <p>提供浏览器可视化交互界面，支持 <code>单独下载链接作品功能</code> 和 <code>获取直播推流地址功能</code>，支持局域网远程访问，可以部署至私有服务器，不可直接部署至公开服务器。</p>
 <h2>服务器部署模式</h2>
@@ -556,7 +585,7 @@
 <p>请求URL：<code>/solo/</code></p>
 <p>请求类型：<code>POST</code></p>
 <p>请求格式：<code>JSON</code></p>
-<p>请求内容：</p>
+<p>请求参数：</p>
 
 ```json
 {
@@ -575,7 +604,7 @@
 <li><code>https://www.tiktok.com/@账号昵称/video/作品ID</code></li>
 </ul>
 <p>响应格式：<code>JSON</code></p>
-<p>响应内容：</p>
+<p>响应参数：</p>
 
 ```json
 {
