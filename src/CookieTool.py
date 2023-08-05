@@ -216,7 +216,7 @@ class Register:
         if not url:
             return False
         self.generate_qr_code(url)
-        if input("您是否已完成扫码登录？输入 'Y' 开始检查登录结果，输入其他任何字符放弃操作：") != "Y":
+        if input("您是否已完成扫码登录？直接回车开始检查登录结果，输入任何字符放弃操作："):
             return False
         url, cookie = self.check_register(token)
         return self.get_cookie(url, cookie) if url else False
