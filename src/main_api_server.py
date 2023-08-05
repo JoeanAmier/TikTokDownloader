@@ -23,7 +23,6 @@ class APIServer(WebUI):
     def run_server(self, app):
         @app.route('/init/', methods=['POST'])
         def init():
-            print(request.json)
             self.update_parameters(request.json)
             return {"message": "success"}
 
