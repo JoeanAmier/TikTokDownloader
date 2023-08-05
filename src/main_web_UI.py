@@ -9,6 +9,23 @@ from src.main_complete import TikTok
 
 
 class WebUI(TikTok):
+    settings_keys = (
+        "root",
+        "folder",
+        "name",
+        "time",
+        "split",
+        "music",
+        "save",
+        "cookie",
+        "dynamic",
+        "original",
+        "proxies",
+        "log",
+        "max_size",
+        "chunk",
+    )
+
     def __init__(self, colour, blacklist, xb, user_agent, code, settings):
         super().__init__(colour, blacklist, xb, user_agent, code, settings)
         self.cookie = Cookie(self.settings, colour)
@@ -33,6 +50,9 @@ class WebUI(TikTok):
 
     def update_parameters(self, parameters):
         """更新前端返回的 parameters"""
+        parameters = {
+            i: j for i,
+            j in parameters.items() if i in self.settings_keys}
         convert = {i: j == "on" or j for i, j in parameters.items()}
         settings = self.settings.read()
         self.update_settings(
