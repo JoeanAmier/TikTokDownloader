@@ -39,10 +39,17 @@ class Master:
 
     def __init__(self):
         self.colour = None
+        self.cookie = None
+        self.register = None
         self.blacklist = None
         self.user_agent, self.code = generate_user_agent()
         self.x_bogus = NewXBogus()
         self.settings = Settings()
+        self.register = Register(
+            self.settings,
+            self.x_bogus,
+            self.user_agent,
+            self.code)
 
     def version(self):
         print(
@@ -66,6 +73,7 @@ class Master:
             b := self.RECORD["path"].exists()) else "禁用"
         self.colour = Colour(not c)
         self.blacklist = DownloadRecorder(not b, "./cache")
+        self.cookie = Cookie(self.settings, self.colour)
 
     def check_update(self):
         if self.UPDATE["path"].exists():
@@ -98,7 +106,8 @@ class Master:
         """选择运行模式"""
         mode = prompt(
             "请选择 TikTokDownloader 运行模式",
-            ("写入 Cookie 信息",
+            ("复制粘贴写入 Cookie",
+             "扫码登陆写入 Cookie",
              "终端命令行模式",
              "Web API 接口模式",
              "Web UI 交互模式",
@@ -141,27 +150,34 @@ class Master:
         self.check_config()
         self.main()
 
-    def cookie(self):
-        cookie = Cookie(self.settings, self.colour)
-        cookie.run()
+    def write_cookie(self):
+        self.cookie.run()
+        self.main()
+
+    def auto_cookie(self):
+        if cookie := self.register.run():
+            print(cookie)
+            self.cookie.extract(cookie, 0)
         self.main()
 
     def compatible(self, mode: str):
         if mode == "1":
-            self.cookie()
+            self.write_cookie()
         elif mode == "2":
-            self.complete()
+            self.auto_cookie()
         elif mode == "3":
-            self.server(APIServer)
+            self.complete()
         elif mode == "4":
-            self.server(WebUI)
+            self.server(APIServer)
         elif mode == "5":
-            self.server(Server)
+            self.server(WebUI)
         elif mode == "6":
-            self.change_config(self.UPDATE["path"])
+            self.server(Server)
         elif mode == "7":
-            self.change_config(self.COLOUR["path"], "\x1b[0m修改设置成功！\x1b[0m")
+            self.change_config(self.UPDATE["path"])
         elif mode == "8":
+            self.change_config(self.COLOUR["path"], "\x1b[0m修改设置成功！\x1b[0m")
+        elif mode == "9":
             self.change_config(self.RECORD["path"])
 
     def check_settings(self):
@@ -177,14 +193,8 @@ class Master:
         self.check_update()
         if not self.check_settings():
             return
-        # self.main()
-        # self.delete_temp()
-        test = Register(
-            self.settings,
-            self.x_bogus,
-            self.user_agent,
-            self.code)
-        print(test.request())
+        self.main()
+        self.delete_temp()
 
     @staticmethod
     def delete_temp():
