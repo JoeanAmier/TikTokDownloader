@@ -97,7 +97,6 @@ class Register:
 
     def __init__(self, settings, xb, user_agent, code):
         self.xb = xb
-        self.qrcode = QRCode()
         self.settings = settings
         self.headers = {
             "User-Agent": user_agent,
@@ -142,9 +141,11 @@ class Register:
             cookie[key] = value
         return cookie
 
-    def generate_qr_code(self, url):
-        self.qrcode.add_data(url)
-        image = self.qrcode.make_image()
+    @staticmethod
+    def generate_qr_code(url):
+        qr_code = QRCode()
+        qr_code.add_data(url)
+        image = qr_code.make_image()
         image.show()
 
     def get_qr_code(self, version=23):
