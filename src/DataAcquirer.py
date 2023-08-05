@@ -1,7 +1,6 @@
 import time
 from datetime import date
 from datetime import datetime
-from random import randint
 from random import randrange
 from re import compile
 from urllib.parse import parse_qs
@@ -15,67 +14,6 @@ from src.Parameter import TtWid
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
-
-
-def generate_user_agent() -> tuple[str, tuple]:
-    user_agent = (
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.183",
-            ((86,
-              138),
-             (238,
-              238,
-              ),
-             )),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
-            ((42,
-              110),
-             (95,
-              187),
-             )),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
-            ((115,
-              235,
-              ),
-             (151,
-              95),
-             )),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188",
-            ((155,
-              54),
-             (11,
-              101))),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1788.0",
-            ((56,
-              22),
-             (77,
-              86)),
-        ),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.0.0",
-            ((116,
-              247),
-             (11,
-              146))),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; WOW64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5666.197 Safari/537.36",
-            ((244,
-              163),
-             (18,
-              102))),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
-            ((107,
-              91),
-             (236,
-              31))),
-    )
-
-    return user_agent[randint(0, len(user_agent) - 1)]
 
 
 def sleep():
@@ -228,13 +166,8 @@ class UserData:
         # self.__web = None
         self.__code = None
 
-    def initialization(self):
-        self.set_user_agent()
-        # self.__web = WebID.get_web_id(
-        #     self.headers["User-Agent"]) or "7255519029058029093"
-
-    def set_user_agent(self):
-        self.headers["User-Agent"], self.__code = generate_user_agent()
+    def initialization(self, user_agent: str, code: tuple, web: str):
+        self.headers["User-Agent"], self.__code = user_agent, code
 
     @property
     def url(self):
