@@ -20,7 +20,7 @@
 <ol>
 <li>安装不低于 <code>3.10</code> 版本的 <a href="https://www.python.org/">Python</a> 解释器</li>
 <li>下载最新源码或 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的源码至本地</li>
-<li>安装 requirements.txt 包含的第三方模块</li>
+<li>安装 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/requirements.txt">requirements.txt</a> 包含的第三方模块</li>
 <li>运行 main.py</li>
 <li>将 Cookie 信息写入配置文件
 <ol><b>手动复制粘贴</b>
