@@ -166,7 +166,7 @@ class UserData:
         # self.__web = None
         self.__code = None
 
-    def initialization(self, user_agent: str, code: tuple, web: str):
+    def initialization(self, user_agent: str, code: tuple, web=None):
         self.headers["User-Agent"], self.__code = user_agent, code
 
     @property
