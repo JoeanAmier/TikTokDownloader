@@ -212,7 +212,7 @@ class TikTok:
             url: str,
             mode: str,
             earliest: str,
-            latest: str, save, root: str, params: dict):
+            latest: str, save, root: str, params: dict, api=False):
         self.request.mark = mark
         self.request.url = url
         self.request.api = mode
@@ -227,6 +227,18 @@ class TikTok:
             self.request.uid.lstrip("UID"),
             self.request.mark,
             self.request.name)
+        if api:
+            return self.request.video_data, self.request.image_data
+        self.download_account_works(num, save, root, params, old_mark)
+        return True
+
+    def download_account_works(
+            self,
+            num,
+            save,
+            root: str,
+            params: dict,
+            old_mark):
         self.download.nickname = self.request.name
         self.download.uid = self.request.uid
         self.download.mark = self.request.mark
@@ -236,7 +248,6 @@ class TikTok:
             self.download.run(f"第 {num} 个" if num else "",
                               self.request.video_data,
                               self.request.image_data)
-        return True
 
     def single_acquisition(self):
         save, root, params = self.record.run(
