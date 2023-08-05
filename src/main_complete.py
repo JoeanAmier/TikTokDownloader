@@ -3,8 +3,6 @@ from time import time
 from src.DataAcquirer import UserData
 from src.DataDownloader import Download
 from src.FileManager import Cache
-# from src.Parameter import XBogus
-from src.Parameter import NewXBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.Recorder import RecordManager
@@ -68,15 +66,14 @@ class TikTok:
         },
     }
 
-    def __init__(self, colour, blacklist, user_agent, code, settings):
+    def __init__(self, colour, blacklist, xb, user_agent, code, settings):
         self.colour = colour
         self.logger = None
         self.request = None
         self.download = None
         self.manager = None
         self.save = False
-        # self.xb = XBogus()
-        self.xb = NewXBogus()
+        self.xb = xb
         self.record = RecordManager()
         self.settings = settings
         self.accounts = []  # 账号数据

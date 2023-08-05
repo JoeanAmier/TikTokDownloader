@@ -8,8 +8,10 @@ from requests import get
 
 from src.Configuration import Settings
 from src.CookieTool import Cookie
+from src.CookieTool import Register
 from src.FileManager import DownloadRecorder
 from src.FileManager import deal_config
+from src.Parameter import NewXBogus
 from src.Parameter import generate_user_agent
 from src.StringCleaner import Colour
 from src.main_api_server import APIServer
@@ -39,6 +41,7 @@ class Master:
         self.colour = None
         self.blacklist = None
         self.user_agent, self.code = generate_user_agent()
+        self.x_bogus = NewXBogus()
         self.settings = Settings()
 
     def version(self):
@@ -110,10 +113,10 @@ class Master:
         example = TikTok(
             self.colour,
             self.blacklist,
+            self.x_bogus,
             self.user_agent,
             self.code,
             self.settings)
-        # register(example.xb.close)
         register(self.blacklist.close)
         example.run()
 
@@ -124,11 +127,11 @@ class Master:
         master = server(
             self.colour,
             self.blacklist,
+            self.x_bogus,
             self.user_agent,
             self.code,
             self.settings)
         app = master.run_server(Flask(__name__))
-        # register(master.xb.close)
         register(self.blacklist.close)
         app.run(host="0.0.0.0", debug=False)
 
@@ -174,8 +177,14 @@ class Master:
         self.check_update()
         if not self.check_settings():
             return
-        self.main()
-        self.delete_temp()
+        # self.main()
+        # self.delete_temp()
+        test = Register(
+            self.settings,
+            self.x_bogus,
+            self.user_agent,
+            self.code)
+        print(test.request())
 
     @staticmethod
     def delete_temp():
