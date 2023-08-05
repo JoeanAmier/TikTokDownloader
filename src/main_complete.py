@@ -8,10 +8,19 @@ from src.Recorder import LoggerManager
 from src.Recorder import RecordManager
 
 
-def prompt(tip: str, choose: tuple | list, colorize, start=1) -> str:
+def prompt(
+        tip: str,
+        choose: tuple | list,
+        colorize,
+        start=1,
+        separate=None) -> str:
     screen = colorize(f"{tip}:\n", 96, bold=1)
+    row = 0
     for i, j in enumerate(choose):
         screen += colorize(f"{i + start}. {j}\n", 92, bold=1)
+        if separate and row in separate:
+            screen += colorize(f"{'=' * 25}\n", 92, bold=1)
+        row += 1
     return input(screen)
 
 
