@@ -9,8 +9,8 @@ from src.main_web_UI import WebUI
 
 
 class Server(WebUI):
-    def __init__(self, colour, blacklist, user_agent, code):
-        super().__init__(colour, blacklist, user_agent, code)
+    def __init__(self, colour, blacklist, user_agent, code, settings):
+        super().__init__(colour, blacklist, user_agent, code, settings)
 
     def initialize(
             self,

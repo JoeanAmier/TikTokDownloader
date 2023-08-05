@@ -1,6 +1,5 @@
 from time import time
 
-from src.Configuration import Settings
 from src.DataAcquirer import UserData
 from src.DataDownloader import Download
 from src.FileManager import Cache
@@ -69,7 +68,7 @@ class TikTok:
         },
     }
 
-    def __init__(self, colour, blacklist, user_agent, code):
+    def __init__(self, colour, blacklist, user_agent, code, settings):
         self.colour = colour
         self.logger = None
         self.request = None
@@ -79,7 +78,7 @@ class TikTok:
         # self.xb = XBogus()
         self.xb = NewXBogus()
         self.record = RecordManager()
-        self.settings = Settings()
+        self.settings = settings
         self.accounts = []  # 账号数据
         self.quit = False
         self._number = 0  # 账号数量

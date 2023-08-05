@@ -111,7 +111,8 @@ class Master:
             self.colour,
             self.blacklist,
             self.user_agent,
-            self.code)
+            self.code,
+            self.settings)
         # register(example.xb.close)
         register(self.blacklist.close)
         example.run()
@@ -124,7 +125,8 @@ class Master:
             self.colour,
             self.blacklist,
             self.user_agent,
-            self.code)
+            self.code,
+            self.settings)
         app = master.run_server(Flask(__name__))
         # register(master.xb.close)
         register(self.blacklist.close)
