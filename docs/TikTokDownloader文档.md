@@ -21,9 +21,18 @@
 <li>安装不低于 <code>3.10</code> 版本的 <a href="https://www.python.org/">Python</a> 解释器</li>
 <li>下载最新源码或 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的源码至本地</li>
 <li>安装 requirements.txt 包含的第三方模块</li>
-<li>首次使用本项目时，运行 main.py 生成默认配置文件</li>
+<li>运行 main.py</li>
+<li>将 Cookie 信息写入配置文件
+<ol><b>手动复制粘贴</b>
 <li>使用浏览器打开抖音网页版，复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a> 至剪贴板</li>
-<li>再次运行 main.py，选择 <code>写入 Cookie 信息</code> 模式，按照提示将 Cookie 写入配置文件</li>
+<li>选择 <code>复制粘贴写入 Cookie</code> 模式，按照提示将 Cookie 写入配置文件</li>
+</ol>
+<ol><b>扫码登录获取</b>
+<li>选择 <code>扫码登陆写入 Cookie</code> 模式，程序会弹出登录二维码图片</li>
+<li>使用抖音 APP 扫描二维码并登录账号，操作后关闭图片窗口</li>
+<li>按照提示将 Cookie 写入配置文件</li>
+</ol>
+</li>
 <li>返回程序界面，依次选择 <code>终端命令行模式</code> --> <code>单独下载链接作品</code></li>
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 </ol>
@@ -365,7 +374,7 @@
 <p>从浏览器复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a>
 至剪贴板，按照程序提示输入 Cookie 后回车确认，程序会自动提取并写入配置文件。</p>
 <h2>扫码登陆写入 Cookie</h2>
-<p>程序获取抖音登录二维码，并使用默认应用打开图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭图片，程序会自动检查登录结果并将登陆后的 Cookie 写入配置文件。</p>
+<p>程序自动获取抖音登录二维码，并使用默认应用打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片，程序会自动检查登录结果并将登陆后的 Cookie 写入配置文件。</p>
 <h2>终端命令行模式</h2>
 <p>功能最全面的模式，支持全部功能。</p>
 <h3>批量下载账号作品</h3>
