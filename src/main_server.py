@@ -9,8 +9,8 @@ from src.main_web_UI import WebUI
 
 
 class Server(WebUI):
-    def __init__(self, colour, blacklist):
-        super().__init__(colour, blacklist)
+    def __init__(self, colour, blacklist, user_agent, code):
+        super().__init__(colour, blacklist, user_agent, code)
 
     def initialize(
             self,
@@ -26,8 +26,8 @@ class Server(WebUI):
             self.xb,
             self.colour,
             self.blacklist)
-        self.request.initialization()
-        self.download.initialization()
+        self.request.initialization(self.user_agent, self.code)
+        self.download.initialization(self.user_agent, self.code)
 
     def set_parameters(self):
         self.download.cookie = self._data["cookie"]

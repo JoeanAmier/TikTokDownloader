@@ -69,7 +69,7 @@ class TikTok:
         },
     }
 
-    def __init__(self, colour, blacklist):
+    def __init__(self, colour, blacklist, user_agent, code):
         self.colour = colour
         self.logger = None
         self.request = None
@@ -87,6 +87,8 @@ class TikTok:
         self.mark = None
         self.nickname = None
         self.blacklist = blacklist
+        self.user_agent = user_agent
+        self.code = code
 
     def configuration(self, **kwargs):
         if not self.check_config():
@@ -313,8 +315,8 @@ class TikTok:
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.mark = "mark" in self._data["name"]
         self.nickname = "nickname" in self._data["name"]
-        self.request.initialization()
-        self.download.initialization()
+        self.request.initialization(self.user_agent, self.code)
+        self.download.initialization(self.user_agent, self.code)
 
     def set_parameters(self):
         self.download.root = self._data["root"]

@@ -10,6 +10,7 @@ from src.Configuration import Settings
 from src.CookieTool import Cookie
 from src.FileManager import DownloadRecorder
 from src.FileManager import deal_config
+from src.Parameter import generate_user_agent
 from src.StringCleaner import Colour
 from src.main_api_server import APIServer
 from src.main_complete import TikTok
@@ -37,6 +38,7 @@ class Master:
     def __init__(self):
         self.colour = None
         self.blacklist = None
+        self.user_agent, self.code = generate_user_agent()
 
     def version(self):
         print(
@@ -104,7 +106,11 @@ class Master:
 
     def complete(self):
         """终端命令行模式"""
-        example = TikTok(self.colour, self.blacklist)
+        example = TikTok(
+            self.colour,
+            self.blacklist,
+            self.user_agent,
+            self.code)
         # register(example.xb.close)
         register(self.blacklist.close)
         example.run()
@@ -113,7 +119,11 @@ class Master:
         """
         服务器模式
         """
-        master = server(self.colour, self.blacklist)
+        master = server(
+            self.colour,
+            self.blacklist,
+            self.user_agent,
+            self.code)
         app = master.run_server(Flask(__name__))
         # register(master.xb.close)
         register(self.blacklist.close)
