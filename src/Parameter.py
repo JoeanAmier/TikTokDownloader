@@ -1,5 +1,6 @@
 from hashlib import md5
 from random import randint
+from random import random
 from string import ascii_letters
 from string import digits
 from time import time
@@ -309,21 +310,52 @@ class WebID:
             return None
 
 
+class VerifyFp:
+    """代码参考: https://github.com/Johnserf-Seed/TikTokDownload/blob/main/Util/Cookies.py"""
+
+    @staticmethod
+    def get_verify_fp():
+        e = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        t = len(e)
+        milliseconds = int(round(time() * 1000))
+        base36 = ''
+        while milliseconds > 0:
+            remainder = milliseconds % 36
+            if remainder < 10:
+                base36 = str(remainder) + base36
+            else:
+                base36 = chr(ord('a') + remainder - 10) + base36
+            milliseconds //= 36
+        r = base36
+        o = [''] * 36
+        o[8] = o[13] = o[18] = o[23] = '_'
+        o[14] = '4'
+
+        for i in range(36):
+            if not o[i]:
+                n = 0 or int(random() * t)
+                if i == 19:
+                    n = 3 & n | 8
+                o[i] = e[n]
+        return f"verify_{r}_" + ''.join(o)
+
+
 if __name__ == "__main__":
-    params = {
-        "device_platform": "webapp",
-        "aid": "6383",
-        "channel": "channel_pc_web",
-        "pc_client_type": "1",
-    }
+    # params = {
+    #     "device_platform": "webapp",
+    #     "aid": "6383",
+    #     "channel": "channel_pc_web",
+    #     "pc_client_type": "1",
+    # }
     # example = XBogus("../static/js/X-Bogus.js")
     # print("X-Bogus", example.get_x_bogus(params, HEADERS["User-Agent"]))
     # example.close()
-    print(MsToken.get_ms_token())
-    print(TtWid.get_tt_wid())
-    print("webid", WebID.get_web_id(HEADERS["User-Agent"]))
-    print(NewXBogus().get_x_bogus(params, ((86,
-                                            138),
-                                           (238,
-                                            238,
-                                            )), 23))
+    # print(MsToken.get_ms_token())
+    # print(TtWid.get_tt_wid())
+    # print("webid", WebID.get_web_id(HEADERS["User-Agent"]))
+    # print(NewXBogus().get_x_bogus(params, ((86,
+    #                                         138),
+    #                                        (238,
+    #                                         238,
+    #                                         )), 23))
+    print(VerifyFp.get_verify_fp())
