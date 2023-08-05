@@ -7,7 +7,6 @@ from shutil import move
 import requests
 
 from src.DataAcquirer import check_cookie
-from src.DataAcquirer import generate_user_agent
 from src.DataAcquirer import retry
 from src.DataAcquirer import sleep
 from src.Recorder import BaseLogger
@@ -86,11 +85,8 @@ class Download:
         self._blacklist = blacklist
         self._id_set = self._blacklist.get_set()
 
-    def initialization(self):
-        self.set_user_agent()
-
-    def set_user_agent(self):
-        self.PC_UA["User-Agent"], self.__code = generate_user_agent()
+    def initialization(self, user_agent: str, code: tuple):
+        self.PC_UA["User-Agent"], self.__code = user_agent, code
 
     @property
     def max_size(self):
