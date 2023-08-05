@@ -56,7 +56,7 @@ class APIServer(WebUI):
                 mark=self.mark,
                 name=self.nickname)
             self.add_params(params)
-            video, image = self.account_download(**params)
+            video, image = self.get_account_works(**params)
             return {
                 "video": video,
                 "image": image,

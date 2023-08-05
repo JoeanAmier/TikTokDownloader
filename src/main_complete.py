@@ -170,7 +170,7 @@ class TikTok:
     def user_works_batch(self, save, root, params):
         self.logger.info(f"共有 {self._number} 个账号的作品等待下载")
         for index in range(self._number):
-            if not self.account_download(
+            if not self.get_account_works(
                     index + 1,
                     *self.accounts[index],
                     save,
@@ -191,7 +191,7 @@ class TikTok:
                 break
             links = self.request.run_alone(url, user=True)
             for i in links:
-                if not self.account_download(
+                if not self.get_account_works(
                         0,
                         "",
                         i,
@@ -205,7 +205,7 @@ class TikTok:
                         continue
                     break
 
-    def account_download(
+    def get_account_works(
             self,
             num: int,
             mark: str,
