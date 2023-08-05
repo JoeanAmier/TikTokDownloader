@@ -160,8 +160,9 @@ class Master:
 
     def auto_cookie(self):
         if cookie := self.register.run():
-            print(cookie)
             self.cookie.extract(cookie, 0)
+        else:
+            print("扫码登陆失败，未写入 Cookie！")
         self.main()
 
     def compatible(self, mode: str):
@@ -186,17 +187,13 @@ class Master:
 
     def check_settings(self):
         if not Path("./settings.json").exists():
-            print("未检测到 settings.json 配置文件！")
             self.settings.create()
-            return False
-        return True
 
     def run(self):
         self.check_config()
         self.version()
         self.check_update()
-        if not self.check_settings():
-            return
+        self.check_settings()
         self.main()
         self.delete_temp()
 
