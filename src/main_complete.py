@@ -212,7 +212,7 @@ class TikTok:
             url: str,
             mode: str,
             earliest: str,
-            latest: str, save, root: str, params: dict, api=False):
+            latest: str, save, root: str, params: dict):
         self.request.mark = mark
         self.request.url = url
         self.request.api = mode
@@ -227,8 +227,6 @@ class TikTok:
             self.request.uid.lstrip("UID"),
             self.request.mark,
             self.request.name)
-        if api:
-            return self.request.video_data, self.request.image_data
         self.download_account_works(num, save, root, params, old_mark)
         return True
 
