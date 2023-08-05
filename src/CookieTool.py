@@ -40,6 +40,8 @@ class Cookie:
             "sessionid_ss": None,
             "sid_ucp_v1": None,
             "ssid_ucp_v1": None,
+            "csrf_session_id": None,
+            "odin_tt": None,
         }
         matches = finditer(self.pattern, cookie)
         for match in matches:
