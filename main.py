@@ -39,6 +39,7 @@ class Master:
         self.colour = None
         self.blacklist = None
         self.user_agent, self.code = generate_user_agent()
+        self.settings = Settings()
 
     def version(self):
         print(
@@ -136,7 +137,7 @@ class Master:
         self.main()
 
     def cookie(self):
-        cookie = Cookie(Settings(), self.colour)
+        cookie = Cookie(self.settings, self.colour)
         cookie.run()
         self.main()
 
@@ -158,11 +159,10 @@ class Master:
         elif mode == "8":
             self.change_config(self.RECORD["path"])
 
-    @staticmethod
-    def check_settings():
+    def check_settings(self):
         if not Path("./settings.json").exists():
             print("未检测到 settings.json 配置文件！")
-            Settings().create()
+            self.settings.create()
             return False
         return True
 
