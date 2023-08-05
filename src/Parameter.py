@@ -10,9 +10,66 @@ from urllib.parse import urlencode
 from requests import exceptions
 from requests import post
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
-}
+
+def generate_user_agent() -> tuple[str, tuple]:
+    user_agent = (
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.183",
+            ((86,
+              138),
+             (238,
+              238,
+              ),
+             )),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
+            ((42,
+              110),
+             (95,
+              187),
+             )),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
+            ((115,
+              235,
+              ),
+             (151,
+              95),
+             )),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188",
+            ((155,
+              54),
+             (11,
+              101))),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1788.0",
+            ((56,
+              22),
+             (77,
+              86)),
+        ),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.0.0",
+            ((116,
+              247),
+             (11,
+              146))),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; WOW64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5666.197 Safari/537.36",
+            ((244,
+              163),
+             (18,
+              102))),
+        (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+            ((107,
+              91),
+             (236,
+              31))),
+    )
+
+    return user_agent[randint(0, len(user_agent) - 1)]
 
 
 def run_time(function):
@@ -282,10 +339,13 @@ class TtWid:
                     print("提取 ttwid 参数失败！")
                     return None
 
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188",
+        }
         api = "https://ttwid.bytedance.com/ttwid/union/register/"
         data = '{"region":"cn","aid":1768,"needFid":false,"service":"www.ixigua.com","migrate_info":{"ticket":"","source":"node"},"cbUrlProtocol":"https","union":true}'
         try:
-            response = post(api, data=data, headers=HEADERS, timeout=10)
+            response = post(api, data=data, headers=headers, timeout=10)
         except (exceptions.ReadTimeout, exceptions.ConnectionError):
             print("获取 ttwid 参数失败！")
             return None
@@ -295,8 +355,7 @@ class TtWid:
 class WebID:
     @staticmethod
     def get_web_id(ua: str) -> str | None:
-        headers = HEADERS
-        headers["User-Agent"] = ua
+        headers = {"User-Agent": ua}
         url = "https://mcs.zijieapi.com/webid"
         data = f'{{"app_id":6383,"url":"https://www.douyin.com/","user_agent":"{ua}","referer":"https://www.douyin.com/","user_unique_id":""}}'
         try:
@@ -352,7 +411,8 @@ if __name__ == "__main__":
     # example.close()
     # print(MsToken.get_ms_token())
     # print(TtWid.get_tt_wid())
-    # print("webid", WebID.get_web_id(HEADERS["User-Agent"]))
+    # print("webid", WebID.get_web_id(
+    #     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188"))
     # print(NewXBogus().get_x_bogus(params, ((86,
     #                                         138),
     #                                        (238,
