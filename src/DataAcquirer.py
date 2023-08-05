@@ -18,7 +18,7 @@ from src.StringCleaner import Cleaner
 
 def sleep():
     """避免频繁请求"""
-    time.sleep(randrange(20, 60, 5) * 0.1)
+    time.sleep(randrange(15, 45, 5) * 0.1)
 
 
 def reset(function):
