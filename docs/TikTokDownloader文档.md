@@ -489,6 +489,7 @@
 <li>响应格式：<code>JSON</code></li>
 </ul>
 <h3>账号作品数据接口</h3>
+<p>请求接口：<code>/account/</code></p>
 <p>请求参数</p>
 
 ```json
