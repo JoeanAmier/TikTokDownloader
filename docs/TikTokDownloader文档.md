@@ -148,7 +148,7 @@
 <tr>
 <td align="center">url</td>
 <td align="center">str</td>
-<td align="center">账号主页/合集作品链接, 批量下载时使用, <strong>属于 accounts 和 mix 子参数</strong></td>
+<td align="center">账号主页/合集作品链接, 批量下载时使用<br><strong>属于 accounts 和 mix 子参数</strong></td>
 </tr>
 <tr>
 <td align="center">mode</td>
@@ -529,6 +529,8 @@
   "proxies": "可选参数",
   "log": "可选参数",
   "max_size": "可选参数",
+  "retry": "可选参数",
+  "pages": "可选参数",
   "chunk": "可选参数"
 }
 ```
