@@ -5,6 +5,7 @@ from pathlib import Path
 from shutil import move
 
 import requests
+from emoji import replace_emoji
 
 from src.DataAcquirer import check_cookie
 from src.DataAcquirer import retry
@@ -550,7 +551,7 @@ class Download:
             if not self.check_blacklist(item[0]):
                 continue
             for index, image in enumerate(item[6]):
-                name = self.get_name(item)
+                name = replace_emoji(self.get_name(item))
                 self.request_file(
                     image,
                     root,
@@ -566,7 +567,7 @@ class Download:
         for item in self.video_data:
             if not self.check_blacklist(item[0]):
                 continue
-            name = self.get_name(item)
+            name = replace_emoji(self.get_name(item))
             self.request_file(
                 item[6],
                 root,
