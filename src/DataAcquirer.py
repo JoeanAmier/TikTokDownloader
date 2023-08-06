@@ -28,6 +28,7 @@ def reset(function):
         if not isinstance(self.url, bool):
             self.id_ = None
         self.comment = []
+        self.comment_data = []
         self.reply = []
         self.mix_total = []
         self.mix_data = []
@@ -140,6 +141,7 @@ class UserData:
         self._cookie = {}  # Cookie，通用
         self.id_ = None  # sec_uid or item_ids
         self.comment = []  # 评论数据
+        self.comment_data = []
         self.cursor = 0  # 最早创建日期，时间戳
         self.reply = []  # 评论回复的ID列表
         self.mix_total = []  # 合集作品数据
@@ -708,20 +710,20 @@ class UserData:
 
     @reset
     @check_cookie
-    def run_comment(self, id_: str, data):
+    def run_comment(self, id_: str, data, api=False):
         self.data = data
         self.log.info("开始获取评论数据")
         while not self.finish:
             print(self.colour.colorize("获取数据中...", 94))
             self.get_comment(id_=id_, api=self.comment_api)
-            self.deal_comment()
+            self.deal_comment(api)
         for item in self.reply:
             self.finish = False
             self.cursor = 0
             while not self.finish:
                 print(self.colour.colorize("获取数据中...", 94))
                 self.get_comment(id_=id_, api=self.reply_api, reply=item)
-                self.deal_comment()
+                self.deal_comment(api)
         self.log.info("评论数据获取结束")
 
     @retry(finish=True)
@@ -781,7 +783,7 @@ class UserData:
         nickname = data.get("nickname") or "已注销账号"
         return uid, sec_uid, short_id, unique_id, user_age, signature, nickname
 
-    def deal_comment(self):
+    def deal_comment(self, api: bool):
         if not self.comment:
             return
         for item in self.comment:
@@ -829,6 +831,8 @@ class UserData:
                 reply_id]
             self.log.info("评论: " + ", ".join(result), False)
             self.data.save(result)
+            if api:
+                self.comment_data.append(result)
 
     @reset
     @check_cookie
