@@ -22,6 +22,7 @@ class WebUI(TikTok):
         "original",
         "proxies",
         "log",
+        "retry",
         "max_size",
         "chunk",
         "pages",
