@@ -33,7 +33,26 @@ class APIServer(WebUI):
             "直播封面",
             "观看次数",
             "在线观众",
-        )
+        ),
+        17: (
+            "采集时间",
+            "评论ID",
+            "评论时间",
+            "账号UID",
+            "SEC_UID",
+            "SHORT_ID",
+            "抖音号",
+            "账号昵称",
+            "账号签名",
+            "年龄",
+            "IP归属地",
+            "评论内容",
+            "评论表情",
+            "评论图片",
+            "点赞数量",
+            "回复数量",
+            "回复ID",
+        ),
     }
 
     def __init__(self, colour, blacklist, xb, user_agent, code, settings):
@@ -51,9 +70,9 @@ class APIServer(WebUI):
             self.cookie.extract(c, 0)
         self.configuration(filename=self.filename)
 
-    def add_params(self, params=None):
+    def add_params(self, params=None, **kwargs):
         save, root, params_ = self.record.run(
-            self._data["root"], format_=self._data["save"])
+            self._data["root"], format_=self._data["save"], **kwargs)
         if not params:
             return save, root, params_
         params["save"] = save
@@ -144,6 +163,18 @@ class APIServer(WebUI):
             self.request.headers['Referer'] = "https://www.douyin.com/"
             return {
                 "live": self.format_data(data),
+                "message": "success",
+            }
+
+        @app.route('/comment/', methods=['POST'])
+        def comment():
+            if isinstance(url := self.check_url(request.json), dict):
+                return url
+            save, root, params = self.add_params(type_="comment")
+            with save(root, name=f"作品{url}_评论数据", **params) as data:
+                self.request.run_comment(url, data, True)
+            return {
+                "comment": self.format_data(self.request.comment_data),
                 "message": "success",
             }
 
