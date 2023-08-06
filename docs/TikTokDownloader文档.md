@@ -494,6 +494,38 @@
 <li>请求格式：<code>JSON</code></li>
 <li>响应格式：<code>JSON</code></li>
 </ul>
+<h3>配置文件修改接口</h3>
+<p>修改 <code>settings.json</code> 配置文件；无需发送全部参数，仅发送想要修改的参数；参数格式与配置文件格式保持一致。</p>
+<p>请求接口：<code>/init/</code></p>
+<p>请求参数</p>
+
+```json
+{
+  "root": "可选参数",
+  "folder": "可选参数",
+  "name": "可选参数",
+  "time": "可选参数",
+  "split": "可选参数",
+  "music": "可选参数",
+  "save": "可选参数",
+  "cookie": "可选参数",
+  "dynamic": "可选参数",
+  "original": "可选参数",
+  "proxies": "可选参数",
+  "log": "可选参数",
+  "max_size": "可选参数",
+  "chunk": "可选参数"
+}
+```
+
+<p>响应参数</p>
+
+```json
+{
+  "message": "success"
+}
+```
+
 <h3>账号作品数据接口</h3>
 <p>返回账号发布页或者喜欢页的作品数据</p>
 <p>请求接口：<code>/account/</code></p>
