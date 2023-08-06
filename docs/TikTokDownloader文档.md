@@ -256,6 +256,11 @@
 <td align="center">发送请求获取数据发生异常时重试的最大次数<br>设置为 <code>0</code> 代表关闭重试, 默认值: <code>10</code></td>
 </tr>
 <tr>
+<td align="center">pages</td>
+<td align="center">int</td>
+<td align="center">批量下载账号发布页或者喜欢页作品，以及采集作品评论数据时，请求数据的最大次数，默认值: <code>0</code> 代表不限制</td>
+</tr>
+<tr>
 <td align="center">thread</td>
 <td align="center">bool</td>
 <td align="center">是否启用多线程下载作品文件，默认值: <code>false</code></td>
