@@ -24,6 +24,7 @@ class WebUI(TikTok):
         "log",
         "max_size",
         "chunk",
+        "pages",
     )
 
     def __init__(self, colour, blacklist, xb, user_agent, code, settings):
