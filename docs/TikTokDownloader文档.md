@@ -316,6 +316,7 @@
   "max_size": 10485760,
   "chunk": 1048576,
   "retry": 20,
+  "pages": 2,
   "thread": true
 }
 ```
@@ -380,6 +381,14 @@
 <li>影响下载速度：较大的 chunk 会增加每次下载的数据量，从而提高下载速度。相反，较小的 chunk 会降低每次下载的数据量，可能导致下载速度稍慢。</li>
 <li>影响内存占用：较大的 chunk 会一次性加载更多的数据到内存中，可能导致内存占用增加。相反，较小的 chunk 会减少每次加载的数据量，从而降低内存占用。</li>
 </ul>
+
+```json
+{
+  "pages": 2
+}
+```
+
+<p>代表批量下载账号发布页或者喜欢页作品，以及采集作品评论数据时，仅获取前 <code>2</code> 页数据；用于解决批量下载账号喜欢页作品需要获取全部数据的问题，以及作品评论数量过多的问题。</p>
 <h1>功能介绍</h1>
 <h2>复制粘贴写入 Cookie</h2>
 <p>从浏览器复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a>
