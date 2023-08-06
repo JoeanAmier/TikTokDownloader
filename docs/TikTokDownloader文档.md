@@ -148,7 +148,7 @@
 <tr>
 <td align="center">url</td>
 <td align="center">str</td>
-<td align="center">账号主页链接, 批量下载时使用(非视频/图集链接), <strong>属于 accounts 子参数</strong></td>
+<td align="center">账号主页/合集作品链接, 批量下载时使用, <strong>属于 accounts 和 mix 子参数</strong></td>
 </tr>
 <tr>
 <td align="center">mode</td>
@@ -258,7 +258,7 @@
 <tr>
 <td align="center">pages</td>
 <td align="center">int</td>
-<td align="center">批量下载账号发布页或者喜欢页作品，以及采集作品评论数据时，请求数据的最大次数，默认值: <code>0</code> 代表不限制</td>
+<td align="center">批量下载账号发布页或者喜欢页作品，以及采集作品评论数据时<br>请求数据的最大次数，默认值: <code>0</code> 代表不限制</td>
 </tr>
 <tr>
 <td align="center">thread</td>
