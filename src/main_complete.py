@@ -280,7 +280,7 @@ class TikTok:
             keys = list(items.keys())
             return items[keys[choice]]
 
-        self.request.headers['referer'] = "https://live.douyin.com"
+        self.request.headers['Referer'] = "https://live.douyin.com"
         print(
             self.colour.colorize(
                 "如果设置了已登录的 Cookie，获取直播数据时将会导致正在观看的直播中断，刷新即可恢复！",
