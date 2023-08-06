@@ -488,6 +488,7 @@
 <p>储存名称格式：<code>HOT_时间戳_热榜名称</code></p>
 <h2>Web API 接口模式</h2>
 <p>启动服务器，提供 API 调用服务，可以部署至私有服务器。</p>
+<p>未进行高并发测试，可能存在问题！</p>
 <p><strong>API 接口通用说明：</strong></p>
 <ul>
 <li>请求类型：<code>POST</code></li>
