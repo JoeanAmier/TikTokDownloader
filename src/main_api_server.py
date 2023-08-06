@@ -64,8 +64,8 @@ class APIServer(WebUI):
             self.update_parameters(request.json)
             return {"message": "success"}
 
-        @app.route('/user/', methods=['POST'])
-        def user():
+        @app.route('/account/', methods=['POST'])
+        def account():
             url = request.json.get('url')
             url = self.request.run_alone(url, solo=True, user=True)
             if not url:
@@ -92,5 +92,9 @@ class APIServer(WebUI):
                 "image": self.format_data(self.download.image_data, "Image"),
                 "message": "success",
             }
+
+        @app.route('/detail/', methods=['POST'])
+        def detail():
+            return {}
 
         return app
