@@ -487,7 +487,7 @@
 <p>采集 <code>热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>save</code> 参数才能正常使用。</p>
 <p>储存名称格式：<code>HOT_时间戳_热榜名称</code></p>
 <h2>Web API 接口模式</h2>
-<p>提供 API 调用功能，发送请求获取数据，不支持单次发送多个链接，如果发送多个链接，仅首个链接生效；可部署至私有服务器。</p>
+<p>启动服务器，提供 API 调用服务，可以部署至私有服务器。</p>
 <p><strong>API 接口通用说明：</strong></p>
 <ul>
 <li>请求类型：<code>POST</code></li>
