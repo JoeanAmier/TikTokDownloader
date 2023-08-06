@@ -87,7 +87,7 @@ class APIServer(WebUI):
                 return url
             params = {
                 "num": 0,
-                "mark": request.json.get('mark', ""),
+                "mark": "",
                 "url": url,
                 "mode": request.json.get('mode', "post"),
                 "earliest": request.json.get('earliest', ""),
