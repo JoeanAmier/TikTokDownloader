@@ -26,6 +26,14 @@ class APIServer(WebUI):
             "账号标识",
             "下载链接",
             "原声信息"),
+        6: (
+            "主播昵称",
+            "直播标题",
+            "推流地址",
+            "直播封面",
+            "观看次数",
+            "在线观众",
+        )
     }
 
     def __init__(self, colour, blacklist, xb, user_agent, code, settings):
@@ -122,6 +130,20 @@ class APIServer(WebUI):
                 return self.request_failed()
             return {
                 "detail": self.format_data(data),
+                "message": "success",
+            }
+
+        @app.route('/live/', methods=['POST'])
+        def live():
+            self.request.headers['Referer'] = "https://live.douyin.com"
+            if not (
+                    data := self.request.run_live(
+                        request.json.get('url'),
+                        True)):
+                return self.request_failed()
+            self.request.headers['Referer'] = "https://www.douyin.com/"
+            return {
+                "live": self.format_data(data),
                 "message": "success",
             }
 
