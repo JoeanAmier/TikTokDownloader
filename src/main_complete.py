@@ -145,6 +145,7 @@ class TikTok:
              "original",
              "proxies",
              "download",
+             "thread",
              ))
         self.save = bool(self._data["save"])
         print("读取配置文件成功！")
@@ -324,7 +325,8 @@ class TikTok:
             None,
             self.xb,
             self.colour,
-            self.blacklist)
+            self.blacklist,
+            self._data["thread"])
         self.request.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
         self.mark = "mark" in self._data["name"]

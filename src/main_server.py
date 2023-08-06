@@ -25,7 +25,8 @@ class Server(WebUI):
             None,
             self.xb,
             self.colour,
-            self.blacklist)
+            self.blacklist,
+            False)
         self.request.initialization(self.user_agent, self.code)
         self.download.initialization(self.user_agent, self.code)
 

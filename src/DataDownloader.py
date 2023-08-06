@@ -1,4 +1,5 @@
 import time
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from itertools import cycle
 from pathlib import Path
@@ -51,7 +52,8 @@ class Download:
             save,
             xb,
             colour,
-            blacklist):
+            blacklist,
+            thread_: bool, ):
         self.colour = colour
         self.headers = {}  # 请求头，通用
         self.log = log  # 日志记录模块，通用
@@ -82,7 +84,8 @@ class Download:
         self.retry = 10  # 重试最大次数，通用
         self.tiktok = False  # TikTok 平台
         self.xb = xb
-        self.__pool = None
+        self.__pool = ThreadPoolExecutor if thread_ else FakeThreadPool
+        self.__thread = None
         self._chunk = None  # 每次从服务器接收的数据块大小
         self.__code = None
         self._blacklist = blacklist
@@ -554,7 +557,8 @@ class Download:
                 continue
             for index, image in enumerate(item[6]):
                 name = replace_emoji(self.get_name(item))
-                self.request_file(
+                self.__thread.submit(
+                    self.request_file,
                     image,
                     root,
                     f"{name}_{index + 1}",
@@ -570,7 +574,8 @@ class Download:
             if not self.check_blacklist(item[0]):
                 continue
             name = replace_emoji(self.get_name(item))
-            self.request_file(
+            self.__thread.submit(
+                self.request_file,
                 item[6],
                 root,
                 name,
@@ -583,17 +588,20 @@ class Download:
     def download_music(self, root, item: list):
         """下载音乐"""
         if self.music and (u := item[7][1]):
-            self.request_file(u, root, self.clean.filter(
-                f"{f'{item[0]}-{item[7][0]}'}"), type_="mp3")
+            self.__thread.submit(
+                self.request_file, u, root, self.clean.filter(
+                    f"{f'{item[0]}-{item[7][0]}'}"), type_="mp3")
 
     def download_cover(self, root, name: str, item: list):
         """下载静态/动态封面图"""
         if not self.dynamic and not self.original:
             return
         if self.dynamic and (u := item[9]):
-            self.request_file(u, root, name, type_="webp")
+            self.__thread.submit(
+                self.request_file, u, root, name, type_="webp")
         if self.original and (u := item[8]):
-            self.request_file(u, root, name, type_="jpeg")
+            self.__thread.submit(
+                self.request_file, u, root, name, type_="jpeg")
 
     def save_file(
             self,
@@ -611,6 +619,8 @@ class Download:
             self.log.info(f"文件: {name} 已删除")
 
         def stop_bar():
+            if self.__pool != FakeThreadPool:
+                return
             if not size:
                 progress_bar.update(0, True)
             print()
@@ -619,8 +629,11 @@ class Download:
         try:
             self.log.info(f"{file} 开始下载")
             progress_bar = ProgressBar(
-                size, colorize=self.colour.colorize) if size > 0 else LoopingBar(
-                colorize=self.colour.colorize)
+                size,
+                colorize=self.colour.colorize,
+                solo=self.__pool == FakeThreadPool) if size > 0 else LoopingBar(
+                colorize=self.colour.colorize,
+                solo=self.__pool == FakeThreadPool)
             with temp_path.open("wb") as f:
                 for chunk in data.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
@@ -663,10 +676,11 @@ class Download:
         self.log.info(f"获取{tip}账号的作品数据成功")
         if not self.download:
             return
-        self.log.info(f"开始下载{tip}账号的视频/图集")
-        self.download_video()
-        self.download_images()
-        self.log.info(f"{tip}账号的视频/图集下载结束")
+        with self.__pool(max_workers=8) as self.__thread:
+            self.log.info(f"开始下载{tip}账号的视频/图集")
+            self.download_video()
+            self.download_images()
+            self.log.info(f"{tip}账号的视频/图集下载结束")
         self.summary(tip)
 
     @reset
@@ -685,16 +699,17 @@ class Download:
         self.nickname = self.clean.filter(data["author"]["nickname"])
         self.mark = self.nickname
         self.get_info([data])
-        if data.get("images") or data.get("image_post_info"):
-            if not download:
-                return self.image_data
-            self.download_images()
-            return self.image_data[0][6][0]
-        else:
-            if not download:
-                return self.video_data
-            self.download_video()
-            return self.video_data[0][8]
+        with self.__pool(max_workers=8) as self.__thread:
+            if data.get("images") or data.get("image_post_info"):
+                if not download:
+                    return self.image_data
+                self.download_images()
+                return self.image_data[0][6][0]
+            else:
+                if not download:
+                    return self.video_data
+                self.download_video()
+                return self.video_data[0][8]
 
     def download_live(self, link: str, name: str):
         """下载直播，不需要Cookie信息"""
@@ -713,6 +728,21 @@ class Download:
         self.download_video()
         self.download_images()
         self.log.info(f"{self.nickname} 的合集下载结束")
+
+
+class FakeThreadPool:
+    def __init__(self, *args, **kwargs):
+        pass
+
+    @staticmethod
+    def submit(function, *args, **kwargs):
+        function(*args, **kwargs)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        pass
 
 
 class NoneBar:
@@ -847,3 +877,5 @@ if __name__ == "__main__":
     sleep()
     demo.stop()
     print("运行结束！")
+    a = FakeThreadPool
+    print(a == FakeThreadPool)
