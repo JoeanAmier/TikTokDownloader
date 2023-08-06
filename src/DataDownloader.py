@@ -3,6 +3,7 @@ from datetime import datetime
 from itertools import cycle
 from pathlib import Path
 from shutil import move
+from threading import Thread
 
 import requests
 from emoji import replace_emoji
@@ -81,6 +82,7 @@ class Download:
         self.retry = 10  # 重试最大次数，通用
         self.tiktok = False  # TikTok 平台
         self.xb = xb
+        self.__pool = None
         self._chunk = None  # 每次从服务器接收的数据块大小
         self.__code = None
         self._blacklist = blacklist
@@ -737,9 +739,11 @@ class ProgressBar(NoneBar):
             colorize=None,
             length=10,
             fill='█',
+            solo=True,
             *args,
             **kwargs):
         super().__init__(*args, **kwargs)
+        self.params = {"end": "", "flush": True} if solo else {}
         self.colorize = colorize or self.direct
         self.text = text
         self.total = total
@@ -760,8 +764,7 @@ class ProgressBar(NoneBar):
             self.colorize(
                 f'\r{self.text}下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.downloaded_size):.2f} MB / {self.bytes_to_mb(self.total):.2f} MB',
                 95),
-            end='',
-            flush=True)
+            **self.params)
 
 
 class LoopingBar(NoneBar):
@@ -777,9 +780,11 @@ class LoopingBar(NoneBar):
                          '⢿',
                          '⣻',
                          '⣽'),
+                 solo=True,
                  *args,
                  **kwargs):
         super().__init__(*args, **kwargs)
+        self.params = {"end": "", "flush": True} if solo else {}
         self.colorize = colorize or self.direct
         self.text = text
         self.spin_chars = cycle(animation)
@@ -795,8 +800,7 @@ class LoopingBar(NoneBar):
             self.colorize(
                 f"\r{self.text}{'下载完成' if finished else '正在下载'}: {'✔️' if finished else spin_char} - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.download_size):.2f} MB",
                 95),
-            end='',
-            flush=True)
+            **self.params)
 
 
 class LoadingAnimation:
@@ -833,3 +837,13 @@ class LoadingAnimation:
 
     def stop(self):
         self.running = False
+        print()
+
+
+if __name__ == "__main__":
+    demo = LoadingAnimation()
+    thread = Thread(target=demo.run)
+    thread.start()
+    sleep()
+    demo.stop()
+    print("运行结束！")
