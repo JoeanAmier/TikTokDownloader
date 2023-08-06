@@ -203,7 +203,7 @@
 <tr>
 <td align="center">music</td>
 <td align="center">bool</td>
-<td align="center">是否下载作品音乐, 默认值: <code>False</code></td>
+<td align="center">是否下载作品音乐, 默认值: <code>false</code></td>
 </tr>
 <tr>
 <td align="center">save</td>
@@ -218,12 +218,12 @@
 <tr>
 <td align="center">dynamic</td>
 <td align="center">bool</td>
-<td align="center">是否下载动态封面图, 默认值: <code>False</code></td>
+<td align="center">是否下载动态封面图, 默认值: <code>false</code></td>
 </tr>
 <tr>
 <td align="center">original</td>
 <td align="center">bool</td>
-<td align="center">是否下载静态封面图, 默认值: <code>False</code></td>
+<td align="center">是否下载静态封面图, 默认值: <code>false</code></td>
 </tr>
 <tr>
 <td align="center">proxies</td>
@@ -233,12 +233,12 @@
 <tr>
 <td align="center">log</td>
 <td align="center">bool</td>
-<td align="center">是否记录运行日志, 默认值: <code>False</code></td>
+<td align="center">是否记录运行日志, 默认值: <code>false</code></td>
 </tr>
 <tr>
 <td align="center">download</td>
 <td align="center">bool</td>
-<td align="center">是否打开下载功能, 如果关闭, 程序将不会下载任何文件; 默认值: <code>True</code></td>
+<td align="center">是否打开下载功能, 如果关闭, 程序将不会下载任何文件; 默认值: <code>true</code></td>
 </tr>
 <tr>
 <td align="center">max_size</td>
@@ -254,6 +254,11 @@
 <td align="center">retry</td>
 <td align="center">int</td>
 <td align="center">发送请求获取数据发生异常时重试的最大次数<br>设置为 <code>0</code> 代表关闭重试, 默认值: <code>10</code></td>
+</tr>
+<tr>
+<td align="center">thread</td>
+<td align="center">bool</td>
+<td align="center">是否启用多线程下载作品文件，默认值: <code>false</code></td>
 </tr>
 </tbody></table>
 <h2>配置示例</h2>
@@ -305,7 +310,8 @@
   "download": true,
   "max_size": 10485760,
   "chunk": 1048576,
-  "retry": 20
+  "retry": 20,
+  "thread": true
 }
 ```
 
