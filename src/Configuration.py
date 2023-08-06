@@ -32,6 +32,7 @@ class Settings:
             "max_size": 0,
             "chunk": 512 * 1024,  # 每次从服务器接收的数据块大小
             "retry": 10,  # 重试最大次数
+            "pages": 0,
             "thread": False,
         }  # 默认配置
 

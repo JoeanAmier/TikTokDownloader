@@ -146,6 +146,7 @@ class TikTok:
              "proxies",
              "download",
              "thread",
+             "pages",
              ))
         self.save = bool(self._data["save"])
         print("读取配置文件成功！")
