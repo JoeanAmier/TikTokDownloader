@@ -6,7 +6,7 @@ from src.main_web_UI import WebUI
 
 class APIServer(WebUI):
     works_keys = {
-        "Video": (
+        10: (
             "作品ID",
             "作品描述",
             "发布时间",
@@ -17,7 +17,7 @@ class APIServer(WebUI):
             "原声信息",
             "静态封面图",
             "动态封面图"),
-        "Image": (
+        8: (
             "作品ID",
             "作品描述",
             "发布时间",
@@ -43,20 +43,33 @@ class APIServer(WebUI):
             self.cookie.extract(c, 0)
         self.configuration(filename=self.filename)
 
-    def add_params(self, params):
+    def add_params(self, params=None):
         save, root, params_ = self.record.run(
             self._data["root"], format_=self._data["save"])
+        if not params:
+            return save, root, params_
         params["save"] = save
         params["root"] = root
         params["params"] = params_
 
-    def format_data(self, data: list, type_: str):
+    def format_data(self, data: list):
         result = []
-        keys = self.works_keys[type_]
+        keys = self.works_keys[len(data[0])]
         for item in data:
             dict_ = {keys[i]: j for i, j in enumerate(item)}
             result.append(dict_)
         return result
+
+    def check_url(self, data: dict, **kwargs):
+        url = data.get('url')
+        url = self.request.run_alone(url, solo=True, **kwargs)
+        return url[0] if url else {"message": "url error"}
+
+    @staticmethod
+    def request_failed():
+        return {
+            "message": "request failed",
+        }
 
     def run_server(self, app):
         @app.route('/init/', methods=['POST'])
@@ -66,14 +79,16 @@ class APIServer(WebUI):
 
         @app.route('/account/', methods=['POST'])
         def account():
-            url = request.json.get('url')
-            url = self.request.run_alone(url, solo=True, user=True)
-            if not url:
-                return {"message": "link error"}
+            if isinstance(
+                    url := self.check_url(
+                        request.json,
+                        user=True),
+                    dict):
+                return url
             params = {
                 "num": 0,
                 "mark": request.json.get('mark', ""),
-                "url": url[0],
+                "url": url,
                 "mode": request.json.get('mode', "post"),
                 "earliest": request.json.get('earliest', ""),
                 "latest": request.json.get('latest', ""),
@@ -86,15 +101,28 @@ class APIServer(WebUI):
                 name=self.nickname)
             self.add_params(params)
             self.download.download = False
-            self.get_account_works(**params)
+            if not self.get_account_works(**params):
+                return self.request_failed()
             return {
-                "video": self.format_data(self.download.video_data, "Video"),
-                "image": self.format_data(self.download.image_data, "Image"),
+                "video": self.format_data(self.download.video_data),
+                "image": self.format_data(self.download.image_data),
                 "message": "success",
             }
 
         @app.route('/detail/', methods=['POST'])
         def detail():
-            return {}
+            if isinstance(url := self.check_url(request.json), dict):
+                return url
+            save, root, params = self.add_params()
+            with save(root, **params) as data:
+                self.download.data = data
+                self.download.download = False
+                data = self.download.run_alone(url, False)
+            if not data:
+                return self.request_failed()
+            return {
+                "detail": self.format_data(data),
+                "message": "success",
+            }
 
         return app
