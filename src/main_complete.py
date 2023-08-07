@@ -405,7 +405,7 @@ class TikTok:
             return False
         return mix_info
 
-    def download_mix(self, mix_info, save, root, params, mark=None):
+    def download_mix(self, mix_info, save, root, params, mark=None, api=False):
         if isinstance(mark, str):
             mix_info[1] = mark or mix_info[1]
         else:
@@ -421,7 +421,7 @@ class TikTok:
             self.download.data = data
             self.download.run_mix(
                 f"MIX{mix_info[0]}_{mix_info[1]}",
-                self.request.mix_total)
+                self.request.mix_total, api)
 
     def mix_solo(self, save, root, params):
         while True:

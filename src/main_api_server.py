@@ -166,10 +166,9 @@ class APIServer(WebUI):
                     "message": "Request to collection data failed"
                 }
             self.download.download = False
-            self.download_mix(**params)
+            self.download_mix(**params, api=True)
             return {
-                "video": self.format_data(self.download.video_data),
-                "image": self.format_data(self.download.image_data),
+                "works": self.format_data(self.download.api_data),
                 "message": "success",
             }
 

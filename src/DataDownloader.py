@@ -742,10 +742,10 @@ class Download:
 
     @reset
     @check_cookie
-    def run_mix(self, folder: str, items: list[dict]):
+    def run_mix(self, folder: str, items: list[dict], api=False):
         """下载合集作品"""
         self.create_folder(folder)
-        self.get_info(items)
+        self.get_info(items, api)
         if not self.download:
             return
         with self.__pool(max_workers=self.max_workers) as self.__thread:
