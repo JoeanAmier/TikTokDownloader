@@ -1,6 +1,7 @@
 from flask import request
 
 from src.FileManager import Cache
+from src.Recorder import RecordManager
 from src.main_web_UI import WebUI
 
 
@@ -34,25 +35,8 @@ class APIServer(WebUI):
             "观看次数",
             "在线观众",
         ),
-        17: (
-            "采集时间",
-            "评论ID",
-            "评论时间",
-            "账号UID",
-            "SEC_UID",
-            "SHORT_ID",
-            "抖音号",
-            "账号昵称",
-            "账号签名",
-            "年龄",
-            "IP归属地",
-            "评论内容",
-            "评论表情",
-            "评论图片",
-            "点赞数量",
-            "回复数量",
-            "回复ID",
-        ),
+        17: RecordManager.Comment_Title,
+        21: RecordManager.User_Title[1:],
     }
 
     def __init__(self, colour, blacklist, xb, user_agent, code, settings):
@@ -210,5 +194,27 @@ class APIServer(WebUI):
                 "image": self.format_data(self.download.image_data),
                 "message": "success",
             }
+
+        # @app.route("/user/", methods=["POST"])
+        # def user():
+        #     if isinstance(
+        #             url := self.check_url(
+        #                 request.json,
+        #                 user=True),
+        #             dict):
+        #         return url
+        #     self.request.url = url
+        #     if not (data := self.request.run_user()):
+        #         self.logger.warning(f"{url} 获取账号数据失败")
+        #         return {
+        #             "message": "Request for account data failed"
+        #         }
+        #     save, root, params = self.add_params(type_="user")
+        #     with save(root, name="UserData", **params) as file:
+        #         self.request.save_user(file, data)
+        #     return {
+        #         "account": self.format_data([data]),
+        #         "message": "success",
+        #     }
 
         return app
