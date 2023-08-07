@@ -547,7 +547,7 @@ class Download:
                         content,
                         full_path,
                         type_,
-                        file_id or file,
+                        file_id or f"直播 {file} ",
                         image_id, ))
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
             self.log.warning(f"网络异常: {e}")
