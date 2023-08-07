@@ -600,13 +600,13 @@ class TikTok:
         self.request.save_user(file, item, True)
 
     @check_save
-    def hot_acquisition(self):
+    def hot_acquisition(self, api=None):
         collection_time = str(time())[:10]
         save, root, params = self.record.run(
             self._data["root"], type_="hot", format_=self._data["save"])
         for i, j in enumerate(("热榜", "娱乐榜", "社会榜", "挑战榜")):
             with save(root, name=f"HOT_{collection_time}_{j}", **params) as data:
-                self.request.run_hot(i, j, data)
+                self.request.run_hot(i, j, data, api)
         self.logger.info(f"抖音热榜数据已储存至 HOT + {collection_time} + 榜单类型")
         self.logger.info("已退出采集抖音热榜数据模式")
 

@@ -18,7 +18,7 @@ class APIServer(WebUI):
         ),
         17: RecordManager.Comment_Title,
         21: RecordManager.User_Title[1:],
-        7: RecordManager.Hot_Type,
+        7: RecordManager.Hot_Title,
         12: RecordManager.Search_User_Title,
     }
 
@@ -225,6 +225,14 @@ class APIServer(WebUI):
 
         @app.route("/hot/", methods=["POST"])
         def hot():
-            pass
+            result = []
+            self.hot_acquisition(result)
+            return {
+                "热榜": self.format_data(result[0]),
+                "娱乐榜": self.format_data(result[1]),
+                "社会榜": self.format_data(result[2]),
+                "挑战榜": self.format_data(result[3]),
+                "message": "success",
+            }
 
         return app

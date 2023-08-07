@@ -1155,13 +1155,17 @@ class UserData:
             ])
         return result
 
-    def run_hot(self, index, board, storage):
+    @reset
+    @check_cookie
+    def run_hot(self, index, board, storage, api=None):
         self.log.info(f"开始采集抖音 {board} 数据")
         self.data = storage
         if not (data := self.get_hot(*self.hot_params[index])):
             self.log.warning(f"采集抖音 {board} 数据失败")
             return
         self.deal_hot(data)
+        if isinstance(api, list):
+            api.append(self.hot_data)
         self.save_hot()
         self.log.info(f"采集抖音 {board} 数据结束")
 
