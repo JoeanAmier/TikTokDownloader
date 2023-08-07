@@ -195,26 +195,26 @@ class APIServer(WebUI):
                 "message": "success",
             }
 
-        # @app.route("/user/", methods=["POST"])
-        # def user():
-        #     if isinstance(
-        #             url := self.check_url(
-        #                 request.json,
-        #                 user=True),
-        #             dict):
-        #         return url
-        #     self.request.url = url
-        #     if not (data := self.request.run_user()):
-        #         self.logger.warning(f"{url} 获取账号数据失败")
-        #         return {
-        #             "message": "Request for account data failed"
-        #         }
-        #     save, root, params = self.add_params(type_="user")
-        #     with save(root, name="UserData", **params) as file:
-        #         self.request.save_user(file, data)
-        #     return {
-        #         "account": self.format_data([data]),
-        #         "message": "success",
-        #     }
+        @app.route("/user/", methods=["POST"])
+        def user():
+            if isinstance(
+                    url := self.check_url(
+                        request.json,
+                        user=True),
+                    dict):
+                return url
+            self.request.url = url
+            if not (data := self.request.run_user()):
+                self.logger.warning(f"{url} 获取账号数据失败")
+                return {
+                    "message": "Request for account data failed"
+                }
+            save, root, params = self.add_params(type_="user")
+            with save(root, name="UserData", **params) as file:
+                self.request.save_user(file, data)
+            return {
+                "account": self.format_data([data]),
+                "message": "success",
+            }
 
         return app
