@@ -319,7 +319,7 @@ class UserData:
     def pages(self, value):
         if not isinstance(value, int):
             value = 0
-        self._pages = value if value > 0 else 999
+        self._pages = value if value > 0 else 9999
         self.log.info(f"获取数据最大次数已设置为 {self._pages}", False)
 
     def send_request(
@@ -532,7 +532,7 @@ class UserData:
         self.log.info(f"正在获取{tip}账号数据")
         if not self.get_user_id(True):
             return False
-        pages = self._pages if self.favorite else 999
+        pages = self._pages if self.favorite else 9999
         while not self.finish or pages > 0:
             print(self.colour.colorize("获取数据中...", 94))
             self.get_user_data()
@@ -727,17 +727,20 @@ class UserData:
     def run_comment(self, id_: str, data, api=False):
         self.data = data
         self.log.info("开始获取评论数据")
-        while not self.finish:
+        pages = self._pages
+        while not self.finish or pages > 0:
             print(self.colour.colorize("获取数据中...", 94))
             self.get_comment(id_=id_, api=self.comment_api)
             self.deal_comment(api)
+            pages -= 1
         for item in self.reply:
             self.finish = False
             self.cursor = 0
-            while not self.finish:
+            while not self.finish or pages > 0:
                 print(self.colour.colorize("获取数据中...", 94))
                 self.get_comment(id_=id_, api=self.reply_api, reply=item)
                 self.deal_comment(api)
+                pages -= 1
         self.log.info("评论数据获取结束")
 
     @retry(finish=True)
