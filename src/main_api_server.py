@@ -62,9 +62,9 @@ class APIServer(WebUI):
         return url[0] if url else {"message": "url error"}
 
     @staticmethod
-    def request_failed():
+    def request_failed(tip="request failed"):
         return {
-            "message": "request failed",
+            "message": tip,
         }
 
     def run_server(self, app):
@@ -198,7 +198,30 @@ class APIServer(WebUI):
 
         @app.route("/search/", methods=["POST"])
         def search():
-            pass
+            keyword = request.json.get("keyword")
+            if not keyword:
+                return self.request_failed("Invalid keyword")
+            params = [
+                keyword,
+                request.json.get("type", ""),
+                request.json.get("page", ""),
+                request.json.get("sort_type", ""),
+                request.json.get("publish_time", ""),
+            ]
+            self.download.favorite = True
+            self.download.download = False
+            self.get_search_results(
+                *
+                self.get_condition(
+                    " ".join(params)),
+                api=True)
+            self.download.favorite = False
+            if not self.download.api_data:
+                return self.request_failed()
+            return {
+                "results": self.format_data(self.download.api_data),
+                "message": "success",
+            }
 
         @app.route("/hot/", methods=["POST"])
         def hot():

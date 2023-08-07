@@ -74,6 +74,11 @@ class TikTok:
             "182": "半年内",
         },
     }
+    DATA_TYPE = {
+        0: "",
+        1: "",
+        2: "search_user",
+    }
 
     def __init__(self, colour, blacklist, xb, user_agent, code, settings):
         self.colour = colour
@@ -510,7 +515,7 @@ class TikTok:
             self.alone_user()
         self.logger.info("已退出批量采集账号数据模式")
 
-    def get_condition(self) -> None | tuple[list, str]:
+    def get_condition(self, condition=None) -> None | tuple[list, str]:
         def extract_integer_and_compare(input_string: str) -> int:
             try:
                 # 尝试将字符串转换为整数，如果转换成功，则返回比较大的数
@@ -519,12 +524,13 @@ class TikTok:
                 # 如果转换失败，则返回1
                 return 1
 
-        condition = input("请输入搜索条件:\n(关键词 类型 页数 排序规则 时间筛选)\n")
-        if not condition:
-            return None
-        elif condition in ("Q", "q",):
-            self.quit = True
-            return None
+        while not condition:
+            condition = input("请输入搜索条件:\n(关键词 类型 页数 排序规则 时间筛选)\n")
+            if not condition:
+                return None
+            elif condition in ("Q", "q",):
+                self.quit = True
+                return None
 
         # 分割字符串
         words = condition.split()
@@ -551,43 +557,46 @@ class TikTok:
 
     @check_save
     def search_acquisition(self):
-        data_type = {
-            0: "",
-            1: "",
-            2: "search_user",
-        }
         self.download.favorite = True
         self.download.download = False
         while c := self.get_condition():
-            tag = c[0][1]
-            self.request.run_search(*c[0][:5])
-            if not self.request.search_data:
-                self.logger.info("采集搜索结果失败")
-                continue
-            save, root, params = self.record.run(
-                self._data["root"], type_=data_type.get(
-                    tag), format_=self._data["save"])
-            params["file"] = "SearchResult.db"
-            name = f"{c[1]}_{str(time())[:10]}"
-            with save(root, name=name, **params) as data:
-                if tag in (0, 1):
-                    self.deal_search_items(data)
-                elif tag == 2:
-                    self.deal_search_user(data)
-                else:
-                    raise ValueError
-            self.logger.info(f"搜索结果数据已储存至 {name}")
+            self.get_search_results(*c)
+        self.download.favorite = False
+        self.download.download = self._data['download']
         self.logger.info("已退出采集搜索结果数据模式")
 
-    def deal_search_items(self, file):
+    def get_search_results(self, works, text, api=False):
+        tag = works[1]
+        self.request.run_search(*works[:5])
+        if not self.request.search_data:
+            self.logger.info("采集搜索结果失败")
+            return
+        save, root, params = self.record.run(
+            self._data["root"], type_=self.DATA_TYPE.get(
+                tag), format_=self._data["save"])
+        params["file"] = "SearchResult.db"
+        name = f"{text}_{str(time())[:10]}"
+        with save(root, name=name, **params) as data:
+            if tag in (0, 1):
+                self.deal_search_items(data, api)
+            elif tag == 2:
+                self.deal_search_user(data, api)
+            else:
+                raise ValueError
+        self.logger.info(f"搜索结果数据已储存至 {name}")
+
+    def deal_search_items(self, file, api=False):
         self.logger.info("开始提取搜索结果")
         self.download.data = file
-        self.download.get_info(self.request.search_data)
+        self.download.api_data = []
+        self.download.get_info(self.request.search_data, api)
         self.logger.info("搜索结果提取结束")
 
-    def deal_search_user(self, file):
+    def deal_search_user(self, file, api=False):
         self.logger.info("开始提取搜索结果")
         item = self.request.deal_search_user()
+        if api:
+            self.download.api_data = item
         self.request.save_user(file, item, True)
 
     @check_save
