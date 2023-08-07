@@ -533,7 +533,7 @@ class UserData:
         if not self.get_user_id(True):
             return False
         pages = self._pages if self.favorite else 9999
-        while not self.finish or pages > 0:
+        while not self.finish and pages > 0:
             print(self.colour.colorize("获取数据中...", 94))
             self.get_user_data()
             self.deal_data()
@@ -728,7 +728,7 @@ class UserData:
         self.data = data
         self.log.info("开始获取评论数据")
         pages = self._pages
-        while not self.finish or pages > 0:
+        while not self.finish and pages > 0:
             print(self.colour.colorize("获取数据中...", 94))
             self.get_comment(id_=id_, api=self.comment_api)
             self.deal_comment(api)
@@ -736,7 +736,7 @@ class UserData:
         for item in self.reply:
             self.finish = False
             self.cursor = 0
-            while not self.finish or pages > 0:
+            while not self.finish and pages > 0:
                 print(self.colour.colorize("获取数据中...", 94))
                 self.get_comment(id_=id_, api=self.reply_api, reply=item)
                 self.deal_comment(api)
