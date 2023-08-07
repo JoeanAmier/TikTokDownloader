@@ -18,6 +18,8 @@ class APIServer(WebUI):
         ),
         17: RecordManager.Comment_Title,
         21: RecordManager.User_Title[1:],
+        7: RecordManager.Hot_Type,
+        12: RecordManager.Search_User_Title,
     }
 
     def __init__(self, colour, blacklist, xb, user_agent, code, settings):
