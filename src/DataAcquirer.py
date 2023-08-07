@@ -167,6 +167,7 @@ class UserData:
         self.xb = xb  # 加密参数对象
         # self.__web = None
         self.__code = None
+        self._pages = None
 
     def initialization(self, user_agent: str, code: tuple, web=None):
         self.headers["User-Agent"], self.__code = user_agent, code
@@ -309,6 +310,17 @@ class UserData:
             self._mark = None
         else:
             self._mark = s if (s := self.clean.filter(value)) else None
+
+    @property
+    def pages(self):
+        return self._pages
+
+    @pages.setter
+    def pages(self, value):
+        if not isinstance(value, int):
+            value = 0
+        self._pages = value if value > 0 else 999
+        self.log.info(f"获取数据最大次数已设置为 {self._pages}", False)
 
     def send_request(
             self,
@@ -520,11 +532,13 @@ class UserData:
         self.log.info(f"正在获取{tip}账号数据")
         if not self.get_user_id(True):
             return False
-        while not self.finish:
+        pages = self._pages if self.favorite else 999
+        while not self.finish or pages > 0:
             print(self.colour.colorize("获取数据中...", 94))
             self.get_user_data()
             self.deal_data()
             self.early_stop()
+            pages -= 1
         self.log.info("该账号的作品数据获取结束")
         if self.favorite:
             self.get_nickname()
