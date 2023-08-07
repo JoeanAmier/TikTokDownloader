@@ -173,7 +173,7 @@ class Master:
         elif mode == "3":
             self.complete()
         elif mode == "4":
-            print(self.colour.colorize("警告：该模式正在开发中，功能可能无法正常使用！", 91))
+            print(self.colour.colorize("注意：该模式尚未进行高并发测试，可能存在问题！", 93))
             self.server(APIServer)
         elif mode == "5":
             self.server(WebUI)
