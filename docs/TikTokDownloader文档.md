@@ -411,7 +411,7 @@
 </ul>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark</code> 或者 <code>UID123456789_账号昵称</code></p>
 <h3>单独下载链接作品</h3>
-<p>输入作品链接；<strong>目前仅该模式支持 TikTok 平台。</strong></p>
+<p>输入作品链接；<strong>支持 TikTok 平台。</strong></p>
 <p>支持链接格式：</p>
 <ul>
 <li><code>https://v.douyin.com/分享码/</code></li>
@@ -577,7 +577,7 @@
 ```
 
 <h3>链接作品数据接口</h3>
-<p>返回作品详细数据</p>
+<p>返回作品详细数据；<strong>支持 TikTok 平台。</strong></p>
 <p>请求接口：<code>/detail/</code></p>
 <p>请求参数</p>
 
@@ -638,6 +638,35 @@
   "comment": [
     "评论数据-1，JSON 格式",
     "评论数据-2，JSON 格式",
+    "..."
+  ],
+  "message": "success"
+}
+```
+
+<h3>合集作品数据接口</h3>
+<p>返回合集作品数据</p>
+<p>请求接口：<code>/mix/</code></p>
+<p>请求参数</p>
+
+```json
+{
+  "url": "属于合集的作品链接，字符串，必需"
+}
+```
+
+<p>响应参数</p>
+
+```json
+{
+  "video": [
+    "视频作品数据-1，JSON 格式",
+    "视频作品数据-2，JSON 格式",
+    "..."
+  ],
+  "image": [
+    "图集作品数据-1，JSON 格式",
+    "图集作品数据-2，JSON 格式",
     "..."
   ],
   "message": "success"
