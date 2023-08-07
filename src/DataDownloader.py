@@ -508,6 +508,7 @@ class Download:
             name: str,
             type_: str,
             image_id="",
+            file_id=None,
             unknown_size=False):
         """发送请求获取文件内容"""
         if not self.download:
@@ -546,6 +547,7 @@ class Download:
                         content,
                         full_path,
                         type_,
+                        file_id or file,
                         image_id, ))
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
             self.log.warning(f"网络异常: {e}")
@@ -564,7 +566,8 @@ class Download:
                     root,
                     f"{name}_{index + 1}",
                     type_="jpeg",
-                    image_id=item[0])
+                    image_id=item[0],
+                    file_id=f"图集 {item[0]}_{index + 1} ")
                 self.image_id = item[0]
             self.update_blacklist(item[0])
             self.download_music(root, item)
@@ -581,6 +584,7 @@ class Download:
                 root,
                 name,
                 type_="mp4",
+                file_id=f"视频 {item[0]} "
             )
             self.update_blacklist(item[0])
             self.download_music(root, item)
@@ -589,9 +593,8 @@ class Download:
     def download_music(self, root, item: list):
         """下载音乐"""
         if self.music and (u := item[7][1]):
-            self.__thread.submit(
-                self.request_file, u, root, self.clean.filter(
-                    f"{f'{item[0]}-{item[7][0]}'}"), type_="mp3")
+            self.__thread.submit(self.request_file, u, root, self.clean.filter(
+                f"{f'{item[0]}-{item[7][0]}'}"), type_="mp3", file_id=f"原声 {item[0]} ")
 
     def download_cover(self, root, name: str, item: list):
         """下载静态/动态封面图"""
@@ -599,10 +602,20 @@ class Download:
             return
         if self.dynamic and (u := item[9]):
             self.__thread.submit(
-                self.request_file, u, root, name, type_="webp")
+                self.request_file,
+                u,
+                root,
+                name,
+                type_="webp",
+                file_id=f"动图 {item[0]} ")
         if self.original and (u := item[8]):
             self.__thread.submit(
-                self.request_file, u, root, name, type_="jpeg")
+                self.request_file,
+                u,
+                root,
+                name,
+                type_="jpeg",
+                file_id=f"封面 {item[0]} ")
 
     def save_file(
             self,
@@ -611,6 +624,7 @@ class Download:
             size: int,
             full_path,
             type_: str,
+            file_id: str,
             id_=""):
         """保存文件"""
 
@@ -628,11 +642,12 @@ class Download:
 
         temp_path = self.temp.joinpath(file)
         try:
-            self.log.info(f"{file} 开始下载")
+            # self.log.info(f"{file} 开始下载")
             progress_bar = ProgressBar(
-                size,
+                size, text=file_id,
                 colorize=self.colour.colorize,
                 solo=self.__pool == FakeThreadPool) if size > 0 else LoopingBar(
+                text=file_id,
                 colorize=self.colour.colorize,
                 solo=self.__pool == FakeThreadPool)
             with temp_path.open("wb") as f:
@@ -650,7 +665,7 @@ class Download:
         elif type_ == "jpeg" and id_ and id_ != self.image_id:
             self.image += 1
         self.remove_file(temp_path, full_path)
-        self.log.info(f"{file} 下载成功")
+        # self.log.info(f"{file} 下载成功")
         return True
 
     def remove_file(self, temp, path):
@@ -795,7 +810,7 @@ class ProgressBar(NoneBar):
         elapsed_time = time.time() - self.start_time
         print(
             self.colorize(
-                f'\r{self.text}下载进度: |{bar}| {percent:.1f}% - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.downloaded_size):.2f} MB / {self.bytes_to_mb(self.total):.2f} MB',
+                f'\r{self.text}下载进度: |{bar}| {percent:.1f}%-耗时: {elapsed_time:.1f}s-文件: {self.bytes_to_mb(self.downloaded_size):.1f}MB/{self.bytes_to_mb(self.total):.1f}MB',
                 95),
             **self.params)
 
@@ -831,7 +846,7 @@ class LoopingBar(NoneBar):
         self.download_size += size
         print(
             self.colorize(
-                f"\r{self.text}{'下载完成' if finished else '正在下载'}: {'✔️' if finished else spin_char} - 下载耗时: {elapsed_time:.2f}s - 文件大小: {self.bytes_to_mb(self.download_size):.2f} MB",
+                f"\r{self.text}{'下载完成' if finished else '正在下载'}: {'✔️' if finished else spin_char}-耗时: {elapsed_time:.1f}s-文件: {self.bytes_to_mb(self.download_size):.1f}MB",
                 95),
             **self.params)
 
