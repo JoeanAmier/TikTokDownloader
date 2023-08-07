@@ -81,6 +81,8 @@ class APIServer(WebUI):
 
     def format_data(self, data: list):
         result = []
+        if not data:
+            return result
         keys = self.works_keys[len(data[0])]
         for item in data:
             dict_ = {keys[i]: j for i, j in enumerate(item)}
@@ -175,6 +177,35 @@ class APIServer(WebUI):
                 self.request.run_comment(url, data, True)
             return {
                 "comment": self.format_data(self.request.comment_data),
+                "message": "success",
+            }
+
+        @app.route('/mix/', methods=['POST'])
+        def mix():
+            if isinstance(
+                    url := self.check_url(
+                        request.json,
+                        value="合集ID"),
+                    dict):
+                return url
+            self.manager = Cache(
+                self.logger,
+                self._data["root"],
+                type_="MIX",
+                mark=self.mark,
+                name=self.nickname)
+            params = {"mark": ""}
+            self.add_params(params, type_="mix")
+            params["mix_info"] = self.get_mix_info(url, False)
+            if not params["mix_info"]:
+                return {
+                    "message": "Request to collection data failed"
+                }
+            self.download.download = False
+            self.download_mix(**params)
+            return {
+                "video": self.format_data(self.download.video_data),
+                "image": self.format_data(self.download.image_data),
                 "message": "success",
             }
 
