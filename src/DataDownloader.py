@@ -742,10 +742,11 @@ class Download:
         self.get_info(items)
         if not self.download:
             return
-        self.log.info(f"{self.nickname} 的合集开始下载")
-        self.download_video()
-        self.download_images()
-        self.log.info(f"{self.nickname} 的合集下载结束")
+        with self.__pool(max_workers=self.max_workers) as self.__thread:
+            self.log.info(f"{self.nickname} 的合集开始下载")
+            self.download_video()
+            self.download_images()
+            self.log.info(f"{self.nickname} 的合集下载结束")
 
 
 class FakeThreadPool:
