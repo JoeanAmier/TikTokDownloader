@@ -195,4 +195,12 @@ class APIServer(WebUI):
                 "message": "success",
             }
 
+        @app.route("/search/", methods=["POST"])
+        def search():
+            pass
+
+        @app.route("/hot/", methods=["POST"])
+        def hot():
+            pass
+
         return app
