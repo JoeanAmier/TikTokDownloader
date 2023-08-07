@@ -354,6 +354,7 @@ class TikTok:
         self.download.retry = self._data["retry"]
         self.download.chunk = self._data["chunk"]
         self.download.max_size = self._data["max_size"]
+        self.request.pages = self._data["pages"]
 
     @check_save
     def comment_acquisition(self):
