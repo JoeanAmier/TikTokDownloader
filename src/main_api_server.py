@@ -114,7 +114,7 @@ class APIServer(WebUI):
                 name=self.nickname)
             self.add_params(params)
             self.download.download = False
-            self.request.pages = request.json.get('pages', 0)
+            self.request.pages = request.json.get('pages', self._data["pages"])
             if not self.get_account_works(**params):
                 return self.request_failed()
             return {
@@ -158,7 +158,7 @@ class APIServer(WebUI):
             if isinstance(url := self.check_url(request.json), dict):
                 return url
             save, root, params = self.add_params(type_="comment")
-            self.request.pages = request.json.get('pages', 0)
+            self.request.pages = request.json.get('pages', self._data["pages"])
             with save(root, name=f"作品{url}_评论数据", **params) as data:
                 self.request.run_comment(url, data, True)
             return {
