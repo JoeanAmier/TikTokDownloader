@@ -810,7 +810,7 @@ class ProgressBar(NoneBar):
         elapsed_time = time.time() - self.start_time
         print(
             self.colorize(
-                f'\r{self.text}下载进度: |{bar}| {percent:.1f}%-耗时: {elapsed_time:.1f}s-文件: {self.bytes_to_mb(self.downloaded_size):.1f}MB/{self.bytes_to_mb(self.total):.1f}MB',
+                f'\r{self.text}下载进度: |{bar}| {percent:.1f}%  耗时: {elapsed_time:.1f}s  文件: {self.bytes_to_mb(self.downloaded_size):.1f}MB/{self.bytes_to_mb(self.total):.1f}MB',
                 95),
             **self.params)
 
@@ -846,7 +846,7 @@ class LoopingBar(NoneBar):
         self.download_size += size
         print(
             self.colorize(
-                f"\r{self.text}{'下载完成' if finished else '正在下载'}: {'✔️' if finished else spin_char}-耗时: {elapsed_time:.1f}s-文件: {self.bytes_to_mb(self.download_size):.1f}MB",
+                f"\r{self.text}{'下载完成' if finished else '正在下载'}: {'✔️' if finished else spin_char}  耗时: {elapsed_time:.1f}s  文件: {self.bytes_to_mb(self.download_size):.1f}MB",
                 95),
             **self.params)
 
