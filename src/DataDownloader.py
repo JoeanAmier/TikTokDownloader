@@ -23,6 +23,7 @@ def reset(function):
     def inner(self, *args, **kwargs):
         self.video_data = []
         self.image_data = []
+        self.api_data = []
         self.video = 0  # 视频下载数量
         self.image = 0  # 图集下载数量
         self.mix_data = []
@@ -73,6 +74,7 @@ class Download:
         self.type_ = {"video": Path, "images": Path}  # 文件保存目录，运行时赋值
         self.video_data = []  # 视频详细信息
         self.image_data = []  # 图集详细信息
+        self.api_data = []
         self.mix_data = []  # 合集详细信息
         self.uid = None  # 账号UID，从DataAcquirer.py传入，提取数据时赋值
         self.mark = None  # 账号标识，从DataAcquirer.py传入，调用前赋值
@@ -381,7 +383,7 @@ class Download:
         tags = [i["tag_name"] for i in t]
         return tags or ["", "", ""]
 
-    def get_info(self, data: list[str | dict]):
+    def get_info(self, data: list[str | dict], api=False):
         """
         提取作品详细信息
         视频格式: 作品ID, 作品描述, 发布时间, UID, 作者昵称, 账号标识, 下载链接, [音乐名称, 音乐链接], 静态封面图, 动态封面图
@@ -464,28 +466,30 @@ class Download:
                         self.clean.filter(nickname) if self.favorite else self.nickname,
                         music_name]),
                 False)
-            self.data.save(
-                [
-                    type_,
-                    collection_time,
-                    uid,
-                    sec_uid,
-                    unique_id,
-                    short_id,
-                    id_,
-                    desc,
-                    create_time.replace(
-                        ".",
-                        ":"),
-                    self.clean.filter(nickname) if self.favorite else self.nickname,
-                    signature,
-                    download_link,
-                    music_name,
-                    music_url,
-                    origin_cover,
-                    dynamic_cover,
-                    *tags,
-                ] + statistics)
+            works_data = [
+                             type_,
+                             collection_time,
+                             uid,
+                             sec_uid,
+                             unique_id,
+                             short_id,
+                             id_,
+                             desc,
+                             create_time.replace(
+                                 ".",
+                                 ":"),
+                             self.clean.filter(nickname) if self.favorite else self.nickname,
+                             signature,
+                             download_link,
+                             music_name,
+                             music_url,
+                             origin_cover,
+                             dynamic_cover,
+                             *tags,
+                         ] + statistics
+            self.data.save(works_data)
+            if api:
+                self.api_data.append(works_data)
 
     def check_blacklist(self, id_) -> bool:
         if not id_:
@@ -683,12 +687,12 @@ class Download:
 
     @reset
     @check_cookie
-    def run(self, tip: str, video: list[str], image: list[str]):
+    def run(self, tip: str, video: list[str], image: list[str], api=False):
         """批量下载"""
         self.create_folder(f"{self.uid}_{self.mark}")
         self.log.info(f"开始获取{tip}账号的作品数据")
-        self.get_info(video)
-        self.get_info(image)
+        self.get_info(video, api)
+        self.get_info(image, api)
         self.log.info(f"获取{tip}账号的作品数据成功")
         if not self.download:
             return
@@ -701,7 +705,7 @@ class Download:
 
     @reset
     @check_cookie
-    def run_alone(self, id_: str, download=True):
+    def run_alone(self, id_: str, download=True, api=False):
         """单独下载"""
         if download and not self.folder:
             self.log.warning("未设置下载文件夹名称")
@@ -714,7 +718,9 @@ class Download:
             return False
         self.nickname = self.clean.filter(data["author"]["nickname"])
         self.mark = self.nickname
-        self.get_info([data])
+        self.get_info([data], api)
+        if api:
+            return self.api_data
         with self.__pool(max_workers=self.max_workers) as self.__thread:
             if data.get("images") or data.get("image_post_info"):
                 if not download:

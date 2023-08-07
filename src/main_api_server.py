@@ -7,26 +7,7 @@ from src.main_web_UI import WebUI
 
 class APIServer(WebUI):
     works_keys = {
-        10: (
-            "作品ID",
-            "作品描述",
-            "发布时间",
-            "UID",
-            "作者昵称",
-            "账号标识",
-            "下载链接",
-            "原声信息",
-            "静态封面图",
-            "动态封面图"),
-        8: (
-            "作品ID",
-            "作品描述",
-            "发布时间",
-            "UID",
-            "作者昵称",
-            "账号标识",
-            "下载链接",
-            "原声信息"),
+        23: RecordManager.Title,
         6: (
             "主播昵称",
             "直播标题",
@@ -115,11 +96,10 @@ class APIServer(WebUI):
             self.add_params(params)
             self.download.download = False
             self.request.pages = request.json.get('pages', self._data["pages"])
-            if not self.get_account_works(**params):
+            if not self.get_account_works(**params, api=True):
                 return self.request_failed()
             return {
-                "video": self.format_data(self.download.video_data),
-                "image": self.format_data(self.download.image_data),
+                "works": self.format_data(self.download.api_data),
                 "message": "success",
             }
 
@@ -131,7 +111,7 @@ class APIServer(WebUI):
             with save(root, **params) as data:
                 self.download.data = data
                 self.download.download = False
-                data = self.download.run_alone(url, False)
+                data = self.download.run_alone(url, False, api=True)
             if not data:
                 return self.request_failed()
             return {
