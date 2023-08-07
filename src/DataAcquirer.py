@@ -78,6 +78,16 @@ def retry(finish=False):
     return inner
 
 
+def update_headers(function):
+    def inner(self, *args, **kwargs):
+        self.headers['Referer'] = "https://live.douyin.com"
+        _ = function(self, *args, **kwargs)
+        self.headers['Referer'] = "https://www.douyin.com/"
+        return _
+
+    return inner
+
+
 class UserData:
     headers = {
         "User-Agent": "",
@@ -636,6 +646,7 @@ class UserData:
                 filtered.append(item[1])
         self.image_data = filtered
 
+    @update_headers
     def run_live(self, text: str, solo=False):
         ids = self.return_live_ids(text, solo)
         return self.live_items(ids) if ids else False

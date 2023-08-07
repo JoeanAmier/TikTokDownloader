@@ -174,7 +174,6 @@ class WebUI(TikTok):
                 "preview": self.preview}
 
     def live_acquisition(self):
-        self.request.headers['Referer'] = "https://live.douyin.com"
         if not (
                 data := self.request.run_live(
                     self.live_url,

@@ -141,13 +141,11 @@ class APIServer(WebUI):
 
         @app.route('/live/', methods=['POST'])
         def live():
-            self.request.headers['Referer'] = "https://live.douyin.com"
             if not (
                     data := self.request.run_live(
                         request.json.get('url'),
                         True)):
                 return self.request_failed()
-            self.request.headers['Referer'] = "https://www.douyin.com/"
             return {
                 "live": self.format_data(data),
                 "message": "success",
