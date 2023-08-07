@@ -258,7 +258,7 @@
 <tr>
 <td align="center">pages</td>
 <td align="center">int</td>
-<td align="center">批量下载账号发布页或者喜欢页作品，以及采集作品评论数据时<br>请求数据的最大次数，默认值: <code>0</code> 代表不限制</td>
+<td align="center">批量下载账号喜欢页作品或者采集作品评论数据时<br>请求数据的最大次数，默认值: <code>0</code> 代表不限制</td>
 </tr>
 <tr>
 <td align="center">thread</td>
@@ -388,7 +388,8 @@
 }
 ```
 
-<p>代表批量下载账号发布页或者喜欢页作品，以及采集作品评论数据时，仅获取前 <code>2</code> 页数据；用于解决批量下载账号喜欢页作品需要获取全部数据的问题，以及作品评论数量过多的问题。</p>
+<p>代表批量下载账号喜欢页作品或者采集作品评论数据时，仅获取前 <code>2</code> 页数据；用于解决批量下载账号喜欢页作品需要获取全部数据的问题，以及作品评论数据数量过多的采集问题。</p>
+<p>不影响批量下载账号发布页作品，如需控制账号发布页数据获取次数，可使用 <code>earliest</code> 和 <code>latest</code> 参数实现。</p>
 <h1>功能介绍</h1>
 <h2>复制粘贴写入 Cookie</h2>
 <p>从浏览器复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a>
