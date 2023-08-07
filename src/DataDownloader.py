@@ -725,6 +725,8 @@ class Download:
         """下载合集作品"""
         self.create_folder(folder)
         self.get_info(items)
+        if not self.download:
+            return
         self.log.info(f"{self.nickname} 的合集开始下载")
         self.download_video()
         self.download_images()
