@@ -1,3 +1,4 @@
+from platform import system
 from re import finditer
 from time import sleep
 
@@ -94,6 +95,7 @@ class Register:
     get_url = "https://sso.douyin.com/get_qrcode/"
     check_url = "https://sso.douyin.com/check_qrconnect/"
     pattern = r'(?P<key>[^=;,]+)=(?P<value>[^;,]+)'
+    system = system()
 
     def __init__(self, settings, xb, user_agent, code):
         self.xb = xb
@@ -141,12 +143,15 @@ class Register:
             cookie[key] = value
         return cookie
 
-    @staticmethod
-    def generate_qr_code(url):
+    def generate_qr_code(self, url):
         qr_code = QRCode()
         qr_code.add_data(url)
-        image = qr_code.make_image()
-        image.show()
+        qr_code.make(fit=True)
+        qr_code.print_ascii(invert=True)
+        if self.system in ("Windows", "Darwin"):
+            # 仅在 Windows 和 MAC 系统自动打开登录二维码图片
+            image = qr_code.make_image()
+            image.show()
 
     def get_qr_code(self, version=23):
         self.verify_fp = VerifyFp.get_verify_fp()
