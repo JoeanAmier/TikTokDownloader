@@ -272,7 +272,7 @@ class Download:
     def create_folder(self, folder: str, live=False, collection=False):
         """创建作品保存文件夹"""
         if self.favorite and not collection:
-            folder = f"{folder}_喜欢页"
+            folder = f"{folder}_喜欢作品"
         root = self.root.joinpath(folder)
         if not root.is_dir():
             root.mkdir()
