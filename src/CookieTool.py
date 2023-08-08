@@ -127,7 +127,6 @@ class Register:
         }
         self.verify_fp = None
         self._code = code
-        self.retry = 0
 
     @staticmethod
     def generate_cookie(data: dict) -> str:
@@ -172,7 +171,8 @@ class Register:
         self.check_params["token"] = token
         self.check_params["verifyFp"] = self.verify_fp
         self.check_params["fp"] = self.verify_fp
-        while self.retry < 10:
+        retry = 0
+        while retry < 10:
             self.wait()
             if not (
                     response := self.request_data(
@@ -181,11 +181,14 @@ class Register:
                         params=self.check_params)):
                 continue
             data = response.json().get("data")
-            if data["status"] == "3":
+            if (s := data["status"]) == "3":
                 redirect_url = data["redirect_url"]
                 cookie = response.headers.get("Set-Cookie")
                 break
-            self.retry += 1
+            elif s in ("4", "5"):
+                retry = 10
+            else:
+                retry += 1
         else:
             print("扫码登陆失败！")
             return None, None
