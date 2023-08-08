@@ -129,6 +129,10 @@
 <td align="center">采集抖音热榜数据</td>
 <td align="center">数据采集</td>
 </tr>
+<tr>
+<td align="center">批量下载收藏作品</td>
+<td align="center">文件下载，数据采集</td>
+</tr>
 </tbody></table>
 <h1>配置文件</h1>
 <h2>参数含义</h2>
@@ -501,6 +505,9 @@
 <h3>采集抖音热榜数据</h3>
 <p>采集 <code>热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>save</code> 参数才能正常使用。</p>
 <p>储存名称格式：<code>HOT_时间戳_热榜名称</code></p>
+<h3>批量下载账号作品</h3>
+<p>需要在配置文件写入已登录的 Cookie；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
+<p>作品保存文件夹和数据储存文件名称为: <code>收藏夹_Owner</code></p>
 <h2>Web API 接口模式</h2>
 <p>启动服务器，提供 API 调用服务，可以部署至私有服务器。</p>
 <p><strong>该模式暂不支持并发请求！仅以 API 形式返回数据提供调用！</strong></p>
