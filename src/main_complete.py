@@ -172,6 +172,8 @@ class TikTok:
             self.user_works_batch(save, root, params)
         elif select == "2":
             self.user_works_solo(save, root, params)
+        elif select.upper() == "Q":
+            self.quit = True
         self.logger.info("已退出批量下载账号作品模式")
 
     def user_works_batch(self, save, root, params):
@@ -263,7 +265,7 @@ class TikTok:
                 url = input("请输入分享链接: ")
                 if not url:
                     break
-                elif url in ("Q", "q",):
+                elif url.upper() == "Q":
                     self.quit = True
                     break
                 ids = self.request.run_alone(url)
@@ -294,7 +296,7 @@ class TikTok:
             link = input("请输入直播链接: ")
             if not link:
                 break
-            elif link in ("Q", "q",):
+            elif link.upper() == "Q":
                 self.quit = True
                 break
             if not (data := self.request.run_live(link)):
@@ -368,7 +370,7 @@ class TikTok:
             url = input("请输入作品链接: ")
             if not url:
                 break
-            elif url in ("Q", "q",):
+            elif url.upper() == "Q":
                 self.quit = True
                 break
             ids = self.request.run_alone(url)
@@ -397,6 +399,8 @@ class TikTok:
             self.mix_batch(save, root, params)
         elif select == "2":
             self.mix_solo(save, root, params)
+        elif select.upper() == "Q":
+            self.quit = True
         self.logger.info("已退出批量下载合集作品模式")
 
     def get_mix_info(self, id_: str, collection=False):
@@ -513,6 +517,8 @@ class TikTok:
             self.accounts_user()
         elif m == "2":
             self.alone_user()
+        elif m.upper() == "Q":
+            self.quit = True
         self.logger.info("已退出批量采集账号数据模式")
 
     def get_condition(self, condition=None) -> None | tuple[list, str]:
@@ -528,7 +534,7 @@ class TikTok:
             condition = input("请输入搜索条件:\n(关键词 类型 页数 排序规则 时间筛选)\n")
             if not condition:
                 return None
-            elif condition in ("Q", "q",):
+            elif condition.upper() == "Q":
                 self.quit = True
                 return None
 
