@@ -62,6 +62,10 @@
 ![WebUI模式截图](docs/WebUI模式截图1.png)
 *****
 ![WebUI模式截图](docs/WebUI模式截图2.png)
+<br><br>
+**Web API 接口模式：**
+<br><br>
+![WebAPI模式截图](docs/WebAPI模式截图.png)
 
 # 📈 项目状态
 
