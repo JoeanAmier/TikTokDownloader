@@ -1242,7 +1242,7 @@ class UserData:
             pages -= 1
         self.log.info("该账号的作品数据获取结束")
         # self.get_nickname()
-        self.uid = "收藏作品数据"
+        self.uid = "收藏夹"
         self.name = "Owner"
         self.mark = self.name
         del self.headers["Content-Type"]

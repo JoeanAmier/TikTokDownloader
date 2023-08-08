@@ -269,9 +269,9 @@ class Download:
         xb = self.xb.get_x_bogus(params, self.__code, version)
         params["X-Bogus"] = xb
 
-    def create_folder(self, folder: str, live=False):
+    def create_folder(self, folder: str, live=False, collection=False):
         """创建作品保存文件夹"""
-        if self.favorite:
+        if self.favorite and not collection:
             folder = f"{folder}_喜欢页"
         root = self.root.joinpath(folder)
         if not root.is_dir():
@@ -695,7 +695,7 @@ class Download:
             api=False,
             collection=""):
         """批量下载"""
-        self.create_folder(f"{self.uid}_{self.mark}")
+        self.create_folder(f"{self.uid}_{self.mark}", collection=True)
         self.log.info(f"开始获取{tip}账号的{collection}作品数据")
         self.get_info(video, api)
         self.get_info(image, api)
