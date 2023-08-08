@@ -173,7 +173,10 @@ class Master:
         elif mode == "3":
             self.complete()
         elif mode == "4":
-            print(self.colour.colorize("注意：该模式尚未进行高并发测试，可能存在问题！", 93))
+            print(
+                self.colour.colorize(
+                    "注意：该模式暂不支持并发请求！仅以 API 形式返回数据提供调用！",
+                    93))
             self.server(APIServer)
         elif mode == "5":
             self.server(WebUI)

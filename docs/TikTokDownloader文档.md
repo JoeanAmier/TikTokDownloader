@@ -503,7 +503,7 @@
 <p>储存名称格式：<code>HOT_时间戳_热榜名称</code></p>
 <h2>Web API 接口模式</h2>
 <p>启动服务器，提供 API 调用服务，可以部署至私有服务器。</p>
-<p><strong>该模式尚未进行高并发测试，可能存在问题！</strong></p>
+<p><strong>该模式暂不支持并发请求！仅以 API 形式返回数据提供调用！</strong></p>
 <p><strong>API 接口通用说明：</strong></p>
 <ul>
 <li>请求类型：<code>POST</code></li>
