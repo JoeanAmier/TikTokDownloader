@@ -616,12 +616,30 @@ class TikTok:
         self.logger.info(f"抖音热榜数据已储存至 HOT + {collection_time} + 榜单类型")
         self.logger.info("已退出采集抖音热榜数据模式")
 
+    def collection_acquisition(self):
+        save, root, params = self.record.run(
+            self._data["root"], format_=self._data["save"])
+        self.request.earliest = ""
+        self.request.latest = ""
+        if self.request.run_collection():
+            self.download_account_works(0, save, root, params, None)
+        self.logger.info("已退出批量下载收藏作品模式")
+
     def run(self):
         self.configuration()
         while not self.quit:
-            select = prompt("请选择下载模式", (
-                "批量下载账号作品", "单独下载链接作品", "获取直播推流地址", "采集作品评论数据", "批量下载合集作品",
-                "批量采集账号数据", "采集搜索结果数据", "采集抖音热榜数据"), self.colour.colorize)
+            select = prompt(
+                "请选择下载模式",
+                ("批量下载账号作品",
+                 "单独下载链接作品",
+                 "获取直播推流地址",
+                 "采集作品评论数据",
+                 "批量下载合集作品",
+                 "批量采集账号数据",
+                 "采集搜索结果数据",
+                 "采集抖音热榜数据",
+                 "批量下载收藏作品"),
+                self.colour.colorize)
             if select in ("Q", "q", "",):
                 self.quit = True
             elif select == "1":
@@ -648,4 +666,7 @@ class TikTok:
             elif select == "8":
                 self.logger.info("已选择采集抖音热榜数据模式")
                 self.hot_acquisition()
+            elif select == "9":
+                self.logger.info("已选择批量下载收藏作品模式")
+                self.collection_acquisition()
         self.logger.info("程序运行结束")

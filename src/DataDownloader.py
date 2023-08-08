@@ -687,20 +687,26 @@ class Download:
 
     @reset
     @check_cookie
-    def run(self, tip: str, video: list[str], image: list[str], api=False):
+    def run(
+            self,
+            tip: str,
+            video: list[str],
+            image: list[str],
+            api=False,
+            collection=""):
         """批量下载"""
         self.create_folder(f"{self.uid}_{self.mark}")
-        self.log.info(f"开始获取{tip}账号的作品数据")
+        self.log.info(f"开始获取{tip}账号的{collection}作品数据")
         self.get_info(video, api)
         self.get_info(image, api)
-        self.log.info(f"获取{tip}账号的作品数据成功")
+        self.log.info(f"获取{tip}账号的{collection}作品数据成功")
         if not self.download:
             return
         with self.__pool(max_workers=self.max_workers) as self.__thread:
-            self.log.info(f"开始下载{tip}账号的视频/图集")
+            self.log.info(f"开始下载{tip}账号的{collection}视频/图集")
             self.download_video()
             self.download_images()
-            self.log.info(f"{tip}账号的视频/图集下载结束")
+            self.log.info(f"{tip}账号的{collection}视频/图集下载结束")
         self.summary(tip)
 
     @reset

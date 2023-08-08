@@ -148,6 +148,10 @@ class UserData:
     reply_tiktok_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
     clean = Cleaner()  # 过滤非法字符
     max_comment = 256  # 评论字数限制
+    mode = {
+        "get": requests.get,
+        "post": requests.post,
+    }
 
     def __init__(self, log: LoggerManager | BaseLogger, xb, colour):
         self.colour = colour
@@ -343,9 +347,10 @@ class UserData:
             value: str,
             json=True,
             headers=None,
+            type_="get",
             **kwargs):
         try:
-            response = requests.get(
+            response = self.mode[type_](
                 url,
                 headers=headers or self.headers,
                 proxies=self.proxies,
@@ -461,13 +466,15 @@ class UserData:
                 self.video_data.append(
                     [item["create_time"], item])
 
-    def summary(self):
+    def summary(self, collection=""):
         """汇总账号作品数量"""
-        self.log.info(f"账号 {self.name} 的视频总数: {len(self.video_data)}")
+        self.log.info(
+            f"账号 {self.name} 的{collection}视频总数: {len(self.video_data)}")
         for i in self.video_data:
             self.log.info(
                 f"视频: {i['aweme_id']}", False)
-        self.log.info(f"账号 {self.name} 的图集总数: {len(self.image_data)}")
+        self.log.info(
+            f"账号 {self.name} 的{collection}图集总数: {len(self.image_data)}")
         for i in self.image_data:
             self.log.info(f"图集: {i['aweme_id']}", False)
 
@@ -1219,3 +1226,66 @@ class UserData:
         for i in self.hot_data:
             self.log.info(", ".join(i), False)
             self.data.save(i)
+
+    @reset
+    @check_cookie
+    @update_headers(headers="https://www.douyin.com/user/self?showTab=favorite_collection")
+    def run_collection(self):
+        self.log.info("正在获取账号收藏作品数据")
+        self.favorite = True
+        self.headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
+        pages = self._pages if self.favorite else 9999
+        while not self.finish and pages > 0:
+            print(self.colour.colorize("获取数据中...", 94))
+            self.get_collection_data()
+            self.deal_data()
+            pages -= 1
+        self.log.info("该账号的作品数据获取结束")
+        # self.get_nickname()
+        self.uid = "收藏作品数据"
+        self.name = "Owner"
+        self.mark = self.name
+        del self.headers["Content-Type"]
+        if not any((self.video_data, self.image_data)):
+            return False
+        self.date_filters()
+        self.summary()
+        self.log.info("获取账号收藏作品数据成功")
+        return True
+
+    @retry(finish=True)
+    def get_collection_data(self):
+        params = {
+            "device_platform": "webapp",
+            "aid": "6383",
+            "channel": "channel_pc_web",
+            "publish_video_strategy_type": "2",
+            "pc_client_type": "1",
+            "cookie_enabled": "true",
+            "platform": "PC",
+            "downlink": "10",
+        }
+        form = {
+            "count": "10",
+            "cursor": self.cursor,
+        }
+        self.deal_url_params(params)
+        self.list = []
+        if not (
+                data := self.send_request(
+                    self.collection_api,
+                    "账号收藏作品数据",
+                    params=params, data=form, type_="post")):
+            return False
+        try:
+            if (list_ := data["aweme_list"]) is None:
+                self.log.info("需要使用登陆后的 Cookie 才能获取账号收藏作品数据")
+                self.finish = True
+            else:
+                self.cursor = data['cursor']
+                self.list = list_
+                self.finish = not data["has_more"]
+            return True
+        except KeyError:
+            self.log.error(f"账号收藏作品数据响应内容异常: {data}", False)
+            return False
