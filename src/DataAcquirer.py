@@ -1,7 +1,6 @@
 import time
 from datetime import date
 from datetime import datetime
-from random import randrange
 from re import compile
 from urllib.parse import parse_qs
 from urllib.parse import quote
@@ -17,8 +16,8 @@ from src.StringCleaner import Cleaner
 
 
 def sleep():
-    """避免频繁请求"""
-    time.sleep(randrange(15, 45, 5) * 0.1)
+    """设置网络请求间隔时间，仅对获取数据生效，不影响下载文件"""
+    pass
 
 
 def reset(function):
