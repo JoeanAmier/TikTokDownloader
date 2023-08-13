@@ -1313,7 +1313,17 @@ class UserData:
             self.sec_user_id = sec_user_id
 
     class Search:
-        pass
+        def __init__(self,
+                     keyword: str,
+                     tab=0,
+                     page=1,
+                     sort_type=0,
+                     publish_time=0):
+            self.keyword = keyword
+            self.tab = tab
+            self.page = page
+            self.sort_type = sort_type
+            self.publish_time = publish_time
 
     class Hot:
         pass
