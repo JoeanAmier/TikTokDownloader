@@ -1289,30 +1289,24 @@ class UserData:
             self.log.error(f"账号收藏作品数据响应内容异常: {data}", False)
             return False
 
+    class Account:
+        def __init__(self, sec_uid: str):
+            self.sec_uid = sec_uid
 
-class Account:
-    pass
+    class Comment:
+        pass
 
+    class Mix:
+        pass
 
-class Comment:
-    pass
+    class Live:
+        pass
 
+    class User:
+        pass
 
-class Mix:
-    pass
+    class Search:
+        pass
 
-
-class Live:
-    pass
-
-
-class User:
-    pass
-
-
-class Search:
-    pass
-
-
-class Hot:
-    pass
+    class Hot:
+        pass
