@@ -1290,20 +1290,27 @@ class UserData:
             return False
 
     class Account:
-        def __init__(self, sec_uid: str):
-            self.sec_uid = sec_uid
+        def __init__(self, sec_user_id: str, tab="post"):
+            self.sec_user_id = sec_user_id
+            self.tab = tab
 
     class Comment:
-        pass
+        def __init__(self, item_id: str):
+            self.item_id = item_id
 
     class Mix:
-        pass
+        def __init__(self, mix_id=None, item_id=None):
+            self.mix_id = mix_id
+            self.item_id = item_id
 
     class Live:
-        pass
+        def __init__(self, room_id=None, web_rid=None):
+            self.web_rid = web_rid
+            self.room_id = room_id
 
     class User:
-        pass
+        def __init__(self, sec_user_id: str):
+            self.sec_user_id = sec_user_id
 
     class Search:
         pass
