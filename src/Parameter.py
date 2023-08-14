@@ -399,6 +399,38 @@ class VerifyFp:
         return f"verify_{r}_" + ''.join(o)
 
 
+class SVWebId:
+    """代码参考: https://github.com/Johnserf-Seed/TikTokDownload/blob/main/Util/algorithm/s_v_web_id.py"""
+
+    @staticmethod
+    def generate_s_v_web_id():
+        e = list("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+        t = len(e)
+        n = SVWebId.base36_encode(int(time() * 1000))
+
+        r = [''] * 36
+        r[8] = r[13] = r[18] = r[23] = "_"
+        r[14] = "4"
+
+        for i in range(36):
+            if not r[i]:
+                o = int(random() * t)
+                r[i] = e[3 & o | 8 if i == 19 else o]
+
+        return f"verify_{n}_" + "".join(r)
+
+    @staticmethod
+    def base36_encode(number):
+        alphabet = '0123456789abcdefghijklmnopqrstuvwxyz'
+        base36 = []
+
+        while number:
+            number, i = divmod(number, 36)
+            base36.append(alphabet[i])
+
+        return ''.join(reversed(base36))
+
+
 if __name__ == "__main__":
     # params = {
     #     "device_platform": "webapp",
@@ -419,3 +451,4 @@ if __name__ == "__main__":
     #                                         238,
     #                                         )), 23))
     print(VerifyFp.get_verify_fp())
+    print(SVWebId.generate_s_v_web_id())
