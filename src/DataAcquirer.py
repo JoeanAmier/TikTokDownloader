@@ -1290,9 +1290,10 @@ class UserData:
             return False
 
     class Account:
-        def __init__(self, sec_user_id: str, tab="post"):
+        def __init__(self, sec_user_id: str, tab="post", pages=0):
             self.sec_user_id = sec_user_id
             self.tab = tab
+            self.pages = pages
 
     class Comment:
         def __init__(self, item_id: str):
@@ -1327,3 +1328,8 @@ class UserData:
 
     class Hot:
         pass
+
+    class Collection:
+        def __init__(self, sec_user_id: str, pages=0):
+            self.sec_user_id = sec_user_id
+            self.pages = pages
