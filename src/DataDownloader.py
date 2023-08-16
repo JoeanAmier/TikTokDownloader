@@ -760,6 +760,12 @@ class Download:
             self.download_images()
             self.log.info(f"{self.nickname} 的合集下载结束")
 
+    class SoloDownload:
+        pass
+
+    class BatchDownload:
+        pass
+
 
 class FakeThreadPool:
     def __init__(self, *args, **kwargs):
