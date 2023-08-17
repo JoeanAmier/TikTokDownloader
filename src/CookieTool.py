@@ -144,13 +144,17 @@ class Register:
 
     def generate_qr_code(self, url):
         qr_code = QRCode()
+        assert url, "无效的登录二维码 URL，请联系作者处理！"
         qr_code.add_data(url)
         qr_code.make(fit=True)
         qr_code.print_ascii(invert=True)
         if self.system in ("Windows", "Darwin"):
             # 仅在 Windows 和 MAC 系统自动打开登录二维码图片
             image = qr_code.make_image()
-            image.show()
+            try:
+                image.show()
+            except AttributeError:
+                print("打开登录二维码图片失败，请扫描终端二维码！")
 
     def get_qr_code(self, version=23):
         self.verify_fp = VerifyFp.get_verify_fp()
