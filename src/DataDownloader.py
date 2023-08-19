@@ -9,9 +9,9 @@ from threading import Thread
 import requests
 from emoji import replace_emoji
 
+from main import wait
 from src.DataAcquirer import check_cookie
 from src.DataAcquirer import retry
-from src.DataAcquirer import sleep
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
@@ -311,7 +311,7 @@ class Download:
                 params=params,
                 proxies=self.proxies,
                 headers=headers, timeout=10)
-            sleep()
+            wait()
             if response.content == b"":
                 self.log.warning("作品详细数据响应内容为空")
                 return False
@@ -915,7 +915,7 @@ if __name__ == "__main__":
     demo = LoadingAnimation()
     thread = Thread(target=demo.run)
     thread.start()
-    sleep()
+    wait()
     demo.stop()
     print("运行结束！")
     a = FakeThreadPool

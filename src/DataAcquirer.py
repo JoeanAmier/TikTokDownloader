@@ -8,16 +8,12 @@ from urllib.parse import urlparse
 
 import requests
 
+from main import wait
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
-
-
-def sleep():
-    """设置网络请求间隔时间，仅对获取数据生效，不影响下载文件"""
-    pass
 
 
 def reset(function):
@@ -355,7 +351,7 @@ class UserData:
                 proxies=self.proxies,
                 **kwargs,
                 timeout=10)
-            sleep()
+            wait()
             if response.content == b"":
                 self.log.warning(f"{url} {value} 响应内容为空")
                 return False
