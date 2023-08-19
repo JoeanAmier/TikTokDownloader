@@ -1323,7 +1323,7 @@ class Acquirer:
             self.publish_time = publish_time
 
     class Hot:
-        pass
+        tab = ("热榜", "娱乐榜", "社会榜", "挑战榜")
 
     class Collection:
         def __init__(self, sec_user_id: str, pages=0):
