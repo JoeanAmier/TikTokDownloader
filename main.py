@@ -21,7 +21,7 @@ from src.main_server import Server
 from src.main_web_UI import WebUI
 
 
-class Master:
+class TikTokDownloader:
     VERSION = 4.1
     STABLE = False
 
@@ -207,4 +207,4 @@ class Master:
 
 
 if __name__ == '__main__':
-    Master().run()
+    TikTokDownloader().run()
