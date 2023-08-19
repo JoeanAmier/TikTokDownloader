@@ -33,7 +33,7 @@ def reset(function):
     return inner
 
 
-class Download:
+class Downloader:
     PC_UA = {
         "User-Agent": ""
     }  # 下载请求头

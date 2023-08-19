@@ -1,8 +1,8 @@
 from flask import render_template
 from flask import request
 
-from src.DataAcquirer import UserData
-from src.DataDownloader import Download
+from src.DataAcquirer import Acquirer
+from src.DataDownloader import Downloader
 from src.Recorder import BaseLogger
 from src.Recorder import NoneLogger
 from src.main_web_UI import WebUI
@@ -19,8 +19,8 @@ class Server(WebUI):
             name="%Y-%m-%d %H.%M.%S",
             filename=None, ):
         self.logger = BaseLogger(self.colour)
-        self.request = UserData(self.logger, self.xb, self.colour)
-        self.download = Download(
+        self.request = Acquirer(self.logger, self.xb, self.colour)
+        self.download = Downloader(
             self.logger,
             None,
             self.xb,

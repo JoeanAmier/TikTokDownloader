@@ -1,7 +1,7 @@
 from time import time
 
-from src.DataAcquirer import UserData
-from src.DataDownloader import Download
+from src.DataAcquirer import Acquirer
+from src.DataDownloader import Downloader
 from src.FileManager import Cache
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
@@ -326,8 +326,8 @@ class TikTok:
         self.logger.folder = folder  # 日志文件夹名称
         self.logger.name = name  # 日志文件名称格式
         self.logger.run(filename=filename)
-        self.request = UserData(self.logger, self.xb, self.colour)
-        self.download = Download(
+        self.request = Acquirer(self.logger, self.xb, self.colour)
+        self.download = Downloader(
             self.logger,
             None,
             self.xb,

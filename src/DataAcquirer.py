@@ -86,7 +86,7 @@ def update_headers(headers):
     return inner
 
 
-class UserData:
+class Acquirer:
     headers = {
         "User-Agent": "",
         'Referer': 'https://www.douyin.com/',
