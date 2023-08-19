@@ -1285,47 +1285,83 @@ class Acquirer:
             self.log.error(f"账号收藏作品数据响应内容异常: {data}", False)
             return False
 
-    class Account:
-        def __init__(self, sec_user_id: str, tab="post", pages=0):
-            self.sec_user_id = sec_user_id
-            self.tab = tab
-            self.pages = pages
 
-    class Comment:
-        def __init__(self, item_id: str):
-            self.item_id = item_id
+class Parameter:
+    def __init__(self, ):
+        pass
 
-    class Mix:
-        def __init__(self, mix_id=None, item_id=None):
-            self.mix_id = mix_id
-            self.item_id = item_id
 
-    class Live:
-        def __init__(self, room_id=None, web_rid=None):
-            self.web_rid = web_rid
-            self.room_id = room_id
+class NewAcquirer:
+    def __init__(self, params):
+        self.params = params
 
-    class User:
-        def __init__(self, sec_user_id: str):
-            self.sec_user_id = sec_user_id
 
-    class Search:
-        def __init__(self,
-                     keyword: str,
-                     tab=0,
-                     page=1,
-                     sort_type=0,
-                     publish_time=0):
-            self.keyword = keyword
-            self.tab = tab
-            self.page = page
-            self.sort_type = sort_type
-            self.publish_time = publish_time
+class Account(NewAcquirer):
+    def __init__(self, params, sec_user_id: str, tab="post", pages=0):
+        super().__init__(params)
+        self.sec_user_id = sec_user_id
+        self.tab = tab
+        self.pages = pages
 
-    class Hot:
-        tab = ("热榜", "娱乐榜", "社会榜", "挑战榜")
 
-    class Collection:
-        def __init__(self, sec_user_id: str, pages=0):
-            self.sec_user_id = sec_user_id
-            self.pages = pages
+class Works(NewAcquirer):
+    def __init__(self, params, id_: str):
+        super().__init__(params)
+        self.id = id_
+
+
+class Comment(NewAcquirer):
+    def __init__(self, params, item_id: str):
+        super().__init__(params)
+        self.item_id = item_id
+
+
+class Mix(NewAcquirer):
+    def __init__(self, params, mix_id=None, item_id=None):
+        super().__init__(params)
+        self.mix_id = mix_id
+        self.item_id = item_id
+
+
+class Live(NewAcquirer):
+    def __init__(self, params, room_id=None, web_rid=None):
+        super().__init__(params)
+        self.web_rid = web_rid
+        self.room_id = room_id
+
+
+class User(NewAcquirer):
+    def __init__(self, params, sec_user_id: str):
+        super().__init__(params)
+        self.sec_user_id = sec_user_id
+
+
+class Search(NewAcquirer):
+    def __init__(
+            self,
+            params,
+            keyword: str,
+            tab=0,
+            page=1,
+            sort_type=0,
+            publish_time=0):
+        super().__init__(params)
+        self.keyword = keyword
+        self.tab = tab
+        self.page = page
+        self.sort_type = sort_type
+        self.publish_time = publish_time
+
+
+class Hot(NewAcquirer):
+    tab = ("热榜", "娱乐榜", "社会榜", "挑战榜")
+
+    def __init__(self, params):
+        super().__init__(params)
+
+
+class Collection(NewAcquirer):
+    def __init__(self, params, sec_user_id: str, pages=0):
+        super().__init__(params)
+        self.sec_user_id = sec_user_id
+        self.pages = pages
