@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 
 import requests
 
-from main import wait
+from src.Customizer import wait
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.Recorder import BaseLogger

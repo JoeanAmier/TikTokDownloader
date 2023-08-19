@@ -9,7 +9,7 @@ from threading import Thread
 import requests
 from emoji import replace_emoji
 
-from main import wait
+from src.Customizer import wait
 from src.DataAcquirer import check_cookie
 from src.DataAcquirer import retry
 from src.Recorder import BaseLogger

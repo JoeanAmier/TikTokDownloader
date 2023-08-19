@@ -21,11 +21,6 @@ from src.main_server import Server
 from src.main_web_UI import WebUI
 
 
-def wait():
-    """设置网络请求间隔时间，仅对获取数据生效，不影响下载文件"""
-    pass
-
-
 class Master:
     VERSION = 4.1
     STABLE = False
