@@ -1,5 +1,6 @@
 from time import time
 
+from src.Customizer import failed
 from src.DataAcquirer import Acquirer
 from src.DataDownloader import Downloader
 from src.FileManager import Cache
@@ -185,7 +186,7 @@ class TikTok:
                     save,
                     root,
                     params):
-                if input("输入任意字符继续运行，直接回车结束运行: "):
+                if failed():
                     continue
                 break
             # break  # 调试使用
@@ -210,7 +211,7 @@ class TikTok:
                         save,
                         root,
                         params):
-                    if input("输入任意字符继续运行，直接回车结束运行: "):
+                    if failed():
                         continue
                     break
 
