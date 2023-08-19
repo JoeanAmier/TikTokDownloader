@@ -1,15 +1,16 @@
-from random import randint
-from time import sleep
+# 启用延迟需要取消注释
+# from random import randint
+# from time import sleep
 
 
 def wait():
     """设置网络请求间隔时间，仅对获取数据生效，不影响下载文件"""
     # 随机延时
-    sleep(randint(15, 35) * 0.1)
-    # 固定间隔
+    # sleep(randint(15, 35) * 0.1)
+    # 固定延时
     # sleep(2)
-    # 取消间隔
-    # pass
+    # 取消延时
+    pass
 
 
 def failed():
