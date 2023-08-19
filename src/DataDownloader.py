@@ -9,6 +9,7 @@ from threading import Thread
 import requests
 from emoji import replace_emoji
 
+from src.Customizer import MAX_WORKERS
 from src.Customizer import wait
 from src.DataAcquirer import check_cookie
 from src.DataAcquirer import retry
@@ -45,7 +46,6 @@ class Downloader:
     item_tiktok_api = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"  # 作品数据接口
     clean = Cleaner()  # 过滤错误字符
     length = 64  # 作品描述长度限制
-    max_workers = 8  # 线程池最大线程数量
     temp = Path("./cache/temp")
 
     def __init__(
@@ -702,7 +702,7 @@ class Downloader:
         self.log.info(f"获取{tip}账号的{collection}作品数据成功")
         if not self.download:
             return
-        with self.__pool(max_workers=self.max_workers) as self.__thread:
+        with self.__pool(max_workers=MAX_WORKERS) as self.__thread:
             self.log.info(f"开始下载{tip}账号的{collection}视频/图集")
             self.download_video()
             self.download_images()
@@ -727,7 +727,7 @@ class Downloader:
         self.get_info([data], api)
         if api:
             return self.api_data
-        with self.__pool(max_workers=self.max_workers) as self.__thread:
+        with self.__pool(max_workers=MAX_WORKERS) as self.__thread:
             if data.get("images") or data.get("image_post_info"):
                 if not download:
                     return self.image_data
@@ -754,7 +754,7 @@ class Downloader:
         self.get_info(items, api)
         if not self.download:
             return
-        with self.__pool(max_workers=self.max_workers) as self.__thread:
+        with self.__pool(max_workers=MAX_WORKERS) as self.__thread:
             self.log.info(f"{self.nickname} 的合集开始下载")
             self.download_video()
             self.download_images()
