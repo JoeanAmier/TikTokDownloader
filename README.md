@@ -88,6 +88,7 @@ TikTokDownloader
 ├─ settings.json                           // 运行参数配置文件
 ├─ src                                     // 项目模块源码文件夹
 │    ├─ CookieTool.py                      // Cookie 写入模块
+│    ├─ Customizer.py                      // 项目代码调整模块
 │    ├─ Configuration.py                   // 配置文件处理模块
 │    ├─ DataAcquirer.py                    // 接口数据获取模块
 │    ├─ DataDownloader.py                  // 作品文件下载模块
@@ -101,6 +102,7 @@ TikTokDownloader
 │    ├─ main_api_server.py                 // Web API 接口模式启动入口
 │    └─ main_web_UI.py                     // Web UI 交互模式启动入口
 ├─ cache                                   // 缓存数据文件夹
+│    └─ IDRecorder.txt                     // 作品下载记录文件
 ├─ static                                  // 静态资源文件夹
 ├─ templates                               // HTML 模板文件夹
 └─ docs                                    // 项目文档文件夹
