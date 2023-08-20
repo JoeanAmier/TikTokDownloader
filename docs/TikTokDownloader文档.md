@@ -28,7 +28,7 @@
 <li>选择 <code>复制粘贴写入 Cookie</code> 模式，按照提示将 Cookie 写入配置文件</li>
 </ol>
 <ol><b>扫码登录获取</b>
-<li>选择 <code>扫码登陆写入 Cookie</code> 模式，程序会弹出登录二维码图片</li>
+<li>选择 <code>扫码登陆写入 Cookie</code> 模式，程序会显示登录二维码图片</li>
 <li>使用抖音 APP 扫描二维码并登录账号，操作后关闭图片窗口</li>
 <li>按照提示将 Cookie 写入配置文件</li>
 </ol>
