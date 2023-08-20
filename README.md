@@ -123,7 +123,7 @@ TikTokDownloader
 <li>选择 <code>复制粘贴写入 Cookie</code> 模式，按照提示将 Cookie 写入配置文件</li>
 </ol>
 <ol><b>扫码登录获取</b>
-<li>选择 <code>扫码登陆写入 Cookie</code> 模式，程序会弹出登录二维码图片</li>
+<li>选择 <code>扫码登陆写入 Cookie</code> 模式，程序会显示登录二维码图片</li>
 <li>使用抖音 APP 扫描二维码并登录账号，操作后关闭图片窗口</li>
 <li>按照提示将 Cookie 写入配置文件</li>
 </ol>
@@ -170,7 +170,7 @@ TikTokDownloader
 <li>获取私密账号的发布作品数据需要登录后的 Cookie，且登录的账号需要关注该私密账号</li>
 <li>批量下载账号作品或合集作品时，如果对应的昵称或标识发生变化，程序会自动更新已下载作品文件名称中的昵称和标识</li>
 <li>程序下载文件时会先将文件下载至临时文件夹，下载完成后再移动至储存文件夹；程序运行结束时会清空临时文件夹</li>
-<li>为了避免频繁请求导致 IP 被风控，程序已加入延时处理机制。如果追求更高的采集效率，请参阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/issues/42">修改指引</a></li>
+<li>如需修改部分程序代码功能，可以直接修改 <code>src/Customizer.py</code> 文件内容</li>
 </ul>
 
 # ⚠️ 免责声明
