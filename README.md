@@ -70,10 +70,10 @@
 # 📈 项目状态
 
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已通过测试，功能均可正常使用
+* 🟢 已发布 EXE 可执行文件，可前往 [Issue](https://github.com/JoeanAmier/TikTokDownloader/issues/49) 下载
 * 🟢 正在重构项目代码，提高代码复用性和可维护性
 * 🟢 准备优化批量下载账号收藏作品功能
 * 🟡 未来可能优化 Web API 接口模式，使其支持并发请求
-* 🟡 未来可能发布 EXE 可执行文件
 * 🟡 未来可能开发获取账号关注列表功能
 * 🟡 未来可能开发获取账号收藏合集列表功能
 * 🔴 最新版本的源码可能存在不稳定的 Bug
