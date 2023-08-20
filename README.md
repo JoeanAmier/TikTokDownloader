@@ -132,6 +132,8 @@ TikTokDownloader
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 </ol>
 
+<p>⭐ <b>已发布 EXE 可执行文件，可直接 <a href="https://github.com/JoeanAmier/TikTokDownloader/issues/49">下载</a> 运行！</b></p>
+
 <b>
 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/TikTokDownloader-Documentation">点击查看项目完整文档</a>
 </b>
