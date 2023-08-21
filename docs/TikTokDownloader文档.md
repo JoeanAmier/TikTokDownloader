@@ -36,7 +36,7 @@
 <li>返回程序界面，依次选择 <code>终端命令行模式</code> --> <code>单独下载链接作品</code></li>
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 </ol>
-<p>⭐ <b>已发布 EXE 可执行文件，可直接 <a href="https://github.com/JoeanAmier/TikTokDownloader/issues/49">下载</a> 运行，开箱即用！</b></p>
+<p>⭐ <b>已发布 EXE 可执行文件，可以直接 <a href="https://github.com/JoeanAmier/TikTokDownloader/issues/49">下载</a> 解压运行，开箱即用！</b></p>
 <h1>基础说明</h1>
 <h2>链接类型</h2>
 <table>
