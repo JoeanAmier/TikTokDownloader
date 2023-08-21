@@ -87,6 +87,7 @@ def update_headers(headers):
 
 
 class Acquirer:
+    """未来将会弃用"""
     headers = {
         "User-Agent": "",
         'Referer': 'https://www.douyin.com/',
@@ -1294,6 +1295,7 @@ class Parameter:
 class NewAcquirer:
     def __init__(self, params):
         self.params = params
+        self.data = []
 
 
 class Account(NewAcquirer):
