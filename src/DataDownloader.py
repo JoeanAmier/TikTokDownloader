@@ -35,6 +35,7 @@ def reset(function):
 
 
 class Downloader:
+    """未来将会弃用"""
     PC_UA = {
         "User-Agent": ""
     }  # 下载请求头
@@ -760,15 +761,23 @@ class Downloader:
             self.download_images()
             self.log.info(f"{self.nickname} 的合集下载结束")
 
-    class Extractor:
+
+class Parameter:
+    def __init__(self, ):
         pass
 
-    class Downloader:
-        def __init__(self, url, path, name, suffix):
-            self.url = url
-            self.path = path
-            self.name = name
-            self.suffix = suffix
+
+class Extractor:
+    pass
+
+
+class NewDownloader:
+    def __init__(self, params, url, path, name, suffix):
+        self.params = params
+        self.url = url
+        self.path = path
+        self.name = name
+        self.suffix = suffix
 
 
 class FakeThreadPool:
