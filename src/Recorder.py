@@ -207,8 +207,8 @@ class CSVLogger:
         if not old or mark[-1] == old:
             return new_
         mark[-1] = old
-        old_file = root.join(f'{"_".join(mark)}.{type_}')
-        new_file = root.join(f"new_.{type_}")
+        old_file = root.joinpath(f'{"_".join(mark)}.{type_}')
+        new_file = root.joinpath(f"{new_}.{type_}")
         old_file.rename(new_file)
         return new_
 
