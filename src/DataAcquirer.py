@@ -1289,13 +1289,30 @@ class Acquirer:
 
 
 class Parameter:
-    def __init__(self, ):
-        pass
+    def __init__(
+            self,
+            user_agent: str,
+            ua_code: tuple,
+            log: LoggerManager | BaseLogger,
+            xb,
+            colour):
+        self.headers = {
+            "User-Agent": user_agent,
+            "Referer": "https://www.douyin.com/",
+        }
+        self.code = ua_code
+        self.log = log
+        self.xb = xb
+        self.colour = colour
 
 
 class NewAcquirer:
     def __init__(self, params):
-        self.params = params
+        self.headers = params.headers
+        self.code = params.code
+        self.log = params.log
+        self.xb = params.xb
+        self.colour = params.colour
         self.data = []
 
 
