@@ -160,6 +160,7 @@ class NoneLogger:
 
 class CSVLogger:
     """CSV格式记录"""
+    __type = "csv"
 
     def __init__(
             self,
@@ -171,10 +172,9 @@ class CSVLogger:
             *args,
             **kwargs):
         self.file = None  # 文件对象
-        self.__type = "csv"
         self.writer = None  # CSV对象
         self.root = Path(root)  # 文件路径
-        self.name = self.rename(root, self.__type, old, name)  # 文件名称
+        self.name = self.rename(self.root, self.__type, old, name)  # 文件名称
         self.title_line = title_line  # 标题行
         self.index = 1 if solo_key else 0
 
@@ -208,13 +208,15 @@ class CSVLogger:
             return new_
         mark[-1] = old
         old_file = root.joinpath(f'{"_".join(mark)}.{type_}')
-        new_file = root.joinpath(f"{new_}.{type_}")
-        old_file.rename(new_file)
+        if old_file.exists():
+            new_file = root.joinpath(f"{new_}.{type_}")
+            old_file.rename(new_file)
         return new_
 
 
 class XLSXLogger:
     """XLSX格式"""
+    __type = "xlsx"
 
     def __init__(
             self,
@@ -228,8 +230,7 @@ class XLSXLogger:
         self.book = None  # XLSX数据簿
         self.sheet = None  # XLSX数据表
         self.root = Path(root)  # 文件路径
-        self.__type = "xlsx"
-        self.name = CSVLogger.rename(root, self.__type, old, name)  # 文件名称
+        self.name = CSVLogger.rename(self.root, self.__type, old, name)  # 文件名称
         self.title_line = title_line  # 标题行
         self.index = 1 if solo_key else 0
 
