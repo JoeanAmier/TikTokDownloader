@@ -324,7 +324,8 @@ class Acquirer:
         if not value or not isinstance(value, str):
             self._mark = None
         else:
-            self._mark = s if (s := self.clean.filter(value)) else None
+            self._mark = s if (
+                s := self.clean.filter(value)).rstrip(".") else None
 
     @property
     def pages(self):
@@ -453,7 +454,7 @@ class Acquirer:
             return
         self.uid = f'UID{self.list[0]["author"]["uid"]}'
         self.name = self.clean.filter(
-            self.list[0]["author"]["nickname"]) or self.uid
+            self.list[0]["author"]["nickname"]).rstrip(".") or self.uid
         for item in self.list:
             if item["images"]:
                 self.image_data.append(
@@ -502,7 +503,7 @@ class Acquirer:
         try:
             self.uid = f'UID{data["aweme_list"][0]["author"]["uid"]}'
             self.name = self.clean.filter(
-                data["aweme_list"][0]["author"]["nickname"]) or self.uid
+                data["aweme_list"][0]["author"]["nickname"]).rstrip(".") or self.uid
             return True
         except KeyError:
             self.log.warning(
