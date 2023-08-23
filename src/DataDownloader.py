@@ -799,6 +799,9 @@ class NewDownloader:
     def request_file(self):
         pass
 
+    def download_file(self, urls: list):
+        pass
+
 
 class FakeThreadPool:
     def __init__(self, *args, **kwargs):

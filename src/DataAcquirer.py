@@ -1303,10 +1303,10 @@ class Parameter:
             time_: str,
             split: str,
             music: bool,
-            save: str,
+            storage: str,
             dynamic: bool,
             original: bool,
-            proxies,
+            proxies: str,
             download: bool,
             max_size: int,
             chunk: int,
@@ -1322,12 +1322,42 @@ class Parameter:
         self.log = log
         self.xb = xb
         self.colour = colour
-        self.cookie = cookie
+        self.cookie = self.check_cookie(cookie)
         self.root = root
         self.blacklist = blacklist
         self.thread = thread_
 
     def check_cookie(self, cookie: dict):
+        pass
+
+    def check_root(self, root: str):
+        pass
+
+    def check_folder(self, folder: str):
+        pass
+
+    def check_name(self, name: str):
+        pass
+
+    def check_time(self, time: str):
+        pass
+
+    def check_split(self, split: str):
+        pass
+
+    def check_storage(self, storage: str):
+        pass
+
+    def check_proxies(self, proxies: str):
+        pass
+
+    def check_max_size(self, max_size: int):
+        pass
+
+    def check_chunk(self, chunk: int):
+        pass
+
+    def check_max_retry(self, max_retry: int):
         pass
 
 
