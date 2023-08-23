@@ -26,3 +26,8 @@ def failed():
     # return True
     # 结束执行
     # return False
+
+
+def illegal_nickname():
+    """当账号昵称 / 合集标题过滤非法字符后不是有效的文件夹名称时，如何处理"""
+    pass
