@@ -1314,6 +1314,39 @@ class NewAcquirer:
         self.xb = params.xb
         self.colour = params.colour
         self.data = []
+        self.response = []
+
+
+class Share:
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
+    }
+
+    def __init__(self, max_retry=10):
+        self.max_retry = max_retry
+
+    def get_url(self, url: str):
+        try:
+            response = requests.get(
+                url,
+                timeout=10,
+                headers=self.headers,
+                allow_redirects=False)
+        except (
+                requests.exceptions.ProxyError,
+                requests.exceptions.SSLError,
+                requests.exceptions.ChunkedEncodingError,
+                requests.exceptions.ConnectionError,
+                requests.ReadTimeout,
+        ):
+            return False
+        return response.history
+
+
+class Link(NewAcquirer):
+    def __init__(self, params):
+        super().__init__(params)
+        self.share = Share()
 
 
 class Account(NewAcquirer):
