@@ -1295,21 +1295,30 @@ class Parameter:
             ua_code: tuple,
             log: LoggerManager | BaseLogger,
             xb,
-            colour):
+            colour,
+            cookie: dict,
+            root: str,
+            blacklist=None,
+            thread_=False,
+    ):
         self.headers = {
             "User-Agent": user_agent,
-            "Referer": "https://www.douyin.com/",
         }
-        self.code = ua_code
+        self.ua_code = ua_code
         self.log = log
         self.xb = xb
         self.colour = colour
+        self.cookie = cookie
+        self.root = root
+        self.blacklist = blacklist
+        self.thread = thread_
 
 
 class NewAcquirer:
     def __init__(self, params):
-        self.headers = params.headers
-        self.code = params.code
+        self.headers = params.headers | {
+            "Referer": "https://www.douyin.com/", }
+        self.ua_code = params.ua_code
         self.log = params.log
         self.xb = params.xb
         self.colour = params.colour

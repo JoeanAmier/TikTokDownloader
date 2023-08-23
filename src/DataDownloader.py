@@ -762,22 +762,23 @@ class Downloader:
             self.log.info(f"{self.nickname} 的合集下载结束")
 
 
-class Parameter:
-    def __init__(self, ):
-        pass
-
-
 class Extractor:
     pass
 
 
 class NewDownloader:
-    def __init__(self, params, url, path, name, suffix):
-        self.params = params
-        self.url = url
-        self.path = path
-        self.name = name
-        self.suffix = suffix
+    def __init__(self, params):
+        self.PC_headers = params.headers
+        self.black_headers = None
+        self.Phone_headers = None
+        self.ua_code = params.ua_code
+        self.log = params.log
+        self.storage = params.storage
+        self.xb = params.xb
+        self.colour = params.colour
+        self.root = params.root
+        self.blacklist = params.blacklist
+        self.thread = params.thread
 
 
 class FakeThreadPool:
