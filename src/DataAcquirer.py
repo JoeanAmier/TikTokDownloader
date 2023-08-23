@@ -1351,11 +1351,32 @@ class Share:
             return False
         return response.history
 
+    def user(self):
+        pass
+
+    def works(self):
+        pass
+
+    def live(self):
+        pass
+
 
 class Link(NewAcquirer):
     def __init__(self, params):
         super().__init__(params)
         self.share = Share()
+
+    def user(self):
+        pass
+
+    def works(self):
+        pass
+
+    def mix(self):
+        pass
+
+    def live(self):
+        pass
 
 
 class Account(NewAcquirer):

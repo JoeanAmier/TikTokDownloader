@@ -778,7 +778,26 @@ class NewDownloader:
         self.colour = params.colour
         self.root = params.root
         self.blacklist = params.blacklist
-        self.thread = params.thread
+        self.__thread = ThreadPoolExecutor if params.thread else FakeThreadPool
+        self.__pool = None
+
+    def download_image(self):
+        pass
+
+    def download_video(self):
+        pass
+
+    def download_music(self):
+        pass
+
+    def download_cover(self):
+        pass
+
+    def download_live(self):
+        pass
+
+    def request_file(self):
+        pass
 
 
 class FakeThreadPool:
