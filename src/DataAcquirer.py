@@ -1298,9 +1298,23 @@ class Parameter:
             colour,
             cookie: dict,
             root: str,
-            blacklist=None,
-            thread_=False,
+            folder: str,
+            name: str,
+            time_: str,
+            split: str,
+            music: bool,
+            save: str,
+            dynamic: bool,
+            original: bool,
+            proxies,
+            download: bool,
+            max_size: int,
+            chunk: int,
+            max_retry: int,
+            blacklist,
+            thread_,
     ):
+        self.status = True
         self.headers = {
             "User-Agent": user_agent,
         }
@@ -1313,8 +1327,69 @@ class Parameter:
         self.blacklist = blacklist
         self.thread = thread_
 
+    def check_cookie(self, cookie: dict):
+        pass
+
 
 class NewAcquirer:
+    # 抖音链接
+    share_link = compile(
+        r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")  # 分享链接
+    account_link = compile(
+        r".*?https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*?")  # 账号主页链接
+    works_link = compile(
+        r".*?https://www\.douyin\.com/(?:video|note)/([0-9]{19}).*?")  # 作品链接
+    mix_link = compile(
+        r".*?https://www.douyin.com/collection/(\d{19}).*?")  # 合集链接
+    live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
+
+    # 抖音 API
+    item_api = "https://www.douyin.com/aweme/v1/web/aweme/detail/"  # 作品数据接口
+    live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
+    live_share_api = "https://webcast.amemv.com/webcast/room/reflow/info/"  # 直播分享链接API
+    comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
+    reply_api = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
+    collection_api = "https://www.douyin.com/aweme/v1/web/aweme/listcollection/"  # 收藏API
+    mix_api = "https://www.douyin.com/aweme/v1/web/mix/aweme/"  # 合集API
+    mix_list_api = "https://www.douyin.com/aweme/v1/web/mix/listcollection/"  # 合集列表API
+    info_api = "https://www.douyin.com/aweme/v1/web/im/user/info/"  # 账号简略数据API
+    feed_api = "https://www.douyin.com/aweme/v1/web/tab/feed/"  # 推荐页API
+    user_api = "https://www.douyin.com/aweme/v1/web/user/profile/other/"  # 账号详细数据API
+    hot_api = "https://www.douyin.com/aweme/v1/web/hot/search/list/"  # 热榜API
+    spotlight_api = "https://www.douyin.com/aweme/v1/web/im/spotlight/relation/"  # 关注账号API
+    familiar_api = "https://www.douyin.com/aweme/v1/web/familiar/feed/"  # 朋友作品推荐API
+    follow_api = "https://www.douyin.com/aweme/v1/web/follow/feed/"  # 关注账号作品推荐API
+    history_api = "https://www.douyin.com/aweme/v1/web/history/read/"  # 观看历史API
+    following_api = "https://www.douyin.com/aweme/v1/web/user/following/list/"  # 关注列表API
+    search_api = (
+        ("https://www.douyin.com/aweme/v1/web/general/search/single/", 15, "aweme_general", "general",),
+        ("https://www.douyin.com/aweme/v1/web/search/item/", 20, "aweme_video_web", "video",),
+        ("https://www.douyin.com/aweme/v1/web/discover/search/", 12, "aweme_user_web", "user",),
+        ("https://www.douyin.com/aweme/v1/web/live/search/", 15, "aweme_live", "",),
+        ("API", "首次请求返回数量", "search_channel", "type")
+    )
+    hot_params = (
+        (0, ""),
+        (2, 2),
+        (2, 4),
+        (2, "hotspot_challenge"),
+    )
+
+    # TikTok 链接
+    share_tiktok_link = compile(
+        r".*?(https://vm\.tiktok\.com/[a-zA-Z0-9]+/).*?")
+    works_tiktok_link = compile(
+        r".*?https://www\.tiktok\.com/@.+/video/(\d+).*?")  # 匹配作品链接
+
+    # TikTok API
+    recommend_api = "https://www.tiktok.com/api/recommend/item_list/"  # 推荐页API
+    home_tiktok_api = "https://www.tiktok.com/api/post/item_list/"  # 发布页API
+    user_tiktok_api = "https://www.tiktok.com/api/user/detail/"  # 账号数据API
+    related_tiktok_api = "https://www.tiktok.com/api/related/item_list/"  # 猜你喜欢API
+    comment_tiktok_api = "https://www.tiktok.com/api/comment/list/"  # 评论API
+    reply_tiktok_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
+    item_tiktok_api = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"  # 作品数据接口
+
     def __init__(self, params):
         self.headers = params.headers | {
             "Referer": "https://www.douyin.com/", }
