@@ -1,13 +1,16 @@
 import time
 from datetime import date
 from datetime import datetime
+from pathlib import Path
 from re import compile
+from re import sub
 from urllib.parse import parse_qs
 from urllib.parse import quote
 from urllib.parse import urlparse
 
 import requests
 
+from src.CookieTool import Register
 from src.Customizer import wait
 from src.Parameter import MsToken
 from src.Parameter import TtWid
@@ -1323,18 +1326,27 @@ class Parameter:
         self.xb = xb
         self.colour = colour
         self.cookie = self.check_cookie(cookie)
-        self.root = root
+        self.root = self.check_root(root)
+        self.folder = self.check_folder(folder)
         self.blacklist = blacklist
+        self.id_set = self.blacklist.get_set()
         self.thread = thread_
 
+    def error(self):
+        self.status = False
+        return None
+
     def check_cookie(self, cookie: dict):
-        pass
+        if isinstance(cookie, dict):
+            self.headers[""] = Register.generate_cookie(cookie)
+            return cookie
+        return self.error()
 
     def check_root(self, root: str):
-        pass
+        return r if (r := Path(root)).is_dir() else self.error()
 
     def check_folder(self, folder: str):
-        pass
+        return folder if (folder := self.clean_text(folder)) else self.error()
 
     def check_name(self, name: str):
         pass
@@ -1359,6 +1371,20 @@ class Parameter:
 
     def check_max_retry(self, max_retry: int):
         pass
+
+    @staticmethod
+    def clean_text(text):
+        """清洗字符串，仅保留中文、英文、数字和下划线"""
+        # 使用正则表达式匹配非中文、英文、数字和下划线字符，并替换为单个下划线
+        text = sub(r'[^\u4e00-\u9fa5a-zA-Z0-9_]+', '_', text)
+
+        # 去除连续的下划线
+        text = sub(r'_+', '_', text)
+
+        # 去除首尾的下划线
+        text = text.strip('_')
+
+        return text
 
 
 class NewAcquirer:
