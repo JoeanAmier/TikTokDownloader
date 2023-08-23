@@ -777,6 +777,7 @@ class NewDownloader:
         self.xb = params.xb
         self.colour = params.colour
         self.root = params.root
+        self.folder = params.folder
         self.blacklist = params.blacklist
         self.__thread = ThreadPoolExecutor if params.thread else FakeThreadPool
         self.__pool = None
@@ -800,6 +801,12 @@ class NewDownloader:
         pass
 
     def download_file(self, urls: list):
+        pass
+
+    def create_folder(self, name: str):
+        pass
+
+    def delete_file(self, path: Path):
         pass
 
 
