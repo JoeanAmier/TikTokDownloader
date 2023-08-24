@@ -1,4 +1,3 @@
-from platform import system
 from re import finditer
 from time import sleep
 
@@ -72,10 +71,28 @@ class Register:
     """
     get_url = "https://sso.douyin.com/get_qrcode/"
     check_url = "https://sso.douyin.com/check_qrconnect/"
-    pattern = r'(?P<key>[^=;,]+)=(?P<value>[^;,]+)'
-    system = system()
+    get_params = {
+        "service": "https://www.douyin.com",
+        "need_logo": "false",
+        "need_short_url": "true",
+        "device_platform": "web_app",
+        "aid": "6383",
+        "account_sdk_source": "sso",
+        "sdk_version": "2.2.5",
+        "language": "zh",
+    }
+    check_params = {
+        "service": "https://www.douyin.com",
+        "need_logo": "false",
+        "need_short_url": "false",
+        "device_platform": "web_app",
+        "aid": "6383",
+        "account_sdk_source": "sso",
+        "sdk_version": "2.2.5",
+        "language": "zh",
+    }
 
-    def __init__(self, settings, xb, user_agent, code):
+    def __init__(self, settings, xb, user_agent, ua_code):
         self.xb = xb
         self.settings = settings
         self.headers = {
@@ -83,63 +100,43 @@ class Register:
             "Referer": "https://www.douyin.com/",
             "Cookie": self.generate_cookie(TtWid.get_tt_wid()),
         }
-        self.get_params = {
-            "service": "https://www.douyin.com",
-            "need_logo": "false",
-            "need_short_url": "true",
-            "device_platform": "web_app",
-            "aid": "6383",
-            "account_sdk_source": "sso",
-            "sdk_version": "2.2.5",
-            "language": "zh",
-        }
-        self.check_params = {
-            "service": "https://www.douyin.com",
-            "need_logo": "false",
-            "need_short_url": "false",
-            "device_platform": "web_app",
-            "aid": "6383",
-            "account_sdk_source": "sso",
-            "sdk_version": "2.2.5",
-            "language": "zh",
-        }
         self.verify_fp = None
-        self._code = code
+        self.ua_code = ua_code
 
     @staticmethod
     def generate_cookie(data: dict) -> str:
         result = [f"{k}={v}" for k, v in data.items()]
         return "; ".join(result)
 
-    def generate_dict(self, data: str) -> dict:
+    @staticmethod
+    def generate_dict(data: str) -> dict:
         cookie = {}
-        matches = finditer(self.pattern, data)
+        matches = finditer(Cookie.pattern, data)
         for match in matches:
             key = match.group('key').strip()
             value = match.group('value').strip()
             cookie[key] = value
         return cookie
 
-    def generate_qr_code(self, url):
+    @staticmethod
+    def generate_qr_code(url):
         qr_code = QRCode()
         assert url, "无效的登录二维码 URL，请联系作者处理！"
         qr_code.add_data(url)
         qr_code.make(fit=True)
         qr_code.print_ascii(invert=True)
-        if self.system in ("Windows", "Darwin"):
-            # 仅在 Windows 和 MAC 系统自动打开登录二维码图片
-            image = qr_code.make_image()
-            try:
-                image.show()
-            except AttributeError:
-                print("打开登录二维码图片失败，请扫描终端二维码！")
+        image = qr_code.make_image()
+        try:
+            image.show()
+        except AttributeError:
+            print("打开登录二维码图片失败，请扫描终端二维码！")
 
     def get_qr_code(self, version=23):
         self.verify_fp = VerifyFp.get_verify_fp()
         self.get_params["verifyFp"] = self.verify_fp
         self.get_params["fp"] = self.verify_fp
         self.get_params["X-Bogus"] = self.xb.get_x_bogus(
-            self.get_params, self._code, version)
+            self.get_params, self.ua_code, version)
         if not (
                 data := self.request_data(
                     url=self.get_url,
@@ -154,7 +151,7 @@ class Register:
         self.check_params["verifyFp"] = self.verify_fp
         self.check_params["fp"] = self.verify_fp
         retry = 0
-        while retry < 10:
+        while retry < 15:
             self.wait()
             if not (
                     response := self.request_data(
@@ -163,16 +160,17 @@ class Register:
                         params=self.check_params)):
                 continue
             data = response.json().get("data")
+            print(response.json())  # 调试使用
             if (s := data["status"]) == "3":
                 redirect_url = data["redirect_url"]
                 cookie = response.headers.get("Set-Cookie")
                 break
             elif s in ("4", "5"):
-                retry = 10
+                retry = 15
             else:
                 retry += 1
         else:
-            print("扫码登陆失败！")
+            print("扫码登陆失败，请手动获取 Cookie 并写入配置文件！")
             return None, None
         return redirect_url, cookie
 
@@ -189,7 +187,7 @@ class Register:
 
     @staticmethod
     def wait():
-        sleep(1.5)
+        sleep(2)
         print("正在检查登录结果！")
 
     def request_data(self, json=True, **kwargs):
@@ -209,7 +207,7 @@ class Register:
         if not url:
             return False
         self.generate_qr_code(url)
-        if input("您是否已完成扫码登录？直接回车开始检查登录结果，输入任何字符放弃操作："):
+        if input("是否已完成扫码登录？直接回车开始检查登录结果，输入任何字符放弃操作："):
             return False
         url, cookie = self.check_register(token)
         return self.get_cookie(url, cookie) if url else False
