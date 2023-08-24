@@ -8,7 +8,7 @@ def retry(function):
         while True:
             if function(self, *args, **kwargs):
                 return
-            _ = input("请关闭所有正在访问作品保存文件夹的窗口和程序，按下回车继续运行")
+            _ = input("请关闭所有正在访问作品保存文件夹的窗口和程序，按下回车继续运行！")
 
     return inner
 
