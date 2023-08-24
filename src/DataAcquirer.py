@@ -1471,7 +1471,7 @@ class NewAcquirer:
     reply_tiktok_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
     item_tiktok_api = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"  # 作品数据接口
 
-    def __init__(self, params):
+    def __init__(self, params: Parameter):
         self.headers = params.headers | {
             "Referer": "https://www.douyin.com/", }
         self.ua_code = params.ua_code
@@ -1518,7 +1518,7 @@ class Share:
 
 
 class Link(NewAcquirer):
-    def __init__(self, params):
+    def __init__(self, params: Parameter):
         super().__init__(params)
         self.share = Share()
 
@@ -1536,41 +1536,49 @@ class Link(NewAcquirer):
 
 
 class Account(NewAcquirer):
-    def __init__(self, params, sec_user_id: str, tab="post", pages=0):
+    def __init__(
+            self,
+            params: Parameter,
+            sec_user_id: str,
+            tab="post",
+            mark="",
+            pages=0):
         super().__init__(params)
         self.sec_user_id = sec_user_id
         self.tab = tab
         self.pages = pages
+        self.nickname = None
+        self.mark = mark
 
 
 class Works(NewAcquirer):
-    def __init__(self, params, id_: str):
+    def __init__(self, params: Parameter, id_: str):
         super().__init__(params)
         self.id = id_
 
 
 class Comment(NewAcquirer):
-    def __init__(self, params, item_id: str):
+    def __init__(self, params: Parameter, item_id: str):
         super().__init__(params)
         self.item_id = item_id
 
 
 class Mix(NewAcquirer):
-    def __init__(self, params, mix_id=None, item_id=None):
+    def __init__(self, params: Parameter, mix_id=None, mark=""):
         super().__init__(params)
         self.mix_id = mix_id
-        self.item_id = item_id
+        self.mark = mark
 
 
 class Live(NewAcquirer):
-    def __init__(self, params, room_id=None, web_rid=None):
+    def __init__(self, params: Parameter, room_id=None, web_rid=None):
         super().__init__(params)
         self.web_rid = web_rid
         self.room_id = room_id
 
 
 class User(NewAcquirer):
-    def __init__(self, params, sec_user_id: str):
+    def __init__(self, params: Parameter, sec_user_id: str):
         super().__init__(params)
         self.sec_user_id = sec_user_id
 
@@ -1578,7 +1586,7 @@ class User(NewAcquirer):
 class Search(NewAcquirer):
     def __init__(
             self,
-            params,
+            params: Parameter,
             keyword: str,
             tab=0,
             page=1,
@@ -1595,12 +1603,12 @@ class Search(NewAcquirer):
 class Hot(NewAcquirer):
     tab = ("热榜", "娱乐榜", "社会榜", "挑战榜")
 
-    def __init__(self, params):
+    def __init__(self, params: Parameter):
         super().__init__(params)
 
 
 class Collection(NewAcquirer):
-    def __init__(self, params, sec_user_id: str, pages=0):
+    def __init__(self, params: Parameter, sec_user_id: str, pages=0):
         super().__init__(params)
         self.sec_user_id = sec_user_id
         self.pages = pages
