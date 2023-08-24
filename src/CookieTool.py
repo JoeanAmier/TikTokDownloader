@@ -5,6 +5,7 @@ from qrcode import QRCode
 from requests import exceptions
 from requests import get
 
+from src.Customizer import check_login
 from src.Parameter import TtWid
 from src.Parameter import VerifyFp
 
@@ -207,7 +208,7 @@ class Register:
         if not url:
             return False
         self.generate_qr_code(url)
-        if input("是否已完成扫码登录？直接回车开始检查登录结果，输入任何字符放弃操作："):
+        if check_login():
             return False
         url, cookie = self.check_register(token)
         return self.get_cookie(url, cookie) if url else False
