@@ -21,13 +21,9 @@ class Cookie:
         """提取 Cookie 并写入配置文件"""
         if not (cookie := input("请粘贴 Cookie 内容：")):
             return
-        # try:
-        #     index = int(input("请输入该 Cookie 的写入位置(索引，默认为0)：") or 0)
-        # except ValueError:
-        #     print(self.colour.colorize("写入位置错误！", 91))
-        self.extract(cookie, 0)
+        self.extract(cookie)
 
-    def extract(self, cookie: str, index: int):
+    def extract(self, cookie: str):
         get_key = {
             "passport_csrf_token": None,
             "passport_csrf_token_default": None,
@@ -51,23 +47,12 @@ class Cookie:
             if key in get_key:
                 get_key[key] = value
         self.check_key(get_key)
-        self.write(get_key, index)
+        self.write(get_key)
         print("写入 Cookie 成功！")
-        # if all(
-        #         value for key,
-        #         value in get_key.items() if key in (
-        #                 'passport_csrf_token',
-        #                 'odin_tt')):
-        #     self.check_key(get_key)
-        #     self.write(get_key, index)
-        #     print("写入 Cookie 成功！")
-        # else:
-        #     print(self.colour.colorize("Cookie 缺少必需的键值对！", 93))
 
     @staticmethod
     def check_key(items):
         if not items["sessionid_ss"]:
-            del items["sessionid_ss"]
             print("当前 Cookie 未登录")
         else:
             print("当前 Cookie 已登录")
@@ -75,14 +60,7 @@ class Cookie:
         for key in keys_to_remove:
             del items[key]
 
-    # def write(self, text, index):
-    #     data = self.settings.read()
-    #     while len(data["cookie"]) < index + 1:
-    #         data["cookie"].append({})
-    #     data["cookie"][index] = text
-    #     self.settings.update(data)
-
-    def write(self, text, *args, **kwargs):
+    def write(self, text):
         data = self.settings.read()
         data["cookie"] = text
         self.settings.update(data)
