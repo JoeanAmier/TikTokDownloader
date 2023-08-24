@@ -1292,6 +1292,15 @@ class Acquirer:
 
 
 class Parameter:
+    name_dict = {
+        "id": 0,
+        "desc": 1,
+        "create_time": 2,
+        "nickname": 4,
+        "uid": 3,
+        "mark": 5,
+    }
+
     def __init__(
             self,
             user_agent: str,
@@ -1332,26 +1341,42 @@ class Parameter:
         self.id_set = self.blacklist.get_set()
         self.thread = thread_
 
-    def error(self):
-        self.status = False
-        return None
-
-    def check_cookie(self, cookie: dict):
+    def check_cookie(self, cookie: dict | str) -> dict:
         if isinstance(cookie, dict):
-            self.headers[""] = Register.generate_cookie(cookie)
+            self.headers["Cookie"] = Register.generate_cookie(cookie)
             return cookie
-        return self.error()
+        elif isinstance(cookie, str):
+            self.headers["Cookie"] = cookie
+            self.log.warning("Cookie 参数格式应为字典格式")
+        else:
+            self.log.warning("Cookie 参数格式错误")
+        return {}
 
-    def check_root(self, root: str):
-        return r if (r := Path(root)).is_dir() else self.error()
+    def check_root(self, root: str) -> Path:
+        if (r := Path(root)).is_dir():
+            self.log.info(f"root 参数已设置为 {root}", False)
+            return r
+        self.log.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用默认值：./")
+        return Path("./")
 
     def check_folder(self, folder: str):
-        return folder if (folder := self.clean_text(folder)) else self.error()
+        if folder := self.clean_text(folder):
+            self.log.info(f"folder 参数已设置为 {folder}", False)
+            return folder
+        self.log.warning(f"folder 参数 {folder} 不是有效的文件夹名称，程序将使用默认值：Download")
+        return "Download"
 
-    def check_name(self, name: str):
-        pass
+    def check_name(self, name: str) -> list[int]:
+        name_key = name.strip().split(" ")
+        try:
+            name_index = [self.name_dict[i] for i in name_key]
+            self.log.info(f"name 参数已设置为 {name}", False)
+            return name_index
+        except KeyError:
+            self.log.warning(f"name 参数 {name} 设置错误，程序将使用默认值：创建时间 账号昵称 描述")
+            return [2, 4, 1]
 
-    def check_time(self, time: str):
+    def check_time(self, time_: str):
         pass
 
     def check_split(self, split: str):
