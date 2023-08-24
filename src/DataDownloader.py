@@ -768,6 +768,7 @@ class Extractor:
 
 class NewDownloader:
     def __init__(self, params):
+        self.extractor = Extractor()
         self.PC_headers = params.headers
         self.black_headers = None
         self.Phone_headers = None
@@ -781,6 +782,9 @@ class NewDownloader:
         self.blacklist = params.blacklist
         self.__thread = ThreadPoolExecutor if params.thread else FakeThreadPool
         self.__pool = None
+
+    def run(self, data: list):
+        pass
 
     def download_image(self):
         pass

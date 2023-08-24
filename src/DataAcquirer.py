@@ -1337,6 +1337,18 @@ class Parameter:
         self.cookie = self.check_cookie(cookie)
         self.root = self.check_root(root)
         self.folder = self.check_folder(folder)
+        self.name = self.check_name(name)
+        self.time = time_
+        self.split = split
+        self.music = music
+        self.storage = storage
+        self.dynamic = dynamic
+        self.original = original
+        self.proxies = proxies
+        self.download = download
+        self.max_size = max_size
+        self.chunk = chunk
+        self.max_retry = max_retry
         self.blacklist = blacklist
         self.id_set = self.blacklist.get_set()
         self.thread = thread_
@@ -1395,6 +1407,9 @@ class Parameter:
         pass
 
     def check_max_retry(self, max_retry: int):
+        pass
+
+    def record_settings(self, ):
         pass
 
     @staticmethod
