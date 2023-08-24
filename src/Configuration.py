@@ -7,14 +7,14 @@ class Settings:
         self.file = Path("./settings.json")  # 配置文件
         self.__default = {
             "accounts": [
-                ["account mark",
-                 "account link",
-                 "post or favorite",
-                 "2016/9/20",
-                 "2023/7/1"],
+                ["账号标识，可以设置为空字符串",
+                 "账号主页链接",
+                 "账号主页类型",
+                 "作品最早发布日期",
+                 "作品最晚发布日期"],
             ],
             "mix": [
-                ["mix mark", "mix link or video / image link"],
+                ["合集标识，可以设置为空字符串", "合集链接或者作品链接"],
             ],
             "root": "./",
             "folder": "Download",
@@ -51,7 +51,7 @@ class Settings:
             else:
                 print("配置文件读取失败，文件不存在！")
                 self.create()
-                return False  # 生成的默认配置文件必须要设置cookie才可以正常运行
+                return False  # 生成的默认配置文件必须要设置 cookie 才可以正常运行
         except json.decoder.JSONDecodeError:
             return {}  # 读取配置文件发生错误时返回空配置
 
