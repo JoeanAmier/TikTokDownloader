@@ -440,7 +440,7 @@ class Acquirer:
             return False
         try:
             if (list_ := data["aweme_list"]) is None:
-                self.log.info("该账号为私密账号，需要使用登陆后的 Cookie，且登录的账号需要关注该私密账号")
+                self.log.info("该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号")
                 self.finish = True
             else:
                 self.cursor = data['max_cursor']
@@ -1279,7 +1279,7 @@ class Acquirer:
             return False
         try:
             if (list_ := data["aweme_list"]) is None:
-                self.log.info("需要使用登陆后的 Cookie 才能获取账号收藏作品数据")
+                self.log.info("需要使用登录后的 Cookie 才能获取账号收藏作品数据")
                 self.finish = True
             else:
                 self.cursor = data['cursor']

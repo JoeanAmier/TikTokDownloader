@@ -174,7 +174,7 @@ class Register:
             else:
                 retry += 1
         else:
-            print("扫码登陆失败，请手动获取 Cookie 并写入配置文件！")
+            print("扫码登录失败，请手动获取 Cookie 并写入配置文件！")
             return None, None
         return redirect_url, cookie
 

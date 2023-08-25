@@ -133,7 +133,7 @@ class TikTokDownloader:
         mode = prompt(
             "请选择 TikTokDownloader 运行模式",
             ("复制粘贴写入 Cookie",
-             "扫码登陆写入 Cookie",
+             "扫码登录写入 Cookie",
              "终端命令行模式",
              "Web API 接口模式",
              "Web UI 交互模式",
@@ -188,7 +188,7 @@ class TikTokDownloader:
         if cookie := self.register.run():
             self.cookie.extract(cookie, 0)
         else:
-            print("扫码登陆失败，未写入 Cookie！")
+            print("扫码登录失败，未写入 Cookie！")
         self.main()
 
     def compatible(self, mode: str):
