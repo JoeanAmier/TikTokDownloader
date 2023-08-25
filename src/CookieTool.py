@@ -160,9 +160,12 @@ class Register:
                         url=self.check_url,
                         params=self.check_params)):
                 continue
+            # print(response.json())  # 调试使用
             data = response.json().get("data")
-            print(response.json())  # 调试使用
-            if (s := data["status"]) == "3":
+            if not data:
+                print(f"发生未知错误: {response.json()}")
+                retry = 15
+            elif (s := data["status"]) == "3":
                 redirect_url = data["redirect_url"]
                 cookie = response.headers.get("Set-Cookie")
                 break
