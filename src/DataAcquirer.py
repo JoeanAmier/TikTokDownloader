@@ -1355,9 +1355,7 @@ class Parameter:
 
     def check_cookie(self, cookie: dict | str) -> dict:
         if isinstance(cookie, dict):
-            for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
-                if isinstance(i, dict):
-                    cookie |= i
+            self.add_cookie(cookie)
             self.headers["Cookie"] = Register.generate_cookie(cookie)
             return cookie
         elif isinstance(cookie, str):
@@ -1366,6 +1364,12 @@ class Parameter:
         else:
             self.log.warning("Cookie 参数格式错误")
         return {}
+
+    @staticmethod
+    def add_cookie(cookie: dict):
+        for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
+            if isinstance(i, dict):
+                cookie |= i
 
     def check_root(self, root: str) -> Path:
         if (r := Path(root)).is_dir():
