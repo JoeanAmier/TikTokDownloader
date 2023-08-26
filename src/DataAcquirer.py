@@ -1355,6 +1355,9 @@ class Parameter:
 
     def check_cookie(self, cookie: dict | str) -> dict:
         if isinstance(cookie, dict):
+            for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
+                if isinstance(i, dict):
+                    cookie |= i
             self.headers["Cookie"] = Register.generate_cookie(cookie)
             return cookie
         elif isinstance(cookie, str):
