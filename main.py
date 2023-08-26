@@ -92,7 +92,11 @@ class TikTokDownloader:
         folder = ("./src/config", "./cache", "./cache/temp")
         for i in folder:
             if not (c := Path(i)).is_dir():
-                c.mkdir(parents=True)
+                try:
+                    c.mkdir()
+                except FileNotFoundError:
+                    print(f"发生预期之外的错误，请联系作者寻求解决方案，工作路径: {Path.cwd()}")
+                    exit()
         self.UPDATE["tip"] = "启用" if self.UPDATE["path"].exists() else "禁用"
         self.COLOUR["tip"] = "启用" if (
             c := self.COLOUR["path"].exists()) else "禁用"
