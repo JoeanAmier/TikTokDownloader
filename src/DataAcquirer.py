@@ -1338,7 +1338,7 @@ class Parameter:
         self.root = self.check_root(root)
         self.folder = self.check_folder(folder)
         self.name = self.check_name(name)
-        self.time = time_
+        self.time = self.check_time(time_)
         self.split = split
         self.music = music
         self.storage = storage
@@ -1366,7 +1366,7 @@ class Parameter:
         return {}
 
     @staticmethod
-    def add_cookie(cookie: dict):
+    def add_cookie(cookie: dict) -> None:
         for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
             if isinstance(i, dict):
                 cookie |= i
@@ -1378,7 +1378,7 @@ class Parameter:
         self.log.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用默认值：./")
         return Path("./")
 
-    def check_folder(self, folder: str):
+    def check_folder(self, folder: str) -> str:
         if folder := self.clean_text(folder):
             self.log.info(f"folder 参数已设置为 {folder}", False)
             return folder
@@ -1395,8 +1395,14 @@ class Parameter:
             self.log.warning(f"name 参数 {name} 设置错误，程序将使用默认值：创建时间 账号昵称 描述")
             return [2, 4, 1]
 
-    def check_time(self, time_: str):
-        pass
+    def check_time(self, time_: str) -> str:
+        try:
+            _ = time.strftime(time_, time.localtime())
+            self.log.info(f"time 参数已设置为 {time_}", False)
+            return time_
+        except ValueError:
+            self.log.warning(f"time 参数 {time_} 设置错误，程序将使用默认值：年-月-日 时.分.秒")
+            return "%Y-%m-%d %H.%M.%S"
 
     def check_split(self, split: str):
         pass
