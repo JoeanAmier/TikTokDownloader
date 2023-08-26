@@ -91,7 +91,7 @@ class TikTokDownloader:
         folder = ("./src/config", "./cache", "./cache/temp")
         for i in folder:
             if not (c := Path(i)).is_dir():
-                c.mkdir()
+                c.mkdir(parents=True)
         self.UPDATE["tip"] = "启用" if self.UPDATE["path"].exists() else "禁用"
         self.COLOUR["tip"] = "启用" if (
             c := self.COLOUR["path"].exists()) else "禁用"
