@@ -1300,6 +1300,7 @@ class Parameter:
         "uid": 3,
         "mark": 5,
     }
+    clean = Cleaner()
 
     def __init__(
             self,
@@ -1405,7 +1406,12 @@ class Parameter:
             return "%Y-%m-%d %H.%M.%S"
 
     def check_split(self, split: str):
-        pass
+        for i in split:
+            if i in self.clean.rule.keys():
+                self.log.warning(f"split 参数 {split} 包含非法字符，程序将使用默认值：-")
+                return "-"
+        self.log.info(f"split 参数已设置为 {split}", False)
+        return split
 
     def check_storage(self, storage: str):
         pass
