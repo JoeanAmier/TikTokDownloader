@@ -30,7 +30,10 @@ def failed():
 
 def illegal_nickname():
     """当账号昵称 / 合集标题过滤非法字符后不是有效的文件夹名称时，如何处理"""
-    pass
+    # 询问用户
+    return input("当前账号昵称或者合集标题不是有效的文件夹名称，请输入自定义的账号标识或者合集标识：")
+    # 使用当前时间戳作为账号昵称或者合集标题
+    # return str(time())[:10]
 
 
 def check_login():

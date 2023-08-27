@@ -11,6 +11,7 @@ from urllib.parse import urlparse
 import requests
 
 from src.CookieTool import Register
+from src.Customizer import illegal_nickname
 from src.Customizer import wait
 from src.Parameter import MsToken
 from src.Parameter import TtWid
@@ -1316,7 +1317,6 @@ class Parameter:
             time_: str,
             split: str,
             music: bool,
-            storage: str,
             dynamic: bool,
             original: bool,
             proxies: str,
@@ -1340,12 +1340,11 @@ class Parameter:
         self.folder = self.check_folder(folder)
         self.name = self.check_name(name)
         self.time = self.check_time(time_)
-        self.split = split
+        self.split = self.check_split(split)
         self.music = music
-        self.storage = storage
         self.dynamic = dynamic
         self.original = original
-        self.proxies = proxies
+        self.proxies = self.check_proxies(proxies)
         self.download = download
         self.max_size = max_size
         self.chunk = chunk
@@ -1380,7 +1379,7 @@ class Parameter:
         return Path("./")
 
     def check_folder(self, folder: str) -> str:
-        if folder := self.clean_text(folder):
+        if folder := self.clean_name(folder):
             self.log.info(f"folder 参数已设置为 {folder}", False)
             return folder
         self.log.warning(f"folder 参数 {folder} 不是有效的文件夹名称，程序将使用默认值：Download")
@@ -1405,7 +1404,7 @@ class Parameter:
             self.log.warning(f"time 参数 {time_} 设置错误，程序将使用默认值：年-月-日 时.分.秒")
             return "%Y-%m-%d %H.%M.%S"
 
-    def check_split(self, split: str):
+    def check_split(self, split: str) -> str:
         for i in split:
             if i in self.clean.rule.keys():
                 self.log.warning(f"split 参数 {split} 包含非法字符，程序将使用默认值：-")
@@ -1413,26 +1412,45 @@ class Parameter:
         self.log.info(f"split 参数已设置为 {split}", False)
         return split
 
-    def check_storage(self, storage: str):
+    def check_proxies(self, proxies: str) -> dict:
+        if isinstance(proxies, str):
+            proxies_dict = {
+                "http": proxies,
+                "https": proxies,
+                "ftp": proxies,
+            }
+            try:
+                response = requests.get(
+                    "https://www.baidu.com/", proxies=proxies_dict, timeout=10)
+                if response.status_code == 200:
+                    self.log.info(f"代理 {proxies} 测试成功")
+                    return proxies_dict
+            except requests.exceptions.ReadTimeout:
+                self.log.warning(f"代理 {proxies} 测试超时")
+            except (
+                    requests.exceptions.ProxyError,
+                    requests.exceptions.SSLError,
+                    requests.exceptions.ChunkedEncodingError,
+                    requests.exceptions.ConnectionError,
+            ):
+                self.log.warning(f"代理 {proxies} 测试失败")
+        return {
+            "http": None,
+            "https": None,
+            "ftp": None,
+        }
+
+    def check_max_size(self, max_size: int) -> int:
         pass
 
-    def check_proxies(self, proxies: str):
+    def check_chunk(self, chunk: int) -> int:
         pass
 
-    def check_max_size(self, max_size: int):
-        pass
-
-    def check_chunk(self, chunk: int):
-        pass
-
-    def check_max_retry(self, max_retry: int):
-        pass
-
-    def record_settings(self, ):
+    def check_max_retry(self, max_retry: int) -> int:
         pass
 
     @staticmethod
-    def clean_text(text):
+    def clean_name(text):
         """清洗字符串，仅保留中文、英文、数字和下划线"""
         # 使用正则表达式匹配非中文、英文、数字和下划线字符，并替换为单个下划线
         text = sub(r'[^\u4e00-\u9fa5a-zA-Z0-9_]+', '_', text)
@@ -1443,7 +1461,7 @@ class Parameter:
         # 去除首尾的下划线
         text = text.strip('_')
 
-        return text
+        return text or illegal_nickname()
 
 
 class NewAcquirer:
