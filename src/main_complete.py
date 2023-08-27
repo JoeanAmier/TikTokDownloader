@@ -281,13 +281,15 @@ class TikTok:
     def live_acquisition(self):
         def choice_quality(items: dict) -> str:
             try:
-                choice = int(input("请选择下载清晰度(输入对应索引，直接回车代表不下载): "))
-                if not 0 <= choice < len(items):
+                choice = input("请选择下载清晰度(输入清晰度或者对应索引，直接回车代表不下载): ")
+                if u := items.get(choice):
+                    return u
+                if not 0 <= (i := int(choice)) < len(items):
                     raise ValueError
             except ValueError:
                 return ""
             keys = list(items.keys())
-            return items[keys[choice]]
+            return items[keys[i]]
 
         print(
             self.colour.colorize(
