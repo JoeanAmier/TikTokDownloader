@@ -1327,7 +1327,6 @@ class Parameter:
             blacklist,
             thread_,
     ):
-        self.status = True
         self.headers = {
             "User-Agent": user_agent,
         }
@@ -1346,9 +1345,9 @@ class Parameter:
         self.original = original
         self.proxies = self.check_proxies(proxies)
         self.download = download
-        self.max_size = max_size
-        self.chunk = chunk
-        self.max_retry = max_retry
+        self.max_size = self.check_max_size(max_size)
+        self.chunk = self.check_chunk(chunk)
+        self.max_retry = self.check_max_retry(max_retry)
         self.blacklist = blacklist
         self.id_set = self.blacklist.get_set()
         self.thread = thread_
@@ -1441,13 +1440,23 @@ class Parameter:
         }
 
     def check_max_size(self, max_size: int) -> int:
-        pass
+        max_size = max(max_size, 0)
+        self.log.info(f"max_size 参数已设置为 {max_size}", False)
+        return max_size
 
     def check_chunk(self, chunk: int) -> int:
-        pass
+        if isinstance(chunk, int) and chunk > 0:
+            self.log.info(f"chunk 参数已设置为 {chunk}", False)
+            return chunk
+        self.log.warning(f"chunk 参数 {chunk} 设置错误，程序将使用默认值：{512 * 1024}", False)
+        return 512 * 1024
 
     def check_max_retry(self, max_retry: int) -> int:
-        pass
+        if isinstance(max_retry, int) and max_retry >= 0:
+            self.log.info(f"max_retry 参数已设置为 {max_retry}", False)
+            return max_retry
+        self.log.warning(f"max_retry 参数 {max_retry} 设置错误，程序将使用默认值：0", False)
+        return 0
 
     @staticmethod
     def clean_name(text):
