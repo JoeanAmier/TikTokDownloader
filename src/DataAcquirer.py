@@ -3,7 +3,6 @@ from datetime import date
 from datetime import datetime
 from pathlib import Path
 from re import compile
-from re import sub
 from urllib.parse import parse_qs
 from urllib.parse import quote
 from urllib.parse import urlparse
@@ -11,13 +10,13 @@ from urllib.parse import urlparse
 import requests
 
 from src.CookieTool import Register
-from src.Customizer import illegal_nickname
 from src.Customizer import wait
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
+from src.StringCleaner import clean_name
 
 
 def reset(function):
@@ -1378,7 +1377,7 @@ class Parameter:
         return Path("./")
 
     def check_folder(self, folder: str) -> str:
-        if folder := self.clean_name(folder):
+        if folder := clean_name(folder):
             self.log.info(f"folder 参数已设置为 {folder}", False)
             return folder
         self.log.warning(f"folder 参数 {folder} 不是有效的文件夹名称，程序将使用默认值：Download")
@@ -1457,20 +1456,6 @@ class Parameter:
             return max_retry
         self.log.warning(f"max_retry 参数 {max_retry} 设置错误，程序将使用默认值：0", False)
         return 0
-
-    @staticmethod
-    def clean_name(text):
-        """清洗字符串，仅保留中文、英文、数字和下划线"""
-        # 使用正则表达式匹配非中文、英文、数字和下划线字符，并替换为单个下划线
-        text = sub(r'[^\u4e00-\u9fa5a-zA-Z0-9_]+', '_', text)
-
-        # 去除连续的下划线
-        text = sub(r'_+', '_', text)
-
-        # 去除首尾的下划线
-        text = text.strip('_')
-
-        return text or illegal_nickname()
 
 
 class NewAcquirer:
