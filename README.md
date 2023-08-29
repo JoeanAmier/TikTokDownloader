@@ -69,16 +69,18 @@
 
 # 📈 项目状态
 
-* 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已通过测试，功能均可正常使用
+* 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已完成测试，所有功能均可正常使用
 * 🟢 已发布 EXE 可执行文件，可前往 [Issue](https://github.com/JoeanAmier/TikTokDownloader/issues/49) 下载
 * 🟢 正在重构项目代码，提高代码复用性和可维护性
 * 🟢 准备优化批量下载账号收藏作品功能
 * 🟡 未来可能优化 Web API 接口模式，使其支持并发请求
-* 🟡 未来可能开发获取账号关注列表功能
-* 🟡 未来可能开发获取账号收藏合集列表功能
+* 🟡 未来可能新增终端 GUI 模式
+* 🟡 未来可能新增获取账号关注列表功能
+* 🟡 未来可能新增获取账号收藏合集列表功能
 * 🔴 最新版本的源码可能存在不稳定的 Bug
 * 🔴 如果在使用过程中发现 Bug，请及时告知作者修复
-* 🔴 当账号昵称不是有效的文件夹名称时，程序会报错，未修复，设置 mark 参数可临时解决问题
+* 🔴 当账号昵称不是有效的文件夹名称时会导致程序报错，未修复，设置 `mark` 参数可临时解决问题
+* 🔴 当 `save` 参数设置为 `csv` 或 `xlsx` 时会导致程序报错，最新源码已修复，未发布 Releases
 
 # 📁 项目结构
 
@@ -228,5 +230,4 @@ TikTokDownloader
 * https://requests.readthedocs.io/en/latest/
 * https://dormousehole.readthedocs.io/en/latest/
 * https://github.com/B1gM8c/X-Bogus
-* https://github.com/aithedev/X-Bogus
 * https://html5up.net/hyperspace
