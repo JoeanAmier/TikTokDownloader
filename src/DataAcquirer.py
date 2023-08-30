@@ -1523,19 +1523,23 @@ class Share:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
     }
 
-    def __init__(self, max_retry=10):
+    def __init__(self, proxies: dict, max_retry=10):
         self.max_retry = max_retry
+        self.proxies = proxies
 
-    def run(self, text: str, type_: str) -> list:
-        pass
+    def run(self, text: str) -> str:
+        if (u := self.share_link.findall(text)) or (
+                u := self.share_link_tiktok.findall(text)):
+            return " ".join(self.get_url(i) for i in u)
+        return text
 
-    def get_url(self, url: str):
+    def get_url(self, url: str) -> str:
         try:
             response = requests.get(
                 url,
                 timeout=10,
-                headers=self.headers,
-                allow_redirects=False)
+                proxies=self.proxies,
+                headers=self.headers, )
         except (
                 requests.exceptions.ProxyError,
                 requests.exceptions.SSLError,
@@ -1543,8 +1547,8 @@ class Share:
                 requests.exceptions.ConnectionError,
                 requests.ReadTimeout,
         ):
-            return False
-        return response.history
+            return ""
+        return response.url
 
 
 class Link(NewAcquirer):
@@ -1563,18 +1567,22 @@ class Link(NewAcquirer):
 
     def __init__(self, params: Parameter):
         super().__init__(params)
-        self.share = Share()
+        self.share = Share(params.proxies, params.max_retry)
 
-    def user(self):
+    def user(self, text: str) -> list:
+        urls = self.share.run(text)
+        return u if (u := self.account_link.findall(urls)) else []
+
+    def works(self, text: str) -> tuple:
+        # urls = self.share.run(text)
         pass
 
-    def works(self):
+    def mix(self, text: str) -> list:
+        # urls = self.share.run(text)
         pass
 
-    def mix(self):
-        pass
-
-    def live(self):
+    def live(self, text: str) -> list:
+        # urls = self.share.run(text)
         pass
 
 
