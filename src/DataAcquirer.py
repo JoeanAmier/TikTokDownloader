@@ -1459,17 +1459,6 @@ class Parameter:
 
 
 class NewAcquirer:
-    # 抖音链接
-    share_link = compile(
-        r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")  # 分享链接
-    account_link = compile(
-        r".*?https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*?")  # 账号主页链接
-    works_link = compile(
-        r".*?https://www\.douyin\.com/(?:video|note)/([0-9]{19}).*?")  # 作品链接
-    mix_link = compile(
-        r".*?https://www.douyin.com/collection/(\d{19}).*?")  # 合集链接
-    live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
-
     # 抖音 API
     item_api = "https://www.douyin.com/aweme/v1/web/aweme/detail/"  # 作品数据接口
     live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
@@ -1502,12 +1491,6 @@ class NewAcquirer:
         (2, "hotspot_challenge"),
     )
 
-    # TikTok 链接
-    share_tiktok_link = compile(
-        r".*?(https://vm\.tiktok\.com/[a-zA-Z0-9]+/).*?")
-    works_tiktok_link = compile(
-        r".*?https://www\.tiktok\.com/@.+/video/(\d+).*?")  # 匹配作品链接
-
     # TikTok API
     recommend_api = "https://www.tiktok.com/api/recommend/item_list/"  # 推荐页API
     home_tiktok_api = "https://www.tiktok.com/api/post/item_list/"  # 发布页API
@@ -1524,17 +1507,27 @@ class NewAcquirer:
         self.log = params.log
         self.xb = params.xb
         self.colour = params.colour
+        self.time = params.time
+        self.proxies = params.proxies
+        self.max_retry = params.max_retry
         self.data = []
         self.response = []
 
 
 class Share:
+    share_link = compile(
+        r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")
+    share_link_tiktok = compile(
+        r".*?(https://vm\.tiktok\.com/[a-zA-Z0-9]+/).*?")
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
     }
 
     def __init__(self, max_retry=10):
         self.max_retry = max_retry
+
+    def run(self, text: str, type_: str) -> list:
+        pass
 
     def get_url(self, url: str):
         try:
@@ -1553,17 +1546,21 @@ class Share:
             return False
         return response.history
 
-    def user(self):
-        pass
-
-    def works(self):
-        pass
-
-    def live(self):
-        pass
-
 
 class Link(NewAcquirer):
+    # 抖音链接
+    account_link = compile(
+        r".*?https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*?")  # 账号主页链接
+    works_link = compile(
+        r".*?https://www\.douyin\.com/(?:video|note)/([0-9]{19}).*?")  # 作品链接
+    mix_link = compile(
+        r".*?https://www.douyin.com/collection/(\d{19}).*?")  # 合集链接
+    live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
+
+    # TikTok 链接
+    works_tiktok_link = compile(
+        r".*?https://www\.tiktok\.com/@.+/video/(\d+).*?")  # 作品链接
+
     def __init__(self, params: Parameter):
         super().__init__(params)
         self.share = Share()
