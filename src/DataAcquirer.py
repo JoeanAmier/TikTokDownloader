@@ -1617,6 +1617,9 @@ class Account(NewAcquirer):
         self.nickname = None
         self.mark = mark
 
+    def run(self):
+        pass
+
 
 class Works(NewAcquirer):
     def __init__(self, params: Parameter, id_: str, tiktok: bool):
@@ -1624,11 +1627,17 @@ class Works(NewAcquirer):
         self.id = id_
         self.tiktok = tiktok
 
+    def run(self):
+        pass
+
 
 class Comment(NewAcquirer):
     def __init__(self, params: Parameter, item_id: str):
         super().__init__(params)
         self.item_id = item_id
+
+    def run(self):
+        pass
 
 
 class Mix(NewAcquirer):
@@ -1638,18 +1647,28 @@ class Mix(NewAcquirer):
         self.works_id = works_id
         self.mark = mark
 
+    def run(self):
+        pass
+
 
 class Live(NewAcquirer):
     def __init__(self, params: Parameter, web_rid=None, redirect_url=None):
         super().__init__(params)
+        self.headers["Referer"] = "https://live.douyin.com/"
         self.web_rid = web_rid
         self.redirect_url = redirect_url
+
+    def run(self):
+        pass
 
 
 class User(NewAcquirer):
     def __init__(self, params: Parameter, sec_user_id: str):
         super().__init__(params)
         self.sec_user_id = sec_user_id
+
+    def run(self):
+        pass
 
 
 class Search(NewAcquirer):
@@ -1668,6 +1687,9 @@ class Search(NewAcquirer):
         self.sort_type = sort_type
         self.publish_time = publish_time
 
+    def run(self):
+        pass
+
 
 class Hot(NewAcquirer):
     tab = ("热榜", "娱乐榜", "社会榜", "挑战榜")
@@ -1675,9 +1697,14 @@ class Hot(NewAcquirer):
     def __init__(self, params: Parameter):
         super().__init__(params)
 
+    def run(self):
+        pass
+
 
 class Collection(NewAcquirer):
-    def __init__(self, params: Parameter, sec_user_id: str, pages=0):
+    def __init__(self, params: Parameter, pages=0):
         super().__init__(params)
-        self.sec_user_id = sec_user_id
         self.pages = pages
+
+    def run(self):
+        pass
