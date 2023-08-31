@@ -1560,6 +1560,8 @@ class Link(NewAcquirer):
     mix_link = compile(
         r".*?https://www\.douyin\.com/collection/(\d{19}).*?")  # 合集链接
     live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
+    live_link_redirect = compile(
+        r"https://webcast\.amemv\.com/douyin/webcast/reflow/.+?")
 
     # TikTok 链接
     works_link_tiktok = compile(
@@ -1583,13 +1585,21 @@ class Link(NewAcquirer):
             return None, []
         return tiktok, u
 
-    def mix(self, text: str) -> list:
-        # urls = self.share.run(text)
-        pass
+    def mix(self, text: str) -> tuple:
+        urls = self.share.run(text)
+        if u := self.works_link.findall(urls):
+            return False, u
+        elif u := self.mix_link.findall(urls):
+            return True, u
+        return None, []
 
-    def live(self, text: str) -> list:
-        # urls = self.share.run(text)
-        pass
+    def live(self, text: str) -> tuple:
+        urls = self.share.run(text)
+        if u := self.live_link.findall(urls):
+            return False, u
+        elif u := self.live_link_redirect.findall(urls):
+            return True, u
+        return None, []
 
 
 class Account(NewAcquirer):
@@ -1609,9 +1619,10 @@ class Account(NewAcquirer):
 
 
 class Works(NewAcquirer):
-    def __init__(self, params: Parameter, id_: str):
+    def __init__(self, params: Parameter, id_: str, tiktok: bool):
         super().__init__(params)
         self.id = id_
+        self.tiktok = tiktok
 
 
 class Comment(NewAcquirer):
@@ -1621,17 +1632,18 @@ class Comment(NewAcquirer):
 
 
 class Mix(NewAcquirer):
-    def __init__(self, params: Parameter, mix_id=None, mark=""):
+    def __init__(self, params: Parameter, mix_id=None, works_id=None, mark=""):
         super().__init__(params)
         self.mix_id = mix_id
+        self.works_id = works_id
         self.mark = mark
 
 
 class Live(NewAcquirer):
-    def __init__(self, params: Parameter, room_id=None, web_rid=None):
+    def __init__(self, params: Parameter, web_rid=None, redirect_url=None):
         super().__init__(params)
         self.web_rid = web_rid
-        self.room_id = room_id
+        self.redirect_url = redirect_url
 
 
 class User(NewAcquirer):
