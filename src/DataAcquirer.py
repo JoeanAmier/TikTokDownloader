@@ -1558,11 +1558,11 @@ class Link(NewAcquirer):
     works_link = compile(
         r".*?https://www\.douyin\.com/(?:video|note)/([0-9]{19}).*?")  # 作品链接
     mix_link = compile(
-        r".*?https://www.douyin.com/collection/(\d{19}).*?")  # 合集链接
+        r".*?https://www\.douyin\.com/collection/(\d{19}).*?")  # 合集链接
     live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
 
     # TikTok 链接
-    works_tiktok_link = compile(
+    works_link_tiktok = compile(
         r".*?https://www\.tiktok\.com/@.+/video/(\d+).*?")  # 作品链接
 
     def __init__(self, params: Parameter):
@@ -1574,8 +1574,14 @@ class Link(NewAcquirer):
         return u if (u := self.account_link.findall(urls)) else []
 
     def works(self, text: str) -> tuple:
-        # urls = self.share.run(text)
-        pass
+        urls = self.share.run(text)
+        if u := self.works_link.findall(urls):
+            tiktok = False
+        elif u := self.works_link_tiktok.findall(urls):
+            tiktok = True
+        else:
+            return None, []
+        return tiktok, u
 
     def mix(self, text: str) -> list:
         # urls = self.share.run(text)
