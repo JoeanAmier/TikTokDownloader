@@ -5,9 +5,14 @@ from pathlib import Path
 from re import compile
 from urllib.parse import parse_qs
 from urllib.parse import quote
+from urllib.parse import urlencode
 from urllib.parse import urlparse
 
 import requests
+from requests import ReadTimeout
+from requests import exceptions
+from requests import get
+from requests import post
 
 from src.CookieTool import Register
 from src.Customizer import wait
@@ -1325,6 +1330,7 @@ class Parameter:
             max_retry: int,
             blacklist,
             thread_,
+            timeout=10,
     ):
         self.headers = {
             "User-Agent": user_agent,
@@ -1350,6 +1356,7 @@ class Parameter:
         self.blacklist = blacklist
         self.id_set = self.blacklist.get_set()
         self.thread = thread_
+        self.timeout = self.check_timeout(timeout)
 
     def check_cookie(self, cookie: dict | str) -> dict:
         if isinstance(cookie, dict):
@@ -1457,6 +1464,13 @@ class Parameter:
         self.log.warning(f"max_retry 参数 {max_retry} 设置错误，程序将使用默认值：0", False)
         return 0
 
+    def check_timeout(self, timeout: int | float) -> int | float:
+        if isinstance(timeout, (int, float)) and timeout > 0:
+            self.log.info(f"timeout 参数已设置为 {timeout}", False)
+            return timeout
+        self.log.warning(f"timeout 参数 {timeout} 设置错误，程序将使用默认值：10")
+        return 10
+
 
 class NewAcquirer:
     # 抖音 API
@@ -1500,6 +1514,11 @@ class NewAcquirer:
     reply_tiktok_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
     item_tiktok_api = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"  # 作品数据接口
 
+    method = {
+        "GET": get,
+        "POST": post,
+    }
+
     def __init__(self, params: Parameter):
         self.headers = params.headers | {
             "Referer": "https://www.douyin.com/", }
@@ -1510,8 +1529,30 @@ class NewAcquirer:
         self.time = params.time
         self.proxies = params.proxies
         self.max_retry = params.max_retry
+        self.timeout = params.timeout
         self.data = []
         self.response = []
+
+    def send_request(self, url: str, params=None, method='GET', **kwargs):
+        try:
+            response = self.method[method](
+                url,
+                params=params,
+                proxies=self.proxies,
+                timeout=self.timeout,
+                headers=self.headers, **kwargs)
+        except (
+                exceptions.ProxyError,
+                exceptions.SSLError,
+                exceptions.ChunkedEncodingError,
+                exceptions.ConnectionError,
+        ):
+            self.log.warning(f"网络异常，请求 {url} {urlencode(params)} 失败")
+            return False
+        except ReadTimeout:
+            self.log.warning(f"请求 {url} {urlencode(params)} 超时")
+            return False
+        return response
 
 
 class Share:
