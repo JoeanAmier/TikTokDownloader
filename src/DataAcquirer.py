@@ -1650,22 +1650,24 @@ class Account(NewAcquirer):
             sec_user_id: str,
             tab="post",
             mark="",
-            pages=0):
+            pages=9999):
         super().__init__(params)
         self.sec_user_id = sec_user_id
         self.tab = tab
-        self.pages = pages
-        self.nickname = None
+        self.favorite = tab == "favorite"
         self.mark = mark
+        self.pages = pages if self.favorite else 9999
+        self.uid = None
+        self.nickname = None
 
     def run(self):
         pass
 
 
 class Works(NewAcquirer):
-    def __init__(self, params: Parameter, id_: str, tiktok: bool):
+    def __init__(self, params: Parameter, item_id: str, tiktok: bool):
         super().__init__(params)
-        self.id = id_
+        self.id = item_id
         self.tiktok = tiktok
 
     def run(self):
@@ -1673,9 +1675,10 @@ class Works(NewAcquirer):
 
 
 class Comment(NewAcquirer):
-    def __init__(self, params: Parameter, item_id: str):
+    def __init__(self, params: Parameter, item_id: str, pages=9999):
         super().__init__(params)
         self.item_id = item_id
+        self.pages = pages
 
     def run(self):
         pass
@@ -1687,6 +1690,7 @@ class Mix(NewAcquirer):
         self.mix_id = mix_id
         self.works_id = works_id
         self.mark = mark
+        self.mix_title = None
 
     def run(self):
         pass
@@ -1737,13 +1741,15 @@ class Hot(NewAcquirer):
 
     def __init__(self, params: Parameter):
         super().__init__(params)
+        self.time = None
+        self.title = None
 
     def run(self):
         pass
 
 
 class Collection(NewAcquirer):
-    def __init__(self, params: Parameter, pages=0):
+    def __init__(self, params: Parameter, pages=9999):
         super().__init__(params)
         self.pages = pages
 
