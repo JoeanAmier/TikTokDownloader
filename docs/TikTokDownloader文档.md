@@ -19,9 +19,9 @@
 <hr>
 <h1>快速入门</h1>
 <ol>
-<li><b>下载 EXE 文件</b> 或者 <b>配置运行环境</b>
+<li><b>下载 EXE 程序</b> 或者 <b>配置运行环境</b>
 <ol><b>直接运行程序</b>
-<li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的 EXE 压缩包</li>
+<li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的 EXE 程序压缩包</li>
 <li>解压后打开程序文件夹，双击运行 <code>main.exe</code></li>
 </ol>
 <ol><b>通过源码运行</b>
