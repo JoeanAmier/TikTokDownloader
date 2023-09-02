@@ -70,7 +70,6 @@
 # 📈 项目状态
 
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已完成测试，所有功能均可正常使用
-* 🟢 已发布 EXE 可执行文件，可前往 [Issue](https://github.com/JoeanAmier/TikTokDownloader/issues/49) 下载
 * 🟢 正在重构项目代码，提高代码复用性和可维护性
 * 🟢 准备优化配置文件的参数格式
 * 🟢 准备优化批量下载账号收藏作品功能
@@ -216,16 +215,16 @@ TikTokDownloader
 
 # ✉️ 联系作者
 
-<p>
-<b>TikTokDownloader 是我个人独立维护的一个开源项目，鉴于个人精力有限，请理解项目进展可能较为缓慢，我会尽力保持更新和维护，以确保项目的稳定性和功能的不断改进。</b>
-</p>
-
 <ul>
 <li>QQ Group: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">830227445</a></li>
 <li>Email: yonglelolu@gmail.com</li>
 </ul>
-
-<p>如果您通过 Email 联系我，我可能无法及时查看并回复信息，我会尽力在七天内回复您的邮件；如果有紧急事项或需要更快的回复，请通过其他方式与我联系，谢谢理解！</p>
+<p>
+<b>TikTokDownloader 是我个人独立维护的一个开源项目，鉴于个人精力有限，请理解项目进展可能较为缓慢，我会尽力保持更新和维护，以确保项目的稳定性和功能的不断改进。</b>
+</p>
+<p>
+<b>如果您通过 Email 联系我，我可能无法及时查看并回复信息，我会尽力在七天内回复您的邮件；如果有紧急事项或需要更快的回复，请通过其他方式与我联系，谢谢理解！</b>
+</p>
 
 # 💡 代码参考
 
