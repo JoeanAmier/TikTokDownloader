@@ -762,26 +762,36 @@ class Downloader:
             self.log.info(f"{self.nickname} 的合集下载结束")
 
 
-class Extractor:
-    pass
-
-
 class NewDownloader:
+    Phone_headers = None
+
     def __init__(self, params):
-        self.extractor = Extractor()
-        self.PC_headers = params.headers
-        self.black_headers = None
-        self.Phone_headers = None
+        self.PC_headers, self.black_headers = self.init_headers(params.headers)
         self.ua_code = params.ua_code
         self.log = params.log
-        self.storage = params.storage
         self.xb = params.xb
         self.colour = params.colour
         self.root = params.root
         self.folder = params.folder
+        self.name = params.name
+        self.time = params.time
+        self.split = params.split
+        self.music = params.music
+        self.dynamic = params.dynamic
+        self.original = params.original
+        self.proxies = params.proxies
+        self.download = params.download
+        self.max_size = params.max_size
+        self.chunk = params.chunk
+        self.max_retry = params.max_retry
         self.blacklist = params.blacklist
+        self.id_set = params.id_set
         self.__thread = ThreadPoolExecutor if params.thread else FakeThreadPool
         self.__pool = None
+
+    @staticmethod
+    def init_headers(headers: dict) -> tuple:
+        return headers, {"User-Agent": headers["User-Agent"]}
 
     def run(self, data: list):
         pass
