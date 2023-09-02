@@ -27,7 +27,7 @@ class TikTokDownloader:
 
     REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
     LICENCE = "GNU General Public License v3.0"
-    DOCUMENTATION = "https://github.com/JoeanAmier/TikTokDownloader/wiki/TikTokDownloader-Documentation"
+    DOCUMENTATION = "https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation"
     RELEASES = "https://github.com/JoeanAmier/TikTokDownloader/releases/latest"
     NAME = f"TikTokDownloader v{VERSION}{'' if STABLE else ' Beta'}"
     WIDTH = 50

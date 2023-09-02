@@ -141,7 +141,7 @@ TikTokDownloader
 </li>
 <li>返回程序界面，依次选择 <code>终端命令行模式</code> --> <code>单独下载链接作品</code></li>
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
-<li>更多详细说明请查看 <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/TikTokDownloader-Documentation">项目文档</a></b></li>
+<li>更多详细说明请查看 <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">项目文档</a></b></li>
 </ol>
 
 <hr>
