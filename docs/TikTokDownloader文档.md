@@ -19,17 +19,25 @@
 <hr>
 <h1>快速入门</h1>
 <ol>
+<li><b>下载 EXE 文件</b> 或者 <b>配置运行环境</b>
+<ol><b>直接运行程序</b>
+<li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的 EXE 压缩包</li>
+<li>解压后打开程序文件夹，双击运行 <code>main.exe</code></li>
+</ol>
+<ol><b>通过源码运行</b>
 <li>安装不低于 <code>3.10</code> 版本的 <a href="https://www.python.org/">Python</a> 解释器</li>
-<li>下载最新源码或 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的源码至本地</li>
+<li>下载最新的源码或 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的源码至本地</li>
 <li>安装 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/requirements.txt">requirements.txt</a> 包含的第三方模块</li>
 <li>运行 main.py</li>
+</ol>
+</li>
 <li>将 Cookie 信息写入配置文件
 <ol><b>手动复制粘贴</b>
 <li>使用浏览器打开抖音网页版，复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a> 至剪贴板</li>
 <li>选择 <code>复制粘贴写入 Cookie</code> 模式，按照提示将 Cookie 写入配置文件</li>
 </ol>
 <ol><b>扫码登录获取</b>
-<li>选择 <code>扫码登录写入 Cookie</code> 模式，程序会显示登录二维码图片</li>
+<li>选择 <code>扫码登陆写入 Cookie</code> 模式，程序会显示登录二维码图片</li>
 <li>使用抖音 APP 扫描二维码并登录账号，操作后关闭图片窗口（若有）</li>
 <li>按照提示将 Cookie 写入配置文件</li>
 </ol>
