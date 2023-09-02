@@ -23,7 +23,7 @@ from src.main_web_UI import WebUI
 
 class TikTokDownloader:
     VERSION = 4.1
-    STABLE = False
+    STABLE = True
 
     REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
     LICENCE = "GNU General Public License v3.0"
