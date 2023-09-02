@@ -81,7 +81,6 @@
 * 🔴 最新版本的源码可能存在不稳定的 Bug
 * 🔴 如果在使用过程中发现 Bug，请及时告知作者修复
 * 🔴 当账号昵称不是有效的文件夹名称时会导致程序报错，未修复，设置 `mark` 参数可临时解决问题
-* 🔴 当 `save` 参数设置为 `csv` 或 `xlsx` 时会导致程序报错，最新源码已修复，未发布 Releases
 
 # 📁 项目结构
 
@@ -112,15 +111,23 @@ TikTokDownloader
 └─ docs                                    // 项目文档文件夹
 ```
 
-# 📋 程序说明
+# 📋 项目说明
 
 **快速入门：**
 
 <ol>
+<li><b>下载 EXE 文件</b> 或者 <b>配置运行环境</b>
+<ol><b>直接运行程序</b>
+<li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的 EXE 压缩包</li>
+<li>解压后打开程序文件夹，双击运行 <code>main.exe</code></li>
+</ol>
+<ol><b>通过源码运行</b>
 <li>安装不低于 <code>3.10</code> 版本的 <a href="https://www.python.org/">Python</a> 解释器</li>
-<li>下载最新源码或 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的源码至本地</li>
+<li>下载最新的源码或 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的源码至本地</li>
 <li>安装 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/requirements.txt">requirements.txt</a> 包含的第三方模块</li>
 <li>运行 main.py</li>
+</ol>
+</li>
 <li>将 Cookie 信息写入配置文件
 <ol><b>手动复制粘贴</b>
 <li>使用浏览器打开抖音网页版，复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a> 至剪贴板</li>
@@ -134,13 +141,8 @@ TikTokDownloader
 </li>
 <li>返回程序界面，依次选择 <code>终端命令行模式</code> --> <code>单独下载链接作品</code></li>
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
+<li>更多详细说明请查看 <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/TikTokDownloader-Documentation">项目文档</a></b></li>
 </ol>
-
-<p>⭐ <b>已发布 EXE 可执行文件，可以直接 <a href="https://github.com/JoeanAmier/TikTokDownloader/issues/49">下载</a> 解压运行，开箱即用！</b></p>
-
-<b>
-<a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/TikTokDownloader-Documentation">点击查看项目完整文档</a>
-</b>
 
 <hr>
 
@@ -157,9 +159,8 @@ TikTokDownloader
 |  下载直播视频  |   ❌    |
 | 获取作品评论数据 |   ⭕    |
 |  下载合集作品  |   ❌    |
-|  获取账号数据  |   ❌    |
+|  获取账号数据  |   ⭕    |
 |  采集搜索结果  |   ❌    |
-|  采集热榜数据  |   ❌    |
 |  采集热榜数据  |   ❌    |
 | 下载账号收藏作品 |   ✔️   |
 
@@ -176,7 +177,7 @@ TikTokDownloader
 <li>获取私密账号的发布作品数据需要登录后的 Cookie，且登录的账号需要关注该私密账号</li>
 <li>批量下载账号作品或合集作品时，如果对应的昵称或标识发生变化，程序会自动更新已下载作品文件名称中的昵称和标识</li>
 <li>程序下载文件时会先将文件下载至临时文件夹，下载完成后再移动至储存文件夹；程序运行结束时会清空临时文件夹</li>
-<li>如果想要自定义程序功能，可以直接修改 <code>src/Customizer.py</code> 文件内容，已简化代码修改难度</li>
+<li>如果想要自定义程序功能，可以直接修改 <code>src/Customizer.py</code> 文件内容，已整理程序功能修改指引</li>
 <li><code>批量下载收藏作品模式</code> 目前仅支持下载当前已登录 Cookie 对应账号的收藏作品，暂不支持多账号</li>
 </ul>
 
