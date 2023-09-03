@@ -9,6 +9,8 @@ from src.Customizer import check_login
 from src.Parameter import TtWid
 from src.Parameter import VerifyFp
 
+__all__ = ["Cookie", "Register"]
+
 
 class Cookie:
     pattern = r'(?P<key>[^=;,]+)=(?P<value>[^;,]+)'
