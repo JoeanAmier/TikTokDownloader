@@ -1,5 +1,9 @@
-import json
+from json import dump
+from json import load
+from json.decoder import JSONDecodeError
 from pathlib import Path
+
+__all__ = ["Settings"]
 
 
 class Settings:
@@ -39,7 +43,7 @@ class Settings:
     def create(self):
         """创建默认配置文件"""
         with self.file.open("w", encoding="UTF-8") as f:
-            json.dump(self.__default, f, indent=4)
+            dump(self.__default, f, indent=4)
         print("创建默认配置文件成功！")
 
     def read(self):
@@ -47,16 +51,16 @@ class Settings:
         try:
             if self.file.exists():
                 with self.file.open("r", encoding="UTF-8") as f:
-                    return json.load(f)
+                    return load(f)
             else:
                 print("配置文件读取失败，文件不存在！")
                 self.create()
                 return False  # 生成的默认配置文件必须要设置 cookie 才可以正常运行
-        except json.decoder.JSONDecodeError:
+        except JSONDecodeError:
             return {}  # 读取配置文件发生错误时返回空配置
 
     def update(self, settings: dict):
         """更新配置文件"""
         with self.file.open("w", encoding="UTF-8") as f:
-            json.dump(settings, f, indent=4, ensure_ascii=False)
+            dump(settings, f, indent=4, ensure_ascii=False)
         print("保存配置成功！")
