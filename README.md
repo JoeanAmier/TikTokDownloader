@@ -142,7 +142,7 @@ TikTokDownloader
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 <li>更多详细说明请查看 <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">项目文档</a></b></li>
 </ol>
-
+<p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a> 运行程序！</p>
 <hr>
 
 **关于 Cookie：**

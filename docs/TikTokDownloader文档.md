@@ -45,6 +45,7 @@
 <li>返回程序界面，依次选择 <code>终端命令行模式</code> --> <code>单独下载链接作品</code></li>
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 </ol>
+<p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a> 运行程序！</p>
 <h1>基础说明</h1>
 <h2>链接类型</h2>
 <table>
