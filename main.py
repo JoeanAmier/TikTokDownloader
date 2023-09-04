@@ -22,8 +22,8 @@ from src.main_web_UI import WebUI
 
 
 class TikTokDownloader:
-    VERSION = 4.2
-    STABLE = False
+    VERSION = 4.1
+    STABLE = True
 
     REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
     LICENCE = "GNU General Public License v3.0"
@@ -192,7 +192,7 @@ class TikTokDownloader:
 
     def auto_cookie(self):
         if cookie := self.register.run():
-            self.cookie.extract(cookie, 0)
+            self.cookie.extract(cookie)
         else:
             print("扫码登录失败，未写入 Cookie！")
         self.main()
