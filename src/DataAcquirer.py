@@ -1530,8 +1530,8 @@ class NewAcquirer:
         self.proxies = params.proxies
         self.max_retry = params.max_retry
         self.timeout = params.timeout
-        self.data = []
         self.response = []
+        self.finished = False
 
     def send_request(self, url: str, params=None, method='GET', **kwargs):
         try:
@@ -1644,6 +1644,9 @@ class Link(NewAcquirer):
 
 
 class Account(NewAcquirer):
+    post_api = "https://www.douyin.com/aweme/v1/web/aweme/post/"
+    favorite_api = "https://www.douyin.com/aweme/v1/web/aweme/favorite/"
+
     def __init__(
             self,
             params: Parameter,
@@ -1653,14 +1656,32 @@ class Account(NewAcquirer):
             pages=9999):
         super().__init__(params)
         self.sec_user_id = sec_user_id
-        self.tab = tab
-        self.favorite = tab == "favorite"
+        self.api, self.favorite, self.pages = self.check_type(tab, pages)
         self.mark = mark
-        self.pages = pages if self.favorite else 9999
         self.uid = None
         self.nickname = None
 
+    def check_type(self, tab: str, pages: int) -> tuple[str, bool, int]:
+        if tab == "favorite":
+            return self.favorite_api, True, pages
+        return self.post_api, False, 9999
+
     def run(self):
+        while not self.finished and self.pages > 0:
+            print(self.colour.colorize("获取数据中...", 94))
+            self.get_account_data()
+            self.deal_account_data()
+            self.early_stop()
+            self.pages -= 1
+        return self.response
+
+    def get_account_data(self):
+        pass
+
+    def deal_account_data(self):
+        pass
+
+    def early_stop(self):
         pass
 
 
