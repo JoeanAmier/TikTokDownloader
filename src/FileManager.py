@@ -1,6 +1,10 @@
-import json
+from json import dump
+from json import load
+from json.decoder import JSONDecodeError
 from pathlib import Path
 from pathlib import PurePath
+
+__all__ = ['Cache', 'deal_config', 'DownloadRecorder']
 
 
 def retry(function):
@@ -27,19 +31,19 @@ class Cache:
         try:
             if self.file.exists():
                 with self.file.open("r", encoding="UTF-8") as f:
-                    cache = json.load(f)
+                    cache = load(f)
                     self.log.info("缓存文件读取成功")
                     return cache
             else:
                 self.log.info("缓存文件不存在")
                 return {}
-        except json.decoder.JSONDecodeError:
+        except JSONDecodeError:
             self.log.warning("缓存文件已损坏")
             return {}
 
     def save_cache(self):
         with self.file.open("w", encoding="UTF-8") as f:
-            json.dump(self.cache, f, indent=4)
+            dump(self.cache, f, indent=4)
         self.log.info("缓存文件已保存")
 
     def update_cache(self, uid: str, mark: str, name: str):
