@@ -1474,9 +1474,6 @@ class Parameter:
 
 class NewAcquirer:
     # 抖音 API
-    item_api = "https://www.douyin.com/aweme/v1/web/aweme/detail/"  # 作品数据接口
-    live_api = "https://live.douyin.com/webcast/room/web/enter/"  # 直播API
-    live_share_api = "https://webcast.amemv.com/webcast/room/reflow/info/"  # 直播分享链接API
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
     reply_api = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
     collection_api = "https://www.douyin.com/aweme/v1/web/aweme/listcollection/"  # 收藏API
@@ -1512,7 +1509,6 @@ class NewAcquirer:
     related_tiktok_api = "https://www.tiktok.com/api/related/item_list/"  # 猜你喜欢API
     comment_tiktok_api = "https://www.tiktok.com/api/comment/list/"  # 评论API
     reply_tiktok_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
-    item_tiktok_api = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"  # 作品数据接口
 
     method = {
         "GET": get,
@@ -1686,6 +1682,9 @@ class Account(NewAcquirer):
 
 
 class Works(NewAcquirer):
+    item_api = "https://www.douyin.com/aweme/v1/web/aweme/detail/"
+    item_api_tiktok = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"
+
     def __init__(self, params: Parameter, item_id: str, tiktok: bool):
         super().__init__(params)
         self.id = item_id
@@ -1706,6 +1705,8 @@ class Comment(NewAcquirer):
 
 
 class Mix(NewAcquirer):
+    item_api = Works.item_api
+
     def __init__(self, params: Parameter, mix_id=None, works_id=None, mark=""):
         super().__init__(params)
         self.mix_id = mix_id
@@ -1718,9 +1719,13 @@ class Mix(NewAcquirer):
 
 
 class Live(NewAcquirer):
+    live_api = "https://live.douyin.com/webcast/room/web/enter/"
+    live_api_share = "https://webcast.amemv.com/webcast/room/reflow/info/"
+
     def __init__(self, params: Parameter, web_rid=None, redirect_url=None):
         super().__init__(params)
         self.headers["Referer"] = "https://live.douyin.com/"
+        del self.headers["Cookie"]
         self.web_rid = web_rid
         self.redirect_url = redirect_url
 
@@ -1762,6 +1767,7 @@ class Hot(NewAcquirer):
 
     def __init__(self, params: Parameter):
         super().__init__(params)
+        del self.headers["Cookie"]
         self.time = None
         self.title = None
 
