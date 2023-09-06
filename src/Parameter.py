@@ -10,6 +10,8 @@ from urllib.parse import urlencode
 from requests import exceptions
 from requests import post
 
+__all__ = ['generate_user_agent', 'NewXBogus', 'MsToken', 'TtWid', 'VerifyFp']
+
 
 def generate_user_agent() -> tuple[str, tuple]:
     user_agent = (

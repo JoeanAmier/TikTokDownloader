@@ -4,6 +4,8 @@ from string import whitespace
 
 from src.Customizer import illegal_nickname
 
+__all__ = ['Cleaner', 'Colour', 'clean_name']
+
 
 class Cleaner:
     def __init__(self):
