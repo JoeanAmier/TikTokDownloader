@@ -13,6 +13,7 @@ from src.Customizer import MAX_WORKERS
 from src.Customizer import wait
 from src.DataAcquirer import check_cookie
 from src.DataAcquirer import retry
+from src.DataAcquirer import update_cookie
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
@@ -764,6 +765,7 @@ class Downloader:
 
 class NewDownloader:
     Phone_headers = None
+    temp = Path("./cache/temp")
 
     def __init__(self, params):
         self.cookie = params.cookie
@@ -794,35 +796,37 @@ class NewDownloader:
     def init_headers(headers: dict) -> tuple:
         return headers, {"User-Agent": headers["User-Agent"]}
 
-    def run(self, data: list):
+    @update_cookie
+    def run(self, data: list[dict]) -> None:
         pass
 
-    def download_image(self):
+    def download_image(self) -> None:
         pass
 
-    def download_video(self):
+    def download_video(self) -> None:
         pass
 
-    def download_music(self):
+    def download_music(self) -> None:
         pass
 
-    def download_cover(self):
+    def download_cover(self) -> None:
         pass
 
-    def download_live(self):
+    def download_live(self) -> None:
         pass
 
-    def request_file(self):
+    def request_file(self) -> bool:
         pass
 
-    def download_file(self, urls: list):
+    def download_file(self, urls: list) -> bool:
         pass
 
     def create_folder(self, name: str):
         pass
 
     def delete_file(self, path: Path):
-        pass
+        path.unlink()
+        self.log.info(f"文件 {path} 已删除")
 
 
 class FakeThreadPool:

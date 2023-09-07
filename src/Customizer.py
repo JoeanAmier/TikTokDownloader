@@ -2,12 +2,25 @@
 # from random import randint
 # from time import sleep
 
-__all__ = ["MAX_WORKERS", "wait", "failed", "illegal_nickname", "check_login"]
+__all__ = [
+    "MAX_WORKERS",
+    "wait",
+    "failed",
+    "illegal_nickname",
+    "check_login",
+    "COMMENT_LENGTH",
+    "DESCRIPTION_LENGTH", ]
 
 # 线程池最大线程数量，多线程下载文件时使用
 # 短期大批量下载文件可以适当设置更大的值
 # 长期大批量下载文件不建议设置过大的值，可能会导致下载无响应（可能是抖音端风控）
 MAX_WORKERS = 4
+
+# 评论内容最大长度限制
+COMMENT_LENGTH = None
+
+# 作品描述最大长度限制
+DESCRIPTION_LENGTH = None
 
 
 def wait():
