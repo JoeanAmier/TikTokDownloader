@@ -1296,6 +1296,17 @@ class Acquirer:
             return False
 
 
+def update_cookie(function):
+    def inner(self, *args, **kwargs):
+        if self.cookie:
+            active_cookie = self.cookie.copy()
+            Parameter.add_cookie(active_cookie)
+            self.headers["Cookie"] = Register.generate_cookie(active_cookie)
+        return function(self, *args, **kwargs)
+
+    return inner
+
+
 class Parameter:
     name_dict = {
         "id": 0,
@@ -1360,8 +1371,6 @@ class Parameter:
 
     def check_cookie(self, cookie: dict | str) -> dict:
         if isinstance(cookie, dict):
-            self.add_cookie(cookie)
-            self.headers["Cookie"] = Register.generate_cookie(cookie)
             return cookie
         elif isinstance(cookie, str):
             self.headers["Cookie"] = cookie
@@ -1516,6 +1525,7 @@ class NewAcquirer:
     }
 
     def __init__(self, params: Parameter):
+        self.cookie = params.cookie
         self.headers = params.headers | {
             "Referer": "https://www.douyin.com/", }
         self.ua_code = params.ua_code
@@ -1662,6 +1672,7 @@ class Account(NewAcquirer):
             return self.favorite_api, True, pages
         return self.post_api, False, 9999
 
+    @update_cookie
     def run(self):
         while not self.finished and self.pages > 0:
             print(self.colour.colorize("获取数据中...", 94))
