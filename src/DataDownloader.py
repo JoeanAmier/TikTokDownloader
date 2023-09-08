@@ -385,6 +385,15 @@ class Downloader:
         tags = [i["tag_name"] for i in t]
         return tags or ["", "", ""]
 
+    @staticmethod
+    def get_description(item) -> str:
+        try:
+            desc = item["share_info"]["share_link_desc"]
+            return desc.split(
+                ":/ ", 1)[1].rstrip("  %s 复制此链接，打开Dou音搜索，直接观看视频！")
+        except (KeyError, IndexError):
+            return ""
+
     def get_info(self, data: list[str | dict], api=False):
         """
         提取作品详细信息
@@ -400,7 +409,7 @@ class Downloader:
                 item)
             desc = self.clear_spaces(
                 self.clean.filter(
-                    item["desc"])[
+                    self.get_description(item))[
                 :self.length]) or id_
             create_time = time.strftime(
                 self.time,
