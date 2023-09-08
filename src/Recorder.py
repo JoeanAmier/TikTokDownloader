@@ -5,6 +5,7 @@ from logging import INFO as INFO_LEVEL
 from logging import getLogger
 from os import path
 from pathlib import Path
+from platform import system
 from re import sub
 from sqlite3 import connect
 from time import localtime
@@ -197,7 +198,7 @@ class CSVLogger:
         self.root = self.root.joinpath(f"{self.name}.{self.__type}")
         self.file = self.root.open(
             "a",
-            encoding="UTF-8",
+            encoding="UTF-8-SIG" if system() == "Windows" else "UTF-8",
             newline="")
         self.writer = writer(self.file)
         self.title()
