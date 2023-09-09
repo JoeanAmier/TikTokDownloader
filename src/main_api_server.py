@@ -34,7 +34,7 @@ class APIServer(WebUI):
             settings[i] = j
         self.settings.update(settings)
         if c := parameters.get("cookie"):
-            self.cookie.extract(c, 0)
+            self.cookie.extract(c)
         self.configuration(filename=self.filename)
 
     def add_params(self, params=None, **kwargs):
