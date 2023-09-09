@@ -35,16 +35,22 @@ class Extractor:
 
     def user(self, data: list[dict], post=True) -> list[dict]:
         result = []
+        template = {
+            "collection_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        }
         if post:
-            [self.extract_user(result, item) for item in data]
+            [self.extract_user(result, template, item) for item in data]
         else:
-            [self.extract_user(result, item) for item in data[:-1]]
+            [self.extract_user(result, template, item) for item in data[:-1]]
             self.extract_not_post(result, data[-1])
         return result
 
-    def extract_user(self, container: list, data: dict) -> None:
-        data_dict = {
-            "collection_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}
+    def extract_user(
+            self,
+            container: list,
+            template: dict,
+            data: dict) -> None:
+        data_dict = template.copy()
         self.extract_works_info(data_dict, data)
         self.extract_account_info(data_dict, data)
         container.append(data_dict)
@@ -80,20 +86,20 @@ class Extractor:
         }
         container.append(data_dict)
 
-    def works(self, data: list[dict]) -> dict:
+    def works(self, data: list[dict]) -> list[dict]:
         pass
 
-    def comment(self, data: list[dict]) -> dict:
+    def comment(self, data: list[dict]) -> list[dict]:
         pass
 
-    def live(self, data: list[dict]) -> dict:
+    def live(self, data: list[dict]) -> list[dict]:
         pass
 
-    def search_general(self, data: list[dict]) -> dict:
+    def search_general(self, data: list[dict]) -> list[dict]:
         pass
 
-    def search_user(self, data: list[dict]) -> dict:
+    def search_user(self, data: list[dict]) -> list[dict]:
         pass
 
-    def hot(self, data: list[list[dict]]) -> dict:
+    def hot(self, data: list[list[dict]]) -> list[dict]:
         pass
