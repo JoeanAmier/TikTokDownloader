@@ -17,11 +17,11 @@ class Extractor:
         }
 
     @staticmethod
-    def get_sec_uid(data: dict) -> str | False:
+    def get_sec_uid(data: dict) -> str:
         try:
             return data["author"]["sec_uid"]
         except KeyError:
-            return False
+            return ""
 
     def run(self, data: list[dict], type_="works", **kwargs) -> list[dict]:
         if type_ not in self.type.keys():

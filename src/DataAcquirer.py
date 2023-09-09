@@ -1776,11 +1776,10 @@ class Account(NewAcquirer):
         self.cursor = 0
         self.get_account_data(self.favorite_api, end=1)
         sec_uid = Extractor.get_sec_uid(self.response[-1])
-        if self.sec_user_id == sec_uid:
-            return
-        elif isinstance(sec_uid, bool):
-            self.log.warning(f"响应格式错误，疑似接口更新: {self.response[-1]}", False)
-        self.generate_temp_data()
+        if not sec_uid:
+            self.log.warning("响应格式错误，疑似接口更新", False)
+        elif self.sec_user_id != sec_uid:
+            self.generate_temp_data()
 
     def generate_temp_data(self):
         fake_data = self.temp_data()
