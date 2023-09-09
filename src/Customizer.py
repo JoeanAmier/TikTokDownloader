@@ -8,19 +8,16 @@ __all__ = [
     "failed",
     "illegal_nickname",
     "check_login",
-    "COMMENT_LENGTH",
-    "DESCRIPTION_LENGTH", ]
+    "DESCRIPTION_LENGTH",
+]
 
 # 线程池最大线程数量，多线程下载文件时使用
 # 短期大批量下载文件可以适当设置更大的值
 # 长期大批量下载文件不建议设置过大的值，可能会导致下载无响应（可能是抖音端风控）
 MAX_WORKERS = 4
 
-# 评论内容最大长度限制
-COMMENT_LENGTH = None
-
-# 作品描述最大长度限制
-DESCRIPTION_LENGTH = None
+# 作品描述最大长度限制，仅对作品文件名称生效，不影响数据储存，设置时需要考虑系统文件名称最大长度限制
+DESCRIPTION_LENGTH = 64
 
 
 def wait():
