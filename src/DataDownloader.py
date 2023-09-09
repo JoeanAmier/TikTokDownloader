@@ -786,7 +786,6 @@ class NewDownloader:
         self.root = params.root
         self.folder = params.folder
         self.name = params.name
-        self.time = params.time
         self.split = params.split
         self.music = params.music
         self.dynamic = params.dynamic

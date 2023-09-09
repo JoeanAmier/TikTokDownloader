@@ -10,7 +10,7 @@ __all__ = ["Extractor"]
 class Extractor:
     def __init__(self, params: Parameter):
         self.log = params.log
-        self.time = params.time
+        self.date = params.date
         self.type = {
             "user": self.user,
             "works": self.works,
@@ -66,7 +66,7 @@ class Extractor:
 
     def format_date(self, data: dict) -> str:
         return strftime(
-            self.time,
+            self.date,
             localtime(
                 data["create_time"]))
 

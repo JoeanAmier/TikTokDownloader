@@ -3,6 +3,8 @@ from datetime import date
 from datetime import datetime
 from pathlib import Path
 from re import compile
+from time import localtime
+from time import strftime
 from urllib.parse import parse_qs
 from urllib.parse import quote
 from urllib.parse import urlencode
@@ -1309,14 +1311,14 @@ def update_cookie(function):
 
 
 class Parameter:
-    name_dict = {
-        "id": 0,
-        "desc": 1,
-        "create_time": 2,
-        "nickname": 4,
-        "uid": 3,
-        "mark": 5,
-    }
+    name_keys = (
+        "id",
+        "desc",
+        "create_time",
+        "nickname",
+        "uid",
+        "mark",
+    )
     clean = Cleaner()
 
     def __init__(
@@ -1330,7 +1332,7 @@ class Parameter:
             root: str,
             folder: str,
             name: str,
-            time_: str,
+            date_: str,
             split: str,
             music: bool,
             dynamic: bool,
@@ -1355,7 +1357,7 @@ class Parameter:
         self.root = self.check_root(root)
         self.folder = self.check_folder(folder)
         self.name = self.check_name(name)
-        self.time = self.check_time(time_)
+        self.date = self.check_date(date_)
         self.split = self.check_split(split)
         self.music = music
         self.dynamic = dynamic
@@ -1400,23 +1402,22 @@ class Parameter:
         self.log.warning(f"folder 参数 {folder} 不是有效的文件夹名称，程序将使用默认值：Download")
         return "Download"
 
-    def check_name(self, name: str) -> list[int]:
-        name_key = name.strip().split(" ")
-        try:
-            name_index = [self.name_dict[i] for i in name_key]
+    def check_name(self, name: str) -> list[str]:
+        name_keys = name.strip().split(" ")
+        if all(i in self.name_keys for i in name_keys):
             self.log.info(f"name 参数已设置为 {name}", False)
-            return name_index
-        except KeyError:
-            self.log.warning(f"name 参数 {name} 设置错误，程序将使用默认值：创建时间 账号昵称 描述")
-            return [2, 4, 1]
+            return name_keys
+        else:
+            self.log.warning(f"name 参数 {name} 设置错误，程序将使用默认值：创建时间 账号昵称 作品描述")
+            return ["create_time", "nickname", "desc"]
 
-    def check_time(self, time_: str) -> str:
+    def check_date(self, date_: str) -> str:
         try:
-            _ = time.strftime(time_, time.localtime())
-            self.log.info(f"time 参数已设置为 {time_}", False)
-            return time_
+            _ = strftime(date_, localtime())
+            self.log.info(f"time 参数已设置为 {date_}", False)
+            return date_
         except ValueError:
-            self.log.warning(f"time 参数 {time_} 设置错误，程序将使用默认值：年-月-日 时.分.秒")
+            self.log.warning(f"time 参数 {date_} 设置错误，程序将使用默认值：年-月-日 时.分.秒")
             return "%Y-%m-%d %H.%M.%S"
 
     def check_split(self, split: str) -> str:
@@ -1533,7 +1534,6 @@ class NewAcquirer:
         self.log = params.log
         self.xb = params.xb
         self.colour = params.colour
-        self.time = params.time
         self.proxies = params.proxies
         self.max_retry = params.max_retry
         self.timeout = params.timeout
