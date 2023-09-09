@@ -83,7 +83,7 @@
 * 🟡 未来可能新增 TikTok 平台批量下载功能
 * 🔴 最新版本的源码可能存在不稳定的 Bug
 * 🔴 如果在使用过程中发现 Bug，请及时告知作者修复
-* 🔴 开启多线程时，作品未下载成功也会记录作品 ID，未修复，关闭多线程或者禁用作品下载记录功能可临时解决问题
+* 🔴 开启多线程时，作品未下载成功也会记录作品 ID，未修复，关闭多线程可临时解决问题
 * 🔴 账号昵称不是有效的文件夹名称时会导致程序报错，未修复，设置 `mark` 参数可临时解决问题
 * 🔴 Windows 系统使用 Excel 打开 CSV 数据文件会显示乱码，已修复，未发布 Releases
 * 🔴 作品描述内容过多时会导致描述内容采集不完整，已修复，未发布 Releases
@@ -96,10 +96,11 @@ TikTokDownloader
 ├─ requirements.txt                        // 程序所需第三方模块信息
 ├─ settings.json                           // 运行参数配置文件
 ├─ src                                     // 项目模块源码文件夹
-│    ├─ CookieTool.py                      // Cookie 写入模块
+│    ├─ CookieTool.py                      // Cookie 处理模块
 │    ├─ Customizer.py                      // 项目代码调整模块
 │    ├─ Configuration.py                   // 配置文件处理模块
 │    ├─ DataAcquirer.py                    // 接口数据获取模块
+│    ├─ DataExtractor.py                   // 抖音数据提取模块
 │    ├─ DataDownloader.py                  // 作品文件下载模块
 │    ├─ FileCache.json                     // 文件管理缓存数据
 │    ├─ FileManager.py                     // 作品文件管理模块
