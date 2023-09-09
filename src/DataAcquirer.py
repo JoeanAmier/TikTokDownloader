@@ -1536,10 +1536,17 @@ class NewAcquirer:
         self.proxies = params.proxies
         self.max_retry = params.max_retry
         self.timeout = params.timeout
+        self.cursor = 0
         self.response = []
         self.finished = False
 
-    def send_request(self, url: str, params=None, method='GET', **kwargs):
+    # @retry
+    def send_request(
+            self,
+            url: str,
+            params=None,
+            method='GET',
+            **kwargs) -> dict | bool:
         try:
             response = self.method[method](
                 url,
@@ -1553,12 +1560,20 @@ class NewAcquirer:
                 exceptions.ChunkedEncodingError,
                 exceptions.ConnectionError,
         ):
-            self.log.warning(f"网络异常，请求 {url} {urlencode(params)} 失败")
+            self.log.warning(f"网络异常，请求 {url}?{urlencode(params)} 失败")
             return False
         except ReadTimeout:
-            self.log.warning(f"请求 {url} {urlencode(params)} 超时")
+            self.log.warning(f"请求 {url}?{urlencode(params)} 超时")
             return False
-        return response
+        try:
+            return response.json()
+        except exceptions.JSONDecodeError:
+            self.log.warning(f"响应内容不是有效的 JSON 格式：{response.content}")
+            return False
+
+    def deal_url_params(self, params: dict, version=23):
+        xb = self.xb.get_x_bogus(params, self.ua_code, version)
+        params["X-Bogus"] = xb
 
 
 class Share:
@@ -1580,6 +1595,7 @@ class Share:
             return " ".join(self.get_url(i) for i in u)
         return text
 
+    # @retry
     def get_url(self, url: str) -> str:
         try:
             response = requests.get(
@@ -1598,7 +1614,7 @@ class Share:
         return response.url
 
 
-class Link(NewAcquirer):
+class Link:
     # 抖音链接
     account_link = compile(
         r".*?https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*?")  # 账号主页链接
@@ -1615,7 +1631,6 @@ class Link(NewAcquirer):
         r".*?https://www\.tiktok\.com/@.+/video/(\d+).*?")  # 作品链接
 
     def __init__(self, params: Parameter):
-        super().__init__(params)
         self.share = Share(params.proxies, params.max_retry)
 
     def user(self, text: str) -> list:
@@ -1659,10 +1674,13 @@ class Account(NewAcquirer):
             sec_user_id: str,
             tab="post",
             mark="",
+            earliest="",
+            latest="",
             pages=9999):
         super().__init__(params)
         self.sec_user_id = sec_user_id
         self.api, self.favorite, self.pages = self.check_type(tab, pages)
+        self.earliest, self.latest = self.check_date(earliest, latest)
         self.mark = mark
         self.uid = None
         self.nickname = None
@@ -1672,24 +1690,79 @@ class Account(NewAcquirer):
             return self.favorite_api, True, pages
         return self.post_api, False, 9999
 
+    def check_date(self, start: str, end: str) -> tuple[date, date]:
+        return self.check_earliest(start), self.check_latest(end)
+
+    def check_earliest(self, date_: str) -> date:
+        try:
+            earliest = datetime.strptime(
+                date_, "%Y/%m/%d").date()
+            self.log.info(f"作品最早发布日期: {date_}")
+            return earliest
+        except ValueError:
+            self.log.warning(f"作品最早发布日期 {date_} 无效")
+            return date(2016, 9, 20)
+
+    def check_latest(self, date_: str) -> date:
+        try:
+            latest = datetime.strptime(date_, "%Y/%m/%d").date()
+            self.log.info(f"作品最晚发布日期: {date_}")
+            return latest
+        except ValueError:
+            self.log.warning(f"作品最晚发布日期无效 {date_}")
+            return date.today()
+
     @update_cookie
     def run(self):
+        num = 1
         while not self.finished and self.pages > 0:
-            print(self.colour.colorize("获取数据中...", 94))
+            print(self.colour.colorize(f"正在获取第 {num} 页数据...", 94))
             self.get_account_data()
-            self.deal_account_data()
             self.early_stop()
             self.pages -= 1
+            num += 1
         return self.response
 
     def get_account_data(self):
-        pass
+        params = {
+            "device_platform": "webapp",
+            "aid": "6383",
+            "channel": "channel_pc_web",
+            "sec_user_id": self.sec_user_id,
+            "max_cursor": self.cursor,
+            "count": "18",
+            "cookie_enabled": "true",
+            "platform": "PC",
+            "downlink": "10",
+        }
+        self.deal_url_params(params)
+        if not (
+                data := self.send_request(
+                    self.api,
+                    params=params)):
+            self.finished = True
+            self.log.warning("获取账号作品数据失败")
+            return
+        try:
+            if (data_list := data["aweme_list"]) is None:
+                self.log.info("该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号")
+                self.finished = True
+            else:
+                self.cursor = data['max_cursor']
+                self.deal_account_data(data_list)
+                self.finished = not data["has_more"]
+        except KeyError:
+            self.log.error(f"账号作品数据响应内容异常: {data}")
 
-    def deal_account_data(self):
-        pass
+    def deal_account_data(self, data: list[dict]) -> None:
+        for i in data:
+            self.response.append(i)
 
     def early_stop(self):
-        pass
+        """如果获取数据的发布日期已经早于限制日期，就不需要再获取下一页的数据了"""
+        if not self.favorite and self.earliest > datetime.fromtimestamp(
+                max(self.cursor / 1000, 0)).date():
+            self.finished = True
 
 
 class Works(NewAcquirer):

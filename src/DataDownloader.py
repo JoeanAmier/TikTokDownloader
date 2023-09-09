@@ -803,7 +803,7 @@ class NewDownloader:
 
     @staticmethod
     def init_headers(headers: dict) -> tuple:
-        return headers, {"User-Agent": headers["User-Agent"]}
+        return headers.copy(), {"User-Agent": headers["User-Agent"]}
 
     @update_cookie
     def run(self, data: list[dict]) -> None:
