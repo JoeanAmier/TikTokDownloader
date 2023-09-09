@@ -16,6 +16,7 @@ from requests import post
 
 from src.CookieTool import Register
 from src.Customizer import wait
+from src.DataExtractor import Extractor
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.Recorder import BaseLogger
@@ -1770,9 +1771,30 @@ class Account(NewAcquirer):
             self.finished = True
 
     def favorite_mode(self):
-        if self.favorite:
-            self.cursor = 0
-            self.get_account_data(self.favorite_api, end=1)
+        if not self.favorite:
+            return
+        self.cursor = 0
+        self.get_account_data(self.favorite_api, end=1)
+        sec_uid = Extractor.get_sec_uid(self.response[-1])
+        if self.sec_user_id == sec_uid:
+            return
+        elif isinstance(sec_uid, bool):
+            self.log.warning(f"响应格式错误，疑似接口更新: {self.response[-1]}", False)
+        self.generate_temp_data()
+
+    def generate_temp_data(self):
+        fake_data = self.temp_data()
+        fake_dict = {
+            "author": {
+                "nickname": fake_data,
+                "uid": fake_data,
+            }
+        }
+        self.response.append(fake_dict)
+
+    @staticmethod
+    def temp_data() -> str:
+        return str(time.time())[:10]
 
 
 class Works(NewAcquirer):

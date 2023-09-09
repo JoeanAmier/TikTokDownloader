@@ -1,8 +1,11 @@
+from src.DataAcquirer import Parameter
+
 __all__ = ["Extractor"]
 
 
 class Extractor:
-    def __init__(self):
+    def __init__(self, params: Parameter):
+        self.log = params.log
         self.type = {
             "user": self.user,
             "works": self.works,
@@ -13,26 +16,35 @@ class Extractor:
             "hot": self.hot,
         }
 
-    def run(self, data: list[dict], type_="Works") -> list[dict]:
+    @staticmethod
+    def get_sec_uid(data: dict) -> str | False:
+        try:
+            return data["author"]["sec_uid"]
+        except KeyError:
+            return False
+
+    def run(self, data: list[dict], type_="works", **kwargs) -> list[dict]:
+        if type_ not in self.type.keys():
+            raise ValueError
+        return self.type[type_](data, **kwargs)
+
+    def user(self, data: list[dict]) -> list[dict]:
         pass
 
-    def user(self):
+    def works(self, data: list[dict]) -> list[dict]:
         pass
 
-    def works(self):
+    def comment(self, data: list[dict]) -> list[dict]:
         pass
 
-    def comment(self):
+    def live(self, data: list[dict]) -> list[dict]:
         pass
 
-    def live(self):
+    def search_general(self, data: list[dict]) -> list[dict]:
         pass
 
-    def search_general(self):
+    def search_user(self, data: list[dict]) -> list[dict]:
         pass
 
-    def search_user(self):
-        pass
-
-    def hot(self):
+    def hot(self, data: list[list[dict]]) -> list[list[dict]]:
         pass
