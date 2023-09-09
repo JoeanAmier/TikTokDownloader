@@ -1717,13 +1717,14 @@ class Account(NewAcquirer):
         num = 1
         while not self.finished and self.pages > 0:
             print(self.colour.colorize(f"正在获取第 {num} 页数据...", 94))
-            self.get_account_data()
+            self.get_account_data(self.api)
             self.early_stop()
             self.pages -= 1
             num += 1
+        self.favorite_mode()
         return self.response
 
-    def get_account_data(self):
+    def get_account_data(self, api: str, start=None, end=None):
         params = {
             "device_platform": "webapp",
             "aid": "6383",
@@ -1738,7 +1739,7 @@ class Account(NewAcquirer):
         self.deal_url_params(params)
         if not (
                 data := self.send_request(
-                    self.api,
+                    api,
                     params=params)):
             self.finished = True
             self.log.warning("获取账号作品数据失败")
@@ -1749,13 +1750,17 @@ class Account(NewAcquirer):
                 self.finished = True
             else:
                 self.cursor = data['max_cursor']
-                self.deal_account_data(data_list)
+                self.deal_account_data(data_list, start, end)
                 self.finished = not data["has_more"]
         except KeyError:
             self.log.error(f"账号作品数据响应内容异常: {data}")
 
-    def deal_account_data(self, data: list[dict]) -> None:
-        for i in data:
+    def deal_account_data(
+            self,
+            data: list[dict],
+            start=None,
+            end=None) -> None:
+        for i in data[start:end]:
             self.response.append(i)
 
     def early_stop(self):
@@ -1763,6 +1768,11 @@ class Account(NewAcquirer):
         if not self.favorite and self.earliest > datetime.fromtimestamp(
                 max(self.cursor / 1000, 0)).date():
             self.finished = True
+
+    def favorite_mode(self):
+        if self.favorite:
+            self.cursor = 0
+            self.get_account_data(self.favorite_api, end=1)
 
 
 class Works(NewAcquirer):
