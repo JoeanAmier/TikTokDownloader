@@ -18,8 +18,8 @@ __all__ = ["Settings", "Parameter"]
 
 
 class Settings:
-    def __init__(self):
-        self.file = Path("./settings.json")  # 配置文件
+    def __init__(self, root: Path):
+        self.file = root.joinpath("./settings.json")  # 配置文件
         self.__default = {
             "accounts": [
                 ["账号标识，可以设置为空字符串",
@@ -90,6 +90,7 @@ class Parameter:
 
     def __init__(
             self,
+            main_path: Path,
             user_agent: str,
             ua_code: tuple,
             log: LoggerManager | BaseLogger,
@@ -113,6 +114,7 @@ class Parameter:
             thread_,
             timeout=10,
     ):
+        self.main_path = main_path  # 项目根路径
         self.headers = {
             "User-Agent": user_agent,
         }
@@ -160,7 +162,7 @@ class Parameter:
             self.log.info(f"root 参数已设置为 {root}", False)
             return r
         self.log.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用默认值：./")
-        return Path("./")
+        return self.main_path
 
     def check_folder(self, folder: str) -> str:
         if folder := Cleaner.clean_name(folder):
