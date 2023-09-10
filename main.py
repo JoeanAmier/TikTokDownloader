@@ -22,8 +22,10 @@ from src.main_web_UI import WebUI
 
 
 class TikTokDownloader:
-    VERSION = 4.2
-    STABLE = True
+    PROJECT_ROOT = Path(__file__).resolve().parent
+
+    VERSION = 4.3
+    STABLE = False
 
     REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
     LICENCE = "GNU General Public License v3.0"
@@ -33,10 +35,11 @@ class TikTokDownloader:
     WIDTH = 50
     LINE = ">" * WIDTH
 
-    UPDATE = {"path": Path("./src/config/Disable_Update")}
-    COLOUR = {"path": Path("./src/config/Disable_Colour")}
-    RECORD = {"path": Path("./src/config/Disable_Record")}
-    DISCLAIMER = {"path": Path("./src/config/Consent_Disclaimer")}
+    UPDATE = {"path": PROJECT_ROOT.joinpath("./src/config/Disable_Update")}
+    COLOUR = {"path": PROJECT_ROOT.joinpath("./src/config/Disable_Colour")}
+    RECORD = {"path": PROJECT_ROOT.joinpath("./src/config/Disable_Record")}
+    DISCLAIMER = {"path": PROJECT_ROOT.joinpath(
+        "./src/config/Consent_Disclaimer")}
 
     DISCLAIMER_TEXT = (
         "关于 TikTokDownloader 的 免责声明：",
@@ -92,12 +95,7 @@ class TikTokDownloader:
     def check_config(self):
         folder = ("./src/config", "./cache", "./cache/temp")
         for i in folder:
-            if not (c := Path(i)).is_dir():
-                try:
-                    c.mkdir()
-                except FileNotFoundError:
-                    print(f"发生预期之外的错误，请联系作者寻求解决方案，工作路径: {Path.cwd()}")
-                    exit()
+            self.PROJECT_ROOT.joinpath(i).mkdir(exist_ok=True)
         self.UPDATE["tip"] = "启用" if self.UPDATE["path"].exists() else "禁用"
         self.COLOUR["tip"] = "启用" if (
             c := self.COLOUR["path"].exists()) else "禁用"
@@ -222,7 +220,7 @@ class TikTokDownloader:
             self.change_config(self.RECORD["path"])
 
     def check_settings(self):
-        if not Path("./settings.json").exists():
+        if not self.PROJECT_ROOT.joinpath("./settings.json").exists():
             self.settings.create()
 
     def run(self):
@@ -234,9 +232,8 @@ class TikTokDownloader:
         self.main()
         self.delete_temp()
 
-    @staticmethod
-    def delete_temp():
-        rmtree(Path("./cache/temp").resolve())
+    def delete_temp(self):
+        rmtree(self.PROJECT_ROOT.joinpath("./cache/temp").resolve())
 
 
 if __name__ == '__main__':
