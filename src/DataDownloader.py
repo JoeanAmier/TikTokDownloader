@@ -9,6 +9,7 @@ from threading import Thread
 import requests
 from emoji import replace_emoji
 
+from src.Configuration import Parameter
 from src.Customizer import MAX_WORKERS
 from src.Customizer import wait
 from src.DataAcquirer import check_cookie
@@ -774,9 +775,8 @@ class Downloader:
 
 class NewDownloader:
     Phone_headers = None
-    temp = Path("./cache/temp")
 
-    def __init__(self, params):
+    def __init__(self, params: Parameter, main_path: Path):
         self.cookie = params.cookie
         self.PC_headers, self.black_headers = self.init_headers(params.headers)
         self.ua_code = params.ua_code
@@ -799,6 +799,7 @@ class NewDownloader:
         self.id_set = params.id_set
         self.__thread = ThreadPoolExecutor if params.thread else FakeThreadPool
         self.__pool = None
+        self.__temp = main_path.joinpath("./cache/temp")
 
     @staticmethod
     def init_headers(headers: dict) -> tuple:
