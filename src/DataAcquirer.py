@@ -8,7 +8,6 @@ from urllib.parse import urlencode
 from urllib.parse import urlparse
 
 import requests
-from requests import ReadTimeout
 from requests import exceptions
 from requests import get
 from requests import post
@@ -1387,7 +1386,7 @@ class NewAcquirer:
         ):
             self.log.warning(f"网络异常，请求 {url}?{urlencode(params)} 失败")
             return False
-        except ReadTimeout:
+        except exceptions.ReadTimeout:
             self.log.warning(f"请求 {url}?{urlencode(params)} 超时")
             return False
         try:
@@ -1514,6 +1513,10 @@ class Account(NewAcquirer):
         if tab == "favorite":
             return self.favorite_api, True, pages
         return self.post_api, False, 9999
+
+    @staticmethod
+    def check_tab(tab: str) -> bool:
+        return tab in {"favorite", "post"}
 
     def check_date(self, start: str, end: str) -> tuple[date, date]:
         return self.check_earliest(start), self.check_latest(end)

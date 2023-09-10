@@ -167,7 +167,7 @@ class TikTok:
             name=self.nickname)
         save, root, params = self.record.run(
             self._data["root"], format_=self._data["save"])
-        select = prompt("请选择账号链接来源", ("使用 accounts 参数内的账号链接",
+        select = prompt("请选择账号链接来源", ("使用 accounts 参数内的账号链接(推荐)",
                                                "手动输入待采集的账号链接"), self.colour.colorize)
         if select == "1":
             self.user_works_batch(save, root, params)
@@ -396,7 +396,7 @@ class TikTok:
             name=self.nickname)
         save, root, params = self.record.run(
             self._data["root"], type_="mix", format_=self._data["save"])
-        select = prompt("请选择合集链接来源", ("使用 mix 参数内的合集链接",
+        select = prompt("请选择合集链接来源", ("使用 mix 参数内的合集链接(推荐)",
                                                "手动输入待采集的合集链接"), self.colour.colorize)
         if select == "1":
             self.mix_batch(save, root, params)
