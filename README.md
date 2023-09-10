@@ -15,10 +15,10 @@
 </div>
 <br>
 <p>🔥 <b>TikTok 视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 Requests 模块实现；批量下载抖音账号发布、喜欢、收藏的作品；单独下载抖音链接或 TikTok 链接对应的作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品搜索结果；采集抖音热榜数据。</p>
-<p>⭐ Windows 用户可前往 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 下载已编译的 exe 程序，开箱即用！</p>
+<p>⭐ Windows 10 及以上用户可前往 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 下载已编译的 exe 程序，开箱即用！</p>
 <hr>
 
-# 📝 功能清单
+# 📝 功能清单\(Function\)
 
 * ✅ 下载抖音无水印视频/图集
 * ✅ 下载 TikTok 无水印视频/图集
@@ -51,7 +51,7 @@
 * ✅ 支持多线程下载作品
 * ✅ 文件完整性处理机制
 
-# 💻 程序界面
+# 💻 程序界面\(Screenshot\)
 
 **终端命令行模式：**
 <br><br>
@@ -69,7 +69,7 @@
 <br><br>
 ![WebAPI模式截图](docs/WebAPI模式截图.png)
 
-# 📈 项目状态
+# 📈 项目状态\(Status\)
 
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已完成测试，所有功能均可正常使用
 * 🟢 正在重构项目代码，提高代码复用性和可维护性
@@ -87,11 +87,8 @@
 * 🔴 如果在使用过程中发现 Bug，请及时告知作者修复
 * 🔴 开启多线程时，作品未下载成功也会记录作品 ID，未修复，关闭多线程可临时解决问题
 * 🔴 账号昵称不是有效的文件夹名称时会导致程序报错，未修复，设置 `mark` 参数可临时解决问题
-* 🔴 Windows 系统使用 Excel 打开 CSV 数据文件会显示乱码，已修复，未发布 Releases
-* 🔴 `Web API 接口模式` 通过 API 设置 Cookie 会报错，已修复，未发布 Releases
-* 🔴 作品描述内容过多时会导致描述内容采集不完整，已修复，未发布 Releases
 
-# 📁 项目结构
+# 📁 项目结构\(Structure\)
 
 ```text
 TikTokDownloader
@@ -121,7 +118,7 @@ TikTokDownloader
 └─ docs                                    // 项目文档文件夹
 ```
 
-# 📋 项目说明
+# 📋 项目说明\(Instructions\)
 
 **快速入门：**
 
@@ -189,9 +186,10 @@ TikTokDownloader
 <li>程序下载文件时会先将文件下载至临时文件夹，下载完成后再移动至储存文件夹；程序运行结束时会清空临时文件夹</li>
 <li>如果想要自定义程序功能，可以直接修改 <code>src/Customizer.py</code> 文件内容，已整理程序功能修改指引</li>
 <li><code>批量下载收藏作品模式</code> 目前仅支持下载当前已登录 Cookie 对应账号的收藏作品，暂不支持多账号</li>
+<li>如果想要程序使用代理，必须在 <code>settings.json</code> 设置 <code>proxies</code> 参数，否则程序不会使用代理</li>
 </ul>
 
-# ⚠️ 免责声明
+# ⚠️ 免责声明\(Disclaimers\)
 
 <ul>
 <li>使用者对本项目的使用由使用者自行决定，并自行承担风险。作者对使用者使用本项目所产生的任何损失、责任、或风险概不负责。</li>
@@ -208,7 +206,7 @@ TikTokDownloader
 </ul>
 <b>在使用本项目的代码和功能之前，请您认真考虑并接受以上免责声明。如果您对上述声明有任何疑问或不同意，请不要使用本项目的代码和功能。如果您使用了本项目的代码和功能，则视为您已完全理解并接受上述免责声明，并自愿承担使用本项目的一切风险和后果。</b>
 
-# ♥️ 赞助项目
+# ♥️ 支持项目\(Support\)
 
 <table>
 <thead>
@@ -224,7 +222,7 @@ TikTokDownloader
 </tbody>
 </table>
 
-# ✉️ 联系作者
+# ✉️ 联系作者\(Contact\)
 
 <ul>
 <li>QQ Group: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">830227445</a></li>
@@ -237,7 +235,7 @@ TikTokDownloader
 <b>如果您通过 Email 联系我，我可能无法及时查看并回复信息，我会尽力在七天内回复您的邮件；如果有紧急事项或需要更快的回复，请通过其他方式与我联系，谢谢理解！</b>
 </p>
 
-# 💡 代码参考
+# 💡 代码参考\(Refer\)
 
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://github.com/Johnserf-Seed/TikTokDownload
