@@ -88,7 +88,7 @@ class WebUI(TikTok):
              0))
         self.settings.update(settings)
         if c := convert.get("cookie"):
-            self.cookie.extract(c, 0)
+            self.cookie.extract(c)
         self.configuration(filename=self.filename)
 
     def get_data(self, data) -> dict:
