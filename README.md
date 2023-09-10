@@ -1,17 +1,18 @@
 <div align="center">
-<img src="static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
+<img src="https://github.com/JoeanAmier/TikTokDownloader/blob/master/static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
 <h1>TikTokDownloader</h1>
 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">
-<img src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader?color=f39800" alt="GNU General Public License v3.0">
+<img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader">
 </a>
-<img src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?color=9ebc19" alt="stars">
+<img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?color=eb6ea5">
+<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?color=fff200">
 <a href="https://sourcery.ai">
-<img src="https://img.shields.io/badge/Sourcery-enabled-ffd900" alt="Sourcery">
+<img src="https://img.shields.io/badge/Sourcery-enabled-884898" alt="Sourcery">
 </a>
-<img src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?color=ba79b1" alt="forks">
 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">
-<img src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader?color=6f94cd" alt="TikTokDownloader">
+<img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader">
 </a>
+<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?color=3eb370">
 </div>
 <br>
 <p>🔥 <b>TikTok 视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 Requests 模块实现；批量下载抖音账号发布、喜欢、收藏的作品；单独下载抖音链接或 TikTok 链接对应的作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品搜索结果；采集抖音热榜数据。</p>
