@@ -3,6 +3,7 @@ from time import localtime
 from time import strftime
 
 from src.Configuration import Parameter
+from src.StringCleaner import Cleaner
 
 __all__ = ["Extractor"]
 
@@ -11,6 +12,7 @@ class Extractor:
     def __init__(self, params: Parameter):
         self.log = params.log
         self.date = params.date
+        self.clean = params.clean
         self.type = {
             "user": self.user,
             "works": self.works,
@@ -64,6 +66,9 @@ class Extractor:
         except (KeyError, IndexError):
             return ""
 
+    def clean_description(self, desc: str) -> str:
+        return Cleaner.clear_spaces(self.clean.filter(desc))
+
     def format_date(self, data: dict) -> str:
         return strftime(
             self.date,
@@ -72,11 +77,22 @@ class Extractor:
 
     def extract_works_info(self, item: dict, data: dict) -> None:
         item["id"] = data["aweme_id"]
-        item["desc"] = self.extract_description(data)
+        item["desc"] = self.clean_description(
+            self.extract_description(data)) or data["aweme_id"]
         item["create_time"] = self.format_date(data)
 
-    def extract_account_info(self, item: dict, data: dict) -> None:
+    def extract_music(self, item: dict, data: dict) -> None:
         pass
+
+    @staticmethod
+    def extract_account_info(item: dict, data: dict) -> None:
+        data = data["author"]
+        item["uid"] = data["uid"]
+        item["sec_uid"] = data["sec_uid"]
+        item["short_id"] = data.get("short_id") or ""
+        item["unique_id"] = data.get("unique_id") or ""
+        item["signature"] = data.get("signature") or ""
+        item["nickname"] = Cleaner.clean_name(data.get("nickname")) or "已注销账号"
 
     @staticmethod
     def extract_not_post(container: list, data: dict) -> None:
