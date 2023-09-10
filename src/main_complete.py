@@ -1,5 +1,6 @@
 from time import time
 
+from src.Customizer import TEXT_REPLACEMENT
 from src.Customizer import failed
 from src.DataAcquirer import Acquirer
 from src.DataDownloader import Downloader
@@ -35,9 +36,6 @@ def check_save(function):
 
 
 class TikTok:
-    CLEAN_PATCH = {
-        " ": " ",
-    }  # 过滤字符
     SEARCH = {
         "type": {
             "综合": 0,
@@ -337,8 +335,8 @@ class TikTok:
             self.colour,
             self.blacklist,
             self._data["thread"])
-        self.request.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
-        self.download.clean.set_rule(self.CLEAN_PATCH, True)  # 设置文本过滤规则
+        self.request.clean.set_rule(TEXT_REPLACEMENT, True)  # 设置文本过滤规则
+        self.download.clean.set_rule(TEXT_REPLACEMENT, True)  # 设置文本过滤规则
         self.mark = "mark" in self._data["name"]
         self.nickname = "nickname" in self._data["name"]
         self.request.initialization(self.user_agent, self.code)

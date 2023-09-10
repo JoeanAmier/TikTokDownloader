@@ -9,6 +9,7 @@ __all__ = [
     "illegal_nickname",
     "check_login",
     "DESCRIPTION_LENGTH",
+    "TEXT_REPLACEMENT",
 ]
 
 # 线程池最大线程数量，多线程下载文件时使用
@@ -18,6 +19,11 @@ MAX_WORKERS = 4
 
 # 作品描述最大长度限制，仅对作品文件名称生效，不影响数据储存，设置时需要考虑系统文件名称最大长度限制
 DESCRIPTION_LENGTH = 64
+
+# 非法字符替换规则，key 为替换前的文本，value 为替换后的文本
+TEXT_REPLACEMENT = {
+    " ": " ",
+}
 
 
 def wait():
