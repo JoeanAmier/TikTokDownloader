@@ -3,7 +3,6 @@ from time import localtime
 from time import strftime
 
 from src.Configuration import Parameter
-from src.StringCleaner import Cleaner
 
 __all__ = ["Extractor"]
 
@@ -67,7 +66,7 @@ class Extractor:
             return ""
 
     def clean_description(self, desc: str) -> str:
-        return Cleaner.clear_spaces(self.clean.filter(desc))
+        return self.clean.clear_spaces(self.clean.filter(desc))
 
     def format_date(self, data: dict) -> str:
         return strftime(
@@ -84,15 +83,15 @@ class Extractor:
     def extract_music(self, item: dict, data: dict) -> None:
         pass
 
-    @staticmethod
-    def extract_account_info(item: dict, data: dict) -> None:
+    def extract_account_info(self, item: dict, data: dict) -> None:
         data = data["author"]
         item["uid"] = data["uid"]
         item["sec_uid"] = data["sec_uid"]
         item["short_id"] = data.get("short_id") or ""
         item["unique_id"] = data.get("unique_id") or ""
         item["signature"] = data.get("signature") or ""
-        item["nickname"] = Cleaner.clean_name(data.get("nickname")) or "已注销账号"
+        item["nickname"] = self.clean.clean_name(
+            data.get("nickname")) or "已注销账号"
 
     @staticmethod
     def extract_not_post(container: list, data: dict) -> None:
