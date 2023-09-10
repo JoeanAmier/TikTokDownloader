@@ -64,7 +64,7 @@ class TikTokDownloader:
         self.blacklist = None
         self.user_agent, self.code = generate_user_agent()
         self.x_bogus = NewXBogus()
-        self.settings = Settings()
+        self.settings = Settings(self.PROJECT_ROOT)
         self.register = Register(
             self.settings,
             self.x_bogus,
@@ -102,7 +102,8 @@ class TikTokDownloader:
         self.RECORD["tip"] = "启用" if (
             b := self.RECORD["path"].exists()) else "禁用"
         self.colour = Colour(not c)
-        self.blacklist = DownloadRecorder(not b, "./cache")
+        self.blacklist = DownloadRecorder(
+            not b, self.PROJECT_ROOT.joinpath("./cache"))
         self.cookie = Cookie(self.settings, self.colour)
 
     def check_update(self):

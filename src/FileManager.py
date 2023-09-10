@@ -2,7 +2,6 @@ from json import dump
 from json import load
 from json.decoder import JSONDecodeError
 from pathlib import Path
-from pathlib import PurePath
 
 __all__ = ['Cache', 'deal_config', 'DownloadRecorder']
 
@@ -18,9 +17,17 @@ def retry(function):
 
 
 class Cache:
-    def __init__(self, record, root: str, type_: str, mark: bool, name: bool):
+    def __init__(
+            self,
+            main_path: Path,
+            record,
+            root: str,
+            type_: str,
+            mark: bool,
+            name: bool):
         self.log = record  # 日志记录对象
-        self.file = Path("./src/FileCache.json")  # 缓存文件
+        self.file = main_path.joinpath("./src/FileCache.json")  # 缓存文件
+        # TODO: 新版本 root 是 Path 对象
         self.root = Path(root)  # 作品文件保存根目录
         self.type_ = type_
         self.mark = mark
@@ -54,8 +61,7 @@ class Cache:
         self.save_cache()
 
     def check_file(self, uid: str, mark: str, name: str):
-        if not (old_folder := PurePath.joinpath(
-                self.root,
+        if not (old_folder := self.root.joinpath(
                 f"{self.type_}{uid}_{self.cache[uid]['mark']}")).is_dir():
             self.log.info(f"{old_folder} 不存在，自动跳过")
             return
@@ -68,7 +74,7 @@ class Cache:
 
     @retry
     def rename_folder(self, old_folder, uid: str, mark: str):
-        new_folder = PurePath.joinpath(self.root, f"{self.type_}{uid}_{mark}")
+        new_folder = self.root.joinpath(f"{self.type_}{uid}_{mark}")
         try:
             old_folder.rename(new_folder)
         except PermissionError as e:
@@ -83,17 +89,17 @@ class Cache:
     def rename_file(self, uid, mark, name, field="name"):
         def rename(type_: str):
             nonlocal folder, uid, mark, name, field
-            deal_folder = PurePath.joinpath(folder, type_)
+            deal_folder = folder.joinpath(type_)
             file_list = deal_folder.iterdir()
             for old_file in file_list:
                 if (s := self.cache[uid][field]) not in old_file.name:
                     break
-                new_file = PurePath.joinpath(deal_folder, old_file.name.replace(
+                new_file = deal_folder.joinpath(old_file.name.replace(
                     s, {"name": name, "mark": mark}[field], 1))
                 old_file.rename(new_file)
                 self.log.info(f"文件 {old_file} 重命名为 {new_file}", False)
 
-        folder = PurePath.joinpath(self.root, f"{self.type_}{uid}_{mark}")
+        folder = self.root.joinpath(f"{self.type_}{uid}_{mark}")
         rename("video")
         rename("images")
 
@@ -106,9 +112,9 @@ def deal_config(path: Path):
 
 
 class DownloadRecorder:
-    def __init__(self, switch, folder):
+    def __init__(self, switch, folder: Path):
         self.switch = switch
-        self.path = Path(f"{folder}").joinpath("IDRecorder.txt")
+        self.path = folder.joinpath("IDRecorder.txt")
         self.file = None
 
     def get_set(self) -> set:
