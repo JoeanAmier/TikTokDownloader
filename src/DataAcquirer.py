@@ -1,10 +1,7 @@
 import time
 from datetime import date
 from datetime import datetime
-from pathlib import Path
 from re import compile
-from time import localtime
-from time import strftime
 from urllib.parse import parse_qs
 from urllib.parse import quote
 from urllib.parse import urlencode
@@ -16,6 +13,7 @@ from requests import exceptions
 from requests import get
 from requests import post
 
+from src.Configuration import Parameter
 from src.CookieTool import Register
 from src.Customizer import wait
 from src.DataExtractor import Extractor
@@ -24,7 +22,6 @@ from src.Parameter import TtWid
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
-from src.StringCleaner import clean_name
 
 
 def reset(function):
@@ -1308,179 +1305,6 @@ def update_cookie(function):
         return function(self, *args, **kwargs)
 
     return inner
-
-
-class Parameter:
-    name_keys = (
-        "id",
-        "desc",
-        "create_time",
-        "nickname",
-        "uid",
-        "mark",
-    )
-    clean = Cleaner()
-
-    def __init__(
-            self,
-            user_agent: str,
-            ua_code: tuple,
-            log: LoggerManager | BaseLogger,
-            xb,
-            colour,
-            cookie: dict,
-            root: str,
-            folder: str,
-            name: str,
-            date_: str,
-            split: str,
-            music: bool,
-            dynamic: bool,
-            original: bool,
-            proxies: str,
-            download: bool,
-            max_size: int,
-            chunk: int,
-            max_retry: int,
-            blacklist,
-            thread_,
-            timeout=10,
-    ):
-        self.headers = {
-            "User-Agent": user_agent,
-        }
-        self.ua_code = ua_code
-        self.log = log
-        self.xb = xb
-        self.colour = colour
-        self.cookie = self.check_cookie(cookie)
-        self.root = self.check_root(root)
-        self.folder = self.check_folder(folder)
-        self.name = self.check_name(name)
-        self.date = self.check_date(date_)
-        self.split = self.check_split(split)
-        self.music = music
-        self.dynamic = dynamic
-        self.original = original
-        self.proxies = self.check_proxies(proxies)
-        self.download = download
-        self.max_size = self.check_max_size(max_size)
-        self.chunk = self.check_chunk(chunk)
-        self.max_retry = self.check_max_retry(max_retry)
-        self.blacklist = blacklist
-        self.id_set = self.blacklist.get_set()
-        self.thread = thread_
-        self.timeout = self.check_timeout(timeout)
-
-    def check_cookie(self, cookie: dict | str) -> dict:
-        if isinstance(cookie, dict):
-            return cookie
-        elif isinstance(cookie, str):
-            self.headers["Cookie"] = cookie
-            self.log.warning("Cookie 参数格式应为字典格式")
-        else:
-            self.log.warning("Cookie 参数格式错误")
-        return {}
-
-    @staticmethod
-    def add_cookie(cookie: dict) -> None:
-        for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
-            if isinstance(i, dict):
-                cookie |= i
-
-    def check_root(self, root: str) -> Path:
-        if (r := Path(root)).is_dir():
-            self.log.info(f"root 参数已设置为 {root}", False)
-            return r
-        self.log.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用默认值：./")
-        return Path("./")
-
-    def check_folder(self, folder: str) -> str:
-        if folder := clean_name(folder):
-            self.log.info(f"folder 参数已设置为 {folder}", False)
-            return folder
-        self.log.warning(f"folder 参数 {folder} 不是有效的文件夹名称，程序将使用默认值：Download")
-        return "Download"
-
-    def check_name(self, name: str) -> list[str]:
-        name_keys = name.strip().split(" ")
-        if all(i in self.name_keys for i in name_keys):
-            self.log.info(f"name 参数已设置为 {name}", False)
-            return name_keys
-        else:
-            self.log.warning(f"name 参数 {name} 设置错误，程序将使用默认值：创建时间 账号昵称 作品描述")
-            return ["create_time", "nickname", "desc"]
-
-    def check_date(self, date_: str) -> str:
-        try:
-            _ = strftime(date_, localtime())
-            self.log.info(f"time 参数已设置为 {date_}", False)
-            return date_
-        except ValueError:
-            self.log.warning(f"time 参数 {date_} 设置错误，程序将使用默认值：年-月-日 时.分.秒")
-            return "%Y-%m-%d %H.%M.%S"
-
-    def check_split(self, split: str) -> str:
-        for i in split:
-            if i in self.clean.rule.keys():
-                self.log.warning(f"split 参数 {split} 包含非法字符，程序将使用默认值：-")
-                return "-"
-        self.log.info(f"split 参数已设置为 {split}", False)
-        return split
-
-    def check_proxies(self, proxies: str) -> dict:
-        if isinstance(proxies, str):
-            proxies_dict = {
-                "http": proxies,
-                "https": proxies,
-                "ftp": proxies,
-            }
-            try:
-                response = requests.get(
-                    "https://www.baidu.com/", proxies=proxies_dict, timeout=10)
-                if response.status_code == 200:
-                    self.log.info(f"代理 {proxies} 测试成功")
-                    return proxies_dict
-            except requests.exceptions.ReadTimeout:
-                self.log.warning(f"代理 {proxies} 测试超时")
-            except (
-                    requests.exceptions.ProxyError,
-                    requests.exceptions.SSLError,
-                    requests.exceptions.ChunkedEncodingError,
-                    requests.exceptions.ConnectionError,
-            ):
-                self.log.warning(f"代理 {proxies} 测试失败")
-        return {
-            "http": None,
-            "https": None,
-            "ftp": None,
-        }
-
-    def check_max_size(self, max_size: int) -> int:
-        max_size = max(max_size, 0)
-        self.log.info(f"max_size 参数已设置为 {max_size}", False)
-        return max_size
-
-    def check_chunk(self, chunk: int) -> int:
-        if isinstance(chunk, int) and chunk > 0:
-            self.log.info(f"chunk 参数已设置为 {chunk}", False)
-            return chunk
-        self.log.warning(f"chunk 参数 {chunk} 设置错误，程序将使用默认值：{512 * 1024}", False)
-        return 512 * 1024
-
-    def check_max_retry(self, max_retry: int) -> int:
-        if isinstance(max_retry, int) and max_retry >= 0:
-            self.log.info(f"max_retry 参数已设置为 {max_retry}", False)
-            return max_retry
-        self.log.warning(f"max_retry 参数 {max_retry} 设置错误，程序将使用默认值：0", False)
-        return 0
-
-    def check_timeout(self, timeout: int | float) -> int | float:
-        if isinstance(timeout, (int, float)) and timeout > 0:
-            self.log.info(f"timeout 参数已设置为 {timeout}", False)
-            return timeout
-        self.log.warning(f"timeout 参数 {timeout} 设置错误，程序将使用默认值：10")
-        return 10
 
 
 class NewAcquirer:

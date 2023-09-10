@@ -2,7 +2,7 @@ from datetime import datetime
 from time import localtime
 from time import strftime
 
-from src.DataAcquirer import Parameter
+from src.Configuration import Parameter
 
 __all__ = ["Extractor"]
 
