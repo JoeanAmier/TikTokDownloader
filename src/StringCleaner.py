@@ -4,7 +4,7 @@ from string import whitespace
 
 from src.Customizer import illegal_nickname
 
-__all__ = ['Cleaner', 'Colour', 'clean_name']
+__all__ = ['Cleaner', 'Colour']
 
 
 class Cleaner:
@@ -61,6 +61,25 @@ class Cleaner:
             text = text.replace(i, self.rule[i])
         return text
 
+    @staticmethod
+    def clean_name(text):
+        """清洗字符串，仅保留中文、英文、数字和下划线"""
+        # 使用正则表达式匹配非中文、英文、数字和下划线字符，并替换为单个下划线
+        text = sub(r'[^\u4e00-\u9fa5a-zA-Z0-9_]+', '_', text)
+
+        # 去除连续的下划线
+        text = sub(r'_+', '_', text)
+
+        # 去除首尾的下划线
+        text = text.strip('_')
+
+        return text or illegal_nickname()
+
+    @staticmethod
+    def clear_spaces(string: str):
+        """将连续的空格转换为单个空格"""
+        return " ".join(string.split())
+
 
 class Colour:
 
@@ -79,20 +98,6 @@ class Colour:
         code = ";".join(
             [str(i) for i in (font, background, bold) if isinstance(i, int)])
         return f"\x1b[{code}m{text}\x1b[{default}m"
-
-
-def clean_name(text):
-    """清洗字符串，仅保留中文、英文、数字和下划线"""
-    # 使用正则表达式匹配非中文、英文、数字和下划线字符，并替换为单个下划线
-    text = sub(r'[^\u4e00-\u9fa5a-zA-Z0-9_]+', '_', text)
-
-    # 去除连续的下划线
-    text = sub(r'_+', '_', text)
-
-    # 去除首尾的下划线
-    text = text.strip('_')
-
-    return text or illegal_nickname()
 
 
 if __name__ == "__main__":

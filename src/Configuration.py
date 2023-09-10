@@ -13,7 +13,6 @@ from src.Parameter import TtWid
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
-from src.StringCleaner import clean_name
 
 __all__ = ["Settings", "Parameter"]
 
@@ -164,7 +163,7 @@ class Parameter:
         return Path("./")
 
     def check_folder(self, folder: str) -> str:
-        if folder := clean_name(folder):
+        if folder := Cleaner.clean_name(folder):
             self.log.info(f"folder 参数已设置为 {folder}", False)
             return folder
         self.log.warning(f"folder 参数 {folder} 不是有效的文件夹名称，程序将使用默认值：Download")

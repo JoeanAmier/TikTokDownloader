@@ -6,7 +6,6 @@ from logging import getLogger
 from os import path
 from pathlib import Path
 from platform import system
-from re import sub
 from sqlite3 import connect
 from time import localtime
 from time import strftime
@@ -327,20 +326,7 @@ class SQLLogger:
         update_sql = f"ALTER TABLE {old_sheet} RENAME TO {new_sheet};"
         self.cursor.execute(update_sql)
         self.db.commit()
-        self.name = self.clean_name(new_sheet)
-
-    @staticmethod
-    def clean_name(name):
-        # 使用正则表达式匹配非中文、英文、数字和下划线字符，并替换为单个下划线
-        name = sub(r'[^\u4e00-\u9fa5a-zA-Z0-9_]+', '_', name)
-
-        # 去除连续的下划线
-        name = sub(r'_+', '_', name)
-
-        # 去除首尾的下划线
-        name = name.strip('_')
-
-        return name
+        self.name = Cleaner.clean_name(new_sheet)
 
 
 class RecordManager:
