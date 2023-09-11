@@ -11,8 +11,8 @@ from src.CookieTool import Cookie
 from src.CookieTool import Register
 from src.FileManager import DownloadRecorder
 from src.FileManager import FileManager
+from src.Parameter import Headers
 from src.Parameter import NewXBogus
-from src.Parameter import generate_user_agent
 from src.StringCleaner import Colour
 from src.main_api_server import APIServer
 from src.main_complete import TikTok
@@ -62,7 +62,7 @@ class TikTokDownloader:
         self.cookie = None
         self.register = None
         self.blacklist = None
-        self.user_agent, self.code = generate_user_agent()
+        self.user_agent, self.code = Headers.generate_user_agent()
         self.x_bogus = NewXBogus()
         self.settings = Settings(self.PROJECT_ROOT)
         self.register = Register(

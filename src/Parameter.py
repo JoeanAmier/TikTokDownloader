@@ -6,72 +6,73 @@ from string import digits
 from time import time
 from urllib.parse import urlencode
 
-# from execjs import compile
 from requests import exceptions
 from requests import post
 
-__all__ = ['generate_user_agent', 'NewXBogus', 'MsToken', 'TtWid', 'VerifyFp']
+__all__ = ['Headers', 'NewXBogus', 'MsToken', 'TtWid', 'VerifyFp']
 
 
-def generate_user_agent() -> tuple[str, tuple]:
-    user_agent = (
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.183",
-            ((86,
-              138),
-             (238,
-              238,
-              ),
-             )),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
-            ((42,
-              110),
-             (95,
-              187),
-             )),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
-            ((115,
-              235,
-              ),
-             (151,
-              95),
-             )),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188",
-            ((155,
-              54),
-             (11,
-              101))),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1788.0",
-            ((56,
-              22),
-             (77,
-              86)),
-        ),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.0.0",
-            ((116,
-              247),
-             (11,
-              146))),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; WOW64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5666.197 Safari/537.36",
-            ((244,
-              163),
-             (18,
-              102))),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
-            ((107,
-              91),
-             (236,
-              31))),
-    )
+class Headers:
+    @staticmethod
+    def generate_user_agent() -> tuple[str, tuple]:
+        user_agent = (
+            (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.183",
+                ((86,
+                  138),
+                 (238,
+                  238,
+                  ),
+                 )),
+            (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
+                ((42,
+                  110),
+                 (95,
+                  187),
+                 )),
+            (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
+                ((115,
+                  235,
+                  ),
+                 (151,
+                  95),
+                 )),
+            (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188",
+                ((155,
+                  54),
+                 (11,
+                  101))),
+            (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1788.0",
+                ((56,
+                  22),
+                 (77,
+                  86)),
+            ),
+            (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.0.0",
+                ((116,
+                  247),
+                 (11,
+                  146))),
+            (
+                "Mozilla/5.0 (Windows NT 10.0; WOW64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.5666.197 Safari/537.36",
+                ((244,
+                  163),
+                 (18,
+                  102))),
+            (
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36",
+                ((107,
+                  91),
+                 (236,
+                  31))),
+        )
 
-    return user_agent[randint(0, len(user_agent) - 1)]
+        return user_agent[randint(0, len(user_agent) - 1)]
 
 
 def run_time(function):
@@ -434,23 +435,5 @@ class SVWebId:
 
 
 if __name__ == "__main__":
-    # params = {
-    #     "device_platform": "webapp",
-    #     "aid": "6383",
-    #     "channel": "channel_pc_web",
-    #     "pc_client_type": "1",
-    # }
-    # example = XBogus("../static/js/X-Bogus.js")
-    # print("X-Bogus", example.get_x_bogus(params, HEADERS["User-Agent"]))
-    # example.close()
-    # print(MsToken.get_ms_token())
-    # print(TtWid.get_tt_wid())
-    # print("webid", WebID.get_web_id(
-    #     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188"))
-    # print(NewXBogus().get_x_bogus(params, ((86,
-    #                                         138),
-    #                                        (238,
-    #                                         238,
-    #                                         )), 23))
     print(VerifyFp.get_verify_fp())
     print(SVWebId.generate_s_v_web_id())
