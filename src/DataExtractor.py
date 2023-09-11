@@ -54,6 +54,7 @@ class Extractor:
         data_dict = template.copy()
         self.extract_works_info(data_dict, data)
         self.extract_account_info(data_dict, data)
+        self.extract_music(data_dict, data)
         container.append(data_dict)
 
     @staticmethod
@@ -80,7 +81,19 @@ class Extractor:
             self.extract_description(data)) or data["aweme_id"]
         item["create_time"] = self.format_date(data)
 
-    def extract_music(self, item: dict, data: dict) -> None:
+    @staticmethod
+    def extract_music(item: dict, data: dict) -> None:
+        if music_data := data.get("music"):
+            name = music_data.get("title") or item["id"]
+            url = m[-1] if (m := music_data["play_url"]
+            ["url_list"]) else ""  # 部分作品的音乐无法下载
+        else:
+            name, url = "", ""
+        item["music_name"] = name
+        item["music_url"] = url
+
+    @staticmethod
+    def extract_statistics(item: dict, data: dict) -> None:
         pass
 
     def extract_account_info(self, item: dict, data: dict) -> None:
