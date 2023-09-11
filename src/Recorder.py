@@ -3,7 +3,7 @@ from logging import FileHandler
 from logging import Formatter
 from logging import INFO as INFO_LEVEL
 from logging import getLogger
-from os import path
+from os.path import getsize
 from pathlib import Path
 from platform import system
 from sqlite3 import connect
@@ -32,36 +32,12 @@ ERROR = 91
 class BaseLogger:
     """不记录日志，空白日志记录器"""
 
-    def __init__(self, colour):
+    def __init__(self, main_path: Path, colour):
         self.colour = colour
         self.log = None  # 记录器主体
-        self._root = "./"  # 日志记录保存根路径
+        self._root = main_path  # 日志记录保存根路径
         self._folder = "Log"  # 日志记录保存文件夹名称
         self._name = "%Y-%m-%d %H.%M.%S"  # 日志文件名称
-
-    @property
-    def root(self):
-        return self._root
-
-    @root.setter
-    def root(self, value):
-        pass
-
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, value):
-        pass
-
-    @property
-    def folder(self):
-        return self._folder
-
-    @folder.setter
-    def folder(self, value: str):
-        pass
 
     def run(self, *args, **kwargs):
         pass
@@ -82,45 +58,45 @@ class BaseLogger:
 class LoggerManager(BaseLogger):
     """日志记录"""
 
-    def __init__(self, colour):
-        super().__init__(colour)
+    def __init__(self, main_path: Path, colour):
+        super().__init__(main_path, colour)
 
-    @property
-    def root(self):
-        return self._root
-
-    @root.setter
-    def root(self, value):
-        if (r := Path(value)).exists():
-            self._root = r
-        else:
-            print("日志保存路径错误！将使用当前路径作为日志保存路径！")
-            self._root = "./"
-
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, value):
-        if value:
-            try:
-                _ = strftime(value, localtime())
-                self._name = value
-            except ValueError:
-                print("日志名称格式错误，将使用默认时间格式（年-月-日 时.分.秒）")
-                self._name = "%Y-%m-%d %H.%M.%S"
-        else:
-            print("日志名称格式错误，将使用默认时间格式（年-月-日 时.分.秒）")
-            self._name = "%Y-%m-%d %H.%M.%S"
-
-    @property
-    def folder(self):
-        return self._folder
-
-    @folder.setter
-    def folder(self, value: str):
-        self._folder = s if (s := Cleaner().filter(value)) else "Log"
+    # @property
+    # def root(self):
+    #     return self._root
+    #
+    # @root.setter
+    # def root(self, value):
+    #     if (r := Path(value)).exists():
+    #         self._root = r
+    #     else:
+    #         print("日志保存路径错误！将使用当前路径作为日志保存路径！")
+    #         self._root = "./"
+    #
+    # @property
+    # def name(self):
+    #     return self._name
+    #
+    # @name.setter
+    # def name(self, value):
+    #     if value:
+    #         try:
+    #             _ = strftime(value, localtime())
+    #             self._name = value
+    #         except ValueError:
+    #             print("日志名称格式错误，将使用默认时间格式（年-月-日 时.分.秒）")
+    #             self._name = "%Y-%m-%d %H.%M.%S"
+    #     else:
+    #         print("日志名称格式错误，将使用默认时间格式（年-月-日 时.分.秒）")
+    #         self._name = "%Y-%m-%d %H.%M.%S"
+    #
+    # @property
+    # def folder(self):
+    #     return self._folder
+    #
+    # @folder.setter
+    # def folder(self, value: str):
+    #     self._folder = s if (s := Cleaner().filter(value)) else "Log"
 
     def run(
             self,
@@ -207,7 +183,7 @@ class CSVLogger:
         self.file.close()
 
     def title(self):
-        if path.getsize(self.root) == 0:
+        if getsize(self.root) == 0:
             # 如果文件没有任何数据，则写入标题行
             self.save(self.title_line[self.index:])
 
@@ -563,8 +539,14 @@ class RecordManager:
         "sql": SQLLogger,
     }
 
-    def run(self, root="./", folder="Data", type_="", format_=""):
-        root = r if (r := Path(root)).exists() else Path("./")
+    def run(
+            self,
+            main_path: Path,
+            root="./",
+            folder="Data",
+            type_="",
+            format_=""):
+        root = r if (r := Path(root)).exists() else main_path
         name = root.joinpath(self.clean.filter(folder) or "Data")
         type_ = self.DataSheet.get(type_)
         format_ = self.DataLogger.get(format_, NoneLogger)
