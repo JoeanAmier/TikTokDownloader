@@ -10,7 +10,7 @@ from src.Configuration import Settings
 from src.CookieTool import Cookie
 from src.CookieTool import Register
 from src.FileManager import DownloadRecorder
-from src.FileManager import deal_config
+from src.FileManager import FileManager
 from src.Parameter import NewXBogus
 from src.Parameter import generate_user_agent
 from src.StringCleaner import Colour
@@ -79,7 +79,7 @@ class TikTokDownloader:
                         "是否已仔细阅读上述免责声明(YES/NO)",
                         93)).upper() != "YES":
                 exit()
-            deal_config(self.DISCLAIMER["path"])
+            FileManager.deal_config(self.DISCLAIMER["path"])
             print()
 
     def version(self):
@@ -180,7 +180,7 @@ class TikTokDownloader:
         app.run(host="0.0.0.0", debug=False)
 
     def change_config(self, file: Path, tip="修改设置成功！"):
-        deal_config(file)
+        FileManager.deal_config(file)
         print(tip)
         self.check_config()
         self.main()

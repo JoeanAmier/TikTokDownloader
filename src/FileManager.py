@@ -3,7 +3,7 @@ from json import load
 from json.decoder import JSONDecodeError
 from pathlib import Path
 
-__all__ = ['Cache', 'deal_config', 'DownloadRecorder']
+__all__ = ['Cache', 'FileManager', 'DownloadRecorder']
 
 
 def retry(function):
@@ -21,14 +21,13 @@ class Cache:
             self,
             main_path: Path,
             record,
-            root: str,
+            root: Path,
             type_: str,
             mark: bool,
             name: bool):
         self.log = record  # 日志记录对象
         self.file = main_path.joinpath("./src/FileCache.json")  # 缓存文件
-        # TODO: 新版本 root 是 Path 对象
-        self.root = Path(root)  # 作品文件保存根目录
+        self.root = root  # 作品文件保存根目录
         self.type_ = type_
         self.mark = mark
         self.name = name
@@ -104,11 +103,13 @@ class Cache:
         rename("images")
 
 
-def deal_config(path: Path):
-    if path.exists():
-        path.unlink()
-    else:
-        path.touch()
+class FileManager:
+    @staticmethod
+    def deal_config(path: Path):
+        if path.exists():
+            path.unlink()
+        else:
+            path.touch()
 
 
 class DownloadRecorder:
