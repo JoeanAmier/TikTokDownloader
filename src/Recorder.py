@@ -307,7 +307,6 @@ class SQLLogger:
 
 class RecordManager:
     """检查数据储存路径和文件夹"""
-    clean = Cleaner()
     Title = (
         "作品类型",
         "采集时间",
@@ -542,12 +541,18 @@ class RecordManager:
     def run(
             self,
             main_path: Path,
-            root="./",
-            folder="Data",
+            root="",
+            folder="",
             type_="",
             format_=""):
-        root = r if (r := Path(root)).exists() else main_path
-        name = root.joinpath(self.clean.filter(folder) or "Data")
+        root = self.check_root(root) or main_path
+        name = root.joinpath(Cleaner.clean_name(folder) or "Data")
         type_ = self.DataSheet.get(type_)
         format_ = self.DataLogger.get(format_, NoneLogger)
         return format_, name, type_
+
+    @staticmethod
+    def check_root(root: str) -> Path | False:
+        if not root:
+            return False
+        return r if (r := Path(root)).exists() else False
