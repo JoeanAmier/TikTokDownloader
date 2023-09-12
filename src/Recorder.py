@@ -42,8 +42,7 @@ class BaseLogger:
             name=name,
         )
 
-    @staticmethod
-    def init_check(**kwargs) -> tuple:
+    def init_check(self, **kwargs) -> tuple:
         return None, None, None
 
     @staticmethod
@@ -85,21 +84,28 @@ class BaseLogger:
 class LoggerManager(BaseLogger):
     """日志记录"""
 
-    def __init__(self, main_path: Path, colour):
-        super().__init__(main_path, colour)
+    def __init__(self, main_path: Path, colour, root="", folder="", name=""):
+        super().__init__(main_path, colour, root, folder, name)
 
-    @staticmethod
-    def init_check(main_path=Path, root=None, folder=None, name=None) -> tuple:
-        return None, None, None
+    def init_check(
+            self,
+            main_path: Path,
+            root=None,
+            folder=None,
+            name=None) -> tuple:
+        root = self.check_root(root, main_path)
+        folder = self.check_folder(folder)
+        name = self.check_name(name)
+        return root, folder, name
 
     def run(
             self,
             format_="%(asctime)s[%(levelname)s]:  %(message)s", filename=None):
-        if not (dir_ := self.root.joinpath(self.folder)).exists():
+        if not (dir_ := self.__root.joinpath(self.__folder)).exists():
             dir_.mkdir()
         file_handler = FileHandler(
             dir_.joinpath(
-                filename or f"{strftime(self.name, localtime())}.log"),
+                filename or f"{strftime(self.__name, localtime())}.log"),
             encoding="UTF-8")
         formatter = Formatter(format_, datefmt="%Y-%m-%d %H:%M:%S")
         file_handler.setFormatter(formatter)
