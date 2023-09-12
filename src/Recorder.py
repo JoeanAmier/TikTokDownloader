@@ -32,12 +32,39 @@ ERROR = 91
 class BaseLogger:
     """不记录日志，空白日志记录器"""
 
-    def __init__(self, main_path: Path, colour):
-        self.colour = colour
+    def __init__(self, main_path: Path, colour, root="", folder="", name=""):
         self.log = None  # 记录器主体
-        self._root = main_path  # 日志记录保存根路径
-        self._folder = "Log"  # 日志记录保存文件夹名称
-        self._name = "%Y-%m-%d %H.%M.%S"  # 日志文件名称
+        self.colour = colour
+        self.__root, self.__folder, self.__name = self.init_check(
+            main_path=main_path,
+            root=root,
+            folder=folder,
+            name=name,
+        )
+
+    @staticmethod
+    def init_check(**kwargs) -> tuple:
+        return None, None, None
+
+    @staticmethod
+    def check_root(root: str, default: Path) -> Path:
+        if root and (r := Path(root)).is_dir():
+            return r
+        print("日志储存路径无效！程序将使用项目根路径作为日志储存路径！")
+        return default
+
+    @staticmethod
+    def check_name(name: str) -> str:
+        try:
+            _ = strftime(name, localtime())
+            return name
+        except ValueError:
+            print("日志名称格式无效，程序将使用默认时间格式：年-月-日 时.分.秒")
+            return "%Y-%m-%d %H.%M.%S"
+
+    @staticmethod
+    def check_folder(folder: str) -> str:
+        return s if (s := Cleaner.clean_name(folder)) else "Log"
 
     def run(self, *args, **kwargs):
         pass
@@ -61,42 +88,9 @@ class LoggerManager(BaseLogger):
     def __init__(self, main_path: Path, colour):
         super().__init__(main_path, colour)
 
-    # @property
-    # def root(self):
-    #     return self._root
-    #
-    # @root.setter
-    # def root(self, value):
-    #     if (r := Path(value)).exists():
-    #         self._root = r
-    #     else:
-    #         print("日志保存路径错误！将使用当前路径作为日志保存路径！")
-    #         self._root = "./"
-    #
-    # @property
-    # def name(self):
-    #     return self._name
-    #
-    # @name.setter
-    # def name(self, value):
-    #     if value:
-    #         try:
-    #             _ = strftime(value, localtime())
-    #             self._name = value
-    #         except ValueError:
-    #             print("日志名称格式错误，将使用默认时间格式（年-月-日 时.分.秒）")
-    #             self._name = "%Y-%m-%d %H.%M.%S"
-    #     else:
-    #         print("日志名称格式错误，将使用默认时间格式（年-月-日 时.分.秒）")
-    #         self._name = "%Y-%m-%d %H.%M.%S"
-    #
-    # @property
-    # def folder(self):
-    #     return self._folder
-    #
-    # @folder.setter
-    # def folder(self, value: str):
-    #     self._folder = s if (s := Cleaner().filter(value)) else "Log"
+    @staticmethod
+    def init_check(main_path=Path, root=None, folder=None, name=None) -> tuple:
+        return None, None, None
 
     def run(
             self,
