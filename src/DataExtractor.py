@@ -55,6 +55,8 @@ class Extractor:
         self.extract_works_info(data_dict, data)
         self.extract_account_info(data_dict, data)
         self.extract_music(data_dict, data)
+        self.extract_statistics(data_dict, data)
+        self.extract_tags(data_dict, data)
         container.append(data_dict)
 
     @staticmethod
@@ -73,7 +75,7 @@ class Extractor:
         return strftime(
             self.date,
             localtime(
-                data["create_time"]))
+                data.get("create_time") or None))
 
     def extract_works_info(self, item: dict, data: dict) -> None:
         item["id"] = data["aweme_id"]
@@ -94,7 +96,23 @@ class Extractor:
 
     @staticmethod
     def extract_statistics(item: dict, data: dict) -> None:
-        pass
+        data = data["statistics"]
+        for i in (
+                "digg_count",
+                "comment_count",
+                "collect_count",
+                "share_count",
+        ):
+            item[i] = str(data[i])
+
+    @staticmethod
+    def extract_tags(item: dict, data: dict) -> None:
+        if not (t := data.get("video_tag")):
+            tags = ["", "", ""]
+        else:
+            tags = [i["tag_name"] for i in t] or ["", "", ""]
+        for tag, value in zip(("tag_1", "tag_2", "tag_3"), tags):
+            item[tag] = value
 
     def extract_account_info(self, item: dict, data: dict) -> None:
         data = data["author"]
