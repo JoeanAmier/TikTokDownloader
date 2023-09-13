@@ -49,7 +49,7 @@ class BaseLogger:
     def check_root(root: str, default: Path) -> Path:
         if root and (r := Path(root)).is_dir():
             return r
-        print("日志储存路径无效！程序将使用项目根路径作为日志储存路径！")
+        print(f"日志储存路径 {root} 无效，程序将使用项目根路径作为储存路径")
         return default
 
     @staticmethod
@@ -58,7 +58,7 @@ class BaseLogger:
             _ = strftime(name, localtime())
             return name
         except ValueError:
-            print("日志名称格式无效，程序将使用默认时间格式：年-月-日 时.分.秒")
+            print(f"日志名称格式 {name} 无效，程序将使用默认时间格式：年-月-日 时.分.秒")
             return "%Y-%m-%d %H.%M.%S"
 
     @staticmethod
@@ -143,11 +143,19 @@ class NoneLogger:
         pass
 
     @staticmethod
-    def rename(*args, **kwargs):
-        pass
+    def rename(root, type_, old, new_) -> str:
+        mark = new_.split("_", 1)
+        if not old or mark[-1] == old:
+            return new_
+        mark[-1] = old
+        old_file = root.joinpath(f'{"_".join(mark)}.{type_}')
+        if old_file.exists():
+            new_file = root.joinpath(f"{new_}.{type_}")
+            old_file.rename(new_file)
+        return new_
 
 
-class CSVLogger:
+class CSVLogger(NoneLogger):
     """CSV格式记录"""
     __type = "csv"
 
@@ -160,6 +168,7 @@ class CSVLogger:
             name="Solo_Download",
             *args,
             **kwargs):
+        super().__init__(*args, **kwargs)
         self.file = None  # 文件对象
         self.writer = None  # CSV对象
         self.root = Path(root)  # 文件路径
@@ -190,20 +199,8 @@ class CSVLogger:
     def save(self, data, *args, **kwargs):
         self.writer.writerow(data)
 
-    @staticmethod
-    def rename(root, type_, old, new_):
-        mark = new_.split("_", 1)
-        if not old or mark[-1] == old:
-            return new_
-        mark[-1] = old
-        old_file = root.joinpath(f'{"_".join(mark)}.{type_}')
-        if old_file.exists():
-            new_file = root.joinpath(f"{new_}.{type_}")
-            old_file.rename(new_file)
-        return new_
 
-
-class XLSXLogger:
+class XLSXLogger(NoneLogger):
     """XLSX格式"""
     __type = "xlsx"
 
@@ -216,10 +213,11 @@ class XLSXLogger:
             name="Solo_Download",
             *args,
             **kwargs):
+        super().__init__(*args, **kwargs)
         self.book = None  # XLSX数据簿
         self.sheet = None  # XLSX数据表
         self.root = Path(root)  # 文件路径
-        self.name = CSVLogger.rename(self.root, self.__type, old, name)  # 文件名称
+        self.name = self.rename(self.root, self.__type, old, name)  # 文件名称
         self.title_line = title_line  # 标题行
         self.index = 1 if solo_key else 0
 
@@ -247,7 +245,7 @@ class XLSXLogger:
         self.sheet.append(data)
 
 
-class SQLLogger:
+class SQLLogger(NoneLogger):
     """SQLite保存数据"""
 
     def __init__(
@@ -259,6 +257,7 @@ class SQLLogger:
             solo_key: bool,
             old=None,
             name="Solo_Download", ):
+        super().__init__()
         self.db = None  # 数据库
         self.cursor = None  # 游标对象
         self.root = Path(root)  # 文件路径

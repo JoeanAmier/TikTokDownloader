@@ -161,7 +161,7 @@ class Parameter:
         if root and (r := Path(root)).is_dir():
             self.log.info(f"root 参数已设置为 {root}", False)
             return r
-        self.log.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用默认值：./")
+        self.log.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
         return self.main_path
 
     def check_folder(self, folder: str) -> str:
