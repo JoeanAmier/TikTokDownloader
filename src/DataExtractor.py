@@ -82,6 +82,30 @@ class Extractor:
         item["desc"] = self.clean_description(
             self.extract_description(data)) or data["aweme_id"]
         item["create_time"] = self.format_date(data)
+        self.classifying_works(item, data)
+
+    def classifying_works(self, item: dict, data: dict) -> None:
+        if images := data.get("images"):
+            self.extract_image_info(item, data, images)
+        elif images := data.get("image_post_info"):
+            self.extract_image_info_tiktok(item, data, images)
+        else:
+            self.extract_video_info(item, data)
+
+    @staticmethod
+    def extract_image_info(item: dict, data: dict, images: dict) -> None:
+        pass
+
+    @staticmethod
+    def extract_image_info_tiktok(
+            item: dict,
+            data: dict,
+            images: dict) -> None:
+        pass
+
+    @staticmethod
+    def extract_video_info(item: dict, data: dict) -> None:
+        pass
 
     @staticmethod
     def extract_music(item: dict, data: dict) -> None:
