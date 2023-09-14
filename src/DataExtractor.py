@@ -92,20 +92,32 @@ class Extractor:
         else:
             self.extract_video_info(item, data)
 
-    @staticmethod
-    def extract_image_info(item: dict, data: dict, images: dict) -> None:
+    def extract_image_info(self, item: dict, data: dict, images: dict) -> None:
         pass
 
-    @staticmethod
     def extract_image_info_tiktok(
+            self,
             item: dict,
             data: dict,
             images: dict) -> None:
         pass
 
-    @staticmethod
-    def extract_video_info(item: dict, data: dict) -> None:
+    def extract_video_info(self, item: dict, data: dict) -> None:
         pass
+
+    @staticmethod
+    def extract_cover(item: dict, data: dict, has=False) -> None:
+        if has:
+            # 动态封面图链接
+            item["dynamic_cover"] = u["url_list"][-1] if (
+                                                             u := data["video"].get("dynamic_cover")) and u[
+                                                             "url_list"] else ""
+            # 静态封面图链接
+            item["origin_cover"] = u["url_list"][-1] if (
+                                                            u := data["video"].get("origin_cover")) and u[
+                                                            "url_list"] else ""
+        else:
+            item["dynamic_cover"], item["origin_cover"] = "", ""
 
     @staticmethod
     def extract_music(item: dict, data: dict) -> None:
