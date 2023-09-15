@@ -93,17 +93,24 @@ class Extractor:
             self.extract_video_info(item, data)
 
     def extract_image_info(self, item: dict, data: dict, images: dict) -> None:
-        pass
+        item["type"] = "图集"
+        item["downloads"] = [i['url_list'][-1] for i in images]
+        self.extract_cover(item, data)
 
     def extract_image_info_tiktok(
             self,
             item: dict,
             data: dict,
             images: dict) -> None:
-        pass
+        item["type"] = "图集"
+        item["downloads"] = [i["display_image"]["url_list"][-1]
+                             for i in images["images"]]
+        self.extract_cover(item, data)
 
     def extract_video_info(self, item: dict, data: dict) -> None:
-        pass
+        item["type"] = "视频"
+        item["downloads"] = item["video"]["play_addr"]["url_list"][-1]
+        self.extract_cover(item, data, True)
 
     @staticmethod
     def extract_cover(item: dict, data: dict, has=False) -> None:
