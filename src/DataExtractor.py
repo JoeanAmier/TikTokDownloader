@@ -122,12 +122,14 @@ class Extractor:
     @staticmethod
     def extract_music(item: dict, data: dict) -> None:
         if music_data := data.get("music"):
-            name = music_data.get("title") or item["id"]
+            author = music_data.get("author") or ""
+            title = music_data.get("title") or ""
             url = m[-1] if (m := music_data["play_url"]
             ["url_list"]) else ""  # 部分作品的音乐无法下载
         else:
-            name, url = "", ""
-        item["music_name"] = name
+            author, title, url = "", "", ""
+        item["music_author"] = author
+        item["music_title"] = title
         item["music_url"] = url
 
     @staticmethod
