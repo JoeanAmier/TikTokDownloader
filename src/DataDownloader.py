@@ -806,7 +806,7 @@ class NewDownloader:
         return headers.copy(), {"User-Agent": headers["User-Agent"]}
 
     @update_cookie
-    def run(self, data: list[dict]) -> None:
+    def run(self, data: list[dict], addition=False) -> None:
         pass
 
     def download_image(self) -> None:

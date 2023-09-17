@@ -21,40 +21,41 @@ class Settings:
     def __init__(self, root: Path):
         self.file = root.joinpath("./settings.json")  # 配置文件
         self.__default = {
-            "accounts": [
+            "Accounts_Urls": [
                 ["账号标识，可以设置为空字符串",
                  "账号主页链接",
                  "账号主页类型",
                  "作品最早发布日期",
                  "作品最晚发布日期"],
             ],
-            "mix": [
+            "Mix_Urls": [
                 ["合集标识，可以设置为空字符串", "合集链接或者作品链接"],
             ],
-            "root": "./",
-            "folder": "Download",
-            "name": "create_time nickname desc",
-            "time": "%Y-%m-%d %H.%M.%S",
-            "split": "-",
-            "music": False,
-            "save": "",
-            "cookie": None,
-            "dynamic": False,
-            "original": False,
-            "proxies": "",
-            "log": False,
-            "download": True,
-            "max_size": 0,
-            "chunk": 512 * 1024,  # 每次从服务器接收的数据块大小
-            "retry": 10,  # 重试最大次数
-            "pages": 0,
-            "thread": False,
+            "Root": "./",
+            "Folder": "Download",
+            "Name_Format": "create_time nickname desc",
+            "Date_Format": "%Y-%m-%d %H.%M.%S",
+            "Split": "-",
+            "Folder_Mode": False,
+            "Music": False,
+            "Save_Format": "",
+            "Cookie": None,
+            "Dynamic_Cover": False,
+            "Original_Cover": False,
+            "Proxies": "",
+            "Log": False,
+            "Download": True,
+            "Max_Size": 0,
+            "Chunk": 512 * 1024,  # 每次从服务器接收的数据块大小
+            "Max_Retry": 10,  # 重试最大次数
+            "Max_Pages": 0,
+            "Thread": False,
         }  # 默认配置
 
     def create(self):
         """创建默认配置文件"""
         with self.file.open("w", encoding="UTF-8") as f:
-            dump(self.__default, f, indent=4)
+            dump(self.__default, f, indent=4, ensure_ascii=False)
         print("创建默认配置文件成功！")
 
     def read(self):
@@ -103,6 +104,7 @@ class Parameter:
             date_: str,
             split: str,
             music: bool,
+            folder_mode: bool,
             dynamic: bool,
             original: bool,
             proxies: str,
@@ -129,6 +131,7 @@ class Parameter:
         self.date = self.check_date(date_)
         self.split = self.check_split(split)
         self.music = music
+        self.folder_mode = folder_mode
         self.dynamic = dynamic
         self.original = original
         self.proxies = self.check_proxies(proxies)
