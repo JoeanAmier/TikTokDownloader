@@ -787,6 +787,7 @@ class NewDownloader:
         self.folder = params.folder
         self.name = params.name
         self.split = params.split
+        self.folder_mode = params.folder_mode
         self.music = params.music
         self.dynamic = params.dynamic
         self.original = params.original
@@ -806,8 +807,14 @@ class NewDownloader:
         return headers.copy(), {"User-Agent": headers["User-Agent"]}
 
     @update_cookie
-    def run(self, data: list[dict], addition=False) -> None:
-        pass
+    def run(
+            self,
+            data: list[dict],
+            solo=True,
+            mark=None,
+            tab=None,
+            addition=False) -> None:
+        root = self.storage_folder(data[-1], solo)
 
     def download_image(self) -> None:
         pass
@@ -830,8 +837,14 @@ class NewDownloader:
     def download_file(self, urls: list) -> bool:
         pass
 
-    def create_folder(self, name: str):
-        pass
+    def storage_folder(self, data: dict, solo: bool, mark=None) -> Path:
+        if solo:
+            folder = self.root.joinpath(self.folder)
+        else:
+            folder = self.root.joinpath(
+                f"UID{data['uid']}_{mark or data['nickname']}")
+        folder.mkdir(exist_ok=True)
+        return folder
 
     def delete_file(self, path: Path):
         path.unlink()
