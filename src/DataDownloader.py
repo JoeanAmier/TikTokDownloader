@@ -810,11 +810,14 @@ class NewDownloader:
     def run(
             self,
             data: list[dict],
-            solo=True,
+            batch=False,
+            mix=False,
             mark=None,
-            tab=None,
-            addition=False) -> None:
-        root = self.storage_folder(data[-1], solo)
+            addition="发布作品", ) -> None:
+        root = self.storage_folder(data[-1], batch, mix, mark, addition)
+        data = self.extract_addition(data, addition)
+        for item in data:
+            pass
 
     def download_image(self) -> None:
         pass
@@ -837,18 +840,36 @@ class NewDownloader:
     def download_file(self, urls: list) -> bool:
         pass
 
-    def storage_folder(self, data: dict, solo: bool, mark=None) -> Path:
-        if solo:
-            folder = self.root.joinpath(self.folder)
-        else:
+    def storage_folder(
+            self,
+            data: dict,
+            batch: bool,
+            mix: bool,
+            mark: str,
+            addition: str) -> Path:
+        assert addition in {"喜欢作品", "收藏作品", "发布作品"}, ValueError
+        if batch:
             folder = self.root.joinpath(
-                f"UID{data['uid']}_{mark or data['nickname']}")
+                f"UID{data['uid']}_{mark or data['nickname']}_{addition}")
+        elif mix:
+            pass
+        else:
+            folder = self.root.joinpath(self.folder)
         folder.mkdir(exist_ok=True)
         return folder
+
+    def generate_works_name(self) -> str:
+        pass
+
+    def create_works_folder(self) -> Path:
+        pass
 
     def delete_file(self, path: Path):
         path.unlink()
         self.log.info(f"文件 {path} 已删除")
+
+    def extract_addition(self, data: list[dict], addition: str) -> list[dict]:
+        pass
 
 
 class FakeThreadPool:
