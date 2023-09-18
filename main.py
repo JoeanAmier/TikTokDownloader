@@ -23,6 +23,7 @@ from src.main_web_UI import WebUI
 
 class TikTokDownloader:
     PROJECT_ROOT = Path(__file__).resolve().parent
+    # PROJECT_ROOT = Path.cwd()
 
     VERSION = 4.3
     STABLE = False
