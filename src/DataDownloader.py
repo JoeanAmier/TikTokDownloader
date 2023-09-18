@@ -807,17 +807,29 @@ class NewDownloader:
         return headers.copy(), {"User-Agent": headers["User-Agent"]}
 
     @update_cookie
-    def run(
-            self,
+    def run(self,
             data: list[dict],
-            batch=False,
-            mix=False,
-            mark=None,
-            addition="发布作品", ) -> None:
-        root = self.storage_folder(data[-1], batch, mix, mark, addition)
-        data = self.extract_addition(data, addition)
-        for item in data:
-            pass
+            type_: str,
+            **kwargs, ) -> None:
+        if type_ == "user":
+            self.run_user(data, **kwargs)
+        elif type_ == "mix":
+            self.run_mix(data, **kwargs)
+        elif type_ == "works":
+            self.run_general(data)
+        else:
+            raise ValueError
+
+    def run_user(self, data: list[dict], mark="", addition="发布作品", ):
+        assert addition in {"喜欢作品", "收藏作品", "发布作品"}, ValueError
+        data, uid, nickname = self.extract_addition(data, addition)
+        root = self.storage_folder(uid, nickname, True, mark, addition)
+
+    def run_general(self, data: list[dict]):
+        pass
+
+    def run_mix(self, data: list[dict], mark=""):
+        pass
 
     def download_image(self) -> None:
         pass
@@ -842,17 +854,18 @@ class NewDownloader:
 
     def storage_folder(
             self,
-            data: dict,
-            batch: bool,
-            mix: bool,
-            mark: str,
-            addition: str) -> Path:
-        assert addition in {"喜欢作品", "收藏作品", "发布作品"}, ValueError
-        if batch:
+            id_=None,
+            name=None,
+            batch=False,
+            mark=None,
+            addition=None,
+            mix=False, ) -> Path:
+        if batch and all((id_, name, addition)):
             folder = self.root.joinpath(
-                f"UID{data['uid']}_{mark or data['nickname']}_{addition}")
-        elif mix:
-            pass
+                f"UID{id_}_{mark or name}_{addition}")
+        elif mix and all((id_, name)):
+            folder = self.root.joinpath(
+                f"MIX{id_}_{mark or name}")
         else:
             folder = self.root.joinpath(self.folder)
         folder.mkdir(exist_ok=True)
@@ -868,8 +881,13 @@ class NewDownloader:
         path.unlink()
         self.log.info(f"文件 {path} 已删除")
 
-    def extract_addition(self, data: list[dict], addition: str) -> list[dict]:
-        pass
+    @staticmethod
+    def extract_addition(
+            data: list[dict], addition: str) -> tuple[list[dict], str, str]:
+        if addition == "发布作品":
+            return data, data[0]["uid"], data[0]["nickname"]
+        else:
+            return data[:-1], data[-1]["uid"], data[-1]["nickname"]
 
 
 class FakeThreadPool:
