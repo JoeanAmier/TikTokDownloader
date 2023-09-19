@@ -188,6 +188,7 @@ TikTokDownloader
 <li>如果想要自定义程序功能，可以直接修改 <code>src/Customizer.py</code> 文件内容，已整理程序功能修改指引</li>
 <li><code>批量下载收藏作品模式</code> 目前仅支持下载当前已登录 Cookie 对应账号的收藏作品，暂不支持多账号</li>
 <li>如果想要程序使用代理，必须在 <code>settings.json</code> 设置 <code>proxies</code> 参数，否则程序不会使用代理</li>
+<li>部分使用者反馈，新发布的作品在短期内下载会下载到低分辨率的文件，一段时间后才能下载到高分辨率文件，但时间规律尚不明确</li>
 </ul>
 
 # ⚠️ 免责声明\(Disclaimers\)
