@@ -33,7 +33,7 @@
 </ol>
 </li>
 <li>将 Cookie 信息写入配置文件
-<ol><b>手动复制粘贴</b>
+<ol><b>手动复制粘贴(推荐)</b>
 <li>使用浏览器打开抖音网页版，复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a> 至剪贴板</li>
 <li>选择 <code>复制粘贴写入 Cookie</code> 模式，按照提示将 Cookie 写入配置文件</li>
 </ol>
