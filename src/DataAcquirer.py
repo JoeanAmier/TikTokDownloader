@@ -1387,7 +1387,7 @@ class NewAcquirer:
             self.log.warning(f"网络异常，请求 {url}?{urlencode(params)} 失败")
             return False
         except exceptions.ReadTimeout:
-            self.log.warning(f"请求 {url}?{urlencode(params)} 超时")
+            self.log.warning(f"网络异常，请求 {url}?{urlencode(params)} 超时")
             return False
         try:
             return response.json()
@@ -1637,7 +1637,7 @@ class Works(NewAcquirer):
 
 
 class Comment(NewAcquirer):
-    def __init__(self, params: Parameter, item_id: str, pages=9999):
+    def __init__(self, params: Parameter, item_id: str, pages=99999):
         super().__init__(params)
         self.item_id = item_id
         self.pages = pages

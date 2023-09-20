@@ -829,7 +829,8 @@ class NewDownloader:
         pass
 
     def run_mix(self, data: list[dict], mark=""):
-        pass
+        data, mix_id, mix_title = self.extract_addition(data, mix=True)
+        root = self.storage_folder(mix_id, mix_title, mark=mark, mix=True)
 
     def download_image(self) -> None:
         pass
@@ -883,8 +884,10 @@ class NewDownloader:
 
     @staticmethod
     def extract_addition(
-            data: list[dict], addition: str) -> tuple[list[dict], str, str]:
-        if addition == "发布作品":
+            data: list[dict], addition="", mix=False) -> tuple[list[dict], str, str]:
+        if mix:
+            pass
+        elif addition == "发布作品":
             return data, data[0]["uid"], data[0]["nickname"]
         else:
             return data[:-1], data[-1]["uid"], data[-1]["nickname"]
