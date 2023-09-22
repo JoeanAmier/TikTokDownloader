@@ -826,7 +826,7 @@ class NewDownloader:
         root = self.storage_folder(uid, nickname, True, mark, addition)
 
     def run_general(self, data: list[dict]):
-        pass
+        root = self.storage_folder()
 
     def run_mix(self, data: list[dict], mark=""):
         data, mix_id, mix_title = self.extract_addition(data, mix=True)
@@ -862,13 +862,12 @@ class NewDownloader:
             addition=None,
             mix=False, ) -> Path:
         if batch and all((id_, name, addition)):
-            folder = self.root.joinpath(
-                f"UID{id_}_{mark or name}_{addition}")
+            folder_name = f"UID{id_}_{mark or name}_{addition}"
         elif mix and all((id_, name)):
-            folder = self.root.joinpath(
-                f"MIX{id_}_{mark or name}")
+            folder_name = f"MIX{id_}_{mark or name}"
         else:
-            folder = self.root.joinpath(self.folder)
+            folder_name = self.folder
+        folder = self.root.joinpath(folder_name)
         folder.mkdir(exist_ok=True)
         return folder
 
