@@ -824,13 +824,31 @@ class NewDownloader:
         assert addition in {"喜欢作品", "收藏作品", "发布作品"}, ValueError
         data, uid, nickname = self.extract_addition(data, addition)
         root = self.storage_folder(uid, nickname, True, mark, addition)
+        self.batch_processing(data, root)
 
     def run_general(self, data: list[dict]):
         root = self.storage_folder()
+        self.batch_processing(data, root)
 
     def run_mix(self, data: list[dict], mark=""):
         data, mix_id, mix_title = self.extract_addition(data, mix=True)
         root = self.storage_folder(mix_id, mix_title, mark=mark, mix=True)
+        self.batch_processing(data, root)
+
+    def run_live(self):
+        pass
+
+    def batch_processing(self, data: list[dict], root: Path):
+        for item in data:
+            self.create_works_folder(root)
+            if item["type"] == "图集":
+                self.download_image()
+            elif item["type"] == "视频":
+                self.download_video()
+            else:
+                raise ValueError
+            self.download_music()
+            self.download_cover()
 
     def download_image(self) -> None:
         pass
@@ -874,7 +892,7 @@ class NewDownloader:
     def generate_works_name(self) -> str:
         pass
 
-    def create_works_folder(self) -> Path:
+    def create_works_folder(self, root: Path) -> Path:
         pass
 
     def delete_file(self, path: Path):
