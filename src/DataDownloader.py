@@ -840,15 +840,16 @@ class NewDownloader:
 
     def batch_processing(self, data: list[dict], root: Path):
         for item in data:
-            self.create_works_folder(root)
+            name = self.generate_works_name(item)
+            root = self.create_works_folder(root, name)
             if item["type"] == "图集":
-                self.download_image()
+                self.download_image(root, name)
             elif item["type"] == "视频":
-                self.download_video()
+                self.download_video(root, name)
             else:
                 raise ValueError
-            self.download_music()
-            self.download_cover()
+            self.download_music(root, name)
+            self.download_cover(root, name)
 
     def download_image(self) -> None:
         pass
@@ -889,11 +890,12 @@ class NewDownloader:
         folder.mkdir(exist_ok=True)
         return folder
 
-    def generate_works_name(self) -> str:
+    def generate_works_name(self, data: dict) -> str:
         pass
 
-    def create_works_folder(self, root: Path) -> Path:
-        pass
+    def create_works_folder(self, root: Path, name: str) -> Path:
+        if not self.folder_mode:
+            return root
 
     def delete_file(self, path: Path):
         path.unlink()

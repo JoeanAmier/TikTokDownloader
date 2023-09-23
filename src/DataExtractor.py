@@ -1,6 +1,7 @@
 from datetime import datetime
 from time import localtime
 from time import strftime
+from types import SimpleNamespace
 
 from src.Configuration import Parameter
 
@@ -29,6 +30,38 @@ class Extractor:
         except KeyError:
             return ""
 
+    @staticmethod
+    def generate_data_object(data: dict) -> SimpleNamespace:
+        def depth_conversion(element):
+            if isinstance(element, dict):
+                return SimpleNamespace(
+                    **{k: depth_conversion(v) for k, v in element.items()})
+            elif isinstance(element, list):
+                return [depth_conversion(item) for item in element]
+            else:
+                return element
+
+        return depth_conversion(data)
+
+    @staticmethod
+    def safe_extract(data: SimpleNamespace, attribute_chain: str, default=""):
+        attributes = attribute_chain.split(".")
+        for attribute in attributes:
+            if "[" in attribute:
+                parts = attribute.split("[", 1)
+                attribute = parts[0]
+                index = parts[1].split("]")[0]
+                try:
+                    index = int(index)
+                    data = getattr(data, attribute, None)[index]
+                except (IndexError, TypeError, ValueError):
+                    return default
+            else:
+                data = getattr(data, attribute, None)
+                if not data:
+                    return default
+        return data or default
+
     def run(self, data: list[dict], type_="works", **kwargs) -> dict:
         if type_ not in self.type.keys():
             raise ValueError
@@ -40,10 +73,12 @@ class Extractor:
             "collection_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         }
         if post:
-            [self.extract_user(result, template, item) for item in data]
+            [self.extract_user(
+                result, template, self.generate_data_object(item)) for item in data]
         else:
-            [self.extract_user(result, template, item) for item in data[:-1]]
-            self.extract_not_post(result, data[-1])
+            [self.extract_user(result, template, self.generate_data_object(
+                item)) for item in data[:-1]]
+            self.extract_not_post(result, self.generate_data_object(data[-1]))
         return result
 
     def extract_user(
