@@ -14,7 +14,6 @@ from requests import post
 
 from src.Configuration import Parameter
 from src.CookieTool import Register
-from src.Customizer import conditional_filtering
 from src.Customizer import wait
 from src.DataExtractor import Extractor
 from src.Parameter import MsToken
@@ -1498,7 +1497,6 @@ class Account(NewAcquirer):
             params: Parameter,
             sec_user_id: str,
             tab="post",
-            mark="",
             earliest="",
             latest="",
             pages=9999):
@@ -1506,9 +1504,6 @@ class Account(NewAcquirer):
         self.sec_user_id = sec_user_id
         self.api, self.favorite, self.pages = self.check_type(tab, pages)
         self.earliest, self.latest = self.check_date(earliest, latest)
-        self.mark = mark
-        self.uid = None
-        self.nickname = None
 
     def check_type(self, tab: str, pages: int) -> tuple[str, bool, int]:
         if tab == "favorite":
@@ -1550,10 +1545,8 @@ class Account(NewAcquirer):
             self.early_stop()
             self.pages -= 1
             num += 1
+        self.summary_works()
         self.favorite_mode()
-        # 筛选前汇总
-        self.response = conditional_filtering(self.response)
-        # 筛选后汇总
         return self.response
 
     def get_account_data(self, api: str, start=None, end=None):
@@ -1607,13 +1600,14 @@ class Account(NewAcquirer):
         self.cursor = 0
         self.get_account_data(self.favorite_api, end=1)
         sec_uid = Extractor.get_sec_uid(self.response[-1])
-        if not sec_uid:
-            self.log.warning("响应格式错误，疑似接口更新", False)
-        elif self.sec_user_id != sec_uid:
+        if self.sec_user_id != sec_uid:
+            self.log.warning(
+                f"sec_user_id 不一致，出现了预期之外的异常: {self.response[-1]}", False)
             self.generate_temp_data()
 
     def generate_temp_data(self):
         fake_data = self.temp_data()
+        self.log.warning(f"获取账号昵称失败，本次运行将临时使用 {fake_data} 作为账号昵称")
         fake_dict = {
             "author": {
                 "nickname": fake_data,
@@ -1625,6 +1619,9 @@ class Account(NewAcquirer):
     @staticmethod
     def temp_data() -> str:
         return str(time.time())[:10]
+
+    def summary_works(self):
+        self.log.info(f"当前账号公开作品数量: {len(self.response)}")
 
 
 class Works(NewAcquirer):

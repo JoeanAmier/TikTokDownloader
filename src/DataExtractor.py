@@ -4,6 +4,7 @@ from time import strftime
 from types import SimpleNamespace
 
 from src.Configuration import Parameter
+from src.Customizer import conditional_filtering
 
 __all__ = ["Extractor"]
 
@@ -72,6 +73,7 @@ class Extractor:
         template = {
             "collection_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         }
+        data = conditional_filtering(data)
         if post:
             [self.extract_user(
                 result, template, self.generate_data_object(item)) for item in data]
@@ -79,7 +81,11 @@ class Extractor:
             [self.extract_user(result, template, self.generate_data_object(
                 item)) for item in data[:-1]]
             self.extract_not_post(result, self.generate_data_object(data[-1]))
+        self.summary_works(data)
         return result
+
+    def summary_works(self, data: list[dict]):
+        self.log.info(f"当前账号筛选作品数量: {len(data)}")
 
     def extract_user(
             self,
