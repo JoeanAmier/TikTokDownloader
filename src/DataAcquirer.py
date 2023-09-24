@@ -14,6 +14,7 @@ from requests import post
 
 from src.Configuration import Parameter
 from src.CookieTool import Register
+from src.Customizer import conditional_filtering
 from src.Customizer import wait
 from src.DataExtractor import Extractor
 from src.Parameter import MsToken
@@ -1550,6 +1551,9 @@ class Account(NewAcquirer):
             self.pages -= 1
             num += 1
         self.favorite_mode()
+        # 筛选前汇总
+        self.response = conditional_filtering(self.response)
+        # 筛选后汇总
         return self.response
 
     def get_account_data(self, api: str, start=None, end=None):

@@ -10,6 +10,7 @@ __all__ = [
     "check_login",
     "DESCRIPTION_LENGTH",
     "TEXT_REPLACEMENT",
+    "conditional_filtering",
 ]
 
 # 线程池最大线程数量，多线程下载文件时使用
@@ -60,3 +61,8 @@ def check_login():
     return input("是否已完成扫码登录？直接回车开始检查登录结果，输入任何字符放弃操作：")
     # 直接检查
     # return False
+
+
+def conditional_filtering(data: list[dict]) -> list[dict]:
+    """自定义作品筛选规则，例如：筛选作品点赞数、作品类型、视频分辨率等"""
+    return data
