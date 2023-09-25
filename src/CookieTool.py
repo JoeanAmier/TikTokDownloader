@@ -132,7 +132,8 @@ class Register:
         try:
             image.show()
         except AttributeError:
-            print("打开登录二维码图片失败，请扫描终端二维码！")
+            print("打开登录二维码图片失败，请扫描终端二维码登录！")
+            print("如果登录二维码无法识别，请尝试更换终端或者手动复制粘贴写入 Cookie！")
 
     def get_qr_code(self, version=23):
         self.verify_fp = VerifyFp.get_verify_fp()
