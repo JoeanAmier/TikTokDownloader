@@ -91,7 +91,7 @@ class Extractor:
             self,
             container: list,
             template: dict,
-            data: dict) -> None:
+            data: SimpleNamespace) -> None:
         data_dict = template.copy()
         self.extract_works_info(data_dict, data)
         self.extract_account_info(data_dict, data)
@@ -100,10 +100,9 @@ class Extractor:
         self.extract_tags(data_dict, data)
         container.append(data_dict)
 
-    @staticmethod
-    def extract_description(data: dict) -> str:
+    def extract_description(self, data: SimpleNamespace) -> str:
         try:
-            desc = data["share_info"]["share_link_desc"]
+            desc = self.safe_extract(data, "share_info.share_link_desc")
             return desc.split(
                 ":/ ", 1)[-1].rstrip("  %s 复制此链接，打开Dou音搜索，直接观看视频！")
         except (KeyError, IndexError):
@@ -112,23 +111,23 @@ class Extractor:
     def clean_description(self, desc: str) -> str:
         return self.clean.clear_spaces(self.clean.filter(desc))
 
-    def format_date(self, data: dict) -> str:
+    def format_date(self, data: SimpleNamespace) -> str:
         return strftime(
             self.date,
             localtime(
-                data.get("create_time") or None))
+                self.safe_extract(data, "create_time") or None))
 
-    def extract_works_info(self, item: dict, data: dict) -> None:
-        item["id"] = data["aweme_id"]
+    def extract_works_info(self, item: dict, data: SimpleNamespace) -> None:
+        item["id"] = self.safe_extract(data, "aweme_id")
         item["desc"] = self.clean_description(
-            self.extract_description(data)) or data["aweme_id"]
+            self.extract_description(data)) or item["id"]
         item["create_time"] = self.format_date(data)
         self.classifying_works(item, data)
 
-    def classifying_works(self, item: dict, data: dict) -> None:
-        if images := data.get("images"):
+    def classifying_works(self, item: dict, data: SimpleNamespace) -> None:
+        if images := self.safe_extract(data, "images"):
             self.extract_image_info(item, data, images)
-        elif images := data.get("image_post_info"):
+        elif images := self.safe_extract(data, "image_post_info"):
             self.extract_image_info_tiktok(item, data, images)
         else:
             self.extract_video_info(item, data)
@@ -210,11 +209,10 @@ class Extractor:
         item["nickname"] = self.clean.clean_name(
             data.get("nickname")) or "已注销账号"
 
-    @staticmethod
-    def extract_not_post(container: list, data: dict) -> None:
+    def extract_not_post(self, container: list, data: SimpleNamespace) -> None:
         data_dict = {
-            "nickname": data["author"]["nickname"],
-            "uid": data["author"]["uid"],
+            "nickname": self.safe_extract(data, "author.nickname"),
+            "uid": self.safe_extract(data, "author.uid"),
         }
         container.append(data_dict)
 
