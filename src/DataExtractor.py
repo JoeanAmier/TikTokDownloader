@@ -199,15 +199,15 @@ class Extractor:
         for tag, value in zip(("tag_1", "tag_2", "tag_3"), tags):
             item[tag] = value
 
-    def extract_account_info(self, item: dict, data: dict) -> None:
-        data = data["author"]
-        item["uid"] = data["uid"]
-        item["sec_uid"] = data["sec_uid"]
-        item["short_id"] = data.get("short_id") or ""
-        item["unique_id"] = data.get("unique_id") or ""
-        item["signature"] = data.get("signature") or ""
+    def extract_account_info(self, item: dict, data: SimpleNamespace) -> None:
+        data = self.safe_extract(data, "author")
+        item["uid"] = self.safe_extract(data, "uid")
+        item["sec_uid"] = self.safe_extract(data, "sec_uid")
+        item["short_id"] = self.safe_extract(data, "short_id")
+        item["unique_id"] = self.safe_extract(data, "unique_id")
+        item["signature"] = self.safe_extract(data, "signature")
         item["nickname"] = self.clean.clean_name(
-            data.get("nickname")) or "已注销账号"
+            self.safe_extract(data, "nickname", "已注销账号"))
 
     def extract_not_post(self, container: list, data: SimpleNamespace) -> None:
         data_dict = {
