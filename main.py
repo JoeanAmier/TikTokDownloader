@@ -81,7 +81,7 @@ class TikTokDownloader:
                         93)).upper() != "YES":
                 exit()
             FileManager.deal_config(self.DISCLAIMER["path"])
-            print()
+            print("\n如果程序输出乱码，说明您的终端不支持控制符，请考虑更换终端或者关闭彩色交互提示功能！\n")
 
     def version(self):
         print(

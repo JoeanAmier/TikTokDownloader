@@ -551,7 +551,7 @@ class RecordManager:
         return format_, name, type_
 
     @staticmethod
-    def check_root(root: str) -> Path | False:
+    def check_root(root: str):
         if not root:
             return False
         return r if (r := Path(root)).exists() else False
