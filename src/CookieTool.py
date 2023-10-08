@@ -25,30 +25,33 @@ class Cookie:
             return
         self.extract(cookie)
 
-    def extract(self, cookie: str):
-        get_key = {
-            "passport_csrf_token": None,
-            "passport_csrf_token_default": None,
-            "passport_auth_status": None,
-            "passport_auth_status_ss": None,
-            "sid_guard": None,
-            "uid_tt": None,
-            "uid_tt_ss": None,
-            "sid_tt": None,
-            "sessionid": None,
-            "sessionid_ss": None,
-            "sid_ucp_v1": None,
-            "ssid_ucp_v1": None,
-            "csrf_session_id": None,
-            "odin_tt": None,
-        }
-        matches = finditer(self.pattern, cookie)
-        for match in matches:
-            key = match.group('key').strip()
-            value = match.group('value').strip()
-            if key in get_key:
-                get_key[key] = value
-        self.check_key(get_key)
+    def extract(self, cookie: str, clean=True):
+        if clean:
+            get_key = {
+                "passport_csrf_token": None,
+                "passport_csrf_token_default": None,
+                "passport_auth_status": None,
+                "passport_auth_status_ss": None,
+                "sid_guard": None,
+                "uid_tt": None,
+                "uid_tt_ss": None,
+                "sid_tt": None,
+                "sessionid": None,
+                "sessionid_ss": None,
+                "sid_ucp_v1": None,
+                "ssid_ucp_v1": None,
+                "csrf_session_id": None,
+                "odin_tt": None,
+            }
+            matches = finditer(self.pattern, cookie)
+            for match in matches:
+                key = match.group('key').strip()
+                value = match.group('value').strip()
+                if key in get_key:
+                    get_key[key] = value
+            self.check_key(get_key)
+        else:
+            get_key = cookie
         self.write(get_key)
         print("写入 Cookie 成功！")
 
@@ -62,7 +65,7 @@ class Cookie:
         for key in keys_to_remove:
             del items[key]
 
-    def write(self, text):
+    def write(self, text: dict | str):
         data = self.settings.read()
         data["cookie"] = text
         self.settings.update(data)

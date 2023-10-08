@@ -192,7 +192,7 @@ class TikTokDownloader:
 
     def auto_cookie(self):
         if cookie := self.register.run():
-            self.cookie.extract(cookie)
+            self.cookie.extract(cookie, False)
         else:
             print("扫码登录失败，未写入 Cookie！")
         self.main()
