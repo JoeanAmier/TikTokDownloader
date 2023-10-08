@@ -97,7 +97,7 @@ class Parameter:
             log: LoggerManager | BaseLogger,
             xb,
             colour,
-            cookie: dict,
+            cookie: dict | str,
             root: str,
             folder: str,
             name: str,
@@ -149,7 +149,7 @@ class Parameter:
             return cookie
         elif isinstance(cookie, str):
             self.headers["Cookie"] = cookie
-            self.log.warning("Cookie 参数格式应为字典格式")
+            # self.log.warning("Cookie 参数格式应为字典格式")
         else:
             self.log.warning("Cookie 参数格式错误")
         return {}

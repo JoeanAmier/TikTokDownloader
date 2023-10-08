@@ -122,9 +122,9 @@ class Register:
         return cookie
 
     @staticmethod
-    def generate_qr_code(url):
+    def generate_qr_code(url: str):
         qr_code = QRCode()
-        assert url, "无效的登录二维码 URL，请联系作者处理！"
+        assert url, "无效的登录二维码数据"
         qr_code.add_data(url)
         qr_code.make(fit=True)
         qr_code.print_ascii(invert=True)
