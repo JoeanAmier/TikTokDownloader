@@ -51,7 +51,7 @@ class Extractor:
             if "[" in attribute:
                 parts = attribute.split("[", 1)
                 attribute = parts[0]
-                index = parts[1].split("]")[0]
+                index = parts[1].split("]", 1)[0]
                 try:
                     index = int(index)
                     data = getattr(data, attribute, None)[index]
@@ -166,13 +166,12 @@ class Extractor:
         else:
             item["dynamic_cover"], item["origin_cover"] = "", ""
 
-    @staticmethod
-    def extract_music(item: dict, data: dict) -> None:
-        if music_data := data.get("music"):
-            author = music_data.get("author") or ""
-            title = music_data.get("title") or ""
-            url = m[-1] if (m := music_data["play_url"]
-            ["url_list"]) else ""  # 部分作品的音乐无法下载
+    def extract_music(self, item: dict, data: SimpleNamespace) -> None:
+        if music_data := self.safe_extract(data, "music"):
+            author = self.safe_extract(music_data, "author")
+            title = self.safe_extract(music_data, "title")
+            url = self.safe_extract(
+                music_data, "play_url.url_list[-1]")  # 部分作品的音乐无法下载
         else:
             author, title, url = "", "", ""
         item["music_author"] = author
