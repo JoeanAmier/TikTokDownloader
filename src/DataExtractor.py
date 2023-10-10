@@ -178,16 +178,15 @@ class Extractor:
         item["music_title"] = title
         item["music_url"] = url
 
-    @staticmethod
-    def extract_statistics(item: dict, data: dict) -> None:
-        data = data["statistics"]
+    def extract_statistics(self, item: dict, data: SimpleNamespace) -> None:
+        data = self.safe_extract(data, "statistics")
         for i in (
                 "digg_count",
                 "comment_count",
                 "collect_count",
                 "share_count",
         ):
-            item[i] = str(data[i])
+            item[i] = str(self.safe_extract(data, i))
 
     @staticmethod
     def extract_tags(item: dict, data: dict) -> None:
