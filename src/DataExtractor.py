@@ -101,10 +101,11 @@ class Extractor:
         container.append(data_dict)
 
     def extract_description(self, data: SimpleNamespace) -> str:
+        # 待优化
         try:
             desc = self.safe_extract(data, "share_info.share_link_desc")
             return desc.split(
-                ":/ ", 1)[-1].rstrip("  %s 复制此链接，打开Dou音搜索，直接观看视频！")
+                "  ", 1)[-1].rstrip("  %s 复制此链接，打开Dou音搜索，直接观看视频！")
         except (KeyError, IndexError):
             return ""
 
