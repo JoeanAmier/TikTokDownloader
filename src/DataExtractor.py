@@ -189,12 +189,11 @@ class Extractor:
         ):
             item[i] = str(self.safe_extract(data, i))
 
-    @staticmethod
-    def extract_tags(item: dict, data: dict) -> None:
-        if not (t := data.get("video_tag")):
+    def extract_tags(self, item: dict, data: SimpleNamespace) -> None:
+        if not (t := self.safe_extract(data, "video_tag")):
             tags = ["", "", ""]
         else:
-            tags = [i["tag_name"] for i in t] or ["", "", ""]
+            tags = [self.safe_extract(i, "tag_name") for i in t]
         for tag, value in zip(("tag_1", "tag_2", "tag_3"), tags):
             item[tag] = value
 
