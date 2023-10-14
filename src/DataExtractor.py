@@ -133,7 +133,11 @@ class Extractor:
         else:
             self.extract_video_info(item, data)
 
-    def extract_image_info(self, item: dict, data: dict, images: dict) -> None:
+    def extract_image_info(
+            self,
+            item: dict,
+            data: SimpleNamespace,
+            images: list) -> None:
         item["type"] = "图集"
         item["downloads"] = [i['url_list'][-1] for i in images]
         self.extract_cover(item, data)
@@ -141,16 +145,17 @@ class Extractor:
     def extract_image_info_tiktok(
             self,
             item: dict,
-            data: dict,
+            data: SimpleNamespace,
             images: dict) -> None:
         item["type"] = "图集"
         item["downloads"] = [i["display_image"]["url_list"][-1]
                              for i in images["images"]]
         self.extract_cover(item, data)
 
-    def extract_video_info(self, item: dict, data: dict) -> None:
+    def extract_video_info(self, item: dict, data: SimpleNamespace) -> None:
         item["type"] = "视频"
-        item["downloads"] = item["video"]["play_addr"]["url_list"][-1]
+        item["downloads"] = self.safe_extract(
+            data, "video.play_addr.url_list[-1]")
         self.extract_cover(item, data, True)
 
     @staticmethod
