@@ -158,17 +158,18 @@ class Extractor:
             data, "video.play_addr.url_list[-1]")
         self.extract_cover(item, data, True)
 
-    @staticmethod
-    def extract_cover(item: dict, data: dict, has=False) -> None:
+    def extract_cover(
+            self,
+            item: dict,
+            data: SimpleNamespace,
+            has=False) -> None:
         if has:
             # 动态封面图链接
-            item["dynamic_cover"] = u["url_list"][-1] if (
-                                                             u := data["video"].get("dynamic_cover")) and u[
-                                                             "url_list"] else ""
+            item["dynamic_cover"] = self.safe_extract(
+                data, "video.dynamic_cover.url_list[-1]")
             # 静态封面图链接
-            item["origin_cover"] = u["url_list"][-1] if (
-                                                            u := data["video"].get("origin_cover")) and u[
-                                                            "url_list"] else ""
+            item["origin_cover"] = self.safe_extract(
+                data, "video.origin_cover.url_list[-1]")
         else:
             item["dynamic_cover"], item["origin_cover"] = "", ""
 
