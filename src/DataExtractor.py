@@ -98,6 +98,7 @@ class Extractor:
         self.extract_music(data_dict, data)
         self.extract_statistics(data_dict, data)
         self.extract_tags(data_dict, data)
+        self.extract_additional_info(data_dict, data)
         container.append(data_dict)
 
     def extract_description(self, data: SimpleNamespace) -> str:
@@ -132,6 +133,11 @@ class Extractor:
             self.extract_image_info_tiktok(item, data, images)
         else:
             self.extract_video_info(item, data)
+
+    def extract_additional_info(self, item: dict, data: SimpleNamespace):
+        item["height"] = self.safe_extract(data, "video.height")
+        item["width"] = self.safe_extract(data, "video.width")
+        item["ratio"] = self.safe_extract(data, "video.ratio")
 
     def extract_image_info(
             self,
