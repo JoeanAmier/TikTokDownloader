@@ -9,6 +9,8 @@ from requests import get
 from src.Configuration import Settings
 from src.CookieTool import Cookie
 from src.CookieTool import Register
+from src.Customizer import SERVER_HOST
+from src.Customizer import SERVER_PORT
 from src.FileManager import DownloadRecorder
 from src.FileManager import FileManager
 from src.Parameter import Headers
@@ -178,7 +180,7 @@ class TikTokDownloader:
             self.settings)
         app = master.run_server(Flask(__name__))
         register(self.blacklist.close)
-        app.run(host="0.0.0.0", debug=False)
+        app.run(host=SERVER_HOST, port=SERVER_PORT, debug=not self.STABLE)
 
     def change_config(self, file: Path, tip="修改设置成功！"):
         FileManager.deal_config(file)

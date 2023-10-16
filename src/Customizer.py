@@ -11,6 +11,8 @@ __all__ = [
     "DESCRIPTION_LENGTH",
     "TEXT_REPLACEMENT",
     "conditional_filtering",
+    "SERVER_HOST",
+    "SERVER_PORT",
 ]
 
 # 线程池最大线程数量，多线程下载文件时使用
@@ -25,6 +27,12 @@ DESCRIPTION_LENGTH = 64
 TEXT_REPLACEMENT = {
     " ": " ",
 }
+
+# 服务器模式主机，设置为 0.0.0.0 可以实现局域网访问（外部可用）
+SERVER_HOST = "127.0.0.1"
+
+# 服务器模式端口
+SERVER_PORT = 5000
 
 
 def wait():
