@@ -52,7 +52,8 @@ class TikTokDownloader:
         "4. 使用者在任何情况下均不得将本项目的作者、贡献者或其他相关方与使用者的使用行为联系起来，或要求其对使用者使用本项目所产生的任何损失或损害负责。",
         "5. 使用者在使用本项目的代码和功能时，必须自行研究相关法律法规，并确保其使用行为合法合规。任何因违反法律法规而导致的法律责任和风险，均由使用者自行承担。",
         "6. 本项目的作者不会提供 TikTokDownloader 项目的付费版本，也不会提供与 TikTokDownloader 项目相关的任何商业服务。",
-        "7. 基于本项目进行的任何二次开发、修改或编译的程序与原创作者无关，原创作者不承担与二次开发行为或其结果相关的任何责任，使用者应自行对因二次开发可能带来的各种情况负全部责任。",
+        "7. 基于本项目进行的任何二次开发、修改或编译的程序与原创作者无关，原创作者不承担与二次开发行为或其结果相关的任何责任，使用者应自行对因"
+        "二次开发可能带来的各种情况负全部责任。",
         "",
         "在使用本项目的代码和功能之前，请您认真考虑并接受以上免责声明。如果您对上述声明有任何疑问或不同意，请不要使用本项目的代码和功能。如果"
         "您使用了本项目的代码和功能，则视为您已完全理解并接受上述免责声明，并自愿承担使用本项目的一切风险和后果。",
@@ -75,24 +76,22 @@ class TikTokDownloader:
 
     def disclaimer(self):
         if not self.DISCLAIMER["path"].exists():
-            self.console.print("\n".join(self.DISCLAIMER_TEXT), "")
-            if input(
-                    self.colour.colorize(
-                        "是否已仔细阅读上述免责声明(YES/NO)",
-                        93)).upper() != "YES":
+            self.console.print(
+                "\n".join(
+                    self.DISCLAIMER_TEXT),
+                style="b yellow")
+            if self.console.input(
+                    "[b yellow]是否已仔细阅读上述免责声明(YES/NO): [/b yellow]").upper() != "YES":
                 exit()
             FileManager.deal_config(self.DISCLAIMER["path"])
-            print("\n如果程序输出乱码，说明您的终端不支持控制符，请考虑更换终端或者关闭彩色交互提示功能！\n")
 
     def version(self):
-        print(
-            self.colour.colorize(
-                f"{self.LINE}\n\n\n{self.NAME.center(self.WIDTH)}\n\n\n{self.LINE}\n",
-                93,
-                bold=1))
-        print(self.colour.colorize(f"项目仓库: {self.REPOSITORY}", 93))
-        print(self.colour.colorize(f"项目文档: {self.DOCUMENTATION}", 93))
-        print(self.colour.colorize(f"开源许可: {self.LICENCE}\n", 93))
+        self.console.print(
+            f"{self.LINE}\n\n\n{self.NAME.center(self.WIDTH)}\n\n\n{self.LINE}\n",
+            style="b yellow")
+        self.console.print(f"项目仓库: {self.REPOSITORY}", style="b yellow")
+        self.console.print(f"项目文档: {self.DOCUMENTATION}", style="b yellow")
+        self.console.print(f"开源许可: {self.LICENCE}\n", style="b yellow")
 
     def check_config(self):
         folder = ("./src/config", "./cache", "./cache/temp")
@@ -103,34 +102,27 @@ class TikTokDownloader:
             b := self.RECORD["path"].exists()) else "禁用"
         self.blacklist = DownloadRecorder(
             not b, self.PROJECT_ROOT.joinpath("./cache"))
-        self.cookie = Cookie(self.settings, self.colour)
+        self.cookie = Cookie(self.settings, self.console)
 
     def check_update(self):
         if self.UPDATE["path"].exists():
             return
-        print(self.colour.colorize("正在检测新版本", 92), end="", flush=True)
         try:
             response = get(self.RELEASES, allow_redirects=False, timeout=10)
             tag = float(response.headers['Location'].split("/")[-1])
             if tag > self.VERSION:
-                print(
-                    self.colour.colorize(
-                        f"\r检测到新版本: {tag}",
-                        92),
-                    flush=True)
-                print(self.RELEASES)
+                self.console.print(
+                    f"检测到新版本: {tag}", style="b yellow")
+                self.console.print(self.RELEASES)
             if tag == self.VERSION and not self.STABLE:
-                print(
-                    self.colour.colorize(
-                        "\r当前版本为测试版, 可更新至稳定版",
-                        92),
-                    flush=True)
-                print(self.RELEASES)
+                self.console.print(
+                    "当前版本为测试版, 可更新至稳定版", style="b yellow")
+                self.console.print(self.RELEASES)
             else:
-                print(self.colour.colorize("\r当前已是最新版本", 92), flush=True)
+                self.console.print("当前已是最新版本", style="b green")
         except (exceptions.ReadTimeout, exceptions.ConnectionError):
-            print(self.colour.colorize("\r检测新版本失败", 91), flush=True)
-        print()
+            self.console.print("检测新版本失败", style="b red")
+        self.console.print()
 
     def main(self):
         """选择运行模式"""
@@ -222,7 +214,7 @@ class TikTokDownloader:
     def check_settings(self):
         if not self.PROJECT_ROOT.joinpath("./settings.json").exists():
             self.settings.create()
-            print("建议根据实际需求修改配置文件后重新运行程序！")
+            self.console.print("建议根据实际需求修改配置文件后重新运行程序！", style="b yellow")
 
     def run(self):
         self.check_config()
@@ -231,7 +223,7 @@ class TikTokDownloader:
         self.check_settings()
         self.disclaimer()
         # self.main()
-        # self.delete_temp()
+        self.delete_temp()
 
     def delete_temp(self):
         rmtree(self.PROJECT_ROOT.joinpath("./cache/temp").resolve())
