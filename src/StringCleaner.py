@@ -2,9 +2,11 @@ from platform import system
 from re import sub
 from string import whitespace
 
+from rich.console import Console as Screen
+
 from src.Customizer import illegal_nickname
 
-__all__ = ['Cleaner', 'Colour']
+__all__ = ['Cleaner', 'Colour', 'Console']
 
 
 class Cleaner:
@@ -98,6 +100,14 @@ class Colour:
         code = ";".join(
             [str(i) for i in (font, background, bold) if isinstance(i, int)])
         return f"\x1b[{code}m{text}\x1b[{default}m"
+
+
+class Console:
+    def __init__(self):
+        self.console = Screen()
+
+    def print(self, text: str, style="", *args, **kwargs):
+        self.console.print(f"[{style}]{text}[{style}]", *args, **kwargs)
 
 
 if __name__ == "__main__":
