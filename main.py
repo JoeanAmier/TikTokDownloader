@@ -5,6 +5,7 @@ from shutil import rmtree
 from flask import Flask
 from requests import exceptions
 from requests import get
+from rich.console import Console
 
 from src.Configuration import Settings
 from src.CookieTool import Cookie
@@ -15,7 +16,6 @@ from src.FileManager import DownloadRecorder
 from src.FileManager import FileManager
 from src.Parameter import Headers
 from src.Parameter import NewXBogus
-from src.StringCleaner import Colour
 from src.main_api_server import APIServer
 from src.main_complete import TikTok
 from src.main_complete import prompt
@@ -39,7 +39,6 @@ class TikTokDownloader:
     LINE = ">" * WIDTH
 
     UPDATE = {"path": PROJECT_ROOT.joinpath("./src/config/Disable_Update")}
-    COLOUR = {"path": PROJECT_ROOT.joinpath("./src/config/Disable_Colour")}
     RECORD = {"path": PROJECT_ROOT.joinpath("./src/config/Disable_Record")}
     DISCLAIMER = {"path": PROJECT_ROOT.joinpath(
         "./src/config/Consent_Disclaimer")}
@@ -61,7 +60,7 @@ class TikTokDownloader:
     )
 
     def __init__(self):
-        self.colour = None
+        self.console = Console()
         self.cookie = None
         self.register = None
         self.blacklist = None
@@ -76,7 +75,7 @@ class TikTokDownloader:
 
     def disclaimer(self):
         if not self.DISCLAIMER["path"].exists():
-            print(self.colour.colorize("\n".join(self.DISCLAIMER_TEXT), 93))
+            self.console.print("\n".join(self.DISCLAIMER_TEXT), "")
             if input(
                     self.colour.colorize(
                         "是否已仔细阅读上述免责声明(YES/NO)",
@@ -100,11 +99,8 @@ class TikTokDownloader:
         for i in folder:
             self.PROJECT_ROOT.joinpath(i).mkdir(exist_ok=True)
         self.UPDATE["tip"] = "启用" if self.UPDATE["path"].exists() else "禁用"
-        self.COLOUR["tip"] = "启用" if (
-            c := self.COLOUR["path"].exists()) else "禁用"
         self.RECORD["tip"] = "启用" if (
             b := self.RECORD["path"].exists()) else "禁用"
-        self.colour = Colour(not c)
         self.blacklist = DownloadRecorder(
             not b, self.PROJECT_ROOT.joinpath("./cache"))
         self.cookie = Cookie(self.settings, self.colour)
@@ -226,6 +222,7 @@ class TikTokDownloader:
     def check_settings(self):
         if not self.PROJECT_ROOT.joinpath("./settings.json").exists():
             self.settings.create()
+            print("建议根据实际需求修改配置文件后重新运行程序！")
 
     def run(self):
         self.check_config()
@@ -233,8 +230,8 @@ class TikTokDownloader:
         self.check_update()
         self.check_settings()
         self.disclaimer()
-        self.main()
-        self.delete_temp()
+        # self.main()
+        # self.delete_temp()
 
     def delete_temp(self):
         rmtree(self.PROJECT_ROOT.joinpath("./cache/temp").resolve())

@@ -2,11 +2,9 @@ from platform import system
 from re import sub
 from string import whitespace
 
-from rich.console import Console as Screen
-
 from src.Customizer import illegal_nickname
 
-__all__ = ['Cleaner', 'Colour', 'Console']
+__all__ = ['Cleaner']
 
 
 class Cleaner:
@@ -81,33 +79,6 @@ class Cleaner:
     def clear_spaces(string: str):
         """将连续的空格转换为单个空格"""
         return " ".join(string.split())
-
-
-class Colour:
-
-    def __init__(self, switch):
-        self.switch = switch
-
-    def colorize(
-            self,
-            text: str,
-            font: int,
-            background=None,
-            bold=None,
-            default="97;1"):
-        if not self.switch:
-            return text
-        code = ";".join(
-            [str(i) for i in (font, background, bold) if isinstance(i, int)])
-        return f"\x1b[{code}m{text}\x1b[{default}m"
-
-
-class Console:
-    def __init__(self):
-        self.console = Screen()
-
-    def print(self, text: str, style="", *args, **kwargs):
-        self.console.print(f"[{style}]{text}[{style}]", *args, **kwargs)
 
 
 if __name__ == "__main__":
