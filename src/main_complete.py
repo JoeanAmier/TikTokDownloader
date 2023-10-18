@@ -11,19 +11,19 @@ from src.Recorder import RecordManager
 
 
 def prompt(
-        tip: str,
+        title: str,
         choose: tuple | list,
-        colorize,
-        start=1,
-        separate=None) -> str:
-    screen = colorize(f"{tip}:\n", 96, bold=1)
+        console,
+        separate=None,
+        style="b blue") -> str:
+    screen = f"{title}:\n"
     row = 0
     for i, j in enumerate(choose):
-        screen += colorize(f"{i + start}. {j}\n", 92, bold=1)
+        screen += f"{i + 1}. {j}\n"
         if separate and row in separate:
-            screen += colorize(f"{'=' * 25}\n", 92, bold=1)
+            screen += f"{'=' * 25}\n"
         row += 1
-    return input(screen)
+    return console.input(f"[{style}]{screen}[/{style}]")
 
 
 def check_save(function):
