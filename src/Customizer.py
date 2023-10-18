@@ -13,6 +13,11 @@ __all__ = [
     "conditional_filtering",
     "SERVER_HOST",
     "SERVER_PORT",
+    "MASTER",
+    "PROMPT",
+    "WARNING",
+    "ERROR",
+    "INFO",
 ]
 
 # 线程池最大线程数量，多线程下载文件时使用
@@ -33,6 +38,13 @@ SERVER_HOST = "127.0.0.1"
 
 # 服务器模式端口
 SERVER_PORT = 5000
+
+# 彩色交互提示颜色设置，支持标准颜色名称、Hex、RGB 格式
+MASTER = "#fff200"
+PROMPT = "#00a3af"
+ERROR = "bright_red"
+WARNING = "bright_yellow"
+INFO = "bright_green"
 
 
 def wait():
