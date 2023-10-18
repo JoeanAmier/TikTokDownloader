@@ -68,7 +68,7 @@ class TikTokDownloader:
         self.blacklist = None
         self.user_agent, self.code = Headers.generate_user_agent()
         self.x_bogus = NewXBogus()
-        self.settings = Settings(self.PROJECT_ROOT)
+        self.settings = Settings(self.PROJECT_ROOT, self.console)
         self.register = Register(
             self.settings,
             self.x_bogus,
@@ -212,8 +212,8 @@ class TikTokDownloader:
         if not self.PROJECT_ROOT.joinpath("./settings.json").exists():
             self.settings.create()
             self.console.print(
-                "建议根据实际需求修改配置文件后重新运行程序！\n",
-                style=f"b {WARNING}")
+                "建议根据实际使用需求修改配置文件 settings.json！\n",
+                style=f"b {INFO}")
 
     def run(self):
         self.check_config()

@@ -8,6 +8,7 @@ from time import strftime
 from requests import exceptions
 from requests import get
 
+from src.Customizer import WARNING, INFO, ERROR
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.Recorder import BaseLogger
@@ -18,8 +19,9 @@ __all__ = ["Settings", "Parameter"]
 
 
 class Settings:
-    def __init__(self, root: Path):
+    def __init__(self, root: Path, console):
         self.file = root.joinpath("./settings.json")  # 配置文件
+        self.console = console
         self.__default = {
             "Accounts_Urls": [
                 ["账号标识，可以设置为空字符串",
@@ -56,7 +58,9 @@ class Settings:
         """创建默认配置文件"""
         with self.file.open("w", encoding="UTF-8") as f:
             dump(self.__default, f, indent=4, ensure_ascii=False)
-        print("创建默认配置文件成功！")
+        self.console.print(
+            "创建默认配置文件 settings.json 成功！\n请参考项目文档的快速入门部分，设置 Cookie 后重新运行程序！",
+            style=f"b {INFO}")
 
     def read(self):
         """读取配置文件，如果没有配置文件，则生成配置文件"""
@@ -65,17 +69,25 @@ class Settings:
                 with self.file.open("r", encoding="UTF-8") as f:
                     return load(f)
             else:
-                print("配置文件读取失败，文件不存在！")
+                self.console.print(
+                    "配置文件 settings.json 读取失败，文件不存在！",
+                    style=f"b {WARNING}")
                 self.create()
                 return False  # 生成的默认配置文件必须要设置 cookie 才可以正常运行
         except JSONDecodeError:
-            return {}  # 读取配置文件发生错误时返回空配置
+            self.console.print(
+                "配置文件 settings.json 格式错误，请检查 JSON 格式！",
+                style=f"b {ERROR}")
+            return False  # 读取配置文件发生错误时返回空配置
+
+    def check(self, data: dict) -> dict:
+        pass
 
     def update(self, settings: dict):
         """更新配置文件"""
         with self.file.open("w", encoding="UTF-8") as f:
             dump(settings, f, indent=4, ensure_ascii=False)
-        print("保存配置成功！")
+        self.console.print("保存配置成功！", style=f"b {INFO}")
 
 
 class Parameter:
