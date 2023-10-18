@@ -24,17 +24,17 @@ class Settings:
         self.console = console
         self.__default = {
             "Accounts_Urls": [
-                {"mark": "账号标识，可以设置为空字符串",
-                 "url": "账号主页链接",
-                 "tab": "账号主页类型",
-                 "earliest": "作品最早发布日期",
-                 "latest": "作品最晚发布日期"},
+                {"Mark": "账号标识，可以设置为空字符串",
+                 "Url": "账号主页链接",
+                 "Tab": "账号主页类型",
+                 "Earliest": "作品最早发布日期",
+                 "Latest": "作品最晚发布日期"},
             ],
             "Mix_Urls": [
-                {"mark": "合集标识，可以设置为空字符串",
-                 "url": "合集链接或者作品链接"},
+                {"Mark": "合集标识，可以设置为空字符串",
+                 "Url": "合集链接或者作品链接"},
             ],
-            "Root": "./",
+            "Root": "",
             "Folder": "Download",
             "Name_Format": "create_time nickname desc",
             "Date_Format": "%Y-%m-%d %H.%M.%S",

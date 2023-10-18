@@ -157,127 +157,132 @@
 </tr>
 </thead>
 <tbody><tr>
-<td align="center">mark</td>
+<td align="center">Mark</td>
 <td align="center">str</td>
-<td align="center">账号/合集标识, 设置为空字符串代表使用账号昵称/合集标题, <strong>属于 accounts 和 mix 子参数</strong></td>
+<td align="center">账号/合集标识, 设置为空字符串代表使用账号昵称/合集标题, <strong>属于 Accounts_Urls 和 Mix_Urls 子参数</strong></td>
 </tr>
 <tr>
-<td align="center">url</td>
+<td align="center">Url</td>
 <td align="center">str</td>
-<td align="center">账号主页/合集作品链接, 批量下载时使用<br><strong>属于 accounts 和 mix 子参数</strong></td>
+<td align="center">账号主页/合集作品链接, 批量下载时使用<br><strong>属于 Accounts_Urls 和 Mix_Urls 子参数</strong></td>
 </tr>
 <tr>
-<td align="center">tab</td>
+<td align="center">Tab</td>
 <td align="center">str</td>
-<td align="center">批量下载类型, <code>post</code> 代表发布作品, <code>favorite</code> 代表喜欢作品<br>需要账号喜欢作品公开可见, <strong>属于 accounts 子参数</strong></td>
+<td align="center">批量下载类型, <code>post</code> 代表发布作品, <code>favorite</code> 代表喜欢作品<br>需要账号喜欢作品公开可见, <strong>属于 Accounts_Urls 子参数</strong></td>
 </tr>
 <tr>
-<td align="center">earliest</td>
+<td align="center">Earliest</td>
 <td align="center">str</td>
-<td align="center">作品最早发布日期, 格式: <code>2023/1/1</code>, 设置为空字符串代表不限制, <strong>属于 accounts 子参数</strong></td>
+<td align="center">作品最早发布日期, 格式: <code>2023/1/1</code>, 设置为空字符串代表不限制, <strong>属于 Accounts_Urls 子参数</strong></td>
 </tr>
 <tr>
-<td align="center">latest</td>
+<td align="center">Latest</td>
 <td align="center">str</td>
-<td align="center">作品最晚发布日期, 格式: <code>2023/1/1</code>, 设置为空字符串代表不限制, <strong>属于 accounts 子参数</strong></td>
+<td align="center">作品最晚发布日期, 格式: <code>2023/1/1</code>, 设置为空字符串代表不限制, <strong>属于 Accounts_Urls 子参数</strong></td>
 </tr>
 <tr>
-<td align="center">accounts[mark, url, mode, earliest, latest]</td>
-<td align="center">list[list[str, str, str, str, str]]</td>
-<td align="center">账号标识, 账号链接, 批量下载类型, 最早发布日期, 最晚发布日期; 批量下载账号作品时使用, 支持多账号, 以列表格式包含五个参数</td>
+<td align="center">Accounts_Urls[Mark, Url, Tab, Earliest, Latest]</td>
+<td align="center">list[dict[str, str, str, str, str]]</td>
+<td align="center">账号标识, 账号链接, 批量下载类型, 最早发布日期, 最晚发布日期; 批量下载账号作品时使用, 支持多账号, 以字典格式包含五个参数</td>
 </tr>
 <tr>
-<td align="center">mix[mark, url]</td>
-<td align="center">list[list[str, str]]</td>
-<td align="center">合集标识, 合集链接或作品链接, 批量下载合集作品时使用<br>支持多合集, 以列表格式包含两个参数</td>
+<td align="center">Mix_Urls[Mark, Url]</td>
+<td align="center">list[dict[str, str]]</td>
+<td align="center">合集标识, 合集链接或作品链接, 批量下载合集作品时使用<br>支持多合集, 以字典格式包含两个参数</td>
 </tr>
 <tr>
-<td align="center">root</td>
+<td align="center">Root</td>
 <td align="center">str</td>
-<td align="center">作品文件和数据记录保存路径, 默认值: 当前路径 <code>./</code></td>
+<td align="center">作品文件和数据记录保存路径, 默认值: <code>项目根路径</code></td>
 </tr>
 <tr>
-<td align="center">folder</td>
+<td align="center">Folder</td>
 <td align="center">str</td>
 <td align="center">下载单独链接作品时, 储存文件夹的名称, 默认值: <code>Download</code></td>
 </tr>
 <tr>
-<td align="center">name</td>
+<td align="center">Name_Format</td>
 <td align="center">str</td>
 <td align="center">文件保存时的命名规则, 值之间使用空格分隔<br>默认值: 发布时间-账号昵称-描述<br><code>id</code>: 唯一值, <code>desc</code>: 描述, <code>create_time</code>: 发布时间<br><code>nickname</code>: 账号昵称, <code>mark</code>: 账号标识, <code>uid</code>: 账号UID</td>
 </tr>
 <tr>
-<td align="center">time</td>
+<td align="center">Date_Format</td>
 <td align="center">str</td>
 <td align="center">发布时间的格式, 默认值: <code>年-月-日 时.分.秒</code><br>注意: Windows 系统的文件名称不能包含英文冒号 <code>:</code></td>
 </tr>
 <tr>
-<td align="center">split</td>
+<td align="center">Split</td>
 <td align="center">str</td>
 <td align="center">文件命名的分隔符, 默认值: <code>-</code></td>
 </tr>
 <tr>
-<td align="center">music</td>
+<td align="center">Folder_Mode</td>
+<td align="center">bool</td>
+<td align="center">未生效</td>
+</tr>
+<tr>
+<td align="center">Music</td>
 <td align="center">bool</td>
 <td align="center">是否下载作品音乐, 默认值: <code>false</code></td>
 </tr>
 <tr>
-<td align="center">save</td>
+<td align="center">Storage_Format</td>
 <td align="center">str</td>
 <td align="center">采集数据持久化储存格式, 设置为空字符串代表不保存<br>支持: <code>csv</code>、<code>xlsx</code>、<code>sql</code>(SQLite)</td>
 </tr>
 <tr>
-<td align="center">cookie</td>
-<td align="center">dict</td>
+<td align="center">Cookie</td>
+<td align="center">dict/str</td>
 <td align="center">抖音网页版 Cookie, 必需参数; 使用 <code>main.py</code> 写入配置文件</td>
 </tr>
 <tr>
-<td align="center">dynamic</td>
+<td align="center">Dynamic_Cover</td>
 <td align="center">bool</td>
 <td align="center">是否下载动态封面图, 默认值: <code>false</code></td>
 </tr>
 <tr>
-<td align="center">original</td>
+<td align="center">Original_Cover</td>
 <td align="center">bool</td>
 <td align="center">是否下载静态封面图, 默认值: <code>false</code></td>
 </tr>
 <tr>
-<td align="center">proxies</td>
+<td align="center">Proxies</td>
 <td align="center">str</td>
 <td align="center">代理地址, 设置为空字符串代表不使用代理</td>
 </tr>
 <tr>
-<td align="center">log</td>
+<td align="center">Log</td>
 <td align="center">bool</td>
 <td align="center">是否记录运行日志, 默认值: <code>false</code></td>
 </tr>
 <tr>
-<td align="center">download</td>
+<td align="center">Download</td>
 <td align="center">bool</td>
 <td align="center">是否打开下载功能, 如果关闭, 程序将不会下载任何文件; 默认值: <code>true</code></td>
 </tr>
 <tr>
-<td align="center">max_size</td>
+<td align="center">Max_Size</td>
 <td align="center">int</td>
 <td align="center">作品文件大小限制, 单位字节, 超出大小限制的作品文件将会跳过下载<br>设置为 <code>0</code> 代表无限制</td>
 </tr>
 <tr>
-<td align="center">chunk</td>
+<td align="center">Chunk</td>
 <td align="center">int</td>
 <td align="center">每次从服务器接收的数据块大小, 单位字节; 默认值：<code>524288</code>(512 KB)</td>
 </tr>
 <tr>
-<td align="center">retry</td>
+<td align="center">Max_Retry</td>
 <td align="center">int</td>
 <td align="center">发送请求获取数据发生异常时重试的最大次数<br>设置为 <code>0</code> 代表关闭重试, 默认值: <code>10</code></td>
 </tr>
 <tr>
-<td align="center">pages</td>
+<td align="center">Max_Pages</td>
 <td align="center">int</td>
 <td align="center">批量下载账号喜欢作品、收藏作品或者采集作品评论数据时<br>请求数据的最大次数，默认值: <code>0</code> 代表不限制</td>
 </tr>
 <tr>
-<td align="center">thread</td>
+<td align="center">Thread</td>
 <td align="center">bool</td>
 <td align="center">是否启用多线程下载作品文件，默认值: <code>false</code></td>
 </tr>
@@ -288,28 +293,28 @@
 {
   "Accounts_Urls": [
     {
-      "mark": "账号标识-1",
-      "url": "账号主页链接-1",
-      "tab": "post",
-      "earliest": "2023/1/1",
-      "latest": "2023/6/1"
+      "Mark": "账号标识-1",
+      "Url": "账号主页链接-1",
+      "Tab": "post",
+      "Earliest": "2023/1/1",
+      "Latest": "2023/6/1"
     },
     {
-      "mark": "账号标识-2",
-      "url": "账号主页链接-2",
-      "tab": "post",
-      "earliest": "2023/7/1",
-      "latest": ""
+      "Mark": "账号标识-2",
+      "Url": "账号主页链接-2",
+      "Tab": "post",
+      "Earliest": "2023/7/1",
+      "Latest": ""
     }
   ],
   "Mix_Urls": [
     {
-      "mark": "合集标识-1",
-      "url": "合集链接或者作品链接"
+      "Mark": "合集标识-1",
+      "Url": "合集链接或者作品链接"
     },
     {
-      "mark": "合集标识-2",
-      "url": "合集链接或者作品链接"
+      "Mark": "合集标识-2",
+      "Url": "合集链接或者作品链接"
     }
   ],
   "Root": "C:\\TikTokDownloader",
@@ -360,7 +365,7 @@
 <p>代表作品文件名称格式为: <code>发布时间 @ 作者UID @ 作品ID</code></p>
 <ul>
 <li>如果作品没有描述，保存时文件名称的描述内容将替换为作品 ID</li>
-<li>单独下载链接作品时，如果在 <code>name</code> 参数中设置了 <code>mark</code>，程序会自动替换为 <code>nickname</code></li>
+<li>单独下载链接作品时，如果在 <code>Name_Format</code> 参数中设置了 <code>mark</code>，程序会自动替换为 <code>nickname</code></li>
 </ul>
 
 ```json
@@ -395,8 +400,8 @@
 
 <p>代表下载文件时每次从服务器接收 1048576 字节 (1 MB)的数据块。</p>
 <ul>
-<li>影响下载速度：较大的 chunk 会增加每次下载的数据量，从而提高下载速度。相反，较小的 chunk 会降低每次下载的数据量，可能导致下载速度稍慢。</li>
-<li>影响内存占用：较大的 chunk 会一次性加载更多的数据到内存中，可能导致内存占用增加。相反，较小的 chunk 会减少每次加载的数据量，从而降低内存占用。</li>
+<li>影响下载速度：较大的 Chunk 会增加每次下载的数据量，从而提高下载速度。相反，较小的 Chunk 会降低每次下载的数据量，可能导致下载速度稍慢。</li>
+<li>影响内存占用：较大的 Chunk 会一次性加载更多的数据到内存中，可能导致内存占用增加。相反，较小的 Chunk 会减少每次加载的数据量，从而降低内存占用。</li>
 </ul>
 
 ```json
@@ -406,7 +411,7 @@
 ```
 
 <p>代表批量下载账号喜欢作品、收藏作品或者采集作品评论数据时，仅获取前 <code>2</code> 页数据；用于解决批量下载账号喜欢作品、收藏作品需要获取全部数据的问题，以及作品评论数据数量过多的采集问题。</p>
-<p>不影响批量下载账号发布作品，如需控制账号发布作品数据获取次数，可使用 <code>earliest</code> 和 <code>latest</code> 参数实现。</p>
+<p>不影响批量下载账号发布作品，如需控制账号发布作品数据获取次数，可使用 <code>Earliest</code> 和 <code>Latest</code> 参数实现。</p>
 <h1>功能介绍</h1>
 <h2>复制粘贴写入 Cookie</h2>
 <p>从浏览器复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a>
