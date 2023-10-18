@@ -167,7 +167,7 @@
 <td align="center">账号主页/合集作品链接, 批量下载时使用<br><strong>属于 accounts 和 mix 子参数</strong></td>
 </tr>
 <tr>
-<td align="center">mode</td>
+<td align="center">tab</td>
 <td align="center">str</td>
 <td align="center">批量下载类型, <code>post</code> 代表发布作品, <code>favorite</code> 代表喜欢作品<br>需要账号喜欢作品公开可见, <strong>属于 accounts 子参数</strong></td>
 </tr>
@@ -286,64 +286,65 @@
 
 ```json
 {
-  "accounts": [
-    [
-      "账号标注1",
-      "账号主页链接, 支持长链接与短链接",
-      "post",
-      "2023/7/1",
-      ""
-    ],
-    [
-      "账号标注2",
-      "账号主页链接, 支持长链接与短链接",
-      "favorite",
-      "",
-      "2023/8/1"
-    ]
+  "Accounts_Urls": [
+    {
+      "mark": "账号标识-1",
+      "url": "账号主页链接-1",
+      "tab": "post",
+      "earliest": "2023/1/1",
+      "latest": "2023/6/1"
+    },
+    {
+      "mark": "账号标识-2",
+      "url": "账号主页链接-2",
+      "tab": "post",
+      "earliest": "2023/7/1",
+      "latest": ""
+    }
   ],
-  "mix": [
-    [
-      "合集标识1",
-      "https://www.douyin.com/collection/123, 支持合集链接与作品链接"
-    ],
-    [
-      "合集标识2",
-      "https://www.douyin.com/video/123, 支持长链接与短链接"
-    ]
+  "Mix_Urls": [
+    {
+      "mark": "合集标识-1",
+      "url": "合集链接或者作品链接"
+    },
+    {
+      "mark": "合集标识-2",
+      "url": "合集链接或者作品链接"
+    }
   ],
-  "root": "./",
-  "folder": "Download",
-  "name": "create_time nickname id desc",
-  "time": "%Y-%m-%d %H.%M.%S",
-  "split": "-",
-  "music": false,
-  "save": "sql",
-  "cookie": {
+  "Root": "C:\\TikTokDownloader",
+  "Folder": "SOLO",
+  "Name_Format": "create_time uid id",
+  "Date_Format": "%Y-%m-%d",
+  "Split": " @ ",
+  "Folder_Mode": false,
+  "Music": false,
+  "Storage_Format": "xlsx",
+  "Cookie": {
     "passport_csrf_token": "222",
     "passport_csrf_token_default": "222",
     "odin_tt": "222"
   },
-  "dynamic": false,
-  "original": false,
-  "proxies": "http://127.0.0.1:9999",
-  "log": false,
-  "download": true,
-  "max_size": 10485760,
-  "chunk": 1048576,
-  "retry": 20,
-  "pages": 2,
-  "thread": true
+  "Dynamic_Cover": false,
+  "Original_Cover": false,
+  "Proxies": "http://127.0.0.1:9999",
+  "Log": false,
+  "Download": true,
+  "Max_Size": 10485760,
+  "Chunk": 1048576,
+  "Max_Retry": 10,
+  "Max_Pages": 2,
+  "Thread": false
 }
 ```
 
-<p><strong>服务器部署模式：</strong> 仅 <code>cookie</code>、<code>proxies</code>、<code>retry</code> 参数生效，其余参数均不生效，但仍需正确编辑配置文件。</p>
+<p><strong>服务器部署模式：</strong> 仅 <code>Cookie</code>、<code>Proxies</code>、<code>Max_Retry</code> 参数生效，其余参数均不生效，但仍需正确编辑配置文件。</p>
 <h2>参数详解</h2>
 
 ```json
 {
-  "root": "C:\\TikTokDownloader",
-  "folder": "SOLO"
+  "Root": "C:\\TikTokDownloader",
+  "Folder": "SOLO"
 }
 ```
 
@@ -351,8 +352,8 @@
 
 ```json
 {
-  "name": "create_time uid id",
-  "split": " @ "
+  "Name_Format": "create_time uid id",
+  "Split": " @ "
 }
 ```
 
@@ -364,7 +365,7 @@
 
 ```json
 {
-  "time": "%Y-%m-%d"
+  "Date_Format": "%Y-%m-%d"
 }
 ```
 
@@ -372,7 +373,7 @@
 
 ```json
 {
-  "save": "xlsx"
+  "Storage_Format": "xlsx"
 }
 ```
 
@@ -380,7 +381,7 @@
 
 ```json
 {
-  "max_size": 10485760
+  "Max_Size": 10485760
 }
 ```
 
@@ -388,7 +389,7 @@
 
 ```json
 {
-  "chunk": 1048576
+  "Chunk": 1048576
 }
 ```
 
@@ -400,7 +401,7 @@
 
 ```json
 {
-  "pages": 2
+  "Max_Pages": 2
 }
 ```
 

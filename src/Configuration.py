@@ -24,14 +24,15 @@ class Settings:
         self.console = console
         self.__default = {
             "Accounts_Urls": [
-                ["账号标识，可以设置为空字符串",
-                 "账号主页链接",
-                 "账号主页类型",
-                 "作品最早发布日期",
-                 "作品最晚发布日期"],
+                {"mark": "账号标识，可以设置为空字符串",
+                 "url": "账号主页链接",
+                 "tab": "账号主页类型",
+                 "earliest": "作品最早发布日期",
+                 "latest": "作品最晚发布日期"},
             ],
             "Mix_Urls": [
-                ["合集标识，可以设置为空字符串", "合集链接或者作品链接"],
+                {"mark": "合集标识，可以设置为空字符串",
+                 "url": "合集链接或者作品链接"},
             ],
             "Root": "./",
             "Folder": "Download",
@@ -40,7 +41,7 @@ class Settings:
             "Split": "-",
             "Folder_Mode": False,
             "Music": False,
-            "Save_Format": "",
+            "Storage_Format": "",
             "Cookie": None,
             "Dynamic_Cover": False,
             "Original_Cover": False,
@@ -67,7 +68,7 @@ class Settings:
         try:
             if self.file.exists():
                 with self.file.open("r", encoding="UTF-8") as f:
-                    return load(f)
+                    return self.check(load(f))
             else:
                 self.console.print(
                     "配置文件 settings.json 读取失败，文件不存在！",
@@ -81,7 +82,12 @@ class Settings:
             return False  # 读取配置文件发生错误时返回空配置
 
     def check(self, data: dict) -> dict:
-        pass
+        if set(self.__default.keys()).issubset(data.keys()):
+            return data
+        if self.console.input(
+                f"[b {ERROR}]配置文件 settings.json 缺少必要的参数，是否需要生成默认配置文件(YES/NO): [/b {ERROR}]").upper() == "YES":
+            self.create()
+        return {}
 
     def update(self, settings: dict):
         """更新配置文件"""
