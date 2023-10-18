@@ -10,6 +10,7 @@ from rich.console import Console
 from src.Configuration import Settings
 from src.CookieTool import Cookie
 from src.CookieTool import Register
+from src.Customizer import MASTER, WARNING, INFO, ERROR
 from src.Customizer import SERVER_HOST
 from src.Customizer import SERVER_PORT
 from src.FileManager import DownloadRecorder
@@ -79,19 +80,20 @@ class TikTokDownloader:
             self.console.print(
                 "\n".join(
                     self.DISCLAIMER_TEXT),
-                style="b yellow")
+                style=f"b {MASTER}")
             if self.console.input(
-                    "[b yellow]是否已仔细阅读上述免责声明(YES/NO): [/b yellow]").upper() != "YES":
+                    f"[b {MASTER}]是否已仔细阅读上述免责声明(YES/NO): [/b {MASTER}]").upper() != "YES":
                 exit()
             FileManager.deal_config(self.DISCLAIMER["path"])
+            self.console.print()
 
     def version(self):
         self.console.print(
             f"{self.LINE}\n\n\n{self.NAME.center(self.WIDTH)}\n\n\n{self.LINE}\n",
-            style="b yellow")
-        self.console.print(f"项目仓库: {self.REPOSITORY}", style="b yellow")
-        self.console.print(f"项目文档: {self.DOCUMENTATION}", style="b yellow")
-        self.console.print(f"开源许可: {self.LICENCE}\n", style="b yellow")
+            style=f"b {MASTER}")
+        self.console.print(f"项目仓库: {self.REPOSITORY}", style=f"b {MASTER}")
+        self.console.print(f"项目文档: {self.DOCUMENTATION}", style=f"b {MASTER}")
+        self.console.print(f"开源许可: {self.LICENCE}\n", style=f"b {MASTER}")
 
     def check_config(self):
         folder = ("./src/config", "./cache", "./cache/temp")
@@ -112,16 +114,16 @@ class TikTokDownloader:
             tag = float(response.headers['Location'].split("/")[-1])
             if tag > self.VERSION:
                 self.console.print(
-                    f"检测到新版本: {tag}", style="b yellow")
+                    f"检测到新版本: {tag}", style=f"b {WARNING}")
                 self.console.print(self.RELEASES)
             if tag == self.VERSION and not self.STABLE:
                 self.console.print(
-                    "当前版本为测试版, 可更新至稳定版", style="b yellow")
+                    "当前版本为测试版, 可更新至稳定版", style=f"b {WARNING}")
                 self.console.print(self.RELEASES)
             else:
-                self.console.print("当前已是最新版本", style="b green")
+                self.console.print("当前已是最新版本", style=f"b {INFO}")
         except (exceptions.ReadTimeout, exceptions.ConnectionError):
-            self.console.print("检测新版本失败", style="b red")
+            self.console.print("检测新版本失败", style=f"b {ERROR}")
         self.console.print()
 
     def main(self):
@@ -135,9 +137,8 @@ class TikTokDownloader:
              "Web UI 交互模式",
              "服务器部署模式",
              f"{self.UPDATE['tip']}检查更新功能",
-             f"{self.COLOUR['tip']}彩色交互提示",
              f"{self.RECORD['tip']}作品下载记录"),
-            self.colour.colorize,
+            self.console,
             separate=(
                 1,
                 5))
@@ -195,10 +196,8 @@ class TikTokDownloader:
         elif mode == "3":
             self.complete()
         elif mode == "4":
-            print(
-                self.colour.colorize(
-                    "注意：该模式暂不支持并发请求！仅以 API 形式返回数据提供调用！",
-                    93))
+            self.console.print(
+                "注意：该模式暂不支持并发请求！仅以 API 形式返回数据提供调用！", style="b #fffa65")
             self.server(APIServer)
         elif mode == "5":
             self.server(WebUI)
@@ -207,14 +206,14 @@ class TikTokDownloader:
         elif mode == "7":
             self.change_config(self.UPDATE["path"])
         elif mode == "8":
-            self.change_config(self.COLOUR["path"], "\x1b[0m修改设置成功！\x1b[0m")
-        elif mode == "9":
             self.change_config(self.RECORD["path"])
 
     def check_settings(self):
         if not self.PROJECT_ROOT.joinpath("./settings.json").exists():
             self.settings.create()
-            self.console.print("建议根据实际需求修改配置文件后重新运行程序！", style="b yellow")
+            self.console.print(
+                "建议根据实际需求修改配置文件后重新运行程序！\n",
+                style=f"b {WARNING}")
 
     def run(self):
         self.check_config()
@@ -222,7 +221,7 @@ class TikTokDownloader:
         self.check_update()
         self.check_settings()
         self.disclaimer()
-        # self.main()
+        self.main()
         self.delete_temp()
 
     def delete_temp(self):

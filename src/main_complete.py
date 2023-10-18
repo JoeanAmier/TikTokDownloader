@@ -1,5 +1,6 @@
 from time import time
 
+from src.Customizer import PROMPT
 from src.Customizer import TEXT_REPLACEMENT
 from src.Customizer import failed
 from src.DataAcquirer import Acquirer
@@ -15,7 +16,7 @@ def prompt(
         choose: tuple | list,
         console,
         separate=None,
-        style="b blue") -> str:
+        style=f"b {PROMPT}") -> str:
     screen = f"{title}:\n"
     row = 0
     for i, j in enumerate(choose):
