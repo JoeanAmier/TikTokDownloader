@@ -41,7 +41,7 @@ SERVER_PORT = 5000
 
 # 彩色交互提示颜色设置，支持标准颜色名称、Hex、RGB 格式
 MASTER = "#fff200"
-PROMPT = "#00a3af"
+PROMPT = "bright_cyan"
 ERROR = "bright_red"
 WARNING = "bright_yellow"
 INFO = "bright_green"
