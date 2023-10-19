@@ -70,7 +70,7 @@ class Settings:
             if self.file.exists():
                 with self.file.open("r", encoding="UTF-8") as f:
                     return self.check(
-                        load(f), load(
+                        load(f).keys(), load(
                             f, object_hook=lambda d: SimpleNamespace(
                                 **d)))
             else:
@@ -85,8 +85,8 @@ class Settings:
                 style=f"b {ERROR}")
             return False  # 读取配置文件发生错误时返回空配置
 
-    def check(self, data: dict, result: SimpleNamespace):
-        if set(self.__default.keys()).issubset(data.keys()):
+    def check(self, keys, result: SimpleNamespace):
+        if set(self.__default.keys()).issubset(set(keys)):
             return result
         if self.console.input(
                 f"[b {ERROR}]配置文件 settings.json 缺少必要的参数，是否需要生成默认配置文件(YES/NO): [/b {ERROR}]").upper() == "YES":
