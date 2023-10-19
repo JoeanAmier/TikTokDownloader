@@ -9,8 +9,7 @@ from urllib.parse import urlparse
 
 import requests
 from requests import exceptions
-from requests import get
-from requests import post
+from requests import request
 
 from src.Configuration import Parameter
 from src.CookieTool import Register
@@ -1344,11 +1343,6 @@ class NewAcquirer:
     comment_tiktok_api = "https://www.tiktok.com/api/comment/list/"  # 评论API
     reply_tiktok_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
 
-    method = {
-        "GET": get,
-        "POST": post,
-    }
-
     def __init__(self, params: Parameter):
         self.cookie = params.cookie
         self.headers = params.headers | {
@@ -1369,10 +1363,11 @@ class NewAcquirer:
             self,
             url: str,
             params=None,
-            method='GET',
+            method='get',
             **kwargs) -> dict | bool:
         try:
-            response = self.method[method](
+            response = request(
+                method,
                 url,
                 params=params,
                 proxies=self.proxies,
