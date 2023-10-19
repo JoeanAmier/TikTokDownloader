@@ -4,6 +4,7 @@ from json.decoder import JSONDecodeError
 from pathlib import Path
 from time import localtime
 from time import strftime
+from types import SimpleNamespace
 
 from requests import exceptions
 from requests import get
@@ -68,7 +69,10 @@ class Settings:
         try:
             if self.file.exists():
                 with self.file.open("r", encoding="UTF-8") as f:
-                    return self.check(load(f))
+                    return self.check(
+                        load(f), load(
+                            f, object_hook=lambda d: SimpleNamespace(
+                                **d)))
             else:
                 self.console.print(
                     "配置文件 settings.json 读取失败，文件不存在！",
@@ -81,13 +85,13 @@ class Settings:
                 style=f"b {ERROR}")
             return False  # 读取配置文件发生错误时返回空配置
 
-    def check(self, data: dict) -> dict:
+    def check(self, data: dict, result: SimpleNamespace):
         if set(self.__default.keys()).issubset(data.keys()):
-            return data
+            return result
         if self.console.input(
                 f"[b {ERROR}]配置文件 settings.json 缺少必要的参数，是否需要生成默认配置文件(YES/NO): [/b {ERROR}]").upper() == "YES":
             self.create()
-        return {}
+        return None
 
     def update(self, settings: dict):
         """更新配置文件"""
