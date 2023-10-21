@@ -7,6 +7,7 @@ from requests import get
 
 from src.Customizer import ERROR
 from src.Customizer import GENERAL
+from src.Customizer import WARNING
 from src.Customizer import check_login
 from src.Parameter import TtWid
 from src.Parameter import VerifyFp
@@ -25,7 +26,7 @@ class Cookie:
         """提取 Cookie 并写入配置文件"""
         if not (
                 cookie := self.console.input(
-                    f"[b {GENERAL}]请粘贴 Cookie 内容：[/b {GENERAL}]")):
+                    f"[{GENERAL}]请粘贴 Cookie 内容：[/{GENERAL}]")):
             return
         self.extract(cookie)
 
@@ -57,13 +58,13 @@ class Cookie:
         else:
             keys = cookie
         self.write(keys)
-        self.console.input("写入 Cookie 成功！", style=f"b {GENERAL}")
+        self.console.input("写入 Cookie 成功！", style=GENERAL)
 
     def check_key(self, items):
         if not items["sessionid_ss"]:
-            self.console.print("当前 Cookie 未登录", style=f"b {GENERAL}")
+            self.console.print("当前 Cookie 未登录", style=GENERAL)
         else:
-            self.console.print("当前 Cookie 已登录", style=f"b {GENERAL}")
+            self.console.print("当前 Cookie 已登录", style=GENERAL)
         keys_to_remove = [key for key, value in items.items() if value is None]
         for key in keys_to_remove:
             del items[key]
@@ -138,9 +139,9 @@ class Register:
         try:
             image.show()
         except AttributeError:
-            self.console.print("打开登录二维码图片失败，请扫描终端二维码登录！", style=f"b {GENERAL}")
-            self.console.print("如果登录二维码无法识别，请尝试更换终端或者手动复制粘贴写入 Cookie！",
-                               style=f"b {GENERAL}")
+            self.console.print(
+                "打开登录二维码图片失败，请扫描终端二维码登录！\n如果登录二维码无法识别，请尝试更换终端或者手动复制粘贴写入 Cookie！",
+                style=GENERAL)
 
     def get_qr_code(self, version=23):
         self.verify_fp = VerifyFp.get_verify_fp()
@@ -176,7 +177,7 @@ class Register:
                 self.console.print(
                     f"发生未知错误: {
                     response.json()}",
-                    style=f"b {ERROR}")
+                    style=ERROR)
                 retry = 15
             elif (s := data["status"]) == "3":
                 redirect_url = data["redirect_url"]
@@ -187,7 +188,7 @@ class Register:
             else:
                 retry += 1
         else:
-            print("扫码登录失败，请手动获取 Cookie 并写入配置文件！")
+            self.console.print("扫码登录失败，请手动获取 Cookie 并写入配置文件！", style=WARNING)
             return None, None
         return redirect_url, cookie
 
@@ -202,10 +203,9 @@ class Register:
             return False
         return response.history[1].headers.get("Set-Cookie")
 
-    @staticmethod
-    def wait():
+    def wait(self):
         sleep(2)
-        print("正在检查登录结果！")
+        self.console.print("正在检查登录结果！", style=GENERAL)
 
     def request_data(self, json=True, **kwargs):
         try:
