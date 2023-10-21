@@ -197,7 +197,7 @@
 <td align="center">作品文件和数据记录保存路径, 默认值: <code>项目根路径</code></td>
 </tr>
 <tr>
-<td align="center">Folder</td>
+<td align="center">Folder_Name</td>
 <td align="center">str</td>
 <td align="center">下载单独链接作品时, 储存文件夹的名称, 默认值: <code>Download</code></td>
 </tr>
@@ -318,7 +318,7 @@
     }
   ],
   "Root": "C:\\TikTokDownloader",
-  "Folder": "SOLO",
+  "Folder_Name": "SOLO",
   "Name_Format": "create_time uid id",
   "Date_Format": "%Y-%m-%d",
   "Split": " @ ",
@@ -349,7 +349,7 @@
 ```json
 {
   "Root": "C:\\TikTokDownloader",
-  "Folder": "SOLO"
+  "Folder_Name": "SOLO"
 }
 ```
 

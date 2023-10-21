@@ -36,7 +36,7 @@ class Settings:
                  "Url": "合集链接或者作品链接"},
             ],
             "Root": "",
-            "Folder": "Download",
+            "Folder_Name": "Download",
             "Name_Format": "create_time nickname desc",
             "Date_Format": "%Y-%m-%d %H.%M.%S",
             "Split": "-",
@@ -118,12 +118,12 @@ class Parameter:
             ua_code: tuple,
             log: LoggerManager | BaseLogger,
             xb,
-            colour,
             cookie: dict | str,
             root: str,
-            folder: str,
-            name: str,
-            date_: str,
+            folder_name: str,
+            name_format: str,
+            date_format: str,
+            storage_format: str,
             split: str,
             music: bool,
             folder_mode: bool,
@@ -134,8 +134,9 @@ class Parameter:
             max_size: int,
             chunk: int,
             max_retry: int,
+            max_pages: int,
             blacklist,
-            thread_,
+            thread_: bool,
             timeout=10,
     ):
         self.main_path = main_path  # 项目根路径
@@ -145,12 +146,11 @@ class Parameter:
         self.ua_code = ua_code
         self.log = log
         self.xb = xb
-        self.colour = colour
         self.cookie = self.check_cookie(cookie)
         self.root = self.check_root(root)
-        self.folder = self.check_folder(folder)
-        self.name = self.check_name(name)
-        self.date = self.check_date(date_)
+        self.folder_name = self.check_folder(folder_name)
+        self.name_format = self.check_name(name_format)
+        self.date_format = self.check_date(date_format)
         self.split = self.check_split(split)
         self.music = music
         self.folder_mode = folder_mode
@@ -162,7 +162,6 @@ class Parameter:
         self.chunk = self.check_chunk(chunk)
         self.max_retry = self.check_max_retry(max_retry)
         self.blacklist = blacklist
-        self.id_set = self.blacklist.get_set()
         self.thread = thread_
         self.timeout = self.check_timeout(timeout)
 
@@ -184,42 +183,45 @@ class Parameter:
 
     def check_root(self, root: str) -> Path:
         if root and (r := Path(root)).is_dir():
-            self.log.info(f"root 参数已设置为 {root}", False)
+            self.log.info(f"Root 参数已设置为 {root}", False)
             return r
-        self.log.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
+        self.log.warning(f"Root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
         return self.main_path
 
     def check_folder(self, folder: str) -> str:
         if folder := Cleaner.clean_name(folder):
-            self.log.info(f"folder 参数已设置为 {folder}", False)
+            self.log.info(f"Folder_Name 参数已设置为 {folder}", False)
             return folder
-        self.log.warning(f"folder 参数 {folder} 不是有效的文件夹名称，程序将使用默认值：Download")
+        self.log.warning(
+            f"Folder_Name 参数 {folder} 不是有效的文件夹名称，程序将使用默认值：Download")
         return "Download"
 
     def check_name(self, name: str) -> list[str]:
         name_keys = name.strip().split(" ")
         if all(i in self.name_keys for i in name_keys):
-            self.log.info(f"name 参数已设置为 {name}", False)
+            self.log.info(f"Name_Format 参数已设置为 {name}", False)
             return name_keys
         else:
-            self.log.warning(f"name 参数 {name} 设置错误，程序将使用默认值：创建时间 账号昵称 作品描述")
+            self.log.warning(
+                f"Name_Format 参数 {name} 设置错误，程序将使用默认值：创建时间 账号昵称 作品描述")
             return ["create_time", "nickname", "desc"]
 
     def check_date(self, date_: str) -> str:
         try:
             _ = strftime(date_, localtime())
-            self.log.info(f"time 参数已设置为 {date_}", False)
+            self.log.info(f"Date_Format 参数已设置为 {date_}", False)
             return date_
         except ValueError:
-            self.log.warning(f"time 参数 {date_} 设置错误，程序将使用默认值：年-月-日 时.分.秒")
+            self.log.warning(
+                f"Date_Format 参数 {date_} 设置错误，程序将使用默认值：年-月-日 时.分.秒")
             return "%Y-%m-%d %H.%M.%S"
 
     def check_split(self, split: str) -> str:
         for i in split:
             if i in self.clean.rule.keys():
-                self.log.warning(f"split 参数 {split} 包含非法字符，程序将使用默认值：-")
+                self.log.warning(f"Split 参数 {split} 包含非法字符，程序将使用默认值：-")
                 return "-"
-        self.log.info(f"split 参数已设置为 {split}", False)
+        self.log.info(f"Split 参数已设置为 {split}", False)
         return split
 
     def check_proxies(self, proxies: str) -> dict:
@@ -252,26 +254,26 @@ class Parameter:
 
     def check_max_size(self, max_size: int) -> int:
         max_size = max(max_size, 0)
-        self.log.info(f"max_size 参数已设置为 {max_size}", False)
+        self.log.info(f"Max_Size 参数已设置为 {max_size}", False)
         return max_size
 
     def check_chunk(self, chunk: int) -> int:
         if isinstance(chunk, int) and chunk > 0:
-            self.log.info(f"chunk 参数已设置为 {chunk}", False)
+            self.log.info(f"Chunk 参数已设置为 {chunk}", False)
             return chunk
-        self.log.warning(f"chunk 参数 {chunk} 设置错误，程序将使用默认值：{512 * 1024}", False)
+        self.log.warning(f"Chunk 参数 {chunk} 设置错误，程序将使用默认值：{512 * 1024}", False)
         return 512 * 1024
 
     def check_max_retry(self, max_retry: int) -> int:
         if isinstance(max_retry, int) and max_retry >= 0:
-            self.log.info(f"max_retry 参数已设置为 {max_retry}", False)
+            self.log.info(f"Max_Retry 参数已设置为 {max_retry}", False)
             return max_retry
-        self.log.warning(f"max_retry 参数 {max_retry} 设置错误，程序将使用默认值：0", False)
+        self.log.warning(f"Max_Retry 参数 {max_retry} 设置错误，程序将使用默认值：0", False)
         return 0
 
     def check_timeout(self, timeout: int | float) -> int | float:
         if isinstance(timeout, (int, float)) and timeout > 0:
-            self.log.info(f"timeout 参数已设置为 {timeout}", False)
+            self.log.info(f"Timeout 参数已设置为 {timeout}", False)
             return timeout
-        self.log.warning(f"timeout 参数 {timeout} 设置错误，程序将使用默认值：10")
+        self.log.warning(f"Timeout 参数 {timeout} 设置错误，程序将使用默认值：10")
         return 10
