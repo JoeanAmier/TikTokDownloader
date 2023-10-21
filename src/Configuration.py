@@ -123,7 +123,6 @@ class Parameter:
             folder_name: str,
             name_format: str,
             date_format: str,
-            storage_format: str,
             split: str,
             music: bool,
             folder_mode: bool,
@@ -148,9 +147,9 @@ class Parameter:
         self.xb = xb
         self.cookie = self.check_cookie(cookie)
         self.root = self.check_root(root)
-        self.folder_name = self.check_folder(folder_name)
-        self.name_format = self.check_name(name_format)
-        self.date_format = self.check_date(date_format)
+        self.folder_name = self.check_folder_name(folder_name)
+        self.name_format = self.check_name_format(name_format)
+        self.date_format = self.check_date_format(date_format)
         self.split = self.check_split(split)
         self.music = music
         self.folder_mode = folder_mode
@@ -161,6 +160,7 @@ class Parameter:
         self.max_size = self.check_max_size(max_size)
         self.chunk = self.check_chunk(chunk)
         self.max_retry = self.check_max_retry(max_retry)
+        self.max_pages = self.check_max_pages(max_pages)
         self.blacklist = blacklist
         self.thread = thread_
         self.timeout = self.check_timeout(timeout)
@@ -188,32 +188,32 @@ class Parameter:
         self.log.warning(f"Root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
         return self.main_path
 
-    def check_folder(self, folder: str) -> str:
-        if folder := Cleaner.clean_name(folder):
-            self.log.info(f"Folder_Name 参数已设置为 {folder}", False)
-            return folder
+    def check_folder_name(self, folder_name: str) -> str:
+        if folder_name := Cleaner.clean_name(folder_name):
+            self.log.info(f"Folder_Name 参数已设置为 {folder_name}", False)
+            return folder_name
         self.log.warning(
-            f"Folder_Name 参数 {folder} 不是有效的文件夹名称，程序将使用默认值：Download")
+            f"Folder_Name 参数 {folder_name} 不是有效的文件夹名称，程序将使用默认值：Download")
         return "Download"
 
-    def check_name(self, name: str) -> list[str]:
-        name_keys = name.strip().split(" ")
+    def check_name_format(self, name_format: str) -> list[str]:
+        name_keys = name_format.strip().split(" ")
         if all(i in self.name_keys for i in name_keys):
-            self.log.info(f"Name_Format 参数已设置为 {name}", False)
+            self.log.info(f"Name_Format 参数已设置为 {name_format}", False)
             return name_keys
         else:
             self.log.warning(
-                f"Name_Format 参数 {name} 设置错误，程序将使用默认值：创建时间 账号昵称 作品描述")
+                f"Name_Format 参数 {name_format} 设置错误，程序将使用默认值：创建时间 账号昵称 作品描述")
             return ["create_time", "nickname", "desc"]
 
-    def check_date(self, date_: str) -> str:
+    def check_date_format(self, date_format: str) -> str:
         try:
-            _ = strftime(date_, localtime())
-            self.log.info(f"Date_Format 参数已设置为 {date_}", False)
-            return date_
+            _ = strftime(date_format, localtime())
+            self.log.info(f"Date_Format 参数已设置为 {date_format}", False)
+            return date_format
         except ValueError:
             self.log.warning(
-                f"Date_Format 参数 {date_} 设置错误，程序将使用默认值：年-月-日 时.分.秒")
+                f"Date_Format 参数 {date_format} 设置错误，程序将使用默认值：年-月-日 时.分.秒")
             return "%Y-%m-%d %H.%M.%S"
 
     def check_split(self, split: str) -> str:
@@ -270,6 +270,15 @@ class Parameter:
             return max_retry
         self.log.warning(f"Max_Retry 参数 {max_retry} 设置错误，程序将使用默认值：0", False)
         return 0
+
+    def check_max_pages(self, max_pages: int) -> int:
+        if isinstance(max_pages, int) and max_pages > 0:
+            self.log.info(f"Max_Pages 参数已设置为 {max_pages}", False)
+            return max_pages
+        elif max_pages != 0:
+            self.log.warning(
+                f"Max_Pages 参数 {max_pages} 设置错误，程序将使用默认值：99999", False)
+        return 99999
 
     def check_timeout(self, timeout: int | float) -> int | float:
         if isinstance(timeout, (int, float)) and timeout > 0:
