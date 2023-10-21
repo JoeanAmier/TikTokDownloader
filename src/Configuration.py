@@ -76,20 +76,20 @@ class Settings:
             else:
                 self.console.print(
                     "配置文件 settings.json 读取失败，文件不存在！",
-                    style=f"b {WARNING}")
+                    style=WARNING)
                 self.create()
                 return False  # 生成的默认配置文件必须要设置 cookie 才可以正常运行
         except JSONDecodeError:
             self.console.print(
                 "配置文件 settings.json 格式错误，请检查 JSON 格式！",
-                style=f"b {ERROR}")
+                style=ERROR)
             return False  # 读取配置文件发生错误时返回空配置
 
     def check(self, keys, result: SimpleNamespace):
         if set(self.__default.keys()).issubset(set(keys)):
             return result
         if self.console.input(
-                f"[b {ERROR}]配置文件 settings.json 缺少必要的参数，是否需要生成默认配置文件(YES/NO): [/b {ERROR}]").upper() == "YES":
+                f"[{ERROR}]配置文件 settings.json 缺少必要的参数，是否需要生成默认配置文件(YES/NO): [/{ERROR}]").upper() == "YES":
             self.create()
         return None
 
@@ -97,7 +97,7 @@ class Settings:
         """更新配置文件"""
         with self.file.open("w", encoding="UTF-8") as f:
             dump(settings, f, indent=4, ensure_ascii=False)
-        self.console.print("保存配置成功！", style=f"b {INFO}")
+        self.console.print("保存配置成功！", style=INFO)
 
 
 class Parameter:
