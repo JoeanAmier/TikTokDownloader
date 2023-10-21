@@ -13,6 +13,7 @@ from time import strftime
 from openpyxl import Workbook
 from openpyxl import load_workbook
 
+from src.Customizer import WARNING, ERROR, INFO
 from src.StringCleaner import Cleaner
 
 __all__ = [
@@ -24,17 +25,13 @@ __all__ = [
     'SQLLogger',
     'RecordManager']
 
-INFO = 94
-WARNING = 93
-ERROR = 91
-
 
 class BaseLogger:
     """不记录日志，空白日志记录器"""
 
-    def __init__(self, main_path: Path, colour, root="", folder="", name=""):
+    def __init__(self, main_path: Path, console, root="", folder="", name=""):
         self.log = None  # 记录器主体
-        self.colour = colour
+        self.console = console
         self.__root, self.__folder, self.__name = self.init_check(
             main_path=main_path,
             root=root,
@@ -70,22 +67,22 @@ class BaseLogger:
 
     def info(self, text: str, output=True):
         if output:
-            print(self.colour.colorize(text, INFO))
+            self.console.print(text, style=INFO)
 
     def warning(self, text: str, output=True):
         if output:
-            print(self.colour.colorize(text, WARNING))
+            self.console.print(text, style=WARNING)
 
     def error(self, text: str, output=True):
         if output:
-            print(self.colour.colorize(text, ERROR))
+            self.console.print(text, style=ERROR)
 
 
 class LoggerManager(BaseLogger):
     """日志记录"""
 
-    def __init__(self, main_path: Path, colour, root="", folder="", name=""):
-        super().__init__(main_path, colour, root, folder, name)
+    def __init__(self, main_path: Path, console, root="", folder="", name=""):
+        super().__init__(main_path, console, root, folder, name)
 
     def init_check(
             self,
@@ -115,17 +112,17 @@ class LoggerManager(BaseLogger):
 
     def info(self, text: str, output=True):
         if output:
-            print(self.colour.colorize(text, INFO))
+            self.console.print(text, style=INFO)
         self.log.info(text)
 
     def warning(self, text: str, output=True):
         if output:
-            print(self.colour.colorize(text, WARNING))
+            self.console.print(text, style=WARNING)
         self.log.warning(text)
 
     def error(self, text: str, output=True):
         if output:
-            print(self.colour.colorize(text, ERROR))
+            self.console.print(text, style=ERROR)
         self.log.error(text)
 
 
@@ -280,13 +277,15 @@ class SQLLogger(NoneLogger):
         self.db.close()
 
     def create(self):
-        create_sql = f"""CREATE TABLE IF NOT EXISTS {self.name} ({", ".join([f"{i} {j}" for i, j in zip(self.title_line, self.title_type)])});"""
+        create_sql = f"""CREATE TABLE IF NOT EXISTS {self.name} ({", ".join(
+            [f"{i} {j}" for i, j in zip(self.title_line, self.title_type)])});"""
         self.cursor.execute(create_sql)
         self.db.commit()
 
     def save(self, data, *args, **kwargs):
         column = self.title_line[self.index:]
-        insert_sql = f"""REPLACE INTO {self.name} ({", ".join(column)}) VALUES ({", ".join(["?" for _ in column])});"""
+        insert_sql = f"""REPLACE INTO {self.name} ({", ".join(column)}) VALUES ({
+        ", ".join(["?" for _ in column])});"""
         self.cursor.execute(insert_sql, data)
         self.db.commit()
 
