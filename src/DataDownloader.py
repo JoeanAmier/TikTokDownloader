@@ -782,10 +782,10 @@ class NewDownloader:
         self.ua_code = params.ua_code
         self.log = params.log
         self.xb = params.xb
-        self.colour = params.colour
+        self.console = params.console
         self.root = params.root
-        self.folder = params.folder
-        self.name = params.name
+        self.folder_name = params.folder_name
+        self.name = params.name_format
         self.split = params.split
         self.folder_mode = params.folder_mode
         self.music = params.music
@@ -797,7 +797,7 @@ class NewDownloader:
         self.chunk = params.chunk
         self.max_retry = params.max_retry
         self.blacklist = params.blacklist
-        self.id_set = params.id_set
+        # self.id_set = self.blacklist
         self.__thread = ThreadPoolExecutor if params.thread else FakeThreadPool
         self.__pool = None
         self.__temp = main_path.joinpath("./cache/temp")
@@ -974,7 +974,14 @@ class ProgressBar(NoneBar):
         elapsed_time = time.time() - self.start_time
         print(
             self.colorize(
-                f'\r{self.text}下载进度: |{bar}| {percent:.1f}%  耗时: {elapsed_time:.1f}s  文件: {self.bytes_to_mb(self.downloaded_size):.1f}MB/{self.bytes_to_mb(self.total):.1f}MB',
+                f'\r{
+                self.text}下载进度: |{bar}| {
+                percent:.1f}%  耗时: {
+                elapsed_time:.1f}s  文件: {
+                self.bytes_to_mb(
+                    self.downloaded_size):.1f}MB/{
+                self.bytes_to_mb(
+                    self.total):.1f}MB',
                 95),
             **self.params)
 
@@ -1010,7 +1017,13 @@ class LoopingBar(NoneBar):
         self.download_size += size
         print(
             self.colorize(
-                f"\r{self.text}{'下载完成' if finished else '正在下载'}: {'✔️' if finished else spin_char}  耗时: {elapsed_time:.1f}s  文件: {self.bytes_to_mb(self.download_size):.1f}MB",
+                f"\r{
+                self.text}{
+                '下载完成' if finished else '正在下载'}: {
+                '✔️' if finished else spin_char}  耗时: {
+                elapsed_time:.1f}s  文件: {
+                self.bytes_to_mb(
+                    self.download_size):.1f}MB",
                 95),
             **self.params)
 

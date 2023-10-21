@@ -118,6 +118,7 @@ class Parameter:
             ua_code: tuple,
             log: LoggerManager | BaseLogger,
             xb,
+            console,
             cookie: dict | str,
             root: str,
             folder_name: str,
@@ -145,6 +146,7 @@ class Parameter:
         self.ua_code = ua_code
         self.log = log
         self.xb = xb
+        self.console = console
         self.cookie = self.check_cookie(cookie)
         self.root = self.check_root(root)
         self.folder_name = self.check_folder_name(folder_name)

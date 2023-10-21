@@ -13,6 +13,7 @@ from requests import request
 
 from src.Configuration import Parameter
 from src.CookieTool import Register
+from src.Customizer import GENERAL
 from src.Customizer import wait
 from src.DataExtractor import Extractor
 from src.Parameter import MsToken
@@ -542,11 +543,11 @@ class Acquirer:
         """获取公开作品数量"""
         # 公开作品数量不准确
         if self.video_data:
-            self.log.info(
-                f'{self.name} 公开作品数量: {self.video_data[0][1]["author"]["aweme_count"]}')
+            self.log.info(f'{self.name} 公开作品数量: {
+            self.video_data[0][1]["author"]["aweme_count"]}')
         elif self.image_data:
-            self.log.info(
-                f'{self.name} 公开作品数量: {self.image_data[0][1]["author"]["aweme_count"]}')
+            self.log.info(f'{self.name} 公开作品数量: {
+            self.image_data[0][1]["author"]["aweme_count"]}')
         else:
             self.log.info(f"{self.name or '该账号'}未获取到公开作品")
 
@@ -1052,7 +1053,8 @@ class Acquirer:
         }
         self.log.info("开始获取搜索数据")
         api, first, channel, type_text = self.search_api[type_]
-        self.headers["Referer"] = f"https://www.douyin.com/search/{quote(keyword)}?type={type_text}"
+        self.headers["Referer"] = f"https://www.douyin.com/search/{quote(keyword)}?type={
+        type_text}"
         for _ in range(page):
             if not self.get_search_data(
                     type_,
@@ -1350,7 +1352,7 @@ class NewAcquirer:
         self.ua_code = params.ua_code
         self.log = params.log
         self.xb = params.xb
-        self.colour = params.colour
+        self.console = params.console
         self.proxies = params.proxies
         self.max_retry = params.max_retry
         self.timeout = params.timeout
@@ -1494,7 +1496,7 @@ class Account(NewAcquirer):
             tab="post",
             earliest="",
             latest="",
-            pages=9999):
+            pages=99999):
         super().__init__(params)
         self.sec_user_id = sec_user_id
         self.api, self.favorite, self.pages = self.check_type(tab, pages)
@@ -1535,7 +1537,7 @@ class Account(NewAcquirer):
     def run(self):
         num = 1
         while not self.finished and self.pages > 0:
-            print(self.colour.colorize(f"正在获取第 {num} 页数据...", 94))
+            self.console.print(f"正在获取第 {num} 页数据...", style=GENERAL)
             self.get_account_data(self.api)
             self.early_stop()
             self.pages -= 1
@@ -1714,7 +1716,7 @@ class Hot(NewAcquirer):
 
 
 class Collection(NewAcquirer):
-    def __init__(self, params: Parameter, pages=9999):
+    def __init__(self, params: Parameter, pages=99999):
         super().__init__(params)
         self.pages = pages
 
