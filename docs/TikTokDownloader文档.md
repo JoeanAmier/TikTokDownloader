@@ -783,9 +783,6 @@
 <p>启用检查更新功能后，运行程序时会向 <code>https://github.com/JoeanAmier/TikTokDownloader/releases/latest</code>
 发送请求获取最新 <code>Releases</code> 版本号，并提示是否存在新版本。</p>
 <p>如果存在新版本会提示新版本的 <code>URL</code> 地址，不会自动下载更新。</p>
-<h2>启用/禁用彩色交互提示</h2>
-<p>程序支持终端彩色交互提示；如果终端不支持控制符，程序会直接输出代码，此时建议禁用彩色交互提示。</p>
-<p>推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a> ！</p>
 <h2>启用/禁用作品下载记录</h2>
 <p>用于解决下载作品文件后移动作品文件导致重复下载的问题！</p>
 <ul>
