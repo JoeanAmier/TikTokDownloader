@@ -41,12 +41,12 @@ SERVER_HOST = "127.0.0.1"
 SERVER_PORT = 5000
 
 # 彩色交互提示颜色设置，支持标准颜色名称、Hex、RGB 格式
-MASTER = "#fff200"
-PROMPT = "bright_cyan"
-GENERAL = "bright_white"
-ERROR = "bright_red"
-WARNING = "bright_yellow"
-INFO = "bright_green"
+MASTER = "b #fff200"
+PROMPT = "b bright_cyan"
+GENERAL = "b bright_white"
+ERROR = "b bright_red"
+WARNING = "b bright_yellow"
+INFO = "b bright_green"
 
 
 def wait():
