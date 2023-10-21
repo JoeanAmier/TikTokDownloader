@@ -18,6 +18,7 @@ __all__ = [
     "WARNING",
     "ERROR",
     "INFO",
+    "GENERAL",
 ]
 
 # 线程池最大线程数量，多线程下载文件时使用
@@ -42,6 +43,7 @@ SERVER_PORT = 5000
 # 彩色交互提示颜色设置，支持标准颜色名称、Hex、RGB 格式
 MASTER = "#fff200"
 PROMPT = "bright_cyan"
+GENERAL = "bright_white"
 ERROR = "bright_red"
 WARNING = "bright_yellow"
 INFO = "bright_green"
