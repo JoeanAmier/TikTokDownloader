@@ -171,9 +171,9 @@ class TikTokDownloader:
         register(self.blacklist.close)
         app.run(host=SERVER_HOST, port=SERVER_PORT, debug=not self.STABLE)
 
-    def change_config(self, file: Path, tip="修改设置成功！"):
+    def change_config(self, file: Path):
         FileManager.deal_config(file)
-        self.console.print(tip, style=GENERAL)
+        self.console.print("修改设置成功！", style=GENERAL)
         self.check_config()
         self.main()
 
