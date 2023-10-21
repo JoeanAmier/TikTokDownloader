@@ -10,7 +10,7 @@ from rich.console import Console
 from src.Configuration import Settings
 from src.CookieTool import Cookie
 from src.CookieTool import Register
-from src.Customizer import MASTER, WARNING, INFO, ERROR
+from src.Customizer import MASTER, WARNING, INFO, ERROR, GENERAL
 from src.Customizer import SERVER_HOST
 from src.Customizer import SERVER_PORT
 from src.FileManager import DownloadRecorder
@@ -71,6 +71,7 @@ class TikTokDownloader:
         self.settings = Settings(self.PROJECT_ROOT, self.console)
         self.register = Register(
             self.settings,
+            self.console,
             self.x_bogus,
             self.user_agent,
             self.code)
@@ -80,20 +81,19 @@ class TikTokDownloader:
             self.console.print(
                 "\n".join(
                     self.DISCLAIMER_TEXT),
-                style=f"b {MASTER}")
+                style=MASTER)
             if self.console.input(
-                    f"[b {MASTER}]是否已仔细阅读上述免责声明(YES/NO): [/b {MASTER}]").upper() != "YES":
+                    f"[{MASTER}]是否已仔细阅读上述免责声明(YES/NO): [/{MASTER}]").upper() != "YES":
                 exit()
             FileManager.deal_config(self.DISCLAIMER["path"])
             self.console.print()
 
     def version(self):
-        self.console.print(
-            f"{self.LINE}\n\n\n{self.NAME.center(self.WIDTH)}\n\n\n{self.LINE}\n",
-            style=f"b {MASTER}")
-        self.console.print(f"项目仓库: {self.REPOSITORY}", style=f"b {MASTER}")
-        self.console.print(f"项目文档: {self.DOCUMENTATION}", style=f"b {MASTER}")
-        self.console.print(f"开源许可: {self.LICENCE}\n", style=f"b {MASTER}")
+        self.console.print(f"{self.LINE}\n\n\n{self.NAME.center(
+            self.WIDTH)}\n\n\n{self.LINE}\n", style=MASTER)
+        self.console.print(f"项目仓库: {self.REPOSITORY}", style=MASTER)
+        self.console.print(f"项目文档: {self.DOCUMENTATION}", style=MASTER)
+        self.console.print(f"开源许可: {self.LICENCE}\n", style=MASTER)
 
     def check_config(self):
         folder = ("./src/config", "./cache", "./cache/temp")
@@ -114,16 +114,16 @@ class TikTokDownloader:
             tag = float(response.headers['Location'].split("/")[-1])
             if tag > self.VERSION:
                 self.console.print(
-                    f"检测到新版本: {tag}", style=f"b {WARNING}")
+                    f"检测到新版本: {tag}", style=WARNING)
                 self.console.print(self.RELEASES)
             if tag == self.VERSION and not self.STABLE:
                 self.console.print(
-                    "当前版本为测试版, 可更新至稳定版", style=f"b {WARNING}")
+                    "当前版本为测试版, 可更新至稳定版", style=WARNING)
                 self.console.print(self.RELEASES)
             else:
-                self.console.print("当前已是最新版本", style=f"b {INFO}")
+                self.console.print("当前已是最新版本", style=INFO)
         except (exceptions.ReadTimeout, exceptions.ConnectionError):
-            self.console.print("检测新版本失败", style=f"b {ERROR}")
+            self.console.print("检测新版本失败", style=ERROR)
         self.console.print()
 
     def main(self):
@@ -173,7 +173,7 @@ class TikTokDownloader:
 
     def change_config(self, file: Path, tip="修改设置成功！"):
         FileManager.deal_config(file)
-        print(tip)
+        self.console.print(tip, style=GENERAL)
         self.check_config()
         self.main()
 
@@ -185,7 +185,7 @@ class TikTokDownloader:
         if cookie := self.register.run():
             self.cookie.extract(cookie, False)
         else:
-            print("扫码登录失败，未写入 Cookie！")
+            self.console.print("扫码登录失败，未写入 Cookie！", style=WARNING)
         self.main()
 
     def compatible(self, mode: str):
@@ -197,7 +197,7 @@ class TikTokDownloader:
             self.complete()
         elif mode == "4":
             self.console.print(
-                "注意：该模式暂不支持并发请求！仅以 API 形式返回数据提供调用！", style="b #fffa65")
+                "注意：该模式暂不支持并发请求！仅以 API 形式返回数据提供调用！", style=WARNING)
             self.server(APIServer)
         elif mode == "5":
             self.server(WebUI)
@@ -213,7 +213,7 @@ class TikTokDownloader:
             self.settings.create()
             self.console.print(
                 "建议根据实际使用需求修改配置文件 settings.json！\n",
-                style=f"b {INFO}")
+                style=GENERAL)
 
     def run(self):
         self.check_config()

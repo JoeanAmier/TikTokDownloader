@@ -9,7 +9,7 @@ from types import SimpleNamespace
 from requests import exceptions
 from requests import get
 
-from src.Customizer import WARNING, INFO, ERROR
+from src.Customizer import WARNING, INFO, ERROR, GENERAL
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.Recorder import BaseLogger
@@ -62,7 +62,7 @@ class Settings:
             dump(self.__default, f, indent=4, ensure_ascii=False)
         self.console.print(
             "创建默认配置文件 settings.json 成功！\n请参考项目文档的快速入门部分，设置 Cookie 后重新运行程序！",
-            style=f"b {INFO}")
+            style=GENERAL)
 
     def read(self):
         """读取配置文件，如果没有配置文件，则生成配置文件"""
