@@ -797,7 +797,6 @@ class NewDownloader:
         self.chunk = params.chunk
         self.max_retry = params.max_retry
         self.blacklist = params.blacklist
-        # self.id_set = self.blacklist
         self.__thread = ThreadPoolExecutor if params.thread else FakeThreadPool
         self.__pool = None
         self.__temp = main_path.joinpath("./cache/temp")

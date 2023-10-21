@@ -117,6 +117,7 @@ class DownloadRecorder:
         self.switch = switch
         self.path = folder.joinpath("IDRecorder.txt")
         self.file = None
+        self.record = self.get_set()
 
     def get_set(self) -> set:
         return self.read_file() if self.switch else set()
@@ -137,6 +138,7 @@ class DownloadRecorder:
 
     def update_id(self, id_):
         if self.switch:
+            self.record.add(id_)
             self.file.write(f"{id_}\n")
 
     def close(self):
