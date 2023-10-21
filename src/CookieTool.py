@@ -5,6 +5,8 @@ from qrcode import QRCode
 from requests import exceptions
 from requests import get
 
+from src.Customizer import ERROR
+from src.Customizer import GENERAL
 from src.Customizer import check_login
 from src.Parameter import TtWid
 from src.Parameter import VerifyFp
@@ -15,19 +17,21 @@ __all__ = ["Cookie", "Register"]
 class Cookie:
     pattern = r'(?P<key>[^=;,]+)=(?P<value>[^;,]+)'
 
-    def __init__(self, settings, colour):
+    def __init__(self, settings, console):
         self.settings = settings
-        self.colour = colour
+        self.console = console
 
     def run(self):
         """提取 Cookie 并写入配置文件"""
-        if not (cookie := input("请粘贴 Cookie 内容：")):
+        if not (
+                cookie := self.console.input(
+                    f"[b {GENERAL}]请粘贴 Cookie 内容：[/b {GENERAL}]")):
             return
         self.extract(cookie)
 
     def extract(self, cookie: str, clean=True):
         if clean:
-            get_key = {
+            keys = {
                 "passport_csrf_token": None,
                 "passport_csrf_token_default": None,
                 "passport_auth_status": None,
@@ -47,20 +51,19 @@ class Cookie:
             for match in matches:
                 key = match.group('key').strip()
                 value = match.group('value').strip()
-                if key in get_key:
-                    get_key[key] = value
-            self.check_key(get_key)
+                if key in keys:
+                    keys[key] = value
+            self.check_key(keys)
         else:
-            get_key = cookie
-        self.write(get_key)
-        print("写入 Cookie 成功！")
+            keys = cookie
+        self.write(keys)
+        self.console.input("写入 Cookie 成功！", style=f"b {GENERAL}")
 
-    @staticmethod
-    def check_key(items):
+    def check_key(self, items):
         if not items["sessionid_ss"]:
-            print("当前 Cookie 未登录")
+            self.console.print("当前 Cookie 未登录", style=f"b {GENERAL}")
         else:
-            print("当前 Cookie 已登录")
+            self.console.print("当前 Cookie 已登录", style=f"b {GENERAL}")
         keys_to_remove = [key for key, value in items.items() if value is None]
         for key in keys_to_remove:
             del items[key]
@@ -98,9 +101,10 @@ class Register:
         "language": "zh",
     }
 
-    def __init__(self, settings, xb, user_agent, ua_code):
+    def __init__(self, settings, console, xb, user_agent, ua_code):
         self.xb = xb
         self.settings = settings
+        self.console = console
         self.headers = {
             "User-Agent": user_agent,
             "Referer": "https://www.douyin.com/",
@@ -124,8 +128,7 @@ class Register:
             cookie[key] = value
         return cookie
 
-    @staticmethod
-    def generate_qr_code(url: str):
+    def generate_qr_code(self, url: str):
         qr_code = QRCode()
         assert url, "无效的登录二维码数据"
         qr_code.add_data(url)
@@ -135,8 +138,9 @@ class Register:
         try:
             image.show()
         except AttributeError:
-            print("打开登录二维码图片失败，请扫描终端二维码登录！")
-            print("如果登录二维码无法识别，请尝试更换终端或者手动复制粘贴写入 Cookie！")
+            self.console.print("打开登录二维码图片失败，请扫描终端二维码登录！", style=f"b {GENERAL}")
+            self.console.print("如果登录二维码无法识别，请尝试更换终端或者手动复制粘贴写入 Cookie！",
+                               style=f"b {GENERAL}")
 
     def get_qr_code(self, version=23):
         self.verify_fp = VerifyFp.get_verify_fp()
@@ -169,7 +173,10 @@ class Register:
             # print(response.json())  # 调试使用
             data = response.json().get("data")
             if not data:
-                print(f"发生未知错误: {response.json()}")
+                self.console.print(
+                    f"发生未知错误: {
+                    response.json()}",
+                    style=f"b {ERROR}")
                 retry = 15
             elif (s := data["status"]) == "3":
                 redirect_url = data["redirect_url"]
