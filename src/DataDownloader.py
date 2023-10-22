@@ -1,17 +1,28 @@
 import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from itertools import cycle
 from pathlib import Path
 from shutil import move
-from threading import Thread
 from types import SimpleNamespace
 
 import requests
 from emoji import replace_emoji
+from requests import get
+from rich.progress import (
+    BarColumn,
+    DownloadColumn,
+    Progress,
+    TextColumn,
+    TimeRemainingColumn,
+    TransferSpeedColumn,
+    TimeElapsedColumn,
+)
 
 from src.Configuration import Parameter
 from src.Customizer import MAX_WORKERS
+from src.Customizer import (
+    PROGRESS,
+)
 from src.Customizer import wait
 from src.DataAcquirer import check_cookie
 from src.DataAcquirer import retry
@@ -683,7 +694,7 @@ class Downloader:
         elif type_ == "jpeg" and id_ and id_ != self.image_id:
             self.image += 1
         self.remove_file(temp_path, full_path)
-        # self.log.info(f"{file} 下载成功")
+        self.log.info(f"{file} 下载成功")
         return True
 
     def remove_file(self, temp, path):
@@ -777,6 +788,25 @@ class Downloader:
 
 class NewDownloader:
     Phone_headers = None
+    progress = Progress(
+        TextColumn(
+            "[progress.description]{task.description}",
+            style=PROGRESS,
+            justify="right"),
+        "•",
+        BarColumn(
+            bar_width=None),
+        "[progress.percentage]{task.percentage:>3.1f}%",
+        "•",
+        DownloadColumn(
+            binary_units=True),
+        "•",
+        TransferSpeedColumn(),
+        "•",
+        TimeElapsedColumn(),
+        "•",
+        TimeRemainingColumn(),
+    )
 
     def __init__(self, params: Parameter, main_path: Path):
         self.cookie = params.cookie
@@ -840,14 +870,22 @@ class NewDownloader:
         pass
 
     def batch_processing(self, data: list[dict], root: Path):
-        count = SimpleNamespace(downloaded=set(), skipped=set())
+        if not self.download:
+            return
+        count = SimpleNamespace(
+            downloaded_image=set(),
+            skipped_image=set(),
+            downloaded_video=set(),
+            skipped_video=set()
+        )
         with self.__thread(max_workers=MAX_WORKERS) as self.__pool:
             for item in data:
                 item = Extractor.generate_data_object(item)
                 name = self.generate_works_name(item)
-                root = self.create_works_folder(root, name)
+                temp_root, actual_root = self.deal_folder_path(root, name)
                 if (t := Extractor.safe_extract(item, "type")) == "图集":
-                    self.download_image(root, name, item, count)
+                    self.download_image(
+                        name, item, count, temp_root, actual_root)
                 elif t == "视频":
                     self.download_video(root, name, item, count)
                 else:
@@ -855,24 +893,51 @@ class NewDownloader:
                 self.download_music(root, name, item)
                 self.download_cover(root, name, item)
 
+    def deal_folder_path(self, root: Path, name: str) -> tuple[Path, Path]:
+        root = self.create_works_folder(root, name)
+        root.mkdir(exist_ok=True)
+        temp = self.__temp.joinpath(name)
+        actual = root.joinpath(name)
+        return temp, actual
+
     def is_in_blacklist(self, id_: str) -> bool:
         return id_ in self.blacklist.record
 
+    @staticmethod
+    def is_exists(path: Path) -> bool:
+        return path.exists()
+
+    def is_skip(self, id_: str, path: Path) -> bool:
+        return self.is_in_blacklist(id_) or self.is_exists(path)
+
     def download_image(
             self,
-            root: Path,
             name: str,
             item: SimpleNamespace,
-            count: SimpleNamespace) -> None:
-        if self.is_in_blacklist(id_ := Extractor.safe_extract(item, "id")):
-            count.skipped.add(id_)
-            return
+            count: SimpleNamespace,
+            temp_root: Path,
+            actual_root: Path) -> None:
         for index, img in enumerate(Extractor.safe_extract(item, "downloads")):
+            if self.is_in_blacklist(id_ := Extractor.safe_extract(item, "id")):
+                count.skipped_image.add(id_)
+                self.log.info(f"图集 {id_} 存在下载记录，跳过下载")
+                break
+            elif self.is_exists(p := actual_root.with_name(f"{name}_{index + 1}").with_suffix(".jpeg")):
+                self.log.info(f"图集 {id_}_{index + 1} 文件已存在，跳过下载")
+                continue
             self.__pool.submit(
                 self.request_file,
                 img,
-                root,
-                f"{name}_{index + 1}.jpeg",
+                temp_root.with_name(
+                    f"{name}_{
+                    index +
+                    1}").with_suffix(".jpeg"),
+                p,
+                f"图集 {id_}_{
+                index +
+                1}",
+                id_,
+                count,
             )
 
     def download_video(
@@ -900,11 +965,72 @@ class NewDownloader:
     def download_live(self) -> None:
         pass
 
-    def request_file(self, url: str, root: Path, name: str) -> bool:
-        pass
+    # @retry
+    def request_file(
+            self,
+            url: str,
+            temp: Path,
+            actual: Path,
+            show: str,
+            id_: str,
+            count: SimpleNamespace,
+            tiktok=False,
+            unknown_size=False) -> bool:
+        try:
+            with get(
+                    url,
+                    stream=True,
+                    proxies=self.proxies,
+                    headers=self.Phone_headers if tiktok else self.PC_headers) as response:
+                if not (
+                        content := int(
+                            response.headers.get(
+                                'content-length',
+                                0))) and not unknown_size:
+                    self.log.warning(f"{url} 响应内容为空")
+                    return False
+                if response.status_code != 200:
+                    self.log.warning(
+                        f"{response.url} 响应码异常: {response.status_code}")
+                    return False
+                elif all((self.max_size, content, content > self.max_size)):
+                    self.log.info(f"{show} 文件大小超出限制，跳过下载")
+                    return True
+                return self.download_file(
+                    temp,
+                    actual,
+                    show,
+                    id_,
+                    response,
+                    content,
+                    count.downloaded_image)
+        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
+            self.log.warning(f"网络异常: {e}")
+            return False
 
-    def download_file(self, urls: list) -> bool:
-        pass
+    def download_file(
+            self,
+            temp: Path,
+            actual: Path,
+            show: str,
+            id_: str,
+            response,
+            content: int,
+            count: set) -> bool:
+        progress_id = self.progress.add_task(show, total=content)
+        try:
+            with temp.open("wb") as f:
+                for chunk in response.iter_content(chunk_size=self.chunk):
+                    f.write(chunk)
+                    self.progress.update(progress_id, advance=len(chunk))
+        except requests.exceptions.ChunkedEncodingError:
+            self.log.warning(f"{show} 由于网络异常下载中断")
+            self.delete_file(temp)
+            return False
+        self.save_file(temp, actual)
+        self.blacklist.record.add(id_)
+        count.add(id_)
+        return True
 
     def storage_folder(
             self,
@@ -931,9 +1057,13 @@ class NewDownloader:
     def create_works_folder(self, root: Path, name: str) -> Path:
         return root.joinpath(name) if self.folder_mode else root
 
+    @staticmethod
+    def save_file(temp: Path, actual: Path):
+        move(temp.resolve(), actual.resolve())
+
     def delete_file(self, path: Path):
         path.unlink()
-        self.log.info(f"文件 {path} 已删除")
+        self.log.info(f"文件 {path.name}{path.suffix} 已删除")
 
     @staticmethod
     def extract_addition(
@@ -959,152 +1089,3 @@ class FakeThreadPool:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
-
-
-class NoneBar:
-    def __init__(self, *args, **kwargs):
-        pass
-
-    def update(self, *args, **kwargs):
-        pass
-
-    @staticmethod
-    def bytes_to_mb(bytes_value):
-        return bytes_value / (1024 * 1024)
-
-    @staticmethod
-    def direct(text, *args, **kwargs):
-        return text
-
-
-class ProgressBar(NoneBar):
-    def __init__(
-            self,
-            total,
-            text="文件",
-            colorize=None,
-            length=10,
-            fill='█',
-            solo=True,
-            *args,
-            **kwargs):
-        super().__init__(*args, **kwargs)
-        self.params = {"end": "", "flush": True} if solo else {}
-        self.colorize = colorize or self.direct
-        self.text = text
-        self.total = total
-        self.length = length
-        self.fill = fill
-        self.downloaded_size = 0
-        self.start_time = time.time()
-        self.update(0)
-
-    def update(self, chunk_size):
-        self.downloaded_size = min(
-            self.downloaded_size + chunk_size, self.total)
-        percent = 100 * (self.downloaded_size / float(self.total))
-        filled_length = int(self.length * self.downloaded_size // self.total)
-        bar = self.fill * filled_length + '-' * (self.length - filled_length)
-        elapsed_time = time.time() - self.start_time
-        print(
-            self.colorize(
-                f'\r{
-                self.text}下载进度: |{bar}| {
-                percent:.1f}%  耗时: {
-                elapsed_time:.1f}s  文件: {
-                self.bytes_to_mb(
-                    self.downloaded_size):.1f}MB/{
-                self.bytes_to_mb(
-                    self.total):.1f}MB',
-                95),
-            **self.params)
-
-
-class LoopingBar(NoneBar):
-    def __init__(self,
-                 text="文件",
-                 colorize=None,
-                 animation=(
-                         '⣾',
-                         '⣷',
-                         '⣯',
-                         '⣟',
-                         '⡿',
-                         '⢿',
-                         '⣻',
-                         '⣽'),
-                 solo=True,
-                 *args,
-                 **kwargs):
-        super().__init__(*args, **kwargs)
-        self.params = {"end": "", "flush": True} if solo else {}
-        self.colorize = colorize or self.direct
-        self.text = text
-        self.spin_chars = cycle(animation)
-        self.download_size = 0
-        self.start_time = time.time()
-        self.update(0)
-
-    def update(self, size: int, finished=False):
-        elapsed_time = time.time() - self.start_time
-        spin_char = next(self.spin_chars)
-        self.download_size += size
-        print(
-            self.colorize(
-                f"\r{
-                self.text}{
-                '下载完成' if finished else '正在下载'}: {
-                '✔️' if finished else spin_char}  耗时: {
-                elapsed_time:.1f}s  文件: {
-                self.bytes_to_mb(
-                    self.download_size):.1f}MB",
-                95),
-            **self.params)
-
-
-class LoadingAnimation:
-    def __init__(
-            self,
-            text="文件正在下载",
-            colorize=None,
-            animation=(
-                    '⣾',
-                    '⣷',
-                    '⣯',
-                    '⣟',
-                    '⡿',
-                    '⢿',
-                    '⣻',
-                    '⣽'),
-            frequency=0.25):
-        self.colorize = colorize or NoneBar.direct
-        self.text = text
-        self.animation_chars = cycle(animation)
-        self.frequency = frequency
-        self.running = True
-
-    def run(self):
-        while self.running:
-            print(
-                self.colorize(
-                    f"\r{self.text}: {next(self.animation_chars)}",
-                    95),
-                end="",
-                flush=True)
-            time.sleep(self.frequency)
-        print("\r", end="", flush=True)
-
-    def stop(self):
-        self.running = False
-        print()
-
-
-if __name__ == "__main__":
-    demo = LoadingAnimation()
-    thread = Thread(target=demo.run)
-    thread.start()
-    wait()
-    demo.stop()
-    print("运行结束！")
-    a = FakeThreadPool
-    print(a == FakeThreadPool)
