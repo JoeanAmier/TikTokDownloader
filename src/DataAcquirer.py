@@ -10,7 +10,11 @@ from requests import request
 
 from src.Configuration import Parameter
 from src.CookieTool import Register
-from src.Customizer import GENERAL
+from src.Customizer import (
+    GENERAL,
+    WARNING,
+)
+from src.Customizer import wait
 from src.DataExtractor import Extractor
 
 __all__ = [
@@ -55,27 +59,22 @@ __all__ = [
 #         return False
 #
 #     return inner
-#
-#
-# def retry(finish=False):
-#     """发生错误时尝试重新执行，装饰的函数需要返回布尔值"""
-#
-#     def inner(function):
-#         def execute(self, *args, **kwargs):
-#             for i in range(self.retry):
-#                 if result := function(self, *args, **kwargs):
-#                     return result
-#                 else:
-#                     print(self.colour.colorize(f"正在尝试第 {i + 1} 次重试", 93))
-#             if not (result := function(self, *args, **kwargs)) and finish:
-#                 self.finish = True
-#             return result
-#
-#         return execute
-#
-#     return inner
-#
-#
+def retry(function):
+    """发生错误时尝试重新执行，装饰的函数需要返回布尔值"""
+
+    def inner(self, *args, **kwargs):
+        finished = kwargs.pop("finished", False)
+        for i in range(self.max_retry):
+            if result := function(self, *args, **kwargs):
+                return result
+            self.console.print(f"正在尝试第 {i + 1} 次重试", style=WARNING)
+        if not (result := function(self, *args, **kwargs)) and finished:
+            self.finished = True
+        return result
+
+    return inner
+
+
 # def update_headers(headers):
 #     def inner(function):
 #         def execute(self, *args, **kwargs):
@@ -1356,7 +1355,7 @@ class Acquirer:
         self.response = []
         self.finished = False
 
-    # @retry
+    @retry
     def send_request(
             self,
             url: str,
@@ -1371,6 +1370,7 @@ class Acquirer:
                 proxies=self.proxies,
                 timeout=self.timeout,
                 headers=self.headers, **kwargs)
+            wait()
         except (
                 exceptions.ProxyError,
                 exceptions.SSLError,
@@ -1412,7 +1412,7 @@ class Share:
             return " ".join(self.get_url(i) for i in u)
         return text
 
-    # @retry
+    @retry
     def get_url(self, url: str) -> str:
         try:
             response = requests.get(
@@ -1534,7 +1534,7 @@ class Account(Acquirer):
         num = 1
         while not self.finished and self.pages > 0:
             self.console.print(f"正在获取第 {num} 页数据...", style=GENERAL)
-            self.get_account_data(self.api)
+            self.get_account_data(self.api, finished=True)
             self.early_stop()
             self.pages -= 1
             num += 1
@@ -1542,7 +1542,7 @@ class Account(Acquirer):
         self.favorite_mode()
         return self.response
 
-    def get_account_data(self, api: str, start=None, end=None):
+    def get_account_data(self, api: str, start=None, end=None, finished=False):
         params = {
             "device_platform": "webapp",
             "aid": "6383",
@@ -1558,7 +1558,8 @@ class Account(Acquirer):
         if not (
                 data := self.send_request(
                     api,
-                    params=params)):
+                    params=params,
+                    finished=finished)):
             self.finished = True
             self.log.warning("获取账号作品数据失败")
             return
