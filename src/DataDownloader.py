@@ -897,8 +897,7 @@ class NewDownloader:
                        for i in self.name_format)
 
     def create_works_folder(self, root: Path, name: str) -> Path:
-        if not self.folder_mode:
-            return root
+        return root.joinpath(name) if self.folder_mode else root
 
     def delete_file(self, path: Path):
         path.unlink()
