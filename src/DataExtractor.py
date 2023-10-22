@@ -226,7 +226,7 @@ class Extractor:
         item["signature"] = self.safe_extract(data, "signature")
         item["nickname"] = self.clean.clean_name(self.safe_extract(
             data, "nickname", "已注销账号")) or Account.temp_data()
-        item["mark"] = mark or item["nickname"]
+        item["mark"] = self.clean.clean_name(mark) or item["nickname"]
 
     def extract_not_post(self, container: list, data: SimpleNamespace) -> None:
         data_dict = {
