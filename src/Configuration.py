@@ -146,6 +146,7 @@ class Parameter:
         self.log = log
         self.xb = xb
         self.console = console
+        self.cookie_cache = None
         self.cookie = self.check_cookie(cookie)
         self.root = self.check_root(root)
         self.folder_name = self.check_folder_name(folder_name)
@@ -169,8 +170,7 @@ class Parameter:
         if isinstance(cookie, dict):
             return cookie
         elif isinstance(cookie, str):
-            self.headers["Cookie"] = cookie
-            # self.log.warning("Cookie 参数格式应为字典格式")
+            self.cookie_cache = cookie
         else:
             self.log.warning("Cookie 参数格式错误")
         return {}
