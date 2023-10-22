@@ -1297,6 +1297,9 @@ def update_cookie(function):
             active_cookie = self.cookie.copy()
             Parameter.add_cookie(active_cookie)
             self.headers["Cookie"] = Register.generate_cookie(active_cookie)
+        elif self.cookie_cache:
+            cookie = Parameter.add_cookie(self.cookie_cache)
+            self.headers["Cookie"] = cookie
         return function(self, *args, **kwargs)
 
     return inner

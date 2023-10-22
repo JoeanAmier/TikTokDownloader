@@ -9,6 +9,7 @@ from types import SimpleNamespace
 from requests import exceptions
 from requests import get
 
+from src.CookieTool import Register
 from src.Customizer import WARNING, INFO, ERROR, GENERAL
 from src.Parameter import MsToken
 from src.Parameter import TtWid
@@ -176,10 +177,16 @@ class Parameter:
         return {}
 
     @staticmethod
-    def add_cookie(cookie: dict) -> None:
-        for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
-            if isinstance(i, dict):
-                cookie |= i
+    def add_cookie(cookie: dict | str) -> None | str:
+        if isinstance(cookie, dict):
+            for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
+                if isinstance(i, dict):
+                    cookie |= i
+        elif isinstance(cookie, str):
+            for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
+                if isinstance(i, dict):
+                    cookie += Register.generate_cookie(i)
+            return cookie
 
     def check_root(self, root: str) -> Path:
         if root and (r := Path(root)).is_dir():
