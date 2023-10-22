@@ -53,7 +53,6 @@ class Settings:
             "Chunk": 512 * 1024,  # 每次从服务器接收的数据块大小
             "Max_Retry": 10,  # 重试最大次数
             "Max_Pages": 0,
-            "Thread": False,
         }  # 默认配置
 
     def create(self):
@@ -136,7 +135,6 @@ class Parameter:
             max_retry: int,
             max_pages: int,
             blacklist,
-            thread_: bool,
             timeout=10,
     ):
         self.main_path = main_path  # 项目根路径
@@ -164,7 +162,6 @@ class Parameter:
         self.max_retry = self.check_max_retry(max_retry)
         self.max_pages = self.check_max_pages(max_pages)
         self.blacklist = blacklist
-        self.thread = thread_
         self.timeout = self.check_timeout(timeout)
 
     def check_cookie(self, cookie: dict | str) -> dict:

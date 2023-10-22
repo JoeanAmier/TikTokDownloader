@@ -829,7 +829,7 @@ class NewDownloader:
         self.chunk = params.chunk
         self.max_retry = params.max_retry
         self.blacklist = params.blacklist
-        self.__thread = ThreadPoolExecutor if params.thread else FakeThreadPool
+        self.__thread = ThreadPoolExecutor
         self.__pool = None
         self.__temp = main_path.joinpath("./cache/temp")
 
@@ -1074,18 +1074,3 @@ class NewDownloader:
             return data, data[0]["uid"], data[0]["nickname"]
         else:
             return data[:-1], data[-1]["uid"], data[-1]["nickname"]
-
-
-class FakeThreadPool:
-    def __init__(self, *args, **kwargs):
-        pass
-
-    @staticmethod
-    def submit(function, *args, **kwargs):
-        function(*args, **kwargs)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
