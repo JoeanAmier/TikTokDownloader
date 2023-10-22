@@ -19,6 +19,7 @@ __all__ = [
     "ERROR",
     "INFO",
     "GENERAL",
+    "PROGRESS",
 ]
 
 # 线程池最大线程数量，多线程下载文件时使用
@@ -44,6 +45,7 @@ SERVER_PORT = 5000
 MASTER = "b #fff200"
 PROMPT = "b bright_cyan"
 GENERAL = "b bright_white"
+PROGRESS = "bright_magenta"
 ERROR = "b bright_red"
 WARNING = "b bright_yellow"
 INFO = "b bright_green"

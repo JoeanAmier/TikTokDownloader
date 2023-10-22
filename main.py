@@ -10,7 +10,13 @@ from rich.console import Console
 from src.Configuration import Settings
 from src.CookieTool import Cookie
 from src.CookieTool import Register
-from src.Customizer import MASTER, WARNING, INFO, ERROR, GENERAL
+from src.Customizer import (
+    MASTER,
+    WARNING,
+    INFO,
+    ERROR,
+    GENERAL
+)
 from src.Customizer import SERVER_HOST
 from src.Customizer import SERVER_PORT
 from src.FileManager import DownloadRecorder
