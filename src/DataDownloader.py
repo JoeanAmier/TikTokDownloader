@@ -5,6 +5,7 @@ from itertools import cycle
 from pathlib import Path
 from shutil import move
 from threading import Thread
+from types import SimpleNamespace
 
 import requests
 from emoji import replace_emoji
@@ -15,6 +16,7 @@ from src.Customizer import wait
 from src.DataAcquirer import check_cookie
 from src.DataAcquirer import retry
 from src.DataAcquirer import update_cookie
+from src.DataExtractor import Extractor
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
@@ -839,11 +841,12 @@ class NewDownloader:
 
     def batch_processing(self, data: list[dict], root: Path):
         for item in data:
+            item = Extractor.generate_data_object(item)
             name = self.generate_works_name(item)
             root = self.create_works_folder(root, name)
-            if item["type"] == "图集":
+            if (t := Extractor.safe_extract(item, "type")) == "图集":
                 self.download_image(root, name)
-            elif item["type"] == "视频":
+            elif t == "视频":
                 self.download_video(root, name)
             else:
                 raise ValueError
@@ -889,7 +892,7 @@ class NewDownloader:
         folder.mkdir(exist_ok=True)
         return folder
 
-    def generate_works_name(self, data: dict) -> str:
+    def generate_works_name(self, data: SimpleNamespace) -> str:
         pass
 
     def create_works_folder(self, root: Path, name: str) -> Path:

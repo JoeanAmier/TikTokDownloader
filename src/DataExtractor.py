@@ -12,7 +12,7 @@ __all__ = ["Extractor"]
 class Extractor:
     def __init__(self, params: Parameter):
         self.log = params.log
-        self.date = params.date
+        self.date_format = params.date_format
         self.clean = params.clean
         self.type = {
             "user": self.user,
@@ -115,7 +115,7 @@ class Extractor:
 
     def format_date(self, data: SimpleNamespace) -> str:
         return strftime(
-            self.date,
+            self.date_format,
             localtime(
                 self.safe_extract(data, "create_time") or None))
 
