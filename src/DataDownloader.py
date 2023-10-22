@@ -787,7 +787,7 @@ class NewDownloader:
         self.console = params.console
         self.root = params.root
         self.folder_name = params.folder_name
-        self.name = params.name_format
+        self.name_format = params.name_format
         self.split = params.split
         self.folder_mode = params.folder_mode
         self.music = params.music
@@ -887,13 +887,14 @@ class NewDownloader:
         elif mix and all((id_, name)):
             folder_name = f"MIX{id_}_{mark or name}"
         else:
-            folder_name = self.folder
+            folder_name = self.folder_name
         folder = self.root.joinpath(folder_name)
         folder.mkdir(exist_ok=True)
         return folder
 
     def generate_works_name(self, data: SimpleNamespace) -> str:
-        pass
+        return "".join(Extractor.safe_extract(data, i)
+                       for i in self.name_format)
 
     def create_works_folder(self, root: Path, name: str) -> Path:
         if not self.folder_mode:

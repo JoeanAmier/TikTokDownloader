@@ -5,6 +5,7 @@ from types import SimpleNamespace
 
 from src.Configuration import Parameter
 from src.Customizer import conditional_filtering
+from src.DataAcquirer import Account
 
 __all__ = ["Extractor"]
 
@@ -68,18 +69,20 @@ class Extractor:
             raise ValueError
         return self.type[type_](data, **kwargs)
 
-    def user(self, data: list[dict], post=True) -> list[dict]:
+    def user(self, data: list[dict], post=True, mark=None) -> list[dict]:
         result = []
         template = {
             "collection_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         }
         data = conditional_filtering(data)
         if post:
-            [self.extract_user(
-                result, template, self.generate_data_object(item)) for item in data]
+            [self.extract_user(result,
+                               template,
+                               self.generate_data_object(item),
+                               mark) for item in data]
         else:
             [self.extract_user(result, template, self.generate_data_object(
-                item)) for item in data[:-1]]
+                item), mark) for item in data[:-1]]
             self.extract_not_post(result, self.generate_data_object(data[-1]))
         self.summary_works(data)
         return result
@@ -91,10 +94,11 @@ class Extractor:
             self,
             container: list,
             template: dict,
-            data: SimpleNamespace) -> None:
+            data: SimpleNamespace,
+            mark: str) -> None:
         data_dict = template.copy()
         self.extract_works_info(data_dict, data)
-        self.extract_account_info(data_dict, data)
+        self.extract_account_info(data_dict, data, mark)
         self.extract_music(data_dict, data)
         self.extract_statistics(data_dict, data)
         self.extract_tags(data_dict, data)
@@ -209,15 +213,20 @@ class Extractor:
         for tag, value in zip(("tag_1", "tag_2", "tag_3"), tags):
             item[tag] = value
 
-    def extract_account_info(self, item: dict, data: SimpleNamespace) -> None:
+    def extract_account_info(
+            self,
+            item: dict,
+            data: SimpleNamespace,
+            mark: str) -> None:
         data = self.safe_extract(data, "author")
         item["uid"] = self.safe_extract(data, "uid")
         item["sec_uid"] = self.safe_extract(data, "sec_uid")
         item["short_id"] = self.safe_extract(data, "short_id")
         item["unique_id"] = self.safe_extract(data, "unique_id")
         item["signature"] = self.safe_extract(data, "signature")
-        item["nickname"] = self.clean.clean_name(
-            self.safe_extract(data, "nickname", "已注销账号"))
+        item["nickname"] = self.clean.clean_name(self.safe_extract(
+            data, "nickname", "已注销账号")) or Account.temp_data()
+        item["mark"] = mark or item["nickname"]
 
     def extract_not_post(self, container: list, data: SimpleNamespace) -> None:
         data_dict = {
