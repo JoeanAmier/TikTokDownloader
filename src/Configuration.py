@@ -178,12 +178,13 @@ class Parameter:
 
     @staticmethod
     def add_cookie(cookie: dict | str) -> None | str:
+        parameters = (MsToken.get_ms_token(), TtWid.get_tt_wid(),)
         if isinstance(cookie, dict):
-            for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
+            for i in parameters:
                 if isinstance(i, dict):
                     cookie |= i
         elif isinstance(cookie, str):
-            for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
+            for i in parameters:
                 if isinstance(i, dict):
                     cookie += Register.generate_cookie(i)
             return cookie
