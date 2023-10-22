@@ -840,35 +840,67 @@ class NewDownloader:
         pass
 
     def batch_processing(self, data: list[dict], root: Path):
-        for item in data:
-            item = Extractor.generate_data_object(item)
-            name = self.generate_works_name(item)
-            root = self.create_works_folder(root, name)
-            if (t := Extractor.safe_extract(item, "type")) == "图集":
-                self.download_image(root, name)
-            elif t == "视频":
-                self.download_video(root, name)
-            else:
-                raise ValueError
-            self.download_music(root, name)
-            self.download_cover(root, name)
+        count = SimpleNamespace(downloaded=set(), skipped=set())
+        with self.__thread(max_workers=MAX_WORKERS) as self.__pool:
+            for item in data:
+                item = Extractor.generate_data_object(item)
+                name = self.generate_works_name(item)
+                root = self.create_works_folder(root, name)
+                if (t := Extractor.safe_extract(item, "type")) == "图集":
+                    self.download_image(root, name, item, count)
+                elif t == "视频":
+                    self.download_video(root, name, item, count)
+                else:
+                    raise ValueError
+                self.download_music(root, name, item)
+                self.download_cover(root, name, item)
 
-    def download_image(self) -> None:
+    def is_in_blacklist(self, id_: str) -> bool:
+        return id_ in self.blacklist.record
+
+    def download_image(
+            self,
+            root: Path,
+            name: str,
+            item: SimpleNamespace,
+            count: SimpleNamespace) -> None:
+        if self.is_in_blacklist(id_ := Extractor.safe_extract(item, "id")):
+            count.skipped.add(id_)
+            return
+        for index, img in enumerate(Extractor.safe_extract(item, "downloads")):
+            self.__pool.submit(
+                self.request_file,
+                img,
+                root,
+                f"{name}_{index + 1}.jpeg",
+            )
+
+    def download_video(
+            self,
+            root: Path,
+            name: str,
+            item: SimpleNamespace,
+            count: SimpleNamespace) -> None:
         pass
 
-    def download_video(self) -> None:
+    def download_music(
+            self,
+            root: Path,
+            name: str,
+            item: SimpleNamespace) -> None:
         pass
 
-    def download_music(self) -> None:
-        pass
-
-    def download_cover(self) -> None:
+    def download_cover(
+            self,
+            root: Path,
+            name: str,
+            item: SimpleNamespace) -> None:
         pass
 
     def download_live(self) -> None:
         pass
 
-    def request_file(self) -> bool:
+    def request_file(self, url: str, root: Path, name: str) -> bool:
         pass
 
     def download_file(self, urls: list) -> bool:
