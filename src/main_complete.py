@@ -2,6 +2,9 @@ from time import time
 
 from src.Customizer import PROMPT
 from src.Customizer import TEXT_REPLACEMENT
+from src.Customizer import (
+    WARNING,
+)
 from src.Customizer import failed
 from src.DataAcquirer import Acquirer
 from src.DataDownloader import Downloader
@@ -27,11 +30,13 @@ def prompt(
     return console.input(f"[{style}]{screen}[/{style}]")
 
 
-def check_save(function):
+def check_storage_format(function):
     def inner(self, *args, **kwargs):
-        if self.save:
+        if self.storage_format:
             return function(self, *args, **kwargs)
-        print(self.colour.colorize("未设置 save 参数，无法正常使用该模式！", 93))
+        self.console.print(
+            "未设置 storage_format 参数，无法正常使用该功能，详细说明请查阅项目文档！",
+            style=WARNING)
 
     return inner
 
@@ -364,7 +369,7 @@ class TikTok:
         self.download.max_size = self._data["max_size"]
         self.request.pages = self._data["pages"]
 
-    @check_save
+    @check_storage_format
     def comment_acquisition(self):
         save, root, params = self.record.run(
             self._data["root"], type_="comment", format_=self._data["save"])
@@ -507,7 +512,7 @@ class TikTok:
                 with save(root, name="UserData", **params) as file:
                     self.request.save_user(file, data)
 
-    @check_save
+    @check_storage_format
     def user_acquisition(self):
         def choose_mode() -> str:
             return prompt(
@@ -563,7 +568,7 @@ class TikTok:
 
         return words, text
 
-    @check_save
+    @check_storage_format
     def search_acquisition(self):
         self.download.favorite = True
         self.download.download = False
@@ -607,7 +612,7 @@ class TikTok:
             self.download.api_data = item
         self.request.save_user(file, item, True)
 
-    @check_save
+    @check_storage_format
     def hot_acquisition(self, api=None):
         collection_time = str(time())[:10]
         save, root, params = self.record.run(
