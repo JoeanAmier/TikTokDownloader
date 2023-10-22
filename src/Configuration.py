@@ -24,35 +24,35 @@ class Settings:
         self.file = root.joinpath("./settings.json")  # 配置文件
         self.console = console
         self.__default = {
-            "Accounts_Urls": [
-                {"Mark": "账号标识，可以设置为空字符串",
-                 "Url": "账号主页链接",
-                 "Tab": "账号主页类型",
-                 "Earliest": "作品最早发布日期",
-                 "Latest": "作品最晚发布日期"},
+            "accounts_urls": [
+                {"mark": "账号标识，可以设置为空字符串",
+                 "url": "账号主页链接",
+                 "tab": "账号主页类型",
+                 "earliest": "作品最早发布日期",
+                 "latest": "作品最晚发布日期"},
             ],
-            "Mix_Urls": [
-                {"Mark": "合集标识，可以设置为空字符串",
-                 "Url": "合集链接或者作品链接"},
+            "mix_urls": [
+                {"mark": "合集标识，可以设置为空字符串",
+                 "url": "合集链接或者作品链接"},
             ],
-            "Root": "",
-            "Folder_Name": "Download",
-            "Name_Format": "create_time nickname desc",
-            "Date_Format": "%Y-%m-%d %H.%M.%S",
-            "Split": "-",
-            "Folder_Mode": False,
-            "Music": False,
-            "Storage_Format": "",
-            "Cookie": None,
-            "Dynamic_Cover": False,
-            "Original_Cover": False,
-            "Proxies": "",
-            "Log": False,
-            "Download": True,
-            "Max_Size": 0,
-            "Chunk": 512 * 1024,  # 每次从服务器接收的数据块大小
-            "Max_Retry": 10,  # 重试最大次数
-            "Max_Pages": 0,
+            "root": "",
+            "folder_name": "Download",
+            "name_format": "create_time nickname desc",
+            "date_format": "%Y-%m-%d %H.%M.%S",
+            "split": "-",
+            "folder_mode": False,
+            "music": False,
+            "storage_format": "",
+            "cookie": None,
+            "dynamic_cover": False,
+            "original_cover": False,
+            "proxies": "",
+            "log": False,
+            "download": True,
+            "max_size": 0,
+            "chunk": 512 * 1024,  # 每次从服务器接收的数据块大小
+            "max_retry": 10,  # 重试最大次数
+            "max_pages": 0,
         }  # 默认配置
 
     def create(self):
@@ -182,45 +182,45 @@ class Parameter:
 
     def check_root(self, root: str) -> Path:
         if root and (r := Path(root)).is_dir():
-            self.log.info(f"Root 参数已设置为 {root}", False)
+            self.log.info(f"root 参数已设置为 {root}", False)
             return r
-        self.log.warning(f"Root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
+        self.log.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
         return self.main_path
 
     def check_folder_name(self, folder_name: str) -> str:
         if folder_name := Cleaner.clean_name(folder_name):
-            self.log.info(f"Folder_Name 参数已设置为 {folder_name}", False)
+            self.log.info(f"folder_name 参数已设置为 {folder_name}", False)
             return folder_name
         self.log.warning(
-            f"Folder_Name 参数 {folder_name} 不是有效的文件夹名称，程序将使用默认值：Download")
+            f"folder_name 参数 {folder_name} 不是有效的文件夹名称，程序将使用默认值：Download")
         return "Download"
 
     def check_name_format(self, name_format: str) -> list[str]:
         name_keys = name_format.strip().split(" ")
         if all(i in self.name_keys for i in name_keys):
-            self.log.info(f"Name_Format 参数已设置为 {name_format}", False)
+            self.log.info(f"name_format 参数已设置为 {name_format}", False)
             return name_keys
         else:
             self.log.warning(
-                f"Name_Format 参数 {name_format} 设置错误，程序将使用默认值：创建时间 账号昵称 作品描述")
+                f"name_format 参数 {name_format} 设置错误，程序将使用默认值：创建时间 账号昵称 作品描述")
             return ["create_time", "nickname", "desc"]
 
     def check_date_format(self, date_format: str) -> str:
         try:
             _ = strftime(date_format, localtime())
-            self.log.info(f"Date_Format 参数已设置为 {date_format}", False)
+            self.log.info(f"date_format 参数已设置为 {date_format}", False)
             return date_format
         except ValueError:
             self.log.warning(
-                f"Date_Format 参数 {date_format} 设置错误，程序将使用默认值：年-月-日 时.分.秒")
+                f"date_format 参数 {date_format} 设置错误，程序将使用默认值：年-月-日 时.分.秒")
             return "%Y-%m-%d %H.%M.%S"
 
     def check_split(self, split: str) -> str:
         for i in split:
             if i in self.clean.rule.keys():
-                self.log.warning(f"Split 参数 {split} 包含非法字符，程序将使用默认值：-")
+                self.log.warning(f"split 参数 {split} 包含非法字符，程序将使用默认值：-")
                 return "-"
-        self.log.info(f"Split 参数已设置为 {split}", False)
+        self.log.info(f"split 参数已设置为 {split}", False)
         return split
 
     def check_proxies(self, proxies: str) -> dict:
@@ -253,35 +253,35 @@ class Parameter:
 
     def check_max_size(self, max_size: int) -> int:
         max_size = max(max_size, 0)
-        self.log.info(f"Max_Size 参数已设置为 {max_size}", False)
+        self.log.info(f"max_size 参数已设置为 {max_size}", False)
         return max_size
 
     def check_chunk(self, chunk: int) -> int:
         if isinstance(chunk, int) and chunk > 0:
-            self.log.info(f"Chunk 参数已设置为 {chunk}", False)
+            self.log.info(f"chunk 参数已设置为 {chunk}", False)
             return chunk
-        self.log.warning(f"Chunk 参数 {chunk} 设置错误，程序将使用默认值：{512 * 1024}", False)
+        self.log.warning(f"chunk 参数 {chunk} 设置错误，程序将使用默认值：{512 * 1024}", False)
         return 512 * 1024
 
     def check_max_retry(self, max_retry: int) -> int:
         if isinstance(max_retry, int) and max_retry >= 0:
-            self.log.info(f"Max_Retry 参数已设置为 {max_retry}", False)
+            self.log.info(f"max_retry 参数已设置为 {max_retry}", False)
             return max_retry
-        self.log.warning(f"Max_Retry 参数 {max_retry} 设置错误，程序将使用默认值：0", False)
+        self.log.warning(f"max_retry 参数 {max_retry} 设置错误，程序将使用默认值：0", False)
         return 0
 
     def check_max_pages(self, max_pages: int) -> int:
         if isinstance(max_pages, int) and max_pages > 0:
-            self.log.info(f"Max_Pages 参数已设置为 {max_pages}", False)
+            self.log.info(f"max_pages 参数已设置为 {max_pages}", False)
             return max_pages
         elif max_pages != 0:
             self.log.warning(
-                f"Max_Pages 参数 {max_pages} 设置错误，程序将使用默认值：99999", False)
+                f"max_pages 参数 {max_pages} 设置错误，程序将使用默认值：99999", False)
         return 99999
 
     def check_timeout(self, timeout: int | float) -> int | float:
         if isinstance(timeout, (int, float)) and timeout > 0:
-            self.log.info(f"Timeout 参数已设置为 {timeout}", False)
+            self.log.info(f"timeout 参数已设置为 {timeout}", False)
             return timeout
-        self.log.warning(f"Timeout 参数 {timeout} 设置错误，程序将使用默认值：10")
+        self.log.warning(f"timeout 参数 {timeout} 设置错误，程序将使用默认值：10")
         return 10
