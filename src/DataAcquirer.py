@@ -1423,6 +1423,7 @@ class Share:
                 timeout=10,
                 proxies=self.proxies,
                 headers=self.headers, )
+            wait()
         except (
                 requests.exceptions.ProxyError,
                 requests.exceptions.SSLError,
