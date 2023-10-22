@@ -136,6 +136,7 @@ class Parameter:
             max_pages: int,
             blacklist,
             timeout=10,
+            **kwargs,
     ):
         self.main_path = main_path  # 项目根路径
         self.headers = {
