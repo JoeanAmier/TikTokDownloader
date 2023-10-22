@@ -1028,7 +1028,7 @@ class NewDownloader:
             self.delete_file(temp)
             return False
         self.save_file(temp, actual)
-        self.blacklist.record.add(id_)
+        self.blacklist.update_id(id_)
         count.add(id_)
         return True
 
