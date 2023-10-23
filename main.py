@@ -227,9 +227,11 @@ class TikTokDownloader:
             main_path=self.PROJECT_ROOT,
             user_agent=self.user_agent,
             ua_code=self.ua_code,
+            log=self.logger,
             xb=self.x_bogus,
             console=self.console,
             **self.settings.read(),
+            blacklist=self.blacklist,
         )
 
     def run(self):
