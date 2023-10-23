@@ -11,7 +11,6 @@ from requests import get
 
 from src.CookieTool import Register
 from src.Customizer import WARNING, INFO, ERROR, GENERAL
-from src.DataExtractor import Extractor
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.Recorder import BaseLogger
@@ -57,24 +56,21 @@ class Settings:
             "max_pages": 0,
         }  # 默认配置
 
-    def create(self) -> SimpleNamespace:
+    def create(self) -> dict:
         """创建默认配置文件"""
         with self.file.open("w", encoding="UTF-8") as f:
             dump(self.__default, f, indent=4, ensure_ascii=False)
         self.console.print(
             "创建默认配置文件 settings.json 成功！\n请参考项目文档的快速入门部分，设置 Cookie 后重新运行程序！",
             style=GENERAL)
-        return Extractor.generate_data_object(self.__default)
+        return self.__default
 
-    def read(self) -> SimpleNamespace:
+    def read(self) -> dict:
         """读取配置文件，如果没有配置文件，则生成配置文件"""
         try:
             if self.file.exists():
                 with self.file.open("r", encoding="UTF-8") as f:
-                    return self.check(
-                        load(f).keys(), load(
-                            f, object_hook=lambda d: SimpleNamespace(
-                                **d)))
+                    return self.check(load(f))
             else:
                 self.console.print(
                     "配置文件 settings.json 读取失败，文件不存在！",
@@ -84,21 +80,26 @@ class Settings:
             self.console.print(
                 "配置文件 settings.json 格式错误，请检查 JSON 格式！",
                 style=ERROR)
-            return Extractor.generate_data_object(
-                self.__default)  # 读取配置文件发生错误时返回空配置
+            return self.__default  # 读取配置文件发生错误时返回空配置
 
-    def check(self, keys, result: SimpleNamespace) -> SimpleNamespace:
-        if set(self.__default.keys()).issubset(set(keys)):
-            return result
+    def check(self, data: dict) -> dict:
+        if set(self.__default.keys()).issubset(set(data.keys())):
+            return data
         if self.console.input(
                 f"[{ERROR}]配置文件 settings.json 缺少必要的参数，是否需要生成默认配置文件(YES/NO): [/{ERROR}]").upper() == "YES":
             self.create()
-        return Extractor.generate_data_object(self.__default)
+        return self.__default
 
-    def update(self, settings: SimpleNamespace):
+    def update(self, settings: dict | SimpleNamespace):
         """更新配置文件"""
         with self.file.open("w", encoding="UTF-8") as f:
-            dump(vars(settings), f, indent=4, ensure_ascii=False)
+            dump(
+                settings if isinstance(
+                    settings,
+                    dict) else vars(settings),
+                f,
+                indent=4,
+                ensure_ascii=False)
         self.console.print("保存配置成功！", style=INFO)
 
 
