@@ -48,7 +48,6 @@ class Settings:
             "dynamic_cover": False,
             "original_cover": False,
             "proxies": "",
-            "log": False,
             "download": True,
             "max_size": 0,
             "chunk": 512 * 1024,  # 每次从服务器接收的数据块大小
@@ -126,6 +125,7 @@ class Parameter:
             split: str,
             music: bool,
             folder_mode: bool,
+            storage_format: str,
             dynamic: bool,
             original: bool,
             proxies: str,
@@ -293,3 +293,14 @@ class Parameter:
             return timeout
         self.log.warning(f"timeout 参数 {timeout} 设置错误，程序将使用默认值：10")
         return 10
+
+    def check_storage_format(self, storage_format: str) -> str:
+        if storage_format in {"xlsx", "csv", "sql"}:
+            self.log.info(f"storage_format 参数已设置为 {storage_format}")
+            return storage_format
+        if not storage_format:
+            self.log.info("storage_format 参数未设置，程序不会储存任何数据至文件")
+        else:
+            self.log.warning(
+                f"storage_format 参数 {storage_format} 设置错误，程序默认不会储存任何数据至文件")
+        return ""
