@@ -7,6 +7,7 @@ from requests import exceptions
 from requests import get
 from rich.console import Console
 
+from src.Configuration import Parameter
 from src.Configuration import Settings
 from src.CookieTool import Cookie
 from src.CookieTool import Register
@@ -23,6 +24,8 @@ from src.FileManager import DownloadRecorder
 from src.FileManager import FileManager
 from src.Parameter import Headers
 from src.Parameter import NewXBogus
+from src.Recorder import BaseLogger
+from src.Recorder import LoggerManager
 from src.main_api_server import APIServer
 from src.main_complete import TikTok
 from src.main_complete import prompt
@@ -47,6 +50,7 @@ class TikTokDownloader:
 
     UPDATE = {"path": PROJECT_ROOT.joinpath("./src/config/Disable_Update")}
     RECORD = {"path": PROJECT_ROOT.joinpath("./src/config/Disable_Record")}
+    LOGGING = {"path": PROJECT_ROOT.joinpath("./src/config/Enable_Logging")}
     DISCLAIMER = {"path": PROJECT_ROOT.joinpath(
         "./src/config/Consent_Disclaimer")}
 
@@ -70,9 +74,10 @@ class TikTokDownloader:
     def __init__(self):
         self.console = Console()
         self.cookie = None
+        self.logger = None
         self.register = None
         self.blacklist = None
-        self.user_agent, self.code = Headers.generate_user_agent()
+        self.user_agent, self.ua_code = Headers.generate_user_agent()
         self.x_bogus = NewXBogus()
         self.settings = Settings(self.PROJECT_ROOT, self.console)
         self.register = Register(
@@ -80,7 +85,8 @@ class TikTokDownloader:
             self.console,
             self.x_bogus,
             self.user_agent,
-            self.code)
+            self.ua_code)
+        self.parameter = None
 
     def disclaimer(self):
         if not self.DISCLAIMER["path"].exists():
@@ -108,8 +114,11 @@ class TikTokDownloader:
         self.UPDATE["tip"] = "启用" if self.UPDATE["path"].exists() else "禁用"
         self.RECORD["tip"] = "启用" if (
             b := self.RECORD["path"].exists()) else "禁用"
+        self.LOGGING["tip"] = "禁用" if (
+            l := self.LOGGING["path"].exists()) else "启用"
         self.blacklist = DownloadRecorder(
             not b, self.PROJECT_ROOT.joinpath("./cache"))
+        self.logger = {True: LoggerManager, False: BaseLogger}[l]
         self.cookie = Cookie(self.settings, self.console)
 
     def check_update(self):
@@ -142,8 +151,9 @@ class TikTokDownloader:
              "Web API 接口模式",
              "Web UI 交互模式",
              "服务器部署模式",
-             f"{self.UPDATE['tip']}检查更新功能",
-             f"{self.RECORD['tip']}作品下载记录"),
+             f"{self.UPDATE['tip']}自动检查更新",
+             f"{self.RECORD['tip']}作品下载记录",
+             f"{self.LOGGING['tip']}运行日志记录",),
             self.console,
             separate=(
                 1,
@@ -157,7 +167,7 @@ class TikTokDownloader:
             self.blacklist,
             self.x_bogus,
             self.user_agent,
-            self.code,
+            self.ua_code,
             self.settings)
         register(self.blacklist.close)
         example.run()
@@ -171,7 +181,7 @@ class TikTokDownloader:
             self.blacklist,
             self.x_bogus,
             self.user_agent,
-            self.code,
+            self.ua_code,
             self.settings)
         app = master.run_server(Flask(__name__))
         register(self.blacklist.close)
@@ -215,11 +225,14 @@ class TikTokDownloader:
             self.change_config(self.RECORD["path"])
 
     def check_settings(self):
-        if not self.PROJECT_ROOT.joinpath("./settings.json").exists():
-            self.settings.create()
-            self.console.print(
-                "建议根据实际使用需求修改配置文件 settings.json！\n",
-                style=GENERAL)
+        self.parameter = Parameter(
+            main_path=self.PROJECT_ROOT,
+            user_agent=self.user_agent,
+            ua_code=self.ua_code,
+            xb=self.x_bogus,
+            console=self.console,
+            **self.settings.read(),
+        )
 
     def run(self):
         self.check_config()
