@@ -74,7 +74,6 @@ class TikTokDownloader:
     def __init__(self):
         self.console = Console()
         self.logger = None
-        self.register = None
         self.blacklist = None
         self.user_agent, self.ua_code = Headers.generate_user_agent()
         self.x_bogus = NewXBogus()
