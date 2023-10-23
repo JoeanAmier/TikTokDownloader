@@ -85,13 +85,13 @@ class TikTok:
         2: "search_user",
     }
 
-    def __init__(self, colour, blacklist, xb, user_agent, code, settings):
-        self.colour = colour
+    def __init__(self, console, blacklist, xb, user_agent, code, settings):
+        self.console = console
         self.logger = None
         self.request = None
         self.download = None
         self.manager = None
-        self.save = False
+        self.storage = False
         self.xb = xb
         self.record = RecordManager()
         self.settings = settings
@@ -124,7 +124,7 @@ class TikTok:
             select = input(
                 "配置文件存在错误！是否需要重新生成默认配置文件？（Y/N）")
             if select == "Y":
-                self.settings.create()
+                self.settings.__create()
             print("程序即将关闭，请检查配置文件后再重新运行程序！")
             return False
 
@@ -158,7 +158,7 @@ class TikTok:
              "thread",
              "pages",
              ))
-        self.save = bool(self._data["save"])
+        self.storage = bool(self._data["save"])
         print("读取配置文件成功！")
         return True
 
