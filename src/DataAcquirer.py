@@ -1,7 +1,7 @@
-import time
 from datetime import date
 from datetime import datetime
 from re import compile
+from time import time
 from urllib.parse import urlencode
 
 import requests
@@ -1401,8 +1401,8 @@ class Share:
     share_link_tiktok = compile(
         r".*?(https://vm\.tiktok\.com/[a-zA-Z0-9]+/).*?")
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
-    }
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome"
+                      "/116.0.0.0 Safari/537.36", }
 
     def __init__(self, proxies: dict, max_retry=10):
         self.max_retry = max_retry
@@ -1615,7 +1615,7 @@ class Account(Acquirer):
 
     @staticmethod
     def temp_data() -> str:
-        return str(time.time())[:10]
+        return str(time())[:10]
 
     def summary_works(self):
         self.log.info(f"当前账号公开作品数量: {len(self.response)}")

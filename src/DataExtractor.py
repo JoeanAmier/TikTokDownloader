@@ -1,11 +1,11 @@
 from datetime import datetime
 from time import localtime
 from time import strftime
+from time import time
 from types import SimpleNamespace
 
 from src.Configuration import Parameter
 from src.Customizer import conditional_filtering
-from src.DataAcquirer import Account
 
 __all__ = ["Extractor"]
 
@@ -225,7 +225,7 @@ class Extractor:
         item["unique_id"] = self.safe_extract(data, "unique_id")
         item["signature"] = self.safe_extract(data, "signature")
         item["nickname"] = self.clean.clean_name(self.safe_extract(
-            data, "nickname", "已注销账号")) or Account.temp_data()
+            data, "nickname", "已注销账号")) or str(time())[:10]
         item["mark"] = self.clean.clean_name(mark) or item["nickname"]
 
     def extract_not_post(self, container: list, data: SimpleNamespace) -> None:
