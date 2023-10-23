@@ -73,13 +73,13 @@ class TikTokDownloader:
 
     def __init__(self):
         self.console = Console()
-        self.cookie = None
         self.logger = None
         self.register = None
         self.blacklist = None
         self.user_agent, self.ua_code = Headers.generate_user_agent()
         self.x_bogus = NewXBogus()
         self.settings = Settings(self.PROJECT_ROOT, self.console)
+        self.cookie = Cookie(self.settings, self.console)
         self.register = Register(
             self.settings,
             self.console,
@@ -119,7 +119,6 @@ class TikTokDownloader:
         self.blacklist = DownloadRecorder(
             not b, self.PROJECT_ROOT.joinpath("./cache"))
         self.logger = {True: LoggerManager, False: BaseLogger}[l]
-        self.cookie = Cookie(self.settings, self.console)
 
     def check_update(self):
         if self.UPDATE["path"].exists():
