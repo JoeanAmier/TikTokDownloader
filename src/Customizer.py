@@ -43,7 +43,7 @@ SERVER_PORT = 5000
 
 # 彩色交互提示颜色设置，支持标准颜色名称、Hex、RGB 格式
 MASTER = "b #fff200"
-PROMPT = "b bright_cyan"
+PROMPT = "b turquoise2"
 GENERAL = "b bright_white"
 PROGRESS = "b bright_magenta"
 ERROR = "b bright_red"
