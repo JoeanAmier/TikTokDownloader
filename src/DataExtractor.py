@@ -1,7 +1,6 @@
 from datetime import datetime
 from time import localtime
 from time import strftime
-from time import time
 from types import SimpleNamespace
 
 from src.Configuration import Parameter
@@ -225,7 +224,7 @@ class Extractor:
         item["unique_id"] = self.safe_extract(data, "unique_id")
         item["signature"] = self.safe_extract(data, "signature")
         item["nickname"] = self.clean.clean_name(self.safe_extract(
-            data, "nickname", "已注销账号")) or str(time())[:10]
+            data, "nickname", "已注销账号")) or "无效昵称"
         item["mark"] = self.clean.clean_name(mark) or item["nickname"]
 
     def extract_not_post(self, container: list, data: SimpleNamespace) -> None:
