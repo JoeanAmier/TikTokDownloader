@@ -11,7 +11,7 @@ __all__ = ["Extractor"]
 
 class Extractor:
     def __init__(self, params: Parameter):
-        self.log = params.log
+        self.log = params.logger
         self.date_format = params.date_format
         self.clean = params.clean
         self.type = {

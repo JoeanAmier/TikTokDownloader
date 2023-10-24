@@ -1347,7 +1347,7 @@ class Acquirer:
         self.headers = params.headers | {
             "Referer": "https://www.douyin.com/", }
         self.ua_code = params.ua_code
-        self.log = params.log
+        self.log = params.logger
         self.xb = params.xb
         self.console = params.console
         self.proxies = params.proxies

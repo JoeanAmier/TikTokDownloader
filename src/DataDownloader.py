@@ -804,7 +804,7 @@ class Downloader:
         self.cookie = params.cookie
         self.PC_headers, self.black_headers = self.init_headers(params.headers)
         self.ua_code = params.ua_code
-        self.log = params.log
+        self.log = params.logger
         self.xb = params.xb
         self.console = params.console
         self.root = params.root
