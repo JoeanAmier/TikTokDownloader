@@ -161,13 +161,7 @@ class TikTokDownloader:
 
     def complete(self):
         """终端命令行模式"""
-        example = TikTok(
-            self.colour,
-            self.blacklist,
-            self.x_bogus,
-            self.user_agent,
-            self.ua_code,
-            self.settings)
+        example = TikTok(self.parameter, self.settings)
         register(self.blacklist.close)
         example.run()
 
@@ -175,13 +169,7 @@ class TikTokDownloader:
         """
         服务器模式
         """
-        master = server(
-            self.colour,
-            self.blacklist,
-            self.x_bogus,
-            self.user_agent,
-            self.ua_code,
-            self.settings)
+        master = server(self.parameter, self.settings)
         app = master.run_server(Flask(__name__))
         register(self.blacklist.close)
         app.run(host=SERVER_HOST, port=SERVER_PORT, debug=not self.STABLE)
@@ -222,6 +210,8 @@ class TikTokDownloader:
             self.change_config(self.UPDATE["path"])
         elif mode == "8":
             self.change_config(self.RECORD["path"])
+        elif mode == "9":
+            self.change_config(self.LOGGING["path"])
 
     def check_settings(self):
         self.parameter = Parameter(
