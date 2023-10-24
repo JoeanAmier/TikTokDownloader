@@ -3,14 +3,13 @@ from time import localtime
 from time import strftime
 from types import SimpleNamespace
 
-from src.Configuration import Parameter
 from src.Customizer import conditional_filtering
 
 __all__ = ["Extractor"]
 
 
 class Extractor:
-    def __init__(self, params: Parameter):
+    def __init__(self, params):
         self.log = params.logger
         self.date_format = params.date_format
         self.clean = params.clean
