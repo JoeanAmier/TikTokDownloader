@@ -158,7 +158,7 @@ class Parameter:
         self.split = self.check_split(split)
         self.music = music
         self.folder_mode = folder_mode
-        self.storage_format = storage_format
+        self.storage_format = self.check_storage_format(storage_format)
         self.dynamic = dynamic
         self.original = original
         self.proxies = self.check_proxies(proxies)
