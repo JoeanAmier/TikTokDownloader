@@ -87,6 +87,7 @@ class TikTokDownloader:
             self.user_agent,
             self.ua_code)
         self.parameter = None
+        self.running = True
 
     def disclaimer(self):
         if not self.DISCLAIMER["path"].exists():
@@ -142,28 +143,30 @@ class TikTokDownloader:
 
     def main(self):
         """选择运行模式"""
-        mode = prompt(
-            "请选择 TikTokDownloader 运行模式",
-            ("复制粘贴写入 Cookie",
-             "扫码登录写入 Cookie",
-             "终端命令行模式",
-             "Web API 接口模式",
-             "Web UI 交互模式",
-             "服务器部署模式",
-             f"{self.UPDATE['tip']}自动检查更新",
-             f"{self.RECORD['tip']}作品下载记录",
-             f"{self.LOGGING['tip']}运行日志记录",),
-            self.console,
-            separate=(
-                1,
-                5))
-        self.compatible(mode)
+        if self.running:
+            mode = prompt(
+                "请选择 TikTokDownloader 运行模式",
+                ("复制粘贴写入 Cookie",
+                 "扫码登录写入 Cookie",
+                 "终端命令行模式",
+                 "Web API 接口模式",
+                 "Web UI 交互模式",
+                 "服务器部署模式",
+                 f"{self.UPDATE['tip']}自动检查更新",
+                 f"{self.RECORD['tip']}作品下载记录",
+                 f"{self.LOGGING['tip']}运行日志记录",),
+                self.console,
+                separate=(
+                    1,
+                    5))
+            self.compatible(mode)
 
     def complete(self):
         """终端命令行模式"""
         example = TikTok(self.parameter, self.settings)
         register(self.blacklist.close)
         example.run()
+        self.main()
 
     def server(self, server):
         """
@@ -192,7 +195,9 @@ class TikTokDownloader:
         self.main()
 
     def compatible(self, mode: str):
-        if mode == "1":
+        if mode in {"Q", "q", ""}:
+            self.running = False
+        elif mode == "1":
             self.write_cookie()
         elif mode == "2":
             self.auto_cookie()
@@ -234,6 +239,7 @@ class TikTokDownloader:
         self.disclaimer()
         self.main()
         self.delete_temp()
+        self.console.print("程序结束运行", style=GENERAL)
 
     def delete_temp(self):
         rmtree(self.PROJECT_ROOT.joinpath("./cache/temp").resolve())
