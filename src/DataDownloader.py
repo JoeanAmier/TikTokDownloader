@@ -800,7 +800,7 @@ class Downloader:
         TimeRemainingColumn(),
     )
 
-    def __init__(self, params: Parameter, main_path: Path):
+    def __init__(self, params: Parameter):
         self.cookie = params.cookie
         self.PC_headers, self.black_headers = self.init_headers(params.headers)
         self.ua_code = params.ua_code
@@ -823,7 +823,7 @@ class Downloader:
         self.blacklist = params.blacklist
         self.__thread = ThreadPoolExecutor
         self.__pool = None
-        self.__temp = main_path.joinpath("./cache/temp")
+        self.__temp = params.main_path.joinpath("./cache/temp")
 
     @staticmethod
     def init_headers(headers: dict) -> tuple:
