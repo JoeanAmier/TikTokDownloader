@@ -11,6 +11,7 @@ from requests import get
 
 from src.CookieTool import Register
 from src.Customizer import INFO, ERROR, GENERAL
+from src.DataExtractor import Extractor
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.Recorder import BaseLogger
@@ -119,6 +120,8 @@ class Parameter:
             console,
             cookie: dict | str,
             root: str,
+            accounts_urls: dict,
+            mix_urls: dict,
             folder_name: str,
             name_format: str,
             date_format: str,
@@ -166,6 +169,8 @@ class Parameter:
         self.max_pages = self.check_max_pages(max_pages)
         self.blacklist = blacklist
         self.timeout = self.check_timeout(timeout)
+        self.accounts_urls = self.check_accounts_urls(accounts_urls)
+        self.mix_urls = self.check_mix_urls(mix_urls)
 
     def check_cookie(self, cookie: dict | str) -> dict:
         if isinstance(cookie, dict):
@@ -305,3 +310,11 @@ class Parameter:
             self.log.warning(
                 f"storage_format 参数 {storage_format} 设置错误，程序默认不会储存任何数据至文件")
         return ""
+
+    @staticmethod
+    def check_accounts_urls(accounts_urls: dict) -> SimpleNamespace:
+        return Extractor.generate_data_object(accounts_urls)
+
+    @staticmethod
+    def check_mix_urls(mix_urls: dict) -> SimpleNamespace:
+        return Extractor.generate_data_object(mix_urls)
