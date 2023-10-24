@@ -1494,17 +1494,17 @@ class Account(Acquirer):
             sec_user_id: str,
             tab="post",
             earliest="",
-            latest="",
-            pages=99999):
+            latest="", ):
         super().__init__(params)
         self.sec_user_id = sec_user_id
-        self.api, self.favorite, self.pages = self.check_type(tab, pages)
+        self.api, self.favorite, self.pages = self.check_type(
+            tab, params.max_pages)
         self.earliest, self.latest = self.check_date(earliest, latest)
 
     def check_type(self, tab: str, pages: int) -> tuple[str, bool, int]:
         if tab == "favorite":
             return self.favorite_api, True, pages
-        return self.post_api, False, 9999
+        return self.post_api, False, 99999
 
     @staticmethod
     def check_tab(tab: str) -> bool:
@@ -1635,10 +1635,10 @@ class Works(Acquirer):
 
 
 class Comment(Acquirer):
-    def __init__(self, params: Parameter, item_id: str, pages=99999):
+    def __init__(self, params: Parameter, item_id: str):
         super().__init__(params)
         self.item_id = item_id
-        self.pages = pages
+        self.pages = params.max_pages
 
     def run(self):
         pass
@@ -1716,9 +1716,9 @@ class Hot(Acquirer):
 
 
 class Collection(Acquirer):
-    def __init__(self, params: Parameter, pages=99999):
+    def __init__(self, params: Parameter):
         super().__init__(params)
-        self.pages = pages
+        self.pages = params.max_pages
 
     def run(self):
         pass
