@@ -1,13 +1,14 @@
 from time import time
 
-from src.Customizer import PROMPT
-from src.Customizer import TEXT_REPLACEMENT
 from src.Customizer import (
+    PROMPT,
     WARNING,
 )
+from src.Customizer import TEXT_REPLACEMENT
 from src.Customizer import failed
 from src.DataAcquirer import Acquirer
 from src.DataDownloader import Downloader
+from src.DataExtractor import Extractor
 from src.FileManager import Cache
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
@@ -85,25 +86,19 @@ class TikTok:
         2: "search_user",
     }
 
-    def __init__(self, console, blacklist, xb, user_agent, code, settings):
-        self.console = console
-        self.logger = None
-        self.request = None
-        self.download = None
+    def __init__(self, parameter, settings):
+        self.parameter = parameter
+        self.console = parameter.console
+        self.logger = parameter.logger
+        self.downloader = Downloader(parameter)
+        self.extractor = Extractor(parameter)
         self.manager = None
-        self.storage = False
-        self.xb = xb
+        self.storage = bool(parameter.storage_format)
         self.record = RecordManager()
         self.settings = settings
-        self.accounts = []  # 账号数据
+        self.accounts = parameter.accounts_urls
+        self.mix = parameter.mix_urls
         self.quit = False
-        self._number = 0  # 账号数量
-        self._data = {}  # 其他配置数据
-        self.mark = None
-        self.nickname = None
-        self.blacklist = blacklist
-        self.user_agent = user_agent
-        self.code = code
 
     def configuration(self, **kwargs):
         if not self.check_config():

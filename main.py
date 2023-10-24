@@ -20,6 +20,7 @@ from src.Customizer import (
 )
 from src.Customizer import SERVER_HOST
 from src.Customizer import SERVER_PORT
+from src.Customizer import TEXT_REPLACEMENT
 from src.FileManager import DownloadRecorder
 from src.FileManager import FileManager
 from src.Parameter import Headers
@@ -227,12 +228,13 @@ class TikTokDownloader:
             main_path=self.PROJECT_ROOT,
             user_agent=self.user_agent,
             ua_code=self.ua_code,
-            log=self.logger,
+            logger=self.logger,
             xb=self.x_bogus,
             console=self.console,
             **self.settings.read(),
             blacklist=self.blacklist,
         )
+        self.parameter.clean.set_rule(TEXT_REPLACEMENT, True)
 
     def run(self):
         self.check_config()
