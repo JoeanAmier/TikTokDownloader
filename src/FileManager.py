@@ -3,6 +3,11 @@ from json import load
 from json.decoder import JSONDecodeError
 from pathlib import Path
 
+from src.Customizer import (
+    WARNING,
+    ERROR,
+)
+
 __all__ = ['Cache', 'FileManager', 'DownloadRecorder']
 
 
@@ -11,7 +16,8 @@ def retry(function):
         while True:
             if function(self, *args, **kwargs):
                 return
-            _ = input("请关闭所有正在访问作品保存文件夹的窗口和程序，按下回车继续运行！")
+            _ = self.console.input(
+                f"[{WARNING}]请关闭所有正在访问作品保存文件夹的窗口和程序，按下回车继续运行！[/{WARNING}]")
 
     return inner
 
@@ -19,16 +25,14 @@ def retry(function):
 class Cache:
     def __init__(
             self,
-            main_path: Path,
-            record,
-            root: Path,
-            type_: str,
+            parameter,
             mark: bool,
             name: bool):
-        self.log = record  # 日志记录对象
-        self.file = main_path.joinpath("./src/FileCache.json")  # 缓存文件
-        self.root = root  # 作品文件保存根目录
-        self.type_ = type_
+        self.console = parameter.console
+        self.log = parameter.logger  # 日志记录对象
+        self.file = parameter.main_path.joinpath(
+            "./src/FileCache.json")  # 缓存数据文件
+        self.root = parameter.root  # 作品文件保存根目录
         self.mark = mark
         self.name = name
         self.cache = self.read_cache()
@@ -38,69 +42,113 @@ class Cache:
             if self.file.exists():
                 with self.file.open("r", encoding="UTF-8") as f:
                     cache = load(f)
-                    self.log.info("缓存文件读取成功")
+                    self.log.info("读取缓存数据成功")
                     return cache
             else:
-                self.log.info("缓存文件不存在")
+                self.log.info("缓存数据文件不存在")
                 return {}
         except JSONDecodeError:
-            self.log.warning("缓存文件已损坏")
+            self.log.warning("缓存数据文件已损坏")
             return {}
 
     def save_cache(self):
         with self.file.open("w", encoding="UTF-8") as f:
             dump(self.cache, f, indent=4)
-        self.log.info("缓存文件已保存")
+        self.log.info("缓存数据已保存至文件")
 
-    def update_cache(self, uid: str, mark: str, name: str):
-        if self.cache.get(uid):
-            self.check_file(uid, mark, name)
-        self.cache[uid] = {"mark": mark, "name": name}
-        self.log.info(f"更新缓存: {uid, mark, name}", False)
+    def update_cache(
+            self,
+            solo_mode: bool,
+            type_: str,
+            id_: str,
+            mark: str,
+            name: str):
+        if self.cache.get(id_):
+            self.check_file(solo_mode, type_, id_, mark, name)
+        self.cache[id_] = {"mark": mark, "name": name}
+        self.log.info(f"更新缓存数据: {id_, mark, name}", False)
         self.save_cache()
 
-    def check_file(self, uid: str, mark: str, name: str):
+    def check_file(
+            self,
+            solo_mode: bool,
+            type_: str,
+            id_: str,
+            mark: str,
+            name: str):
         if not (old_folder := self.root.joinpath(
-                f"{self.type_}{uid}_{self.cache[uid]['mark']}")).is_dir():
-            self.log.info(f"{old_folder} 不存在，自动跳过")
+                f"{type_}{id_}_{self.cache[id_]["mark"]}")).is_dir():
+            self.log.info(f"{old_folder} 文件夹不存在，自动跳过")
             return
-        if self.cache[uid]["mark"] != mark:
-            self.rename_folder(old_folder, uid, mark)
+        if self.cache[id_]["mark"] != mark:
+            self.rename_folder(old_folder, type_, id_, mark)
             if self.mark:
-                self.rename_file(uid, mark, name, field="mark")
-        if self.cache[uid]["name"] != name and self.name:
-            self.rename_file(uid, mark, name)
+                self.scan_file(solo_mode, type_, id_, mark, name, field="mark")
+        if self.cache[id_]["name"] != name and self.name:
+            self.scan_file(solo_mode, type_, id_, mark, name)
 
-    @retry
-    def rename_folder(self, old_folder, uid: str, mark: str):
-        new_folder = self.root.joinpath(f"{self.type_}{uid}_{mark}")
-        try:
-            old_folder.rename(new_folder)
-        except PermissionError as e:
-            self.log.warning(f"文件已被占用，重命名失败: {e}")
-            return False
-        except FileExistsError as e:
-            self.log.warning(f"文件名称重复，重命名失败: {e}")
-            return False
-        self.log.info(f"文件夹 {old_folder} 重命名为 {new_folder}", False)
+    def rename_folder(self, old_folder, type_: str, id_: str, mark: str):
+        new_folder = self.root.joinpath(f"{type_}{id_}_{mark}")
+        self.rename(old_folder, new_folder, "文件夹")
+        self.log.info(f"文件夹 {old_folder} 已重命名为 {new_folder}", False)
         return True
 
-    def rename_file(self, uid, mark, name, field="name"):
-        def rename(type_: str):
-            nonlocal folder, uid, mark, name, field
-            deal_folder = folder.joinpath(type_)
-            file_list = deal_folder.iterdir()
-            for old_file in file_list:
-                if (s := self.cache[uid][field]) not in old_file.name:
-                    break
-                new_file = deal_folder.joinpath(old_file.name.replace(
-                    s, {"name": name, "mark": mark}[field], 1))
-                old_file.rename(new_file)
-                self.log.info(f"文件 {old_file} 重命名为 {new_file}", False)
+    def scan_file(
+            self,
+            solo_mode: bool,
+            type_: str,
+            id_: str,
+            mark: str,
+            name: str,
+            field="name"):
+        root = self.root.joinpath(f"{type_}{id_}_{mark}")
+        item_list = root.iterdir()
+        if solo_mode:
+            for f in item_list:
+                if f.isdir():
+                    files = f.iterdir()
+                    self.batch_rename(f, files, id_, mark, name, field)
+        else:
+            self.batch_rename(root, item_list, id_, mark, name, field)
 
-        folder = self.root.joinpath(f"{self.type_}{uid}_{mark}")
-        rename("video")
-        rename("images")
+    def batch_rename(
+            self,
+            root: Path,
+            files: tuple,
+            id_: str,
+            mark: str,
+            name: str,
+            field: str):
+        for old_file in files:
+            if (s := self.cache[id_][field]) not in old_file.name:
+                break
+            self.rename_file(root, old_file, s, mark, name, field)
+
+    def rename_file(
+            self,
+            root: Path,
+            old_file: Path,
+            key_words: str,
+            mark: str,
+            name: str,
+            field: str):
+        new_file = root.joinpath(old_file.name.replace(
+            key_words, {"name": name, "mark": mark}[field], 1))
+        self.rename(old_file, new_file)
+        self.log.info(f"文件 {old_file} 重命名为 {new_file}", False)
+        return True
+
+    @retry
+    def rename(self, old_: Path, new_: Path, type_="文件") -> bool:
+        try:
+            old_.rename(new_)
+            return True
+        except PermissionError as e:
+            self.console.print(f"{type_}被占用，重命名失败: {e}", style=ERROR)
+            return False
+        except FileExistsError as e:
+            self.console.print(f"{type_}名称重复，重命名失败: {e}", style=ERROR)
+            return False
 
 
 class FileManager:
