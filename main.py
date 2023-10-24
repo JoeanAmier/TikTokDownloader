@@ -143,7 +143,7 @@ class TikTokDownloader:
 
     def main(self):
         """选择运行模式"""
-        if self.running:
+        while self.running:
             mode = prompt(
                 "请选择 TikTokDownloader 运行模式",
                 ("复制粘贴写入 Cookie",
@@ -166,13 +166,13 @@ class TikTokDownloader:
         example = TikTok(self.parameter, self.settings)
         register(self.blacklist.close)
         example.run()
-        self.main()
+        self.running = example.running
 
     def server(self, server):
         """
         服务器模式
         """
-        master = server(self.parameter, self.settings)
+        master = server(self.parameter, self.settings, self.running)
         app = master.run_server(Flask(__name__))
         register(self.blacklist.close)
         app.run(host=SERVER_HOST, port=SERVER_PORT, debug=not self.STABLE)
@@ -181,18 +181,16 @@ class TikTokDownloader:
         FileManager.deal_config(file)
         self.console.print("修改设置成功！", style=GENERAL)
         self.check_config()
-        self.main()
+        self.check_settings()
 
     def write_cookie(self):
         self.cookie.run()
-        self.main()
 
     def auto_cookie(self):
         if cookie := self.register.run():
             self.cookie.extract(cookie, False)
         else:
             self.console.print("扫码登录失败，未写入 Cookie！", style=WARNING)
-        self.main()
 
     def compatible(self, mode: str):
         if mode in {"Q", "q", ""}:
