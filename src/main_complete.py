@@ -4,14 +4,10 @@ from src.Customizer import (
     PROMPT,
     WARNING,
 )
-from src.Customizer import TEXT_REPLACEMENT
 from src.Customizer import failed
-from src.DataAcquirer import Acquirer
 from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
 from src.FileManager import Cache
-from src.Recorder import BaseLogger
-from src.Recorder import LoggerManager
 from src.Recorder import RecordManager
 
 
@@ -92,70 +88,17 @@ class TikTok:
         self.logger = parameter.logger
         self.downloader = Downloader(parameter)
         self.extractor = Extractor(parameter)
-        self.manager = None
         self.storage = bool(parameter.storage_format)
         self.record = RecordManager()
         self.settings = settings
         self.accounts = parameter.accounts_urls
         self.mix = parameter.mix_urls
         self.quit = False
-
-    def configuration(self, **kwargs):
-        if not self.check_config():
-            self.quit = True
-            return
-        self.initialize(**kwargs)
-        self.set_parameters()
-
-    def check_config(self):
-        print("正在读取配置文件！")
-        settings = self.settings.read()
-        if not isinstance(settings, dict):
-            return False
-        try:
-            return self.read_data(settings)
-        except KeyError as e:
-            print(f"读取配置文件发生错误: {e}")
-            select = input(
-                "配置文件存在错误！是否需要重新生成默认配置文件？（Y/N）")
-            if select == "Y":
-                self.settings.__create()
-            print("程序即将关闭，请检查配置文件后再重新运行程序！")
-            return False
-
-    def read_data(self, settings):
-        def get_data(key, value, items, index=False):
-            for i in items:
-                key[i] = value[i][0] if index else value[i]
-
-        self.accounts = settings["accounts"]
-        self._number = len(self.accounts)
-        get_data(
-            self._data,
-            settings,
-            ("mix",
-             "root",
-             "folder",
-             "name",
-             "time",
-             "split",
-             "save",
-             "log",
-             "retry",
-             "chunk",
-             "max_size",
-             "music",
-             "cookie",
-             "dynamic",
-             "original",
-             "proxies",
-             "download",
-             "thread",
-             "pages",
-             ))
-        self.storage = bool(self._data["save"])
-        print("读取配置文件成功！")
-        return True
+        self.cache = Cache(
+            parameter,
+            "mark" in parameter.name_format,
+            "nickname" in parameter.name_format
+        )
 
     def batch_acquisition(self):
         self.manager = Cache(
@@ -313,56 +256,6 @@ class TikTok:
                 if len(data) == 1 and (l := choice_quality(item[2])):
                     self.download.download_live(l, f"{item[0]}-{item[1]}")
         self.logger.info("已退出获取直播推流地址模式")
-
-    def initialize(
-            self,
-            root="./",
-            folder="Log",
-            name="%Y-%m-%d %H.%M.%S",
-            filename=None,
-    ):
-        self.logger = LoggerManager(
-            self.colour) if self._data["log"] else BaseLogger(
-            self.colour)
-        self.logger.root = root  # 日志根目录
-        self.logger.folder = folder  # 日志文件夹名称
-        self.logger.name = name  # 日志文件名称格式
-        self.logger.run(filename=filename)
-        self.request = Acquirer(self.logger, self.xb, self.colour)
-        self.download = Downloader(
-            self.logger,
-            None,
-            self.xb,
-            self.colour,
-            self.blacklist,
-            self._data["thread"])
-        self.request.clean.set_rule(TEXT_REPLACEMENT, True)  # 设置文本过滤规则
-        self.download.clean.set_rule(TEXT_REPLACEMENT, True)  # 设置文本过滤规则
-        self.mark = "mark" in self._data["name"]
-        self.nickname = "nickname" in self._data["name"]
-        self.request.initialization(self.user_agent, self.code)
-        self.download.initialization(self.user_agent, self.code)
-
-    def set_parameters(self):
-        self.download.root = self._data["root"]
-        self.download.folder = self._data["folder"]
-        self.download.name = self._data["name"]
-        self.download.music = self._data["music"]
-        self.request.time = self._data["time"]
-        self.download.time = self.request.time
-        self.download.split = self._data["split"]
-        self.request.cookie = self._data["cookie"]
-        self.download.cookie = self.request.cookie
-        self.download.dynamic = self._data["dynamic"]
-        self.download.original = self._data["original"]
-        self.request.proxies = self._data["proxies"]
-        self.download.proxies = self.request.proxies
-        self.download.download = self._data["download"]
-        self.request.retry = self._data["retry"]
-        self.download.retry = self._data["retry"]
-        self.download.chunk = self._data["chunk"]
-        self.download.max_size = self._data["max_size"]
-        self.request.pages = self._data["pages"]
 
     @check_storage_format
     def comment_acquisition(self):
@@ -628,7 +521,6 @@ class TikTok:
         self.logger.info("已退出批量下载收藏作品模式")
 
     def run(self):
-        self.configuration()
         while not self.quit:
             select = prompt(
                 "请选择下载模式",
