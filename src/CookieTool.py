@@ -116,12 +116,16 @@ class Register:
 
     @staticmethod
     def generate_cookie(data: dict) -> str:
+        if not isinstance(data, dict):
+            return ""
         result = [f"{k}={v}" for k, v in data.items()]
         return "; ".join(result)
 
     @staticmethod
     def generate_dict(data: str) -> dict:
         cookie = {}
+        if not isinstance(data, str):
+            return cookie
         matches = finditer(Cookie.pattern, data)
         for match in matches:
             key = match.group('key').strip()
