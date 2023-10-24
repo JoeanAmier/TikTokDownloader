@@ -14,8 +14,6 @@ from src.Customizer import INFO, ERROR, GENERAL
 from src.DataExtractor import Extractor
 from src.Parameter import MsToken
 from src.Parameter import TtWid
-from src.Recorder import BaseLogger
-from src.Recorder import LoggerManager
 from src.StringCleaner import Cleaner
 
 __all__ = ["Settings", "Parameter"]
@@ -115,7 +113,7 @@ class Parameter:
             main_path: Path,
             user_agent: str,
             ua_code: tuple,
-            logger: LoggerManager | BaseLogger,
+            logger,
             xb,
             console,
             cookie: dict | str,
@@ -129,8 +127,8 @@ class Parameter:
             music: bool,
             folder_mode: bool,
             storage_format: str,
-            dynamic: bool,
-            original: bool,
+            dynamic_cover: bool,
+            original_cover: bool,
             proxies: str,
             download: bool,
             max_size: int,
@@ -146,7 +144,7 @@ class Parameter:
             "User-Agent": user_agent,
         }
         self.ua_code = ua_code
-        self.logger = logger
+        self.logger = logger(main_path, console)
         self.xb = xb
         self.console = console
         self.cookie_cache = None
@@ -159,8 +157,8 @@ class Parameter:
         self.music = music
         self.folder_mode = folder_mode
         self.storage_format = self.check_storage_format(storage_format)
-        self.dynamic = dynamic
-        self.original = original
+        self.dynamic = dynamic_cover
+        self.original = original_cover
         self.proxies = self.check_proxies(proxies)
         self.download = download
         self.max_size = self.check_max_size(max_size)
