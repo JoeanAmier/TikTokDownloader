@@ -93,7 +93,7 @@ class TikTok:
         self.settings = settings
         self.accounts = parameter.accounts_urls
         self.mix = parameter.mix_urls
-        self.quit = False
+        self.running = True
         self.cache = Cache(
             parameter,
             "mark" in parameter.name_format,
@@ -521,9 +521,9 @@ class TikTok:
         self.logger.info("已退出批量下载收藏作品模式")
 
     def run(self):
-        while not self.quit:
+        while self.running:
             select = prompt(
-                "请选择下载模式",
+                "请选择采集功能",
                 ("批量下载账号作品",
                  "单独下载链接作品",
                  "获取直播推流地址",
@@ -533,9 +533,11 @@ class TikTok:
                  "采集搜索结果数据",
                  "采集抖音热榜数据",
                  "批量下载收藏作品"),
-                self.colour.colorize)
-            if select in ("Q", "q", "",):
-                self.quit = True
+                self.console)
+            if select in {"Q", "q"}:
+                self.running = False
+            elif not select:
+                break
             elif select == "1":
                 self.logger.info("已选择批量下载账号作品模式")
                 self.batch_acquisition()
@@ -563,4 +565,3 @@ class TikTok:
             elif select == "9":
                 self.logger.info("已选择批量下载收藏作品模式")
                 self.collection_acquisition()
-        self.logger.info("程序运行结束")
