@@ -115,7 +115,7 @@ class Parameter:
             main_path: Path,
             user_agent: str,
             ua_code: tuple,
-            log: LoggerManager | BaseLogger,
+            logger: LoggerManager | BaseLogger,
             xb,
             console,
             cookie: dict | str,
@@ -146,7 +146,7 @@ class Parameter:
             "User-Agent": user_agent,
         }
         self.ua_code = ua_code
-        self.log = log
+        self.logger = logger
         self.xb = xb
         self.console = console
         self.cookie_cache = None
@@ -178,7 +178,7 @@ class Parameter:
         elif isinstance(cookie, str):
             self.cookie_cache = cookie
         else:
-            self.log.warning("Cookie 参数格式错误")
+            self.logger.warning("Cookie 参数格式错误")
         return {}
 
     @staticmethod
@@ -196,45 +196,45 @@ class Parameter:
 
     def check_root(self, root: str) -> Path:
         if root and (r := Path(root)).is_dir():
-            self.log.info(f"root 参数已设置为 {root}", False)
+            self.logger.info(f"root 参数已设置为 {root}", False)
             return r
-        self.log.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
+        self.logger.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
         return self.main_path
 
     def check_folder_name(self, folder_name: str) -> str:
         if folder_name := Cleaner.clean_name(folder_name):
-            self.log.info(f"folder_name 参数已设置为 {folder_name}", False)
+            self.logger.info(f"folder_name 参数已设置为 {folder_name}", False)
             return folder_name
-        self.log.warning(
+        self.logger.warning(
             f"folder_name 参数 {folder_name} 不是有效的文件夹名称，程序将使用默认值：Download")
         return "Download"
 
     def check_name_format(self, name_format: str) -> list[str]:
         name_keys = name_format.strip().split(" ")
         if all(i in self.name_keys for i in name_keys):
-            self.log.info(f"name_format 参数已设置为 {name_format}", False)
+            self.logger.info(f"name_format 参数已设置为 {name_format}", False)
             return name_keys
         else:
-            self.log.warning(
+            self.logger.warning(
                 f"name_format 参数 {name_format} 设置错误，程序将使用默认值：创建时间 账号昵称 作品描述")
             return ["create_time", "nickname", "desc"]
 
     def check_date_format(self, date_format: str) -> str:
         try:
             _ = strftime(date_format, localtime())
-            self.log.info(f"date_format 参数已设置为 {date_format}", False)
+            self.logger.info(f"date_format 参数已设置为 {date_format}", False)
             return date_format
         except ValueError:
-            self.log.warning(
+            self.logger.warning(
                 f"date_format 参数 {date_format} 设置错误，程序将使用默认值：年-月-日 时.分.秒")
             return "%Y-%m-%d %H.%M.%S"
 
     def check_split(self, split: str) -> str:
         for i in split:
             if i in self.clean.rule.keys():
-                self.log.warning(f"split 参数 {split} 包含非法字符，程序将使用默认值：-")
+                self.logger.warning(f"split 参数 {split} 包含非法字符，程序将使用默认值：-")
                 return "-"
-        self.log.info(f"split 参数已设置为 {split}", False)
+        self.logger.info(f"split 参数已设置为 {split}", False)
         return split
 
     def check_proxies(self, proxies: str) -> dict:
@@ -248,17 +248,17 @@ class Parameter:
                 response = get(
                     "https://www.baidu.com/", proxies=proxies_dict, timeout=10)
                 if response.status_code == 200:
-                    self.log.info(f"代理 {proxies} 测试成功")
+                    self.logger.info(f"代理 {proxies} 测试成功")
                     return proxies_dict
             except exceptions.ReadTimeout:
-                self.log.warning(f"代理 {proxies} 测试超时")
+                self.logger.warning(f"代理 {proxies} 测试超时")
             except (
                     exceptions.ProxyError,
                     exceptions.SSLError,
                     exceptions.ChunkedEncodingError,
                     exceptions.ConnectionError,
             ):
-                self.log.warning(f"代理 {proxies} 测试失败")
+                self.logger.warning(f"代理 {proxies} 测试失败")
         return {
             "http": None,
             "https": None,
@@ -267,47 +267,49 @@ class Parameter:
 
     def check_max_size(self, max_size: int) -> int:
         max_size = max(max_size, 0)
-        self.log.info(f"max_size 参数已设置为 {max_size}", False)
+        self.logger.info(f"max_size 参数已设置为 {max_size}", False)
         return max_size
 
     def check_chunk(self, chunk: int) -> int:
         if isinstance(chunk, int) and chunk > 0:
-            self.log.info(f"chunk 参数已设置为 {chunk}", False)
+            self.logger.info(f"chunk 参数已设置为 {chunk}", False)
             return chunk
-        self.log.warning(f"chunk 参数 {chunk} 设置错误，程序将使用默认值：{512 * 1024}", False)
+        self.logger.warning(
+            f"chunk 参数 {chunk} 设置错误，程序将使用默认值：{
+            512 * 1024}", False)
         return 512 * 1024
 
     def check_max_retry(self, max_retry: int) -> int:
         if isinstance(max_retry, int) and max_retry >= 0:
-            self.log.info(f"max_retry 参数已设置为 {max_retry}", False)
+            self.logger.info(f"max_retry 参数已设置为 {max_retry}", False)
             return max_retry
-        self.log.warning(f"max_retry 参数 {max_retry} 设置错误，程序将使用默认值：0", False)
+        self.logger.warning(f"max_retry 参数 {max_retry} 设置错误，程序将使用默认值：0", False)
         return 0
 
     def check_max_pages(self, max_pages: int) -> int:
         if isinstance(max_pages, int) and max_pages > 0:
-            self.log.info(f"max_pages 参数已设置为 {max_pages}", False)
+            self.logger.info(f"max_pages 参数已设置为 {max_pages}", False)
             return max_pages
         elif max_pages != 0:
-            self.log.warning(
+            self.logger.warning(
                 f"max_pages 参数 {max_pages} 设置错误，程序将使用默认值：99999", False)
         return 99999
 
     def check_timeout(self, timeout: int | float) -> int | float:
         if isinstance(timeout, (int, float)) and timeout > 0:
-            self.log.info(f"timeout 参数已设置为 {timeout}", False)
+            self.logger.info(f"timeout 参数已设置为 {timeout}", False)
             return timeout
-        self.log.warning(f"timeout 参数 {timeout} 设置错误，程序将使用默认值：10")
+        self.logger.warning(f"timeout 参数 {timeout} 设置错误，程序将使用默认值：10")
         return 10
 
     def check_storage_format(self, storage_format: str) -> str:
         if storage_format in {"xlsx", "csv", "sql"}:
-            self.log.info(f"storage_format 参数已设置为 {storage_format}")
+            self.logger.info(f"storage_format 参数已设置为 {storage_format}")
             return storage_format
         if not storage_format:
-            self.log.info("storage_format 参数未设置，程序不会储存任何数据至文件")
+            self.logger.info("storage_format 参数未设置，程序不会储存任何数据至文件")
         else:
-            self.log.warning(
+            self.logger.warning(
                 f"storage_format 参数 {storage_format} 设置错误，程序默认不会储存任何数据至文件")
         return ""
 
