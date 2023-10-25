@@ -62,12 +62,17 @@ class Extractor:
                     return default
         return data or default
 
-    def run(self, data: list[dict], type_="works", **kwargs) -> dict:
+    def run(self, data: list[dict], recorder, type_="works", **kwargs) -> dict:
         if type_ not in self.type.keys():
             raise ValueError
-        return self.type[type_](data, **kwargs)
+        return self.type[type_](data, recorder, **kwargs)
 
-    def user(self, data: list[dict], post=True, mark=None) -> list[dict]:
+    def user(
+            self,
+            data: list[dict],
+            recorder,
+            post=True,
+            mark=None) -> list[dict]:
         result = []
         template = {
             "collection_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -83,6 +88,7 @@ class Extractor:
                 item), mark) for item in data[:-1]]
             self.extract_not_post(result, self.generate_data_object(data[-1]))
         self.summary_works(data)
+        self.record_data(recorder, data)
         return result
 
     def summary_works(self, data: list[dict]):
@@ -249,4 +255,8 @@ class Extractor:
         pass
 
     def hot(self, data: list[list[dict]]) -> list[dict]:
+        pass
+
+    @staticmethod
+    def record_data(record, data):
         pass
