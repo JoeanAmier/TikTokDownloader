@@ -140,7 +140,7 @@ class NoneLogger:
         pass
 
     @staticmethod
-    def rename(root, type_, old, new_) -> str:
+    def __rename(root: Path, type_: str, old: str, new_: str) -> str:
         mark = new_.split("_", 1)
         if not old or mark[-1] == old:
             return new_
@@ -158,9 +158,9 @@ class CSVLogger(NoneLogger):
 
     def __init__(
             self,
-            root: str,
-            title_line,
-            solo_key: bool,
+            root: Path,
+            title_line: tuple,
+            id_: bool,
             old=None,
             name="Solo_Download",
             *args,
@@ -168,16 +168,13 @@ class CSVLogger(NoneLogger):
         super().__init__(*args, **kwargs)
         self.file = None  # 文件对象
         self.writer = None  # CSV对象
-        self.root = Path(root)  # 文件路径
-        self.name = self.rename(self.root, self.__type, old, name)  # 文件名称
+        self.name = self.__rename(root, self.__type, old, name)  # 文件名称
+        self.path = root.joinpath(f"{self.name}.{self.__type}")  # 文件路径
         self.title_line = title_line  # 标题行
-        self.index = 1 if solo_key else 0
+        self.index = 1 if id_ else 0
 
     def __enter__(self):
-        if not self.root.exists():
-            self.root.mkdir()
-        self.root = self.root.joinpath(f"{self.name}.{self.__type}")
-        self.file = self.root.open(
+        self.file = self.path.open(
             "a",
             encoding="UTF-8-SIG" if system() == "Windows" else "UTF-8",
             newline="")
@@ -189,7 +186,7 @@ class CSVLogger(NoneLogger):
         self.file.close()
 
     def title(self):
-        if getsize(self.root) == 0:
+        if getsize(self.path) == 0:
             # 如果文件没有任何数据，则写入标题行
             self.save(self.title_line[self.index:])
 
@@ -203,9 +200,9 @@ class XLSXLogger(NoneLogger):
 
     def __init__(
             self,
-            root: str,
-            title_line,
-            solo_key: bool,
+            root: Path,
+            title_line: tuple,
+            id_: bool,
             old=None,
             name="Solo_Download",
             *args,
@@ -213,23 +210,20 @@ class XLSXLogger(NoneLogger):
         super().__init__(*args, **kwargs)
         self.book = None  # XLSX数据簿
         self.sheet = None  # XLSX数据表
-        self.root = Path(root)  # 文件路径
-        self.name = self.rename(self.root, self.__type, old, name)  # 文件名称
+        self.name = self.__rename(root, self.__type, old, name)  # 文件名称
+        self.path = self.root.joinpath(f"{self.name}.{self.__type}")
         self.title_line = title_line  # 标题行
-        self.index = 1 if solo_key else 0
+        self.index = 1 if id_ else 0
 
     def __enter__(self):
-        if not self.root.exists():
-            self.root.exists()
-        self.root = self.root.joinpath(f"{self.name}.{self.__type}")
         self.book = load_workbook(
-            self.root) if self.root.exists() else Workbook()
+            self.path) if self.path.exists() else Workbook()
         self.sheet = self.book.active
         self.title()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.book.save(self.root)
+        self.book.save(self.path)
         self.book.close()
 
     def title(self):
@@ -247,27 +241,25 @@ class SQLLogger(NoneLogger):
 
     def __init__(
             self,
-            root: str,
-            file,
-            title_line,
-            title_type,
-            solo_key: bool,
+            root: Path,
+            db_name: str,
+            title_line: tuple,
+            title_type: tuple,
+            id_: bool,
             old=None,
             name="Solo_Download", ):
         super().__init__()
         self.db = None  # 数据库
         self.cursor = None  # 游标对象
-        self.root = Path(root)  # 文件路径
         self.name = (old, name)  # 数据表名称
-        self.file = file  # 数据库文件名称
+        self.file = db_name  # 数据库文件名称
+        self.path = root.joinpath(self.file)
         self.title_line = title_line  # 数据表列名
         self.title_type = title_type  # 数据表数据类型
-        self.index = 1 if solo_key else 0
+        self.index = 1 if id_ else 0
 
     def __enter__(self):
-        if not self.root.exists():
-            self.root.mkdir()
-        self.db = connect(self.root.joinpath(self.file))
+        self.db = connect(self.path)
         self.cursor = self.db.cursor()
         self.update_sheet()
         self.create()
@@ -300,7 +292,7 @@ class SQLLogger(NoneLogger):
         update_sql = f"ALTER TABLE {old_sheet} RENAME TO {new_sheet};"
         self.cursor.execute(update_sql)
         self.db.commit()
-        self.name = Cleaner.clean_name(new_sheet)
+        self.name = new_sheet
 
 
 class RecordManager:
@@ -492,42 +484,42 @@ class RecordManager:
         "INTEGER",
         "TEXT",
     )
-    DataSheet = {
-        "": {
-            "file": "TikTokDownloader.db",
+    LoggerParams = {
+        "works": {
+            "db_name": "WorksData.db",
             "title_line": Title,
             "title_type": Type_,
-            "solo_key": False,
+            "id_": False,
         },
         "comment": {
-            "file": "CommentData.db",
+            "db_name": "CommentData.db",
             "title_line": Comment_Title,
             "title_type": Comment_Type,
-            "solo_key": False,
+            "id_": False,
         },
         "user": {
-            "file": "UserData.db",
+            "db_name": "UserData.db",
             "title_line": User_Title,
             "title_type": User_Type,
-            "solo_key": True,
+            "id_": True,
         },
         "mix": {
-            "file": "MixData.db",
+            "db_name": "MixData.db",
             "title_line": Title,
             "title_type": Type_,
-            "solo_key": False,
+            "id_": False,
         },
         "search_user": {
-            "file": "SearchResult.db",
+            "db_name": "SearchData.db",
             "title_line": Search_User_Title,
             "title_type": Search_User_Type,
-            "solo_key": False,
+            "id_": False,
         },
         "hot": {
-            "file": "HotBoardData.db",
+            "db_name": "HotBoardData.db",
             "title_line": Hot_Title,
             "title_type": Hot_Type,
-            "solo_key": False,
+            "id_": False,
         },
     }
     DataLogger = {
@@ -538,19 +530,11 @@ class RecordManager:
 
     def run(
             self,
-            main_path: Path,
-            root="",
+            parameter,
             folder="",
-            type_="",
-            format_=""):
-        root = self.check_root(root) or main_path
-        name = root.joinpath(Cleaner.clean_name(folder) or "Data")
-        type_ = self.DataSheet.get(type_)
-        format_ = self.DataLogger.get(format_, NoneLogger)
-        return format_, name, type_
-
-    @staticmethod
-    def check_root(root: str):
-        if not root:
-            return False
-        return r if (r := Path(root)).exists() else False
+            type_="works"):
+        root = parameter.root.joinpath(Cleaner.clean_name(folder) or "Data")
+        root.mkdir(exist_ok=True)
+        params = self.LoggerParams[type_]
+        logger = self.DataLogger.get(parameter.storage_format, NoneLogger)
+        return root, params, logger
