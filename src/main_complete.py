@@ -5,6 +5,10 @@ from src.Customizer import (
     WARNING,
 )
 from src.Customizer import failed
+from src.DataAcquirer import (
+    Link,
+    Account,
+)
 from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
 from src.FileManager import Cache
@@ -86,6 +90,7 @@ class TikTok:
         self.parameter = parameter
         self.console = parameter.console
         self.logger = parameter.logger
+        self.links = Link(parameter)
         self.downloader = Downloader(parameter)
         self.extractor = Extractor(parameter)
         self.storage = bool(parameter.storage_format)
@@ -101,58 +106,57 @@ class TikTok:
         )
 
     def batch_acquisition(self):
-        self.manager = Cache(
-            self.logger,
-            self._data["root"],
-            type_="UID",
-            mark=self.mark,
-            name=self.nickname)
-        save, root, params = self.record.run(
-            self._data["root"], format_=self._data["save"])
-        select = prompt("请选择账号链接来源", ("使用 accounts 参数内的账号链接(推荐)",
-                                               "手动输入待采集的账号链接"), self.colour.colorize)
+        root, params, logger = self.record.run(self.parameter)
+        select = prompt("请选择账号链接来源", ("使用 accounts_urls 参数内的账号链接(推荐)",
+                                               "手动输入待采集的账号链接"), self.console)
         if select == "1":
-            self.user_works_batch(save, root, params)
+            self.user_works_batch(root, params, logger)
         elif select == "2":
-            self.user_works_solo(save, root, params)
+            self.user_works_solo(root, params, logger)
         elif select.upper() == "Q":
-            self.quit = True
+            self.running = False
         self.logger.info("已退出批量下载账号作品模式")
 
-    def user_works_batch(self, save, root, params):
-        self.logger.info(f"共有 {self._number} 个账号的作品等待下载")
-        for index in range(self._number):
+    def user_works_batch(self, root, params, logger):
+        self.logger.info(f"共有 {len(self.accounts)} 个账号的作品等待下载")
+        count = 1
+        for index, data in enumerate(self.accounts):
+            if not (sec_user_id := self.check_sec_user_id(data.url)):
+                self.logger.warning(
+                    f"配置文件 accounts_urls 参数第 {
+                    index + 1} 条数据的 url 无效")
+                continue
             if not self.get_account_works(
                     index + 1,
-                    *self.accounts[index],
-                    save,
-                    root,
-                    params):
+                    **vars(data) | {"sec_user_id": sec_user_id},
+                    root=root,
+                    params=params,
+                    logger=logger):
                 if failed():
                     continue
                 break
             # break  # 调试使用
 
-    def user_works_solo(self, save, root, params):
+    def check_sec_user_id(self, sec_user_id: str) -> str:
+        sec_user_id = self.links.user(sec_user_id)
+        return sec_user_id[0] if len(sec_user_id) > 0 else ""
+
+    def user_works_solo(self, root, params, logger):
         while True:
-            url = input("请输入账号链接: ")
+            url = self.console.input(f"[{PROMPT}]请输入账号主页链接: [/{PROMPT}]")
             if not url:
                 break
             elif url in ("Q", "q",):
-                self.quit = True
+                self.running = False
                 break
-            links = self.request.run_alone(url, user=True)
-            for i in links:
+            links = self.links.user(url)
+            for index, sec in enumerate(links):
                 if not self.get_account_works(
-                        0,
-                        "",
-                        i,
-                        "post",
-                        "",
-                        "",
-                        save,
-                        root,
-                        params):
+                        index + 1,
+                        sec_user_id=sec,
+                        root=root,
+                        params=params,
+                        logger=logger):
                     if failed():
                         continue
                     break
@@ -160,27 +164,31 @@ class TikTok:
     def get_account_works(
             self,
             num: int,
-            mark: str,
-            url: str,
-            mode: str,
-            earliest: str,
-            latest: str, save, root: str, params: dict, api=False):
-        self.request.mark = mark
-        self.request.url = url
-        self.request.api = mode
-        self.request.earliest = earliest
-        self.request.latest = latest
-        if not self.request.run(f"第 {num} 个" if num else ""):
+            root,
+            params: dict,
+            logger,
+            sec_user_id: str,
+            mark="",
+            tab="post",
+            earliest="",
+            latest="",
+            api=False,
+            *args,
+            **kwargs):
+        self.logger.info(f"正在处理第 {num} 个账号")
+        acquirer = Account(self.parameter, sec_user_id, tab, earliest, latest)
+        account_data = acquirer.run()
+        if not account_data:
             return False
-        old_mark = m["mark"] if (
-            m := self.manager.cache.get(
-                self.request.uid.lstrip("UID"))) else None
-        self.manager.update_cache(
-            self.request.uid.lstrip("UID"),
-            self.request.mark,
-            self.request.name)
-        self.download_account_works(num, save, root, params, old_mark, api)
-        return True
+        # old_mark = m["mark"] if (
+        #     m := self.manager.cache.get(
+        #         self.request.uid.lstrip("UID"))) else None
+        # self.manager.update_cache(
+        #     self.request.uid.lstrip("UID"),
+        #     self.request.mark,
+        #     self.request.name)
+        # self.download_account_works(num, save, root, params, old_mark, api)
+        # return True
 
     def download_account_works(
             self,
