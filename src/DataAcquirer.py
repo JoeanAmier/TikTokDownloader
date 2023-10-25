@@ -18,7 +18,7 @@ from src.Customizer import wait
 from src.DataExtractor import Extractor
 
 __all__ = [
-    "Share",
+    "Link",
     "Account",
 ]
 
