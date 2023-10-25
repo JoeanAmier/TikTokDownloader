@@ -1604,7 +1604,7 @@ class Account(Acquirer):
 
     def generate_temp_data(self):
         fake_data = self.temp_data()
-        self.log.warning(f"获取账号昵称失败，本次运行将临时使用 {fake_data} 作为账号昵称")
+        self.log.warning(f"获取账号昵称失败，本次运行将临时使用 {fake_data} 作为账号昵称和 UID")
         fake_dict = {
             "author": {
                 "nickname": fake_data,
