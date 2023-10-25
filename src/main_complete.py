@@ -180,15 +180,21 @@ class TikTok:
         account_data = acquirer.run()
         if not account_data:
             return False
-        # old_mark = m["mark"] if (
-        #     m := self.manager.cache.get(
-        #         self.request.uid.lstrip("UID"))) else None
-        # self.manager.update_cache(
-        #     self.request.uid.lstrip("UID"),
-        #     self.request.mark,
-        #     self.request.name)
+        account_data = self.extractor.run(
+            account_data, post=tab == "post", mark=mark)
+        if api:
+            return account_data
+        old_mark = m["mark"] if (m := self.manager.cache.get(
+            id_ := account_data[-1]["uid"])) else None
+        self.manager.update_cache(
+            self.parameter.folder_mode,
+            "UID",
+            id_,
+            mark,
+            account_data[-1]["nickname"],
+        )
         # self.download_account_works(num, save, root, params, old_mark, api)
-        # return True
+        return True
 
     def download_account_works(
             self,
