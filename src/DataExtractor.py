@@ -239,24 +239,24 @@ class Extractor:
         }
         container.append(data_dict)
 
-    def works(self, data: list[dict]) -> list[dict]:
+    def works(self, data: list[dict], recorder) -> list[dict]:
         pass
 
-    def comment(self, data: list[dict]) -> list[dict]:
+    def comment(self, data: list[dict], recorder) -> list[dict]:
         pass
 
-    def live(self, data: list[dict]) -> list[dict]:
+    def live(self, data: list[dict], recorder) -> list[dict]:
         pass
 
-    def search_general(self, data: list[dict]) -> list[dict]:
+    def search_general(self, data: list[dict], recorder) -> list[dict]:
         pass
 
-    def search_user(self, data: list[dict]) -> list[dict]:
+    def search_user(self, data: list[dict], recorder) -> list[dict]:
         pass
 
-    def hot(self, data: list[list[dict]]) -> list[dict]:
+    def hot(self, data: list[list[dict]], recorder) -> list[dict]:
         pass
 
     @staticmethod
-    def record_data(record, data):
+    def record_data(record, data: dict):
         pass
