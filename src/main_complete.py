@@ -120,16 +120,14 @@ class TikTok:
 
     def user_works_batch(self, root, params, logger):
         self.logger.info(f"共有 {len(self.accounts)} 个账号的作品等待下载")
-        count = 1
-        for index, data in enumerate(self.accounts):
-            rest(count, self.console.print)
+        for index, data in enumerate(self.accounts, start=1):
             if not (sec_user_id := self.check_sec_user_id(data.url)):
                 self.logger.warning(
-                    f"配置文件 accounts_urls 参数第 {
-                    index + 1} 条数据的 url 无效")
+                    f"配置文件 accounts_urls 参数"
+                    f"第 {index} 条数据的 url 无效")
                 continue
             if not self.get_account_works(
-                    index + 1,
+                    index,
                     **vars(data) | {"sec_user_id": sec_user_id},
                     root=root,
                     params=params,
@@ -138,7 +136,7 @@ class TikTok:
                     continue
                 break
             # break  # 调试使用
-            count += 1
+            rest(index, self.console.print)
 
     def check_sec_user_id(self, sec_user_id: str) -> str:
         sec_user_id = self.links.user(sec_user_id)
@@ -153,11 +151,9 @@ class TikTok:
                 self.running = False
                 break
             links = self.links.user(url)
-            count = 1
-            for index, sec in enumerate(links):
-                rest(count, self.console.print)
+            for index, sec in enumerate(links, start=1):
                 if not self.get_account_works(
-                        index + 1,
+                        index,
                         sec_user_id=sec,
                         root=root,
                         params=params,
@@ -165,7 +161,7 @@ class TikTok:
                     if failed():
                         continue
                     break
-                count += 1
+                rest(index, self.console.print)
 
     def get_account_works(
             self,
