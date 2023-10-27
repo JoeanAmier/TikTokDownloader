@@ -72,7 +72,7 @@ class Extractor:
             data: list[dict],
             recorder,
             post=True,
-            mark=None) -> list[dict]:
+            mark="") -> list[dict]:
         result = []
         template = {
             "collection_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -85,7 +85,7 @@ class Extractor:
                                mark) for item in data]
         else:
             [self.extract_user(result, template, self.generate_data_object(
-                item), mark) for item in data[:-1]]
+                item)) for item in data[:-1]]
             self.extract_not_post(result, self.generate_data_object(data[-1]))
         self.summary_works(data)
         self.record_data(recorder, data)
@@ -99,7 +99,7 @@ class Extractor:
             container: list,
             template: dict,
             data: SimpleNamespace,
-            mark: str) -> None:
+            mark="") -> None:
         data_dict = template.copy()
         self.extract_works_info(data_dict, data)
         self.extract_account_info(data_dict, data, mark)
@@ -258,5 +258,5 @@ class Extractor:
         pass
 
     @staticmethod
-    def record_data(record, data: dict):
+    def record_data(record, data: list[dict]):
         pass
