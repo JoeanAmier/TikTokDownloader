@@ -200,7 +200,7 @@ class Parameter:
         return self.main_path
 
     def check_folder_name(self, folder_name: str) -> str:
-        if folder_name := Cleaner.clean_name(folder_name):
+        if folder_name := Cleaner.clean_name(folder_name, False):
             self.logger.info(f"folder_name 参数已设置为 {folder_name}", False)
             return folder_name
         self.logger.warning(
