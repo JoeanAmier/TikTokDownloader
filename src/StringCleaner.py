@@ -1,6 +1,7 @@
 from platform import system
 from re import sub
 from string import whitespace
+from time import time
 
 from src.Customizer import illegal_nickname
 
@@ -73,7 +74,7 @@ class Cleaner:
         # 去除首尾的下划线
         text = text.strip('_')
 
-        return text or illegal_nickname()
+        return text or illegal_nickname() or str(time())[:10]
 
     @staticmethod
     def clear_spaces(string: str):
