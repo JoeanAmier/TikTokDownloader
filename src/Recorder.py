@@ -60,7 +60,7 @@ class BaseLogger:
 
     @staticmethod
     def check_folder(folder: str) -> str:
-        return s if (s := Cleaner.clean_name(folder)) else "Log"
+        return s if (s := Cleaner.clean_name(folder, False)) else "Log"
 
     def run(self, *args, **kwargs):
         pass
@@ -533,7 +533,9 @@ class RecordManager:
             parameter,
             folder="",
             type_="works"):
-        root = parameter.root.joinpath(Cleaner.clean_name(folder) or "Data")
+        root = parameter.root.joinpath(
+            Cleaner.clean_name(
+                folder, False) or "Data")
         root.mkdir(exist_ok=True)
         params = self.LoggerParams[type_]
         logger = self.DataLogger.get(parameter.storage_format, NoneLogger)
