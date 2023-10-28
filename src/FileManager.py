@@ -76,8 +76,10 @@ class Cache:
             id_: str,
             mark: str,
             name: str):
-        if not (old_folder := self.root.joinpath(
-                f"{type_}{id_}_{self.data[id_]["mark"]}")).is_dir():
+        if not (
+                old_folder := self.root.joinpath(
+                    f"{type_}{id_}_{
+                    self.data[id_]["mark"] or self.data[id_]["name"]}")).is_dir():
             self.log.info(f"{old_folder} 文件夹不存在，自动跳过")
             return
         if self.data[id_]["mark"] != mark:
