@@ -920,7 +920,7 @@ class Downloader:
             actual_root: Path) -> None:
         for index, img in enumerate(
                 Extractor.safe_extract(
-                    item, "downloads"), start=1):
+                    item, "downloads").split(" "), start=1):
             if self.is_in_blacklist(id_ := Extractor.safe_extract(item, "id")):
                 count.skipped_image.add(id_)
                 self.log.info(f"图集 {id_} 存在下载记录，跳过下载")

@@ -92,8 +92,8 @@ class Extractor:
             [self.extract_user(result, template, self.generate_data_object(
                 item)) for item in data[:-1]]
             self.extract_not_post(result, self.generate_data_object(data[-1]))
-        self.summary_works(data)
-        self.record_data(recorder, data)
+        self.summary_works(result)
+        self.record_data(recorder, result)
         return result
 
     def summary_works(self, data: list[dict]):
@@ -158,9 +158,9 @@ class Extractor:
             data: SimpleNamespace,
             images: list) -> None:
         item["type"] = "图集"
-        item["downloads"] = [
+        item["downloads"] = " ".join(
             self.safe_extract(
-                i, 'url_list[-1]') for i in images]
+                i, 'url_list[-1]') for i in images)
         self.extract_cover(item, data)
 
     def extract_image_info_tiktok(
@@ -169,8 +169,8 @@ class Extractor:
             data: SimpleNamespace,
             images: dict) -> None:
         item["type"] = "图集"
-        item["downloads"] = [i["display_image"]["url_list"][-1]
-                             for i in images["images"]]
+        item["downloads"] = " ".join(self.safe_extract(
+            i, "display_image.url_list[-1]") for i in images["images"])
         self.extract_cover(item, data)
 
     def extract_video_info(self, item: dict, data: SimpleNamespace) -> None:

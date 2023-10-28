@@ -143,7 +143,7 @@ class NoneLogger:
         pass
 
     @staticmethod
-    def __rename(root: Path, type_: str, old: str, new_: str) -> str:
+    def _rename(root: Path, type_: str, old: str, new_: str) -> str:
         mark = new_.split("_", 1)
         if not old or mark[-1] == old:
             return new_
@@ -172,7 +172,7 @@ class CSVLogger(NoneLogger):
         super().__init__(*args, **kwargs)
         self.file = None  # 文件对象
         self.writer = None  # CSV对象
-        self.name = self.__rename(root, self.__type, old, name)  # 文件名称
+        self.name = self._rename(root, self.__type, old, name)  # 文件名称
         self.path = root.joinpath(f"{self.name}.{self.__type}")  # 文件路径
         self.title_line = title_line  # 标题行
         self.field_keys = field_keys
@@ -216,8 +216,8 @@ class XLSXLogger(NoneLogger):
         super().__init__(*args, **kwargs)
         self.book = None  # XLSX数据簿
         self.sheet = None  # XLSX数据表
-        self.name = self.__rename(root, self.__type, old, name)  # 文件名称
-        self.path = self.root.joinpath(f"{self.name}.{self.__type}")
+        self.name = self._rename(root, self.__type, old, name)  # 文件名称
+        self.path = root.joinpath(f"{self.name}.{self.__type}")
         self.title_line = title_line  # 标题行
         self.field_keys = field_keys
         self.index = 1 if id_ else 0
