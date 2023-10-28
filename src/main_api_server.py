@@ -7,7 +7,7 @@ from src.main_web_UI import WebUI
 
 class APIServer(WebUI):
     works_keys = {
-        23: RecordManager.Title,
+        23: RecordManager.works_text,
         6: (
             "主播昵称",
             "直播标题",

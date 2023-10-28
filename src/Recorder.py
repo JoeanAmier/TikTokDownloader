@@ -32,7 +32,7 @@ class BaseLogger:
     def __init__(self, main_path: Path, console, root="", folder="", name=""):
         self.log = None  # 记录器主体
         self.console = console
-        self.__root, self.__folder, self.__name = self.init_check(
+        self._root, self._folder, self._name = self.init_check(
             main_path=main_path,
             root=root,
             folder=folder,
@@ -46,7 +46,8 @@ class BaseLogger:
     def check_root(root: str, default: Path) -> Path:
         if root and (r := Path(root)).is_dir():
             return r
-        print(f"日志储存路径 {root} 无效，程序将使用项目根路径作为储存路径")
+        if root:
+            print(f"日志储存路径 {root} 无效，程序将使用项目根路径作为储存路径")
         return default
 
     @staticmethod
@@ -98,11 +99,11 @@ class LoggerManager(BaseLogger):
     def run(
             self,
             format_="%(asctime)s[%(levelname)s]:  %(message)s", filename=None):
-        if not (dir_ := self.__root.joinpath(self.__folder)).exists():
+        if not (dir_ := self._root.joinpath(self._folder)).exists():
             dir_.mkdir()
         file_handler = FileHandler(
             dir_.joinpath(
-                filename or f"{strftime(self.__name, localtime())}.log"),
+                filename or f"{strftime(self._name, localtime())}.log"),
             encoding="UTF-8")
         formatter = Formatter(format_, datefmt="%Y-%m-%d %H:%M:%S")
         file_handler.setFormatter(formatter)

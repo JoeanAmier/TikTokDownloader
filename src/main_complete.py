@@ -34,7 +34,7 @@ def prompt(
 
 def check_storage_format(function):
     def inner(self, *args, **kwargs):
-        if self.storage_format:
+        if self.parameter.storage_format:
             return function(self, *args, **kwargs)
         self.console.print(
             "未设置 storage_format 参数，无法正常使用该功能，详细说明请查阅项目文档！",
@@ -135,7 +135,7 @@ class TikTok:
                 if failed():
                     continue
                 break
-            # break  # 调试使用
+            break  # 调试使用
             rest(index, self.console.print)
 
     def check_sec_user_id(self, sec_user_id: str) -> str:

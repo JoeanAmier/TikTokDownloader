@@ -43,7 +43,7 @@ class Settings:
             "folder_mode": False,
             "music": False,
             "storage_format": "",
-            "cookie": None,
+            "cookie": "",
             "dynamic_cover": False,
             "original_cover": False,
             "proxies": "",
@@ -145,6 +145,7 @@ class Parameter:
         }
         self.ua_code = ua_code
         self.logger = logger(main_path, console)
+        self.logger.run()
         self.xb = xb
         self.console = console
         self.cookie_cache = None
@@ -196,7 +197,8 @@ class Parameter:
         if root and (r := Path(root)).is_dir():
             self.logger.info(f"root 参数已设置为 {root}", False)
             return r
-        self.logger.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
+        if root:
+            self.logger.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
         return self.main_path
 
     def check_folder_name(self, folder_name: str) -> str:
@@ -236,7 +238,7 @@ class Parameter:
         return split
 
     def check_proxies(self, proxies: str) -> dict:
-        if isinstance(proxies, str):
+        if isinstance(proxies, str) and proxies:
             proxies_dict = {
                 "http": proxies,
                 "https": proxies,
