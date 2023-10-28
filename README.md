@@ -98,7 +98,6 @@ TikTokDownloader
 │    ├─ DataAcquirer.py                    // 接口数据获取模块
 │    ├─ DataExtractor.py                   // 数据提取储存模块
 │    ├─ DataDownloader.py                  // 作品文件下载模块
-│    ├─ FileCache.json                     // 文件管理缓存数据
 │    ├─ FileManager.py                     // 作品文件管理模块
 │    ├─ Parameter.py                       // 加密参数生成模块
 │    ├─ Recorder.py                        // 日志及数据记录模块
@@ -108,6 +107,7 @@ TikTokDownloader
 │    ├─ main_api_server.py                 // Web API 接口模式启动入口
 │    └─ main_web_UI.py                     // Web UI 交互模式启动入口
 ├─ cache                                   // 缓存数据文件夹
+│    ├─ AccountCache.json                  // 账号管理缓存数据
 │    └─ IDRecorder.txt                     // 作品下载记录文件
 ├─ static                                  // 静态资源文件夹
 ├─ templates                               // HTML 模板文件夹
