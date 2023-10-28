@@ -102,8 +102,7 @@ class LoggerManager(BaseLogger):
             dir_.mkdir()
         file_handler = FileHandler(
             dir_.joinpath(
-                f"{filename}.log" or f"{
-                strftime(
+                f"{filename}.log" if filename else f"{strftime(
                     self._name,
                     localtime())}.log"),
             encoding="UTF-8")
