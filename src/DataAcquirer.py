@@ -1438,6 +1438,9 @@ class Link:
     # 抖音链接
     account_link = compile(
         r".*?https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*?")  # 账号主页链接
+    account_share = compile(
+        r".*?https://www\.iesdouyin\.com/share/user/(.*?)\?.*?"
+    )
     works_link = compile(
         r".*?https://www\.douyin\.com/(?:video|note)/([0-9]{19}).*?")  # 作品链接
     mix_link = compile(
@@ -1455,8 +1458,11 @@ class Link:
 
     def user(self, text: str) -> list:
         urls = self.share.run(text)
-        return [i[0] for i in u] if (
-            u := self.account_link.findall(urls)) else []
+        if u := self.account_link.findall(urls):
+            return [i[0] for i in u]
+        elif u := self.account_share.findall(urls):
+            return u
+        return []
 
     def works(self, text: str) -> tuple:
         urls = self.share.run(text)
@@ -1524,7 +1530,7 @@ class Account(Acquirer):
             earliest = datetime.strptime(
                 date_, "%Y/%m/%d")
             self.log.info(f"作品最早发布日期: {date_}")
-            # self.set_cursor(earliest)
+            self.set_cursor(earliest)
             return earliest.date()
         except ValueError:
             self.log.warning(f"作品最早发布日期 {date_} 无效")

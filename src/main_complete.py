@@ -135,7 +135,7 @@ class TikTok:
                 if failed():
                     continue
                 break
-            break  # 调试使用
+            # break  # 调试使用
             rest(index, self.console.print)
 
     def check_sec_user_id(self, sec_user_id: str) -> str:
