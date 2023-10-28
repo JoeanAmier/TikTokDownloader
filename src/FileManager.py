@@ -35,7 +35,7 @@ class Cache:
         self.root = parameter.root  # 作品文件保存根目录
         self.mark = mark
         self.name = name
-        self.cache = self.read_cache()
+        self.data = self.read_cache()
 
     def read_cache(self):
         try:
@@ -53,7 +53,7 @@ class Cache:
 
     def save_cache(self):
         with self.file.open("w", encoding="UTF-8") as f:
-            dump(self.cache, f, indent=4)
+            dump(self.data, f, indent=4)
         self.log.info("缓存数据已保存至文件")
 
     def update_cache(
@@ -63,9 +63,9 @@ class Cache:
             id_: str,
             mark: str,
             name: str):
-        if self.cache.get(id_):
+        if self.data.get(id_):
             self.check_file(solo_mode, type_, id_, mark, name)
-        self.cache[id_] = {"mark": mark, "name": name}
+        self.data[id_] = {"mark": mark, "name": name}
         self.log.info(f"更新缓存数据: {id_, mark, name}", False)
         self.save_cache()
 
@@ -77,14 +77,14 @@ class Cache:
             mark: str,
             name: str):
         if not (old_folder := self.root.joinpath(
-                f"{type_}{id_}_{self.cache[id_]["mark"]}")).is_dir():
+                f"{type_}{id_}_{self.data[id_]["mark"]}")).is_dir():
             self.log.info(f"{old_folder} 文件夹不存在，自动跳过")
             return
-        if self.cache[id_]["mark"] != mark:
+        if self.data[id_]["mark"] != mark:
             self.rename_folder(old_folder, type_, id_, mark)
             if self.mark:
                 self.scan_file(solo_mode, type_, id_, mark, name, field="mark")
-        if self.cache[id_]["name"] != name and self.name:
+        if self.data[id_]["name"] != name and self.name:
             self.scan_file(solo_mode, type_, id_, mark, name)
 
     def rename_folder(self, old_folder, type_: str, id_: str, mark: str):
@@ -120,7 +120,7 @@ class Cache:
             name: str,
             field: str):
         for old_file in files:
-            if (s := self.cache[id_][field]) not in old_file.name:
+            if (s := self.data[id_][field]) not in old_file.name:
                 break
             self.rename_file(root, old_file, s, mark, name, field)
 

@@ -58,7 +58,7 @@ class Cookie:
         else:
             keys = cookie
         self.write(keys)
-        self.console.input("写入 Cookie 成功！", style=GENERAL)
+        self.console.print("写入 Cookie 成功！", style=GENERAL)
 
     def check_key(self, items):
         if not items["sessionid_ss"]:
