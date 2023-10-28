@@ -52,6 +52,8 @@ class BaseLogger:
 
     @staticmethod
     def check_name(name: str) -> str:
+        if not name:
+            return "%Y-%m-%d %H.%M.%S"
         try:
             _ = strftime(name, localtime())
             return name
@@ -103,7 +105,10 @@ class LoggerManager(BaseLogger):
             dir_.mkdir()
         file_handler = FileHandler(
             dir_.joinpath(
-                filename or f"{strftime(self._name, localtime())}.log"),
+                f"{filename}.log" or f"{
+                strftime(
+                    self._name,
+                    localtime())}.log"),
             encoding="UTF-8")
         formatter = Formatter(format_, datefmt="%Y-%m-%d %H:%M:%S")
         file_handler.setFormatter(formatter)
