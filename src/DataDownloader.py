@@ -12,8 +12,6 @@ from rich.progress import (
     Progress,
     TextColumn,
     TimeRemainingColumn,
-    TransferSpeedColumn,
-    TimeElapsedColumn,
 )
 
 from src.Configuration import Parameter
@@ -787,15 +785,11 @@ class Downloader:
             justify="right"),
         "•",
         BarColumn(
-            bar_width=None),
+            bar_width=30),
         "[progress.percentage]{task.percentage:>3.1f}%",
         "•",
         DownloadColumn(
             binary_units=True),
-        "•",
-        TransferSpeedColumn(),
-        "•",
-        TimeElapsedColumn(),
         "•",
         TimeRemainingColumn(),
     )
