@@ -177,16 +177,18 @@ class TikTok:
             api=False,
             *args,
             **kwargs):
+        self.logger.info(f"开始处理第 {num} 个账号" if num else "开始处理账号")
         acquirer = Account(self.parameter, sec_user_id, tab, earliest, latest)
         account_data = acquirer.run()
         if not account_data:
             return False
-        account_data = self.extractor.run(
-            account_data, post=tab == "post", mark=mark)
-        if api:
-            return account_data
         old_mark = m["mark"] if (m := self.manager.cache.get(
             id_ := account_data[-1]["uid"])) else None
+        with logger(root, name=f"UID{id_}_{mark}", old=old_mark, **params) as recorder:
+            account_data = self.extractor.run(
+                account_data, recorder, post=tab == "post", mark=mark)
+        if api:
+            return account_data
         self.manager.update_cache(
             self.parameter.folder_mode,
             "UID",
@@ -199,20 +201,16 @@ class TikTok:
 
     def download_account_works(
             self,
-            num,
-            save,
-            root: str,
-            params: dict,
-            old_mark, api=False):
-        self.download.nickname = self.request.name
-        self.download.uid = self.request.uid
-        self.download.mark = self.request.mark
-        self.download.favorite = self.request.favorite
-        with save(root, name=f"{self.download.uid}_{self.download.mark}", old=old_mark, **params) as data:
-            self.download.data = data
-            self.download.run(f"第 {num} 个" if num else "",
-                              self.request.video_data,
-                              self.request.image_data, api)
+            data: list[dict],
+            old_mark: str,
+            mark: str,
+            post: bool,
+    ):
+        self.downloader.run(
+            data,
+            "user",
+            mark=mark,
+            addition="发布作品" if post else "喜欢作品")
 
     def single_acquisition(self):
         save, root, params = self.record.run(
