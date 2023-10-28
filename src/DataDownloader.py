@@ -909,13 +909,16 @@ class Downloader:
             count: SimpleNamespace,
             temp_root: Path,
             actual_root: Path) -> None:
-        for index, img in enumerate(Extractor.safe_extract(item, "downloads")):
+        for index, img in enumerate(
+                Extractor.safe_extract(
+                    item, "downloads"), start=1):
             if self.is_in_blacklist(id_ := Extractor.safe_extract(item, "id")):
                 count.skipped_image.add(id_)
                 self.log.info(f"图集 {id_} 存在下载记录，跳过下载")
                 break
-            elif self.is_exists(p := actual_root.with_name(f"{name}_{index + 1}").with_suffix(".jpeg")):
-                self.log.info(f"图集 {id_}_{index + 1} 文件已存在，跳过下载")
+            elif self.is_exists(p := actual_root.with_name(f"{name}_{index}.jpeg")):
+                self.log.info(f"图集 {id_}_{index} 文件已存在，跳过下载")
+                self.log.info(f"文件路径: {p.resolve()}")
                 continue
             self.__pool.submit(
                 self.request_file,
@@ -925,9 +928,7 @@ class Downloader:
                     index +
                     1}").with_suffix(".jpeg"),
                 p,
-                f"图集 {id_}_{
-                index +
-                1}",
+                f"图集 {id_}_{index}",
                 id_,
                 count,
             )
