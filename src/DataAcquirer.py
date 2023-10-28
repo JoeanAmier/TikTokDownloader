@@ -1514,6 +1514,8 @@ class Account(Acquirer):
         return self.check_earliest(start), self.check_latest(end)
 
     def check_earliest(self, date_: str) -> date:
+        if not date_:
+            return date(2016, 9, 20)
         try:
             earliest = datetime.strptime(
                 date_, "%Y/%m/%d")
@@ -1527,6 +1529,8 @@ class Account(Acquirer):
             return date(2016, 9, 20)
 
     def check_latest(self, date_: str) -> date:
+        if not date_:
+            return date.today()
         try:
             latest = datetime.strptime(date_, "%Y/%m/%d").date()
             self.log.info(f"作品最晚发布日期: {date_}")
