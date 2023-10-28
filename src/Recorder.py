@@ -39,8 +39,16 @@ class BaseLogger:
             name=name,
         )
 
-    def init_check(self, **kwargs) -> tuple:
-        return None, None, None
+    def init_check(
+            self,
+            main_path: Path,
+            root=None,
+            folder=None,
+            name=None) -> tuple:
+        root = self.check_root(root, main_path)
+        folder = self.check_folder(folder)
+        name = self.check_name(name)
+        return root, folder, name
 
     @staticmethod
     def check_root(root: str, default: Path) -> Path:
@@ -86,17 +94,6 @@ class LoggerManager(BaseLogger):
 
     def __init__(self, main_path: Path, console, root="", folder="", name=""):
         super().__init__(main_path, console, root, folder, name)
-
-    def init_check(
-            self,
-            main_path: Path,
-            root=None,
-            folder=None,
-            name=None) -> tuple:
-        root = self.check_root(root, main_path)
-        folder = self.check_folder(folder)
-        name = self.check_name(name)
-        return root, folder, name
 
     def run(
             self,
