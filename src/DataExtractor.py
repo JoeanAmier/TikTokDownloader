@@ -158,7 +158,9 @@ class Extractor:
             data: SimpleNamespace,
             images: list) -> None:
         item["type"] = "图集"
-        item["downloads"] = [i['url_list'][-1] for i in images]
+        item["downloads"] = [
+            self.safe_extract(
+                i, 'url_list[-1]') for i in images]
         self.extract_cover(item, data)
 
     def extract_image_info_tiktok(
@@ -264,7 +266,7 @@ class Extractor:
 
     def record_data(self, record, data: list[dict]):
         for i in data:
-            record.write(self.extract_values(record, i))
+            record.save(self.extract_values(record, i))
 
     @staticmethod
     def extract_values(record, data: dict) -> list:

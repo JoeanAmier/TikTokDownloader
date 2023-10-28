@@ -129,7 +129,7 @@ class LoggerManager(BaseLogger):
 
 class NoneLogger:
     def __init__(self, *args, **kwargs):
-        pass
+        self.field_keys = []
 
     def __enter__(self):
         return self

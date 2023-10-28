@@ -193,7 +193,7 @@ class TikTok:
                 mark=mark)
         if api:
             return account_data
-        self.manager.update_cache(
+        self.cache.update_cache(
             self.parameter.folder_mode,
             "UID",
             id_,

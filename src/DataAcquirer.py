@@ -1296,9 +1296,9 @@ def update_cookie(function):
         if self.cookie:
             active_cookie = self.cookie.copy()
             Parameter.add_cookie(active_cookie)
-            self.headers["Cookie"] = Register.generate_cookie(active_cookie)
+            self.PC_headers["Cookie"] = Register.generate_cookie(active_cookie)
         elif self.cookie_cache:
-            self.headers["Cookie"] = Parameter.add_cookie(self.cookie_cache)
+            self.PC_headers["Cookie"] = Parameter.add_cookie(self.cookie_cache)
         return function(self, *args, **kwargs)
 
     return inner
@@ -1344,7 +1344,7 @@ class Acquirer:
 
     def __init__(self, params: Parameter):
         self.cookie = params.cookie
-        self.headers = params.headers | {
+        self.PC_headers = params.headers | {
             "Referer": "https://www.douyin.com/", }
         self.ua_code = params.ua_code
         self.log = params.logger
@@ -1371,7 +1371,7 @@ class Acquirer:
                 params=params,
                 proxies=self.proxies,
                 timeout=self.timeout,
-                headers=self.headers, **kwargs)
+                headers=self.PC_headers, **kwargs)
             wait()
         except (
                 exceptions.ProxyError,
@@ -1678,8 +1678,8 @@ class Live(Acquirer):
 
     def __init__(self, params: Parameter, web_rid=None, redirect_url=None):
         super().__init__(params)
-        self.headers["Referer"] = "https://live.douyin.com/"
-        del self.headers["Cookie"]
+        self.PC_headers["Referer"] = "https://live.douyin.com/"
+        del self.PC_headers["Cookie"]
         self.web_rid = web_rid
         self.redirect_url = redirect_url
 
@@ -1721,7 +1721,7 @@ class Hot(Acquirer):
 
     def __init__(self, params: Parameter):
         super().__init__(params)
-        del self.headers["Cookie"]
+        del self.PC_headers["Cookie"]
         self.time = None
         self.title = None
 

@@ -133,7 +133,7 @@ class WebUI(TikTok):
             "preview": self.preview}
 
     def single_acquisition(self):
-        self.request.headers['Referer'] = "https://www.douyin.com/"
+        self.request.PC_headers['Referer'] = "https://www.douyin.com/"
         save, root, params = self.record.run(
             self._data["root"], format_=self._data["save"])
         with save(root, **params) as data:
