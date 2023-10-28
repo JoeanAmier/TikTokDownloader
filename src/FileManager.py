@@ -31,7 +31,7 @@ class Cache:
         self.console = parameter.console
         self.log = parameter.logger  # 日志记录对象
         self.file = parameter.main_path.joinpath(
-            "./src/FileCache.json")  # 缓存数据文件
+            "./cache/AccountCache.json")  # 缓存数据文件
         self.root = parameter.root  # 作品文件保存根目录
         self.mark = mark
         self.name = name
