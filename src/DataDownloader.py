@@ -870,20 +870,28 @@ class Downloader:
             downloaded_video=set(),
             skipped_video=set()
         )
-        with self.__thread(max_workers=MAX_WORKERS) as self.__pool:
-            for item in data:
-                item = Extractor.generate_data_object(item)
-                name = self.generate_works_name(item)
-                temp_root, actual_root = self.deal_folder_path(root, name)
-                if (t := Extractor.safe_extract(item, "type")) == "图集":
-                    self.download_image(
-                        name, item, count, temp_root, actual_root)
-                elif t == "视频":
-                    self.download_video(root, name, item, count)
-                else:
-                    raise ValueError
-                self.download_music(root, name, item)
-                self.download_cover(root, name, item)
+        tasks = []
+        for item in data:
+            item = Extractor.generate_data_object(item)
+            name = self.generate_works_name(item)
+            temp_root, actual_root = self.deal_folder_path(root, name)
+            if (t := Extractor.safe_extract(item, "type")) == "图集":
+                self.download_image(
+                    tasks, name, item, count, temp_root, actual_root)
+            elif t == "视频":
+                self.download_video(tasks, root, name, item, count)
+            else:
+                raise ValueError
+            self.download_music(tasks, root, name, item)
+            self.download_cover(tasks, root, name, item)
+        self.downloader_chart(tasks)
+
+    def downloader_chart(self, tasks: list[tuple]):
+        with self.progress:
+            with self.__thread(max_workers=MAX_WORKERS) as self.__pool:
+                for task in tasks:
+                    task_id = self.progress.add_task(task[3], start=False)
+                    self.__pool.submit(self.request_file, task_id, *task)
 
     def deal_folder_path(self, root: Path, name: str) -> tuple[Path, Path]:
         root = self.create_works_folder(root, name)
@@ -904,6 +912,7 @@ class Downloader:
 
     def download_image(
             self,
+            tasks: list,
             name: str,
             item: SimpleNamespace,
             count: SimpleNamespace,
@@ -918,23 +927,21 @@ class Downloader:
                 break
             elif self.is_exists(p := actual_root.with_name(f"{name}_{index}.jpeg")):
                 self.log.info(f"图集 {id_}_{index} 文件已存在，跳过下载")
-                self.log.info(f"文件路径: {p.resolve()}")
+                self.log.info(f"文件路径: {p.resolve()}", False)
                 continue
-            self.__pool.submit(
-                self.request_file,
+            tasks.append((
                 img,
                 temp_root.with_name(
-                    f"{name}_{
-                    index +
-                    1}").with_suffix(".jpeg"),
+                    f"{name}_{index}.jpeg"),
                 p,
                 f"图集 {id_}_{index}",
                 id_,
                 count,
-            )
+            ))
 
     def download_video(
             self,
+            tasks: list,
             root: Path,
             name: str,
             item: SimpleNamespace,
@@ -943,6 +950,7 @@ class Downloader:
 
     def download_music(
             self,
+            tasks: list,
             root: Path,
             name: str,
             item: SimpleNamespace) -> None:
@@ -950,6 +958,7 @@ class Downloader:
 
     def download_cover(
             self,
+            tasks: list,
             root: Path,
             name: str,
             item: SimpleNamespace) -> None:
@@ -961,6 +970,7 @@ class Downloader:
     # @retry
     def request_file(
             self,
+            task_id,
             url: str,
             temp: Path,
             actual: Path,
@@ -980,16 +990,17 @@ class Downloader:
                             response.headers.get(
                                 'content-length',
                                 0))) and not unknown_size:
-                    self.log.warning(f"{url} 响应内容为空")
+                    self.log.warning(f"{url} 响应内容为空", False)
                     return False
                 if response.status_code != 200:
                     self.log.warning(
-                        f"{response.url} 响应码异常: {response.status_code}")
+                        f"{response.url} 响应码异常: {response.status_code}", False)
                     return False
                 elif all((self.max_size, content, content > self.max_size)):
-                    self.log.info(f"{show} 文件大小超出限制，跳过下载")
+                    self.log.info(f"{show} 文件大小超出限制，跳过下载", False)
                     return True
                 return self.download_file(
+                    task_id,
                     temp,
                     actual,
                     show,
@@ -998,11 +1009,12 @@ class Downloader:
                     content,
                     count.downloaded_image)
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
-            self.log.warning(f"网络异常: {e}")
+            self.log.warning(f"网络异常: {e}", False)
             return False
 
     def download_file(
             self,
+            task_id,
             temp: Path,
             actual: Path,
             show: str,
@@ -1010,14 +1022,15 @@ class Downloader:
             response,
             content: int,
             count: set) -> bool:
-        progress_id = self.progress.add_task(show, total=content)
+        self.progress.update(task_id, total=content)
+        self.progress.start_task(task_id)
         try:
             with temp.open("wb") as f:
                 for chunk in response.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
-                    self.progress.update(progress_id, advance=len(chunk))
+                    self.progress.update(task_id, advance=len(chunk))
         except requests.exceptions.ChunkedEncodingError:
-            self.log.warning(f"{show} 由于网络异常下载中断")
+            self.log.warning(f"{show} 由于网络异常下载中断", False)
             self.delete_file(temp)
             return False
         self.save_file(temp, actual)
@@ -1056,7 +1069,7 @@ class Downloader:
 
     def delete_file(self, path: Path):
         path.unlink()
-        self.log.info(f"文件 {path.name}{path.suffix} 已删除")
+        self.log.info(f"文件 {path.name}{path.suffix} 已删除", False)
 
     @staticmethod
     def extract_addition(
