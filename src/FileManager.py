@@ -82,7 +82,7 @@ class Cache:
                         f"{type_}{id_}_{
                         self.data[id_]["mark"] or self.data[id_]["name"]}_{i}")).is_dir():
                 self.log.info(f"{old_folder} 文件夹不存在，自动跳过", False)
-                return
+                continue
             if self.data[id_]["mark"] != mark:
                 self.rename_folder(old_folder, type_, id_, mark)
                 if self.mark:
