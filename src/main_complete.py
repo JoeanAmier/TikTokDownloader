@@ -537,7 +537,7 @@ class TikTok:
             select = prompt(
                 "请选择采集功能",
                 ("批量下载账号作品",
-                 "单独下载链接作品",
+                 "批量下载链接作品",
                  "获取直播推流地址",
                  "采集作品评论数据",
                  "批量下载合集作品",
@@ -554,7 +554,7 @@ class TikTok:
                 self.logger.info("已选择批量下载账号作品模式")
                 self.batch_acquisition()
             elif select == "2":
-                self.logger.info("已选择单独下载链接作品模式")
+                self.logger.info("已选择批量下载链接作品模式")
                 self.single_acquisition()
             elif select == "3":
                 self.logger.info("已选择获取直播推流地址模式")

@@ -43,7 +43,7 @@
 <li>按照提示将 Cookie 写入配置文件</li>
 </ol>
 </li>
-<li>返回程序界面，依次选择 <code>终端命令行模式</code> --> <code>单独下载链接作品</code></li>
+<li>返回程序界面，依次选择 <code>终端命令行模式</code> --> <code>批量下载链接作品</code></li>
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 </ol>
 <p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a> 运行程序！</p>
@@ -98,8 +98,8 @@
 </ul>
 <h2>数据储存</h2>
 <ul>
-<li><code>settings.json</code> 的 <code>save</code> 参数可设置数据储存格式类型。</li>
-<li><code>采集作品评论数据</code>、<code>批量采集账号数据</code>、<code>采集搜索结果数据</code>、<code>采集抖音热榜数据</code> 模式必须设置 <code>save</code> 参数才能正常使用。</li>
+<li>配置文件 <code>settings.json</code> 的 <code>storage_format</code> 参数可设置数据储存格式类型。</li>
+<li><code>采集作品评论数据</code>、<code>批量采集账号数据</code>、<code>采集搜索结果数据</code>、<code>采集抖音热榜数据</code> 模式必须设置 <code>storage_format</code> 参数才能正常使用。</li>
 <li>程序所有数据均储存至 <code>root</code> 参数路径下的 <code>Data</code> 文件夹。</li>
 </ul>
 <h2>功能简介</h2>
@@ -115,7 +115,7 @@
 <td align="center">文件下载, 数据采集</td>
 </tr>
 <tr>
-<td align="center">单独下载链接作品</td>
+<td align="center">批量下载链接作品</td>
 <td align="center">文件下载, 数据采集</td>
 </tr>
 <tr>
@@ -361,7 +361,7 @@
 <p>代表作品文件名称格式为: <code>发布时间 @ 作者UID @ 作品ID</code></p>
 <ul>
 <li>如果作品没有描述，保存时文件名称的描述内容将替换为作品 ID</li>
-<li>单独下载链接作品时，如果在 <code>name_format</code> 参数中设置了 <code>mark</code> 字段，程序会自动替换为 <code>nickname</code> 字段</li>
+<li>批量下载链接作品时，如果在 <code>name_format</code> 参数中设置了 <code>mark</code> 字段，程序会自动替换为 <code>nickname</code> 字段</li>
 </ul>
 
 ```json
@@ -431,7 +431,7 @@
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark</code> 或者 <code>UID123456789_账号昵称</code></p>
-<h3>单独下载链接作品</h3>
+<h3>批量下载链接作品</h3>
 <p>输入作品链接；<strong>支持 TikTok 平台。</strong></p>
 <p>支持链接格式：</p>
 <ul>
@@ -773,9 +773,9 @@
 ```
 
 <h2>Web UI 交互模式</h2>
-<p>提供浏览器可视化交互界面，支持 <code>单独下载链接作品功能</code> 和 <code>获取直播推流地址功能</code>，支持局域网远程访问，可以部署至私有服务器，不可直接部署至公开服务器。</p>
+<p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品功能</code> 和 <code>获取直播推流地址功能</code>，支持局域网远程访问，可以部署至私有服务器，不可直接部署至公开服务器。</p>
 <h2>服务器部署模式</h2>
-<p>提供浏览器可视化交互界面，支持 <code>单独下载链接作品功能</code>，用于部署至公开服务器，为网站访客提供作品下载服务。</p>
+<p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品功能</code>，用于部署至公开服务器，为网站访客提供作品下载服务。</p>
 <p>为保护访客隐私，<code>服务器部署模式</code> 禁用了日志记录和数据存储功能，不会记录任何作品提取数据。</p>
 <h2>启用/禁用检查更新功能</h2>
 <p>启用检查更新功能后，运行程序时会向 <code>https://github.com/JoeanAmier/TikTokDownloader/releases/latest</code>
@@ -792,7 +792,7 @@
 <p><strong>不建议在程序运行过程中访问记录文件！</strong></p>
 <h1>其他功能说明</h1>
 <h2>单次输入多个链接</h2>
-<p><code>单独下载链接作品</code>、<code>获取直播推流地址</code>、<code>采集作品评论数据</code>、<code>批量下载合集作品</code>、<code>批量采集账号数据</code>
+<p><code>批量下载链接作品</code>、<code>获取直播推流地址</code>、<code>采集作品评论数据</code>、<code>批量下载合集作品</code>、<code>批量采集账号数据</code>
 支持单次输入多个链接，实现批量下载 / 提取功能；单次输入多个链接时，链接类型需要保持一致，不支持短链接与长链接混合输入。</p>
 <h3>输入示例</h3>
 <p><code>批量采集账号数据模式</code> 输入多个长链接时，需要使用空格分隔，其余模式不需要分隔字符，此处示例使用空格分隔仅仅便于观察区分链接。</p>
