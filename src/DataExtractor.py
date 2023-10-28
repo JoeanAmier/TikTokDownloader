@@ -262,6 +262,10 @@ class Extractor:
     def hot(self, data: list[list[dict]], recorder) -> list[dict]:
         pass
 
+    def record_data(self, record, data: list[dict]):
+        for i in data:
+            record.write(self.extract_values(record, i))
+
     @staticmethod
-    def record_data(record, data: list[dict]):
-        pass
+    def extract_values(record, data: dict) -> list:
+        return [data[key] for key in record.field_keys]
