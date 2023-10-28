@@ -160,6 +160,7 @@ class CSVLogger(NoneLogger):
             self,
             root: Path,
             title_line: tuple,
+            field_keys: tuple,
             id_: bool,
             old=None,
             name="Solo_Download",
@@ -171,6 +172,7 @@ class CSVLogger(NoneLogger):
         self.name = self.__rename(root, self.__type, old, name)  # 文件名称
         self.path = root.joinpath(f"{self.name}.{self.__type}")  # 文件路径
         self.title_line = title_line  # 标题行
+        self.field_keys = field_keys
         self.index = 1 if id_ else 0
 
     def __enter__(self):
@@ -202,6 +204,7 @@ class XLSXLogger(NoneLogger):
             self,
             root: Path,
             title_line: tuple,
+            field_keys: tuple,
             id_: bool,
             old=None,
             name="Solo_Download",
@@ -213,6 +216,7 @@ class XLSXLogger(NoneLogger):
         self.name = self.__rename(root, self.__type, old, name)  # 文件名称
         self.path = self.root.joinpath(f"{self.name}.{self.__type}")
         self.title_line = title_line  # 标题行
+        self.field_keys = field_keys
         self.index = 1 if id_ else 0
 
     def __enter__(self):
@@ -245,6 +249,7 @@ class SQLLogger(NoneLogger):
             db_name: str,
             title_line: tuple,
             title_type: tuple,
+            field_keys: tuple,
             id_: bool,
             old=None,
             name="Solo_Download", ):
@@ -256,6 +261,7 @@ class SQLLogger(NoneLogger):
         self.path = root.joinpath(self.file)
         self.title_line = title_line  # 数据表列名
         self.title_type = title_type  # 数据表数据类型
+        self.field_keys = field_keys
         self.index = 1 if id_ else 0
 
     def __enter__(self):
@@ -297,7 +303,10 @@ class SQLLogger(NoneLogger):
 
 class RecordManager:
     """检查数据储存路径和文件夹"""
-    Title = (
+    works_keys = (
+        "",
+    )
+    works_text = (
         "作品类型",
         "采集时间",
         "账号UID",
@@ -321,7 +330,7 @@ class RecordManager:
         "评论数量",
         "收藏数量",
         "分享数量")
-    Type_ = (
+    works_type = (
         "TEXT",
         "TEXT",
         "TEXT",
@@ -487,38 +496,44 @@ class RecordManager:
     LoggerParams = {
         "works": {
             "db_name": "WorksData.db",
-            "title_line": Title,
-            "title_type": Type_,
+            "title_line": works_text,
+            "title_type": works_type,
+            "field_keys": works_keys,
             "id_": False,
         },
         "comment": {
             "db_name": "CommentData.db",
             "title_line": Comment_Title,
             "title_type": Comment_Type,
+            "field_keys": works_keys,
             "id_": False,
         },
         "user": {
             "db_name": "UserData.db",
             "title_line": User_Title,
             "title_type": User_Type,
+            "field_keys": works_keys,
             "id_": True,
         },
         "mix": {
             "db_name": "MixData.db",
-            "title_line": Title,
-            "title_type": Type_,
+            "title_line": works_text,
+            "title_type": works_type,
+            "field_keys": works_keys,
             "id_": False,
         },
         "search_user": {
             "db_name": "SearchData.db",
             "title_line": Search_User_Title,
             "title_type": Search_User_Type,
+            "field_keys": works_keys,
             "id_": False,
         },
         "hot": {
             "db_name": "HotBoardData.db",
             "title_line": Hot_Title,
             "title_type": Hot_Type,
+            "field_keys": works_keys,
             "id_": False,
         },
     }
