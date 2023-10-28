@@ -1455,7 +1455,8 @@ class Link:
 
     def user(self, text: str) -> list:
         urls = self.share.run(text)
-        return u if (u := self.account_link.findall(urls)) else []
+        return [i[0] for i in u] if (
+            u := self.account_link.findall(urls)) else []
 
     def works(self, text: str) -> tuple:
         urls = self.share.run(text)
@@ -1463,6 +1464,9 @@ class Link:
             tiktok = False
         elif u := self.works_link_tiktok.findall(urls):
             tiktok = True
+        elif u := self.account_link.findall(urls):
+            tiktok = False
+            u = [i[1] for i in u]
         else:
             return None, []
         return tiktok, u
@@ -1520,7 +1524,7 @@ class Account(Acquirer):
             earliest = datetime.strptime(
                 date_, "%Y/%m/%d")
             self.log.info(f"作品最早发布日期: {date_}")
-            self.set_cursor(earliest)
+            # self.set_cursor(earliest)
             return earliest.date()
         except ValueError:
             self.log.warning(f"作品最早发布日期 {date_} 无效")
