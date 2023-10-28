@@ -182,11 +182,15 @@ class TikTok:
         account_data = acquirer.run()
         if not account_data:
             return False
-        old_mark = m["mark"] if (m := self.manager.cache.get(
-            id_ := account_data[-1]["uid"])) else None
+        old_mark = m["mark"] if (m := self.cache.data.get(
+            id_ := account_data[-1]["author"]["uid"])) else None
         with logger(root, name=f"UID{id_}_{mark}", old=old_mark, **params) as recorder:
             account_data = self.extractor.run(
-                account_data, recorder, post=tab == "post", mark=mark)
+                account_data,
+                recorder,
+                type_="user",
+                post=tab == "post",
+                mark=mark)
         if api:
             return account_data
         self.manager.update_cache(
@@ -330,7 +334,7 @@ class TikTok:
         self.download.nickname = mix_info[2]
         self.download.mark = mix_info[1]
         old_mark = m["mark"] if (
-            m := self.manager.cache.get(
+            m := self.manager.data.get(
                 mix_info[0])) else None
         self.manager.update_cache(*mix_info)
         with save(root, name=f"MIX{mix_info[0]}_{mix_info[1]}", old=old_mark, **params) as data:
