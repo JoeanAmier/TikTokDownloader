@@ -196,13 +196,12 @@ class TikTok:
             mark,
             account_data[-1]["nickname"],
         )
-        # self.download_account_works(num, save, root, params, old_mark, api)
+        self.download_account_works(account_data, mark, tab == "post")
         return True
 
     def download_account_works(
             self,
             data: list[dict],
-            old_mark: str,
             mark: str,
             post: bool,
     ):

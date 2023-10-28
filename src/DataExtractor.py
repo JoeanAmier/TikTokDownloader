@@ -62,7 +62,12 @@ class Extractor:
                     return default
         return data or default
 
-    def run(self, data: list[dict], recorder, type_="works", **kwargs) -> dict:
+    def run(
+            self,
+            data: list[dict],
+            recorder,
+            type_="works",
+            **kwargs) -> list[dict]:
         if type_ not in self.type.keys():
             raise ValueError
         return self.type[type_](data, recorder, **kwargs)
