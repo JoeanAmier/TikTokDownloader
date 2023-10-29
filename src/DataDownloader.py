@@ -877,6 +877,7 @@ class Downloader:
             with self.__thread(max_workers=MAX_WORKERS) as self.__pool:
                 for task in tasks:
                     task_id = self.progress.add_task(task[3], start=False)
+                    # noinspection PyTypeChecker
                     self.__pool.submit(
                         self.request_file,
                         task_id,
@@ -961,7 +962,8 @@ class Downloader:
             count: SimpleNamespace,
             temp_root: Path,
             actual_root: Path) -> None:
-        pass
+        if not self.music:
+            return
 
     def download_cover(
             self,
@@ -971,7 +973,10 @@ class Downloader:
             count: SimpleNamespace,
             temp_root: Path,
             actual_root: Path) -> None:
-        pass
+        if self.original:
+            pass
+        if self.dynamic:
+            pass
 
     def download_live(self) -> None:
         pass
