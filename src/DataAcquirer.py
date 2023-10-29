@@ -1329,12 +1329,9 @@ class Account(Acquirer):
             earliest = datetime.strptime(
                 date_, "%Y/%m/%d")
             self.log.info(f"作品最早发布日期: {date_}")
-            self.set_cursor(earliest)
             return earliest.date()
         except ValueError:
             self.log.warning(f"作品最早发布日期 {date_} 无效")
-            earliest = date(2016, 9, 20)
-            self.set_cursor(datetime.combine(earliest, datetime.min.time()))
             return date(2016, 9, 20)
 
     def check_latest(self, date_: str) -> date:
@@ -1347,9 +1344,6 @@ class Account(Acquirer):
         except ValueError:
             self.log.warning(f"作品最晚发布日期无效 {date_}")
             return date.today()
-
-    def set_cursor(self, earliest: datetime):
-        self.cursor = int(earliest.timestamp() * 1000)
 
     @update_cookie
     def run(self) -> tuple[list[dict], date, date]:
