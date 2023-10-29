@@ -24,42 +24,6 @@ __all__ = [
 ]
 
 
-# def reset(function):
-#     """重置数据"""
-#
-#     def inner(self, *args, **kwargs):
-#         if not isinstance(self.url, bool):
-#             self.id_ = None
-#         self.comment = []
-#         self.comment_data = []
-#         self.reply = []
-#         self.mix_total = []
-#         self.mix_data = []
-#         self.hot_data = []
-#         self.search_data = []
-#         self.cursor = 0
-#         self.name = None
-#         self.uid = None
-#         self.video_data = []  # 视频ID数据
-#         self.image_data = []  # 图集ID数据
-#         self.finish = False  # 是否获取完毕
-#         result = function(self, *args, **kwargs)
-#         self.id_ = None
-#         return result
-#
-#     return inner
-#
-#
-# def check_cookie(function):
-#     """检查是否设置了Cookie"""
-#
-#     def inner(self, *args, **kwargs):
-#         if self.cookie:
-#             return function(self, *args, **kwargs)
-#         print(self.colour.colorize("未设置Cookie！", 91))
-#         return False
-#
-#     return inner
 def retry(function):
     """发生错误时尝试重新执行，装饰的函数需要返回布尔值"""
 
@@ -78,19 +42,6 @@ def retry(function):
     return inner
 
 
-# def update_headers(headers):
-#     def inner(function):
-#         def execute(self, *args, **kwargs):
-#             self.headers['Referer'] = headers
-#             _ = function(self, *args, **kwargs)
-#             self.headers['Referer'] = "https://www.douyin.com/"
-#             return _
-#
-#         return execute
-#
-#     return inner
-#
-#
 # class Acquirer:
 #     """未来将会弃用"""
 #     headers = {
@@ -188,161 +139,6 @@ def retry(function):
 #         # self.__web = None
 #         self.__code = None
 #         self._pages = None
-#
-#     def initialization(self, user_agent: str, code: tuple, web=None):
-#         self.headers["User-Agent"], self.__code = user_agent, code
-#
-#     @property
-#     def url(self):
-#         return self._url
-#
-#     @url.setter
-#     def url(self, value):
-#         if self.share_link.match(value):
-#             self._url = value
-#             self.log.info(f"当前账号链接: {value}", False)
-#         elif len(s := self.account_link.findall(value)) == 1:
-#             self._url = True
-#             self.id_ = s[0][0]
-#             self.log.info(f"当前账号链接: {value}", False)
-#         else:
-#             self.log.warning(f"无效的账号链接: {value}")
-#
-#     @property
-#     def api(self):
-#         return self._api
-#
-#     @api.setter
-#     def api(self, value):
-#         if value == "post":
-#             self._api = f"https://www.douyin.com/aweme/v1/web/aweme/{value}/"
-#             self.favorite = False
-#         elif value == "favorite":
-#             self._api = f"https://www.douyin.com/aweme/v1/web/aweme/{value}/"
-#             self.favorite = True
-#         else:
-#             self.log.warning(f"批量下载类型错误！必须设置为“post”或者“favorite”，错误值: {value}")
-#
-#     @property
-#     def cookie(self):
-#         return self._cookie
-#
-#     @cookie.setter
-#     def cookie(self, cookie: dict):
-#         if isinstance(cookie, dict):
-#             self._cookie = cookie
-#             for i in (MsToken.get_ms_token(), TtWid.get_tt_wid(),):
-#                 if isinstance(i, dict):
-#                     self._cookie |= i
-#             self.headers["Cookie"] = "; ".join(
-#                 [f"{i}={j}" for i, j in self._cookie.items()])
-#
-#     @property
-#     def earliest(self):
-#         return self._earliest
-#
-#     @earliest.setter
-#     def earliest(self, value):
-#         if not value:
-#             self._earliest = date(2016, 9, 20)
-#             return
-#         try:
-#             self._earliest = datetime.strptime(
-#                 value, "%Y/%m/%d").date()
-#             self.log.info(f"作品最早发布日期: {value}")
-#         except ValueError:
-#             self.log.warning("作品最早发布日期无效")
-#
-#     @property
-#     def latest(self):
-#         return self._latest
-#
-#     @latest.setter
-#     def latest(self, value):
-#         if not value:
-#             self._latest = date.today()
-#             return
-#         try:
-#             self._latest = datetime.strptime(value, "%Y/%m/%d").date()
-#             self.log.info(f"作品最晚发布日期: {value}")
-#         except ValueError:
-#             self.log.warning("作品最晚发布日期无效")
-#
-#     @property
-#     def proxies(self):
-#         return self._proxies
-#
-#     @proxies.setter
-#     def proxies(self, value):
-#         if value and isinstance(value, str):
-#             test = {
-#                 "http": value,
-#                 "https": value,
-#                 "ftp": value
-#             }
-#             try:
-#                 response = requests.get(
-#                     "https://www.baidu.com/", proxies=test, timeout=10)
-#                 if response.status_code == 200:
-#                     self.log.info("代理测试通过")
-#                     self._proxies = test
-#                     return
-#             except requests.exceptions.ReadTimeout:
-#                 self.log.warning("代理测试超时")
-#             except (
-#                     requests.exceptions.ProxyError,
-#                     requests.exceptions.SSLError,
-#                     requests.exceptions.ChunkedEncodingError,
-#                     requests.exceptions.ConnectionError,
-#             ):
-#                 self.log.warning("代理测试失败")
-#         self._proxies = {
-#             "http": None,
-#             "https": None,
-#             "ftp": None,
-#         }
-#
-#     @property
-#     def time(self):
-#         return self._time
-#
-#     @time.setter
-#     def time(self, value):
-#         if value:
-#             try:
-#                 _ = time.strftime(value, time.localtime())
-#                 self._time = value
-#                 self.log.info(f"时间格式设置成功: {value}", False)
-#             except ValueError:
-#                 self.log.warning(f"时间格式错误: {value}，将使用默认时间格式(年-月-日 时.分.秒)")
-#                 self._time = "%Y-%m-%d %H.%M.%S"
-#         else:
-#             self.log.warning("错误的时间格式，将使用默认时间格式(年-月-日 时.分.秒)")
-#             self._time = "%Y-%m-%d %H.%M.%S"
-#
-#     @property
-#     def mark(self):
-#         return self._mark
-#
-#     @mark.setter
-#     def mark(self, value):
-#         if not value or not isinstance(value, str):
-#             self._mark = None
-#         else:
-#             self._mark = s if (
-#                 s := self.clean.filter(value)).rstrip(".") else None
-#
-#     @property
-#     def pages(self):
-#         return self._pages
-#
-#     @pages.setter
-#     def pages(self, value):
-#         if not isinstance(value, int):
-#             value = 0
-#         self._pages = value if value > 0 else 9999
-#         self.log.info(f"获取数据最大次数已设置为 {self._pages}", False)
-#
 #     def send_request(
 #             self,
 #             url: str,
@@ -1556,7 +1352,7 @@ class Account(Acquirer):
         self.cursor = int(earliest.timestamp() * 1000)
 
     @update_cookie
-    def run(self):
+    def run(self) -> tuple[list[dict], date, date]:
         num = 1
         while not self.finished and self.pages > 0:
             self.console.print(f"正在获取第 {num} 页数据...", style=GENERAL)
@@ -1566,7 +1362,7 @@ class Account(Acquirer):
             num += 1
         self.summary_works()
         self.favorite_mode()
-        return self.response
+        return self.response, self.earliest, self.latest
 
     def get_account_data(self, api: str, start=None, end=None, finished=False):
         params = {
