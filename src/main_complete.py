@@ -232,10 +232,8 @@ class TikTok:
             addition="发布作品" if post else "喜欢作品")
 
     def single_acquisition(self):
-        save, root, params = self.record.run(
-            self._data["root"], format_=self._data["save"])
-        with save(root, **params) as data:
-            self.download.data = data
+        root, params, logger = self.record.run(self.parameter)
+        with logger(root, **params) as record:
             while True:
                 url = input("请输入分享链接: ")
                 if not url:
