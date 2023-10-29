@@ -177,7 +177,8 @@ class TikTok:
             api=False,
             source=False,
             *args,
-            **kwargs):
+            **kwargs,
+    ):
         self.logger.info(f"开始处理第 {num} 个账号" if num else "开始处理账号")
         acquirer = Account(self.parameter, sec_user_id, tab, earliest, latest)
         account_data, earliest, latest = acquirer.run()
@@ -199,6 +200,8 @@ class TikTok:
                 mark=mark,
                 earliest=earliest,
                 latest=latest)
+        if not account_data:
+            return False
         if api:
             return account_data
         self.cache.update_cache(
