@@ -78,41 +78,44 @@ class Extractor:
             recorder,
             post=True,
             mark="") -> list[dict]:
-        result = []
-        template = {
-            "collection_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        }
+        container = SimpleNamespace(
+            all_data=[],
+            template={
+                "collection_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            },
+            cache=None,
+            nickname=None,
+            mark=self.clean.clean_name(mark),
+            post=post,
+        )
         data = conditional_filtering(data)
         if post:
-            [self.extract_user(result,
-                               template,
-                               self.generate_data_object(item),
-                               mark) for item in data]
+            [self.extract_user(container, self.generate_data_object(item))
+             for item in data]
         else:
-            [self.extract_user(result, template, self.generate_data_object(
+            [self.extract_user(container, self.generate_data_object(
                 item)) for item in data[:-1]]
-            self.extract_not_post(result, self.generate_data_object(data[-1]))
-        self.summary_works(result)
-        self.record_data(recorder, result)
-        return result
+            self.extract_not_post(container,
+                                  self.generate_data_object(data[-1]))
+        self.summary_works(container.all_data)
+        self.record_data(recorder, container.all_data)
+        return container.all_data
 
     def summary_works(self, data: list[dict]):
         self.log.info(f"当前账号筛选作品数量: {len(data)}")
 
     def extract_user(
             self,
-            container: list,
-            template: dict,
-            data: SimpleNamespace,
-            mark="") -> None:
-        data_dict = template.copy()
-        self.extract_works_info(data_dict, data)
-        self.extract_account_info(data_dict, data, mark)
-        self.extract_music(data_dict, data)
-        self.extract_statistics(data_dict, data)
-        self.extract_tags(data_dict, data)
-        self.extract_additional_info(data_dict, data)
-        container.append(data_dict)
+            container: SimpleNamespace,
+            data: SimpleNamespace) -> None:
+        container.cache = container.template.copy()
+        self.extract_works_info(container.cache, data)
+        self.extract_account_info(container, data)
+        self.extract_music(container.cache, data)
+        self.extract_statistics(container.cache, data)
+        self.extract_tags(container.cache, data)
+        self.extract_additional_info(container.cache, data)
+        container.all_data.append(container.cache)
 
     def extract_description(self, data: SimpleNamespace) -> str:
         return self.safe_extract(data, "desc")
@@ -226,25 +229,39 @@ class Extractor:
 
     def extract_account_info(
             self,
-            item: dict,
+            container: SimpleNamespace,
             data: SimpleNamespace,
-            mark: str) -> None:
+    ) -> None:
         data = self.safe_extract(data, "author")
-        item["uid"] = self.safe_extract(data, "uid")
-        item["sec_uid"] = self.safe_extract(data, "sec_uid")
-        item["short_id"] = self.safe_extract(data, "short_id")
-        item["unique_id"] = self.safe_extract(data, "unique_id")
-        item["signature"] = self.safe_extract(data, "signature")
-        item["nickname"] = self.clean.clean_name(self.safe_extract(
-            data, "nickname", "已注销账号"), False) or "无效昵称"
-        item["mark"] = self.clean.clean_name(mark, False) or item["nickname"]
+        container.cache["uid"] = self.safe_extract(data, "uid")
+        container.cache["sec_uid"] = self.safe_extract(data, "sec_uid")
+        container.cache["short_id"] = self.safe_extract(data, "short_id")
+        container.cache["unique_id"] = self.safe_extract(data, "unique_id")
+        container.cache["signature"] = self.safe_extract(data, "signature")
+        self.check_account_info(container, data)
 
-    def extract_not_post(self, container: list, data: SimpleNamespace) -> None:
+    def check_account_info(self,
+                           container: SimpleNamespace,
+                           data: SimpleNamespace, ) -> None:
+        if container.post:
+            if not container.nickname:
+                container.nickname = self.clean.clean_name(self.safe_extract(
+                    data, "nickname", "已注销账号"), default="无效账号昵称")
+            container.cache["nickname"] = container.nickname
+            container.cache["mark"] = container.mark or container.nickname
+        else:
+            nickname = self.clean.clean_name(self.safe_extract(
+                data, "nickname", "已注销账号"), inquire=False, default="无效账号昵称")
+            container.cache["nickname"] = nickname
+            container.cache["mark"] = nickname
+
+    def extract_not_post(self, container: SimpleNamespace,
+                         data: SimpleNamespace) -> None:
         data_dict = {
             "nickname": self.safe_extract(data, "author.nickname"),
             "uid": self.safe_extract(data, "author.uid"),
         }
-        container.append(data_dict)
+        container.all_data.append(data_dict)
 
     def works(self, data: list[dict], recorder) -> list[dict]:
         pass
