@@ -283,6 +283,11 @@
 <td align="center">int</td>
 <td align="center">批量下载账号喜欢作品、收藏作品或者采集作品评论数据时<br>请求数据的最大次数，默认值: <code>0</code> 代表不限制</td>
 </tr>
+<tr>
+<td align="center">default_mode</td>
+<td align="center">int</td>
+<td align="center">程序启动的默认模式</td>
+</tr>
 </tbody></table>
 <h2>配置示例</h2>
 
@@ -335,7 +340,8 @@
   "max_size": 10485760,
   "chunk": 1048576,
   "max_retry": 10,
-  "max_pages": 2
+  "max_pages": 2,
+  "default_mode": 3
 }
 ```
 
@@ -408,6 +414,14 @@
 
 <p>代表批量下载账号喜欢作品、收藏作品或者采集作品评论数据时，仅获取前 <code>2</code> 页数据；用于解决批量下载账号喜欢作品、收藏作品需要获取全部数据的问题，以及作品评论数据数量过多的采集问题。</p>
 <p>不影响批量下载账号发布作品，如需控制账号发布作品数据获取次数，可使用 <code>earliest</code> 和 <code>latest</code> 参数实现。</p>
+
+```json
+{
+  "default_mode": 3
+}
+```
+
+<p>代表运行程序自动进入 <code>终端命令行模式</code>，其他示例：<code>4</code> 代表 <code>Web API 接口模式</code>，<code>5</code> 代表 <code>Web UI 交互模式</code>，<code>6</code> 代表 <code>服务器部署模式</code>。</p>
 <h1>高级配置</h1>
 <p>如果想要进一步修改程序功能，可以编辑 <code>src/Customizer.py</code> 文件，按照注释指引和实际需求进行自定义修改。</p>
 <h1>功能介绍</h1>
