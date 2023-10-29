@@ -106,19 +106,19 @@ class TikTok:
             "nickname" in parameter.name_format
         )
 
-    def batch_acquisition(self):
+    def account_acquisition_interactive(self):
         root, params, logger = self.record.run(self.parameter)
         select = prompt("请选择账号链接来源", ("使用 accounts_urls 参数内的账号链接(推荐)",
                                                "手动输入待采集的账号链接"), self.console)
         if select == "1":
-            self.user_works_batch(root, params, logger)
+            self.account_works_batch(root, params, logger)
         elif select == "2":
-            self.user_works_solo(root, params, logger)
+            self.account_works_inquire(root, params, logger)
         elif select.upper() == "Q":
             self.running = False
         self.logger.info("已退出批量下载账号作品模式")
 
-    def user_works_batch(self, root, params, logger):
+    def account_works_batch(self, root, params, logger):
         self.logger.info(f"共有 {len(self.accounts)} 个账号的作品等待下载")
         for index, data in enumerate(self.accounts, start=1):
             if not (sec_user_id := self.check_sec_user_id(data.url)):
@@ -126,7 +126,7 @@ class TikTok:
                     f"配置文件 accounts_urls 参数"
                     f"第 {index} 条数据的 url 无效")
                 continue
-            if not self.get_account_works(
+            if not self.deal_account_works(
                     index,
                     **vars(data) | {"sec_user_id": sec_user_id},
                     root=root,
@@ -142,7 +142,7 @@ class TikTok:
         sec_user_id = self.links.user(sec_user_id)
         return sec_user_id[0] if len(sec_user_id) > 0 else ""
 
-    def user_works_solo(self, root, params, logger):
+    def account_works_inquire(self, root, params, logger):
         while True:
             url = self.console.input(f"[{PROMPT}]请输入账号主页链接: [/{PROMPT}]")
             if not url:
@@ -152,7 +152,7 @@ class TikTok:
                 break
             links = self.links.user(url)
             for index, sec in enumerate(links, start=1):
-                if not self.get_account_works(
+                if not self.deal_account_works(
                         index,
                         sec_user_id=sec,
                         root=root,
@@ -163,7 +163,7 @@ class TikTok:
                     break
                 rest(index, self.console.print)
 
-    def get_account_works(
+    def deal_account_works(
             self,
             num: int,
             root,
@@ -234,21 +234,24 @@ class TikTok:
     def single_acquisition(self):
         root, params, logger = self.record.run(self.parameter)
         with logger(root, **params) as record:
-            while True:
-                url = input("请输入分享链接: ")
+            while self.running:
+                url = self.console.input(f"[{PROMPT}]请输入作品链接: [/{PROMPT}]")
                 if not url:
                     break
                 elif url.upper() == "Q":
-                    self.quit = True
+                    self.running = False
                     break
-                ids = self.request.run_alone(url)
+                tiktok, ids = self.links.works(url)
                 if not ids:
-                    self.logger.error(f"{url} 获取作品ID失败")
+                    self.logger.warning(f"{url} 提取作品 ID 失败")
                     continue
-                self.download.tiktok = self.request.tiktok
-                for i in ids:
-                    self.download.run_alone(i)
+                # self.download.tiktok = self.request.tiktok
+                # for i in ids:
+                #     self.download.run_alone(i)
         self.logger.info("已退出单独下载链接作品模式")
+
+    def input_links_acquisition(self, tiktok: bool, ids: list[str]):
+        pass
 
     def live_acquisition(self):
         def choice_quality(items: dict) -> str:
@@ -570,7 +573,7 @@ class TikTok:
                 break
             elif select == "1":
                 self.logger.info("已选择批量下载账号作品模式")
-                self.batch_acquisition()
+                self.account_acquisition_interactive()
             elif select == "2":
                 self.logger.info("已选择批量下载链接作品模式")
                 self.single_acquisition()

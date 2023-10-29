@@ -98,7 +98,7 @@ class APIServer(WebUI):
             self.add_params(params)
             self.download.download = False
             self.request.pages = request.json.get('pages', self._data["pages"])
-            if not self.get_account_works(**params, api=True):
+            if not self.deal_account_works(**params, api=True):
                 return self.request_failed()
             return {
                 "works": self.format_data(self.download.api_data),
