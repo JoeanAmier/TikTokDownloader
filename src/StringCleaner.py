@@ -63,10 +63,10 @@ class Cleaner:
         return text
 
     @staticmethod
-    def clean_name(text: str, inquire=True) -> str:
+    def clean_name(text: str, inquire=True, default: str = "") -> str:
         """清洗字符串，仅保留中文、英文、数字和下划线"""
         if not text:
-            return ""
+            return default
 
         # 使用正则表达式匹配非中文、英文、数字和下划线字符，并替换为单个下划线
         text = sub(r'[^\u4e00-\u9fa5a-zA-Z0-9_]+', '_', text)
@@ -77,8 +77,8 @@ class Cleaner:
         # 去除首尾的下划线
         text = text.strip('_')
 
-        return text or illegal_nickname() or str(
-            time())[:10] if inquire else text
+        return text or illegal_nickname() or default or str(
+            time())[:10] if inquire else text or default
 
     @staticmethod
     def clear_spaces(string: str):
