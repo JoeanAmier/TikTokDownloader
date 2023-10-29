@@ -1037,8 +1037,8 @@ class Downloader:
         return folder
 
     def generate_works_name(self, data: SimpleNamespace) -> str:
-        return replace_emoji("".join(Extractor.safe_extract(data, i)
-                                     for i in self.name_format))
+        return replace_emoji(self.split.join(Extractor.safe_extract(data, i)
+                                             for i in self.name_format))
 
     def create_works_folder(self, root: Path, name: str) -> Path:
         return root.joinpath(name) if self.folder_mode else root
