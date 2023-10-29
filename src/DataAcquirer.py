@@ -1238,10 +1238,14 @@ class Link:
     account_link = compile(
         r".*?https://www\.douyin\.com/user/([a-zA-z0-9-_]+)(?:\?modal_id=([0-9]{19}))?.*?")  # 账号主页链接
     account_share = compile(
-        r".*?https://www\.iesdouyin\.com/share/user/(.*?)\?.*?"
+        r".*?https://www\.iesdouyin\.com/share/user/(.*?)\?.*?"  # 账号主页分享短链
     )
     works_link = compile(
         r".*?https://www\.douyin\.com/(?:video|note)/([0-9]{19}).*?")  # 作品链接
+    works_share = compile(
+        # 作品分享短链
+        r".*?https://www\.iesdouyin\.com/share/(?:video|note)/([0-9]{19})/.*?"
+    )
     mix_link = compile(
         r".*?https://www\.douyin\.com/collection/(\d{19}).*?")  # 合集链接
     live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
@@ -1269,6 +1273,8 @@ class Link:
             tiktok = False
         elif u := self.works_link_tiktok.findall(urls):
             tiktok = True
+        elif u := self.works_share.findall(urls):
+            tiktok = False
         elif u := self.account_link.findall(urls):
             tiktok = False
             u = [i[1] for i in u]
