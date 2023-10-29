@@ -161,6 +161,7 @@ class TikTokDownloader:
                         1,
                         5))
             self.compatible(default_mode)
+            default_mode = ""
 
     def complete(self):
         """终端命令行模式"""
