@@ -870,6 +870,7 @@ class Downloader:
             self.download_music(tasks, root, name, item)
             self.download_cover(tasks, root, name, item)
         self.downloader_chart(tasks)
+        self.statistics_count(count)
 
     def downloader_chart(self, tasks: list[tuple]):
         with self.progress:
@@ -939,6 +940,7 @@ class Downloader:
                     f"{name}.mp4")):
             self.log.info(f"视频 {id_} 存在下载记录或文件已存在，跳过下载")
             self.log.info(f"文件路径: {p.resolve()}", False)
+            count.skipped_video.add(id_)
             return
         tasks.append((
             Extractor.safe_extract(item, "downloads"),
@@ -952,17 +954,21 @@ class Downloader:
     def download_music(
             self,
             tasks: list,
-            root: Path,
             name: str,
-            item: SimpleNamespace) -> None:
+            item: SimpleNamespace,
+            count: SimpleNamespace,
+            temp_root: Path,
+            actual_root: Path) -> None:
         pass
 
     def download_cover(
             self,
             tasks: list,
-            root: Path,
             name: str,
-            item: SimpleNamespace) -> None:
+            item: SimpleNamespace,
+            count: SimpleNamespace,
+            temp_root: Path,
+            actual_root: Path) -> None:
         pass
 
     def download_live(self) -> None:
@@ -1008,7 +1014,7 @@ class Downloader:
                     id_,
                     response,
                     content,
-                    count.downloaded_image)
+                    count)
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
             self.log.warning(f"网络异常: {e}", False)
             return False
@@ -1022,7 +1028,7 @@ class Downloader:
             id_: str,
             response,
             content: int,
-            count: set) -> bool:
+            count: SimpleNamespace) -> bool:
         self.progress.update(task_id, total=content)
         self.progress.start_task(task_id)
         try:
@@ -1036,8 +1042,11 @@ class Downloader:
             return False
         self.save_file(temp, actual)
         self.blacklist.update_id(id_)
-        count.add(id_)
+        self.add_count(temp, count)
         return True
+
+    def add_count(self, temp: Path, count: SimpleNamespace):
+        pass
 
     def storage_folder(
             self,
@@ -1071,3 +1080,9 @@ class Downloader:
     def delete_file(self, path: Path):
         path.unlink()
         self.log.info(f"文件 {path.name}{path.suffix} 已删除", False)
+
+    def statistics_count(self, count: SimpleNamespace):
+        self.log.info(f"跳过视频作品 {len(count.skipped_video)} 个")
+        self.log.info(f"跳过图集作品 {len(count.skipped_image)} 个")
+        self.log.info(f"下载视频作品 {len(count.downloaded_video)} 个")
+        self.log.info(f"下载图集作品 {len(count.downloaded_image)} 个")
