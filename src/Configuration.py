@@ -52,6 +52,7 @@ class Settings:
             "chunk": 512 * 1024,  # 每次从服务器接收的数据块大小
             "max_retry": 10,  # 重试最大次数
             "max_pages": 0,
+            "mode": None
         }  # 默认配置
 
     def __create(self) -> dict:
@@ -135,6 +136,7 @@ class Parameter:
             chunk: int,
             max_retry: int,
             max_pages: int,
+            mode: str,
             blacklist,
             timeout=10,
             **kwargs,
@@ -170,6 +172,7 @@ class Parameter:
         self.timeout = self.check_timeout(timeout)
         self.accounts_urls = self.check_accounts_urls(accounts_urls)
         self.mix_urls = self.check_mix_urls(mix_urls)
+        self.mode = self.check_mode(mode)
 
     def check_cookie(self, cookie: dict | str) -> dict:
         if isinstance(cookie, dict):
@@ -320,3 +323,10 @@ class Parameter:
     @staticmethod
     def check_mix_urls(mix_urls: dict) -> SimpleNamespace:
         return Extractor.generate_data_object(mix_urls)
+
+    def check_mode(self, mode: str) -> str:
+        try:
+            return mode if mode and int(mode) in range(3, 7) else ""
+        except ValueError:
+            self.logger.warning(f"mode 参数 {mode} 设置错误")
+            return ""

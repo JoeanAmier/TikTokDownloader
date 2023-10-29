@@ -141,24 +141,25 @@ class TikTokDownloader:
             self.console.print("检测新版本失败", style=ERROR)
         self.console.print()
 
-    def main(self):
+    def main_menu(self, mode=""):
         """选择运行模式"""
         while self.running:
-            mode = prompt(
-                "请选择 TikTokDownloader 运行模式",
-                ("复制粘贴写入 Cookie",
-                 "扫码登录写入 Cookie",
-                 "终端命令行模式",
-                 "Web API 接口模式",
-                 "Web UI 交互模式",
-                 "服务器部署模式",
-                 f"{self.UPDATE['tip']}自动检查更新",
-                 f"{self.RECORD['tip']}作品下载记录",
-                 f"{self.LOGGING['tip']}运行日志记录",),
-                self.console,
-                separate=(
-                    1,
-                    5))
+            if not mode:
+                mode = prompt(
+                    "请选择 TikTokDownloader 运行模式",
+                    ("复制粘贴写入 Cookie",
+                     "扫码登录写入 Cookie",
+                     "终端命令行模式",
+                     "Web API 接口模式",
+                     "Web UI 交互模式",
+                     "服务器部署模式",
+                     f"{self.UPDATE['tip']}自动检查更新",
+                     f"{self.RECORD['tip']}作品下载记录",
+                     f"{self.LOGGING['tip']}运行日志记录",),
+                    self.console,
+                    separate=(
+                        1,
+                        5))
             self.compatible(mode)
 
     def complete(self):
@@ -235,7 +236,7 @@ class TikTokDownloader:
         self.check_update()
         self.check_settings()
         self.disclaimer()
-        self.main()
+        self.main_menu(self.parameter.mode)
         self.delete_temp()
         self.console.print("程序结束运行", style=GENERAL)
 
