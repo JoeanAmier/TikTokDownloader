@@ -260,13 +260,19 @@ class Extractor:
             container.cache["nickname"] = nickname
             container.cache["mark"] = nickname
 
-    def check_account_info(self, data: dict, mark="") -> tuple[str, str, str]:
-        data = self.generate_data_object(data)
-        uid = self.safe_extract(data, "author.uid")
+    def preprocessing_data(self,
+                           data: list[dict],
+                           mark="",
+                           post=True) -> tuple[str,
+    str,
+    str,
+    list[dict]]:
+        item = self.generate_data_object(data[-1])
+        uid = self.safe_extract(item, "author.uid")
         nickname = self.clean.clean_name(self.safe_extract(
-            data, "author.nickname", "已注销账号"), default="无效账号昵称")
+            item, "author.nickname", "已注销账号"), default="无效账号昵称")
         mark = self.clean.clean_name(mark, default=nickname)
-        return uid, nickname, mark
+        return uid, nickname, mark, data[:None if post else -1]
 
     def extract_not_post(self, container: SimpleNamespace,
                          data: SimpleNamespace) -> None:
