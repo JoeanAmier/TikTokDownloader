@@ -1412,7 +1412,8 @@ class Account(Acquirer):
         sec_uid = Extractor.get_sec_uid(self.response[-1])
         if self.sec_user_id != sec_uid:
             self.log.warning(
-                f"sec_user_id 不一致，出现了预期之外的异常: {self.response[-1]}", False)
+                f"sec_user_id {self.sec_user_id} 与 {sec_uid} 不一致，出现了"
+                f"预期之外的异常: {self.response[-1]}", False)
             self.generate_temp_data()
 
     def generate_temp_data(self):
