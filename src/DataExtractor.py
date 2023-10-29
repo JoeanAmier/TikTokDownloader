@@ -76,17 +76,22 @@ class Extractor:
             self,
             data: list[dict],
             recorder,
+            earliest,
+            latest,
             post=True,
-            mark="") -> list[dict]:
+            mark="",
+    ) -> tuple[str, str, list[dict]]:
         container = SimpleNamespace(
             all_data=[],
             template={
-                "collection_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "collection_time": datetime.now().strftime(self.date_format),
             },
             cache=None,
-            nickname=None,
+            nickname="",
             mark=self.clean.clean_name(mark),
             post=post,
+            earliest=earliest,
+            latest=latest,
         )
         data = conditional_filtering(data)
         if post:
@@ -97,9 +102,10 @@ class Extractor:
                 item)) for item in data[:-1]]
             self.extract_not_post(container,
                                   self.generate_data_object(data[-1]))
-        self.summary_works(container.all_data)
-        self.record_data(recorder, container.all_data)
-        return container.all_data
+        self.date_filter(container)
+        self.summary_works(container.all_data[:None if post else -1])
+        self.record_data(recorder, container.all_data[:None if post else -1])
+        return container.nickname, container.mark, container.all_data
 
     def summary_works(self, data: list[dict]):
         self.log.info(f"当前账号筛选作品数量: {len(data)}")
@@ -140,6 +146,7 @@ class Extractor:
         item["desc"] = self.clean_description(
             self.extract_description(data)) or item["id"]
         item["create_time"] = self.format_date(data)
+        item["create_timestamp"] = self.safe_extract(data, "create_time")
         self.classifying_works(item, data)
 
     def classifying_works(self, item: dict, data: SimpleNamespace) -> None:
@@ -288,3 +295,13 @@ class Extractor:
     @staticmethod
     def extract_values(record, data: dict) -> list:
         return [data[key] for key in record.field_keys]
+
+    @staticmethod
+    def date_filter(container: SimpleNamespace, ):
+        result = []
+        for item in container.all_data:
+            create_time = datetime.fromtimestamp(
+                item["create_timestamp"]).date()
+            if container.earliest <= create_time <= container.latest:
+                result.append(item)
+        container.all_data = result
