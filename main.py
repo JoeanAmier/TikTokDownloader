@@ -38,7 +38,7 @@ class TikTokDownloader:
     PROJECT_ROOT = Path(__file__).resolve().parent
     # PROJECT_ROOT = Path.cwd()
 
-    VERSION = 4.3
+    VERSION = 5.0
     STABLE = False
 
     REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
