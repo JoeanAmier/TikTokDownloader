@@ -221,7 +221,7 @@
 <tr>
 <td align="center">folder_mode</td>
 <td align="center">bool</td>
-<td align="center">是否将每个作品的文件储存至单独的文件夹，默认值: <code>false</code></td>
+<td align="center">是否将每个作品的文件储存至单独的文件夹，文件夹名称格式与 <code>folder_name</code> 参数保持一致，默认值: <code>false</code></td>
 </tr>
 <tr>
 <td align="center">music</td>
