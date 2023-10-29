@@ -834,7 +834,7 @@ class Downloader:
         root = self.storage_folder(uid, nickname, True, mark, addition)
         self.batch_processing(data, root)
 
-    def run_general(self, data: list[dict]):
+    def run_general(self, data: list[dict], tiktok: bool):
         root = self.storage_folder()
         self.batch_processing(data, root)
 
@@ -928,11 +928,26 @@ class Downloader:
     def download_video(
             self,
             tasks: list,
-            root: Path,
             name: str,
             item: SimpleNamespace,
-            count: SimpleNamespace) -> None:
-        pass
+            count: SimpleNamespace,
+            temp_root: Path,
+            actual_root: Path) -> None:
+        if self.is_skip(
+                id_ := Extractor.safe_extract(
+                    item, "id"), p := actual_root.with_name(
+                    f"{name}.mp4")):
+            self.log.info(f"视频 {id_} 存在下载记录或文件已存在，跳过下载")
+            self.log.info(f"文件路径: {p.resolve()}", False)
+            return
+        tasks.append((
+            Extractor.safe_extract(item, "downloads"),
+            temp_root.with_name(f"{name}.mp4"),
+            p,
+            f"视频 {id_}",
+            id_,
+            count,
+        ))
 
     def download_music(
             self,
