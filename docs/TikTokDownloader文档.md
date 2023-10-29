@@ -92,8 +92,8 @@
 </tr>
 </tbody></table>
 <ul>
-<li>长链接：使用浏览器打开抖音或 TikTok 链接时，地址栏所显示的 URL 地址。</li>
-<li>短链接：点击 APP 或网页版的分享按钮得到的 URL 地址，抖音平台以 <code>https://v.</code> 开头，掺杂中文和其他字符；TikTok
+<li>账号/作品/直播完整链接：使用浏览器打开抖音或 TikTok 链接时，地址栏所显示的 URL 地址。</li>
+<li>分享短链接：点击 APP 或网页版的分享按钮得到的 URL 地址，抖音平台以 <code>https://v.</code> 开头，掺杂中文和其他字符；TikTok
 平台以 <code>https://vm</code> 开头，不掺杂其他字符；使用时不需要手动去除中文和其他字符，程序会自动提取 URL 链接。</li>
 </ul>
 <h2>数据储存</h2>
