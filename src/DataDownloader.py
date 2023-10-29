@@ -860,28 +860,22 @@ class Downloader:
             item = Extractor.generate_data_object(item)
             name = self.generate_works_name(item)
             temp_root, actual_root = self.deal_folder_path(root, name)
+            id_ = Extractor.safe_extract(item, "id")
+            params = {
+                tasks: tasks,
+                name: name,
+                id_: id_,
+                item: item,
+                count: count,
+                temp_root: temp_root,
+                actual_root: actual_root
+            }
             if (t := Extractor.safe_extract(item, "type")) == "图集":
-                self.download_image(
-                    tasks, name, item, count, temp_root, actual_root)
+                self.download_image(**params)
             elif t == "视频":
-                self.download_video(
-                    tasks, name, item, count, temp_root, actual_root)
-            else:
-                raise ValueError
-            self.download_music(
-                tasks,
-                name,
-                item,
-                count,
-                temp_root,
-                actual_root)
-            self.download_cover(
-                tasks,
-                name,
-                item,
-                count,
-                temp_root,
-                actual_root)
+                self.download_video(**params)
+            self.download_music(**params)
+            self.download_cover(**params)
         self.downloader_chart(tasks, count)
         self.statistics_count(count)
 
@@ -919,6 +913,7 @@ class Downloader:
             self,
             tasks: list,
             name: str,
+            id_: str,
             item: SimpleNamespace,
             count: SimpleNamespace,
             temp_root: Path,
@@ -926,7 +921,7 @@ class Downloader:
         for index, img in enumerate(
                 Extractor.safe_extract(
                     item, "downloads").split(" "), start=1):
-            if self.is_in_blacklist(id_ := Extractor.safe_extract(item, "id")):
+            if self.is_in_blacklist(id_):
                 count.skipped_image.add(id_)
                 self.log.info(f"图集 {id_} 存在下载记录，跳过下载")
                 break
@@ -947,13 +942,13 @@ class Downloader:
             self,
             tasks: list,
             name: str,
+            id_: str,
             item: SimpleNamespace,
             count: SimpleNamespace,
             temp_root: Path,
             actual_root: Path) -> None:
         if self.is_skip(
-                id_ := Extractor.safe_extract(
-                    item, "id"), p := actual_root.with_name(
+                id_, p := actual_root.with_name(
                     f"{name}.mp4")):
             self.log.info(f"视频 {id_} 存在下载记录或文件已存在，跳过下载")
             self.log.info(f"文件路径: {p.resolve()}", False)
@@ -971,10 +966,11 @@ class Downloader:
             self,
             tasks: list,
             name: str,
+            id_: str,
             item: SimpleNamespace,
-            count: SimpleNamespace,
             temp_root: Path,
-            actual_root: Path) -> None:
+            actual_root: Path,
+            **kwargs, ) -> None:
         if not self.music:
             return
 
@@ -982,10 +978,11 @@ class Downloader:
             self,
             tasks: list,
             name: str,
+            id_: str,
             item: SimpleNamespace,
-            count: SimpleNamespace,
             temp_root: Path,
-            actual_root: Path) -> None:
+            actual_root: Path,
+            **kwargs, ) -> None:
         if self.original:
             pass
         if self.dynamic:
