@@ -132,7 +132,7 @@ class WebUI(TikTok):
             "dynamic": False,
             "preview": self.preview}
 
-    def single_acquisition(self):
+    def works_interactive(self):
         self.request.PC_headers['Referer'] = "https://www.douyin.com/"
         save, root, params = self.record.run(
             self._data["root"], format_=self._data["save"])
@@ -173,7 +173,7 @@ class WebUI(TikTok):
                 "dynamic": False,
                 "preview": self.preview}
 
-    def live_acquisition(self):
+    def live_interactive(self):
         if not (
                 data := self.request.run_live(
                     self.live_url,
@@ -223,7 +223,7 @@ class WebUI(TikTok):
                     "dynamic": False,
                     "preview": self.preview}
             self.solo_url = (url, download)
-            return self.single_acquisition()
+            return self.works_interactive()
 
         @app.route('/live/', methods=['POST'])
         def live():
@@ -235,6 +235,6 @@ class WebUI(TikTok):
                     "best": "",
                     "preview": self.preview}
             self.live_url = url
-            return self.live_acquisition()
+            return self.live_interactive()
 
         return app

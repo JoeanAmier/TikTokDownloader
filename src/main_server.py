@@ -41,7 +41,7 @@ class Server(WebUI):
         self.request.retry = self._data["retry"]
         self.download.retry = self._data["retry"]
 
-    def single_acquisition(self):
+    def works_interactive(self):
         with NoneLogger() as data:
             self.download.data = data
             id_ = self.request.run_alone(self.solo_url, solo=True)
@@ -87,6 +87,6 @@ class Server(WebUI):
                     "dynamic": False,
                     "preview": self.preview}
             self.solo_url = url
-            return self.single_acquisition()
+            return self.works_interactive()
 
         return app

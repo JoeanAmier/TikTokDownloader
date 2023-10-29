@@ -231,7 +231,7 @@ class TikTok:
             mark=mark,
             addition="发布作品" if post else "喜欢作品")
 
-    def single_acquisition(self):
+    def works_interactive(self):
         root, params, logger = self.record.run(self.parameter)
         with logger(root, **params) as record:
             while self.running:
@@ -253,7 +253,7 @@ class TikTok:
     def input_links_acquisition(self, tiktok: bool, ids: list[str]):
         pass
 
-    def live_acquisition(self):
+    def live_interactive(self):
         def choice_quality(items: dict) -> str:
             try:
                 choice = input("请选择下载清晰度(输入清晰度或者对应索引，直接回车代表不下载): ")
@@ -291,7 +291,7 @@ class TikTok:
         self.logger.info("已退出获取直播推流地址模式")
 
     @check_storage_format
-    def comment_acquisition(self):
+    def comment_interactive(self):
         save, root, params = self.record.run(
             self._data["root"], type_="comment", format_=self._data["save"])
         while True:
@@ -312,7 +312,7 @@ class TikTok:
                 self.logger.info(f"作品评论数据已储存至 {name}")
         self.logger.info("已退出采集作品评论数据模式")
 
-    def mix_acquisition(self):
+    def mix_interactive(self):
         self.manager = Cache(
             self.logger,
             self._data["root"],
@@ -434,7 +434,7 @@ class TikTok:
                     self.request.save_user(file, data)
 
     @check_storage_format
-    def user_acquisition(self):
+    def user_interactive(self):
         def choose_mode() -> str:
             return prompt(
                 "请选择账号链接来源",
@@ -490,7 +490,7 @@ class TikTok:
         return words, text
 
     @check_storage_format
-    def search_acquisition(self):
+    def search_interactive(self):
         self.download.favorite = True
         self.download.download = False
         while c := self.get_condition():
@@ -534,7 +534,7 @@ class TikTok:
         self.request.save_user(file, item, True)
 
     @check_storage_format
-    def hot_acquisition(self, api=None):
+    def hot_interactive(self, api=None):
         collection_time = str(time())[:10]
         save, root, params = self.record.run(
             self._data["root"], type_="hot", format_=self._data["save"])
@@ -544,7 +544,7 @@ class TikTok:
         self.logger.info(f"抖音热榜数据已储存至 HOT + {collection_time} + 榜单类型")
         self.logger.info("已退出采集抖音热榜数据模式")
 
-    def collection_acquisition(self):
+    def collection_interactive(self):
         save, root, params = self.record.run(
             self._data["root"], format_=self._data["save"])
         self.request.earliest = ""
@@ -576,25 +576,25 @@ class TikTok:
                 self.account_acquisition_interactive()
             elif select == "2":
                 self.logger.info("已选择批量下载链接作品模式")
-                self.single_acquisition()
+                self.works_interactive()
             elif select == "3":
                 self.logger.info("已选择获取直播推流地址模式")
-                self.live_acquisition()
+                self.live_interactive()
             elif select == "4":
                 self.logger.info("已选择采集作品评论数据模式")
-                self.comment_acquisition()
+                self.comment_interactive()
             elif select == "5":
                 self.logger.info("已选择批量下载合集作品模式")
-                self.mix_acquisition()
+                self.mix_interactive()
             elif select == "6":
                 self.logger.info("已选择批量采集账号数据模式")
-                self.user_acquisition()
+                self.user_interactive()
             elif select == "7":
                 self.logger.info("已选择采集搜索结果数据模式")
-                self.search_acquisition()
+                self.search_interactive()
             elif select == "8":
                 self.logger.info("已选择采集抖音热榜数据模式")
-                self.hot_acquisition()
+                self.hot_interactive()
             elif select == "9":
                 self.logger.info("已选择批量下载收藏作品模式")
-                self.collection_acquisition()
+                self.collection_interactive()

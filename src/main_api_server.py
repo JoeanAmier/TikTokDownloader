@@ -226,7 +226,7 @@ class APIServer(WebUI):
         @app.route("/hot/", methods=["POST"])
         def hot():
             result = []
-            self.hot_acquisition(result)
+            self.hot_interactive(result)
             return {
                 "热榜": self.format_data(result[0]),
                 "娱乐榜": self.format_data(result[1]),
