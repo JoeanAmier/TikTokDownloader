@@ -862,13 +862,13 @@ class Downloader:
             temp_root, actual_root = self.deal_folder_path(root, name)
             id_ = Extractor.safe_extract(item, "id")
             params = {
-                tasks: tasks,
-                name: name,
-                id_: id_,
-                item: item,
-                count: count,
-                temp_root: temp_root,
-                actual_root: actual_root
+                "tasks": tasks,
+                "name": name,
+                "id_": id_,
+                "item": item,
+                "count": count,
+                "temp_root": temp_root,
+                "actual_root": actual_root
             }
             if (t := Extractor.safe_extract(item, "type")) == "图集":
                 self.download_image(**params)
