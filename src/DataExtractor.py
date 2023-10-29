@@ -76,19 +76,20 @@ class Extractor:
             self,
             data: list[dict],
             recorder,
+            nickname: str,
+            mark: str,
             earliest,
             latest,
             post=True,
-            mark="",
-    ) -> tuple[str, str, list[dict]]:
+    ) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
             template={
                 "collection_time": datetime.now().strftime(self.date_format),
             },
             cache=None,
-            nickname="",
-            mark=self.clean.clean_name(mark),
+            nickname=nickname,
+            mark=mark,
             post=post,
             earliest=earliest,
             latest=latest,
@@ -105,7 +106,7 @@ class Extractor:
         self.date_filter(container, post)
         self.summary_works(container.all_data[:None if post else -1])
         self.record_data(recorder, container.all_data[:None if post else -1])
-        return container.nickname, container.mark, container.all_data
+        return container.all_data
 
     def summary_works(self, data: list[dict]):
         self.log.info(f"当前账号筛选作品数量: {len(data)}")
@@ -245,15 +246,12 @@ class Extractor:
         container.cache["short_id"] = self.safe_extract(data, "short_id")
         container.cache["unique_id"] = self.safe_extract(data, "unique_id")
         container.cache["signature"] = self.safe_extract(data, "signature")
-        self.check_account_info(container, data)
+        self.extract_nickname_info(container, data)
 
-    def check_account_info(self,
-                           container: SimpleNamespace,
-                           data: SimpleNamespace, ) -> None:
+    def extract_nickname_info(self,
+                              container: SimpleNamespace,
+                              data: SimpleNamespace, ) -> None:
         if container.post:
-            if not container.nickname:
-                container.nickname = self.clean.clean_name(self.safe_extract(
-                    data, "nickname", "已注销账号"), default="无效账号昵称")
             container.cache["nickname"] = container.nickname
             container.cache["mark"] = container.mark or container.nickname
         else:
@@ -261,6 +259,14 @@ class Extractor:
                 data, "nickname", "已注销账号"), inquire=False, default="无效账号昵称")
             container.cache["nickname"] = nickname
             container.cache["mark"] = nickname
+
+    def check_account_info(self, data: dict, mark="") -> tuple[str, str, str]:
+        data = self.generate_data_object(data)
+        uid = self.safe_extract(data, "author.uid")
+        nickname = self.clean.clean_name(self.safe_extract(
+            data, "author.nickname", "已注销账号"), default="无效账号昵称")
+        mark = self.clean.clean_name(mark, default=nickname)
+        return uid, nickname, mark
 
     def extract_not_post(self, container: SimpleNamespace,
                          data: SimpleNamespace) -> None:

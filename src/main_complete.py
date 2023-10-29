@@ -180,29 +180,33 @@ class TikTok:
             **kwargs):
         self.logger.info(f"开始处理第 {num} 个账号" if num else "开始处理账号")
         acquirer = Account(self.parameter, sec_user_id, tab, earliest, latest)
-        account_data = acquirer.run()
+        account_data, earliest, latest = acquirer.run()
         if not account_data:
             return False
         if source:
             return account_data
-        old_mark = m["mark"] if (m := self.cache.data.get(
-            id_ := account_data[-1]["author"]["uid"])) else None
-        with logger(root, name=f"UID{id_}_{mark or account_data[-1]["author"]["nickname"]}", old=old_mark,
+        uid, nickname, mark = self.extractor.check_account_info(
+            account_data[-1], mark)
+        old_mark = m["mark"] if (m := self.cache.data.get(uid)) else None
+        with logger(root, name=f"UID{uid}_{mark}", old=old_mark,
                     **params) as recorder:
             account_data = self.extractor.run(
                 account_data,
                 recorder,
                 type_="user",
                 post=tab == "post",
-                mark=mark)
+                nickname=nickname,
+                mark=mark,
+                earliest=earliest,
+                latest=latest)
         if api:
             return account_data
         self.cache.update_cache(
             self.parameter.folder_mode,
             "UID",
-            id_,
+            uid,
             mark,
-            account_data[-1]["nickname"],
+            nickname,
         )
         self.download_account_works(account_data, mark, tab == "post")
         return True
