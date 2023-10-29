@@ -864,11 +864,24 @@ class Downloader:
                 self.download_image(
                     tasks, name, item, count, temp_root, actual_root)
             elif t == "视频":
-                self.download_video(tasks, root, name, item, count)
+                self.download_video(
+                    tasks, name, item, count, temp_root, actual_root)
             else:
                 raise ValueError
-            self.download_music(tasks, root, name, item)
-            self.download_cover(tasks, root, name, item)
+            self.download_music(
+                tasks,
+                name,
+                item,
+                count,
+                temp_root,
+                actual_root)
+            self.download_cover(
+                tasks,
+                name,
+                item,
+                count,
+                temp_root,
+                actual_root)
         self.downloader_chart(tasks, count)
         self.statistics_count(count)
 
