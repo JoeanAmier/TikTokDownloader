@@ -1104,6 +1104,7 @@ def update_cookie(function):
 
 
 class Acquirer:
+    Phone_headers = None
     # 抖音 API
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
     reply_api = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
@@ -1162,6 +1163,7 @@ class Acquirer:
             url: str,
             params=None,
             method='get',
+            headers=None,
             **kwargs) -> dict | bool:
         try:
             response = request(
@@ -1170,7 +1172,7 @@ class Acquirer:
                 params=params,
                 proxies=self.proxies,
                 timeout=self.timeout,
-                headers=self.PC_headers, **kwargs)
+                headers=headers or self.PC_headers, **kwargs)
             wait()
         except (
                 exceptions.ProxyError,
@@ -1450,8 +1452,33 @@ class Works(Acquirer):
         self.id = item_id
         self.tiktok = tiktok
 
-    def run(self):
-        pass
+    def run(self) -> dict:
+        if self.tiktok:
+            params = {
+                "aweme_id": self.id,
+            }
+            api = self.item_api_tiktok
+            headers = self.Phone_headers
+        else:
+            params = {
+                "aweme_id": self.id,
+                "aid": "6383",
+                "cookie_enabled": "true",
+                "platform": "PC",
+                "downlink": "10"
+            }
+            api = self.item_api
+            self.deal_url_params(params)
+            headers = self.PC_headers
+        if not (
+                data := self.send_request(
+                    api,
+                    params=params,
+                    headers=headers,
+                )):
+            self.log.warning("获取作品数据失败")
+            return {}
+        return data or {}
 
 
 class Comment(Acquirer):
