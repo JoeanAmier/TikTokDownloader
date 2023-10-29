@@ -19,26 +19,11 @@ from src.Customizer import MAX_WORKERS
 from src.Customizer import (
     PROGRESS,
 )
+from src.DataAcquirer import retry
 from src.DataAcquirer import update_cookie
 from src.DataExtractor import Extractor
 
 
-# def reset(function):
-#     """重置数据"""
-#
-#     def inner(self, *args, **kwargs):
-#         self.video_data = []
-#         self.image_data = []
-#         self.api_data = []
-#         self.video = 0  # 视频下载数量
-#         self.image = 0  # 图集下载数量
-#         self.mix_data = []
-#         self.image_id = None  # 临时记录图集ID，用于下载计数
-#         return function(self, *args, **kwargs)
-#
-#     return inner
-#
-#
 # class Downloader:
 #     """未来将会弃用"""
 #     PC_UA = {
@@ -885,7 +870,8 @@ class Downloader:
             with self.__thread(max_workers=MAX_WORKERS) as self.__pool:
                 for task in tasks:
                     task_id = self.progress.add_task(task[3], start=False)
-                    self.__pool.submit(self.request_file, task_id, *task)
+                    self.__pool.submit(
+                        self.request_file, task_id, *task, output=False)
 
     def deal_folder_path(self, root: Path, name: str) -> tuple[Path, Path]:
         root = self.create_works_folder(root, name)
@@ -961,7 +947,7 @@ class Downloader:
     def download_live(self) -> None:
         pass
 
-    # @retry
+    @retry
     def request_file(
             self,
             task_id,

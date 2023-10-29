@@ -18,6 +18,7 @@ from src.Customizer import wait
 from src.DataExtractor import Extractor
 
 __all__ = [
+    "retry",
     "Link",
     "Account",
 ]
@@ -64,10 +65,12 @@ def retry(function):
 
     def inner(self, *args, **kwargs):
         finished = kwargs.pop("finished", False)
+        output = kwargs.pop("output", True)
         for i in range(self.max_retry):
             if result := function(self, *args, **kwargs):
                 return result
-            self.console.print(f"正在尝试第 {i + 1} 次重试", style=WARNING)
+            if output:
+                self.console.print(f"正在尝试第 {i + 1} 次重试", style=WARNING)
         if not (result := function(self, *args, **kwargs)) and finished:
             self.finished = True
         return result
@@ -1638,7 +1641,7 @@ class Account(Acquirer):
         return str(time())[:10]
 
     def summary_works(self):
-        self.log.info(f"当前账号公开作品数量: {len(self.response)}")
+        self.log.info(f"当前账号获取作品数量: {len(self.response)}")
 
 
 class Works(Acquirer):

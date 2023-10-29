@@ -175,6 +175,7 @@ class TikTok:
             earliest="",
             latest="",
             api=False,
+            source=False,
             *args,
             **kwargs):
         self.logger.info(f"开始处理第 {num} 个账号" if num else "开始处理账号")
@@ -182,6 +183,8 @@ class TikTok:
         account_data = acquirer.run()
         if not account_data:
             return False
+        if source:
+            return account_data
         old_mark = m["mark"] if (m := self.cache.data.get(
             id_ := account_data[-1]["author"]["uid"])) else None
         with logger(root, name=f"UID{id_}_{mark or account_data[-1]["author"]["nickname"]}", old=old_mark,
