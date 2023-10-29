@@ -869,16 +869,20 @@ class Downloader:
                 raise ValueError
             self.download_music(tasks, root, name, item)
             self.download_cover(tasks, root, name, item)
-        self.downloader_chart(tasks)
+        self.downloader_chart(tasks, count)
         self.statistics_count(count)
 
-    def downloader_chart(self, tasks: list[tuple]):
+    def downloader_chart(self, tasks: list[tuple], count: SimpleNamespace):
         with self.progress:
             with self.__thread(max_workers=MAX_WORKERS) as self.__pool:
                 for task in tasks:
                     task_id = self.progress.add_task(task[3], start=False)
                     self.__pool.submit(
-                        self.request_file, task_id, *task, output=False)
+                        self.request_file,
+                        task_id,
+                        *task,
+                        count=count,
+                        output=False)
 
     def deal_folder_path(self, root: Path, name: str) -> tuple[Path, Path]:
         root = self.create_works_folder(root, name)
@@ -923,7 +927,6 @@ class Downloader:
                 p,
                 f"图集 {id_}_{index}",
                 id_,
-                count,
             ))
 
     def download_video(
@@ -948,7 +951,6 @@ class Downloader:
             p,
             f"视频 {id_}",
             id_,
-            count,
         ))
 
     def download_music(
