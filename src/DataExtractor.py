@@ -263,10 +263,7 @@ class Extractor:
     def preprocessing_data(self,
                            data: list[dict],
                            mark="",
-                           post=True) -> tuple[str,
-    str,
-    str,
-    list[dict]]:
+                           post=True) -> tuple[str, str, str, list[dict]]:
         item = self.generate_data_object(data[-1])
         uid = self.safe_extract(item, "author.uid")
         nickname = self.clean.clean_name(self.safe_extract(
