@@ -186,8 +186,8 @@ class TikTok:
             return False
         if source:
             return account_data
-        uid, nickname, mark = self.extractor.check_account_info(
-            account_data[-1], mark)
+        uid, nickname, mark, account_data = self.extractor.preprocessing_data(
+            account_data, mark, tab == "post")
         old_mark = m["mark"] if (m := self.cache.data.get(uid)) else None
         with logger(root, name=f"UID{uid}_{mark}", old=old_mark,
                     **params) as recorder:
