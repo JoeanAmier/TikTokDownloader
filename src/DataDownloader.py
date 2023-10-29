@@ -11,7 +11,6 @@ from rich.progress import (
     DownloadColumn,
     Progress,
     TextColumn,
-    TimeRemainingColumn,
 )
 
 from src.Configuration import Parameter
@@ -770,13 +769,11 @@ class Downloader:
             justify="left"),
         "•",
         BarColumn(
-            bar_width=25),
+            bar_width=20),
         "[progress.percentage]{task.percentage:>3.1f}%",
         "•",
         DownloadColumn(
             binary_units=True),
-        "•",
-        TimeRemainingColumn(),
     )
 
     def __init__(self, params: Parameter):
