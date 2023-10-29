@@ -102,7 +102,7 @@ class Extractor:
                 item)) for item in data[:-1]]
             self.extract_not_post(container,
                                   self.generate_data_object(data[-1]))
-        self.date_filter(container)
+        self.date_filter(container, post)
         self.summary_works(container.all_data[:None if post else -1])
         self.record_data(recorder, container.all_data[:None if post else -1])
         return container.nickname, container.mark, container.all_data
@@ -297,11 +297,13 @@ class Extractor:
         return [data[key] for key in record.field_keys]
 
     @staticmethod
-    def date_filter(container: SimpleNamespace, ):
+    def date_filter(container: SimpleNamespace, post: bool):
         result = []
-        for item in container.all_data:
+        for item in container.all_data[:None if post else -1]:
             create_time = datetime.fromtimestamp(
                 item["create_timestamp"]).date()
             if container.earliest <= create_time <= container.latest:
                 result.append(item)
+        if not post:
+            result.append(container.all_data[-1])
         container.all_data = result
