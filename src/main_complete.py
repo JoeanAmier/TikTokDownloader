@@ -245,12 +245,10 @@ class TikTok:
                 if not ids:
                     self.logger.warning(f"{url} 提取作品 ID 失败")
                     continue
-                # self.download.tiktok = self.request.tiktok
-                # for i in ids:
-                #     self.download.run_alone(i)
+                self.input_links_acquisition(tiktok, ids, record)
         self.logger.info("已退出单独下载链接作品模式")
 
-    def input_links_acquisition(self, tiktok: bool, ids: list[str]):
+    def input_links_acquisition(self, tiktok: bool, ids: list[str], record):
         pass
 
     def live_interactive(self):
