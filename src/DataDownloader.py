@@ -767,7 +767,7 @@ class Downloader:
         TextColumn(
             "[progress.description]{task.description}",
             style=PROGRESS,
-            justify="right"),
+            justify="left"),
         "•",
         BarColumn(
             bar_width=25),
