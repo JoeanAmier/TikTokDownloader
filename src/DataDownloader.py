@@ -770,7 +770,7 @@ class Downloader:
             justify="right"),
         "•",
         BarColumn(
-            bar_width=30),
+            bar_width=25),
         "[progress.percentage]{task.percentage:>3.1f}%",
         "•",
         DownloadColumn(
@@ -822,9 +822,15 @@ class Downloader:
         else:
             raise ValueError
 
-    def run_user(self, data: list[dict], mark="", addition="发布作品", ):
+    def run_user(
+            self,
+            data: list[dict],
+            uid: str,
+            nickname: str,
+            mark="",
+            addition="发布作品",
+    ):
         assert addition in {"喜欢作品", "收藏作品", "发布作品"}, ValueError
-        data, uid, nickname = self.extract_addition(data, addition)
         root = self.storage_folder(uid, nickname, True, mark, addition)
         self.batch_processing(data, root)
 
@@ -1050,13 +1056,3 @@ class Downloader:
     def delete_file(self, path: Path):
         path.unlink()
         self.log.info(f"文件 {path.name}{path.suffix} 已删除", False)
-
-    @staticmethod
-    def extract_addition(
-            data: list[dict], addition="", mix=False) -> tuple[list[dict], str, str]:
-        if mix:
-            pass
-        elif addition == "发布作品":
-            return data, data[0]["uid"], data[0]["nickname"]
-        else:
-            return data[:-1], data[-1]["uid"], data[-1]["nickname"]

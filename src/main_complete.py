@@ -211,18 +211,23 @@ class TikTok:
             mark,
             nickname,
         )
-        self.download_account_works(account_data, mark, tab == "post")
+        self.download_account_works(
+            account_data, uid, nickname, mark, tab == "post")
         return True
 
     def download_account_works(
             self,
             data: list[dict],
+            uid: str,
+            nickname: str,
             mark: str,
             post: bool,
     ):
         self.downloader.run(
             data,
             "user",
+            uid=uid,
+            nickname=nickname,
             mark=mark,
             addition="发布作品" if post else "喜欢作品")
 
