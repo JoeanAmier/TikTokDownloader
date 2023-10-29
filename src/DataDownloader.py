@@ -1042,11 +1042,14 @@ class Downloader:
             return False
         self.save_file(temp, actual)
         self.blacklist.update_id(id_)
-        self.add_count(temp, count)
+        self.add_count(show, id_, count)
         return True
 
-    def add_count(self, temp: Path, count: SimpleNamespace):
-        pass
+    def add_count(self, type_: str, id_: str, count: SimpleNamespace):
+        if type_.startswith("图集"):
+            count.downloaded_image.add(id_)
+        elif type_.startswith("视频"):
+            count.downloaded_video.add(id_)
 
     def storage_folder(
             self,
