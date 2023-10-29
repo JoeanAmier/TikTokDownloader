@@ -971,8 +971,16 @@ class Downloader:
             temp_root: Path,
             actual_root: Path,
             **kwargs, ) -> None:
-        if not self.music:
-            return
+        if self.check_deal_music(
+                url := Extractor.safe_extract(item, "music_url"),
+                p := actual_root.with_name(f"{name}.mp3"), ):
+            tasks.append((
+                url,
+                temp_root.with_name(f"{name}.mp3"),
+                p,
+                f"音乐 {id_}",
+                id_,
+            ))
 
     def download_cover(
             self,
@@ -983,10 +991,31 @@ class Downloader:
             temp_root: Path,
             actual_root: Path,
             **kwargs, ) -> None:
-        if self.original:
-            pass
-        if self.dynamic:
-            pass
+        if all((self.original,
+                url := Extractor.safe_extract(item, "origin_cover"),
+                not self.is_exists(p := actual_root.with_name(f"{name}.jpeg"))
+                )):
+            tasks.append((
+                url,
+                temp_root.with_name(f"{name}.jpeg"),
+                p,
+                f"封面 {id_}",
+                id_,
+            ))
+        if all((self.dynamic,
+                url := Extractor.safe_extract(item, "dynamic_cover"),
+                not self.is_exists(p := actual_root.with_name(f"{name}.webp"))
+                )):
+            tasks.append((
+                url,
+                temp_root.with_name(f"{name}.webp"),
+                p,
+                f"动图 {id_}",
+                id_,
+            ))
+
+    def check_deal_music(self, url: str, path: Path) -> bool:
+        return all((self.music, url, not self.is_exists(path)))
 
     def download_live(self) -> None:
         pass
