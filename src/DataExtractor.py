@@ -119,13 +119,11 @@ class Extractor:
         container.all_data.append(container.cache)
 
     def extract_description(self, data: SimpleNamespace) -> str:
-        return self.safe_extract(data, "desc")
-        # try:
-        #     desc = self.safe_extract(data, "share_info.share_link_desc")
-        #     return desc.split(
-        #         "  ", 1)[-1].rstrip("  %s 复制此链接，打开Dou音搜索，直接观看视频！")
-        # except (KeyError, IndexError):
-        #     return ""
+        if len(desc := self.safe_extract(data, "desc")) < 107:
+            return desc
+        long_desc = self.safe_extract(data, "share_info.share_link_desc")
+        return long_desc.split(
+            "  ", 1)[-1].split("  %s", 1)[0].replace("# ", "#")
 
     def clean_description(self, desc: str) -> str:
         return self.clean.clear_spaces(self.clean.filter(desc))
