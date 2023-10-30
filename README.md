@@ -184,6 +184,7 @@ TikTokDownloader
 <li><code>批量下载收藏作品模式</code> 目前仅支持下载当前已登录 Cookie 对应账号的收藏作品，暂不支持多账号</li>
 <li>如果想要程序使用代理，必须在 <code>settings.json</code> 设置 <code>proxies</code> 参数，否则程序不会使用代理</li>
 <li>部分使用者反馈，新发布的作品过早下载会下载到低分辨率的文件，一段时间后才能下载到高分辨率文件，但时间规律尚不明确</li>
+<li><b>退出程序时，请以正常方式退出程序或者按下 Ctrl + C 结束运行，不要点击终端窗口的关闭按钮结束程序</b></li>
 </ul>
 
 # ⚠️ 免责声明\(Disclaimers\)
@@ -206,7 +207,8 @@ TikTokDownloader
 # ✉️ 联系作者\(Contact\)
 
 <ul>
-<li>QQ Group: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">830227445</a></li>
+<li>QQ: 2437596031</li>
+<li>QQ Group: 830227445 | <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">点击扫码加入群聊</a></li>
 <li>Email: yonglelolu@gmail.com</li>
 </ul>
 <p>
