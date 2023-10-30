@@ -9,6 +9,7 @@ from src.Customizer import rest
 from src.DataAcquirer import (
     Link,
     Account,
+    Works,
 )
 from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
@@ -248,8 +249,21 @@ class TikTok:
                 self.input_links_acquisition(tiktok, ids, record)
         self.logger.info("已退出单独下载链接作品模式")
 
-    def input_links_acquisition(self, tiktok: bool, ids: list[str], record):
-        pass
+    def input_links_acquisition(
+            self,
+            tiktok: bool,
+            ids: list[str],
+            record,
+            api=False,
+            source=False):
+        works_data = [Works(self.parameter, i, tiktok).run() for i in ids]
+        if not works_data:
+            return False
+        if source:
+            return works_data
+        works_data = self.extractor.run(works_data, record)
+        if api:
+            return works_data
 
     def live_interactive(self):
         def choice_quality(items: dict) -> str:
