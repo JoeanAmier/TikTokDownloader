@@ -802,7 +802,7 @@ class Downloader:
 
     @staticmethod
     def init_headers(headers: dict) -> tuple:
-        return headers.copy(), {"User-Agent": headers["User-Agent"]}
+        return headers, {"User-Agent": headers["User-Agent"]}
 
     def run(self,
             data: list[dict],
