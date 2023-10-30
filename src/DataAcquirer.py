@@ -9,7 +9,6 @@ from requests import exceptions
 from requests import request
 
 from src.Configuration import Parameter
-from src.CookieTool import Register
 from src.Customizer import (
     GENERAL,
     WARNING,
@@ -1090,22 +1089,6 @@ def retry(function):
 #             self.log.error(f"账号收藏作品数据响应内容异常: {data}", False)
 #             return False
 
-
-def update_cookie(function):
-    def inner(self, *args, **kwargs):
-        update = kwargs.pop("update", True)
-        if (p := args[0]).headers.get("Cookie") and not update:
-            return function(self, *args, **kwargs)
-        if p.cookie:
-            p.add_cookie(p.cookie)
-            p.headers["Cookie"] = Register.generate_cookie(p.cookie)
-        elif p.cookie_cache:
-            p.headers["Cookie"] = p.add_cookie(p.cookie_cache)
-        return function(self, *args, **kwargs)
-
-    return inner
-
-
 class Acquirer:
     Phone_headers = None
     # 抖音 API
@@ -1145,7 +1128,6 @@ class Acquirer:
     comment_tiktok_api = "https://www.tiktok.com/api/comment/list/"  # 评论API
     reply_tiktok_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
 
-    @update_cookie
     def __init__(self, params: Parameter):
         self.PC_headers = params.headers | {
             "Referer": "https://www.douyin.com/", }
@@ -1450,7 +1432,7 @@ class Works(Acquirer):
     item_api_tiktok = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"
 
     def __init__(self, params: Parameter, item_id: str, tiktok: bool):
-        super().__init__(params, update=False)
+        super().__init__(params)
         self.id = item_id
         self.tiktok = tiktok
 

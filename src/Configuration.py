@@ -330,3 +330,10 @@ class Parameter:
         if default_mode:
             self.logger.warning(f"default_mode 参数 {default_mode} 设置错误")
         return ""
+
+    def update_cookie(self):
+        if self.cookie:
+            self.add_cookie(self.cookie)
+            self.headers["Cookie"] = Register.generate_cookie(self.cookie)
+        elif self.cookie_cache:
+            self.headers["Cookie"] = self.add_cookie(self.cookie_cache)
