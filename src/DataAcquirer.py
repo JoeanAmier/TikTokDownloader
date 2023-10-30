@@ -21,6 +21,7 @@ __all__ = [
     "retry",
     "Link",
     "Account",
+    "Works",
 ]
 
 
@@ -1092,12 +1093,14 @@ def retry(function):
 
 def update_cookie(function):
     def inner(self, *args, **kwargs):
-        if self.cookie:
-            active_cookie = self.cookie.copy()
-            Parameter.add_cookie(active_cookie)
-            self.PC_headers["Cookie"] = Register.generate_cookie(active_cookie)
-        elif self.cookie_cache:
-            self.PC_headers["Cookie"] = Parameter.add_cookie(self.cookie_cache)
+        update = kwargs.pop("update", True)
+        if (p := args[0]).headers.get("Cookie") and not update:
+            return function(self, *args, **kwargs)
+        if p.cookie:
+            p.add_cookie(p.cookie)
+            p.headers["Cookie"] = Register.generate_cookie(p.cookie)
+        elif p.cookie_cache:
+            p.headers["Cookie"] = p.add_cookie(p.cookie_cache)
         return function(self, *args, **kwargs)
 
     return inner
@@ -1142,8 +1145,8 @@ class Acquirer:
     comment_tiktok_api = "https://www.tiktok.com/api/comment/list/"  # 评论API
     reply_tiktok_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
 
+    @update_cookie
     def __init__(self, params: Parameter):
-        self.cookie = params.cookie
         self.PC_headers = params.headers | {
             "Referer": "https://www.douyin.com/", }
         self.ua_code = params.ua_code
@@ -1188,7 +1191,7 @@ class Acquirer:
         try:
             return response.json()
         except exceptions.JSONDecodeError:
-            self.log.warning(f"响应内容不是有效的 JSON 格式：{response.content}")
+            self.log.warning(f"响应内容不是有效的 JSON 格式：{response.text}")
             return False
 
     def deal_url_params(self, params: dict, version=23):
@@ -1353,7 +1356,6 @@ class Account(Acquirer):
             self.log.warning(f"作品最晚发布日期无效 {date_}")
             return date.today()
 
-    @update_cookie
     def run(self) -> tuple[list[dict], date, date]:
         num = 1
         while not self.finished and self.pages > 0:
@@ -1448,7 +1450,7 @@ class Works(Acquirer):
     item_api_tiktok = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"
 
     def __init__(self, params: Parameter, item_id: str, tiktok: bool):
-        super().__init__(params)
+        super().__init__(params, update=False)
         self.id = item_id
         self.tiktok = tiktok
 
@@ -1469,7 +1471,7 @@ class Works(Acquirer):
             }
             api = self.item_api
             self.deal_url_params(params)
-            headers = self.PC_headers
+            headers = None
         if not (
                 data := self.send_request(
                     api,
