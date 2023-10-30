@@ -1129,8 +1129,7 @@ class Acquirer:
     reply_tiktok_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
 
     def __init__(self, params: Parameter):
-        self.PC_headers = params.headers | {
-            "Referer": "https://www.douyin.com/", }
+        self.PC_headers, self.black_headers = self.init_headers(params.headers)
         self.ua_code = params.ua_code
         self.log = params.logger
         self.xb = params.xb
@@ -1141,6 +1140,12 @@ class Acquirer:
         self.cursor = 0
         self.response = []
         self.finished = False
+
+    @staticmethod
+    def init_headers(headers: dict) -> tuple:
+        return (headers | {
+            "Referer": "https://www.douyin.com/", },
+                {"User-Agent": headers["User-Agent"]})
 
     @retry
     def send_request(
@@ -1493,27 +1498,51 @@ class Live(Acquirer):
     live_api = "https://live.douyin.com/webcast/room/web/enter/"
     live_api_share = "https://webcast.amemv.com/webcast/room/reflow/info/"
 
-    def __init__(self, params: Parameter, web_rid=None, room_id=None):
+    def __init__(
+            self,
+            params: Parameter,
+            web_rid=None,
+            room_id=None,
+            sec_user_id=None):
         super().__init__(params)
         self.PC_headers["Referer"] = "https://live.douyin.com/"
         del self.PC_headers["Cookie"]
         self.web_rid = web_rid
         self.room_id = room_id
+        self.sec_user_id = sec_user_id
 
     def run(self) -> dict:
         if self.web_rid:
             data = self.with_web_rid()
-        elif self.room_id:
+        elif self.room_id and self.sec_user_id:
             data = self.with_room_id()
         else:
             date = {}
         return data
 
     def with_web_rid(self):
-        pass
+        params = {
+            "aid": "6383",
+            "app_name": "douyin_web",
+            "device_platform": "web",
+            "cookie_enabled": "true",
+            "web_rid": self.web_rid,
+        }
+        api = self.live_api
+        headers = None
+        self.deal_url_params(params)
 
     def with_room_id(self):
-        pass
+        params = {
+            "type_id": "0",
+            "live_id": "1",
+            "room_id": self.room_id,
+            "sec_user_id": self.sec_user_id,
+            "app_id": "1128",
+        }
+        api = self.live_api_share
+        headers = self.black_headers
+        self.deal_url_params(params, 174)
 
 
 class User(Acquirer):
