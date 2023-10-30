@@ -266,7 +266,18 @@ class Extractor:
         return uid, nickname, mark, data[:None if post else -1]
 
     def works(self, data: list[dict], recorder) -> list[dict]:
-        pass
+        container = SimpleNamespace(
+            all_data=[],
+            template={
+                "collection_time": datetime.now().strftime(self.date_format),
+            },
+            cache=None,
+            post=False,
+        )
+        [self.extract_user(container, self.generate_data_object(item))
+         for item in data]
+        self.record_data(recorder, container.all_data)
+        return container.all_data
 
     def comment(self, data: list[dict], recorder) -> list[dict]:
         pass
