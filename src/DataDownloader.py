@@ -813,7 +813,7 @@ class Downloader:
         elif type_ == "mix":
             self.run_mix(data, **kwargs)
         elif type_ == "works":
-            self.run_general(data)
+            self.run_general(data, **kwargs)
         else:
             raise ValueError
 
@@ -831,7 +831,7 @@ class Downloader:
 
     def run_general(self, data: list[dict], tiktok: bool):
         root = self.storage_folder()
-        self.batch_processing(data, root)
+        self.batch_processing(data, root, False, tiktok=tiktok)
 
     def run_mix(self, data: list[dict], mark=""):
         data, mix_id, mix_title = self.extract_addition(data, mix=True)
@@ -841,7 +841,12 @@ class Downloader:
     def run_live(self):
         pass
 
-    def batch_processing(self, data: list[dict], root: Path):
+    def batch_processing(
+            self,
+            data: list[dict],
+            root: Path,
+            statistics=True,
+            **kwargs):
         if not self.download:
             return
         count = SimpleNamespace(
@@ -871,10 +876,15 @@ class Downloader:
                 self.download_video(**params)
             self.download_music(**params)
             self.download_cover(**params)
-        self.downloader_chart(tasks, count)
-        self.statistics_count(count)
+        self.downloader_chart(tasks, count, **kwargs)
+        if statistics:
+            self.statistics_count(count)
 
-    def downloader_chart(self, tasks: list[tuple], count: SimpleNamespace):
+    def downloader_chart(
+            self,
+            tasks: list[tuple],
+            count: SimpleNamespace,
+            **kwargs):
         with self.progress:
             with self.__thread(max_workers=MAX_WORKERS) as self.__pool:
                 for task in tasks:
@@ -885,6 +895,7 @@ class Downloader:
                         task_id,
                         *task,
                         count=count,
+                        **kwargs,
                         output=False)
 
     def deal_folder_path(self, root: Path, name: str) -> tuple[Path, Path]:
@@ -1086,7 +1097,8 @@ class Downloader:
         self.add_count(show, id_, count)
         return True
 
-    def add_count(self, type_: str, id_: str, count: SimpleNamespace):
+    @staticmethod
+    def add_count(type_: str, id_: str, count: SimpleNamespace):
         if type_.startswith("图集"):
             count.downloaded_image.add(id_)
         elif type_.startswith("视频"):

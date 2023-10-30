@@ -264,6 +264,7 @@ class TikTok:
         works_data = self.extractor.run(works_data, record)
         if api:
             return works_data
+        self.downloader.run(works_data, "works", tiktok=tiktok)
 
     def live_interactive(self):
         def choice_quality(items: dict) -> str:
