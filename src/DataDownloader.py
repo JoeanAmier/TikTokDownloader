@@ -19,7 +19,6 @@ from src.Customizer import (
     PROGRESS,
 )
 from src.DataAcquirer import retry
-from src.DataAcquirer import update_cookie
 from src.DataExtractor import Extractor
 
 
@@ -805,7 +804,6 @@ class Downloader:
     def init_headers(headers: dict) -> tuple:
         return headers.copy(), {"User-Agent": headers["User-Agent"]}
 
-    @update_cookie
     def run(self,
             data: list[dict],
             type_: str,
