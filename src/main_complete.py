@@ -266,18 +266,19 @@ class TikTok:
             return works_data
         self.downloader.run(works_data, "works", tiktok=tiktok)
 
+    def _choice_live_quality(self, items: dict) -> str:
+        try:
+            choice = self.console.input(
+                f"[{PROMPT}]请选择下载清晰度(输入清晰度或者对应索引，直接回车代表不下载): [/{PROMPT}]")
+            if u := items.get(choice):
+                return u
+            if not 0 <= (i := int(choice)) < len(items):
+                raise ValueError
+        except ValueError:
+            return ""
+        return list(items.values())[i]
+
     def live_interactive(self):
-        def choice_quality(items: dict) -> str:
-            try:
-                choice = input("请选择下载清晰度(输入清晰度或者对应索引，直接回车代表不下载): ")
-                if u := items.get(choice):
-                    return u
-                if not 0 <= (i := int(choice)) < len(items):
-                    raise ValueError
-            except ValueError:
-                return ""
-            keys = list(items.keys())
-            return items[keys[i]]
 
         print(
             self.colour.colorize(
