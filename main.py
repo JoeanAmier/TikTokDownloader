@@ -1,6 +1,8 @@
 from atexit import register
 from pathlib import Path
 from shutil import rmtree
+from threading import Thread
+from time import sleep
 
 from flask import Flask
 from requests import exceptions
@@ -11,6 +13,7 @@ from src.Configuration import Parameter
 from src.Configuration import Settings
 from src.CookieTool import Cookie
 from src.CookieTool import Register
+from src.Customizer import COOKIE_UPDATE_INTERVAL
 from src.Customizer import (
     MASTER,
     WARNING,
@@ -237,12 +240,22 @@ class TikTokDownloader:
         self.check_update()
         self.check_settings()
         self.disclaimer()
+        self.periodic_tasks()
         self.main_menu(self.parameter.default_mode)
         self.delete_temp()
         self.console.print("程序结束运行", style=GENERAL)
 
     def delete_temp(self):
         rmtree(self.PROJECT_ROOT.joinpath("./cache/temp").resolve())
+
+    def periodic_update_cookie(self):
+        while True:
+            self.parameter.update_cookie()
+            sleep(COOKIE_UPDATE_INTERVAL)
+
+    def periodic_tasks(self):
+        thread = Thread(target=self.periodic_update_cookie, daemon=True)
+        thread.start()
 
 
 if __name__ == '__main__':
