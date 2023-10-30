@@ -19,7 +19,8 @@ __all__ = [
     "INFO",
     "GENERAL",
     "PROGRESS",
-    "rest"
+    "rest",
+    "COOKIE_UPDATE_INTERVAL",
 ]
 
 # 线程池最大线程数量，多线程下载文件时使用
@@ -40,6 +41,9 @@ SERVER_HOST = "127.0.0.1"
 
 # 服务器模式端口
 SERVER_PORT = 5000
+
+# Cookie 更新间隔，单位：秒
+COOKIE_UPDATE_INTERVAL = 15 * 60
 
 # 彩色交互提示颜色设置，支持标准颜色名称、Hex、RGB 格式
 MASTER = "b #fff200"
