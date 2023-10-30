@@ -1236,7 +1236,7 @@ class Link:
     mix_link = compile(
         r".*?https://www\.douyin\.com/collection/(\d{19}).*?")  # 合集链接
     live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
-    live_link_redirect = compile(
+    live_link_share = compile(
         r"https://webcast\.amemv\.com/douyin/webcast/reflow/.+?")
 
     # TikTok 链接
@@ -1280,9 +1280,9 @@ class Link:
     def live(self, text: str) -> tuple:
         urls = self.share.run(text)
         if u := self.live_link.findall(urls):
-            return False, u
-        elif u := self.live_link_redirect.findall(urls):
             return True, u
+        elif u := self.live_link_share.findall(urls):
+            return False, u
         return None, []
 
 
@@ -1493,14 +1493,26 @@ class Live(Acquirer):
     live_api = "https://live.douyin.com/webcast/room/web/enter/"
     live_api_share = "https://webcast.amemv.com/webcast/room/reflow/info/"
 
-    def __init__(self, params: Parameter, web_rid=None, redirect_url=None):
+    def __init__(self, params: Parameter, web_rid=None, room_id=None):
         super().__init__(params)
         self.PC_headers["Referer"] = "https://live.douyin.com/"
         del self.PC_headers["Cookie"]
         self.web_rid = web_rid
-        self.redirect_url = redirect_url
+        self.room_id = room_id
 
-    def run(self):
+    def run(self) -> dict:
+        if self.web_rid:
+            data = self.with_web_rid()
+        elif self.room_id:
+            data = self.with_room_id()
+        else:
+            date = {}
+        return data
+
+    def with_web_rid(self):
+        pass
+
+    def with_room_id(self):
         pass
 
 
