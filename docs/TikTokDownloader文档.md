@@ -32,6 +32,7 @@
 <li>运行 main.py</li>
 </ol>
 </li>
+<li>查看屏幕输出的 TikTokDownloader 免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
 <ol><b>手动复制粘贴(推荐)</b>
 <li>使用浏览器打开抖音网页版，复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a> 至剪贴板</li>
