@@ -1462,7 +1462,7 @@ class Works(Acquirer):
                 )):
             self.log.warning("获取作品数据失败")
             return {}
-        return data or {}
+        return data["aweme_detail"] or {}
 
 
 class Comment(Acquirer):
