@@ -1,7 +1,6 @@
 from time import time
 
 from src.Customizer import (
-    PROMPT,
     WARNING,
 )
 from src.Customizer import failed
@@ -22,8 +21,7 @@ def prompt(
         title: str,
         choose: tuple | list,
         console,
-        separate=None,
-        style=f"b {PROMPT}") -> str:
+        separate=None) -> str:
     screen = f"{title}:\n"
     row = 0
     for i, j in enumerate(choose):
@@ -31,7 +29,7 @@ def prompt(
         if separate and row in separate:
             screen += f"{'=' * 25}\n"
         row += 1
-    return console.input(f"[{style}]{screen}[/{style}]")
+    return console.input(screen)
 
 
 def check_storage_format(function):
@@ -146,7 +144,7 @@ class TikTok:
 
     def account_works_inquire(self, root, params, logger):
         while True:
-            url = self.console.input(f"[{PROMPT}]请输入账号主页链接: [/{PROMPT}]")
+            url = self.console.input("请输入账号主页链接: ")
             if not url:
                 break
             elif url in ("Q", "q",):
@@ -237,7 +235,7 @@ class TikTok:
         root, params, logger = self.record.run(self.parameter)
         with logger(root, **params) as record:
             while self.running:
-                url = self.console.input(f"[{PROMPT}]请输入作品链接: [/{PROMPT}]")
+                url = self.console.input("请输入作品链接: ")
                 if not url:
                     break
                 elif url.upper() == "Q":
@@ -270,10 +268,10 @@ class TikTok:
     def _choice_live_quality(self, items: dict) -> str:
         try:
             choice = self.console.input(
-                f"[{PROMPT}]请选择下载清晰度(输入清晰度或者对应索引，直接回车代表不下载): [/{PROMPT}]")
+                "请选择下载清晰度(输入清晰度或者对应序号，直接回车代表不下载): ")
             if u := items.get(choice):
                 return u
-            if not 0 <= (i := int(choice)) < len(items):
+            if not 0 <= (i := int(choice) + 1) < len(items):
                 raise ValueError
         except ValueError:
             return ""
@@ -283,17 +281,16 @@ class TikTok:
         self.console.print(
             "如果设置了已登录的 Cookie，获取直播数据时将会导致正在观看的直播中断，刷新即可恢复！", style=WARNING)
         while True:
-            link = self.console.input(f"[{PROMPT}]请输入直播链接: [/{PROMPT}]")
+            link = self.console.input("请输入直播链接: ")
             if not link:
                 break
             elif link.upper() == "Q":
                 self.running = False
                 break
             params = self.generate_params_dict(*self.links.live(link))
-            for i in params:
-                data = Live(self.parameter, **i).run()
-            #     if len(data) == 1 and (l := choice_quality(item[2])):
-            #         self.download.download_live(l, f"{item[0]}-{item[1]}")
+            live_data = [Live(self.parameter, **i).run() for i in params]
+            live_data = self.extractor.run(live_data, None, "live")
+            self.show_live_info(live_data)
         self.logger.info("已退出获取直播推流地址模式")
 
     def generate_params_dict(self, rid: bool, ids: list[list]) -> list[dict]:
@@ -304,6 +301,24 @@ class TikTok:
             return [{"web_rid": id_} for id_ in ids]
         else:
             return [{"room_id": id_[0], "sec_user_id": id_[1]} for id_ in ids]
+
+    def show_live_info(self, data: list[dict]):
+        download_tasks = []
+        for item in data:
+            self.console.print("直播标题:", item["title"])
+            self.console.print("主播昵称:", item["nickname"])
+            self.console.print("在线观众:", item["user_count_str"])
+            self.console.print("观看次数:", item["total_user_str"])
+            if item["status"] == 4:
+                self.console.print("当前直播已结束！")
+                continue
+            self.show_live_stream_url(item["stream_url"], download_tasks)
+            print(download_tasks)
+
+    def show_live_stream_url(self, urls: dict, tasks: list):
+        for i, (k, v) in enumerate(vars(urls).items(), start=1):
+            self.console.print(i, k, v)
+        tasks.append(self._choice_live_quality(vars(urls)))
 
     @check_storage_format
     def comment_interactive(self):

@@ -1244,6 +1244,9 @@ class Link:
     mix_link = compile(
         r".*?https://www\.douyin\.com/collection/(\d{19}).*?")  # 合集链接
     live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
+    live_link_self = compile(
+        r".*?https://www\.douyin\.com/follow\?webRid=(\d+).*?"
+    )
     live_link_share = compile(
         r"https://webcast\.amemv\.com/douyin/webcast/reflow/\S+")
 
@@ -1288,6 +1291,8 @@ class Link:
     def live(self, text: str) -> tuple:
         urls = self.share.run(text)
         if u := self.live_link.findall(urls):
+            return True, u
+        elif u := self.live_link_self.findall(urls):
             return True, u
         elif u := self.live_link_share.findall(urls):
             return False, self.extract_sec_user_id(u)

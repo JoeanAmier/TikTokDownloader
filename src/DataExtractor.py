@@ -280,8 +280,27 @@ class Extractor:
     def comment(self, data: list[dict], recorder) -> list[dict]:
         pass
 
-    def live(self, data: list[dict], recorder) -> list[dict]:
-        pass
+    def live(self, data: list[dict], *args) -> list[dict]:
+        container = SimpleNamespace(all_data=[])
+        [self.extract_live_data(container,
+                                self.generate_data_object(i)) for i in data]
+        return container.all_data
+
+    def extract_live_data(
+            self,
+            container: SimpleNamespace,
+            data: SimpleNamespace):
+        data = self.safe_extract(
+            data, "data.data[0]") or self.safe_extract(
+            data, "data.room")
+        live_data = {"status": self.safe_extract(data, "status"),
+                     "nickname": self.safe_extract(data, "owner.nickname"),
+                     "title": self.safe_extract(data, "title"),
+                     "stream_url": self.safe_extract(data, "stream_url.flv_pull_url"),
+                     "cover": self.safe_extract(data, "cover.url_list[-1]"),
+                     "total_user_str": self.safe_extract(data, "stats.total_user_str"),
+                     "user_count_str": self.safe_extract(data, "stats.user_count_str")}
+        container.all_data.append(live_data)
 
     def search_general(self, data: list[dict], recorder) -> list[dict]:
         pass
