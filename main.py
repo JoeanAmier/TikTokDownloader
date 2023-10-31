@@ -17,6 +17,7 @@ from src.Customizer import COOKIE_UPDATE_INTERVAL
 from src.Customizer import (
     MASTER,
     WARNING,
+    PROMPT,
     INFO,
     ERROR,
     GENERAL
@@ -35,6 +36,14 @@ from src.main_complete import TikTok
 from src.main_complete import prompt
 from src.main_server import Server
 from src.main_web_UI import WebUI
+
+
+class ColorfulConsole(Console):
+    def print(self, *args, style=GENERAL, **kwargs):
+        super().print(*args, style=style, **kwargs)
+
+    def input(self, prompt="", *args, **kwargs):
+        return super().input(f"[{PROMPT}]{prompt}[/{PROMPT}]", *args, **kwargs)
 
 
 class TikTokDownloader:
@@ -76,7 +85,7 @@ class TikTokDownloader:
     )
 
     def __init__(self):
-        self.console = Console()
+        self.console = ColorfulConsole()
         self.logger = None
         self.blacklist = None
         self.user_agent, self.ua_code = Headers.generate_user_agent()
@@ -99,7 +108,7 @@ class TikTokDownloader:
                     self.DISCLAIMER_TEXT),
                 style=MASTER)
             if self.console.input(
-                    f"[{MASTER}]是否已仔细阅读上述免责声明(YES/NO): [/{MASTER}]").upper() != "YES":
+                    "是否已仔细阅读上述免责声明(YES/NO): ").upper() != "YES":
                 exit()
             FileManager.deal_config(self.DISCLAIMER["path"])
             self.console.print()
@@ -184,7 +193,7 @@ class TikTokDownloader:
 
     def change_config(self, file: Path):
         FileManager.deal_config(file)
-        self.console.print("修改设置成功！", style=GENERAL)
+        self.console.print("修改设置成功！")
         self.check_config()
         self.check_settings()
 
@@ -243,7 +252,7 @@ class TikTokDownloader:
         self.periodic_tasks()
         self.main_menu(self.parameter.default_mode)
         self.delete_temp()
-        self.console.print("程序结束运行", style=GENERAL)
+        self.console.print("程序结束运行")
 
     def delete_temp(self):
         rmtree(self.PROJECT_ROOT.joinpath("./cache/temp").resolve())
