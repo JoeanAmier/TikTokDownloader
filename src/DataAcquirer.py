@@ -1513,14 +1513,13 @@ class Live(Acquirer):
 
     def run(self) -> dict:
         if self.web_rid:
-            data = self.with_web_rid()
+            return self.with_web_rid()
         elif self.room_id and self.sec_user_id:
-            data = self.with_room_id()
+            return self.with_room_id()
         else:
-            date = {}
-        return data
+            return {}
 
-    def with_web_rid(self):
+    def with_web_rid(self) -> dict:
         params = {
             "aid": "6383",
             "app_name": "douyin_web",
@@ -1529,10 +1528,10 @@ class Live(Acquirer):
             "web_rid": self.web_rid,
         }
         api = self.live_api
-        headers = None
         self.deal_url_params(params)
+        return self.get_live_data(api, params)
 
-    def with_room_id(self):
+    def with_room_id(self) -> dict:
         params = {
             "type_id": "0",
             "live_id": "1",
@@ -1543,6 +1542,22 @@ class Live(Acquirer):
         api = self.live_api_share
         headers = self.black_headers
         self.deal_url_params(params, 174)
+        return self.get_live_data(api, params, headers)
+
+    def get_live_data(
+            self,
+            api: str,
+            params: dict,
+            headers: dict = None) -> dict:
+        if not (
+                data := self.send_request(
+                    api,
+                    params=params,
+                    headers=headers,
+                )):
+            self.log.warning("获取直播数据失败")
+            return {}
+        return data or {}
 
 
 class User(Acquirer):
