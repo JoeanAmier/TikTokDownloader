@@ -290,7 +290,7 @@ class TikTok:
             params = self.generate_params_dict(*self.links.live(link))
             live_data = [Live(self.parameter, **i).run() for i in params]
             live_data = self.extractor.run(live_data, None, "live")
-            self.show_live_info(live_data)
+            download_tasks = self.show_live_info(live_data)
         self.logger.info("已退出获取直播推流地址模式")
 
     def generate_params_dict(self, rid: bool, ids: list[list]) -> list[dict]:
@@ -302,7 +302,7 @@ class TikTok:
         else:
             return [{"room_id": id_[0], "sec_user_id": id_[1]} for id_ in ids]
 
-    def show_live_info(self, data: list[dict]):
+    def show_live_info(self, data: list[dict]) -> list[str]:
         download_tasks = []
         for item in data:
             self.console.print("直播标题:", item["title"])
@@ -313,7 +313,7 @@ class TikTok:
                 self.console.print("当前直播已结束！")
                 continue
             self.show_live_stream_url(item["stream_url"], download_tasks)
-            print(download_tasks)
+        return download_tasks
 
     def show_live_stream_url(self, urls: dict, tasks: list):
         for i, (k, v) in enumerate(vars(urls).items(), start=1):

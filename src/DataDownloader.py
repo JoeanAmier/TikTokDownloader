@@ -14,12 +14,12 @@ from rich.progress import (
 )
 
 from src.Configuration import Parameter
+from src.Customizer import DESCRIPTION_LENGTH
 from src.Customizer import MAX_WORKERS
 from src.Customizer import (
     PROGRESS,
 )
 from src.DataAcquirer import retry
-from src.DataExtractor import Extractor
 
 
 # class Downloader:
@@ -857,20 +857,19 @@ class Downloader:
         )
         tasks = []
         for item in data:
-            item = Extractor.generate_data_object(item)
+            item["desc"] = item["desc"][:DESCRIPTION_LENGTH]
             name = self.generate_works_name(item)
             temp_root, actual_root = self.deal_folder_path(root, name)
-            id_ = Extractor.safe_extract(item, "id")
             params = {
                 "tasks": tasks,
                 "name": name,
-                "id_": id_,
+                "id_": item["id"],
                 "item": item,
                 "count": count,
                 "temp_root": temp_root,
                 "actual_root": actual_root
             }
-            if (t := Extractor.safe_extract(item, "type")) == "图集":
+            if (t := item["type"]) == "图集":
                 self.download_image(**params)
             elif t == "视频":
                 self.download_video(**params)
@@ -884,9 +883,10 @@ class Downloader:
             self,
             tasks: list[tuple],
             count: SimpleNamespace,
+            max_workers=MAX_WORKERS,
             **kwargs):
         with self.progress:
-            with self.__thread(max_workers=MAX_WORKERS) as self.__pool:
+            with self.__thread(max_workers=max_workers) as self.__pool:
                 for task in tasks:
                     task_id = self.progress.add_task(task[3], start=False)
                     # noinspection PyTypeChecker
@@ -925,8 +925,7 @@ class Downloader:
             temp_root: Path,
             actual_root: Path) -> None:
         for index, img in enumerate(
-                Extractor.safe_extract(
-                    item, "downloads").split(" "), start=1):
+                item["downloads"].split(" "), start=1):
             if self.is_in_blacklist(id_):
                 count.skipped_image.add(id_)
                 self.log.info(f"图集 {id_} 存在下载记录，跳过下载")
@@ -961,7 +960,7 @@ class Downloader:
             count.skipped_video.add(id_)
             return
         tasks.append((
-            Extractor.safe_extract(item, "downloads"),
+            item["downloads"],
             temp_root.with_name(f"{name}.mp4"),
             p,
             f"视频 {id_}",
@@ -978,7 +977,7 @@ class Downloader:
             actual_root: Path,
             **kwargs, ) -> None:
         if self.check_deal_music(
-                url := Extractor.safe_extract(item, "music_url"),
+                url := item["music_url"],
                 p := actual_root.with_name(f"{name}.mp3"), ):
             tasks.append((
                 url,
@@ -998,7 +997,7 @@ class Downloader:
             actual_root: Path,
             **kwargs, ) -> None:
         if all((self.original,
-                url := Extractor.safe_extract(item, "origin_cover"),
+                url := item["origin_cover"],
                 not self.is_exists(p := actual_root.with_name(f"{name}.jpeg"))
                 )):
             tasks.append((
@@ -1009,7 +1008,7 @@ class Downloader:
                 id_,
             ))
         if all((self.dynamic,
-                url := Extractor.safe_extract(item, "dynamic_cover"),
+                url := item["dynamic_cover"],
                 not self.is_exists(p := actual_root.with_name(f"{name}.webp"))
                 )):
             tasks.append((
@@ -1122,9 +1121,10 @@ class Downloader:
         folder.mkdir(exist_ok=True)
         return folder
 
-    def generate_works_name(self, data: SimpleNamespace) -> str:
-        return replace_emoji(self.split.join(Extractor.safe_extract(data, i)
-                                             for i in self.name_format))
+    def generate_works_name(self, data: dict) -> str:
+        return replace_emoji(
+            self.split.join(
+                data[i] for i in self.name_format))
 
     def create_works_folder(self, root: Path, name: str) -> Path:
         return root.joinpath(name) if self.folder_mode else root
