@@ -10,6 +10,7 @@ from src.DataAcquirer import (
     Link,
     Account,
     Works,
+    Live,
 )
 from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
@@ -288,19 +289,21 @@ class TikTok:
             elif link.upper() == "Q":
                 self.running = False
                 break
-            params = self.generate_params_dict(self.links.live(link))
+            params = self.generate_params_dict(*self.links.live(link))
             for i in params:
-                pass
+                data = Live(self.parameter, **i).run()
             #     if len(data) == 1 and (l := choice_quality(item[2])):
             #         self.download.download_live(l, f"{item[0]}-{item[1]}")
         self.logger.info("已退出获取直播推流地址模式")
 
-    def generate_params_dict(self, rid: bool, ids: list[str]) -> dict:
+    def generate_params_dict(self, rid: bool, ids: list[list]) -> list[dict]:
         if not ids:
             self.console.print("提取 web_rid 或者 room_id 失败！", style=WARNING)
-            return {}
-        key_name = "web_rid" if rid else "room_id"
-        return {key_name: id_ for id_ in ids}
+            return []
+        if rid:
+            return [{"web_rid": id_} for id_ in ids]
+        else:
+            return [{"room_id": id_[0], "sec_user_id": id_[1]} for id_ in ids]
 
     @check_storage_format
     def comment_interactive(self):

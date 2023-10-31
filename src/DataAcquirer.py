@@ -2,7 +2,9 @@ from datetime import date
 from datetime import datetime
 from re import compile
 from time import time
+from urllib.parse import parse_qs
 from urllib.parse import urlencode
+from urllib.parse import urlparse
 
 import requests
 from requests import exceptions
@@ -21,6 +23,7 @@ __all__ = [
     "Link",
     "Account",
     "Works",
+    "Live",
 ]
 
 
@@ -1242,7 +1245,7 @@ class Link:
         r".*?https://www\.douyin\.com/collection/(\d{19}).*?")  # 合集链接
     live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
     live_link_share = compile(
-        r"https://webcast\.amemv\.com/douyin/webcast/reflow/.+?")
+        r"https://webcast\.amemv\.com/douyin/webcast/reflow/\S+")
 
     # TikTok 链接
     works_link_tiktok = compile(
@@ -1287,8 +1290,18 @@ class Link:
         if u := self.live_link.findall(urls):
             return True, u
         elif u := self.live_link_share.findall(urls):
-            return False, u
+            return False, self.extract_sec_user_id(u)
         return None, []
+
+    @staticmethod
+    def extract_sec_user_id(urls: list[str]) -> list[list]:
+        data = []
+        for url in urls:
+            url = urlparse(url)
+            query_params = parse_qs(url.query)
+            data.append([url.path.split("/")[-1],
+                         query_params.get("sec_user_id", [""])[0]])
+        return data
 
 
 class Account(Acquirer):
@@ -1506,7 +1519,6 @@ class Live(Acquirer):
             sec_user_id=None):
         super().__init__(params)
         self.PC_headers["Referer"] = "https://live.douyin.com/"
-        del self.PC_headers["Cookie"]
         self.web_rid = web_rid
         self.room_id = room_id
         self.sec_user_id = sec_user_id
