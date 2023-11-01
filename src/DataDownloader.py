@@ -1,4 +1,5 @@
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from pathlib import Path
 from shutil import move
 from types import SimpleNamespace
@@ -838,8 +839,31 @@ class Downloader:
         root = self.storage_folder(mix_id, mix_title, mark=mark, mix=True)
         self.batch_processing(data, root)
 
-    def run_live(self):
-        pass
+    def run_live(self, data: list[tuple]):
+        if not self.download:
+            return
+        download_tasks = []
+        self.generate_live_tasks(data, download_tasks)
+        self.downloader_chart(
+            download_tasks,
+            SimpleNamespace(),
+            len(download_tasks),
+            unknown_size=True,
+            headers=self.black_headers)
+
+    def generate_live_tasks(self, data: list[tuple[dict, str]], tasks: list):
+        for i, u in enumerate(data):
+            name = replace_emoji(f'{i["title"]}{self.split}{i["nickname"]}' f'{self.split}{
+            datetime.now().strftime("%Y-%m-%d %H.%M.%S")}.flv')
+            temp_root, actual_root = self.deal_folder_path(
+                self.storage_folder(folder_name="Live"), name, True)
+            tasks.append((
+                u,
+                temp_root,
+                actual_root,
+                f'直播 {i["title"]}{self.split}{i["nickname"]}',
+                "0" * 19,
+            ))
 
     def batch_processing(
             self,
@@ -898,8 +922,9 @@ class Downloader:
                         **kwargs,
                         output=False)
 
-    def deal_folder_path(self, root: Path, name: str) -> tuple[Path, Path]:
-        root = self.create_works_folder(root, name)
+    def deal_folder_path(self, root: Path, name: str,
+                         folder_mode=None) -> tuple[Path, Path]:
+        root = self.create_works_folder(root, name, folder_mode)
         root.mkdir(exist_ok=True)
         temp = self.__temp.joinpath(name)
         actual = root.joinpath(name)
@@ -1035,6 +1060,7 @@ class Downloader:
             show: str,
             id_: str,
             count: SimpleNamespace,
+            headers: dict = None,
             tiktok=False,
             unknown_size=False) -> bool:
         try:
@@ -1042,7 +1068,7 @@ class Downloader:
                     url,
                     stream=True,
                     proxies=self.proxies,
-                    headers=self.Phone_headers if tiktok else self.PC_headers) as response:
+                    headers=headers or self.Phone_headers if tiktok else self.PC_headers) as response:
                 if not (
                         content := int(
                             response.headers.get(
@@ -1110,13 +1136,14 @@ class Downloader:
             batch=False,
             mark=None,
             addition=None,
-            mix=False, ) -> Path:
+            mix=False,
+            folder_name: str = None) -> Path:
         if batch and all((id_, name, addition)):
             folder_name = f"UID{id_}_{mark or name}_{addition}"
         elif mix and all((id_, name)):
             folder_name = f"MIX{id_}_{mark or name}"
         else:
-            folder_name = self.folder_name
+            folder_name = folder_name or self.folder_name
         folder = self.root.joinpath(folder_name)
         folder.mkdir(exist_ok=True)
         return folder
@@ -1126,8 +1153,12 @@ class Downloader:
             self.split.join(
                 data[i] for i in self.name_format))
 
-    def create_works_folder(self, root: Path, name: str) -> Path:
-        return root.joinpath(name) if self.folder_mode else root
+    def create_works_folder(
+            self,
+            root: Path,
+            name: str,
+            folder_mode=None) -> Path:
+        return root.joinpath(name) if folder_mode or self.folder_mode else root
 
     @staticmethod
     def save_file(temp: Path, actual: Path):

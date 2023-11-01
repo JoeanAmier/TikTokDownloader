@@ -296,7 +296,7 @@ class Extractor:
         live_data = {"status": self.safe_extract(data, "status"),
                      "nickname": self.safe_extract(data, "owner.nickname"),
                      "title": self.safe_extract(data, "title"),
-                     "stream_url": self.safe_extract(data, "stream_url.flv_pull_url"),
+                     "stream_url": vars(self.safe_extract(data, "stream_url.flv_pull_url")),
                      "cover": self.safe_extract(data, "cover.url_list[-1]"),
                      "total_user_str": self.safe_extract(data, "stats.total_user_str"),
                      "user_count_str": self.safe_extract(data, "stats.user_count_str")}

@@ -464,12 +464,12 @@
 <ul>
 <li><code>https://live.douyin.com/直播ID</code></li>
 <li><code>https://v.douyin.com/分享码/</code></li>
+<li><code>https://www.douyin.com/follow?webRid=直播ID</code></li>
 </ul>
 <p>下载说明：</p>
 <ul>
-<li>单次输入一个直播链接时，程序会询问用户是否下载直播视频，如果使用本程序下载，需要保持程序运行直到直播结束。</li>
-<li>单次输入多个直播链接时，程序不会询问用户是否下载视频。</li>
-<li>程序询问是否下载直播时，输入直播清晰度或者对应索引即可下载，例如：下载最高清晰度输入 <code>清晰度FULL_HD1</code> 或者 <code>0</code> 均可。</li>
+<li>程序会询问用户是否下载直播视频，如果使用本程序下载，需要保持程序运行直到直播结束。</li>
+<li>程序询问是否下载直播时，输入直播清晰度或者对应序号即可下载，例如：下载最高清晰度输入 <code>清晰度FULL_HD1</code> 或者 <code>1</code> 均可。</li>
 <li>下载的直播视频时长会显示为直播总时长，实际视频内容是从下载时间开始，后面部分的片段无法播放；复制推流地址并使用 FFmpeg 下载可以解决该问题，操作方法请自行查阅资料。</li>
 <li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹</li>
 </ul>
