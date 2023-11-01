@@ -271,7 +271,7 @@ class TikTok:
                 "请选择下载清晰度(输入清晰度或者对应序号，直接回车代表不下载): ")
             if u := items.get(choice):
                 return u
-            if not 0 <= (i := int(choice) + 1) < len(items):
+            if not 0 <= (i := int(choice) - 1) < len(items):
                 raise ValueError
         except ValueError:
             return ""
@@ -323,6 +323,7 @@ class TikTok:
             (item, u) if (
                 u := self._choice_live_quality(
                     item["stream_url"])) else u)
+        print()
 
     @check_storage_format
     def comment_interactive(self):

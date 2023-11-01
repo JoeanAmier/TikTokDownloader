@@ -12,6 +12,7 @@ from rich.progress import (
     DownloadColumn,
     Progress,
     TextColumn,
+    TimeElapsedColumn,
 )
 
 from src.Configuration import Parameter
@@ -775,6 +776,17 @@ class Downloader:
         DownloadColumn(
             binary_units=True),
     )
+    live_progress = Progress(
+        TextColumn(
+            "[progress.description]{task.description}",
+            style=PROGRESS,
+            justify="left"),
+        "•",
+        BarColumn(
+            bar_width=20),
+        "•",
+        TimeElapsedColumn(),
+    )
 
     def __init__(self, params: Parameter):
         self.cookie = params.cookie
@@ -847,14 +859,16 @@ class Downloader:
         self.downloader_chart(
             download_tasks,
             SimpleNamespace(),
+            self.live_progress,
             len(download_tasks),
             unknown_size=True,
             headers=self.black_headers)
 
     def generate_live_tasks(self, data: list[tuple[dict, str]], tasks: list):
-        for i, u in enumerate(data):
-            name = replace_emoji(f'{i["title"]}{self.split}{i["nickname"]}' f'{self.split}{
-            datetime.now().strftime("%Y-%m-%d %H.%M.%S")}.flv')
+        for i, u in data:
+            name = replace_emoji(
+                f'{i["title"]}{self.split}{i["nickname"]}'
+                f'{self.split}{datetime.now().strftime("%Y-%m-%d %H.%M.%S")}.flv')
             temp_root, actual_root = self.deal_folder_path(
                 self.storage_folder(folder_name="Live"), name, True)
             tasks.append((
@@ -899,7 +913,7 @@ class Downloader:
                 self.download_video(**params)
             self.download_music(**params)
             self.download_cover(**params)
-        self.downloader_chart(tasks, count, **kwargs)
+        self.downloader_chart(tasks, count, self.progress, **kwargs)
         if statistics:
             self.statistics_count(count)
 
@@ -907,12 +921,14 @@ class Downloader:
             self,
             tasks: list[tuple],
             count: SimpleNamespace,
+            progress: Progress,
             max_workers=MAX_WORKERS,
             **kwargs):
-        with self.progress:
+        with progress:
             with self.__thread(max_workers=max_workers) as self.__pool:
                 for task in tasks:
-                    task_id = self.progress.add_task(task[3], start=False)
+                    task_id = progress.add_task(
+                        task[3], start=False, total=None)
                     # noinspection PyTypeChecker
                     self.__pool.submit(
                         self.request_file,
@@ -920,6 +936,7 @@ class Downloader:
                         *task,
                         count=count,
                         **kwargs,
+                        progress=progress,
                         output=False)
 
     def deal_folder_path(self, root: Path, name: str,
@@ -1060,6 +1077,7 @@ class Downloader:
             show: str,
             id_: str,
             count: SimpleNamespace,
+            progress: Progress,
             headers: dict = None,
             tiktok=False,
             unknown_size=False) -> bool:
@@ -1091,7 +1109,8 @@ class Downloader:
                     id_,
                     response,
                     content,
-                    count)
+                    count,
+                    progress)
         except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
             self.log.warning(f"网络异常: {e}", False)
             return False
@@ -1105,14 +1124,15 @@ class Downloader:
             id_: str,
             response,
             content: int,
-            count: SimpleNamespace) -> bool:
-        self.progress.update(task_id, total=content)
-        self.progress.start_task(task_id)
+            count: SimpleNamespace,
+            progress: Progress) -> bool:
+        progress.update(task_id, total=content or None)
+        progress.start_task(task_id)
         try:
             with temp.open("wb") as f:
                 for chunk in response.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
-                    self.progress.update(task_id, advance=len(chunk))
+                    progress.update(task_id, advance=len(chunk))
         except requests.exceptions.ChunkedEncodingError:
             self.log.warning(f"{show} 由于网络异常下载中断", False)
             self.delete_file(temp)
