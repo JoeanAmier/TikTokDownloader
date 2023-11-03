@@ -940,8 +940,8 @@ class Downloader:
                         output=False)
 
     def deal_folder_path(self, root: Path, name: str,
-                         folder_mode=None) -> tuple[Path, Path]:
-        root = self.create_works_folder(root, name, folder_mode)
+                         pass_=False) -> tuple[Path, Path]:
+        root = self.create_works_folder(root, name, pass_)
         root.mkdir(exist_ok=True)
         temp = self.__temp.joinpath(name)
         actual = root.joinpath(name)
@@ -1064,9 +1064,6 @@ class Downloader:
     def check_deal_music(self, url: str, path: Path) -> bool:
         return all((self.music, url, not self.is_exists(path)))
 
-    def download_live(self) -> None:
-        pass
-
     @retry
     def request_file(
             self,
@@ -1177,8 +1174,10 @@ class Downloader:
             self,
             root: Path,
             name: str,
-            folder_mode=None) -> Path:
-        return root.joinpath(name) if folder_mode or self.folder_mode else root
+            pass_=False) -> Path:
+        if pass_:
+            return root.joinpath(name)
+        return root.joinpath(name) if self.folder_mode else root
 
     @staticmethod
     def save_file(temp: Path, actual: Path):

@@ -44,7 +44,10 @@ class Extractor:
         return depth_conversion(data)
 
     @staticmethod
-    def safe_extract(data: SimpleNamespace, attribute_chain: str, default=""):
+    def safe_extract(
+            data: SimpleNamespace,
+            attribute_chain: str,
+            default: str | int = ""):
         attributes = attribute_chain.split(".")
         for attribute in attributes:
             if "[" in attribute:
@@ -231,13 +234,15 @@ class Extractor:
             self,
             container: SimpleNamespace,
             data: SimpleNamespace,
+            key="author",
     ) -> None:
-        data = self.safe_extract(data, "author")
+        data = self.safe_extract(data, key)
         container.cache["uid"] = self.safe_extract(data, "uid")
         container.cache["sec_uid"] = self.safe_extract(data, "sec_uid")
         container.cache["short_id"] = self.safe_extract(data, "short_id")
         container.cache["unique_id"] = self.safe_extract(data, "unique_id")
         container.cache["signature"] = self.safe_extract(data, "signature")
+        container.cache["user_age"] = self.safe_extract(data, "user_age")
         self.extract_nickname_info(container, data)
 
     def extract_nickname_info(self,
@@ -277,8 +282,64 @@ class Extractor:
         self.record_data(recorder, container.all_data)
         return container.all_data
 
-    def comment(self, data: list[dict], recorder) -> list[dict]:
-        pass
+    def comment(self, data: list[dict], recorder,
+                source=False) -> tuple[list[dict], list]:
+        container = SimpleNamespace(
+            all_data=[],
+            reply_ids=[],
+            template={
+                "collection_time": datetime.now().strftime(self.date_format),
+            },
+            cache=None,
+            post=False,
+        )
+        if source:
+            [self._extract_reply_ids(container, i) for i in data]
+            return container.all_data, container.reply_ids
+        else:
+            [self._extract_comments_data(
+                container, self.generate_data_object(i)) for i in data]
+            self.record_data(recorder, container.all_data)
+            return container.all_data, container.reply_ids
+
+    def _extract_comments_data(
+            self,
+            container: SimpleNamespace,
+            data: SimpleNamespace):
+        container.cache = container.template.copy()
+        container.cache["create_time"] = self.format_date(data)
+        container.cache["ip_label"] = self.safe_extract(data, "ip_label", "未知")
+        container.cache["text"] = self.safe_extract(data, "text")
+        container.cache["image"] = self.safe_extract(
+            data, "image_list[0].origin_url.url_list[-1]")
+        container.cache["sticker"] = self.safe_extract(
+            data, "sticker.static_url.url_list[-1]")
+        container.cache["digg_count"] = str(
+            self.safe_extract(data, "digg_count"))
+        container.cache["reply_to_reply_id"] = self.safe_extract(
+            data, "reply_to_reply_id")
+        container.cache["reply_comment_total"] = str(
+            self.safe_extract(data, "reply_comment_total", 0))
+        container.cache["reply_id"] = self.safe_extract(data, "reply_id")
+        container.cache["cid"] = self.safe_extract(data, "cid")
+        self.extract_account_info(container, data, "user")
+        self._filter_reply_ids(container)
+        container.all_data.append(container.cache)
+
+    def _extract_reply_ids(self, container: SimpleNamespace, data: dict):
+        cache = self.generate_data_object(data)
+        container.cache = {
+            "reply_comment_total": str(
+                self.safe_extract(
+                    cache, "reply_comment_total", 0)), "cid": self.safe_extract(
+                cache, "cid")}
+        self._filter_reply_ids(container)
+        container.all_data.append(data)
+
+    @staticmethod
+    def _filter_reply_ids(container: SimpleNamespace):
+        if container.cache["reply_comment_total"] != "0":
+            container.reply_ids.append(container.cache["cid"])
 
     def live(self, data: list[dict], *args) -> list[dict]:
         container = SimpleNamespace(all_data=[])

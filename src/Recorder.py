@@ -382,7 +382,27 @@ class RecordManager:
         "INTEGER",
         "INTEGER",
     )
-    Comment_Title = (
+    comment_keys = (
+        "collection_time",
+        "cid",
+        "create_time",
+        "uid",
+        "sec_uid",
+        "short_id",
+        "unique_id",
+        "nickname",
+        "signature",
+        # "user_age",
+        "ip_label",
+        "text",
+        "sticker",
+        "image",
+        "digg_count",
+        "reply_comment_total",
+        "reply_id",
+        "reply_to_reply_id",
+    )
+    comment_title = (
         "采集时间",
         "评论ID",
         "评论时间",
@@ -392,7 +412,7 @@ class RecordManager:
         "抖音号",
         "账号昵称",
         "账号签名",
-        "年龄",
+        # "年龄",
         "IP归属地",
         "评论内容",
         "评论表情",
@@ -400,8 +420,9 @@ class RecordManager:
         "点赞数量",
         "回复数量",
         "回复ID",
+        "回复对象",
     )
-    Comment_Type = (
+    comment_type = (
         "TEXT",
         "TEXT PRIMARY KEY",
         "TEXT",
@@ -411,13 +432,14 @@ class RecordManager:
         "TEXT",
         "TEXT",
         "TEXT",
-        "INTEGER",
+        # "INTEGER",
         "TEXT",
         "TEXT",
         "TEXT",
         "TEXT",
         "INTEGER",
         "INTEGER",
+        "TEXT",
         "TEXT",
     )
     User_Title = (
@@ -530,9 +552,9 @@ class RecordManager:
         },
         "comment": {
             "db_name": "CommentData.db",
-            "title_line": Comment_Title,
-            "title_type": Comment_Type,
-            "field_keys": works_keys,
+            "title_line": comment_title,
+            "title_type": comment_type,
+            "field_keys": comment_keys,
             "id_": False,
         },
         "user": {

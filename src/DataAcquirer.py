@@ -12,7 +12,6 @@ from requests import request
 
 from src.Configuration import Parameter
 from src.Customizer import (
-    GENERAL,
     WARNING,
 )
 from src.Customizer import wait
@@ -24,6 +23,7 @@ __all__ = [
     "Account",
     "Works",
     "Live",
+    "Comment",
 ]
 
 
@@ -37,7 +37,7 @@ def retry(function):
             if result := function(self, *args, **kwargs):
                 return result
             if output:
-                self.console.print(f"正在尝试第 {i + 1} 次重试", style=WARNING)
+                self.console.print(f"正在尝试第 {i + 1} 次重试！", style=WARNING)
         if not (result := function(self, *args, **kwargs)) and finished:
             self.finished = True
         return result
@@ -1095,8 +1095,6 @@ def retry(function):
 class Acquirer:
     Phone_headers = None
     # 抖音 API
-    comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
-    reply_api = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
     collection_api = "https://www.douyin.com/aweme/v1/web/aweme/listcollection/"  # 收藏API
     mix_api = "https://www.douyin.com/aweme/v1/web/mix/aweme/"  # 合集API
     mix_list_api = "https://www.douyin.com/aweme/v1/web/mix/listcollection/"  # 合集列表API
@@ -1364,7 +1362,7 @@ class Account(Acquirer):
     def run(self) -> tuple[list[dict], date, date]:
         num = 1
         while not self.finished and self.pages > 0:
-            self.console.print(f"正在获取第 {num} 页数据...", style=GENERAL)
+            self.console.print(f"正在获取第 {num} 页数据...")
             self.get_account_data(self.api, finished=True)
             self.early_stop()
             self.pages -= 1
@@ -1391,7 +1389,6 @@ class Account(Acquirer):
                     api,
                     params=params,
                     finished=finished)):
-            self.finished = True
             self.log.warning("获取账号作品数据失败")
             return
         try:
@@ -1489,13 +1486,91 @@ class Works(Acquirer):
 
 
 class Comment(Acquirer):
+    comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
+    comment_api_reply = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
+
     def __init__(self, params: Parameter, item_id: str):
         super().__init__(params)
         self.item_id = item_id
         self.pages = params.max_pages
+        self.all_data = None
+        self.reply_ids = None
 
-    def run(self):
-        pass
+    def run(self, extractor: Extractor, recorder, source=False) -> list[dict]:
+        num = 1
+        while not self.finished and self.pages > 0:
+            self.console.print(f"正在获取第 {num} 页数据...")
+            self.get_comments_data(self.comment_api)
+            self.pages -= 1
+            num += 1
+        self.all_data, self.reply_ids = extractor.run(
+            self.response, recorder, "comment", source=source)
+        self.response = []
+        for i in self.reply_ids:
+            self.finished = False
+            self.cursor = 0
+            while not self.finished and self.pages > 0:
+                self.console.print("正在获取评论回复数据...")
+                self.get_comments_data(self.comment_api_reply, i)
+                self.pages -= 1
+        self.all_data.extend(
+            self._check_reply_ids(
+                *
+                extractor.run(
+                    self.response,
+                    recorder,
+                    "comment",
+                    source=source)))
+        return self.all_data
+
+    def get_comments_data(self, api: str, reply=""):
+        if reply:
+            params = {
+                "device_platform": "webapp",
+                "aid": "6383",
+                "channel": "channel_pc_web",
+                "item_id": self.item_id,
+                "comment_id": reply,
+                "cursor": self.cursor,
+                "count": "10" if self.cursor else "3",  # 每次返回数据的数量
+                "cookie_enabled": "true",
+                "platform": "PC",
+                "downlink": "10",
+            }
+            self.deal_url_params(params, 174)
+        else:
+            params = {
+                "device_platform": "webapp",
+                "aid": "6383",
+                "channel": "channel_pc_web",
+                "aweme_id": self.item_id,
+                "cursor": self.cursor,
+                "count": "20",
+                "cookie_enabled": "true",
+                "platform": "PC",
+                "downlink": "10",
+            }
+            self.deal_url_params(params)
+        if not (
+                data := self.send_request(
+                    api,
+                    params=params,
+                    finished=True)):
+            self.log.warning("获取作品评论数据失败")
+            return
+        self.deal_comments_data(data["comments"])
+        self.cursor = data["cursor"]
+        self.finished = not data["has_more"]
+
+    def deal_comments_data(self, comments: list[dict]):
+        for i in comments:
+            self.response.append(i)
+
+    @staticmethod
+    def _check_reply_ids(data: list[dict], ids: list) -> list[dict]:
+        if ids:
+            raise ValueError
+        return data
 
 
 class Mix(Acquirer):

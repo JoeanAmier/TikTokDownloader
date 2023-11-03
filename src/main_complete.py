@@ -10,6 +10,7 @@ from src.DataAcquirer import (
     Account,
     Works,
     Live,
+    Comment,
 )
 from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
@@ -323,27 +324,28 @@ class TikTok:
             (item, u) if (
                 u := self._choice_live_quality(
                     item["stream_url"])) else u)
-        print()
 
     @check_storage_format
     def comment_interactive(self):
-        save, root, params = self.record.run(
-            self._data["root"], type_="comment", format_=self._data["save"])
+        root, params, logger = self.record.run(self.parameter, type_="comment")
         while True:
-            url = input("请输入作品链接: ")
+            url = self.console.input("请输入作品链接: ")
             if not url:
                 break
             elif url.upper() == "Q":
-                self.quit = True
+                self.running = False
                 break
-            ids = self.request.run_alone(url)
+            tiktok, ids = self.links.works(url)
             if not ids:
-                self.logger.error(f"{url} 获取作品ID失败")
+                self.logger.warning(f"{url} 提取作品 ID 失败")
+                continue
+            elif tiktok:
+                self.console.print("目前项目暂不支持采集 TikTok 作品评论数据！", style=WARNING)
                 continue
             for i in ids:
                 name = f"作品{i}_评论数据"
-                with save(root, name=name, **params) as data:
-                    self.request.run_comment(i, data)
+                with logger(root, name=name, **params) as record:
+                    Comment(self.parameter, i).run(self.extractor, record)
                 self.logger.info(f"作品评论数据已储存至 {name}")
         self.logger.info("已退出采集作品评论数据模式")
 

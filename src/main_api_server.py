@@ -16,7 +16,7 @@ class APIServer(WebUI):
             "观看次数",
             "在线观众",
         ),
-        17: RecordManager.Comment_Title,
+        17: RecordManager.comment_title,
         21: RecordManager.User_Title[1:],
         7: RecordManager.Hot_Title,
         12: RecordManager.Search_User_Title,
