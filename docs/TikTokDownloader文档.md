@@ -26,7 +26,7 @@
 <li>解压后打开程序文件夹，双击运行 <code>main.exe</code></li>
 </ol>
 <ol><b>通过源码运行</b>
-<li>安装不低于 <code>3.10</code> 版本的 <a href="https://www.python.org/">Python</a> 解释器</li>
+<li>安装不低于 <code>3.12</code> 版本的 <a href="https://www.python.org/">Python</a> 解释器</li>
 <li>下载最新的源码或 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的源码至本地</li>
 <li>安装 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/requirements.txt">requirements.txt</a> 包含的第三方模块</li>
 <li>运行 main.py</li>

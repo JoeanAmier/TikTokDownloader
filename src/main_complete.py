@@ -120,8 +120,9 @@ class TikTok:
 
     def account_acquisition_interactive(self):
         root, params, logger = self.record.run(self.parameter)
-        select = prompt("请选择账号链接来源", ("使用 accounts_urls 参数内的账号链接(推荐)",
-                                               "手动输入待采集的账号链接"), self.console)
+        select = prompt("请选择账号链接来源",
+                        ("使用 accounts_urls 参数的账号链接(推荐)",
+                         "手动输入待采集的账号链接"), self.console)
         if select == "1":
             self.account_works_batch(root, params, logger)
         elif select == "2":
@@ -376,8 +377,9 @@ class TikTok:
 
     def mix_interactive(self):
         root, params, logger = self.record.run(self.parameter, type_="mix")
-        select = prompt("请选择合集链接来源", ("使用 mix_urls 参数内的合集链接(推荐)",
-                                               "手动输入待采集的合集/作品链接"), self.console)
+        select = prompt("请选择合集链接来源",
+                        ("使用 mix_urls 参数的合集链接(推荐)",
+                         "手动输入待采集的合集/作品链接"), self.console)
         if select == "1":
             self.mix_batch(root, params, logger)
         elif select == "2":
@@ -400,24 +402,6 @@ class TikTok:
     @staticmethod
     def _generate_mix_params(mix: bool, id_: str) -> dict:
         return {"mix_id": id_, } if mix else {"works_id": id_, }
-
-    def download_mix(self, mix_info, save, root, params, mark=None, api=False):
-        if isinstance(mark, str):
-            mix_info[1] = mark or mix_info[1]
-        else:
-            mix_info[1] = input(
-                "请输入合集标识(直接回车使用合集标题作为合集标识): ") or mix_info[1]
-        self.download.nickname = mix_info[2]
-        self.download.mark = mix_info[1]
-        old_mark = m["mark"] if (
-            m := self.manager.data.get(
-                mix_info[0])) else None
-        self.manager.update_cache(*mix_info)
-        with save(root, name=f"MIX{mix_info[0]}_{mix_info[1]}", old=old_mark, **params) as data:
-            self.download.data = data
-            self.download.run_mix(
-                f"MIX{mix_info[0]}_{mix_info[1]}",
-                self.request.mix_total, api)
 
     def mix_inquire(self, root, params, logger):
         while url := self._inquire_input("合集或作品"):
@@ -476,56 +460,36 @@ class TikTok:
         mix_id, id_ = self.links.mix(url)
         return (mix_id, id_[0]) if len(id_) > 0 else (mix_id, "")
 
-    def accounts_user(self):
-        save, root, params = self.record.run(
-            self._data["root"], type_="user", format_=self._data["save"])
-        for i in self.accounts:
-            self.request.url = i[1]
-            self.logger.info(f"{i[1]} 开始获取账号数据")
-            data = self.request.run_batch()
-            if not data:
-                self.logger.warning(f"{i[1]} 获取账号数据失败")
+    def user_batch(self):
+        root, params, logger = self.record.run(self.parameter, type_="user")
+        for index, data in enumerate(self.accounts, start=1):
+            if not (sec_user_id := self.check_sec_user_id(data.url)):
+                self.logger.warning(
+                    f"配置文件 accounts_urls 参数"
+                    f"第 {index} 条数据的 url 无效")
                 continue
-            with save(root, name="UserData", **params) as file:
-                self.request.save_user(file, data)
 
-    def alone_user(self):
-        save, root, params = self.record.run(
-            self._data["root"], type_="user", format_=self._data["save"])
-        while True:
-            url = input("请输入账号链接: ")
-            if not url:
-                break
-            elif url in ("Q", "q",):
-                self.quit = True
-                break
-            ids = self.request.run_alone(url, user=True)
-            if not ids:
-                continue
-            for i in ids:
-                self.request.url = i
-                self.logger.info(f"{i} 开始获取账号数据")
-                data = self.request.run_batch()
-                if not data:
-                    self.logger.warning(f"{i} 获取账号数据失败")
-                    continue
-                with save(root, name="UserData", **params) as file:
-                    self.request.save_user(file, data)
+    def user_inquire(self):
+        root, params, logger = self.record.run(self.parameter, type_="user")
+        while url := self._inquire_input("账号主页"):
+            sec_user_ids = self.links.user(url)
+            if not sec_user_ids:
+                self.logger.warning(f"{url} 提取账号 sec_user_id 失败")
+            for i in sec_user_ids:
+                pass
 
     @check_storage_format
     def user_interactive(self):
-        def choose_mode() -> str:
-            return prompt(
-                "请选择账号链接来源",
-                ("使用 accounts 参数内的账号链接",
-                 "手动输入待采集的账号链接"), self.colour.colorize)
-
-        if (m := choose_mode()) == "1":
-            self.accounts_user()
-        elif m == "2":
-            self.alone_user()
-        elif m.upper() == "Q":
-            self.quit = True
+        select = prompt(
+            "请选择账号链接来源",
+            ("使用 accounts_urls 参数的账号链接",
+             "手动输入待采集的账号链接"), self.console)
+        if select == "1":
+            self.user_batch()
+        elif select == "2":
+            self.user_inquire()
+        elif select.upper() == "Q":
+            self.running = False
         self.logger.info("已退出批量采集账号数据模式")
 
     def get_condition(self, condition=None) -> None | tuple[list, str]:

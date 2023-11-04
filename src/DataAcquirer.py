@@ -4,6 +4,7 @@ from itertools import cycle
 from re import compile
 from time import time
 from urllib.parse import parse_qs
+from urllib.parse import quote
 from urllib.parse import urlencode
 from urllib.parse import urlparse
 
@@ -1099,9 +1100,7 @@ class Acquirer:
     # 抖音 API
     collection_api = "https://www.douyin.com/aweme/v1/web/aweme/listcollection/"  # 收藏API
     mix_list_api = "https://www.douyin.com/aweme/v1/web/mix/listcollection/"  # 合集列表API
-    info_api = "https://www.douyin.com/aweme/v1/web/im/user/info/"  # 账号简略数据API
     feed_api = "https://www.douyin.com/aweme/v1/web/tab/feed/"  # 推荐页API
-    user_api = "https://www.douyin.com/aweme/v1/web/user/profile/other/"  # 账号详细数据API
     hot_api = "https://www.douyin.com/aweme/v1/web/hot/search/list/"  # 热榜API
     spotlight_api = "https://www.douyin.com/aweme/v1/web/im/spotlight/relation/"  # 关注账号API
     familiar_api = "https://www.douyin.com/aweme/v1/web/familiar/feed/"  # 朋友作品推荐API
@@ -1489,7 +1488,6 @@ class Works(Acquirer):
             return data["aweme_detail"] or {}
         except KeyError:
             self.log.error(f"作品数据响应内容异常: {data}")
-            self.finished = True
 
 
 class Comment(Acquirer):
@@ -1709,12 +1707,35 @@ class Live(Acquirer):
 
 
 class User(Acquirer):
+    user_api = "https://www.douyin.com/aweme/v1/web/user/profile/other/"  # 账号详细数据API
+
     def __init__(self, params: Parameter, sec_user_id: str):
         super().__init__(params)
         self.sec_user_id = sec_user_id
 
     def run(self):
-        pass
+        params = {
+            "device_platform": "webapp",
+            "aid": "6383",
+            "channel": "channel_pc_web",
+            "source": "channel_pc_web",
+            "sec_user_id": self.sec_user_id,
+            "cookie_enabled": "true",
+            "platform": "PC",
+            "downlink": "10",
+        }
+        self.deal_url_params(params)
+        if not (
+                data := self.send_request(
+                    self.user_api,
+                    params=params,
+                )):
+            self.log.warning("获取账号数据失败")
+            return {}
+        try:
+            return data["user"] or {}
+        except KeyError:
+            self.log.error(f"账号数据响应内容异常: {data}")
 
 
 class Search(Acquirer):
@@ -1757,3 +1778,38 @@ class Collection(Acquirer):
 
     def run(self):
         pass
+
+
+class Info(Acquirer):
+    info_api = "https://www.douyin.com/aweme/v1/web/im/user/info/"  # 账号简略数据API
+
+    def __init__(self, params: Parameter, sec_user_id: str):
+        super().__init__(params)
+        self.sec_user_id = sec_user_id
+        self.params = {
+            "device_platform": "webapp",
+            "aid": "6383",
+            "channel": "channel_pc_web",
+            "cookie_enabled": "true",
+            "platform": "PC",
+            "downlink": "10",
+        }
+
+    def run(self):
+        self.deal_url_params(self.params)
+        form = {
+            "sec_user_ids": quote(f'["{self.sec_user_id}"]')
+        }
+        if not (
+                data := self.send_request(
+                    self.info_api,
+                    params=self.params,
+                    method='post',
+                    data=form,
+                )):
+            self.log.warning("获取账号数据失败")
+            return {}
+        try:
+            return data["data"][0] or {}
+        except (KeyError, IndexError):
+            self.log.error(f"账号数据响应内容异常: {data}")
