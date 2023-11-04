@@ -1,6 +1,7 @@
 from datetime import datetime
 from time import localtime
 from time import strftime
+from time import time
 from types import SimpleNamespace
 
 from src.Customizer import conditional_filtering
@@ -14,7 +15,7 @@ class Extractor:
         self.date_format = params.date_format
         self.clean = params.clean
         self.type = {
-            "user": self.user,
+            "batch": self.batch,
             "works": self.works,
             "comment": self.comment,
             "live": self.live,
@@ -75,15 +76,15 @@ class Extractor:
             raise ValueError
         return self.type[type_](data, recorder, **kwargs)
 
-    def user(
+    def batch(
             self,
             data: list[dict],
             recorder,
-            nickname: str,
+            name: str,
             mark: str,
             earliest,
             latest,
-            post=True,
+            same=True,
     ) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
@@ -91,14 +92,14 @@ class Extractor:
                 "collection_time": datetime.now().strftime(self.date_format),
             },
             cache=None,
-            nickname=nickname,
+            name=name,
             mark=mark,
-            post=post,
+            same=same,
             earliest=earliest,
             latest=latest,
         )
         data = conditional_filtering(data)
-        [self.extract_user(container, self.generate_data_object(item))
+        [self.extract_batch(container, self.generate_data_object(item))
          for item in data]
         self.date_filter(container)
         self.summary_works(container.all_data)
@@ -108,7 +109,7 @@ class Extractor:
     def summary_works(self, data: list[dict]):
         self.log.info(f"当前账号筛选作品数量: {len(data)}")
 
-    def extract_user(
+    def extract_batch(
             self,
             container: SimpleNamespace,
             data: SimpleNamespace) -> None:
@@ -242,31 +243,37 @@ class Extractor:
         container.cache["short_id"] = self.safe_extract(data, "short_id")
         container.cache["unique_id"] = self.safe_extract(data, "unique_id")
         container.cache["signature"] = self.safe_extract(data, "signature")
-        container.cache["user_age"] = self.safe_extract(data, "user_age")
+        # container.cache["user_age"] = self.safe_extract(data, "user_age")
         self.extract_nickname_info(container, data)
 
     def extract_nickname_info(self,
                               container: SimpleNamespace,
                               data: SimpleNamespace, ) -> None:
-        if container.post:
-            container.cache["nickname"] = container.nickname
-            container.cache["mark"] = container.mark or container.nickname
+        if container.same:
+            container.cache["nickname"] = container.name
+            container.cache["mark"] = container.mark or container.name
         else:
-            nickname = self.clean.clean_name(self.safe_extract(
+            name = self.clean.clean_name(self.safe_extract(
                 data, "nickname", "已注销账号"), inquire=False, default="无效账号昵称")
-            container.cache["nickname"] = nickname
-            container.cache["mark"] = nickname
+            container.cache["nickname"] = name
+            container.cache["mark"] = name
 
     def preprocessing_data(self,
                            data: list[dict],
                            mark="",
-                           post=True) -> tuple[str, str, str, list[dict]]:
+                           post=True,
+                           mix=False) -> tuple:
         item = self.generate_data_object(data[-1])
-        uid = self.safe_extract(item, "author.uid")
-        nickname = self.clean.clean_name(self.safe_extract(
-            item, "author.nickname", "已注销账号"), default="无效账号昵称")
-        mark = self.clean.clean_name(mark, default=nickname)
-        return uid, nickname, mark, data[:None if post else -1]
+        mid = self.safe_extract(item, "mix_info.mix_id")
+        id_ = self.safe_extract(item, "author.uid")
+        name = self.clean.clean_name(self.safe_extract(
+            item, "author.nickname", f"账号_{str(time())[:10]}"),
+            default="无效账号昵称")
+        title = self.clean.clean_name(self.safe_extract(
+            item, "mix_info.mix_name", f"合集_{str(time())[:10]}"),
+            default="无效合集标题")
+        mark = self.clean.clean_name(mark, default=title if mix else name)
+        return id_, name, mid, title, mark, data[:None if post else -1]
 
     def works(self, data: list[dict], recorder) -> list[dict]:
         container = SimpleNamespace(
@@ -275,9 +282,9 @@ class Extractor:
                 "collection_time": datetime.now().strftime(self.date_format),
             },
             cache=None,
-            post=False,
+            same=False,
         )
-        [self.extract_user(container, self.generate_data_object(item))
+        [self.extract_batch(container, self.generate_data_object(item))
          for item in data]
         self.record_data(recorder, container.all_data)
         return container.all_data
@@ -389,3 +396,8 @@ class Extractor:
             if container.earliest <= create_time <= container.latest:
                 result.append(item)
         container.all_data = result
+
+    @staticmethod
+    def extract_mix_id(data: dict) -> str:
+        data = Extractor.generate_data_object(data)
+        return Extractor.safe_extract(data, "mix_info.mix_id")

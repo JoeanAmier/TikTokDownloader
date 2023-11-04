@@ -1,5 +1,6 @@
 from datetime import date
 from datetime import datetime
+from itertools import cycle
 from re import compile
 from time import time
 from urllib.parse import parse_qs
@@ -24,6 +25,7 @@ __all__ = [
     "Works",
     "Live",
     "Comment",
+    "Mix",
 ]
 
 
@@ -1096,7 +1098,6 @@ class Acquirer:
     Phone_headers = None
     # 抖音 API
     collection_api = "https://www.douyin.com/aweme/v1/web/aweme/listcollection/"  # 收藏API
-    mix_api = "https://www.douyin.com/aweme/v1/web/mix/aweme/"  # 合集API
     mix_list_api = "https://www.douyin.com/aweme/v1/web/mix/listcollection/"  # 合集列表API
     info_api = "https://www.douyin.com/aweme/v1/web/im/user/info/"  # 账号简略数据API
     feed_api = "https://www.douyin.com/aweme/v1/web/tab/feed/"  # 推荐页API
@@ -1186,6 +1187,14 @@ class Acquirer:
         xb = self.xb.get_x_bogus(params, self.ua_code, version)
         params["X-Bogus"] = xb
 
+    def deal_item_data(
+            self,
+            data: list[dict],
+            start: int = None,
+            end: int = None):
+        for i in data[start:end]:
+            self.response.append(i)
+
 
 class Share:
     share_link = compile(
@@ -1236,9 +1245,8 @@ class Link:
     works_link = compile(
         r".*?https://www\.douyin\.com/(?:video|note)/([0-9]{19}).*?")  # 作品链接
     works_share = compile(
-        # 作品分享短链
         r".*?https://www\.iesdouyin\.com/share/(?:video|note)/([0-9]{19})/.*?"
-    )
+    )  # 作品分享短链
     mix_link = compile(
         r".*?https://www\.douyin\.com/collection/(\d{19}).*?")  # 合集链接
     live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
@@ -1280,7 +1288,9 @@ class Link:
 
     def mix(self, text: str) -> tuple:
         urls = self.share.run(text)
-        if u := self.works_link.findall(urls):
+        if u := self.works_share.findall(urls):
+            return False, u
+        elif u := self.works_link.findall(urls):
             return False, u
         elif u := self.mix_link.findall(urls):
             return True, u
@@ -1397,18 +1407,11 @@ class Account(Acquirer):
                 self.finished = True
             else:
                 self.cursor = data['max_cursor']
-                self.deal_account_data(data_list, start, end)
+                self.deal_item_data(data_list, start, end)
                 self.finished = not data["has_more"]
         except KeyError:
             self.log.error(f"账号作品数据响应内容异常: {data}")
-
-    def deal_account_data(
-            self,
-            data: list[dict],
-            start=None,
-            end=None) -> None:
-        for i in data[start:end]:
-            self.response.append(i)
+            self.finished = True
 
     def early_stop(self):
         """如果获取数据的发布日期已经早于限制日期，就不需要再获取下一页的数据了"""
@@ -1482,12 +1485,17 @@ class Works(Acquirer):
                 )):
             self.log.warning("获取作品数据失败")
             return {}
-        return data["aweme_detail"] or {}
+        try:
+            return data["aweme_detail"] or {}
+        except KeyError:
+            self.log.error(f"作品数据响应内容异常: {data}")
+            self.finished = True
 
 
 class Comment(Acquirer):
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
     comment_api_reply = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
+    cycle = cycle(("⇒", "⇓", "⇐", "⇑"))
 
     def __init__(self, params: Parameter, item_id: str):
         super().__init__(params)
@@ -1510,7 +1518,7 @@ class Comment(Acquirer):
             self.finished = False
             self.cursor = 0
             while not self.finished and self.pages > 0:
-                self.console.print("正在获取评论回复数据...")
+                self.console.print(f"{next(self.cycle)} 正在获取评论回复数据...")
                 self.get_comments_data(self.comment_api_reply, i)
                 self.pages -= 1
         self.all_data.extend(
@@ -1558,13 +1566,15 @@ class Comment(Acquirer):
                     finished=True)):
             self.log.warning("获取作品评论数据失败")
             return
-        self.deal_comments_data(data["comments"])
-        self.cursor = data["cursor"]
-        self.finished = not data["has_more"]
-
-    def deal_comments_data(self, comments: list[dict]):
-        for i in comments:
-            self.response.append(i)
+        try:
+            if not (l := data["comments"]):
+                raise KeyError
+            self.deal_item_data(l)
+            self.cursor = data["cursor"]
+            self.finished = not data["has_more"]
+        except KeyError:
+            self.log.error(f"作品评论数据响应内容异常: {data}")
+            self.finished = True
 
     @staticmethod
     def _check_reply_ids(data: list[dict], ids: list) -> list[dict]:
@@ -1574,17 +1584,63 @@ class Comment(Acquirer):
 
 
 class Mix(Acquirer):
-    item_api = Works.item_api
+    mix_api = "https://www.douyin.com/aweme/v1/web/mix/aweme/"  # 合集API
 
-    def __init__(self, params: Parameter, mix_id=None, works_id=None, mark=""):
+    def __init__(
+            self,
+            params: Parameter,
+            mix_id: str = None,
+            works_id: str = None):
         super().__init__(params)
+        self.works = Works(params, item_id=works_id, tiktok=False)
         self.mix_id = mix_id
         self.works_id = works_id
-        self.mark = mark
-        self.mix_title = None
 
-    def run(self):
-        pass
+    def run(self) -> list:
+        self._get_mix_id()
+        if not self.mix_id:
+            return []
+        num = 1
+        while not self.finished:
+            self.console.print(f"正在获取第 {num} 页数据...")
+            self._get_mix_data()
+            num += 1
+        return self.response
+
+    def _get_mix_data(self):
+        params = {
+            "device_platform": "webapp",
+            "aid": "6383",
+            "channel": "channel_pc_web",
+            "mix_id": self.mix_id,
+            "cursor": self.cursor,
+            "count": "20",
+            "cookie_enabled": "true",
+            "platform": "PC",
+            "downlink": "10",
+        }
+        self.deal_url_params(params)
+        if not (
+                data := self.send_request(
+                    self.mix_api,
+                    params=params,
+                    finished=True,
+                )):
+            self.log.warning("获取合集作品数据失败")
+            return
+        try:
+            if not (l := data["aweme_list"]):
+                raise KeyError
+            self.deal_item_data(l)
+            self.cursor = data['cursor']
+            self.finished = not data["has_more"]
+        except KeyError:
+            self.log.error(f"合集数据内容异常: {data}")
+            self.finished = True
+
+    def _get_mix_id(self):
+        if not self.mix_id:
+            self.mix_id = Extractor.extract_mix_id(self.works.run())
 
 
 class Live(Acquirer):

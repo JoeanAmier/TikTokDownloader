@@ -76,7 +76,7 @@ class Cache:
             id_: str,
             mark: str,
             name: str):
-        for i in ("喜欢作品", "收藏作品", "发布作品"):
+        for i in ("喜欢作品", "收藏作品", "发布作品", "合集作品"):
             if not (
                     old_folder := self.root.joinpath(
                         f"{type_}{id_}_{

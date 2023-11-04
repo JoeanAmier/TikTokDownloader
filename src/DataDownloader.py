@@ -821,35 +821,37 @@ class Downloader:
             data: list[dict],
             type_: str,
             **kwargs, ) -> None:
-        if type_ == "user":
-            self.run_user(data, **kwargs)
-        elif type_ == "mix":
-            self.run_mix(data, **kwargs)
+        if type_ == "batch":
+            self.run_batch(data, **kwargs)
         elif type_ == "works":
             self.run_general(data, **kwargs)
         else:
             raise ValueError
 
-    def run_user(
+    def run_batch(
             self,
             data: list[dict],
-            uid: str,
-            nickname: str,
+            id_: str,
+            name: str,
             mark="",
             addition="发布作品",
+            mid: str = None,
+            title: str = None,
     ):
-        assert addition in {"喜欢作品", "收藏作品", "发布作品"}, ValueError
-        root = self.storage_folder(uid, nickname, True, mark, addition)
+        assert addition in {"喜欢作品", "收藏作品", "发布作品", "合集作品"}, ValueError
+        mix = addition == "合集作品"
+        root = self.storage_folder(
+            mid or id_,
+            title or name,
+            not mix,
+            mark,
+            addition,
+            mix)
         self.batch_processing(data, root)
 
     def run_general(self, data: list[dict], tiktok: bool):
         root = self.storage_folder()
         self.batch_processing(data, root, False, tiktok=tiktok)
-
-    def run_mix(self, data: list[dict], mark=""):
-        data, mix_id, mix_title = self.extract_addition(data, mix=True)
-        root = self.storage_folder(mix_id, mix_title, mark=mark, mix=True)
-        self.batch_processing(data, root)
 
     def run_live(self, data: list[tuple]):
         if not self.download:
@@ -1148,17 +1150,17 @@ class Downloader:
 
     def storage_folder(
             self,
-            id_=None,
-            name=None,
+            id_: str = None,
+            name: str = None,
             batch=False,
-            mark=None,
-            addition=None,
+            mark: str = None,
+            addition: str = None,
             mix=False,
             folder_name: str = None) -> Path:
         if batch and all((id_, name, addition)):
             folder_name = f"UID{id_}_{mark or name}_{addition}"
-        elif mix and all((id_, name)):
-            folder_name = f"MIX{id_}_{mark or name}"
+        elif mix and all((id_, name, addition)):
+            folder_name = f"MIX{id_}_{mark or name}_{addition}"
         else:
             folder_name = folder_name or self.folder_name
         folder = self.root.joinpath(folder_name)

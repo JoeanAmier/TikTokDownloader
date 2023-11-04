@@ -183,7 +183,7 @@ class APIServer(WebUI):
                     dict):
                 return url
             self.request.url = url
-            if not (data := self.request.run_user()):
+            if not (data := self.request.run_batch()):
                 self.logger.warning(f"{url} 获取账号数据失败")
                 return {
                     "message": "Request for account data failed"

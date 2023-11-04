@@ -1,3 +1,4 @@
+from datetime import date
 from time import time
 
 from src.Customizer import (
@@ -11,6 +12,7 @@ from src.DataAcquirer import (
     Works,
     Live,
     Comment,
+    Mix,
 )
 from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
@@ -107,6 +109,15 @@ class TikTok:
             "nickname" in parameter.name_format
         )
 
+    def _inquire_input(self, tip: str) -> str:
+        url = self.console.input(f"请输入{tip}链接: ")
+        if not url:
+            return ""
+        elif url in ("Q", "q",):
+            self.running = False
+            return ""
+        return url
+
     def account_acquisition_interactive(self):
         root, params, logger = self.record.run(self.parameter)
         select = prompt("请选择账号链接来源", ("使用 accounts_urls 参数内的账号链接(推荐)",
@@ -144,14 +155,10 @@ class TikTok:
         return sec_user_id[0] if len(sec_user_id) > 0 else ""
 
     def account_works_inquire(self, root, params, logger):
-        while True:
-            url = self.console.input("请输入账号主页链接: ")
-            if not url:
-                break
-            elif url in ("Q", "q",):
-                self.running = False
-                break
+        while url := self._inquire_input("账号主页"):
             links = self.links.user(url)
+            if not links:
+                self.logger.warning(f"{url} 提取账号 sec_user_id 失败")
             for index, sec in enumerate(links, start=1):
                 if not self.deal_account_works(
                         index,
@@ -187,67 +194,92 @@ class TikTok:
             return False
         if source:
             return account_data
-        uid, nickname, mark, account_data = self.extractor.preprocessing_data(
-            account_data, mark, tab == "post")
-        old_mark = m["mark"] if (m := self.cache.data.get(uid)) else None
-        with logger(root, name=f"UID{uid}_{mark}", old=old_mark,
+        return self._batch_process_works(
+            root,
+            params,
+            logger,
+            account_data,
+            mark,
+            tab == "post",
+            api=api,
+            earliest=earliest,
+            latest=latest)
+
+    def _batch_process_works(self,
+                             root,
+                             params: dict,
+                             logger,
+                             data,
+                             mark,
+                             post=True,
+                             mix=False,
+                             api=False,
+                             earliest: date = None,
+                             latest: date = None,
+                             ):
+        id_, name, mid, title, mark, data = self.extractor.preprocessing_data(
+            data, mark, post, mix)
+        old_mark = m["mark"] if (
+            m := self.cache.data.get(
+                mid if mix else id_)) else None
+        with logger(root, name=f"{'MID' if mix else 'UID'}{mid if mix else id_}_{mark}", old=old_mark,
                     **params) as recorder:
-            account_data = self.extractor.run(
-                account_data,
+            data = self.extractor.run(
+                data,
                 recorder,
-                type_="user",
-                post=tab == "post",
-                nickname=nickname,
+                type_="batch",
+                post=post,
+                name=name,
                 mark=mark,
-                earliest=earliest,
-                latest=latest)
-        if not account_data:
+                earliest=earliest or date(2016, 9, 20),
+                latest=latest or date.today(),
+                same=any((post, mix)))
+        if not data:
             return False
         if api:
-            return account_data
+            return data
         self.cache.update_cache(
             self.parameter.folder_mode,
-            "UID",
-            uid,
+            "MID" if mix else "UID",
+            mid if mix else id_,
             mark,
-            nickname,
+            title if mix else name,
         )
         self.download_account_works(
-            account_data, uid, nickname, mark, tab == "post")
+            data, id_, name, mark, post, mix, mid, title)
         return True
 
     def download_account_works(
             self,
             data: list[dict],
-            uid: str,
-            nickname: str,
+            id_: str,
+            name: str,
             mark: str,
             post: bool,
+            mix: bool,
+            mid: str = None,
+            title: str = None,
     ):
         self.downloader.run(
             data,
-            "user",
-            uid=uid,
-            nickname=nickname,
+            "batch",
+            id_=id_,
+            name=name,
             mark=mark,
-            addition="发布作品" if post else "喜欢作品")
+            addition="合集作品" if mix else "发布作品" if post else "喜欢作品",
+            mid=mid,
+            title=title, )
 
     def works_interactive(self):
         root, params, logger = self.record.run(self.parameter)
         with logger(root, **params) as record:
-            while self.running:
-                url = self.console.input("请输入作品链接: ")
-                if not url:
-                    break
-                elif url.upper() == "Q":
-                    self.running = False
-                    break
+            while url := self._inquire_input("作品"):
                 tiktok, ids = self.links.works(url)
                 if not ids:
                     self.logger.warning(f"{url} 提取作品 ID 失败")
                     continue
                 self.input_links_acquisition(tiktok, ids, record)
-        self.logger.info("已退出单独下载链接作品模式")
+        self.logger.info("已退出批量下载链接作品模式")
 
     def input_links_acquisition(
             self,
@@ -281,21 +313,21 @@ class TikTok:
     def live_interactive(self):
         self.console.print(
             "如果设置了已登录的 Cookie，获取直播数据时将会导致正在观看的直播中断，刷新即可恢复！", style=WARNING)
-        while True:
-            link = self.console.input("请输入直播链接: ")
-            if not link:
-                break
-            elif link.upper() == "Q":
-                self.running = False
-                break
-            params = self.generate_params_dict(*self.links.live(link))
+        while url := self._inquire_input("直播"):
+            params = self._generate_live_params(*self.links.live(url))
+            if not params:
+                self.console.print(f"{url} 提取直播 ID 失败")
+                continue
             live_data = [Live(self.parameter, **i).run() for i in params]
+            if not live_data:
+                self.console.print("获取直播数据失败")
+                continue
             live_data = self.extractor.run(live_data, None, "live")
             download_tasks = self.show_live_info(live_data)
             self.downloader.run_live(download_tasks)
         self.logger.info("已退出获取直播推流地址模式")
 
-    def generate_params_dict(self, rid: bool, ids: list[list]) -> list[dict]:
+    def _generate_live_params(self, rid: bool, ids: list[list]) -> list[dict]:
         if not ids:
             self.console.print("提取 web_rid 或者 room_id 失败！", style=WARNING)
             return []
@@ -328,13 +360,7 @@ class TikTok:
     @check_storage_format
     def comment_interactive(self):
         root, params, logger = self.record.run(self.parameter, type_="comment")
-        while True:
-            url = self.console.input("请输入作品链接: ")
-            if not url:
-                break
-            elif url.upper() == "Q":
-                self.running = False
-                break
+        while url := self._inquire_input("作品"):
             tiktok, ids = self.links.works(url)
             if not ids:
                 self.logger.warning(f"{url} 提取作品 ID 失败")
@@ -350,22 +376,15 @@ class TikTok:
         self.logger.info("已退出采集作品评论数据模式")
 
     def mix_interactive(self):
-        self.manager = Cache(
-            self.logger,
-            self._data["root"],
-            type_="MIX",
-            mark=self.mark,
-            name=self.nickname)
-        save, root, params = self.record.run(
-            self._data["root"], type_="mix", format_=self._data["save"])
-        select = prompt("请选择合集链接来源", ("使用 mix 参数内的合集链接(推荐)",
-                                               "手动输入待采集的合集链接"), self.colour.colorize)
+        root, params, logger = self.record.run(self.parameter, type_="mix")
+        select = prompt("请选择合集链接来源", ("使用 mix_urls 参数内的合集链接(推荐)",
+                                               "手动输入待采集的合集/作品链接"), self.console)
         if select == "1":
-            self.mix_batch(save, root, params)
+            self.mix_batch(root, params, logger)
         elif select == "2":
-            self.mix_solo(save, root, params)
+            self.mix_inquire(root, params, logger)
         elif select.upper() == "Q":
-            self.quit = True
+            self.running = False
         self.logger.info("已退出批量下载合集作品模式")
 
     def get_mix_info(self, id_: str, collection=False):
@@ -378,6 +397,10 @@ class TikTok:
             self.logger.info(f"{id_} 获取合集信息失败")
             return False
         return mix_info
+
+    @staticmethod
+    def _generate_mix_params(mix: bool, id_: str) -> dict:
+        return {"mix_id": id_, } if mix else {"works_id": id_, }
 
     def download_mix(self, mix_info, save, root, params, mark=None, api=False):
         if isinstance(mark, str):
@@ -397,42 +420,62 @@ class TikTok:
                 f"MIX{mix_info[0]}_{mix_info[1]}",
                 self.request.mix_total, api)
 
-    def mix_solo(self, save, root, params):
-        while True:
-            url = input("请输入合集作品链接: ")
-            if not url:
-                break
-            elif url in ("Q", "q",):
-                self.quit = True
-                break
-            ids = self.request.run_alone(url, "合集ID", mix=True)
-            if not ids:
-                self.logger.error(f"{url} 获取作品ID或合集ID失败")
-                continue
-            if isinstance(ids, tuple):
-                mix_id = True
-                ids = ids[0]
-            else:
-                mix_id = False
-            for i in ids:
-                if not (info := self.get_mix_info(i, mix_id)):
-                    continue
-                self.download_mix(info, save, root, params)
-
-    def mix_batch(self, save, root, params):
-        for mark, url in self._data["mix"]:
-            id_ = self.request.run_alone(url, "合集ID", solo=True, mix=True)
+    def mix_inquire(self, root, params, logger):
+        while url := self._inquire_input("合集或作品"):
+            mix_id, id_ = self.links.mix(url)
             if not id_:
-                self.logger.error(f"{url} 获取作品ID或合集ID失败")
+                self.logger.warning(f"{url} 获取作品 ID 或合集 ID 失败")
+            for index, i in enumerate(id_, start=1):
+                if not self._deal_mix_works(root, params, logger, mix_id, i):
+                    if failed():
+                        continue
+                    break
+                rest(index, self.console.print)
+
+    def mix_batch(self, root, params, logger):
+        for index, data in enumerate(self.mix, start=1):
+            mix_id, id_ = self._check_mix_id(data.url)
+            if not id_:
+                self.logger.warning(f"{data.url} 获取作品 ID 或合集 ID 失败")
                 continue
-            if isinstance(id_, tuple):
-                mix_id = True
-                id_ = id_[0]
-            else:
-                mix_id = False
-            if not (info := self.get_mix_info(id_[0], mix_id)):
-                continue
-            self.download_mix(info, save, root, params, mark)
+            if not self._deal_mix_works(
+                    root,
+                    params,
+                    logger,
+                    mix_id,
+                    id_,
+                    data.mark,
+                    index):
+                if failed():
+                    continue
+                break
+            rest(index, self.console.print)
+
+    def _deal_mix_works(self,
+                        root,
+                        params,
+                        logger,
+                        mix_id: bool = None,
+                        id_: str = None,
+                        mark: str = None,
+                        num: int = 0,
+                        api=False,
+                        source=False, ):
+        self.logger.info(f"开始处理第 {num} 个合集" if num else "开始处理合集")
+        mix_params = self._generate_mix_params(mix_id, id_)
+        if mix_data := Mix(self.parameter, **mix_params).run():
+            return (
+                mix_data
+                if source
+                else self._batch_process_works(
+                    root, params, logger, mix_data, mark, mix=True, api=api
+                )
+            )
+        return False
+
+    def _check_mix_id(self, url: str) -> tuple[bool, str]:
+        mix_id, id_ = self.links.mix(url)
+        return (mix_id, id_[0]) if len(id_) > 0 else (mix_id, "")
 
     def accounts_user(self):
         save, root, params = self.record.run(
@@ -440,7 +483,7 @@ class TikTok:
         for i in self.accounts:
             self.request.url = i[1]
             self.logger.info(f"{i[1]} 开始获取账号数据")
-            data = self.request.run_user()
+            data = self.request.run_batch()
             if not data:
                 self.logger.warning(f"{i[1]} 获取账号数据失败")
                 continue
@@ -463,7 +506,7 @@ class TikTok:
             for i in ids:
                 self.request.url = i
                 self.logger.info(f"{i} 开始获取账号数据")
-                data = self.request.run_user()
+                data = self.request.run_batch()
                 if not data:
                     self.logger.warning(f"{i} 获取账号数据失败")
                     continue
