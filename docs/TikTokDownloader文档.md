@@ -256,11 +256,6 @@
 <td align="center">代理地址, 设置为空字符串代表不使用代理</td>
 </tr>
 <tr>
-<td align="center">log</td>
-<td align="center">bool</td>
-<td align="center">是否记录运行日志, 默认值: <code>false</code></td>
-</tr>
-<tr>
 <td align="center">download</td>
 <td align="center">bool</td>
 <td align="center">是否打开下载功能, 如果关闭, 程序将不会下载任何文件; 默认值: <code>true</code></td>
@@ -337,7 +332,6 @@
   "dynamic_cover": false,
   "original_cover": false,
   "proxies": "http://127.0.0.1:9999",
-  "log": false,
   "download": true,
   "max_size": 10485760,
   "chunk": 1048576,
@@ -438,7 +432,7 @@
 <h3>批量下载账号作品</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts</code> 参数中的账号链接。</li>
-<li>手动输入待采集的账号链接；此选项仅支持批量下载账号发布页作品，且不支持参数设置。</li>
+<li>手动输入待采集的账号链接；此选项仅支持批量下载账号发布页作品，暂不支持参数设置。</li>
 </ol>
 <p>支持链接格式：</p>
 <ul>
@@ -446,7 +440,7 @@
 <li><code>https://www.douyin.com/user/账号ID</code></li>
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
-<p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark</code> 或者 <code>UID123456789_账号昵称</code></p>
+<p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
 <h3>批量下载链接作品</h3>
 <p>输入作品链接；<strong>支持 TikTok 平台。</strong></p>
 <p>支持链接格式：</p>
@@ -469,7 +463,7 @@
 </ul>
 <p>下载说明：</p>
 <ul>
-<li>程序会询问用户是否下载直播视频，如果使用本程序下载，需要保持程序运行直到直播结束。</li>
+<li>程序会询问用户是否下载直播视频，支持同时下载多个直播视频；如果使用本程序下载，需要保持程序运行直到直播结束。</li>
 <li>程序询问是否下载直播时，输入直播清晰度或者对应序号即可下载，例如：下载最高清晰度输入 <code>清晰度FULL_HD1</code> 或者 <code>1</code> 均可。</li>
 <li>下载的直播视频时长会显示为直播总时长，实际视频内容是从下载时间开始，后面部分的片段无法播放；复制推流地址并使用 FFmpeg 下载可以解决该问题，操作方法请自行查阅资料。</li>
 <li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹</li>
@@ -483,7 +477,7 @@
 <li><code>https://www.douyin.com/video/作品ID</code></li>
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
-<p>支持采集评论回复、评论表情、评论图片；必须设置 <code>save</code> 参数才能正常使用。</p>
+<p>支持采集评论回复、评论表情、评论图片；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <p>储存名称格式：<code>作品123456789_评论数据</code></p>
 <h3>批量下载合集作品</h3>
 <ol>
@@ -498,7 +492,7 @@
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/collection/合集ID</code></li>
 </ul>
-<p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark</code> 或者 <code>MIX123456789_合集标题</code></p>
+<p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
 <h3>批量采集账号数据</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts</code> 参数中的账号链接。</li>
@@ -510,7 +504,7 @@
 <li><code>https://www.douyin.com/user/账号ID</code></li>
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
-<p>重复获取相同账号数据时会储存为新的数据行，不会覆盖原有数据；必须设置 <code>save</code> 参数才能正常使用。</p>
+<p>重复获取相同账号数据时会储存为新的数据行，不会覆盖原有数据；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <h3>采集搜索结果数据</h3>
 <h4>输入格式</h4>
 <p><strong>格式：</strong><code>关键词</code> <code>类型</code> <code>页数</code> <code>排序规则</code> <code>时间筛选</code></p>
@@ -520,7 +514,7 @@
 <li>发布时间：<code>0</code>：不限；<code>1</code>：一天内；<code>7</code>：一周内；<code>182</code>：半年内</li>
 </ul>
 <p>参数之间使用空格分隔，<code>类型</code> 和 <code>排序规则</code> 支持输入中文或者对应索引，<code>页数</code> 和 <code>时间筛选</code> 仅支持输入整数。</p>
-<p>程序采集的抖音搜索结果会储存至文件，储存名称格式：<code>搜索类型_排序依据_发布时间_关键词_时间戳</code>；不支持直接下载搜索结果作品；必须设置 <code>save</code> 参数才能正常使用。</p>
+<p>程序采集的抖音搜索结果会储存至文件，储存名称格式：<code>搜索类型_排序依据_发布时间_关键词_时间戳</code>；不支持直接下载搜索结果作品；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <h4>输入示例</h4>
 <p><strong>输入：</strong><code>猫咪</code></p>
 <p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>综合搜索</code>；页数：<code>1</code>；排序依据：<code>综合排序</code>；发布时间：<code>不限</code></p>
@@ -537,7 +531,7 @@
 <p><strong>输入：</strong><code>猫咪 2 2</code> 等效于 <code>猫咪 用户搜索 2</code></p>
 <p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>用户搜索</code>；页数：<code>2</code></p>
 <h3>采集抖音热榜数据</h3>
-<p>采集 <code>热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>save</code> 参数才能正常使用。</p>
+<p>采集 <code>热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <p>储存名称格式：<code>HOT_时间戳_热榜名称</code></p>
 <h3>批量下载收藏作品</h3>
 <p>需要在配置文件写入已登录的 Cookie；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
