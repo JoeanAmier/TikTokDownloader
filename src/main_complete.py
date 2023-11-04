@@ -228,7 +228,6 @@ class TikTok:
                 data,
                 recorder,
                 type_="batch",
-                post=post,
                 name=name,
                 mark=mark,
                 earliest=earliest or date(2016, 9, 20),

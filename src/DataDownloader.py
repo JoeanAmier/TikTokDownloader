@@ -854,7 +854,7 @@ class Downloader:
         self.batch_processing(data, root, False, tiktok=tiktok)
 
     def run_live(self, data: list[tuple]):
-        if not self.download:
+        if not data or not self.download:
             return
         download_tasks = []
         self.generate_live_tasks(data, download_tasks)
