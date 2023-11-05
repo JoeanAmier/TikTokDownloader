@@ -3,11 +3,12 @@ from datetime import datetime
 from itertools import cycle
 from re import compile
 from time import time
+from types import SimpleNamespace
 from urllib.parse import parse_qs
+from urllib.parse import quote
 from urllib.parse import urlencode
 from urllib.parse import urlparse
 
-import requests
 from requests import exceptions
 from requests import request
 
@@ -64,13 +65,6 @@ class Acquirer:
     follow_api = "https://www.douyin.com/aweme/v1/web/follow/feed/"  # 关注账号作品推荐API
     history_api = "https://www.douyin.com/aweme/v1/web/history/read/"  # 观看历史API
     following_api = "https://www.douyin.com/aweme/v1/web/user/following/list/"  # 关注列表API
-    search_api = (
-        ("https://www.douyin.com/aweme/v1/web/general/search/single/", 15, "aweme_general", "general",),
-        ("https://www.douyin.com/aweme/v1/web/search/item/", 20, "aweme_video_web", "video",),
-        ("https://www.douyin.com/aweme/v1/web/discover/search/", 12, "aweme_user_web", "user",),
-        ("https://www.douyin.com/aweme/v1/web/live/search/", 15, "aweme_live", "",),
-        ("API", "首次请求返回数量", "search_channel", "type")
-    )
     hot_params = (
         (0, ""),
         (2, 2),
@@ -174,18 +168,19 @@ class Share:
     @retry
     def get_url(self, url: str) -> str:
         try:
-            response = requests.get(
+            response = request(
+                "get",
                 url,
                 timeout=10,
                 proxies=self.proxies,
                 headers=self.headers, )
             wait()
         except (
-                requests.exceptions.ProxyError,
-                requests.exceptions.SSLError,
-                requests.exceptions.ChunkedEncodingError,
-                requests.exceptions.ConnectionError,
-                requests.ReadTimeout,
+                exceptions.ProxyError,
+                exceptions.SSLError,
+                exceptions.ChunkedEncodingError,
+                exceptions.ConnectionError,
+                exceptions.ReadTimeout,
         ):
             return ""
         return response.url
@@ -696,6 +691,33 @@ class User(Acquirer):
 
 
 class Search(Acquirer):
+    search_params = (
+        SimpleNamespace(
+            api="https://www.douyin.com/aweme/v1/web/general/search/single/",
+            count=15,
+            channel="aweme_general",
+            type="general",
+        ),
+        SimpleNamespace(
+            api="https://www.douyin.com/aweme/v1/web/search/item/",
+            count=20,
+            channel="aweme_video_web",
+            type="video",
+        ),
+        SimpleNamespace(
+            api="https://www.douyin.com/aweme/v1/web/discover/search/",
+            count=12,
+            channel="aweme_user_web",
+            type="user",
+        ),
+        SimpleNamespace(
+            api="https://www.douyin.com/aweme/v1/web/live/search/",
+            count=15,
+            channel="aweme_live",
+            type="live",
+        ),
+    )
+
     def __init__(
             self,
             params: Parameter,
@@ -712,7 +734,82 @@ class Search(Acquirer):
         self.publish_time = publish_time
 
     def run(self):
-        pass
+        data = self.search_params[self.tab]
+        self.PC_headers["Referer"] = (
+            f"https://www.douyin.com/search/{
+            quote(
+                self.keyword)}?" f"source=switch_tab&type={
+            data.type}")
+        if self.tab in {2, 3}:
+            deal = self._run_user_live
+        elif self.tab in {0, 1}:
+            deal = self._run_general
+        else:
+            raise ValueError
+        while not self.finished and self.page > 0:
+            deal(data, self.tab)
+            self.page -= 1
+        return self.response
+
+    def _run_user_live(self, data: SimpleNamespace, type_: int):
+        params = {
+            "device_platform": "webapp",
+            "aid": "6383",
+            "channel": "channel_pc_web",
+            "search_channel": data.channel,
+            "keyword": self.keyword,
+            "search_source": "switch_tab",
+            "query_correct_type": "1",
+            "is_filter_search": "0",
+            "offset": self.cursor,
+            "count": 10 if self.cursor else data.count,
+            "pc_client_type": "1",
+            "cookie_enabled": "true",
+            "platform": "PC",
+            "downlink": "7.7",
+        }
+        self.deal_url_params(params, 174 if self.cursor else 23)
+        self._get_search_data(
+            data.api,
+            params,
+            "user_list" if type_ == 2 else "data")
+
+    def _run_general(self, data: SimpleNamespace, *args):
+        params = {
+            "device_platform": "webapp",
+            "aid": "6383",
+            "channel": "channel_pc_web",
+            "search_channel": data.channel,
+            "sort_type": self.sort_type,
+            "publish_time": self.publish_time,
+            "keyword": self.keyword,
+            "search_source": "switch_tab",
+            "query_correct_type": "1",
+            "is_filter_search": {True: 1, False: 0}[any((self.sort_type, self.publish_time))],
+            "offset": self.cursor,
+            "count": 10 if self.cursor else data.count,
+            "pc_client_type": "1",
+            "cookie_enabled": "true",
+            "platform": "PC",
+            "downlink": "7.7",
+        }
+        self.deal_url_params(params, 174 if self.cursor else 23)
+        self._get_search_data(data.api, params, "data")
+
+    def _get_search_data(self, api: str, params: dict, key: str):
+        if not (
+                data := self.send_request(
+                    api,
+                    params=params,
+                    finished=True,
+                )):
+            self.log.warning("获取搜索数据失败")
+            return
+        try:
+            self.deal_item_data(data[key])
+        except KeyError:
+            self.log.error(f"搜索数据响应内容异常: {data}")
+            self.finished = True
 
 
 class Hot(Acquirer):

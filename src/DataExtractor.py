@@ -20,8 +20,7 @@ class Extractor:
             "comment": self.comment,
             "live": self.live,
             "user": self.user,
-            "search_general": self.search_general,
-            "search_user": self.search_user,
+            "search": self.search,
             "hot": self.hot,
         }
 
@@ -431,16 +430,121 @@ class Extractor:
         container.cache["short_id"] = self.safe_extract(data, "short_id")
         container.cache["aweme_count"] = str(
             self.safe_extract(data, "aweme_count"))  # 数量不准确
-        container.cache["verify"] = self.safe_extract(data, "custom_verify")
+        container.cache["verify"] = self.safe_extract(
+            data, "custom_verify", "无")
         container.cache["enterprise"] = self.safe_extract(
-            data, "enterprise_verify_reason")
+            data, "enterprise_verify_reason", "无")
         container.all_data.append(container.cache)
 
-    def search_general(self, data: list[dict], recorder) -> list[dict]:
-        pass
+    def search(self, data: list[dict], recorder, tab: int) -> list[dict]:
+        if tab in {0, 1}:
+            return self.search_general(data, recorder)
+        elif tab == 2:
+            return self.search_user(data, recorder)
+        elif tab == 3:
+            return self.search_live(data, recorder)
 
-    def search_user(self, data: list[dict], recorder) -> list[dict]:
-        pass
+    def search_general(self, data: list[dict], recorder) -> list[dict]:
+        container = SimpleNamespace(
+            all_data=[],
+            cache=None,
+            template={
+                "collection_time": datetime.now().strftime(self.date_format),
+            },
+            same=False,
+        )
+        [self._search_result_classify(
+            container, self.generate_data_object(i)) for i in data]
+        self.record_data(recorder, container.all_data)
+        return container.all_data
+
+    def _search_result_classify(
+            self,
+            container: SimpleNamespace,
+            data: SimpleNamespace):
+        if d := self.safe_extract(data, "aweme_info"):
+            self.extract_batch(container, d)
+        elif d := self.safe_extract(data, "aweme_mix_info.mix_items"):
+            [self.extract_batch(container, i) for i in d]
+        elif d := self.safe_extract(data, "card_info.attached_info.aweme_list"):
+            [self.extract_batch(container, i) for i in d]
+        elif d := self.safe_extract(data, "user_list[0].items"):
+            [self.extract_batch(container, i) for i in d]
+        # elif d := self.safe_extract(data, "user_list.user_info"):
+        #     pass
+        # elif d := self.safe_extract(data, "music_list"):
+        #     pass
+        # elif d := self.safe_extract(data, "common_aladdin"):
+        #     pass
+
+    def search_user(
+            self,
+            data: list[dict],
+            recorder) -> list[dict]:
+        container = SimpleNamespace(
+            all_data=[],
+            cache=None,
+            template={
+                "collection_time": datetime.now().strftime(self.date_format),
+            },
+        )
+        [self._deal_search_user_live(container, self.generate_data_object(
+            i["user_info"])) for i in data]
+        self.record_data(recorder, container.all_data)
+        return container.all_data
+
+    def _deal_search_user_live(self,
+                               container: SimpleNamespace,
+                               data: SimpleNamespace,
+                               user=True):
+        if user:
+            container.cache = container.template.copy()
+        container.cache["avatar"] = self.safe_extract(
+            data, f"{'avatar_thumb' if user else 'avatar_larger'}.url_list[0]")
+        container.cache["nickname"] = self.safe_extract(data, "nickname")
+        container.cache["sec_uid"] = self.safe_extract(data, "sec_uid")
+        container.cache["signature"] = self.safe_extract(data, "signature")
+        container.cache["uid"] = self.safe_extract(data, "uid")
+        container.cache["short_id"] = self.safe_extract(data, "short_id")
+        container.cache["verify"] = self.safe_extract(
+            data, "custom_verify", "无")
+        container.cache["enterprise"] = self.safe_extract(
+            data, "enterprise_verify_reason", "无")
+        if user:
+            container.cache["follower_count"] = str(
+                self.safe_extract(data, "follower_count"))
+            container.cache["total_favorited"] = str(
+                self.safe_extract(data, "total_favorited"))
+            container.cache["unique_id"] = self.safe_extract(data, "unique_id")
+            container.all_data.append(container.cache)
+        else:
+            pass
+
+    def search_live(
+            self,
+            data: list[dict],
+            recorder) -> list[dict]:
+        container = SimpleNamespace(
+            all_data=[],
+            cache=None,
+            template={
+                "collection_time": datetime.now().strftime(self.date_format),
+            },
+        )
+        [self._deal_search_live(
+            container, self.generate_data_object(i["lives"])) for i in data]
+        self.record_data(recorder, container.all_data)
+        return container.all_data
+
+    def _deal_search_live(self,
+                          container: SimpleNamespace,
+                          data: SimpleNamespace):
+        container.cache = container.template.copy()
+        self._deal_search_user_live(
+            container, self.safe_extract(
+                data, "author"), False)
+        container.cache["room_id"] = self.safe_extract(data, "aweme_id")
+        container.all_data.append(container.cache)
 
     def hot(self, data: list[list[dict]], recorder) -> list[dict]:
         pass

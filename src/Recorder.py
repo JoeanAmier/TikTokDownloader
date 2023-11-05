@@ -76,17 +76,17 @@ class BaseLogger:
     def run(self, *args, **kwargs):
         pass
 
-    def info(self, text: str, output=True):
+    def info(self, text: str, output=True, **kwargs):
         if output:
-            self.console.print(text, style=INFO)
+            self.console.print(text, style=INFO, **kwargs)
 
-    def warning(self, text: str, output=True):
+    def warning(self, text: str, output=True, **kwargs):
         if output:
-            self.console.print(text, style=WARNING)
+            self.console.print(text, style=WARNING, **kwargs)
 
-    def error(self, text: str, output=True):
+    def error(self, text: str, output=True, **kwargs):
         if output:
-            self.console.print(text, style=ERROR)
+            self.console.print(text, style=ERROR, **kwargs)
 
 
 class LoggerManager(BaseLogger):
@@ -112,19 +112,19 @@ class LoggerManager(BaseLogger):
         self.log.addHandler(file_handler)
         self.log.setLevel(INFO_LEVEL)
 
-    def info(self, text: str, output=True):
+    def info(self, text: str, output=True, **kwargs):
         if output:
-            self.console.print(text, style=INFO)
+            self.console.print(text, style=INFO, **kwargs)
         self.log.info(text)
 
-    def warning(self, text: str, output=True):
+    def warning(self, text: str, output=True, **kwargs):
         if output:
-            self.console.print(text, style=WARNING)
+            self.console.print(text, style=WARNING, **kwargs)
         self.log.warning(text)
 
-    def error(self, text: str, output=True):
+    def error(self, text: str, output=True, **kwargs):
         if output:
-            self.console.print(text, style=ERROR)
+            self.console.print(text, style=ERROR, **kwargs)
         self.log.error(text)
 
 
@@ -522,23 +522,37 @@ class RecordManager:
         "INTEGER",
         "INTEGER",
     )
-    Search_User_Title = (
+    search_user_keys = (
+        "collection_time",
+        "uid",
+        "sec_uid",
+        "nickname",
+        "unique_id",
+        "short_id",
+        "avatar",
+        "signature",
+        "verify",
+        "enterprise",
+        "follower_count",
+        "total_favorited",
+    )
+    search_user_title = (
         "采集时间",
-        "账号UID",
+        "UID",
         "SEC_UID",
         "账号昵称",
         "抖音号",
         "SHORT_ID",
-        "头像缩略图",
+        "头像链接",
         "账号签名",
         "标签",
         "企业",
         "粉丝数量",
         "获赞数量",
     )
-    Search_User_Type = (
+    search_user_type = (
         "TEXT",
-        "TEXT PRIMARY KEY",
+        "TEXT",
         "TEXT",
         "TEXT",
         "TEXT",
@@ -549,6 +563,42 @@ class RecordManager:
         "TEXT",
         "INTEGER",
         "INTEGER",
+    )
+    search_live_keys = (
+        "collection_time",
+        "room_id",
+        "uid",
+        "sec_uid",
+        "nickname",
+        "short_id",
+        "avatar",
+        "signature",
+        "verify",
+        "enterprise",
+    )
+    search_live_title = (
+        "采集时间",
+        "直播ID",
+        "UID",
+        "SEC_UID",
+        "账号昵称",
+        "SHORT_ID",
+        "头像链接",
+        "账号签名",
+        "标签",
+        "企业",
+    )
+    search_live_type = (
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
     )
     Hot_Title = (
         "排名",
@@ -601,9 +651,16 @@ class RecordManager:
         },
         "search_user": {
             "db_name": "SearchData.db",
-            "title_line": Search_User_Title,
-            "title_type": Search_User_Type,
-            "field_keys": works_keys,
+            "title_line": search_user_title,
+            "title_type": search_user_type,
+            "field_keys": search_user_keys,
+            "id_": False,
+        },
+        "search_live": {
+            "db_name": "SearchData.db",
+            "title_line": search_live_title,
+            "title_type": search_live_type,
+            "field_keys": search_live_keys,
             "id_": False,
         },
         "hot": {

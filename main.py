@@ -39,8 +39,8 @@ from src.main_web_UI import WebUI
 
 
 class ColorfulConsole(Console):
-    def print(self, *args, style=GENERAL, **kwargs):
-        super().print(*args, style=style, **kwargs)
+    def print(self, *args, style=GENERAL, highlight=False, **kwargs):
+        super().print(*args, style=style, highlight=highlight, **kwargs)
 
     def input(self, prompt="", *args, **kwargs):
         return super().input(f"[{PROMPT}]{prompt}[/{PROMPT}]", *args, **kwargs)
@@ -186,7 +186,7 @@ class TikTokDownloader:
         """
         服务器模式
         """
-        master = server(self.parameter, self.settings, self.running)
+        master = server(self.parameter, self.settings)
         app = master.run_server(Flask(__name__))
         register(self.blacklist.close)
         app.run(host=SERVER_HOST, port=SERVER_PORT, debug=not self.STABLE)
@@ -216,8 +216,6 @@ class TikTokDownloader:
         elif mode == "3":
             self.complete()
         elif mode == "4":
-            self.console.print(
-                "注意：该模式暂不支持并发请求！仅以 API 形式返回数据提供调用！", style=WARNING)
             self.server(APIServer)
         elif mode == "5":
             self.server(WebUI)

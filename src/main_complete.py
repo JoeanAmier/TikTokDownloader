@@ -1,4 +1,5 @@
 from datetime import date
+from datetime import datetime
 from time import time
 
 from src.Customizer import (
@@ -14,6 +15,7 @@ from src.DataAcquirer import (
     Comment,
     Mix,
     User,
+    Search,
 )
 from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
@@ -53,17 +55,17 @@ class TikTok:
             "综合": 0,
             "视频": 1,
             "用户": 2,
-            # "直播": 3,
+            "直播": 3,
             "0": 0,
             "1": 1,
             "2": 2,
-            # "3": 3,
+            "3": 3,
         },
         "type_text": {
             0: "综合搜索",
             1: "视频搜索",
             2: "用户搜索",
-            # 3: "直播搜索",
+            3: "直播搜索",
         },
         "sort": {
             "综合排序": 0,
@@ -79,16 +81,17 @@ class TikTok:
             2: "最多点赞",
         },
         "publish_text": {
-            "0": "不限",
-            "1": "一天内",
-            "7": "一周内",
-            "182": "半年内",
+            0: "不限",
+            1: "一天内",
+            7: "一周内",
+            182: "半年内",
         },
     }
     DATA_TYPE = {
-        0: "",
-        1: "",
+        0: "works",
+        1: "works",
         2: "search_user",
+        3: "search_live"
     }
 
     def __init__(self, parameter, settings):
@@ -110,14 +113,14 @@ class TikTok:
             "nickname" in parameter.name_format
         )
 
-    def _inquire_input(self, tip: str) -> str:
-        url = self.console.input(f"请输入{tip}链接: ")
-        if not url:
+    def _inquire_input(self, url: str = None, tip: str = None) -> str:
+        text = self.console.input(tip or f"请输入{url}链接: ")
+        if not text:
             return ""
-        elif url in ("Q", "q",):
+        elif text in ("Q", "q",):
             self.running = False
             return ""
-        return url
+        return text
 
     def account_acquisition_interactive(self):
         root, params, logger = self.record.run(self.parameter)
@@ -193,6 +196,7 @@ class TikTok:
         acquirer = Account(self.parameter, sec_user_id, tab, earliest, latest)
         account_data, earliest, latest = acquirer.run()
         if not account_data:
+            self.logger.warning("采集账号主页数据失败")
             return False
         if source:
             return account_data
@@ -372,8 +376,10 @@ class TikTok:
             for i in ids:
                 name = f"作品{i}_评论数据"
                 with logger(root, name=name, **params) as record:
-                    Comment(self.parameter, i).run(self.extractor, record)
-                self.logger.info(f"作品评论数据已储存至 {name}")
+                    if Comment(self.parameter, i).run(self.extractor, record):
+                        self.logger.info(f"作品评论数据已储存至 {name}")
+                    else:
+                        self.logger.warning("采集评论数据失败")
         self.logger.info("已退出采集作品评论数据模式")
 
     def mix_interactive(self):
@@ -444,6 +450,7 @@ class TikTok:
                     root, params, logger, mix_data, mark, mix=True, api=api
                 )
             )
+        self.logger.warning("采集合集作品数据失败")
         return False
 
     def _check_mix_id(self, url: str) -> tuple[bool, str]:
@@ -484,6 +491,9 @@ class TikTok:
             logger,
             data: list[dict],
             source=False):
+        if not data:
+            self.logger.warning("采集账号数据失败")
+            return None
         if source:
             return data
         with logger(root, name="UserData", **params) as recorder:
@@ -505,89 +515,105 @@ class TikTok:
             self.running = False
         self.logger.info("已退出批量采集账号数据模式")
 
-    def get_condition(self, condition=None) -> None | tuple[list, str]:
-        def extract_integer_and_compare(input_string: str) -> int:
-            try:
-                # 尝试将字符串转换为整数，如果转换成功，则返回比较大的数
-                return max(int(input_string), 1)
-            except ValueError:
-                # 如果转换失败，则返回1
-                return 1
-
-        while not condition:
-            condition = input("请输入搜索条件:\n(关键词 类型 页数 排序规则 时间筛选)\n")
-            if not condition:
-                return None
-            elif condition.upper() == "Q":
-                self.quit = True
-                return None
+    def _enter_search_criteria(
+            self, text: str = None) -> None | tuple[list, str]:
+        if not text:
+            text = self._inquire_input(
+                tip="请输入搜索条件:\n(关键词 搜索类型 页数 排序规则 时间筛选)\n")
 
         # 分割字符串
-        words = condition.split()
+        text = text.split()
 
         # 如果列表长度小于指定长度，使用空字符串补齐
-        while len(words) < 5:
-            words.append("")
+        while 0 < len(text) < 5:
+            text.append("0")
 
-        words[1] = self.SEARCH["type"].get(words[1], 0)
-        words[2] = extract_integer_and_compare(words[2])
-        words[3] = self.SEARCH["sort"].get(words[3], 0)
-        words[4] = words[4] if words[4] in ("0", "1", "7", "182") else "0"
+        return self._verify_search_criteria(*text)
 
-        if words[1] == 2:
-            text = "_".join([self.SEARCH["type_text"][words[1]],
-                             words[0]])
-        else:
-            text = "_".join([self.SEARCH["type_text"][words[1]],
-                             self.SEARCH["sort_text"][words[3]],
-                             self.SEARCH["publish_text"][words[4]],
-                             words[0]])
+    def _verify_search_criteria(
+            self,
+            keyword: str = None,
+            type_: str = None,
+            pages: str = None,
+            sort: str = None,
+            publish: str = None) -> tuple:
+        if not keyword:
+            return (None,)
+        type_ = self.SEARCH["type"].get(type_, 0)
+        type_text = self.SEARCH["type_text"][type_]
+        pages = self._extract_integer(pages)
+        sort = self.SEARCH["sort"].get(sort, 0)
+        sort_text = self.SEARCH["sort_text"][sort]
+        publish = int(publish) if publish in {"0", "1", "7", "182"} else 0
+        publish_text = self.SEARCH["publish_text"][publish]
+        return keyword, (type_, type_text), pages, (sort,
+                                                    sort_text), (publish, publish_text)
 
-        return words, text
+    @staticmethod
+    def _extract_integer(page: str) -> int:
+        try:
+            # 尝试将字符串转换为整数，如果转换成功，则返回比较大的数
+            return max(int(page), 1)
+        except ValueError:
+            # 如果转换失败，则返回1
+            return 1
 
     @check_storage_format
     def search_interactive(self):
-        self.download.favorite = True
-        self.download.download = False
-        while c := self.get_condition():
-            self.get_search_results(*c)
-        self.download.favorite = False
-        self.download.download = self._data['download']
+        while all(c := self._enter_search_criteria()):
+            self._deal_search_data(*c)
         self.logger.info("已退出采集搜索结果数据模式")
 
-    def get_search_results(self, works, text, api=False):
-        tag = works[1]
-        self.request.run_search(*works[:5])
-        if not self.request.search_data:
-            self.logger.info("采集搜索结果失败")
-            return
-        save, root, params = self.record.run(
-            self._data["root"], type_=self.DATA_TYPE.get(
-                tag), format_=self._data["save"])
-        params["file"] = "SearchResult.db"
-        name = f"{text}_{str(time())[:10]}"
-        with save(root, name=name, **params) as data:
-            if tag in (0, 1):
-                self.deal_search_items(data, api)
-            elif tag == 2:
-                self.deal_search_user(data, api)
-            else:
-                raise ValueError
-        self.logger.info(f"搜索结果数据已储存至 {name}")
+    @staticmethod
+    def _generate_search_name(
+            keyword: str,
+            type_: str,
+            sort: str = None,
+            publish: str = None) -> str:
+        format_ = (
+            datetime.now().strftime("%Y-%m-%d %H.%M.%S"),
+            type_,
+            keyword,
+            sort,
+            publish)
+        if all(format_):
+            return "_".join(format_)
+        elif all(format_[:3]):
+            return "_".join(format_[:3])
+        raise ValueError
 
-    def deal_search_items(self, file, api=False):
-        self.logger.info("开始提取搜索结果")
-        self.download.data = file
-        self.download.api_data = []
-        self.download.get_info(self.request.search_data, api)
-        self.logger.info("搜索结果提取结束")
-
-    def deal_search_user(self, file, api=False):
-        self.logger.info("开始提取搜索结果")
-        item = self.request.deal_search_user()
-        if api:
-            self.download.api_data = item
-        self.request.save_user(file, item, True)
+    def _deal_search_data(
+            self,
+            keyword: str,
+            type_: tuple,
+            pages: int,
+            sort: tuple,
+            publish: tuple,
+            source=False):
+        search_data = Search(
+            self.parameter,
+            keyword,
+            type_[0],
+            pages,
+            sort[0],
+            publish[0]).run()
+        if not search_data:
+            self.logger.warning("采集搜索数据失败")
+            return None
+        if source:
+            return search_data
+        name = self._generate_search_name(
+            keyword, type_[1], sort[1], publish[1])
+        root, params, logger = self.record.run(self.parameter,
+                                               type_=self.DATA_TYPE[type_[0]])
+        with logger(root, name=name, **params) as logger:
+            self.extractor.run(
+                search_data,
+                logger,
+                type_="search",
+                tab=type_[0])
+            self.logger.info(f"搜索数据已保存至 {name}")
+        return search_data
 
     @check_storage_format
     def hot_interactive(self, api=None):

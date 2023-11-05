@@ -19,7 +19,7 @@ class APIServer(WebUI):
         17: RecordManager.comment_title,
         21: RecordManager.user_title[1:],
         7: RecordManager.Hot_Title,
-        12: RecordManager.Search_User_Title,
+        12: RecordManager.search_user_title,
     }
 
     def __init__(self, colour, blacklist, xb, user_agent, code, settings):
@@ -212,7 +212,7 @@ class APIServer(WebUI):
             self.download.download = False
             self.get_search_results(
                 *
-                self.get_condition(
+                self._enter_search_criteria(
                     " ".join(params)),
                 api=True)
             self.download.favorite = False
