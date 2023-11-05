@@ -17,7 +17,7 @@ class APIServer(WebUI):
             "在线观众",
         ),
         17: RecordManager.comment_title,
-        21: RecordManager.User_Title[1:],
+        21: RecordManager.user_title[1:],
         7: RecordManager.Hot_Title,
         12: RecordManager.Search_User_Title,
     }

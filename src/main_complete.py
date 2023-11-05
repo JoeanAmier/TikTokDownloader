@@ -13,6 +13,7 @@ from src.DataAcquirer import (
     Live,
     Comment,
     Mix,
+    User,
 )
 from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
@@ -388,17 +389,6 @@ class TikTok:
             self.running = False
         self.logger.info("已退出批量下载合集作品模式")
 
-    def get_mix_info(self, id_: str, collection=False):
-        data = id_ if collection else self.download.get_data(id_)
-        if not data:
-            self.logger.info(f"{id_} 获取合集信息失败")
-            return False
-        mix_info = self.request.run_mix(data)
-        if not isinstance(mix_info, list):
-            self.logger.info(f"{id_} 获取合集信息失败")
-            return False
-        return mix_info
-
     @staticmethod
     def _generate_mix_params(mix: bool, id_: str) -> dict:
         return {"mix_id": id_, } if mix else {"works_id": id_, }
@@ -462,12 +452,15 @@ class TikTok:
 
     def user_batch(self):
         root, params, logger = self.record.run(self.parameter, type_="user")
+        users = []
         for index, data in enumerate(self.accounts, start=1):
             if not (sec_user_id := self.check_sec_user_id(data.url)):
                 self.logger.warning(
                     f"配置文件 accounts_urls 参数"
                     f"第 {index} 条数据的 url 无效")
                 continue
+            users.append(self._get_user_data(sec_user_id))
+        self._deal_user_data(root, params, logger, [i for i in users if i])
 
     def user_inquire(self):
         root, params, logger = self.record.run(self.parameter, type_="user")
@@ -475,8 +468,28 @@ class TikTok:
             sec_user_ids = self.links.user(url)
             if not sec_user_ids:
                 self.logger.warning(f"{url} 提取账号 sec_user_id 失败")
-            for i in sec_user_ids:
-                pass
+                continue
+            users = [self._get_user_data(i) for i in sec_user_ids]
+            self._deal_user_data(root, params, logger, [i for i in users if i])
+
+    def _get_user_data(self, sec_user_id: str):
+        self.logger.info(f"正在获取账号 {sec_user_id} 的数据")
+        data = User(self.parameter, sec_user_id).run()
+        return data or {}
+
+    def _deal_user_data(
+            self,
+            root,
+            params,
+            logger,
+            data: list[dict],
+            source=False):
+        if source:
+            return data
+        with logger(root, name="UserData", **params) as recorder:
+            data = self.extractor.run(data, recorder, type_="user")
+        self.logger.info("账号数据已保存至文件")
+        return data
 
     @check_storage_format
     def user_interactive(self):

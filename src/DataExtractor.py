@@ -19,17 +19,22 @@ class Extractor:
             "works": self.works,
             "comment": self.comment,
             "live": self.live,
+            "user": self.user,
             "search_general": self.search_general,
             "search_user": self.search_user,
             "hot": self.hot,
         }
 
     @staticmethod
-    def get_sec_uid(data: dict) -> str:
+    def get_user_info(data: dict) -> dict:
         try:
-            return data["author"]["sec_uid"]
+            return {
+                "nickname": data["nickname"],
+                "sec_uid": data["sec_uid"],
+                "uid": data["uid"],
+            }
         except KeyError:
-            return ""
+            return {}
 
     @staticmethod
     def generate_data_object(data: dict) -> SimpleNamespace:
@@ -236,6 +241,7 @@ class Extractor:
             container: SimpleNamespace,
             data: SimpleNamespace,
             key="author",
+            pass_=False,
     ) -> None:
         data = self.safe_extract(data, key)
         container.cache["uid"] = self.safe_extract(data, "uid")
@@ -244,17 +250,23 @@ class Extractor:
         container.cache["unique_id"] = self.safe_extract(data, "unique_id")
         container.cache["signature"] = self.safe_extract(data, "signature")
         # container.cache["user_age"] = self.safe_extract(data, "user_age")
-        self.extract_nickname_info(container, data)
+        self.extract_nickname_info(container, data, pass_)
 
     def extract_nickname_info(self,
                               container: SimpleNamespace,
-                              data: SimpleNamespace, ) -> None:
+                              data: SimpleNamespace, pass_: bool) -> None:
         if container.same:
             container.cache["nickname"] = container.name
             container.cache["mark"] = container.mark or container.name
         else:
-            name = self.clean.clean_name(self.safe_extract(
-                data, "nickname", "已注销账号"), inquire=False, default="无效账号昵称")
+            name = self.clean.clean_name(
+                self.safe_extract(
+                    data,
+                    "nickname",
+                    "已注销账号"),
+                inquire=False,
+                default="无效账号昵称",
+                pass_=pass_)
             container.cache["nickname"] = name
             container.cache["mark"] = name
 
@@ -298,16 +310,15 @@ class Extractor:
                 "collection_time": datetime.now().strftime(self.date_format),
             },
             cache=None,
-            post=False,
+            same=False,
         )
         if source:
             [self._extract_reply_ids(container, i) for i in data]
-            return container.all_data, container.reply_ids
         else:
             [self._extract_comments_data(
                 container, self.generate_data_object(i)) for i in data]
             self.record_data(recorder, container.all_data)
-            return container.all_data, container.reply_ids
+        return container.all_data, container.reply_ids
 
     def _extract_comments_data(
             self,
@@ -329,7 +340,7 @@ class Extractor:
             self.safe_extract(data, "reply_comment_total", 0))
         container.cache["reply_id"] = self.safe_extract(data, "reply_id")
         container.cache["cid"] = self.safe_extract(data, "cid")
-        self.extract_account_info(container, data, "user")
+        self.extract_account_info(container, data, "user", True)
         self._filter_reply_ids(container)
         container.all_data.append(container.cache)
 
@@ -369,6 +380,61 @@ class Extractor:
                      "total_user_str": self.safe_extract(data, "stats.total_user_str"),
                      "user_count_str": self.safe_extract(data, "stats.user_count_str")}
         container.all_data.append(live_data)
+
+    def user(self, data: list[dict], recorder) -> list[dict]:
+        container = SimpleNamespace(
+            all_data=[],
+            cache=None,
+            template={
+                "collection_time": datetime.now().strftime(self.date_format),
+            },
+        )
+        [self._extract_user_data(container,
+                                 self.generate_data_object(i)) for i in data]
+        self.record_data(recorder, container.all_data)
+        return container.all_data
+
+    def _extract_user_data(
+            self,
+            container: SimpleNamespace,
+            data: SimpleNamespace):
+        container.cache = container.template.copy()
+        container.cache["avatar"] = self.safe_extract(
+            data, "avatar_larger.url_list[0]")
+        container.cache["city"] = self.safe_extract(data, "city")
+        container.cache["country"] = self.safe_extract(data, "country")
+        # container.cache["district"] = self.safe_extract(data, "district")
+        container.cache["favoriting_count"] = str(
+            self.safe_extract(data, "favoriting_count"))
+        container.cache["follower_count"] = str(
+            self.safe_extract(data, "follower_count"))
+        container.cache["max_follower_count"] = str(
+            self.safe_extract(data, "max_follower_count"))
+        container.cache["following_count"] = str(
+            self.safe_extract(data, "following_count"))
+        container.cache["total_favorited"] = str(
+            self.safe_extract(data, "total_favorited"))
+        container.cache["gender"] = {1: "男", 2: "女"}.get(
+            self.safe_extract(data, "gender"), "未知")
+        # container.cache["ip_location"] = self.safe_extract(data, "ip_location")
+        container.cache["nickname"] = self.safe_extract(data, "nickname")
+        container.cache["province"] = self.safe_extract(data, "province")
+        container.cache["school_name"] = self.safe_extract(data, "school_name")
+        container.cache["sec_uid"] = self.safe_extract(data, "sec_uid")
+        container.cache["signature"] = self.safe_extract(data, "signature")
+        container.cache["uid"] = self.safe_extract(data, "uid")
+        container.cache["unique_id"] = self.safe_extract(data, "unique_id")
+        container.cache["user_age"] = str(
+            self.safe_extract(data, "user_age", -1))
+        container.cache["cover"] = self.safe_extract(
+            data, "cover_url[0].url_list[-1]")
+        container.cache["short_id"] = self.safe_extract(data, "short_id")
+        container.cache["aweme_count"] = str(
+            self.safe_extract(data, "aweme_count"))  # 数量不准确
+        container.cache["verify"] = self.safe_extract(data, "custom_verify")
+        container.cache["enterprise"] = self.safe_extract(
+            data, "enterprise_verify_reason")
+        container.all_data.append(container.cache)
 
     def search_general(self, data: list[dict], recorder) -> list[dict]:
         pass
