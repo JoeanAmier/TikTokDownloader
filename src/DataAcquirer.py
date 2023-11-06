@@ -818,8 +818,7 @@ class Hot(Acquirer):
 
     def __init__(self, params: Parameter):
         super().__init__(params)
-        del self.PC_headers["Cookie"]
-        self.time = None
+        self.time = datetime.now().strftime("%Y-%m-%d %H.%M.%S")
         self.title = None
 
     def run(self):

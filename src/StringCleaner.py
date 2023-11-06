@@ -69,7 +69,10 @@ class Cleaner:
             default: str = "",
             pass_=False) -> str:
         """清洗字符串，仅保留中文、英文、数字和下划线"""
-        if pass_ or not text:
+        if pass_:
+            return text
+
+        if not text:
             return default
 
         # 使用正则表达式匹配非中文、英文、数字和下划线字符，并替换为单个下划线

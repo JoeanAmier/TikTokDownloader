@@ -108,6 +108,7 @@ TikTokDownloader
 │    ├─ temp                               // 下载文件临时文件夹
 │    ├─ AccountCache.json                  // 账号管理缓存数据
 │    └─ IDRecorder.txt                     // 作品下载记录文件
+├─ ffmpeg                                  // FFmpeg 存放文件夹
 ├─ static                                  // 静态资源文件夹
 ├─ templates                               // HTML 模板文件夹
 └─ docs                                    // 项目文档文件夹

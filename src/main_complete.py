@@ -1,6 +1,5 @@
 from datetime import date
 from datetime import datetime
-from time import time
 
 from src.Customizer import (
     WARNING,
@@ -324,7 +323,7 @@ class TikTok:
                 self.console.print(f"{url} 提取直播 ID 失败")
                 continue
             live_data = [Live(self.parameter, **i).run() for i in params]
-            if not live_data:
+            if not [i for i in live_data if i]:
                 self.console.print("获取直播数据失败")
                 continue
             live_data = self.extractor.run(live_data, None, "live")
@@ -617,13 +616,12 @@ class TikTok:
 
     @check_storage_format
     def hot_interactive(self, api=None):
-        collection_time = str(time())[:10]
-        save, root, params = self.record.run(
-            self._data["root"], type_="hot", format_=self._data["save"])
-        for i, j in enumerate(("热榜", "娱乐榜", "社会榜", "挑战榜")):
-            with save(root, name=f"HOT_{collection_time}_{j}", **params) as data:
-                self.request.run_hot(i, j, data, api)
-        self.logger.info(f"抖音热榜数据已储存至 HOT + {collection_time} + 榜单类型")
+        # save, root, params = self.record.run(
+        #     self._data["root"], type_="hot", format_=self._data["save"])
+        # for i, j in enumerate(("热榜", "娱乐榜", "社会榜", "挑战榜")):
+        #     with save(root, name=f"HOT_{collection_time}_{j}", **params) as data:
+        #         self.request.run_hot(i, j, data, api)
+        # self.logger.info(f"抖音热榜数据已储存至 HOT + {collection_time} + 榜单类型")
         self.logger.info("已退出采集抖音热榜数据模式")
 
     def collection_interactive(self):

@@ -151,6 +151,7 @@
 </tbody></table>
 <h1>配置文件</h1>
 <p>配置文件：项目根目录下的 <code>settings.json</code> 文件，可以自定义设置程序部分运行参数。</p>
+<p>注意: 修改 <code>settings.json</code> 后需要重新运行程序才会生效！</p>
 <h2>参数含义</h2>
 <table>
 <thead>

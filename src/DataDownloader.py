@@ -22,6 +22,7 @@ from src.Customizer import (
     PROGRESS,
 )
 from src.DataAcquirer import retry
+from src.StringCleaner import Cleaner
 
 __all__ = ["Downloader"]
 
@@ -135,9 +136,14 @@ class Downloader:
 
     def generate_live_tasks(self, data: list[tuple[dict, str]], tasks: list):
         for i, u in data:
-            name = replace_emoji(
-                f'{i["title"]}{self.split}{i["nickname"]}'
-                f'{self.split}{datetime.now().strftime("%Y-%m-%d %H.%M.%S")}.flv')
+            name = Cleaner.clean_name(
+                replace_emoji(
+                    f'{
+                    i["title"]}{
+                    self.split}{
+                    i["nickname"]}' f'{
+                    self.split}{
+                    datetime.now().strftime("%Y-%m-%d %H.%M.%S")}.flv'))
             temp_root, actual_root = self.deal_folder_path(
                 self.storage_folder(folder_name="Live"), name, True)
             tasks.append((
@@ -435,9 +441,9 @@ class Downloader:
         return folder
 
     def generate_works_name(self, data: dict) -> str:
-        return replace_emoji(
+        return Cleaner.clean_name(replace_emoji(
             self.split.join(
-                data[i] for i in self.name_format))
+                data[i] for i in self.name_format)))
 
     def create_works_folder(
             self,

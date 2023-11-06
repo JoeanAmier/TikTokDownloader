@@ -517,8 +517,8 @@ class Extractor:
                 self.safe_extract(data, "total_favorited"))
             container.cache["unique_id"] = self.safe_extract(data, "unique_id")
             container.all_data.append(container.cache)
-        else:
-            pass
+        # else:
+        #     pass
 
     def search_live(
             self,
