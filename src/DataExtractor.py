@@ -136,11 +136,11 @@ class Extractor:
     def clean_description(self, desc: str) -> str:
         return self.clean.clear_spaces(self.clean.filter(desc))
 
-    def format_date(self, data: SimpleNamespace) -> str:
+    def format_date(self, data: SimpleNamespace, key: str = None) -> str:
         return strftime(
             self.date_format,
             localtime(
-                self.safe_extract(data, "create_time") or None))
+                self.safe_extract(data, key or "create_time") or None))
 
     def extract_works_info(self, item: dict, data: SimpleNamespace) -> None:
         item["id"] = self.safe_extract(data, "aweme_id")
@@ -546,8 +546,25 @@ class Extractor:
         container.cache["room_id"] = self.safe_extract(data, "aweme_id")
         container.all_data.append(container.cache)
 
-    def hot(self, data: list[list[dict]], recorder) -> list[dict]:
-        pass
+    def hot(self, data: list[dict], recorder) -> list[dict]:
+        all_data = []
+        [self._deal_hot_data(all_data, self.generate_data_object(i))
+         for i in data]
+        self.record_data(recorder, all_data)
+        return all_data
+
+    def _deal_hot_data(self, container: list, data: SimpleNamespace):
+        cache = {
+            "position": str(self.safe_extract(data, "position", -1)),
+            "sentence_id": self.safe_extract(data, "sentence_id"),
+            "word": self.safe_extract(data, "word"),
+            "video_count": str(self.safe_extract(data, "video_count")),
+            "event_time": self.format_date(data, "event_time"),
+            # "view_count": str(self.safe_extract(data, "view_count")),
+            "hot_value": str(self.safe_extract(data, "hot_value")),
+            "cover": self.safe_extract(data, "word_cover.url_list[-1]"),
+        }
+        container.append(cache)
 
     def record_data(self, record, data: list[dict]):
         for i in data:

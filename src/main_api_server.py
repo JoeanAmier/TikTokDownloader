@@ -18,7 +18,7 @@ class APIServer(WebUI):
         ),
         17: RecordManager.comment_title,
         21: RecordManager.user_title[1:],
-        7: RecordManager.Hot_Title,
+        7: RecordManager.hot_title,
         12: RecordManager.search_user_title,
     }
 

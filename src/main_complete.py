@@ -15,6 +15,7 @@ from src.DataAcquirer import (
     Mix,
     User,
     Search,
+    Hot,
 )
 from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
@@ -615,23 +616,28 @@ class TikTok:
         return search_data
 
     @check_storage_format
-    def hot_interactive(self, api=None):
-        # save, root, params = self.record.run(
-        #     self._data["root"], type_="hot", format_=self._data["save"])
-        # for i, j in enumerate(("热榜", "娱乐榜", "社会榜", "挑战榜")):
-        #     with save(root, name=f"HOT_{collection_time}_{j}", **params) as data:
-        #         self.request.run_hot(i, j, data, api)
-        # self.logger.info(f"抖音热榜数据已储存至 HOT + {collection_time} + 榜单类型")
+    def hot_interactive(self):
+        self._deal_hot_data()
         self.logger.info("已退出采集抖音热榜数据模式")
 
+    def _deal_hot_data(self, source=False):
+        time_, board = Hot(self.parameter).run()
+        if not any(board):
+            return None
+        if source:
+            return [{Hot.board_params[i].name: j} for i, j in board]
+        root, params, logger = self.record.run(self.parameter, type_="hot")
+        data = []
+        for i, j in board:
+            name = f"{time_}_{Hot.board_params[i].name}"
+            with logger(root, name=name, **params) as record:
+                data.append(
+                    {Hot.board_params[i].name: self.extractor.run(j, record, type_="hot")})
+        self.logger.info(f"热榜数据已储存至 {time_} + 榜单类型")
+        return time_, data
+
     def collection_interactive(self):
-        save, root, params = self.record.run(
-            self._data["root"], format_=self._data["save"])
-        self.request.earliest = ""
-        self.request.latest = ""
-        if self.request.run_collection():
-            self.download_account_works(0, save, root, params, None)
-        self.logger.info("已退出批量下载收藏作品模式")
+        pass
 
     def run(self):
         while self.running:

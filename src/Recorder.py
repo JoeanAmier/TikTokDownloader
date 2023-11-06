@@ -600,23 +600,33 @@ class RecordManager:
         "TEXT",
         "TEXT",
     )
-    Hot_Title = (
+    hot_keys = (
+        "position",
+        "word",
+        "hot_value",
+        "cover",
+        "event_time",
+        # "view_count",
+        "video_count",
+        "sentence_id",
+    )
+    hot_title = (
         "排名",
         "内容",
         "热度",
-        # "浏览数量",
+        "封面",
         "时间",
-        "作品数量",
-        "sentence_tag",
-        "sentence_id",
+        # "浏览数量",
+        "视频数量",
+        "SENTENCE_ID",
     )
-    Hot_Type = (
-        "INTEGER PRIMARY KEY",
+    hot_type = (
+        "INTEGER",
         "TEXT",
         "INTEGER",
+        "TEXT",
+        "TEXT",
         # "INTEGER",
-        "TEXT",
-        "INTEGER",
         "INTEGER",
         "TEXT",
     )
@@ -664,10 +674,10 @@ class RecordManager:
             "id_": False,
         },
         "hot": {
-            "db_name": "HotBoardData.db",
-            "title_line": Hot_Title,
-            "title_type": Hot_Type,
-            "field_keys": works_keys,
+            "db_name": "BoardData.db",
+            "title_line": hot_title,
+            "title_type": hot_type,
+            "field_keys": hot_keys,
             "id_": False,
         },
     }
