@@ -15,7 +15,7 @@
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?color=3eb370">
 </div>
 <br>
-<p>🔥 <b>TikTok 视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 Requests 模块实现；批量下载抖音账号发布、喜欢、收藏的作品；单独下载抖音链接或 TikTok 链接对应的作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品搜索结果；采集抖音热榜数据。</p>
+<p>🔥 <b>TikTok 视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 Requests 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏的作品；单独下载抖音链接或 TikTok 链接对应的作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
 <p>⭐ Windows 10 及以上用户可前往 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 下载已编译的 exe 程序，开箱即用！</p>
 <hr>
 
@@ -73,10 +73,8 @@
 # 📈 项目状态\(Status\)
 
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已完成测试，所有功能均可正常使用
-* 🟢 准备优化批量下载账号收藏作品功能
+* 🟢 正在加入 FFmpeg 优化直播下载功能
 * 🟡 未来可能支持更多抖音热榜类型
-* 🟡 未来可能优化 Web API 接口模式，使其支持并发请求
-* 🟡 未来可能使用 FFmpeg 优化直播下载功能
 * 🟡 未来可能新增终端文本用户界面\(TUI\)模式
 * 🟡 未来可能新增获取账号关注列表功能
 * 🟡 未来可能新增获取账号收藏合集列表功能
@@ -107,6 +105,7 @@ TikTokDownloader
 │    ├─ main_api_server.py                 // Web API 接口模式启动入口
 │    └─ main_web_UI.py                     // Web UI 交互模式启动入口
 ├─ cache                                   // 缓存数据文件夹
+│    ├─ temp                               // 下载文件临时文件夹
 │    ├─ AccountCache.json                  // 账号管理缓存数据
 │    └─ IDRecorder.txt                     // 作品下载记录文件
 ├─ static                                  // 静态资源文件夹
@@ -185,7 +184,6 @@ TikTokDownloader
 <li><code>批量下载收藏作品模式</code> 目前仅支持下载当前已登录 Cookie 对应账号的收藏作品，暂不支持多账号</li>
 <li>如果想要程序使用代理，必须在 <code>settings.json</code> 设置 <code>proxies</code> 参数，否则程序不会使用代理</li>
 <li>部分使用者反馈，新发布的作品过早下载会下载到低分辨率的文件，一段时间后才能下载到高分辨率文件，但时间规律尚不明确</li>
-<li><b>退出程序时，请以正常方式退出程序或者按下 Ctrl + C 结束运行，不要点击终端窗口的关闭按钮结束程序</b></li>
 </ul>
 
 # ⚠️ 免责声明\(Disclaimers\)
@@ -209,7 +207,7 @@ TikTokDownloader
 
 <ul>
 <li>QQ: 2437596031</li>
-<li>QQ Group: 830227445 | <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">点击扫码加入群聊</a></li>
+<li>QQ Group: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">点击扫码加入群聊</a></li>
 <li>Email: yonglelolu@gmail.com</li>
 </ul>
 <p>
@@ -244,5 +242,6 @@ TikTokDownloader
 * https://github.com/davidteather/TikTok-Api
 * https://requests.readthedocs.io/en/latest/
 * https://dormousehole.readthedocs.io/en/latest/
+* https://github.com/Textualize/rich
 * https://github.com/B1gM8c/X-Bogus
 * https://html5up.net/hyperspace

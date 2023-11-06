@@ -612,7 +612,7 @@ class Live(Acquirer):
     def run(self) -> dict:
         if self.web_rid:
             return self.with_web_rid()
-        elif self.room_id and self.sec_user_id:
+        elif self.room_id:
             return self.with_room_id()
         else:
             return {}
@@ -635,6 +635,7 @@ class Live(Acquirer):
             "live_id": "1",
             "room_id": self.room_id,
             "sec_user_id": self.sec_user_id,
+            "version_code": "99.99.99",
             "app_id": "1128",
         }
         api = self.live_api_share
