@@ -32,7 +32,7 @@ class Extractor:
                 "sec_uid": data["sec_uid"],
                 "uid": data["uid"],
             }
-        except KeyError:
+        except (KeyError, TypeError):
             return {}
 
     @staticmethod

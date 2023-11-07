@@ -151,6 +151,7 @@
 </tbody></table>
 <h1>配置文件</h1>
 <p>配置文件：项目根目录下的 <code>settings.json</code> 文件，可以自定义设置程序部分运行参数。</p>
+<p><b><code>cookie</code> 参数为必需参数，必须设置该参数才能正常使用程序</b>；其余参数可以根据实际需求进行修改！</p>
 <p>注意: 修改 <code>settings.json</code> 后需要重新运行程序才会生效！</p>
 <h2>参数含义</h2>
 <table>
@@ -164,12 +165,12 @@
 <tbody><tr>
 <td align="center">mark</td>
 <td align="center">str</td>
-<td align="center">账号/合集标识, 设置为空字符串代表使用账号昵称/合集标题, <strong>属于 accounts_urls 和 mix_urls 子参数</strong></td>
+<td align="center">账号/合集标识, 设置为空字符串代表使用账号昵称/合集标题, <strong>属于 accounts_urls、mix_urls 和 owner_url 子参数</strong></td>
 </tr>
 <tr>
 <td align="center">url</td>
 <td align="center">str</td>
-<td align="center">账号主页/合集作品链接, 批量下载时使用<br><strong>属于 accounts_urls 和 mix_urls 子参数</strong></td>
+<td align="center">账号主页/合集作品链接, 批量下载时使用<br><strong>属于 accounts_urls、mix_urls 和 owner_url 子参数</strong></td>
 </tr>
 <tr>
 <td align="center">Tab</td>
@@ -195,6 +196,11 @@
 <td align="center">mix_urls[mark, url]</td>
 <td align="center">list[dict[str, str]]</td>
 <td align="center">合集标识, 合集链接或作品链接, 批量下载合集作品时使用<br>支持多合集, 以字典格式包含两个参数</td>
+</tr>
+<tr>
+<td align="center">owner_url[mark, url]</td>
+<td align="center">[dict[str, str]]</td>
+<td align="center">已登录 Cookie 的账号标识, 账号主页链接, 批量下载收藏作品时使用<br>用于获取账号昵称和 UID, 以字典格式包含两个参数</td>
 </tr>
 <tr>
 <td align="center">root</td>
@@ -317,6 +323,10 @@
       "url": "合集链接或者作品链接"
     }
   ],
+  "owner_url": {
+    "mark": "已登录 Cookie 的账号标识，可以设置为空字符串",
+    "url": "已登录 Cookie 的账号主页链接（可选）"
+  },
   "root": "C:\\TikTokDownloader",
   "folder_name": "SOLO",
   "name_format": "create_time uid id",

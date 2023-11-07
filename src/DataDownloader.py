@@ -4,8 +4,8 @@ from pathlib import Path
 from shutil import move
 from types import SimpleNamespace
 
-import requests
 from emoji import replace_emoji
+from requests import exceptions
 from requests import get
 from rich.progress import (
     BarColumn,
@@ -77,6 +77,8 @@ class Downloader:
         self.chunk = params.chunk
         self.max_retry = params.max_retry
         self.blacklist = params.blacklist
+        self.timeout = params.timeout
+        self.ffmpeg = params.ffmpeg
         self.__thread = ThreadPoolExecutor
         self.__pool = None
         self.__temp = params.main_path.joinpath("./cache/temp")
@@ -126,13 +128,16 @@ class Downloader:
             return
         download_tasks = []
         self.generate_live_tasks(data, download_tasks)
-        self.downloader_chart(
-            download_tasks,
-            SimpleNamespace(),
-            self.live_progress,
-            len(download_tasks),
-            unknown_size=True,
-            headers=self.black_headers)
+        if self.ffmpeg:
+            self.__download_live()
+        else:
+            self.downloader_chart(
+                download_tasks,
+                SimpleNamespace(),
+                self.live_progress,
+                len(download_tasks),
+                unknown_size=True,
+                headers=self.black_headers)
 
     def generate_live_tasks(self, data: list[tuple[dict, str]], tasks: list):
         for i, u in data:
@@ -153,6 +158,9 @@ class Downloader:
                 f'直播 {i["title"]}{self.split}{i["nickname"]}',
                 "0" * 19,
             ))
+
+    def __download_live(self):
+        pass
 
     def batch_processing(
             self,
@@ -358,7 +366,8 @@ class Downloader:
                     url,
                     stream=True,
                     proxies=self.proxies,
-                    headers=headers or self.Phone_headers if tiktok else self.PC_headers) as response:
+                    headers=headers or self.Phone_headers if tiktok else self.PC_headers,
+                    timeout=self.timeout) as response:
                 if not (
                         content := int(
                             response.headers.get(
@@ -383,7 +392,9 @@ class Downloader:
                     content,
                     count,
                     progress)
-        except (requests.exceptions.ConnectionError, requests.exceptions.ChunkedEncodingError) as e:
+        except (exceptions.ConnectionError,
+                exceptions.ChunkedEncodingError,
+                exceptions.ReadTimeout) as e:
             self.log.warning(f"网络异常: {e}", False)
             return False
 
@@ -405,7 +416,7 @@ class Downloader:
                 for chunk in response.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
                     progress.update(task_id, advance=len(chunk))
-        except requests.exceptions.ChunkedEncodingError:
+        except exceptions.ChunkedEncodingError:
             self.log.warning(f"{show} 由于网络异常下载中断", False)
             self.delete_file(temp)
             return False

@@ -16,6 +16,7 @@ from src.DataAcquirer import (
     User,
     Search,
     Hot,
+    Collection,
 )
 from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
@@ -106,6 +107,7 @@ class TikTok:
         self.settings = settings
         self.accounts = parameter.accounts_urls
         self.mix = parameter.mix_urls
+        self.owner = parameter.owner_url
         self.running = True
         self.cache = Cache(
             parameter,
@@ -196,7 +198,7 @@ class TikTok:
         acquirer = Account(self.parameter, sec_user_id, tab, earliest, latest)
         account_data, earliest, latest = acquirer.run()
         if not account_data:
-            self.logger.warning("采集账号主页数据失败")
+            self.logger.warning("获取账号主页数据失败")
             return False
         if source:
             return account_data
@@ -222,6 +224,7 @@ class TikTok:
                              api=False,
                              earliest: date = None,
                              latest: date = None,
+                             addition: str = None,
                              ):
         id_, name, mid, title, mark, data = self.extractor.preprocessing_data(
             data, mark, post, mix)
@@ -251,7 +254,7 @@ class TikTok:
             title if mix else name,
         )
         self.download_account_works(
-            data, id_, name, mark, post, mix, mid, title)
+            data, id_, name, mark, post, mix, mid, title, addition)
         return True
 
     def download_account_works(
@@ -264,6 +267,7 @@ class TikTok:
             mix: bool,
             mid: str = None,
             title: str = None,
+            addition: str = None,
     ):
         self.downloader.run(
             data,
@@ -271,9 +275,11 @@ class TikTok:
             id_=id_,
             name=name,
             mark=mark,
-            addition="合集作品" if mix else "发布作品" if post else "喜欢作品",
+            addition=addition or (
+                "合集作品" if mix else "发布作品" if post else "喜欢作品"),
             mid=mid,
-            title=title, )
+            title=title,
+        )
 
     def works_interactive(self):
         root, params, logger = self.record.run(self.parameter)
@@ -637,7 +643,36 @@ class TikTok:
         return time_, data
 
     def collection_interactive(self):
-        pass
+        root, params, logger = self.record.run(self.parameter)
+        if not (sec_user_id := self.check_sec_user_id(self.owner.url)):
+            self.logger.warning(
+                f"配置文件 owner_url 的 url 参数 {self.owner.url} 无效")
+        self._deal_collection_data(root, params, logger, sec_user_id)
+        self.logger.info("已退出批量下载收藏作品模式")
+
+    def _deal_collection_data(
+            self,
+            root,
+            params,
+            logger,
+            sec_user_id: str,
+            api=False,
+            source=False):
+        collection = Collection(self.parameter, sec_user_id).run()
+        if not collection:
+            self.logger.warning("获取账号收藏数据失败")
+            return None
+        if source:
+            return collection
+        return self._batch_process_works(
+            root,
+            params,
+            logger,
+            collection,
+            self.owner.mark,
+            False,
+            api=api,
+            addition="收藏作品", )
 
     def run(self):
         while self.running:

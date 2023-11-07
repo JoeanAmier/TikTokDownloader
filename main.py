@@ -46,6 +46,16 @@ class ColorfulConsole(Console):
         return super().input(f"[{PROMPT}]{prompt}[/{PROMPT}]", *args, **kwargs)
 
 
+def start_cookie_task(function):
+    def inner(self, *args, **kwargs):
+        if not self.task:
+            self.periodic_tasks()
+            self.task = True
+        return function(self, *args, **kwargs)
+
+    return inner
+
+
 class TikTokDownloader:
     PROJECT_ROOT = Path(__file__).resolve().parent
     # PROJECT_ROOT = Path.cwd()
@@ -100,6 +110,7 @@ class TikTokDownloader:
             self.ua_code)
         self.parameter = None
         self.running = True
+        self.task = False
 
     def disclaimer(self):
         if not self.DISCLAIMER["path"].exists():
@@ -175,6 +186,7 @@ class TikTokDownloader:
             self.compatible(default_mode)
             default_mode = ""
 
+    @start_cookie_task
     def complete(self):
         """终端命令行模式"""
         example = TikTok(self.parameter, self.settings)
@@ -182,6 +194,7 @@ class TikTokDownloader:
         example.run()
         self.running = example.running
 
+    @start_cookie_task
     def server(self, server):
         """
         服务器模式
@@ -199,10 +212,14 @@ class TikTokDownloader:
 
     def write_cookie(self):
         self.cookie.run()
+        self.check_settings()
+        self.parameter.update_cookie()
 
     def auto_cookie(self):
         if cookie := self.register.run():
             self.cookie.extract(cookie, False)
+            self.check_settings()
+            self.parameter.update_cookie()
         else:
             self.console.print("扫码登录失败，未写入 Cookie！", style=WARNING)
 
@@ -247,7 +264,6 @@ class TikTokDownloader:
         self.check_update()
         self.check_settings()
         self.disclaimer()
-        self.periodic_tasks()
         self.main_menu(self.parameter.default_mode)
         self.delete_temp()
         self.console.print("程序结束运行")

@@ -35,6 +35,8 @@ class Settings:
                 {"mark": "合集标识，可以设置为空字符串",
                  "url": "合集链接或者作品链接"},
             ],
+            "owner_url": {"mark": "账号标识，可以设置为空字符串",
+                          "url": "账号主页链接", },
             "root": "",
             "folder_name": "Download",
             "name_format": "create_time nickname desc",
@@ -137,6 +139,7 @@ class Parameter:
             max_retry: int,
             max_pages: int,
             default_mode: int,
+            owner_url: dict,
             blacklist,
             timeout=10,
             **kwargs,
@@ -170,9 +173,11 @@ class Parameter:
         self.max_pages = self.check_max_pages(max_pages)
         self.blacklist = blacklist
         self.timeout = self.check_timeout(timeout)
-        self.accounts_urls = self.check_accounts_urls(accounts_urls)
-        self.mix_urls = self.check_mix_urls(mix_urls)
+        self.accounts_urls = Extractor.generate_data_object(accounts_urls)
+        self.mix_urls = Extractor.generate_data_object(mix_urls)
+        self.owner_url = Extractor.generate_data_object(owner_url)
         self.default_mode = self.check_default_mode(default_mode)
+        self.ffmpeg = FFMPEG().run() or None
 
     def check_cookie(self, cookie: dict | str) -> dict:
         if isinstance(cookie, dict):
@@ -316,14 +321,6 @@ class Parameter:
                 f"storage_format 参数 {storage_format} 设置错误，程序默认不会储存任何数据至文件")
         return ""
 
-    @staticmethod
-    def check_accounts_urls(accounts_urls: dict) -> SimpleNamespace:
-        return Extractor.generate_data_object(accounts_urls)
-
-    @staticmethod
-    def check_mix_urls(mix_urls: dict) -> SimpleNamespace:
-        return Extractor.generate_data_object(mix_urls)
-
     def check_default_mode(self, default_mode: int) -> str:
         if default_mode in range(3, 7):
             return str(default_mode)
@@ -337,3 +334,8 @@ class Parameter:
             self.headers["Cookie"] = Register.generate_cookie(self.cookie)
         elif self.cookie_cache:
             self.headers["Cookie"] = self.add_cookie(self.cookie_cache)
+
+
+class FFMPEG:
+    def run(self) -> bool:
+        pass

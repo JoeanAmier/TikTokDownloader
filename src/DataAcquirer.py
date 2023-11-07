@@ -56,7 +56,6 @@ class Acquirer:
         'User-Agent': 'com.ss.android.ugc.trill/494+Mozilla/5.0+(Linux;+Android+12;+2112123G+Build/SKQ1.211006.001;+wv)'
                       '+AppleWebKit/537.36+(KHTML,+like+Gecko)+Version/4.0+Chrome/107.0.5304.105+Mobile+Safari/537.36'}
     # 抖音 API
-    collection_api = "https://www.douyin.com/aweme/v1/web/aweme/listcollection/"  # 收藏API
     mix_list_api = "https://www.douyin.com/aweme/v1/web/mix/listcollection/"  # 合集列表API
     feed_api = "https://www.douyin.com/aweme/v1/web/tab/feed/"  # 推荐页API
     spotlight_api = "https://www.douyin.com/aweme/v1/web/im/spotlight/relation/"  # 关注账号API
@@ -877,12 +876,74 @@ class Hot(Acquirer):
 
 
 class Collection(Acquirer):
-    def __init__(self, params: Parameter):
+    collection_api = "https://www.douyin.com/aweme/v1/web/aweme/listcollection/"  # 收藏API
+    params = {
+        "device_platform": "webapp",
+        "aid": "6383",
+        "channel": "channel_pc_web",
+        "publish_video_strategy_type": "2",
+        "pc_client_type": "1",
+        "cookie_enabled": "true",
+        "platform": "PC",
+        "downlink": "5.45",
+    }
+
+    def __init__(self, params: Parameter, sec_user_id: str):
         super().__init__(params)
         self.pages = params.max_pages
+        self.sec_user_id = bool(sec_user_id)
+        self.info = Info(params, sec_user_id)
 
     def run(self):
-        pass
+        num = 1
+        while not self.finished and self.pages > 0:
+            self.console.print(f"正在获取第 {num} 页数据...")
+            self._get_account_data()
+            self.pages -= 1
+            num += 1
+        self._get_owner_data()
+        return self.response
+
+    def _get_account_data(self):
+        params = self.params.copy()
+        self.deal_url_params(params)
+        form = {
+            "count": "10",
+            "cursor": self.cursor,
+        }
+        if not (
+                data := self.send_request(
+                    self.collection_api,
+                    params=params,
+                    data=form,
+                    method='post',
+                    finished=True)):
+            self.log.warning("获取账号收藏数据失败")
+            return
+        try:
+            self.cursor = data['cursor']
+            self.deal_item_data(data["aweme_list"])
+            self.finished = not data["has_more"]
+        except KeyError:
+            self.log.error(f"账号收藏数据响应内容异常: {data}")
+            self.finished = True
+
+    def _get_owner_data(self):
+        if self.sec_user_id and (
+                info := Extractor.get_user_info(
+                    self.info.run())):
+            self.response.append({"author": info})
+        else:
+            temp_data = Account.temp_data()
+            self.log.warning(f"owner_url 参数未设置 或者 获取账号数据失败，本次运行将临时使用 {
+            temp_data} 作为账号昵称和 UID")
+            fake_data = {
+                "author": {
+                    "nickname": temp_data,
+                    "uid": temp_data,
+                }
+            }
+            self.response.append(fake_data)
 
 
 class Info(Acquirer):
@@ -916,5 +977,5 @@ class Info(Acquirer):
             return {}
         try:
             return data["data"][0] or {}
-        except (KeyError, IndexError):
+        except (KeyError, IndexError, TypeError):
             self.log.error(f"账号数据响应内容异常: {data}")
