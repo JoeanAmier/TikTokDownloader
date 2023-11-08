@@ -12,7 +12,7 @@ from requests import get
 from src.CookieTool import Register
 from src.Customizer import INFO, ERROR, GENERAL
 from src.DataExtractor import Extractor
-from src.Parameter import MsToken
+# from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.StringCleaner import Cleaner
 
@@ -191,13 +191,13 @@ class Parameter:
 
     @staticmethod
     def add_cookie(cookie: dict | str) -> None | str:
-        parameters = (MsToken.get_ms_token(), TtWid.get_tt_wid(),)
+        # parameters = (MsToken.get_ms_token(), TtWid.get_tt_wid(),)
         if isinstance(cookie, dict):
-            for i in parameters:
+            for i in (TtWid.get_tt_wid(),):
                 if isinstance(i, dict):
                     cookie |= i
         elif isinstance(cookie, str):
-            for i in parameters:
+            for i in (TtWid.get_tt_wid(),):
                 if isinstance(i, dict):
                     cookie += Register.generate_cookie(i)
             return cookie

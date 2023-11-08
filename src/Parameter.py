@@ -9,7 +9,7 @@ from urllib.parse import urlencode
 from requests import exceptions
 from requests import post
 
-__all__ = ['Headers', 'NewXBogus', 'MsToken', 'TtWid', 'VerifyFp']
+__all__ = ['Headers', 'NewXBogus', 'TtWid', 'VerifyFp']
 
 
 class Headers:
@@ -343,15 +343,16 @@ class TtWid:
                     return None
 
         headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.188",
-        }
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/"
+                          "115.0.0.0 Safari/537.36 Edg/115.0.1901.188", }
         api = "https://ttwid.bytedance.com/ttwid/union/register/"
-        data = '{"region":"cn","aid":1768,"needFid":false,"service":"www.ixigua.com","migrate_info":{"ticket":"","source":"node"},"cbUrlProtocol":"https","union":true}'
+        data = (
+            '{"region":"cn","aid":1768,"needFid":false,"service":"www.ixigua.com","migrate_info":'
+            '{"ticket":"","source":"node"},"cbUrlProtocol":"https","union":true}')
         try:
             response = post(api, data=data, headers=headers, timeout=10)
         except (exceptions.ReadTimeout, exceptions.ConnectionError):
-            print("获取 ttwid 参数失败！")
-            return None
+            return print("获取 ttwid 参数失败！")
         return clean(response.headers) or None
 
 
@@ -360,16 +361,15 @@ class WebID:
     def get_web_id(ua: str) -> str | None:
         headers = {"User-Agent": ua}
         url = "https://mcs.zijieapi.com/webid"
-        data = f'{{"app_id":6383,"url":"https://www.douyin.com/","user_agent":"{ua}","referer":"https://www.douyin.com/","user_unique_id":""}}'
+        data = (f'{{"app_id":6383,"url":"https://www.douyin.com/","user_agent":'
+                f'"{ua}","referer":"https://www.douyin.com/","user_unique_id":""}}')
         try:
             response = post(url, data=data, headers=headers, timeout=10)
             return response.json()["web_id"]
         except (exceptions.ReadTimeout, exceptions.ConnectionError):
-            print("获取 web_id 参数失败！")
-            return None
+            return print("获取 web_id 参数失败！")
         except (exceptions.JSONDecodeError, KeyError):
-            print("web_id 参数格式异常，疑似失效！")
-            return None
+            return print("web_id 参数格式异常，疑似失效！")
 
 
 class VerifyFp:

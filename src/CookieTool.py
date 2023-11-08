@@ -215,7 +215,7 @@ class Register:
             return False
         elif response.history[0].status_code != 302:
             return False
-        return response.history[1].headers.get("Set-Cookie")
+        return self.clean_cookie(response.history[1].headers.get("Set-Cookie"))
 
     def wait(self):
         sleep(2)
