@@ -1,4 +1,7 @@
+from pathlib import Path
+from platform import system
 from re import finditer
+from subprocess import run
 from time import sleep
 
 from qrcode import QRCode
@@ -113,6 +116,7 @@ class Register:
         }
         self.verify_fp = None
         self.ua_code = ua_code
+        self.temp = None
 
     @staticmethod
     def generate_cookie(data: dict) -> str:
@@ -139,13 +143,19 @@ class Register:
         qr_code.add_data(url)
         qr_code.make(fit=True)
         qr_code.print_ascii(invert=True)
-        image = qr_code.make_image()
-        try:
-            image.show()
-        except AttributeError:
-            self.console.print(
-                "打开登录二维码图片失败，请扫描终端二维码登录！\n如果登录二维码无法识别，请尝试更换终端或者手动复制粘贴写入 Cookie！",
-                style=GENERAL)
+        img = qr_code.make_image()
+        img.save(self.temp)
+        self.console.print(
+            "请使用抖音 APP 扫描二维码登录，如果二维码无法识别，请尝试更换终端或者手动复制粘贴写入 Cookie！")
+        self._open_qrcode_image()
+
+    def _open_qrcode_image(self):
+        if (s := system()) == "Darwin":  # macOS
+            run(["open", self.temp])
+        elif s == "Windows":  # Windows
+            run(["start", self.temp], shell=True)
+        elif s == "Linux":  # Linux
+            run(["xdg-open", self.temp])
 
     def get_qr_code(self, version=23):
         self.verify_fp = VerifyFp.get_verify_fp()
@@ -223,7 +233,8 @@ class Register:
         ):
             return None
 
-    def run(self):
+    def run(self, temp: Path):
+        self.temp = str(temp.joinpath("扫码后请关闭该图片.png"))
         url, token = self.get_qr_code()
         if not url:
             return False

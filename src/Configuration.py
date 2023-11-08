@@ -145,6 +145,7 @@ class Parameter:
             **kwargs,
     ):
         self.main_path = main_path  # 项目根路径
+        self.temp = main_path.joinpath("./cache/temp")  # 缓存路径
         self.headers = {
             "User-Agent": user_agent,
         }

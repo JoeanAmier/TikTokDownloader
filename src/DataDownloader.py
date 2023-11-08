@@ -81,7 +81,7 @@ class Downloader:
         self.ffmpeg = params.ffmpeg
         self.__thread = ThreadPoolExecutor
         self.__pool = None
-        self.__temp = params.main_path.joinpath("./cache/temp")
+        self.__temp = params.temp
 
     @staticmethod
     def init_headers(headers: dict) -> tuple:

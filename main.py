@@ -216,7 +216,7 @@ class TikTokDownloader:
         self.parameter.update_cookie()
 
     def auto_cookie(self):
-        if cookie := self.register.run():
+        if cookie := self.register.run(self.parameter.temp):
             self.cookie.extract(cookie, False)
             self.check_settings()
             self.parameter.update_cookie()
