@@ -248,7 +248,7 @@ class Extractor:
         container.cache["short_id"] = self.safe_extract(data, "short_id")
         container.cache["unique_id"] = self.safe_extract(data, "unique_id")
         container.cache["signature"] = self.safe_extract(data, "signature")
-        # container.cache["user_age"] = self.safe_extract(data, "user_age")
+        container.cache["user_age"] = self.safe_extract(data, "user_age")
         self.extract_nickname_info(container, data, pass_)
 
     def extract_nickname_info(self,
@@ -402,7 +402,7 @@ class Extractor:
             data, "avatar_larger.url_list[0]")
         container.cache["city"] = self.safe_extract(data, "city")
         container.cache["country"] = self.safe_extract(data, "country")
-        # container.cache["district"] = self.safe_extract(data, "district")
+        container.cache["district"] = self.safe_extract(data, "district")
         container.cache["favoriting_count"] = str(
             self.safe_extract(data, "favoriting_count"))
         container.cache["follower_count"] = str(
@@ -415,7 +415,7 @@ class Extractor:
             self.safe_extract(data, "total_favorited"))
         container.cache["gender"] = {1: "男", 2: "女"}.get(
             self.safe_extract(data, "gender"), "未知")
-        # container.cache["ip_location"] = self.safe_extract(data, "ip_location")
+        container.cache["ip_location"] = self.safe_extract(data, "ip_location")
         container.cache["nickname"] = self.safe_extract(data, "nickname")
         container.cache["province"] = self.safe_extract(data, "province")
         container.cache["school_name"] = self.safe_extract(data, "school_name")
@@ -429,7 +429,7 @@ class Extractor:
             data, "cover_url[0].url_list[-1]")
         container.cache["short_id"] = self.safe_extract(data, "short_id")
         container.cache["aweme_count"] = str(
-            self.safe_extract(data, "aweme_count"))  # 数量不准确
+            self.safe_extract(data, "aweme_count"))
         container.cache["verify"] = self.safe_extract(
             data, "custom_verify", "无")
         container.cache["enterprise"] = self.safe_extract(
@@ -560,7 +560,7 @@ class Extractor:
             "word": self.safe_extract(data, "word"),
             "video_count": str(self.safe_extract(data, "video_count")),
             "event_time": self.format_date(data, "event_time"),
-            # "view_count": str(self.safe_extract(data, "view_count")),
+            "view_count": str(self.safe_extract(data, "view_count")),
             "hot_value": str(self.safe_extract(data, "hot_value")),
             "cover": self.safe_extract(data, "word_cover.url_list[-1]"),
         }
