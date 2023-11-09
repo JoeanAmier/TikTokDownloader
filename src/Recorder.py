@@ -50,23 +50,21 @@ class BaseLogger:
         name = self.check_name(name)
         return root, folder, name
 
-    @staticmethod
-    def check_root(root: str, default: Path) -> Path:
+    def check_root(self, root: str, default: Path) -> Path:
         if (r := Path(root)).is_dir():
             return r
         if root:
-            print(f"日志储存路径 {root} 无效，程序将使用项目根路径作为储存路径")
+            self.console.print(f"日志储存路径 {root} 无效，程序将使用项目根路径作为储存路径")
         return default
 
-    @staticmethod
-    def check_name(name: str) -> str:
+    def check_name(self, name: str) -> str:
         if not name:
             return "%Y-%m-%d %H.%M.%S"
         try:
             _ = strftime(name, localtime())
             return name
         except ValueError:
-            print(f"日志名称格式 {name} 无效，程序将使用默认时间格式：年-月-日 时.分.秒")
+            self.console.print(f"日志名称格式 {name} 无效，程序将使用默认时间格式：年-月-日 时.分.秒")
             return "%Y-%m-%d %H.%M.%S"
 
     @staticmethod

@@ -206,9 +206,18 @@ class Parameter:
         if (r := Path(root)).is_dir():
             self.logger.info(f"root 参数已设置为 {root}", False)
             return r
-        if root:
+        if r := self.check_root_again(r):
+            self.logger.info(f"root 参数已设置为 {r}", False)
+        else:
             self.logger.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
-        return self.main_path
+            return self.main_path
+
+    @staticmethod
+    def check_root_again(root: Path) -> bool | Path:
+        if root.resolve().parent.is_dir():
+            root.mkdir()
+            return root
+        return False
 
     def check_folder_name(self, folder_name: str) -> str:
         if folder_name := Cleaner.clean_name(folder_name, False):
