@@ -129,14 +129,15 @@ class Extractor:
         container.all_data.append(container.cache)
 
     def _extract_extra_info(self, item: dict, data: SimpleNamespace):
-        extra = {}
-        data = self.safe_extract(data, "anchor_info")
-        extra_info = self.safe_extract(data, "extra")
-        if t := self.safe_extract(data, "title_tag") == "购物":
-            self._extract_commodity_data(extra, extra_info)
-        elif t == "游戏":
-            self._extract_game_data(extra, extra_info)
-        item["extra"] = dumps(extra, ensure_ascii=False, indent=2)
+        if e := self.safe_extract(data, "anchor_info"):
+            extra = dumps(
+                e,
+                ensure_ascii=False,
+                indent=2,
+                default=lambda x: vars(x))
+        else:
+            extra = ""
+        item["extra"] = extra
 
     def _extract_commodity_data(self, item: dict, data: SimpleNamespace):
         pass
