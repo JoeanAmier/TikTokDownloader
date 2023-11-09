@@ -52,7 +52,7 @@ class BaseLogger:
 
     @staticmethod
     def check_root(root: str, default: Path) -> Path:
-        if root and (r := Path(root)).is_dir():
+        if (r := Path(root)).is_dir():
             return r
         if root:
             print(f"日志储存路径 {root} 无效，程序将使用项目根路径作为储存路径")
@@ -331,6 +331,7 @@ class RecordManager:
         "comment_count",
         "collect_count",
         "share_count",
+        "extra",
     )
     works_text = (
         "作品类型",
@@ -357,7 +358,9 @@ class RecordManager:
         "点赞数量",
         "评论数量",
         "收藏数量",
-        "分享数量")
+        "分享数量",
+        "额外信息"
+    )
     works_type = (
         "TEXT",
         "TEXT",
@@ -384,6 +387,7 @@ class RecordManager:
         "INTEGER",
         "INTEGER",
         "INTEGER",
+        "TEXT",
     )
     comment_keys = (
         "collection_time",

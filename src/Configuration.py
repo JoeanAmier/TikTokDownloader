@@ -203,7 +203,7 @@ class Parameter:
             return cookie
 
     def check_root(self, root: str) -> Path:
-        if root and (r := Path(root)).is_dir():
+        if (r := Path(root)).is_dir():
             self.logger.info(f"root 参数已设置为 {root}", False)
             return r
         if root:
@@ -316,7 +316,7 @@ class Parameter:
             self.logger.info(f"storage_format 参数已设置为 {storage_format}", False)
             return storage_format
         if not storage_format:
-            self.logger.info("storage_format 参数未设置，程序不会储存任何数据至文件")
+            self.logger.info("storage_format 参数未设置，程序不会储存任何数据至文件", False)
         else:
             self.logger.warning(
                 f"storage_format 参数 {storage_format} 设置错误，程序默认不会储存任何数据至文件")

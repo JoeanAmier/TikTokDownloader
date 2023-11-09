@@ -1,4 +1,5 @@
 from datetime import datetime
+from json import dumps
 from time import localtime
 from time import strftime
 from time import time
@@ -123,8 +124,25 @@ class Extractor:
         self.extract_music(container.cache, data)
         self.extract_statistics(container.cache, data)
         self.extract_tags(container.cache, data)
+        self._extract_extra_info(container.cache, data)
         self.extract_additional_info(container.cache, data)
         container.all_data.append(container.cache)
+
+    def _extract_extra_info(self, item: dict, data: SimpleNamespace):
+        extra = {}
+        data = self.safe_extract(data, "anchor_info")
+        extra_info = self.safe_extract(data, "extra")
+        if t := self.safe_extract(data, "title_tag") == "购物":
+            self._extract_commodity_data(extra, extra_info)
+        elif t == "游戏":
+            self._extract_game_data(extra, extra_info)
+        item["extra"] = dumps(extra, ensure_ascii=False, indent=2)
+
+    def _extract_commodity_data(self, item: dict, data: SimpleNamespace):
+        pass
+
+    def _extract_game_data(self, item: dict, data: SimpleNamespace):
+        pass
 
     def extract_description(self, data: SimpleNamespace) -> str:
         if len(desc := self.safe_extract(data, "desc")) < 107:
