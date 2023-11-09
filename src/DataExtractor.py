@@ -53,7 +53,7 @@ class Extractor:
     def safe_extract(
             data: SimpleNamespace,
             attribute_chain: str,
-            default: str | int = ""):
+            default: str | int | list = ""):
         attributes = attribute_chain.split(".")
         for attribute in attributes:
             if "[" in attribute:
@@ -166,6 +166,7 @@ class Extractor:
             self.extract_description(data)) or item["id"]
         item["create_time"] = self.format_date(data)
         item["create_timestamp"] = self.safe_extract(data, "create_time")
+        self._extract_text_extra(item, data)
         self.classifying_works(item, data)
 
     def classifying_works(self, item: dict, data: SimpleNamespace) -> None:
@@ -190,6 +191,7 @@ class Extractor:
         item["downloads"] = " ".join(
             self.safe_extract(
                 i, 'url_list[-1]') for i in images)
+        item["duration"] = "00:00:00"
         self.extract_cover(item, data)
 
     def extract_image_info_tiktok(
@@ -200,13 +202,40 @@ class Extractor:
         item["type"] = "图集"
         item["downloads"] = " ".join(self.safe_extract(
             i, "display_image.url_list[-1]") for i in images["images"])
+        item["duration"] = "00:00:00"
         self.extract_cover(item, data)
 
     def extract_video_info(self, item: dict, data: SimpleNamespace) -> None:
         item["type"] = "视频"
         item["downloads"] = self.safe_extract(
             data, "video.play_addr.url_list[-1]")
+        item["duration"] = self._time_conversion(
+            self.safe_extract(data, "video.duration", 0))
         self.extract_cover(item, data, True)
+
+    @staticmethod
+    def _time_conversion(time_: int) -> str:
+        return f"{
+        time_ //
+        1000 //
+        3600:0>2d}:{
+        time_ //
+        1000 %
+        3600 //
+        60:0>2d}:{
+        time_ //
+        1000 %
+        3600 %
+        60:0>2d}"
+
+    def _extract_text_extra(self, item: dict, data: SimpleNamespace):
+        text = [
+            i.hashtag_name
+            for i in self.safe_extract(
+                data, "text_extra", [SimpleNamespace(**{"hashtag_name": ""})]
+            )
+        ]
+        item["text_extra"] = ", ".join(text)
 
     def extract_cover(
             self,

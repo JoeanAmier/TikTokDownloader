@@ -57,8 +57,8 @@ def start_cookie_task(function):
 
 
 class TikTokDownloader:
-    PROJECT_ROOT = Path(__file__).resolve().parent
-    # PROJECT_ROOT = Path().resolve().parent
+    PROJECT_ROOT = Path(__file__).resolve().parent  # 源码运行
+    # PROJECT_ROOT = Path().resolve().parent  # 打包运行
     # print(PROJECT_ROOT)  # 调试使用
 
     VERSION = 5.0
