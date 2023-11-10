@@ -231,12 +231,12 @@ class Extractor:
 
     def _extract_text_extra(self, item: dict, data: SimpleNamespace):
         text = [
-            i.hashtag_name
+            self.safe_extract(i, "hashtag_name")
             for i in self.safe_extract(
-                data, "text_extra", [SimpleNamespace(**{"hashtag_name": ""})]
+                data, "text_extra", []
             )
         ]
-        item["text_extra"] = ", ".join(text)
+        item["text_extra"] = ", ".join(i for i in text if i)
 
     def extract_cover(
             self,

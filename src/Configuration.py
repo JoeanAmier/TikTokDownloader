@@ -179,6 +179,33 @@ class Parameter:
         self.owner_url = Extractor.generate_data_object(owner_url)
         self.default_mode = self.check_default_mode(default_mode)
         self.ffmpeg = FFMPEG().run() or None
+        self.check_rules = {
+            "accounts_urls": None,
+            "mix_urls": None,
+            "owner_url": None,
+            "root": self.check_root,
+            "folder_name": self.check_folder_name,
+            "name_format": self.check_name_format,
+            "date_format": self.check_date_format,
+            "split": self.check_split,
+            "folder_mode": self._check_bool,
+            "music": self._check_bool,
+            "storage_format": self.check_storage_format,
+            "cookie": self.check_cookie,
+            "dynamic_cover": self._check_bool,
+            "original_cover": self._check_bool,
+            "proxies": self.check_proxies,
+            "download": self._check_bool,
+            "max_size": self.check_max_size,
+            "chunk": self.check_chunk,
+            "max_retry": self.check_max_retry,
+            "max_pages": self.check_max_pages,
+            "default_mode": self.check_default_mode,
+        }
+
+    @staticmethod
+    def _check_bool(value: bool) -> bool:
+        return value if isinstance(value, bool) else False
 
     def check_cookie(self, cookie: dict | str) -> dict:
         if isinstance(cookie, dict):
@@ -344,6 +371,36 @@ class Parameter:
             self.headers["Cookie"] = Register.generate_cookie(self.cookie)
         elif self.cookie_cache:
             self.headers["Cookie"] = self.add_cookie(self.cookie_cache)
+
+    def _get_settings_data(self) -> dict:
+        return {
+            "accounts_urls": vars(self.accounts_urls),
+            "mix_urls": vars(self.mix_urls),
+            "owner_url": vars(self.owner_url),
+            "root": self.root,
+            "folder_name": self.folder_name,
+            "name_format": self.name_format,
+            "date_format": self.date_format,
+            "split": self.split,
+            "folder_mode": self.folder_mode,
+            "music": self.music,
+            "storage_format": self.storage_format,
+            "cookie": self.cookie_cache or self.cookie,
+            "dynamic_cover": self.dynamic,
+            "original_cover": self.original,
+            "proxies": self.proxies,
+            "download": self.download,
+            "max_size": self.max_size,
+            "chunk": self.chunk,
+            "max_retry": self.max_retry,
+            "max_pages": self.max_pages,
+            "default_mode": self.default_mode,
+        }
+
+    def _update_settings_data(self, key: str, value: str | int | bool):
+        if key in list(self.check_rules.keys())[3:]:
+            self.check_rules[key](value)
+        return self._get_settings_data()[key]
 
 
 class FFMPEG:
