@@ -176,7 +176,7 @@
 <td align="center">账号主页/合集作品链接, 批量下载时使用<br><strong>属于 accounts_urls、mix_urls 和 owner_url 子参数</strong></td>
 </tr>
 <tr>
-<td align="center">Tab</td>
+<td align="center">tab</td>
 <td align="center">str</td>
 <td align="center">批量下载类型, <code>post</code> 代表发布作品, <code>favorite</code> 代表喜欢作品<br>需要账号喜欢作品公开可见, <strong>属于 Accounts_Urls 子参数</strong></td>
 </tr>
@@ -218,7 +218,7 @@
 <tr>
 <td align="center">name_format</td>
 <td align="center">str</td>
-<td align="center">文件保存时的命名规则, 值之间使用空格分隔<br>默认值: 发布时间-账号昵称-描述<br><code>id</code>: 唯一值, <code>desc</code>: 描述, <code>create_time</code>: 发布时间<br><code>nickname</code>: 账号昵称, <code>mark</code>: 账号标识, <code>uid</code>: 账号UID</td>
+<td align="center">文件保存时的命名规则, 值之间使用空格分隔<br>默认值: 作品类型-发布时间-账号昵称-描述<br><code>id</code>: 唯一值, <code>desc</code>: 描述, <code>create_time</code>: 发布时间<br><code>nickname</code>: 账号昵称, <code>mark</code>: 账号标识, <code>uid</code>: 账号UID, <code>type</code>: 作品类型</td>
 </tr>
 <tr>
 <td align="center">date_format</td>

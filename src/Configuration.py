@@ -42,7 +42,7 @@ class Settings:
                           "url": "账号主页链接", },
             "root": "",
             "folder_name": "Download",
-            "name_format": "create_time nickname desc",
+            "name_format": "type create_time nickname desc",
             "date_format": "%Y-%m-%d %H.%M.%S",
             "split": "-",
             "folder_mode": False,
@@ -113,6 +113,7 @@ class Parameter:
         "nickname",
         "uid",
         "mark",
+        "type",
     )
     clean = Cleaner()
 
@@ -267,8 +268,8 @@ class Parameter:
             return name_keys
         else:
             self.logger.warning(
-                f"name_format 参数 {name_format} 设置错误，程序将使用默认值：创建时间 账号昵称 作品描述")
-            return ["create_time", "nickname", "desc"]
+                f"name_format 参数 {name_format} 设置错误，程序将使用默认值：作品类型 创建时间 账号昵称 作品描述")
+            return ["type", "create_time", "nickname", "desc"]
 
     def check_date_format(self, date_format: str) -> str:
         try:
