@@ -240,9 +240,10 @@ TikTokDownloader
 
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://github.com/Johnserf-Seed/TikTokDownload
+* https://github.com/ihmily/DouyinLiveRecorder
 * https://github.com/davidteather/TikTok-Api
 * https://requests.readthedocs.io/en/latest/
 * https://dormousehole.readthedocs.io/en/latest/
 * https://github.com/Textualize/rich
-* https://github.com/B1gM8c/X-Bogus
+* https://ffmpeg.org/ffmpeg-all.html
 * https://html5up.net/hyperspace

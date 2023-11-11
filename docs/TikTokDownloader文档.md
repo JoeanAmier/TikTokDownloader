@@ -292,6 +292,11 @@
 <td align="center">int</td>
 <td align="center">程序启动的默认模式</td>
 </tr>
+<tr>
+<td align="center">ffmpeg_path</td>
+<td align="center">str</td>
+<td align="center"><code>ffmpeg.exe</code> 路径，下载直播时使用，如果系统环境存在 <code>ffmpeg</code> 或者不想使用 <code>ffmpeg</code>，可以不设置该参数</td>
+</tr>
 </tbody></table>
 <h2>配置示例</h2>
 
@@ -348,7 +353,8 @@
   "chunk": 1048576,
   "max_retry": 10,
   "max_pages": 2,
-  "default_mode": 3
+  "default_mode": 3,
+  "ffmpeg_path": "C:\\TikTokDownloader\\ffmpeg.exe"
 }
 ```
 
@@ -474,9 +480,12 @@
 </ul>
 <p>下载说明：</p>
 <ul>
-<li>程序会询问用户是否下载直播视频，支持同时下载多个直播视频；如果使用本程序下载，需要保持程序运行直到直播结束。</li>
-<li>程序询问是否下载直播时，输入直播清晰度或者对应序号即可下载，例如：下载最高清晰度输入 <code>清晰度FULL_HD1</code> 或者 <code>1</code> 均可。</li>
-<li>下载的直播视频时长会显示为直播总时长，实际视频内容是从下载时间开始，后面部分的片段无法播放；复制推流地址并使用 FFmpeg 下载可以解决该问题，操作方法请自行查阅资料。</li>
+<li>程序会优先调用系统环境的 <code>ffmpeg</code>，其次调用 <code>ffmpeg_path</code> 参数指定的 <code>ffmpeg</code>，如果 <code>ffmpeg</code> 不可用，程序将会调用内置下载器。</li>
+<li>程序会询问用户是否下载直播视频，支持同时下载多个直播视频。</li>
+<li>程序调用 <code>ffmpeg</code> 下载直播时，关闭 TikTokDownloader 不会影响直播下载。</li>
+<li>程序调用内置下载器下载直播时，需要保持 TikTokDownloader 运行直到直播结束。</li>
+<li>程序询问是否下载直播时，输入直播清晰度或者对应序号即可下载，例如：下载最高清晰度输入 <code>FULL_HD1</code> 或者 <code>1</code> 均可。</li>
+<li>程序调用内置下载器下载的直播文件，视频时长会显示为直播总时长，实际视频内容从下载时间开始，靠后部分的片段无法播放。</li>
 <li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹</li>
 </ul>
 <h3>采集作品评论数据</h3>

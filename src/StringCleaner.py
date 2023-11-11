@@ -75,8 +75,11 @@ class Cleaner:
         if not text:
             return default
 
-        # 使用正则表达式匹配非中文、英文、数字和下划线字符，并替换为单个下划线
-        text = sub(r'[^\u4e00-\u9fa5a-zA-Z0-9_]+', '_', text)
+        # 使用正则表达式匹配非中文、英文、数字和常见符号，并替换为单个下划线
+        text = sub(
+            r'[^\u4e00-\u9fa5a-zA-Z0-9~@#%&\-_. ，。？！《》；：“”（）()]+',
+            '_',
+            text)
 
         # 去除连续的下划线
         text = sub(r'_+', '_', text)
@@ -84,8 +87,8 @@ class Cleaner:
         # 去除首尾的下划线
         text = text.strip('_')
 
-        return text or illegal_nickname() or default or str(
-            time())[:10] if inquire else text or default
+        return (text or illegal_nickname() or default or str(
+            time())[:10]) if inquire else (text or default)
 
     @staticmethod
     def clear_spaces(string: str):

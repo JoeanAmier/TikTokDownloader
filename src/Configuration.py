@@ -2,6 +2,9 @@ from json import dump
 from json import load
 from json.decoder import JSONDecodeError
 from pathlib import Path
+from platform import system
+from shutil import which
+from subprocess import Popen
 from time import localtime
 from time import strftime
 from types import SimpleNamespace
@@ -54,7 +57,8 @@ class Settings:
             "chunk": 512 * 1024,  # 每次从服务器接收的数据块大小
             "max_retry": 10,  # 重试最大次数
             "max_pages": 0,
-            "default_mode": 0
+            "default_mode": 0,
+            "ffmpeg_path": "",
         }  # 默认配置
 
     def __create(self) -> dict:
@@ -85,6 +89,7 @@ class Settings:
         if self.console.input(
                 f"[{ERROR}]配置文件 settings.json 缺少必要的参数，是否需要生成默认配置文件(YES/NO): [/{ERROR}]").upper() == "YES":
             self.__create()
+        self.console.print("本次运行将会使用各项参数默认值，程序功能可能无法正常使用！")
         return self.__default
 
     def update(self, settings: dict | SimpleNamespace):
@@ -140,6 +145,7 @@ class Parameter:
             max_pages: int,
             default_mode: int,
             owner_url: dict,
+            ffmpeg_path: str,
             blacklist,
             timeout=10,
             **kwargs,
@@ -178,7 +184,7 @@ class Parameter:
         self.mix_urls = Extractor.generate_data_object(mix_urls)
         self.owner_url = Extractor.generate_data_object(owner_url)
         self.default_mode = self.check_default_mode(default_mode)
-        self.ffmpeg = FFMPEG().run() or None
+        self.ffmpeg = f if (f := FFMPEG(Path(ffmpeg_path))).run() else None
         self.check_rules = {
             "accounts_urls": None,
             "mix_urls": None,
@@ -404,5 +410,67 @@ class Parameter:
 
 
 class FFMPEG:
-    def run(self) -> bool:
-        pass
+    def __init__(self, path: Path):
+        self.path = path
+        self.command, self.params = self._check_system_type()
+
+    @staticmethod
+    def _check_system_type():
+        if (s := system()) == "Darwin":  # macOS
+            return ["open", "-a", "Terminal"], {}
+        elif s == "Windows":  # Windows
+            return ["start", "cmd", "/k"], {"shell": True}
+        elif s == "Linux":  # Linux
+            return ["x-terminal-emulator"], {}
+
+    def run(self):
+        self.path = self._check_system_ffmpeg() or self._check_path_ffmpeg()
+        return self.path
+
+    def download(self, root, data: list[tuple], proxies, timeout, user_agent):
+        for u, p in data:
+            command = self._generate_command(
+                u, p, proxies, timeout, user_agent)
+            Popen(command, **self.params, cwd=str(root))
+
+    def _generate_command(
+            self,
+            url,
+            file,
+            proxies,
+            timeout,
+            user_agent) -> list:
+        command = self.command.copy()
+        command.extend([
+            self.path,
+            "-hide_banner",
+            "-log_level", "error",
+            "-protocol_whitelist", "rtmp,crypto,file,http,https,tcp,tls,udp,rtp",
+            "-fflags", "+discardcorrupt",
+            "-timeout", f"{timeout * 1000 * 1000}",
+            "-user_agent", user_agent,
+            "-i", url,
+            "-bufsize", "5120k",
+            "-map", "0",
+            "-c:v", "copy",
+            "-c:a", "copy",
+            "-sn", "-dn",
+            "-reconnect_delay_max", "15",
+            "-reconnect_streamed", "-reconnect_at_eof",
+            "-max_muxing_queue_size", "64",
+            "-correct_ts_overflow", "1",
+
+        ])
+        if proxies:
+            for insert_index, item in enumerate(
+                    ("-http_proxy", proxies), start=len(self.command) + 2):
+                command.insert(insert_index, item)
+        command.append(file)
+        return command
+
+    @staticmethod
+    def _check_system_ffmpeg():
+        return which("ffmpeg")
+
+    def _check_path_ffmpeg(self):
+        return which(self.path)

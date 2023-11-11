@@ -309,21 +309,22 @@ class TikTok:
             return works_data
         self.downloader.run(works_data, "works", tiktok=tiktok)
 
-    def _choice_live_quality(self, items: dict) -> str:
+    def _choice_live_quality(
+            self,
+            flv_items: dict,
+            m3u8_items: dict) -> tuple | None:
         try:
             choice = self.console.input(
                 "请选择下载清晰度(输入清晰度或者对应序号，直接回车代表不下载): ")
-            if u := items.get(choice):
-                return u
-            if not 0 <= (i := int(choice) - 1) < len(items):
+            if u := flv_items.get(choice):
+                return u, m3u8_items.get(choice)
+            if not 0 <= (i := int(choice) - 1) < len(flv_items):
                 raise ValueError
         except ValueError:
-            return ""
-        return list(items.values())[i]
+            return None
+        return list(flv_items.values())[i], list(m3u8_items.values())[i]
 
     def live_interactive(self):
-        self.console.print(
-            "如果设置了已登录的 Cookie，获取直播数据时将会导致正在观看的直播中断，刷新即可恢复！", style=WARNING)
         while url := self._inquire_input("直播"):
             params = self._generate_live_params(*self.links.live(url))
             if not params:
@@ -361,12 +362,16 @@ class TikTok:
         return [i for i in download_tasks if isinstance(i, tuple)]
 
     def show_live_stream_url(self, item: dict, tasks: list):
-        for i, (k, v) in enumerate(item["stream_url"].items(), start=1):
+        self.console.print("FLV 推流地址: ")
+        for i, (k, v) in enumerate(item["flv_pull_url"].items(), start=1):
+            self.console.print(i, k, v)
+        self.console.print("M3U8 推流地址: ")
+        for i, (k, v) in enumerate(item["hls_pull_url_map"].items(), start=1):
             self.console.print(i, k, v)
         tasks.append(
-            (item, u) if (
+            (item, *u) if (
                 u := self._choice_live_quality(
-                    item["stream_url"])) else u)
+                    item["flv_pull_url"], item["hls_pull_url_map"])) else u)
 
     @check_storage_format
     def comment_interactive(self):

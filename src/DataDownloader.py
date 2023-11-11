@@ -20,6 +20,8 @@ from src.Customizer import DESCRIPTION_LENGTH
 from src.Customizer import MAX_WORKERS
 from src.Customizer import (
     PROGRESS,
+    INFO,
+    WARNING,
 )
 from src.DataAcquirer import retry
 from src.StringCleaner import Cleaner
@@ -127,10 +129,19 @@ class Downloader:
         if not data or not self.download:
             return
         download_tasks = []
-        self.generate_live_tasks(data, download_tasks)
+        download_command = []
+        self.generate_live_tasks(data, download_tasks, download_command)
         if self.ffmpeg:
-            self.__download_live()
+            self.console.print(
+                "检测到 ffmpeg，程序将会调用 ffmpeg 下载直播，关闭 TikTokDownloader 不会中断下载！",
+                style=INFO,
+            )
+            self.__download_live(download_command)
         else:
+            self.console.print(
+                "未检测到 ffmpeg，程序将会调用内置下载器下载直播，您需要保持 TikTokDownloader 运行直到直播结束！",
+                style=WARNING,
+            )
             self.downloader_chart(
                 download_tasks,
                 SimpleNamespace(),
@@ -139,8 +150,9 @@ class Downloader:
                 unknown_size=True,
                 headers=self.black_headers)
 
-    def generate_live_tasks(self, data: list[tuple[dict, str]], tasks: list):
-        for i, u in data:
+    def generate_live_tasks(
+            self, data: list[tuple[dict, str]], tasks: list, commands: list):
+        for i, f, m in data:
             name = Cleaner.clean_name(
                 replace_emoji(
                     f'{
@@ -148,19 +160,30 @@ class Downloader:
                     self.split}{
                     i["nickname"]}' f'{
                     self.split}{
-                    datetime.now().strftime("%Y-%m-%d %H.%M.%S")}.flv'))
+                    datetime.now().strftime("%Y-%m-%d %H.%M.%S")}.flv'),
+                inquire=False)
             temp_root, actual_root = self.deal_folder_path(
                 self.storage_folder(folder_name="Live"), name, True)
             tasks.append((
-                u,
+                f,
                 temp_root,
                 actual_root,
                 f'直播 {i["title"]}{self.split}{i["nickname"]}',
                 "0" * 19,
             ))
+            commands.append((
+                m,
+                str(actual_root.with_name(f"{actual_root.stem}.mp4")),
+            ))
 
-    def __download_live(self):
-        pass
+    def __download_live(self, commands: list):
+        self.ffmpeg.download(
+            self.root,
+            commands,
+            self.proxies["https"],
+            self.timeout,
+            self.black_headers["User-Agent"],
+        )
 
     def batch_processing(
             self,
@@ -454,7 +477,7 @@ class Downloader:
     def generate_works_name(self, data: dict) -> str:
         return Cleaner.clean_name(replace_emoji(
             self.split.join(
-                data[i] for i in self.name_format)))
+                data[i] for i in self.name_format)), inquire=False)
 
     def create_works_folder(
             self,
@@ -462,7 +485,7 @@ class Downloader:
             name: str,
             pass_=False) -> Path:
         if pass_:
-            return root.joinpath(name)
+            return root
         return root.joinpath(name) if self.folder_mode else root
 
     @staticmethod

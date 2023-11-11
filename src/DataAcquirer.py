@@ -30,6 +30,7 @@ __all__ = [
     "User",
     "Hot",
     "Search",
+    "Collection",
 ]
 
 
