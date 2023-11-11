@@ -146,11 +146,13 @@ class Extractor:
         pass
 
     def extract_description(self, data: SimpleNamespace) -> str:
-        if len(desc := self.safe_extract(data, "desc")) < 107:
-            return desc
-        long_desc = self.safe_extract(data, "share_info.share_link_desc")
-        return long_desc.split(
-            "  ", 1)[-1].split("  %s", 1)[0].replace("# ", "#")
+        # 2023/11/11: 抖音不再折叠过长的作品描述
+        return self.safe_extract(data, "desc")
+        # if len(desc := self.safe_extract(data, "desc")) < 107:
+        #     return desc
+        # long_desc = self.safe_extract(data, "share_info.share_link_desc")
+        # return long_desc.split(
+        #     "  ", 1)[-1].split("  %s", 1)[0].replace("# ", "#")
 
     def clean_description(self, desc: str) -> str:
         return self.clean.clear_spaces(self.clean.filter(desc))
