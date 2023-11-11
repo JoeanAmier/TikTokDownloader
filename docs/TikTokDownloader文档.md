@@ -95,7 +95,7 @@
 </tbody></table>
 <ul>
 <li>账号/作品/直播完整链接：使用浏览器打开抖音或 TikTok 链接时，地址栏所显示的 URL 地址。</li>
-<li>分享短链接：点击 APP 或网页版的分享按钮得到的 URL 地址，抖音平台以 <code>https://v.</code> 开头，掺杂中文和其他字符；TikTok
+<li>分享链接：点击 APP 或网页版的分享按钮得到的 URL 地址，抖音平台以 <code>https://v.</code> 开头，掺杂中文和其他字符；TikTok
 平台以 <code>https://vm</code> 开头，不掺杂其他字符；使用时不需要手动去除中文和其他字符，程序会自动提取 URL 链接。</li>
 </ul>
 <h2>数据储存</h2>
@@ -104,6 +104,9 @@
 <li><code>采集作品评论数据</code>、<code>批量采集账号数据</code>、<code>采集搜索结果数据</code>、<code>采集抖音热榜数据</code> 模式必须设置 <code>storage_format</code> 参数才能正常使用。</li>
 <li>程序所有数据均储存至 <code>root</code> 参数路径下的 <code>Data</code> 文件夹。</li>
 </ul>
+<h2>直播下载</h2>
+<p><code>获取直播推流地址</code> 功能支持调用 <code>ffmpeg</code> 下载直播，程序会优先调用系统环境的 <code>ffmpeg</code>，其次调用 <code>ffmpeg_path</code> 参数指定的 <code>ffmpeg</code>，如果 <code>ffmpeg</code> 不可用，程序将会调用内置下载器。</p>
+<p><code>ffmpeg.exe</code> 可前往 <a href="http://ffmpeg.org/download.html">官方网站</a> 获取。</p>
 <h2>功能简介</h2>
 <table>
 <thead>
@@ -437,6 +440,19 @@
 <p>代表运行程序自动进入 <code>终端命令行模式</code>，其他示例：<code>4</code> 代表 <code>Web API 接口模式</code>，<code>5</code> 代表 <code>Web UI 交互模式</code>，<code>6</code> 代表 <code>服务器部署模式</code>。</p>
 <h1>高级配置</h1>
 <p>如果想要进一步修改程序功能，可以编辑 <code>src/Customizer.py</code> 文件，按照注释指引和实际需求进行自定义修改。</p>
+<b>部分可自定义设置的功能：</b>
+<ul>
+<li>设置作品文件下载的最大线程数量</li>
+<li>设置文件名称的作品描述长度限制</li>
+<li>设置非法字符替换规则</li>
+<li>设置服务器模式主机及端口</li>
+<li>设置 Cookie 更新间隔</li>
+<li>设置彩色交互提示颜色</li>
+<li>设置请求数据时间间隔</li>
+<li>设置获取数据失败时的处理策略</li>
+<li>设置作品筛选规则</li>
+<li>设置分批获取数据策略</li>
+</ul>
 <h1>功能介绍</h1>
 <h2>复制粘贴写入 Cookie</h2>
 <p>从浏览器复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a>
@@ -480,7 +496,6 @@
 </ul>
 <p>下载说明：</p>
 <ul>
-<li>程序会优先调用系统环境的 <code>ffmpeg</code>，其次调用 <code>ffmpeg_path</code> 参数指定的 <code>ffmpeg</code>，如果 <code>ffmpeg</code> 不可用，程序将会调用内置下载器。</li>
 <li>程序会询问用户是否下载直播视频，支持同时下载多个直播视频。</li>
 <li>程序调用 <code>ffmpeg</code> 下载直播时，关闭 TikTokDownloader 不会影响直播下载。</li>
 <li>程序调用内置下载器下载直播时，需要保持 TikTokDownloader 运行直到直播结束。</li>
@@ -529,33 +544,38 @@
 <h4>输入格式</h4>
 <p><strong>格式：</strong><code>关键词</code> <code>类型</code> <code>页数</code> <code>排序规则</code> <code>时间筛选</code></p>
 <ul>
-<li>搜索类型：<code>综合搜索</code> <code>视频搜索</code> <code>用户搜索</code></li>
+<li>搜索类型：<code>综合搜索</code> <code>视频搜索</code> <code>用户搜索</code> <code>直播搜索</code></li>
 <li>排序依据：<code>综合排序</code> <code>最新发布</code> <code>最多点赞</code></li>
-<li>发布时间：<code>0</code>：不限；<code>1</code>：一天内；<code>7</code>：一周内；<code>182</code>：半年内</li>
+<li>时间筛选：<code>0</code>：不限；<code>1</code>：一天内；<code>7</code>：一周内；<code>182</code>：半年内</li>
 </ul>
 <p>参数之间使用空格分隔，<code>类型</code> 和 <code>排序规则</code> 支持输入中文或者对应索引，<code>页数</code> 和 <code>时间筛选</code> 仅支持输入整数。</p>
-<p>程序采集的抖音搜索结果会储存至文件，储存名称格式：<code>搜索类型_排序依据_发布时间_关键词_时间戳</code>；不支持直接下载搜索结果作品；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
+<p>程序采集的抖音搜索结果会储存至文件，储存名称格式：<code>搜索时间_搜索类型_关键词_排序依据_时间筛选</code>；不支持直接下载搜索结果作品；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
+<p><code>用户搜索</code> 和 <code>直播搜索</code> 不需要输入排序依据和时间筛选（输入也不会报错）</p>
 <h4>输入示例</h4>
 <p><strong>输入：</strong><code>猫咪</code></p>
-<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>综合搜索</code>；页数：<code>1</code>；排序依据：<code>综合排序</code>；发布时间：<code>不限</code></p>
+<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>综合搜索</code>；页数：<code>1</code>；排序依据：<code>综合排序</code>；时间筛选：<code>不限</code></p>
 <hr>
 <p><strong>输入：</strong><code>猫咪 1 2 1</code> 等效于 <code>猫咪 视频搜索 2 最新发布</code></p>
-<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>视频搜索</code>；页数：<code>2</code>；排序依据：<code>最新发布</code>；发布时间：<code>不限</code></p>
+<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>视频搜索</code>；页数：<code>2</code>；排序依据：<code>最新发布</code>；时间筛选：<code>不限</code></p>
 <hr>
 <p><strong>输入：</strong><code>猫咪 0 10 0 7</code> 等效于 <code>猫咪 综合搜索 10 综合排序 7</code></p>
-<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>综合搜索</code>；页数：<code>10</code>；排序依据：<code>综合排序</code>；发布时间：<code>一周内</code></p>
+<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>综合搜索</code>；页数：<code>10</code>；排序依据：<code>综合排序</code>；时间筛选：<code>一周内</code></p>
 <hr>
 <p><strong>输入：</strong><code>猫咪 1 5 2 182</code> 等效于 <code>猫咪 视频搜索 5 最多点赞 182</code></p>
-<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>视频搜索</code>；页数：<code>5</code>；排序依据：<code>最多点赞</code>；发布时间：<code>半年内</code></p>
+<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>视频搜索</code>；页数：<code>5</code>；排序依据：<code>最多点赞</code>；时间筛选：<code>半年内</code></p>
 <hr>
 <p><strong>输入：</strong><code>猫咪 2 2</code> 等效于 <code>猫咪 用户搜索 2</code></p>
 <p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>用户搜索</code>；页数：<code>2</code></p>
+<hr>
+<p><strong>输入：</strong><code>猫咪 3 2</code> 等效于 <code>猫咪 直播搜索 2</code></p>
+<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>直播搜索</code>；页数：<code>2</code></p>
 <h3>采集抖音热榜数据</h3>
-<p>采集 <code>热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
-<p>储存名称格式：<code>HOT_时间戳_热榜名称</code></p>
+<p>采集 <code>抖音热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
+<p>储存名称格式：<code>采集时间_热榜名称</code></p>
 <h3>批量下载收藏作品</h3>
-<p>需要在配置文件写入已登录的 Cookie；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
-<p>作品保存文件夹和数据储存文件名称为: <code>收藏夹_Owner</code></p>
+<p>需要在配置文件写入已登录的 Cookie，并在 <code>owner_url</code> 参数填入对应的账号主页链接和账号标识（可选）；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
+<p>如果未设置 <code>owner_url</code> 参数，程序会使用临时字符串作为账号昵称和 UID。</p>
+<p>账号文件夹格式为 <code>UID123456789_mark_收藏作品</code> 或者 <code>UID123456789_账号昵称_收藏作品</code></p>
 <h2>Web API 接口模式</h2>
 <p>启动服务器，提供 API 调用服务；支持局域网远程访问，可以部署至私有服务器，不可直接部署至公开服务器。</p>
 <p><strong>该模式暂不支持并发请求！仅以 API 形式返回数据提供调用！</strong></p>

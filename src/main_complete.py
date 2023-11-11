@@ -368,10 +368,14 @@ class TikTok:
         self.console.print("M3U8 推流地址: ")
         for i, (k, v) in enumerate(item["hls_pull_url_map"].items(), start=1):
             self.console.print(i, k, v)
-        tasks.append(
-            (item, *u) if (
-                u := self._choice_live_quality(
-                    item["flv_pull_url"], item["hls_pull_url_map"])) else u)
+        if self.parameter.download:
+            tasks.append(
+                (item,
+                 *
+                 u) if (
+                    u := self._choice_live_quality(
+                        item["flv_pull_url"],
+                        item["hls_pull_url_map"])) else u)
 
     @check_storage_format
     def comment_interactive(self):
