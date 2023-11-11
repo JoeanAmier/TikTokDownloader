@@ -173,12 +173,11 @@ class Downloader:
             ))
             commands.append((
                 m,
-                str(actual_root.with_name(f"{actual_root.stem}.mp4")),
+                str(actual_root.with_name(f"{actual_root.stem}.mp4").resolve()),
             ))
 
     def __download_live(self, commands: list):
         self.ffmpeg.download(
-            self.root,
             commands,
             self.proxies["https"],
             self.timeout,

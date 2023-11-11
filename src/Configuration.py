@@ -412,26 +412,26 @@ class Parameter:
 class FFMPEG:
     def __init__(self, path: Path):
         self.path = path
-        self.command, self.params = self._check_system_type()
+        self.command, self.shell = self._check_system_type()
 
     @staticmethod
     def _check_system_type():
         if (s := system()) == "Darwin":  # macOS
-            return ["open", "-a", "Terminal"], {}
+            return ['open', '-a', 'Terminal'], False
         elif s == "Windows":  # Windows
-            return ["start", "cmd", "/k"], {"shell": True}
+            return ['start', 'cmd', '/k'], True
         elif s == "Linux":  # Linux
-            return ["x-terminal-emulator"], {}
+            return ['x-terminal-emulator'], False
 
     def run(self):
         self.path = self._check_system_ffmpeg() or self._check_path_ffmpeg()
         return self.path
 
-    def download(self, root, data: list[tuple], proxies, timeout, user_agent):
+    def download(self, data: list[tuple], proxies, timeout, user_agent):
         for u, p in data:
             command = self._generate_command(
                 u, p, proxies, timeout, user_agent)
-            Popen(command, **self.params, cwd=str(root))
+            Popen(command, shell=self.shell)
 
     def _generate_command(
             self,
@@ -459,13 +459,13 @@ class FFMPEG:
             "-reconnect_streamed", "-reconnect_at_eof",
             "-max_muxing_queue_size", "64",
             "-correct_ts_overflow", "1",
-
         ])
         if proxies:
             for insert_index, item in enumerate(
                     ("-http_proxy", proxies), start=len(self.command) + 2):
                 command.insert(insert_index, item)
         command.append(file)
+        # print(command)  # 调试使用
         return command
 
     @staticmethod
