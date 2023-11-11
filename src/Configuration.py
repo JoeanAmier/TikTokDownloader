@@ -439,7 +439,7 @@ class FFMPEG:
             file,
             proxies,
             timeout,
-            user_agent) -> list:
+            user_agent) -> str:
         command = self.command.copy()
         command.extend([
             self.path,
@@ -448,8 +448,8 @@ class FFMPEG:
             "-protocol_whitelist", "rtmp,crypto,file,http,https,tcp,tls,udp,rtp",
             "-fflags", "+discardcorrupt",
             "-timeout", f"{timeout * 1000 * 1000}",
-            "-user_agent", user_agent,
-            "-i", url,
+            "-user_agent", f'"{user_agent}"',
+            "-i", f'"{url}"',
             "-bufsize", "5120k",
             "-map", "0",
             "-c:v", "copy",
@@ -464,9 +464,9 @@ class FFMPEG:
             for insert_index, item in enumerate(
                     ("-http_proxy", proxies), start=len(self.command) + 2):
                 command.insert(insert_index, item)
-        command.append(file)
-        # print(command)  # 调试使用
-        return command
+        command.append(f'"{file}"')
+        # print(" ".join(command))  # 调试使用
+        return " ".join(command)
 
     @staticmethod
     def _check_system_ffmpeg():
