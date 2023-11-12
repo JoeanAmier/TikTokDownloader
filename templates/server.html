@@ -22,25 +22,25 @@
     <section id="main" class="wrapper">
         <div class="inner">
             <h1 class="major">抖音 / TikTok 作品下载地址提取</h1>
-            <form id="solo_form" onsubmit="return false">
+            <form id="single_form" onsubmit="return false">
                 <div class="fields">
                     <div class="field half">
-                        <label for="solo_url">请输入抖音 / TikTok 作品链接：</label>
+                        <label for="single_url">请输入抖音 / TikTok 作品链接：</label>
                         <label>
-                            <input type="text" id="solo_url"/>
+                            <input type="text" id="single_url"/>
                         </label>
                         <br>
                         <ul class="actions">
                             <li><input type="button" class="button submit" value="读取剪贴板并粘贴至输入框"
-                                       onclick="solo_input()">
+                                       onclick="single_input()">
                             </li>
                         </ul>
                         <ul class="actions">
-                            <li><input type="button" class="button submit" value="提取下载链接"
-                                       onclick="solo_post()"></li>
+                            <li><input type="button" class="button submit" value="获取下载链接"
+                                       onclick="single_post()"></li>
                         </ul>
-                        <label for="solo_state">运行结果：</label>
-                        <input id="solo_state" type="text" readonly>
+                        <label for="single_state">运行结果：</label>
+                        <input id="single_state" type="text" readonly>
                         <br>
                         <ul class="actions">
                             <li><input type="button" class="button submit" value="下载视频"
@@ -63,14 +63,14 @@
                                        onclick="get_images()" id="images_url">
                             </li>
                         </ul>
-                        <div id="solo_url_text" style="display: none;">
+                        <div id="single_url_text" style="display: none;">
                         </div>
                     </div>
                     <div class="field half">
                         <label>作品预览：</label>
                         <span class="image fit" id="preview"><img
-                                id="solo_preview"
-                                src="static/images/blank.png"
+                                id="single_preview"
+                                src="{{ preview }}"
                                 alt="预览图"/></span>
                     </div>
                 </div>

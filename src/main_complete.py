@@ -298,19 +298,17 @@ class TikTok:
             ids: list[str],
             record,
             api=False,
-            source=False,
-            download=True, ):
+            source=False, ):
         works_data = [Works(self.parameter, i, tiktok).run() for i in ids]
         if not any(works_data):
             return False
         if source:
             return works_data
         works_data = self.extractor.run(works_data, record)
-        if api or not download:
+        if api:
             return works_data
         self.downloader.run(works_data, "works", tiktok=tiktok)
-        if download:
-            return self._get_preview_image(works_data[0])
+        return self._get_preview_image(works_data[0])
 
     @staticmethod
     def _get_preview_image(data: dict) -> str:

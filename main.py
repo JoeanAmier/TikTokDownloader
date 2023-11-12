@@ -154,12 +154,14 @@ class TikTokDownloader:
                 self.console.print(
                     f"检测到新版本: {tag}", style=WARNING)
                 self.console.print(self.RELEASES)
-            if tag == self.VERSION and not self.STABLE:
+            elif tag == self.VERSION and not self.STABLE:
                 self.console.print(
-                    "当前版本为测试版, 可更新至稳定版", style=WARNING)
+                    "当前版本为开发版, 可更新至正式版", style=WARNING)
                 self.console.print(self.RELEASES)
+            elif not self.STABLE:
+                self.console.print("当前已是最新开发版", style=WARNING)
             else:
-                self.console.print("当前已是最新版本", style=INFO)
+                self.console.print("当前已是最新正式版", style=INFO)
         except (exceptions.ReadTimeout, exceptions.ConnectionError):
             self.console.print("检测新版本失败", style=ERROR)
         self.console.print()
