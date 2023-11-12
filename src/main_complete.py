@@ -95,7 +95,7 @@ class TikTok:
         3: "search_live"
     }
 
-    def __init__(self, parameter, settings):
+    def __init__(self, parameter):
         self.parameter = parameter
         self.console = parameter.console
         self.logger = parameter.logger
@@ -104,7 +104,7 @@ class TikTok:
         self.extractor = Extractor(parameter)
         self.storage = bool(parameter.storage_format)
         self.record = RecordManager()
-        self.settings = settings
+        self.settings = parameter.settings
         self.accounts = parameter.accounts_urls
         self.mix = parameter.mix_urls
         self.owner = parameter.owner_url

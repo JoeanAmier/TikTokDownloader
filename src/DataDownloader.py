@@ -71,8 +71,8 @@ class Downloader:
         self.split = params.split
         self.folder_mode = params.folder_mode
         self.music = params.music
-        self.dynamic = params.dynamic
-        self.original = params.original
+        self.dynamic = params.dynamic_cover
+        self.original = params.original_cover
         self.proxies = params.proxies
         self.download = params.download
         self.max_size = params.max_size

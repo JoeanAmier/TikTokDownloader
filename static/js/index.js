@@ -1,10 +1,10 @@
-function solo_input() {
+function single_input() {
     // 点击按钮时获取剪贴板文本并写入输入框
     // 使用 Clipboard API 获取剪贴板文本
     navigator.clipboard.readText()
         .then(function (text) {
             // 将剪贴板文本写入输入框
-            $('#solo_url').val(text);
+            $('#single_url').val(text);
         })
         .catch(function (error) {
             console.error('读取剪贴板失败: ', error);
@@ -25,57 +25,62 @@ function get_parameters() {
     // 获取当前参数设置
     return {
         root: $("#root").val(),
-        folder: $("#folder").val(),
-        name: $("#name").val(),
-        time: $("#time").val(),
+        folder_name: $("#folder_name").val(),
+        name_format: $("#name_format").val(),
+        date_format: $("#date_format").val(),
         split: $("#split").val(),
         music: $("#music:checked").val(),
-        save: $("#save").val(),
-        dynamic: $("#dynamic:checked").val(),
-        original: $("#original:checked").val(),
+        download: $("#download:checked").val(),
+        folder_mode: $("#folder_mode:checked").val(),
+        storage_format: $("#storage_format").val(),
+        default_mode: $("#default_mode").val(),
+        dynamic_cover: $("#dynamic_cover:checked").val(),
+        original_cover: $("#original_cover:checked").val(),
         proxies: $("#proxies").val(),
-        log: $("#log:checked").val(),
         chunk: $("#chunk").val(),
         max_size: $("#max_size").val(),
+        max_retry: $("#max_retry").val(),
+        max_pages: $("#max_pages").val(),
         cookie: $("#cookie").val(),
+        ffmpeg_path: $("#ffmpeg_path").val(),
     }
 }
 
 function update_parameters() {
     $.ajax({
         type: "POST",
-        url: "/save/",
+        url: "/update/",
         contentType: "application/json",
         data: JSON.stringify(get_parameters()),
         success: function () {
             window.location.href = "/";
         },
         error: function () {
-            alert("保存配置文件失败！");
+            alert("保存配置失败！");
         }
     });
 }
 
 
-function solo_post(download = false) {
+function single_post(download = false) {
     const data = {
-        url: $("#solo_url").val(), download: download
+        url: $("#single_url").val(), download: download
     };
     $.ajax({
-        type: "POST", url: "/solo/", contentType: "application/json",  // 设置请求的 Content-Type 为 JSON
+        type: "POST", url: "/single/", contentType: "application/json",  // 设置请求的 Content-Type 为 JSON
         data: JSON.stringify(data),  // 将 JSON 对象转为字符串
         success: function (result) {
-            $("#solo_state").val(result["text"]);
+            $("#single_state").val(result["text"]);
             $("#download_url").data("link", result["download"]);
             $("#music_url").data("link", result["music"]);
             $("#origin_url").data("link", result["origin"]);
             $("#dynamic_url").data("link", result["dynamic"]);
-            $("#solo_preview").attr("src", result["preview"]);
+            $("#single_preview").attr("src", result["preview"]);
             if (result["author"] !== null) {
-                $('#solo_url').val("");
+                $('#single_url').val("");
             }
         }, error: function () {
-            alert("请求失败！");
+            alert("获取数据失败！");
         }
     });
 }
@@ -90,7 +95,7 @@ function get_download() {
 
 function get_images() {
     let link = $("#download_url").data("link");
-    let $text = $("#solo_url_text");
+    let $text = $("#single_url_text");
     $text.empty();
     if (Array.isArray(link)) {
         link.forEach(function (element, index) {
@@ -148,7 +153,7 @@ function live_post() {
             }
             $("#live_preview").attr("src", result["preview"]);
         }, error: function () {
-            alert("请求失败！");
+            alert("获取数据失败！");
         }
     });
 }

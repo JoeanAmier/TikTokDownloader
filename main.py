@@ -189,7 +189,7 @@ class TikTokDownloader:
     @start_cookie_task
     def complete(self):
         """终端命令行模式"""
-        example = TikTok(self.parameter, self.settings)
+        example = TikTok(self.parameter)
         register(self.blacklist.close)
         example.run()
         self.running = example.running
@@ -199,7 +199,7 @@ class TikTokDownloader:
         """
         服务器模式
         """
-        master = server(self.parameter, self.settings)
+        master = server(self.parameter)
         app = master.run_server(Flask(__name__))
         register(self.blacklist.close)
         app.run(host=SERVER_HOST, port=SERVER_PORT, debug=not self.STABLE)
@@ -247,6 +247,8 @@ class TikTokDownloader:
 
     def check_settings(self):
         self.parameter = Parameter(
+            self.settings,
+            self.cookie,
             main_path=self.PROJECT_ROOT,
             user_agent=self.user_agent,
             ua_code=self.ua_code,

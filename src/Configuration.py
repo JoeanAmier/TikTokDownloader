@@ -119,6 +119,8 @@ class Parameter:
 
     def __init__(
             self,
+            settings,
+            cookie_object,
             main_path: Path,
             user_agent: str,
             ua_code: tuple,
@@ -151,6 +153,8 @@ class Parameter:
             timeout=10,
             **kwargs,
     ):
+        self.settings = settings
+        self.cookie_object = cookie_object
         self.main_path = main_path  # 项目根路径
         self.temp = main_path.joinpath("./cache/temp")  # 缓存路径
         self.headers = {
@@ -171,8 +175,8 @@ class Parameter:
         self.music = music
         self.folder_mode = folder_mode
         self.storage_format = self.check_storage_format(storage_format)
-        self.dynamic = dynamic_cover
-        self.original = original_cover
+        self.dynamic_cover = dynamic_cover
+        self.original_cover = original_cover
         self.proxies = self.check_proxies(proxies)
         self.download = download
         self.max_size = self.check_max_size(max_size)
@@ -185,7 +189,9 @@ class Parameter:
         self.mix_urls = Extractor.generate_data_object(mix_urls)
         self.owner_url = Extractor.generate_data_object(owner_url)
         self.default_mode = self.check_default_mode(default_mode)
-        self.ffmpeg = f if (f := FFMPEG(Path(ffmpeg_path))).run() else None
+        self.preview = "static/images/blank.png"
+        self.ffmpeg_path = ffmpeg_path
+        self.ffmpeg = self._check_ffmpeg_path(self.ffmpeg_path)
         self.check_rules = {
             "accounts_urls": None,
             "mix_urls": None,
@@ -198,7 +204,6 @@ class Parameter:
             "folder_mode": self._check_bool,
             "music": self._check_bool,
             "storage_format": self.check_storage_format,
-            "cookie": self.check_cookie,
             "dynamic_cover": self._check_bool,
             "original_cover": self._check_bool,
             "proxies": self.check_proxies,
@@ -208,6 +213,7 @@ class Parameter:
             "max_retry": self.check_max_retry,
             "max_pages": self.check_max_pages,
             "default_mode": self.check_default_mode,
+            "ffmpeg_path": self._check_ffmpeg_path,
         }
 
     @staticmethod
@@ -379,35 +385,52 @@ class Parameter:
         elif self.cookie_cache:
             self.headers["Cookie"] = self.add_cookie(self.cookie_cache)
 
-    def _get_settings_data(self) -> dict:
+    @staticmethod
+    def _check_ffmpeg_path(ffmpeg_path: str):
+        return f if (f := FFMPEG(Path(ffmpeg_path))).run() else None
+
+    def get_settings_data(self) -> dict:
         return {
-            "accounts_urls": vars(self.accounts_urls),
-            "mix_urls": vars(self.mix_urls),
+            "accounts_urls": [vars(i) for i in self.accounts_urls],
+            "mix_urls": [vars(i) for i in self.mix_urls],
             "owner_url": vars(self.owner_url),
-            "root": self.root,
+            "root": str(self.root.resolve()),
             "folder_name": self.folder_name,
-            "name_format": self.name_format,
+            "name_format": " ".join(self.name_format),
             "date_format": self.date_format,
             "split": self.split,
             "folder_mode": self.folder_mode,
             "music": self.music,
             "storage_format": self.storage_format,
             "cookie": self.cookie_cache or self.cookie,
-            "dynamic_cover": self.dynamic,
-            "original_cover": self.original,
-            "proxies": self.proxies,
+            "dynamic_cover": self.dynamic_cover,
+            "original_cover": self.original_cover,
+            "proxies": self.proxies["https"] or "",
             "download": self.download,
             "max_size": self.max_size,
             "chunk": self.chunk,
             "max_retry": self.max_retry,
             "max_pages": self.max_pages,
-            "default_mode": self.default_mode,
+            "default_mode": int(self.default_mode),
+            "ffmpeg_path": self.ffmpeg.path,
+            "ffmpeg": bool(self.ffmpeg),
         }
 
-    def _update_settings_data(self, key: str, value: str | int | bool):
-        if key in list(self.check_rules.keys())[3:]:
-            self.check_rules[key](value)
-        return self._get_settings_data()[key]
+    def update_settings_data(self, data: dict, ):
+        for key, value in data.items():
+            if key in list(self.check_rules.keys())[3:]:
+                # print(key, hasattr(self, key))  # 调试使用
+                setattr(self, key, self.check_rules[key](value))
+        if c := data["cookie"]:
+            setattr(
+                self,
+                "cookie",
+                self.cookie_object.extract(
+                    c,
+                    return_=True))
+        self.settings.update(data := self.get_settings_data())
+        # print(data)  # 调试使用
+        return data
 
 
 class FFMPEG:

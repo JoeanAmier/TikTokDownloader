@@ -33,7 +33,7 @@ class Cookie:
             return
         self.extract(cookie)
 
-    def extract(self, cookie: str, clean=True):
+    def extract(self, cookie: str, clean=True, return_=False):
         if clean:
             keys = {
                 "passport_csrf_token": None,
@@ -60,6 +60,8 @@ class Cookie:
             self.check_key(keys)
         else:
             keys = cookie
+        if return_:
+            return keys
         self.write(keys)
         self.console.print("写入 Cookie 成功！", style=GENERAL)
 

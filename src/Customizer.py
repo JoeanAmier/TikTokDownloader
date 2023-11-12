@@ -21,6 +21,7 @@ __all__ = [
     "PROGRESS",
     "rest",
     "COOKIE_UPDATE_INTERVAL",
+    "verify_token",
 ]
 
 # 线程池最大线程数量，多线程下载文件时使用
@@ -118,3 +119,8 @@ def rest(count: int, screen):
     #     sleep(rest_time)
     # 默认不启用
     pass
+
+
+def verify_token(token: str) -> bool:
+    """Web API 接口模式 和 服务器部署模式 设置 token 参数验证"""
+    return True
