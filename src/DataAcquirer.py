@@ -154,8 +154,9 @@ class Share:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome"
                       "/116.0.0.0 Safari/537.36", }
 
-    def __init__(self, proxies: dict, max_retry=10):
+    def __init__(self, console, proxies: dict, max_retry=10):
         self.max_retry = max_retry
+        self.console = console
         self.proxies = proxies
 
     def run(self, text: str) -> str:
@@ -211,7 +212,7 @@ class Link:
         r".*?https://www\.tiktok\.com/@.+/video/(\d+).*?")  # 作品链接
 
     def __init__(self, params: Parameter):
-        self.share = Share(params.proxies, params.max_retry)
+        self.share = Share(params.console, params.proxies, params.max_retry)
 
     def user(self, text: str) -> list:
         urls = self.share.run(text)

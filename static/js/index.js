@@ -66,6 +66,8 @@ function single_post(download = false) {
     const data = {
         url: $("#single_url").val(), download: download
     };
+    let $text = $("#single_url_text");
+    $text.hide();
     $.ajax({
         type: "POST", url: "/single/", contentType: "application/json",  // 设置请求的 Content-Type 为 JSON
         data: JSON.stringify(data),  // 将 JSON 对象转为字符串
@@ -79,8 +81,9 @@ function single_post(download = false) {
             if (result["author"] !== null) {
                 $('#single_url').val("");
             }
+            get_images();
         }, error: function () {
-            alert("获取数据失败！");
+            alert("获取作品数据失败！");
         }
     });
 }
@@ -99,7 +102,7 @@ function get_images() {
     $text.empty();
     if (Array.isArray(link)) {
         link.forEach(function (element, index) {
-            let paragraph = $("<p>").text(`图片-${index}: ${element}`);
+            let paragraph = $("<span>").html("<a href='" + element + "' target='_blank'>" + "图片-" + (index + 1) + "</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
             $text.append(paragraph);
         });
         $text.toggle();
@@ -137,34 +140,43 @@ function live_post() {
     const data = {
         url: $("#live_url").val()
     };
+    let $text = $("#live_url_text");
+    $text.hide();
     $.ajax({
         type: "POST", url: "/live/", contentType: "application/json",  // 设置请求的 Content-Type 为 JSON
         data: JSON.stringify(data),  // 将 JSON 对象转为字符串
         success: function (result) {
             $("#live_state").val(result["text"]);
-            let urls = result["urls"];
-            if (urls) {
+            let flv = result["flv"];
+            let m3u8 = result["m3u8"];
+            if (flv) {
                 $("#live_url").val("");
-                $("#all_url").data("link", urls);
+                $("#all_url").data({"flv": flv, "m3u8": m3u8});
                 $("#best_url").data("link", result["best"]);
+                get_all();
             } else {
-                $("#all_url").removeData("link");
+                $("#all_url").removeData(["flv", "m3u8"]);
                 $("#best_url").removeData("link");
+                $text.empty();
             }
             $("#live_preview").attr("src", result["preview"]);
         }, error: function () {
-            alert("获取数据失败！");
+            alert("获取直播数据失败！");
         }
     });
 }
 
 
 function get_all() {
-    let link = $("#all_url").data("link");
+    let urls = $("#all_url").data();
     let $text = $("#live_url_text");
     $text.empty();
-    for (let key in link) {
-        let paragraph = $("<p>").text(`清晰度${key}: ${link[key]}`);
+    for (let key in urls.flv) {
+        let paragraph = $("<p>").text(`FLV 清晰度 ${key}: ${urls.flv[key]}`);
+        $text.append(paragraph);
+    }
+    for (let key in urls.m3u8) {
+        let paragraph = $("<p>").text(`M3U8 清晰度 ${key}: ${urls.m3u8[key]}`);
         $text.append(paragraph);
     }
     $text.toggle();

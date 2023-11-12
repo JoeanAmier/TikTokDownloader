@@ -352,6 +352,8 @@ class Extractor:
 
     def comment(self, data: list[dict], recorder,
                 source=False) -> tuple[list[dict], list]:
+        if not any(data):
+            return [{}], []
         container = SimpleNamespace(
             all_data=[],
             reply_ids=[],

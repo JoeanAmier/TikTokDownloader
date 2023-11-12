@@ -162,7 +162,7 @@
                             <div class="field quarter">
                                 <label for="cookie">Cookie（直接粘贴）</label>
                                 <label>
-                                    <input type="text" id="cookie" value=""/>
+                                    <input type="text" id="cookie" value="" placeholder="未修改"/>
                                 </label>
                             </div>
                             <div class="field quarter">
@@ -181,7 +181,7 @@
                         <div class="fields">
                             <div class="field quarter">
                                 <input type="checkbox" id="music" name="music" {% if music %}checked{% endif %}>
-                                <label for="music">下载音乐</label>
+                                <label for="music">下载作品原声</label>
                             </div>
                             <div class="field quarter">
                                 <input type="checkbox" id="dynamic_cover" name="dynamic_cover"
@@ -196,17 +196,17 @@
                             <div class="field quarter">
                                 <input type="checkbox" id="folder_mode" name="folder_mode"
                                        {% if folder_mode %}checked{% endif %}>
-                                <label for="folder_mode">文件夹模式</label>
+                                <label for="folder_mode">作品文件夹归档模式</label>
                             </div>
                             <div class="field quarter">
                                 <input type="checkbox" id="download" name="download"
                                        {% if download %}checked{% endif %}>
-                                <label for="download">启用下载</label>
+                                <label for="download">启用下载功能</label>
                             </div>
                             <div class="field quarter">
                                 <input type="checkbox" id="ffmpeg" name="ffmpeg"
                                        {% if ffmpeg %}checked{% endif %} disabled>
-                                <label for="ffmpeg">ffmpeg 可用</label>
+                                <label for="ffmpeg">ffmpeg 可用状态</label>
                             </div>
                         </div>
                         <ul class="actions">
@@ -241,7 +241,7 @@
                                 <ul class="actions">
                                     <li><input type="button" class="button submit" value="获取下载链接"
                                                onclick="single_post()"></li>
-                                    <li><input type="button" class="button submit" value="后台下载"
+                                    <li><input type="button" class="button submit" value="后台下载作品"
                                                onclick="single_post(true)" {% if not download %} disabled {% endif %}>
                                     </li>
                                 </ul>
@@ -318,8 +318,7 @@
                                 </ul>
                                 <ul class="actions">
                                     <li><input type="button" class="button submit" value="下载最高画质视频"
-                                               onclick="get_best()" id="best_url" {% if not download %}
-                                               disabled {% endif %}>
+                                               onclick="get_best()" id="best_url">
                                     </li>
                                 </ul>
                                 <div id="live_url_text" style="display: none;">

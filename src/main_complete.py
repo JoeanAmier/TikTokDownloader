@@ -197,7 +197,7 @@ class TikTok:
         self.logger.info(f"开始处理第 {num} 个账号" if num else "开始处理账号")
         acquirer = Account(self.parameter, sec_user_id, tab, earliest, latest)
         account_data, earliest, latest = acquirer.run()
-        if not account_data:
+        if not any(account_data):
             self.logger.warning("获取账号主页数据失败")
             return False
         if source:
@@ -298,16 +298,27 @@ class TikTok:
             ids: list[str],
             record,
             api=False,
-            source=False):
+            source=False,
+            download=True, ):
         works_data = [Works(self.parameter, i, tiktok).run() for i in ids]
-        if not works_data:
+        if not any(works_data):
             return False
         if source:
             return works_data
         works_data = self.extractor.run(works_data, record)
-        if api:
+        if api or not download:
             return works_data
         self.downloader.run(works_data, "works", tiktok=tiktok)
+        if download:
+            return self._get_preview_image(works_data[0])
+
+    @staticmethod
+    def _get_preview_image(data: dict) -> str:
+        if data["type"] == "图集":
+            return data["downloads"][0]
+        elif data["type"] == "视频":
+            return data["origin_cover"]
+        raise ValueError
 
     def _choice_live_quality(
             self,
@@ -457,7 +468,7 @@ class TikTok:
                         source=False, ):
         self.logger.info(f"开始处理第 {num} 个合集" if num else "开始处理合集")
         mix_params = self._generate_mix_params(mix_id, id_)
-        if mix_data := Mix(self.parameter, **mix_params).run():
+        if any(mix_data := Mix(self.parameter, **mix_params).run()):
             return (
                 mix_data
                 if source
@@ -612,7 +623,7 @@ class TikTok:
             pages,
             sort[0],
             publish[0]).run()
-        if not search_data:
+        if not any(search_data):
             self.logger.warning("采集搜索数据失败")
             return None
         if source:
@@ -668,7 +679,7 @@ class TikTok:
             api=False,
             source=False):
         collection = Collection(self.parameter, sec_user_id).run()
-        if not collection:
+        if not any(collection):
             self.logger.warning("获取账号收藏数据失败")
             return None
         if source:
