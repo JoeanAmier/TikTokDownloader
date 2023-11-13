@@ -69,7 +69,7 @@ class BaseLogger:
 
     @staticmethod
     def check_folder(folder: str) -> str:
-        return Cleaner.clean_name(folder, False, "Log")
+        return Cleaner().filter_name(folder, False, "Log")
 
     def run(self, *args, **kwargs):
         pass
@@ -704,8 +704,7 @@ class RecordManager:
             folder="",
             type_="works"):
         root = parameter.root.joinpath(
-            Cleaner.clean_name(
-                folder, False, "Data"))
+            parameter.cleaner.filter_name(folder, False, "Data"))
         root.mkdir(exist_ok=True)
         params = self.LoggerParams[type_]
         logger = self.DataLogger.get(parameter.storage_format, NoneLogger)

@@ -49,7 +49,7 @@ function get_parameters() {
 function update_parameters() {
     $.ajax({
         type: "POST",
-        url: "/update/",
+        url: "/settings/",
         contentType: "application/json",
         data: JSON.stringify(get_parameters()),
         success: function () {

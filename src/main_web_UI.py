@@ -46,10 +46,11 @@ class WebUI(TikTok):
             except ValueError:
                 data[i] = j
 
-    def update_settings(self, data: dict):
-        self._convert_bool(data)
+    def update_settings(self, data: dict, api=True):
+        if not api:
+            self._convert_bool(data)
         # print(data)  # 调试使用
-        self.parameter.update_settings_data(data)
+        return self.parameter.update_settings_data(data)
 
     def deal_single_works(self, url: str, download: bool) -> dict:
         tiktok, ids = self.links.works(url)
@@ -109,10 +110,10 @@ class WebUI(TikTok):
                 **self.parameter.get_settings_data(),
                 preview=self.preview)
 
-        @app.route('/update/', methods=['POST'])
-        def update():
+        @app.route('/settings/', methods=['POST'])
+        def settings():
             """保存配置并重新加载首页"""
-            self.update_settings(request.json)
+            self.update_settings(request.json, False)
             return url_for("index")
 
         @app.route('/single/', methods=['POST'])

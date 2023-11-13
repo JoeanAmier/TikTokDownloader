@@ -14,7 +14,7 @@ class Extractor:
     def __init__(self, params):
         self.log = params.logger
         self.date_format = params.date_format
-        self.clean = params.clean
+        self.cleaner = params.cleaner
         self.type = {
             "batch": self.batch,
             "works": self.works,
@@ -155,7 +155,7 @@ class Extractor:
         #     "  ", 1)[-1].split("  %s", 1)[0].replace("# ", "#")
 
     def clean_description(self, desc: str) -> str:
-        return self.clean.clear_spaces(self.clean.filter(desc))
+        return self.cleaner.clear_spaces(self.cleaner.filter(desc))
 
     def format_date(self, data: SimpleNamespace, key: str = None) -> str:
         return strftime(
@@ -290,7 +290,6 @@ class Extractor:
             container: SimpleNamespace,
             data: SimpleNamespace,
             key="author",
-            pass_=False,
     ) -> None:
         data = self.safe_extract(data, key)
         container.cache["uid"] = self.safe_extract(data, "uid")
@@ -299,23 +298,22 @@ class Extractor:
         container.cache["unique_id"] = self.safe_extract(data, "unique_id")
         container.cache["signature"] = self.safe_extract(data, "signature")
         container.cache["user_age"] = self.safe_extract(data, "user_age")
-        self.extract_nickname_info(container, data, pass_)
+        self.extract_nickname_info(container, data)
 
     def extract_nickname_info(self,
                               container: SimpleNamespace,
-                              data: SimpleNamespace, pass_: bool) -> None:
+                              data: SimpleNamespace) -> None:
         if container.same:
             container.cache["nickname"] = container.name
             container.cache["mark"] = container.mark or container.name
         else:
-            name = self.clean.clean_name(
+            name = self.cleaner.filter_name(
                 self.safe_extract(
                     data,
                     "nickname",
                     "已注销账号"),
                 inquire=False,
-                default="无效账号昵称",
-                pass_=pass_)
+                default="无效账号昵称", )
             container.cache["nickname"] = name
             container.cache["mark"] = name
 
@@ -327,13 +325,13 @@ class Extractor:
         item = self.generate_data_object(data[-1])
         mid = self.safe_extract(item, "mix_info.mix_id")
         id_ = self.safe_extract(item, "author.uid")
-        name = self.clean.clean_name(self.safe_extract(
+        name = self.cleaner.filter_name(self.safe_extract(
             item, "author.nickname", f"账号_{str(time())[:10]}"),
             default="无效账号昵称")
-        title = self.clean.clean_name(self.safe_extract(
+        title = self.cleaner.filter_name(self.safe_extract(
             item, "mix_info.mix_name", f"合集_{str(time())[:10]}"),
             default="无效合集标题")
-        mark = self.clean.clean_name(mark, default=title if mix else name)
+        mark = self.cleaner.filter_name(mark, default=title if mix else name)
         return id_, name, mid, title, mark, data[:None if post else -1]
 
     def works(self, data: list[dict], recorder) -> list[dict]:
@@ -391,7 +389,7 @@ class Extractor:
             self.safe_extract(data, "reply_comment_total", 0))
         container.cache["reply_id"] = self.safe_extract(data, "reply_id")
         container.cache["cid"] = self.safe_extract(data, "cid")
-        self.extract_account_info(container, data, "user", True)
+        self.extract_account_info(container, data, "user")
         self._filter_reply_ids(container)
         container.all_data.append(container.cache)
 

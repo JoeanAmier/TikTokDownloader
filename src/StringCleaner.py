@@ -1,7 +1,8 @@
 from platform import system
-from re import sub
 from string import whitespace
 from time import time
+
+from emoji import replace_emoji
 
 from src.Customizer import illegal_nickname
 
@@ -62,30 +63,17 @@ class Cleaner:
             text = text.replace(i, self.rule[i])
         return text
 
-    @staticmethod
-    def clean_name(
+    def filter_name(
+            self,
             text: str,
             inquire=True,
-            default: str = "",
-            pass_=False) -> str:
-        """清洗字符串，仅保留中文、英文、数字和下划线"""
-        if pass_:
-            return text
+            default: str = "") -> str:
+        """过滤文件夹名称中的非法字符"""
+        text = self.filter(text)
 
-        if not text:
-            return default
+        text = replace_emoji(text)
 
-        # 使用正则表达式匹配非中文、英文、数字和常见符号，并替换为单个下划线
-        text = sub(
-            r'[^\u4e00-\u9fa5a-zA-Z0-9~@#%&\-_. ，。？！《》；：“”（）()]+',
-            '_',
-            text)
-
-        # 去除连续的下划线
-        text = sub(r'_+', '_', text)
-
-        # 去除首尾的下划线
-        text = text.strip('_')
+        text = text.strip().strip(".")
 
         return (text or illegal_nickname() or default or str(
             time())[:10]) if inquire else (text or default)

@@ -115,7 +115,7 @@ class Parameter:
         "mark",
         "type",
     )
-    clean = Cleaner()
+    cleaner = Cleaner()
 
     def __init__(
             self,
@@ -260,7 +260,7 @@ class Parameter:
         return False
 
     def check_folder_name(self, folder_name: str) -> str:
-        if folder_name := Cleaner.clean_name(folder_name, False):
+        if folder_name := self.cleaner.filter_name(folder_name, False):
             self.logger.info(f"folder_name 参数已设置为 {folder_name}", False)
             return folder_name
         self.logger.warning(
@@ -289,7 +289,7 @@ class Parameter:
 
     def check_split(self, split: str) -> str:
         for i in split:
-            if i in self.clean.rule.keys():
+            if i in self.cleaner.rule.keys():
                 self.logger.warning(f"split 参数 {split} 包含非法字符，程序将使用默认值：-")
                 return "-"
         self.logger.info(f"split 参数已设置为 {split}", False)
@@ -376,7 +376,7 @@ class Parameter:
             return str(default_mode)
         if default_mode:
             self.logger.warning(f"default_mode 参数 {default_mode} 设置错误")
-        return ""
+        return "0"
 
     def update_cookie(self):
         if self.cookie:
@@ -428,6 +428,7 @@ class Parameter:
                 self.cookie_object.extract(
                     c,
                     return_=True))
+            self.update_cookie()
         self.settings.update(data := self.get_settings_data())
         # print(data)  # 调试使用
         return data

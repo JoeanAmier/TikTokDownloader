@@ -4,7 +4,6 @@ from pathlib import Path
 from shutil import move
 from types import SimpleNamespace
 
-from emoji import replace_emoji
 from requests import exceptions
 from requests import get
 from rich.progress import (
@@ -24,7 +23,6 @@ from src.Customizer import (
     WARNING,
 )
 from src.DataAcquirer import retry
-from src.StringCleaner import Cleaner
 
 __all__ = ["Downloader"]
 
@@ -59,6 +57,7 @@ class Downloader:
     )
 
     def __init__(self, params: Parameter):
+        self.cleaner = params.cleaner
         self.cookie = params.cookie
         self.PC_headers, self.black_headers = self.init_headers(params.headers)
         self.ua_code = params.ua_code
@@ -153,14 +152,8 @@ class Downloader:
     def generate_live_tasks(
             self, data: list[tuple[dict, str]], tasks: list, commands: list):
         for i, f, m in data:
-            name = Cleaner.clean_name(
-                replace_emoji(
-                    f'{
-                    i["title"]}{
-                    self.split}{
-                    i["nickname"]}' f'{
-                    self.split}{
-                    datetime.now().strftime("%Y-%m-%d %H.%M.%S")}.flv'),
+            name = self.cleaner.filter_name(
+                f'{i["title"]}{self.split}{i["nickname"]}{self.split}{datetime.now().strftime("%Y-%m-%d %H.%M.%S")}.flv',
                 inquire=False)
             temp_root, actual_root = self.deal_folder_path(
                 self.storage_folder(folder_name="Live"), name, True)
@@ -474,9 +467,8 @@ class Downloader:
         return folder
 
     def generate_works_name(self, data: dict) -> str:
-        return Cleaner.clean_name(replace_emoji(
-            self.split.join(
-                data[i] for i in self.name_format)), inquire=False)
+        return self.cleaner.filter_name(self.split.join(
+            data[i] for i in self.name_format), inquire=False)
 
     def create_works_folder(
             self,
