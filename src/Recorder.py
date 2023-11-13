@@ -702,10 +702,12 @@ class RecordManager:
             self,
             parameter,
             folder="",
-            type_="works"):
+            type_="works",
+            blank=False, ):
         root = parameter.root.joinpath(
             parameter.cleaner.filter_name(folder, False, "Data"))
         root.mkdir(exist_ok=True)
         params = self.LoggerParams[type_]
-        logger = self.DataLogger.get(parameter.storage_format, NoneLogger)
+        logger = NoneLogger if blank else self.DataLogger.get(
+            parameter.storage_format, NoneLogger)
         return root, params, logger

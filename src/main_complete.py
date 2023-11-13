@@ -199,7 +199,7 @@ class TikTok:
         account_data, earliest, latest = acquirer.run()
         if not any(account_data):
             self.logger.warning("获取账号主页数据失败")
-            return False
+            return None
         if source:
             return account_data
         return self._batch_process_works(
@@ -242,8 +242,6 @@ class TikTok:
                 earliest=earliest or date(2016, 9, 20),
                 latest=latest or date.today(),
                 same=any((post, mix)))
-        if not data:
-            return False
         if api:
             return data
         self.cache.update_cache(
@@ -301,7 +299,7 @@ class TikTok:
             source=False, ):
         works_data = [Works(self.parameter, i, tiktok).run() for i in ids]
         if not any(works_data):
-            return False
+            return None
         if source:
             return works_data
         works_data = self.extractor.run(works_data, record)
@@ -337,11 +335,11 @@ class TikTok:
         while url := self._inquire_input("直播"):
             params = self._generate_live_params(*self.links.live(url))
             if not params:
-                self.console.print(f"{url} 提取直播 ID 失败")
+                self.logger.warning(f"{url} 提取直播 ID 失败")
                 continue
             live_data = [Live(self.parameter, **i).run() for i in params]
             if not [i for i in live_data if i]:
-                self.console.print("获取直播数据失败")
+                self.logger.warning("获取直播数据失败")
                 continue
             live_data = self.extractor.run(live_data, None, "live")
             download_tasks = self.show_live_info(live_data)
@@ -425,10 +423,11 @@ class TikTok:
 
     def mix_inquire(self, root, params, logger):
         while url := self._inquire_input("合集或作品"):
-            mix_id, id_ = self.links.mix(url)
-            if not id_:
+            mix_id, ids = self.links.mix(url)
+            if not ids:
                 self.logger.warning(f"{url} 获取作品 ID 或合集 ID 失败")
-            for index, i in enumerate(id_, start=1):
+                continue
+            for index, i in enumerate(ids, start=1):
                 if not self._deal_mix_works(root, params, logger, mix_id, i):
                     if failed():
                         continue
@@ -475,7 +474,7 @@ class TikTok:
                 )
             )
         self.logger.warning("采集合集作品数据失败")
-        return False
+        return None
 
     def _check_mix_id(self, url: str) -> tuple[bool, str]:
         mix_id, id_ = self.links.mix(url)
@@ -647,9 +646,9 @@ class TikTok:
     def _deal_hot_data(self, source=False):
         time_, board = Hot(self.parameter).run()
         if not any(board):
-            return None
+            return None, None
         if source:
-            return [{Hot.board_params[i].name: j} for i, j in board]
+            return time_, [{Hot.board_params[i].name: j} for i, j in board]
         root, params, logger = self.record.run(self.parameter, type_="hot")
         data = []
         for i, j in board:

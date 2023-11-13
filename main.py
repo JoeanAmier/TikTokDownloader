@@ -5,6 +5,8 @@ from threading import Thread
 from time import sleep
 
 from flask import Flask
+from flask import abort
+from flask import request
 from requests import exceptions
 from requests import get
 from rich.console import Console
@@ -25,6 +27,7 @@ from src.Customizer import (
 from src.Customizer import SERVER_HOST
 from src.Customizer import SERVER_PORT
 from src.Customizer import TEXT_REPLACEMENT
+from src.Customizer import verify_token
 from src.FileManager import DownloadRecorder
 from src.FileManager import FileManager
 from src.Parameter import Headers
@@ -197,14 +200,22 @@ class TikTokDownloader:
         self.running = example.running
 
     @start_cookie_task
-    def server(self, server):
+    def server(self, server, token=True):
         """
         服务器模式
         """
         master = server(self.parameter)
         app = master.run_server(Flask(__name__))
         register(self.blacklist.close)
+        if token:
+            app.before_request(self.verify_token)
         app.run(host=SERVER_HOST, port=SERVER_PORT, debug=not self.STABLE)
+
+    @staticmethod
+    def verify_token():
+        if request.method == "POST" and not verify_token(
+                request.json.get("token")):
+            return abort(403)
 
     def change_config(self, file: Path):
         FileManager.deal_config(file)
@@ -237,7 +248,7 @@ class TikTokDownloader:
         elif mode == "4":
             self.server(APIServer)
         elif mode == "5":
-            self.server(WebUI)
+            self.server(WebUI, False)
         elif mode == "6":
             self.server(Server)
         elif mode == "7":
