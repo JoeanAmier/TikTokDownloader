@@ -23,6 +23,11 @@ from src.DataExtractor import Extractor
 from src.FileManager import Cache
 from src.Recorder import RecordManager
 
+__all__ = [
+    "prompt",
+    "TikTok",
+]
+
 
 def prompt(
         title: str,

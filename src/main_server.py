@@ -3,6 +3,8 @@ from flask import request
 
 from src.main_web_UI import WebUI
 
+__all__ = ["Server"]
+
 
 class Server(WebUI):
     def __init__(self, parameter):

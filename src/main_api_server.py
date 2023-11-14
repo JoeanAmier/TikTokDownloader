@@ -4,6 +4,8 @@ from src.DataAcquirer import Comment
 from src.DataAcquirer import Live
 from src.main_web_UI import WebUI
 
+__all__ = ['APIServer']
+
 
 class APIServer(WebUI):
     def __init__(self, parameter):

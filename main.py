@@ -40,6 +40,8 @@ from src.main_complete import prompt
 from src.main_server import Server
 from src.main_web_UI import WebUI
 
+__all__ = []
+
 
 class ColorfulConsole(Console):
     def print(self, *args, style=GENERAL, highlight=False, **kwargs):
