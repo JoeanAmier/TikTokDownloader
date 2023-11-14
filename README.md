@@ -65,6 +65,8 @@
 ![WebUI模式截图](docs/WebUI模式截图1.png)
 *****
 ![WebUI模式截图](docs/WebUI模式截图2.png)
+*****
+![WebUI模式截图](docs/WebUI模式截图3.png)
 <br><br>
 **Web API 接口模式：**
 <br><br>
@@ -73,7 +75,6 @@
 # 📈 项目状态\(Status\)
 
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已完成测试，所有功能均可正常使用
-* 🟢 正在加入 FFmpeg 优化直播下载功能
 * 🟡 未来可能支持更多抖音热榜类型
 * 🟡 未来可能新增终端文本用户界面\(TUI\)模式
 * 🟡 未来可能新增获取账号关注列表功能
@@ -108,7 +109,6 @@ TikTokDownloader
 │    ├─ temp                               // 下载文件临时文件夹
 │    ├─ AccountCache.json                  // 账号管理缓存数据
 │    └─ IDRecorder.txt                     // 作品下载记录文件
-├─ ffmpeg                                  // FFmpeg 存放文件夹
 ├─ static                                  // 静态资源文件夹
 ├─ templates                               // HTML 模板文件夹
 └─ docs                                    // 项目文档文件夹
@@ -127,27 +127,27 @@ TikTokDownloader
 <ol><b>通过源码运行</b>
 <li>安装不低于 <code>3.12</code> 版本的 <a href="https://www.python.org/">Python</a> 解释器</li>
 <li>下载最新的源码或 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的源码至本地</li>
-<li>安装 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/requirements.txt">requirements.txt</a> 包含的第三方模块</li>
+<li>运行 <code>pip install -r requirements.txt</code> 命令安装程序所需模块</li>
 <li>运行 main.py</li>
 </ol>
 </li>
 <li>查看屏幕输出的 TikTokDownloader 免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
-<ol><b>手动复制粘贴(推荐)</b>
-<li>使用浏览器打开抖音网页版，复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a> 至剪贴板</li>
-<li>选择 <code>复制粘贴写入 Cookie</code> 模式，按照提示将 Cookie 写入配置文件</li>
+<ol><b>手动复制粘贴</b>
+<li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
+<li>选择 <code>复制粘贴写入 Cookie</code> 选项，按照提示将 Cookie 写入配置文件</li>
 </ol>
 <ol><b>扫码登录获取</b>
-<li>选择 <code>扫码登陆写入 Cookie</code> 模式，程序会显示登录二维码图片</li>
-<li>使用抖音 APP 扫描二维码并登录账号，操作后关闭图片窗口（若有）</li>
-<li>按照提示将 Cookie 写入配置文件</li>
+<li>选择 <code>扫码登陆写入 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</li>
+<li>使用抖音 APP 扫描二维码并登录账号</li>
+<li>按照提示操作，将 Cookie 写入配置文件</li>
 </ol>
 </li>
-<li>返回程序界面，依次选择 <code>终端命令行模式</code> --> <code>单独下载链接作品</code></li>
+<li>返回程序界面，依次选择 <code>终端命令行模式</code> --> <code>批量下载链接作品</code></li>
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 <li>更多详细说明请查看 <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">项目文档</a></b></li>
 </ol>
-<p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a> 运行程序！</p>
+<p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a>（Windows 11 自带默认终端）</p>
 <hr>
 
 **关于 Cookie：**
@@ -185,6 +185,7 @@ TikTokDownloader
 <li><code>批量下载收藏作品模式</code> 目前仅支持下载当前已登录 Cookie 对应账号的收藏作品，暂不支持多账号</li>
 <li>如果想要程序使用代理，必须在 <code>settings.json</code> 设置 <code>proxies</code> 参数，否则程序不会使用代理</li>
 <li>部分使用者反馈，新发布的作品过早下载会下载到低分辨率的文件，一段时间后才能下载到高分辨率文件，但时间规律尚不明确</li>
+<li>退出程序时，建议以正常方式结束运行或者按下 Ctrl + C 结束运行，不建议直接点击终端窗口的关闭按钮结束运行</li>
 </ul>
 
 # ⚠️ 免责声明\(Disclaimers\)

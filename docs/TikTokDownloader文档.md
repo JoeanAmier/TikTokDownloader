@@ -51,7 +51,7 @@
 <p><a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">点击查看 Cookie 获取教程</a></p>
 <h1>入门说明</h1>
 <h2>关于终端</h2>
-<p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a> （Windows 11 自带默认终端）运行程序以便获得最佳彩色交互显示效果！</p>
+<p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a>（Windows 11 自带默认终端）运行程序以便获得最佳彩色交互显示效果！</p>
 <h2>链接类型</h2>
 <table>
 <thead>
