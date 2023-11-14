@@ -28,20 +28,20 @@
 <ol><b>通过源码运行</b>
 <li>安装不低于 <code>3.12</code> 版本的 <a href="https://www.python.org/">Python</a> 解释器</li>
 <li>下载最新的源码或 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的源码至本地</li>
-<li>安装 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/requirements.txt">requirements.txt</a> 包含的第三方模块</li>
+<li>运行 <code>pip install -r requirements.txt</code> 命令安装程序所需模块</li>
 <li>运行 main.py</li>
 </ol>
 </li>
 <li>查看屏幕输出的 TikTokDownloader 免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
-<ol><b>手动复制粘贴(推荐)</b>
-<li>使用浏览器打开抖音网页版，复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a> 至剪贴板</li>
-<li>选择 <code>复制粘贴写入 Cookie</code> 模式，按照提示将 Cookie 写入配置文件</li>
+<ol><b>手动复制粘贴</b>
+<li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
+<li>选择 <code>复制粘贴写入 Cookie</code> 选项，按照提示将 Cookie 写入配置文件</li>
 </ol>
 <ol><b>扫码登录获取</b>
-<li>选择 <code>扫码登陆写入 Cookie</code> 模式，程序会显示登录二维码图片</li>
-<li>使用抖音 APP 扫描二维码并登录账号，操作后关闭图片窗口（若有）</li>
-<li>按照提示将 Cookie 写入配置文件</li>
+<li>选择 <code>扫码登陆写入 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</li>
+<li>使用抖音 APP 扫描二维码并登录账号</li>
+<li>按照提示操作，将 Cookie 写入配置文件</li>
 </ol>
 </li>
 <li>返回程序界面，依次选择 <code>终端命令行模式</code> --> <code>批量下载链接作品</code></li>
@@ -100,13 +100,13 @@
 </ul>
 <h2>数据储存</h2>
 <ul>
-<li>配置文件 <code>settings.json</code> 的 <code>storage_format</code> 参数可设置数据储存格式类型。</li>
+<li>配置文件 <code>settings.json</code> 的 <code>storage_format</code> 参数可设置数据储存格式类型，如果不设置该参数，程序不会储存任何数据至文件。</li>
 <li><code>采集作品评论数据</code>、<code>批量采集账号数据</code>、<code>采集搜索结果数据</code>、<code>采集抖音热榜数据</code> 模式必须设置 <code>storage_format</code> 参数才能正常使用。</li>
 <li>程序所有数据均储存至 <code>root</code> 参数路径下的 <code>Data</code> 文件夹。</li>
 </ul>
 <h2>直播下载</h2>
-<p><code>获取直播推流地址</code> 功能支持调用 <code>ffmpeg</code> 下载直播，程序会优先调用系统环境的 <code>ffmpeg</code>，其次调用 <code>ffmpeg_path</code> 参数指定的 <code>ffmpeg</code>，如果 <code>ffmpeg</code> 不可用，程序将会调用内置下载器。</p>
-<p><code>ffmpeg.exe</code> 可前往 <a href="http://ffmpeg.org/download.html">官方网站</a> 获取。</p>
+<p><code>获取直播推流地址</code> 功能支持调用 <code>ffmpeg</code> 下载直播，程序会优先调用系统环境的 <code>ffmpeg</code>，其次调用 <code>ffmpeg_path</code> 参数指定的 <code>ffmpeg</code>，如果 <code>ffmpeg</code> 不可用，程序将会调用内置下载器下载直播。</p>
+<p>建议配置 <code>ffmpeg</code> 环境，<code>ffmpeg.exe</code> 可前往 <a href="http://ffmpeg.org/download.html">官方网站</a> 获取。</p>
 <h2>功能简介</h2>
 <table>
 <thead>
@@ -155,7 +155,7 @@
 <h1>配置文件</h1>
 <p>配置文件：项目根目录下的 <code>settings.json</code> 文件，可以自定义设置程序部分运行参数。</p>
 <p><b><code>cookie</code> 参数为必需参数，必须设置该参数才能正常使用程序</b>；其余参数可以根据实际需求进行修改！</p>
-<p>注意: 修改 <code>settings.json</code> 后需要重新运行程序才会生效！</p>
+<p>注意: 手动修改 <code>settings.json</code> 后需要重新运行程序才会生效！</p>
 <h2>参数含义</h2>
 <table>
 <thead>
@@ -213,7 +213,7 @@
 <tr>
 <td align="center">folder_name</td>
 <td align="center">str</td>
-<td align="center">下载单独链接作品时, 储存文件夹的名称, 默认值: <code>Download</code></td>
+<td align="center">下载单独链接作品时, 保存文件夹的名称, 默认值: <code>Download</code></td>
 </tr>
 <tr>
 <td align="center">name_format</td>
@@ -248,7 +248,7 @@
 <tr>
 <td align="center">cookie</td>
 <td align="center">dict/str</td>
-<td align="center">抖音网页版 Cookie, 必需参数; 使用 <code>main.py</code> 写入配置文件</td>
+<td align="center">抖音网页版 Cookie, 必需参数; 建议通过程序写入配置文件，亦可手动编辑</td>
 </tr>
 <tr>
 <td align="center">dynamic_cover</td>
@@ -452,19 +452,19 @@
 <li>设置获取数据失败时的处理策略</li>
 <li>设置作品筛选规则</li>
 <li>设置分批获取数据策略</li>
+<li>设置服务器模式参数验证</li>
 </ul>
 <h1>功能介绍</h1>
 <h2>复制粘贴写入 Cookie</h2>
-<p>从浏览器复制全部 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie</a>
-至剪贴板，按照程序提示输入 Cookie 后回车确认，程序会自动提取并写入配置文件。</p>
-<p>如果粘贴 Cookie 至终端后无响应，可能是 Cookie 文本长度超出终端最大文本长度限制，请尝试更换终端。</p>
+<p>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，手动从浏览器复制所需 Cookie 至剪贴板，按照程序提示输入 Cookie 后回车确认，程序会自动处理 Cookie 并写入配置文件。</p>
+<p>如果粘贴 Cookie 至终端后无响应，可能是 Cookie 文本长度超出终端最大文本长度限制，请考虑更换终端或者其他写入方式。</p>
 <h2>扫码登录写入 Cookie</h2>
-<p>程序自动获取抖音登录二维码，并在终端输出二维码，程序还会尝试使用系统默认图片浏览器打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片窗口（如果成功打开二维码图片窗口），程序会自动检查登录结果并将登录后的 Cookie 写入配置文件。</p>
+<p>程序自动获取抖音登录二维码，随后会在终端输出二维码，并使用系统默认图片浏览器打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片窗口，并根据提示操作是否开始检查登录结果，确认后程序会检查登录结果并将登录后的 Cookie 写入配置文件。</p>
 <h2>终端命令行模式</h2>
 <p>功能最全面的模式，支持全部功能。</p>
 <h3>批量下载账号作品</h3>
 <ol>
-<li>使用 <code>settings.json</code> 的 <code>accounts</code> 参数中的账号链接。</li>
+<li>使用 <code>settings.json</code> 的 <code>accounts_urls</code> 参数中的账号链接。</li>
 <li>手动输入待采集的账号链接；此选项仅支持批量下载账号发布页作品，暂不支持参数设置。</li>
 </ol>
 <p>支持链接格式：</p>
@@ -485,7 +485,7 @@
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 <li><code>https://www.tiktok.com/@账号昵称/video/作品ID</code></li>
 </ul>
-<p>作品会下载至 <code>root</code> 参数和 <code>folder</code> 参数拼接成的文件夹。</p>
+<p>作品会下载至 <code>root</code> 参数和 <code>folder_name</code> 参数拼接成的文件夹。</p>
 <h3>获取直播推流地址</h3>
 <p>输入直播链接，不支持已结束的直播。</p>
 <p>支持链接格式：</p>
@@ -516,7 +516,7 @@
 <p>储存名称格式：<code>作品123456789_评论数据</code></p>
 <h3>批量下载合集作品</h3>
 <ol>
-<li>使用 <code>settings.json</code> 的 <code>mix</code> 参数中的合集链接或作品链接。</li>
+<li>使用 <code>settings.json</code> 的 <code>mix_urls</code> 参数中的合集链接或作品链接。</li>
 <li>输入合集链接，或者属于合集的任意一个作品链接。</li>
 </ol>
 <p>支持链接格式：</p>
@@ -530,7 +530,7 @@
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
 <h3>批量采集账号数据</h3>
 <ol>
-<li>使用 <code>settings.json</code> 的 <code>accounts</code> 参数中的账号链接。</li>
+<li>使用 <code>settings.json</code> 的 <code>accounts_urls</code> 参数中的账号链接。</li>
 <li>手动输入待采集的账号链接。</li>
 </ol>
 <p>支持链接格式：</p>
@@ -577,68 +577,79 @@
 <p>如果未设置 <code>owner_url</code> 参数，程序会使用临时字符串作为账号昵称和 UID。</p>
 <p>账号文件夹格式为 <code>UID123456789_mark_收藏作品</code> 或者 <code>UID123456789_账号昵称_收藏作品</code></p>
 <h2>Web API 接口模式</h2>
-<p>启动服务器，提供 API 调用服务；支持局域网远程访问，可以部署至私有服务器，不可直接部署至公开服务器。</p>
-<p><strong>该模式暂不支持并发请求！仅以 API 形式返回数据提供调用！</strong></p>
+<p>启动服务器，提供 API 调用功能；支持局域网远程访问，可以部署至私有服务器或者公开服务器，建议设置参数验证。</p>
+<p>目前支持调用 API 获取数据，暂不支持调用 API 下载文件！</p>
 <p><strong>API 接口通用说明：</strong></p>
 <ul>
 <li>请求类型：<code>POST</code></li>
 <li>请求格式：<code>JSON</code></li>
 <li>响应格式：<code>JSON</code></li>
 </ul>
+<p><b>代码示例：</b></p>
+
+```python
+import requests
+
+params = {
+    "url": "https://www.douyin.com/note/12345678910",
+    "source": True
+}
+response = requests.post("http://localhost:5000/detail/", json=params)
+print(response.json())
+```
+
 <h3>配置文件修改接口</h3>
-<p>修改 <code>settings.json</code> 配置文件；无需发送全部参数，仅发送想要修改的参数；参数格式与配置文件格式保持一致。</p>
-<p>请求接口：<code>/init/</code></p>
-<p>请求参数</p>
+<p>修改 <code>settings.json</code> 配置文件；无需发送全部参数，仅需发送想要修改的参数；参数格式要求与配置文件格式要求保持一致。</p>
+<p><b>请求接口：</b><code>/settings/</code></p>
+<p><b>请求参数</b></p>
 
 ```json
 {
   "root": "可选参数",
-  "folder": "可选参数",
-  "name": "可选参数",
-  "time": "可选参数",
+  "folder_name": "可选参数",
+  "name_format": "可选参数",
+  "date_format": "可选参数",
   "split": "可选参数",
+  "folder_mode": "可选参数",
   "music": "可选参数",
-  "save": "可选参数",
+  "storage_format": "可选参数",
   "cookie": "可选参数",
-  "dynamic": "可选参数",
-  "original": "可选参数",
+  "dynamic_cover": "可选参数",
+  "original_cover": "可选参数",
   "proxies": "可选参数",
-  "log": "可选参数",
+  "download": "可选参数",
   "max_size": "可选参数",
-  "retry": "可选参数",
-  "pages": "可选参数",
-  "chunk": "可选参数"
+  "chunk": "可选参数",
+  "max_retry": "可选参数",
+  "max_pages": "可选参数",
+  "default_mode": "可选参数",
+  "ffmpeg_path": "可选参数"
 }
 ```
 
-<p>响应参数</p>
-
-```json
-{
-  "message": "success"
-}
-```
-
+<p><b>响应参数</b></p>
+<p>返回 <code>settings.json</code> 配置文件所有参数</p>
 <h3>账号作品数据接口</h3>
-<p>返回账号发布或者喜欢的作品数据</p>
-<p>请求接口：<code>/account/</code></p>
-<p>请求参数</p>
+<p>获取账号发布作品或者喜欢作品数据</p>
+<p><b>请求接口：</b><code>/account/</code></p>
+<p><b>请求参数</b></p>
 
 ```json
 {
   "url": "账号主页链接，字符串，必需",
-  "mode": "发布作品或者喜欢作品，字符串，可选",
+  "tab": "发布作品或者喜欢作品，字符串，可选",
   "earliest": "作品最早发布日期，字符串，可选",
   "latest": "作品最晚发布日期，字符串，可选",
-  "pages": "账号喜欢作品数据最大请求次数，整数，可选"
+  "pages": "账号喜欢作品数据最大请求次数，整数，可选",
+  "source": "是否返回原始数据，布尔值，可选，默认值: false"
 }
 ```
 
-<p>响应参数</p>
+<p><b>响应参数</b></p>
 
 ```json
 {
-  "works": [
+  "data": [
     "作品数据-1，JSON 格式",
     "作品数据-2，JSON 格式",
     "..."
@@ -648,66 +659,73 @@
 ```
 
 <h3>链接作品数据接口</h3>
-<p>返回作品详细数据；<strong>支持 TikTok 平台。</strong></p>
-<p>请求接口：<code>/detail/</code></p>
-<p>请求参数</p>
+<p>获取作品详细数据；<strong>支持 TikTok 平台。</strong></p>
+<p><b>请求接口：</b><code>/detail/</code></p>
+<p><b>请求参数</b></p>
 
 ```json
 {
-  "url": "作品链接，字符串，必需"
+  "url": "作品链接，支持多作品，字符串，必需",
+  "source": "是否返回原始数据，布尔值，可选，默认值: false"
 }
 ```
 
-<p>响应参数</p>
+<p><b>响应参数</b></p>
 
 ```json
 {
-  "detail": [
-    "作品数据，JSON 格式"
+  "data": [
+    "作品数据-1，JSON 格式",
+    "作品数据-2，JSON 格式",
+    "..."
   ],
   "message": "success"
 }
 ```
 
 <h3>直播推流数据接口</h3>
-<p>返回直播推流数据</p>
-<p>请求接口：<code>/live/</code></p>
-<p>请求参数</p>
+<p>获取直播推流数据</p>
+<p><b>请求接口：</b><code>/live/</code></p>
+<p><b>请求参数</b></p>
 
 ```json
 {
-  "url": "直播链接，字符串，必需"
+  "url": "直播链接，支持多直播，字符串，必需",
+  "source": "是否返回原始数据，布尔值，可选，默认值: false"
 }
 ```
 
-<p>响应参数</p>
+<p><b>响应参数</b></p>
 
 ```json
 {
-  "live": [
-    "直播数据，JSON 格式"
+  "data": [
+    "直播数据-1，JSON 格式",
+    "直播数据-2，JSON 格式",
+    "..."
   ],
   "message": "success"
 }
 ```
 
 <h3>作品评论数据接口</h3>
-<p>返回作品评论数据</p>
-<p>请求接口：<code>/comment/</code></p>
-<p>请求参数</p>
+<p>获取作品评论数据</p>
+<p><b>请求接口：</b><code>/comment/</code></p>
+<p><b>请求参数</b></p>
 
 ```json
 {
   "url": "作品链接，字符串，必需",
-  "pages": "作品评论数据最大请求次数，整数，可选"
+  "pages": "作品评论数据最大请求次数，整数，可选",
+  "source": "是否返回原始数据，布尔值，可选，默认值: false"
 }
 ```
 
-<p>响应参数</p>
+<p><b>响应参数</b></p>
 
 ```json
 {
-  "comment": [
+  "data": [
     "评论数据-1，JSON 格式",
     "评论数据-2，JSON 格式",
     "..."
@@ -717,21 +735,22 @@
 ```
 
 <h3>合集作品数据接口</h3>
-<p>返回合集作品数据</p>
-<p>请求接口：<code>/mix/</code></p>
-<p>请求参数</p>
+<p>获取合集作品数据</p>
+<p><b>请求接口：</b><code>/mix/</code></p>
+<p><b>请求参数</b></p>
 
 ```json
 {
-  "url": "属于合集的作品链接，字符串，必需"
+  "url": "属于合集的作品链接，字符串，必需",
+  "source": "是否返回原始数据，布尔值，可选，默认值: false"
 }
 ```
 
-<p>响应参数</p>
+<p><b>响应参数</b></p>
 
 ```json
 {
-  "works": [
+  "data": [
     "作品数据-1，JSON 格式",
     "作品数据-2，JSON 格式",
     "..."
@@ -741,31 +760,34 @@
 ```
 
 <h3>账号详细数据接口</h3>
-<p>返回账号详细数据</p>
-<p>请求接口：<code>/user/</code></p>
-<p>请求参数</p>
+<p>获取账号详细数据</p>
+<p><b>请求接口：</b><code>/user/</code></p>
+<p><b>请求参数</b></p>
 
 ```json
 {
-  "url": "账号主页链接，字符串，必需"
+  "url": "账号主页链接，支持多账号，字符串，必需",
+  "source": "是否返回原始数据，布尔值，可选，默认值: false"
 }
 ```
 
-<p>响应参数</p>
+<p><b>响应参数</b></p>
 
 ```json
 {
-  "account": [
-    "账号详细数据，JSON 格式"
+  "data": [
+    "账号详细数据-1，JSON 格式",
+    "账号详细数据-2，JSON 格式",
+    "..."
   ],
   "message": "success"
 }
 ```
 
 <h3>搜索结果数据接口</h3>
-<p>返回抖音搜索结果数据</p>
-<p>请求接口：<code>/search/</code></p>
-<p>请求参数</p>
+<p>获取抖音搜索结果数据</p>
+<p><b>请求接口：</b><code>/search/</code></p>
+<p><b>请求参数</b></p>
 
 ```json
 {
@@ -773,15 +795,16 @@
   "type": "搜索类型，字符串，可选",
   "page": "结果页数，字符串，可选",
   "sort_type": "排序依据，字符串，可选",
-  "publish_time": "发布时间，字符串，可选"
+  "publish_time": "发布时间，字符串，可选",
+  "source": "是否返回原始数据，布尔值，可选，默认值: false"
 }
 ```
 
-<p>响应参数</p>
+<p><b>响应参数</b></p>
 
 ```json
 {
-  "results": [
+  "data": [
     "搜索结果数据-1，JSON 格式",
     "搜索结果数据-2，JSON 格式",
     "..."
@@ -791,32 +814,50 @@
 ```
 
 <h3>抖音热榜数据接口</h3>
-<p>返回抖音热榜数据</p>
-<p>请求接口：<code>/hot/</code></p>
-<p>请求参数：无</p>
-<p>响应参数</p>
+<p>获取抖音热榜数据</p>
+<p><b>请求接口：</b><code>/hot/</code></p>
+<p><b>请求参数</b></p>
 
 ```json
 {
-  "热榜": [
-    "热榜数据-1，JSON 格式",
-    "热榜数据-2，JSON 格式",
-    "..."
-  ],
-  "娱乐榜": [
-    "热榜数据-1，JSON 格式",
-    "热榜数据-2，JSON 格式",
-    "..."
-  ],
-  "社会榜": [
-    "热榜数据-1，JSON 格式",
-    "热榜数据-2，JSON 格式",
-    "..."
-  ],
-  "挑战榜": [
-    "热榜数据-1，JSON 格式",
-    "热榜数据-2，JSON 格式",
-    "..."
+  "source": "是否返回原始数据，布尔值，可选，默认值: false"
+}
+```
+
+<p><b>响应参数</b></p>
+
+```json
+{
+  "time": "热榜采集时间",
+  "data": [
+    {
+      "抖音热榜": [
+        "热榜数据-1，JSON 格式",
+        "热榜数据-2，JSON 格式",
+        "..."
+      ]
+    },
+    {
+      "娱乐榜": [
+        "热榜数据-1，JSON 格式",
+        "热榜数据-2，JSON 格式",
+        "..."
+      ]
+    },
+    {
+      "社会榜": [
+        "热榜数据-1，JSON 格式",
+        "热榜数据-2，JSON 格式",
+        "..."
+      ]
+    },
+    {
+      "挑战榜": [
+        "热榜数据-1，JSON 格式",
+        "热榜数据-2，JSON 格式",
+        "..."
+      ]
+    }
   ],
   "message": "success"
 }
@@ -826,7 +867,8 @@
 <p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品功能</code> 和 <code>获取直播推流地址功能</code>，支持局域网远程访问，可以部署至私有服务器，不可直接部署至公开服务器。</p>
 <h2>服务器部署模式</h2>
 <p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品功能</code>，用于部署至公开服务器，为网站访客提供作品下载服务。</p>
-<p>为保护访客隐私，<code>服务器部署模式</code> 禁用了日志记录和数据存储功能，不会记录任何作品提取数据。</p>
+<p>为保护访客隐私，<code>服务器部署模式</code> 禁用了数据存储功能，不会记录任何作品提取数据。</p>
+<p>支持远程修改 <code>settings.json</code> 配置文件，请参考 <code>配置文件修改接口</code></p>
 <h2>启用/禁用检查更新功能</h2>
 <p>启用检查更新功能后，运行程序时会向 <code>https://github.com/JoeanAmier/TikTokDownloader/releases/latest</code>
 发送请求获取最新 <code>Releases</code> 版本号，并提示是否存在新版本。</p>
@@ -843,7 +885,7 @@
 <h1>其他功能说明</h1>
 <h2>单次输入多个链接</h2>
 <p><code>批量下载链接作品</code>、<code>获取直播推流地址</code>、<code>采集作品评论数据</code>、<code>批量下载合集作品</code>、<code>批量采集账号数据</code>
-支持单次输入多个链接，实现批量下载 / 提取功能；单次输入多个链接时，链接类型需要保持一致，不支持短链接与长链接混合输入。</p>
+支持单次输入多个链接，实现批量下载 / 提取功能；单次输入多个链接时，链接类型需要保持一致，不支持完整链接与分享链接混合输入。</p>
 <h3>输入示例</h3>
 <p><code>批量采集账号数据模式</code> 输入多个长链接时，需要使用空格分隔，其余模式不需要分隔字符，此处示例使用空格分隔仅仅便于观察区分链接。</p>
 <p>无需对复制的链接进行处理，程序会自动提取输入文本中的有效链接。</p>
@@ -859,8 +901,8 @@
 <h2>账号/合集标识</h2>
 <h3>标识设置规则</h3>
 <ul>
-<li><code>name</code> 参数中没有使用 <code>nickname</code> 时，<code>mark</code> 设置没有限制。</li>
-<li><code>name</code> 参数中使用了 <code>nickname</code> 时，<code>mark</code> 与 <code>nickname</code> 不能设置为包含关系的字符串。</li>
+<li><code>name_format</code> 参数中没有使用 <code>nickname</code> 时，<code>mark</code> 设置没有限制。</li>
+<li><code>name_format</code> 参数中使用了 <code>nickname</code> 时，<code>mark</code> 与 <code>nickname</code> 不能设置为包含关系的字符串。</li>
 </ul>
 <p><strong>示例：</strong></p>
 <ul>
@@ -872,17 +914,17 @@
 <h3>账号标识说明</h3>
 <ul>
 <li>账号标识 <code>mark</code> 参数相当于账号备注，便于用户识别账号作品文件夹，避免账号昵称修改导致无法识别已下载作品问题。</li>
-<li><code>批量下载账号作品</code> 模式下，如果设置了 <code>mark</code> 参数，下载的作品将会保存至 <code>UID123456789_mark参数</code>
-或 <code>UID123456789_mark参数_喜欢作品</code> 文件夹内。</li>
+<li><code>批量下载账号作品</code> 模式下，如果设置了 <code>mark</code> 参数，下载的作品将会保存至 <code>UID123456789_mark_发布作品</code>
+或 <code>UID123456789_mark_喜欢作品</code> 文件夹内。</li>
 <li><code>批量下载账号作品</code> 模式下，如果 <code>mark</code>
-参数设置为空字符串，程序将会使用账号昵称作为账号标识，下载的作品将会保存至 <code>UID123456789_账号昵称</code>
+参数设置为空字符串，程序将会使用账号昵称作为账号标识，下载的作品将会保存至 <code>UID123456789_账号昵称_发布作品</code>
 或 <code>UID123456789_账号昵称_喜欢作品</code> 文件夹内。</li>
 </ul>
 <h3>合集标识说明</h3>
 <p>与账号标识作用一致。</p>
 <h3>如何修改标识</h3>
-<p><strong>修改账号标识:</strong> 修改 <code>accounts</code> 的 <code>mark</code> 参数，再次运行 <code>批量下载账号作品</code> 模式，程序会自动应用新的账号标识。</p>
-<p><strong>修改合集标识:</strong> 修改 <code>mix</code> 的 <code>mark</code> 参数，再次运行 <code>批量下载合集作品</code> 模式，程序会自动应用新的账号标识；或者手动输入合集链接，根据程序提示进行设置。</p>
+<p><strong>修改账号标识:</strong> 修改 <code>accounts_urls</code> 的 <code>mark</code> 参数，再次运行 <code>批量下载账号作品</code> 模式，程序会自动应用新的账号标识。</p>
+<p><strong>修改合集标识:</strong> 修改 <code>mix_urls</code> 的 <code>mark</code> 参数，再次运行 <code>批量下载合集作品</code> 模式，程序会自动应用新的账号标识；或者手动输入合集链接，根据程序提示进行设置。</p>
 <h3>账户昵称修改</h3>
 <p>在 <code>批量下载账号作品</code> 和 <code>批量下载合集作品</code> 模式下，程序会判断账号昵称是否有修改，如果有修改，程序会自动识别已下载作品文件名称中的账户昵称，并修改至最新账户昵称。</p>
 <h3>AccountCache.json</h3>
@@ -891,7 +933,7 @@
 <p><strong>缓存文件仅供程序读取和写入，不建议手动编辑文件内容。</strong></p>
 <h1>服务器部署模式二次开发</h1>
 <h2>API 文档</h2>
-<p>请求URL：<code>/solo/</code></p>
+<p>请求URL：<code>/single/</code></p>
 <p>请求类型：<code>POST</code></p>
 <p>请求格式：<code>JSON</code></p>
 <p>请求参数：</p>

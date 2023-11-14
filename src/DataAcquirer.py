@@ -449,10 +449,10 @@ class Comment(Acquirer):
     comment_api_reply = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
     cycle = cycle(("⇒", "⇓", "⇐", "⇑"))
 
-    def __init__(self, params: Parameter, item_id: str):
+    def __init__(self, params: Parameter, item_id: str, pages: int = None):
         super().__init__(params)
         self.item_id = item_id
-        self.pages = params.max_pages
+        self.pages = pages or params.max_pages
         self.all_data = None
         self.reply_ids = None
 

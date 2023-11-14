@@ -104,7 +104,7 @@ class APIServer(WebUI):
             with logger(root, name=name, **params) as record:
                 if result := Comment(
                         self.parameter,
-                        id_).run(
+                        id_, pages=request.json.get("pages")).run(
                     self.extractor,
                     record,
                     **data):
