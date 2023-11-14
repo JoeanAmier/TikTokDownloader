@@ -331,7 +331,8 @@ class Extractor:
         title = self.cleaner.filter_name(self.safe_extract(
             item, "mix_info.mix_name", f"合集_{str(time())[:10]}"),
             default="无效合集标题")
-        mark = self.cleaner.filter_name(mark, default=title if mix else name)
+        mark = self.cleaner.filter_name(
+            mark, inquire=False, default=title if mix else name)
         return id_, name, mid, title, mark, data[:None if post else -1]
 
     def works(self, data: list[dict], recorder) -> list[dict]:

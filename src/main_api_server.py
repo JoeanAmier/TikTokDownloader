@@ -1,3 +1,4 @@
+from flask import redirect
 from flask import request
 
 from src.DataAcquirer import Comment
@@ -22,6 +23,11 @@ class APIServer(WebUI):
         data["logger"] = logger
 
     def run_server(self, app):
+        @app.route("/")
+        def index():
+            return redirect(
+                "https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation")
+
         @app.route('/settings/', methods=['POST'])
         def settings():
             return self.update_settings(request.json)

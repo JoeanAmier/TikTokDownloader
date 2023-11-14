@@ -464,7 +464,7 @@ class TikTok:
                         logger,
                         mix_id: bool = None,
                         id_: str = None,
-                        mark: str = None,
+                        mark="",
                         num: int = 0,
                         api=False,
                         source=False, ):
@@ -628,6 +628,7 @@ class TikTok:
         if not any(search_data):
             self.logger.warning("采集搜索数据失败")
             return None
+        # print(search_data)  # 调试使用
         if source:
             return search_data
         name = self._generate_search_name(
@@ -635,12 +636,13 @@ class TikTok:
         root, params, logger = self.record.run(self.parameter,
                                                type_=self.DATA_TYPE[type_[0]])
         with logger(root, name=name, **params) as logger:
-            self.extractor.run(
+            search_data = self.extractor.run(
                 search_data,
                 logger,
                 type_="search",
                 tab=type_[0])
             self.logger.info(f"搜索数据已保存至 {name}")
+        # print(search_data)  # 调试使用
         return search_data
 
     @check_storage_format
@@ -662,6 +664,7 @@ class TikTok:
                 data.append(
                     {Hot.board_params[i].name: self.extractor.run(j, record, type_="hot")})
         self.logger.info(f"热榜数据已储存至 {time_} + 榜单类型")
+        # print(time_, data, source)  # 调试使用
         return time_, data
 
     def collection_interactive(self):

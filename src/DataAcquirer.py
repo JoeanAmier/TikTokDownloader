@@ -64,12 +64,6 @@ class Acquirer:
     follow_api = "https://www.douyin.com/aweme/v1/web/follow/feed/"  # 关注账号作品推荐API
     history_api = "https://www.douyin.com/aweme/v1/web/history/read/"  # 观看历史API
     following_api = "https://www.douyin.com/aweme/v1/web/user/following/list/"  # 关注列表API
-    hot_params = (
-        (0, ""),
-        (2, 2),
-        (2, 4),
-        (2, "hotspot_challenge"),
-    )
 
     # TikTok API
     recommend_api = "https://www.tiktok.com/api/recommend/item_list/"  # 推荐页API
@@ -329,6 +323,7 @@ class Account(Acquirer):
             self.early_stop()
             self.pages -= 1
             num += 1
+            # break  # 调试使用
         self.summary_works()
         self.favorite_mode()
         return self.response, self.earliest, self.latest
@@ -463,6 +458,7 @@ class Comment(Acquirer):
             self.get_comments_data(self.comment_api)
             self.pages -= 1
             num += 1
+            # break  # 调试使用
         self.all_data, self.reply_ids = extractor.run(
             self.response, recorder, "comment", source=source)
         self.response = []
@@ -473,6 +469,7 @@ class Comment(Acquirer):
                 self.console.print(f"{next(self.cycle)} 正在获取评论回复数据...")
                 self.get_comments_data(self.comment_api_reply, i)
                 self.pages -= 1
+                # break  # 调试使用
         self.all_data.extend(
             self._check_reply_ids(
                 *
@@ -559,6 +556,7 @@ class Mix(Acquirer):
             self.console.print(f"正在获取第 {num} 页数据...")
             self._get_mix_data()
             num += 1
+            # break  # 调试使用
         return self.response
 
     def _get_mix_data(self):
