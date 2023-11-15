@@ -9,7 +9,6 @@ from requests import exceptions
 from requests import get
 
 from src.Customizer import ERROR
-from src.Customizer import GENERAL
 from src.Customizer import WARNING
 from src.Customizer import check_login
 from src.Parameter import TtWid
@@ -29,7 +28,7 @@ class Cookie:
         """提取 Cookie 并写入配置文件"""
         if not (
                 cookie := self.console.input(
-                    f"[{GENERAL}]请粘贴 Cookie 内容：[/{GENERAL}]")):
+                    "请粘贴 Cookie 内容: ")):
             return
         self.extract(cookie)
 
@@ -63,13 +62,13 @@ class Cookie:
         if return_:
             return keys
         self.write(keys)
-        self.console.print("写入 Cookie 成功！", style=GENERAL)
+        self.console.print("写入 Cookie 成功！")
 
     def check_key(self, items):
         if not items["sessionid_ss"]:
-            self.console.print("当前 Cookie 未登录", style=GENERAL)
+            self.console.print("当前 Cookie 未登录")
         else:
-            self.console.print("当前 Cookie 已登录", style=GENERAL)
+            self.console.print("当前 Cookie 已登录")
         keys_to_remove = [key for key, value in items.items() if value is None]
         for key in keys_to_remove:
             del items[key]
@@ -141,7 +140,7 @@ class Register:
 
     def generate_qr_code(self, url: str):
         qr_code = QRCode()
-        assert url, "无效的登录二维码数据"
+        # assert url, "无效的登录二维码数据"
         qr_code.add_data(url)
         qr_code.make(fit=True)
         qr_code.print_ascii(invert=True)
@@ -221,7 +220,7 @@ class Register:
 
     def wait(self):
         sleep(2)
-        self.console.print("正在检查登录结果！", style=GENERAL)
+        self.console.print("正在检查登录结果！")
 
     def request_data(self, json=True, **kwargs):
         try:

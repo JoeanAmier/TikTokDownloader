@@ -13,7 +13,7 @@ from requests import exceptions
 from requests import get
 
 from src.CookieTool import Register
-from src.Customizer import INFO, ERROR, GENERAL
+from src.Customizer import INFO, ERROR
 from src.DataExtractor import Extractor
 # from src.Parameter import MsToken
 from src.Parameter import TtWid
@@ -67,7 +67,7 @@ class Settings:
             dump(self.__default, f, indent=4, ensure_ascii=False)
         self.console.print(
             "创建默认配置文件 settings.json 成功！\n请参考项目文档的快速入门部分，设置 Cookie 后重新运行程序！\n建议根据实际使用需求"
-            "修改配置文件 settings.json！\n", style=GENERAL)
+            "修改配置文件 settings.json！\n")
         return self.__default
 
     def read(self) -> dict:

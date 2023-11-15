@@ -438,6 +438,20 @@
 ```
 
 <p>代表运行程序自动进入 <code>终端命令行模式</code>，其他示例：<code>4</code> 代表 <code>Web API 接口模式</code>，<code>5</code> 代表 <code>Web UI 交互模式</code>，<code>6</code> 代表 <code>服务器部署模式</code>。</p>
+
+```json
+{
+  "proxies": "http://127.0.0.1:9999"
+}
+```
+
+<p>代表程序获取网络数据时使用 <code>http://127.0.0.1:9999</code> 作为代理；程序会自动验证代理是否可用，如果代理不可用，则 <code>proxies</code> 参数不生效。</p>
+<p>如果您的电脑使用了代理工具且未修改默认端口，可以尝试以下设置：</p>
+<ul>
+<li>Clash: <code>http://127.0.0.1:7890</code></li>
+<li>v2rayN: <code>http://127.0.0.1:10809</code></li>
+</ul>
+
 <h1>高级配置</h1>
 <p>如果想要进一步修改程序功能，可以编辑 <code>src/Customizer.py</code> 文件，按照注释指引和实际需求进行自定义修改。</p>
 <b>部分可自定义设置的功能：</b>
