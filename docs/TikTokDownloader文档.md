@@ -296,7 +296,7 @@
 <td align="center">程序启动的默认模式</td>
 </tr>
 <tr>
-<td align="center">ffmpeg_path</td>
+<td align="center">ffmpeg</td>
 <td align="center">str</td>
 <td align="center"><code>ffmpeg.exe</code> 路径，下载直播时使用，如果系统环境存在 <code>ffmpeg</code> 或者不想使用 <code>ffmpeg</code>，可以不设置该参数</td>
 </tr>
@@ -357,7 +357,7 @@
   "max_retry": 10,
   "max_pages": 2,
   "default_mode": 3,
-  "ffmpeg_path": "C:\\TikTokDownloader\\ffmpeg.exe"
+  "ffmpeg": "C:\\TikTokDownloader\\ffmpeg.exe"
 }
 ```
 

@@ -58,7 +58,7 @@ class Settings:
             "max_retry": 10,  # 重试最大次数
             "max_pages": 0,
             "default_mode": 0,
-            "ffmpeg_path": "",
+            "ffmpeg": "",
         }  # 默认配置
 
     def __create(self) -> dict:
@@ -148,7 +148,7 @@ class Parameter:
             max_pages: int,
             default_mode: int,
             owner_url: dict,
-            ffmpeg_path: str,
+            ffmpeg: str,
             blacklist,
             timeout=10,
             **kwargs,
@@ -190,8 +190,7 @@ class Parameter:
         self.owner_url = Extractor.generate_data_object(owner_url)
         self.default_mode = self.check_default_mode(default_mode)
         self.preview = "static/images/blank.png"
-        self.ffmpeg_path = ffmpeg_path
-        self.ffmpeg = self._check_ffmpeg_path(self.ffmpeg_path)
+        self.ffmpeg = self._generate_ffmpeg_object(ffmpeg)
         self.check_rules = {
             "accounts_urls": None,
             "mix_urls": None,
@@ -213,7 +212,7 @@ class Parameter:
             "max_retry": self.check_max_retry,
             "max_pages": self.check_max_pages,
             "default_mode": self.check_default_mode,
-            "ffmpeg_path": self._check_ffmpeg_path,
+            "ffmpeg": self._generate_ffmpeg_object,
         }
 
     @staticmethod
@@ -386,8 +385,8 @@ class Parameter:
             self.headers["Cookie"] = self.add_cookie(self.cookie_cache)
 
     @staticmethod
-    def _check_ffmpeg_path(ffmpeg_path: str):
-        return f if (f := FFMPEG(Path(ffmpeg_path))).run() else None
+    def _generate_ffmpeg_object(ffmpeg_path: str):
+        return FFMPEG(ffmpeg_path)
 
     def get_settings_data(self) -> dict:
         return {
@@ -412,8 +411,7 @@ class Parameter:
             "max_retry": self.max_retry,
             "max_pages": self.max_pages,
             "default_mode": int(self.default_mode),
-            "ffmpeg_path": self.ffmpeg.path,
-            "ffmpeg": bool(self.ffmpeg),
+            "ffmpeg": self.ffmpeg.path,
         }
 
     def update_settings_data(self, data: dict, ):
@@ -435,8 +433,9 @@ class Parameter:
 
 
 class FFMPEG:
-    def __init__(self, path: Path):
-        self.path = path
+    def __init__(self, path: str):
+        self.path = self.__check_ffmpeg_path(Path(path))
+        self.state = bool(self.path)
         self.command, self.shell = self._check_system_type()
 
     @staticmethod
@@ -448,17 +447,16 @@ class FFMPEG:
         elif s == "Linux":  # Linux
             return ['x-terminal-emulator'], False
 
-    def run(self):
-        self.path = self._check_system_ffmpeg() or self._check_path_ffmpeg()
-        return self.path
+    def __check_ffmpeg_path(self, path: Path):
+        return self.__check_system_ffmpeg() or self.__check_system_ffmpeg(path)
 
     def download(self, data: list[tuple], proxies, timeout, user_agent):
         for u, p in data:
-            command = self._generate_command(
+            command = self.__generate_command(
                 u, p, proxies, timeout, user_agent)
             Popen(command, shell=self.shell)
 
-    def _generate_command(
+    def __generate_command(
             self,
             url,
             file,
@@ -494,8 +492,5 @@ class FFMPEG:
         return " ".join(command)
 
     @staticmethod
-    def _check_system_ffmpeg():
-        return which("ffmpeg")
-
-    def _check_path_ffmpeg(self):
-        return which(self.path)
+    def __check_system_ffmpeg(path: Path = None):
+        return which(path or "ffmpeg")

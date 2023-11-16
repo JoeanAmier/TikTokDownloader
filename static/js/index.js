@@ -42,7 +42,7 @@ function get_parameters() {
         max_retry: $("#max_retry").val(),
         max_pages: $("#max_pages").val(),
         cookie: $("#cookie").val(),
-        ffmpeg_path: $("#ffmpeg_path").val(),
+        ffmpeg: $("#ffmpeg").val(),
     }
 }
 

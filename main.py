@@ -65,8 +65,8 @@ class TikTokDownloader:
     PROJECT_ROOT = Path(__file__).resolve().parent  # 源码运行
     # print(PROJECT_ROOT)  # 调试使用
 
-    VERSION = 5.0
-    STABLE = True
+    VERSION = 5.1
+    STABLE = False
 
     REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
     LICENCE = "GNU General Public License v3.0"

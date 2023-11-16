@@ -172,9 +172,9 @@
                                 </label>
                             </div>
                             <div class="field quarter">
-                                <label for="ffmpeg_path">ffmpeg.exe 路径(ffmpeg_path)</label>
+                                <label for="ffmpeg">ffmpeg.exe 路径(ffmpeg)</label>
                                 <label>
-                                    <input type="text" id="ffmpeg_path" value="{{ ffmpeg_path }}"/>
+                                    <input type="text" id="ffmpeg" value="{{ ffmpeg }}"/>
                                 </label>
                             </div>
                         </div>
@@ -202,11 +202,6 @@
                                 <input type="checkbox" id="download" name="download"
                                        {% if download %}checked{% endif %}>
                                 <label for="download">启用下载功能</label>
-                            </div>
-                            <div class="field quarter">
-                                <input type="checkbox" id="ffmpeg" name="ffmpeg"
-                                       {% if ffmpeg %}checked{% endif %} disabled>
-                                <label for="ffmpeg">ffmpeg 可用状态</label>
                             </div>
                         </div>
                         <ul class="actions">

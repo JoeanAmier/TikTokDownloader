@@ -130,7 +130,7 @@ class Downloader:
         download_tasks = []
         download_command = []
         self.generate_live_tasks(data, download_tasks, download_command)
-        if self.ffmpeg:
+        if self.ffmpeg.state:
             self.console.print(
                 "检测到 ffmpeg，程序将会调用 ffmpeg 下载直播，关闭 TikTokDownloader 不会中断下载！",
                 style=INFO,
