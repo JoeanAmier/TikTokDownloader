@@ -105,7 +105,7 @@
 <li>程序所有数据均储存至 <code>root</code> 参数路径下的 <code>Data</code> 文件夹。</li>
 </ul>
 <h2>直播下载</h2>
-<p><code>获取直播推流地址</code> 功能支持调用 <code>ffmpeg</code> 下载直播，程序会优先调用系统环境的 <code>ffmpeg</code>，其次调用 <code>ffmpeg_path</code> 参数指定的 <code>ffmpeg</code>，如果 <code>ffmpeg</code> 不可用，程序将会调用内置下载器下载直播。</p>
+<p><code>获取直播推流地址</code> 功能支持调用 <code>ffmpeg</code> 下载直播，程序会优先调用系统环境的 <code>ffmpeg</code>，其次调用 <code>ffmpeg</code> 参数指定的 <code>ffmpeg</code>，如果 <code>ffmpeg</code> 不可用，程序将会调用内置下载器下载直播。</p>
 <p>建议配置 <code>ffmpeg</code> 环境，<code>ffmpeg.exe</code> 可前往 <a href="http://ffmpeg.org/download.html">官方网站</a> 获取。</p>
 <h2>功能简介</h2>
 <table>
@@ -637,7 +637,7 @@ print(response.json())
   "max_retry": "可选参数",
   "max_pages": "可选参数",
   "default_mode": "可选参数",
-  "ffmpeg_path": "可选参数"
+  "ffmpeg": "可选参数"
 }
 ```
 

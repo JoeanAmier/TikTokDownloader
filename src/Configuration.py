@@ -242,14 +242,16 @@ class Parameter:
             return cookie
 
     def check_root(self, root: str) -> Path:
+        if not root:
+            return self.main_path
         if (r := Path(root)).is_dir():
             self.logger.info(f"root 参数已设置为 {root}", False)
             return r
         if r := self.check_root_again(r):
             self.logger.info(f"root 参数已设置为 {r}", False)
-        else:
-            self.logger.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
-            return self.main_path
+            return r
+        self.logger.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
+        return self.main_path
 
     @staticmethod
     def check_root_again(root: Path) -> bool | Path:

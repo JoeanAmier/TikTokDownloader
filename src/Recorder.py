@@ -51,10 +51,11 @@ class BaseLogger:
         return root, folder, name
 
     def check_root(self, root: str, default: Path) -> Path:
+        if not root:
+            return default
         if (r := Path(root)).is_dir():
             return r
-        if root:
-            self.console.print(f"日志储存路径 {root} 无效，程序将使用项目根路径作为储存路径")
+        self.console.print(f"日志储存路径 {root} 无效，程序将使用项目根路径作为储存路径")
         return default
 
     def check_name(self, name: str) -> str:
