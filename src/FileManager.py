@@ -42,13 +42,13 @@ class Cache:
             if self.file.exists():
                 with self.file.open("r", encoding="UTF-8") as f:
                     cache = load(f)
-                    self.log.info("读取缓存数据成功")
+                    self.log.info("读取缓存数据成功\n")
                     return cache
             else:
-                self.log.info("缓存数据文件不存在")
+                self.log.info("缓存数据文件不存在\n")
                 return {}
         except JSONDecodeError:
-            self.log.warning("缓存数据文件已损坏")
+            self.log.warning("缓存数据文件已损坏\n")
             return {}
 
     def save_cache(self):

@@ -629,12 +629,14 @@ class Extractor:
 
     @staticmethod
     def date_filter(container: SimpleNamespace):
+        # print("前", len(container.all_data))  # 调试代码
         result = []
         for item in container.all_data:
             create_time = datetime.fromtimestamp(
                 item["create_timestamp"]).date()
             if container.earliest <= create_time <= container.latest:
                 result.append(item)
+        # print("后", len(result))  # 调试代码
         container.all_data = result
 
     @staticmethod

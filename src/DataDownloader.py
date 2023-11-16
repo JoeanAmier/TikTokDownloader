@@ -12,6 +12,8 @@ from rich.progress import (
     Progress,
     TextColumn,
     TimeElapsedColumn,
+    TimeRemainingColumn,
+    TransferSpeedColumn,
 )
 
 from src.Configuration import Parameter
@@ -31,30 +33,6 @@ class Downloader:
     Phone_headers = {
         'User-Agent': 'com.ss.android.ugc.trill/494+Mozilla/5.0+(Linux;+Android+12;+2112123G+Build/SKQ1.211006.001;+wv)'
                       '+AppleWebKit/537.36+(KHTML,+like+Gecko)+Version/4.0+Chrome/107.0.5304.105+Mobile+Safari/537.36'}
-    progress = Progress(
-        TextColumn(
-            "[progress.description]{task.description}",
-            style=PROGRESS,
-            justify="left"),
-        "•",
-        BarColumn(
-            bar_width=20),
-        "[progress.percentage]{task.percentage:>3.1f}%",
-        "•",
-        DownloadColumn(
-            binary_units=True),
-    )
-    live_progress = Progress(
-        TextColumn(
-            "[progress.description]{task.description}",
-            style=PROGRESS,
-            justify="left"),
-        "•",
-        BarColumn(
-            bar_width=20),
-        "•",
-        TimeElapsedColumn(),
-    )
 
     def __init__(self, params: Parameter):
         self.cleaner = params.cleaner
@@ -83,6 +61,36 @@ class Downloader:
         self.__thread = ThreadPoolExecutor
         self.__pool = None
         self.__temp = params.temp
+        self.progress = Progress(
+            TextColumn(
+                "[progress.description]{task.description}",
+                style=PROGRESS,
+                justify="left"),
+            "•",
+            BarColumn(
+                bar_width=20),
+            "[progress.percentage]{task.percentage:>3.1f}%",
+            "•",
+            DownloadColumn(
+                binary_units=True),
+            "•",
+            TimeRemainingColumn(),
+            console=self.console,
+        )
+        self.live_progress = Progress(
+            TextColumn(
+                "[progress.description]{task.description}",
+                style=PROGRESS,
+                justify="left"),
+            "•",
+            BarColumn(
+                bar_width=20),
+            "•",
+            TransferSpeedColumn(),
+            "•",
+            TimeElapsedColumn(),
+            console=self.console,
+        )
 
     @staticmethod
     def init_headers(headers: dict) -> tuple:
@@ -234,8 +242,7 @@ class Downloader:
                         *task,
                         count=count,
                         **kwargs,
-                        progress=progress,
-                        output=False)
+                        progress=progress)
 
     def deal_folder_path(self, root: Path, name: str,
                          pass_=False) -> tuple[Path, Path]:
@@ -388,14 +395,14 @@ class Downloader:
                             response.headers.get(
                                 'content-length',
                                 0))) and not unknown_size:
-                    self.log.warning(f"{url} 响应内容为空", False)
+                    self.log.warning(f"{url} 响应内容为空")
                     return False
                 if response.status_code != 200:
                     self.log.warning(
-                        f"{response.url} 响应码异常: {response.status_code}", False)
+                        f"{response.url} 响应码异常: {response.status_code}")
                     return False
                 elif all((self.max_size, content, content > self.max_size)):
-                    self.log.info(f"{show} 文件大小超出限制，跳过下载", False)
+                    self.log.info(f"{show} 文件大小超出限制，跳过下载")
                     return True
                 return self.download_file(
                     task_id,
@@ -410,7 +417,7 @@ class Downloader:
         except (exceptions.ConnectionError,
                 exceptions.ChunkedEncodingError,
                 exceptions.ReadTimeout) as e:
-            self.log.warning(f"网络异常: {e}", False)
+            self.log.warning(f"网络异常: {e}")
             return False
 
     def download_file(
@@ -432,7 +439,7 @@ class Downloader:
                     f.write(chunk)
                     progress.update(task_id, advance=len(chunk))
         except exceptions.ChunkedEncodingError:
-            self.log.warning(f"{show} 由于网络异常下载中断", False)
+            self.log.warning(f"{show} 由于网络异常下载中断")
             self.delete_file(temp)
             return False
         self.save_file(temp, actual)
@@ -485,7 +492,7 @@ class Downloader:
 
     def delete_file(self, path: Path):
         path.unlink()
-        self.log.info(f"文件 {path.name}{path.suffix} 已删除", False)
+        self.log.info(f"文件 {path.name}{path.suffix} 已删除")
 
     def statistics_count(self, count: SimpleNamespace):
         self.log.info(f"跳过视频作品 {len(count.skipped_video)} 个")

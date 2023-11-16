@@ -159,7 +159,7 @@ class TikTok:
                 if failed():
                     continue
                 break
-            # break  # 调试使用
+            # break  # 调试代码
             rest(index, self.console.print)
 
     def check_sec_user_id(self, sec_user_id: str) -> str:
@@ -628,7 +628,7 @@ class TikTok:
         if not any(search_data):
             self.logger.warning("采集搜索数据失败")
             return None
-        # print(search_data)  # 调试使用
+        # print(search_data)  # 调试代码
         if source:
             return search_data
         name = self._generate_search_name(
@@ -642,7 +642,7 @@ class TikTok:
                 type_="search",
                 tab=type_[0])
             self.logger.info(f"搜索数据已保存至 {name}")
-        # print(search_data)  # 调试使用
+        # print(search_data)  # 调试代码
         return search_data
 
     @check_storage_format
@@ -664,7 +664,7 @@ class TikTok:
                 data.append(
                     {Hot.board_params[i].name: self.extractor.run(j, record, type_="hot")})
         self.logger.info(f"热榜数据已储存至 {time_} + 榜单类型")
-        # print(time_, data, source)  # 调试使用
+        # print(time_, data, source)  # 调试代码
         return time_, data
 
     def collection_interactive(self):

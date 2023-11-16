@@ -39,12 +39,10 @@ def retry(function):
 
     def inner(self, *args, **kwargs):
         finished = kwargs.pop("finished", False)
-        output = kwargs.pop("output", True)
         for i in range(self.max_retry):
             if result := function(self, *args, **kwargs):
                 return result
-            if output:
-                self.console.print(f"正在尝试第 {i + 1} 次重试！", style=WARNING)
+            self.console.print(f"正在尝试第 {i + 1} 次重试！", style=WARNING)
         if not (result := function(self, *args, **kwargs)) and finished:
             self.finished = True
         return result
@@ -323,7 +321,7 @@ class Account(Acquirer):
             self.early_stop()
             self.pages -= 1
             num += 1
-            # break  # 调试使用
+            # break  # 调试代码
         self.summary_works()
         self.favorite_mode()
         return self.response, self.earliest, self.latest
@@ -458,7 +456,7 @@ class Comment(Acquirer):
             self.get_comments_data(self.comment_api)
             self.pages -= 1
             num += 1
-            # break  # 调试使用
+            # break  # 调试代码
         self.all_data, self.reply_ids = extractor.run(
             self.response, recorder, "comment", source=source)
         self.response = []
@@ -469,7 +467,7 @@ class Comment(Acquirer):
                 self.console.print(f"{next(self.cycle)} 正在获取评论回复数据...")
                 self.get_comments_data(self.comment_api_reply, i)
                 self.pages -= 1
-                # break  # 调试使用
+                # break  # 调试代码
         self.all_data.extend(
             self._check_reply_ids(
                 *
@@ -556,7 +554,7 @@ class Mix(Acquirer):
             self.console.print(f"正在获取第 {num} 页数据...")
             self._get_mix_data()
             num += 1
-            # break  # 调试使用
+            # break  # 调试代码
         return self.response
 
     def _get_mix_data(self):
