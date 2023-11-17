@@ -208,7 +208,7 @@
 <tr>
 <td align="center">root</td>
 <td align="center">str</td>
-<td align="center">作品文件和数据记录保存路径, 默认值: <code>项目根路径</code></td>
+<td align="center">作品文件和数据记录保存路径, 建议使用绝对路径，默认值: <code>项目根路径</code></td>
 </tr>
 <tr>
 <td align="center">folder_name</td>
@@ -218,7 +218,7 @@
 <tr>
 <td align="center">name_format</td>
 <td align="center">str</td>
-<td align="center">文件保存时的命名规则, 值之间使用空格分隔<br>默认值: 作品类型-发布时间-账号昵称-描述<br><code>id</code>: 唯一值, <code>desc</code>: 描述, <code>create_time</code>: 发布时间<br><code>nickname</code>: 账号昵称, <code>mark</code>: 账号标识, <code>uid</code>: 账号UID, <code>type</code>: 作品类型</td>
+<td align="center">文件保存时的命名规则, 值之间使用空格分隔<br>默认值: 发布时间-作品类型-账号昵称-描述<br><code>id</code>: 唯一值, <code>desc</code>: 描述, <code>create_time</code>: 发布时间<br><code>nickname</code>: 账号昵称, <code>mark</code>: 账号标识, <code>uid</code>: 账号UID, <code>type</code>: 作品类型</td>
 </tr>
 <tr>
 <td align="center">date_format</td>
