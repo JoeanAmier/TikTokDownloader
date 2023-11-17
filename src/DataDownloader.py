@@ -61,7 +61,9 @@ class Downloader:
         self.__thread = ThreadPoolExecutor
         self.__pool = None
         self.__temp = params.temp
-        self.progress = Progress(
+
+    def __general_progress_object(self):
+        return Progress(
             TextColumn(
                 "[progress.description]{task.description}",
                 style=PROGRESS,
@@ -77,7 +79,9 @@ class Downloader:
             TimeRemainingColumn(),
             console=self.console,
         )
-        self.live_progress = Progress(
+
+    def __live_progress_object(self):
+        return Progress(
             TextColumn(
                 "[progress.description]{task.description}",
                 style=PROGRESS,
@@ -152,7 +156,7 @@ class Downloader:
             self.downloader_chart(
                 download_tasks,
                 SimpleNamespace(),
-                self.live_progress,
+                self.__general_progress_object(),
                 len(download_tasks),
                 unknown_size=True,
                 headers=self.black_headers)
@@ -219,7 +223,11 @@ class Downloader:
                 self.download_video(**params)
             self.download_music(**params)
             self.download_cover(**params)
-        self.downloader_chart(tasks, count, self.progress, **kwargs)
+        self.downloader_chart(
+            tasks,
+            count,
+            self.__general_progress_object(),
+            **kwargs)
         if statistics:
             self.statistics_count(count)
 
