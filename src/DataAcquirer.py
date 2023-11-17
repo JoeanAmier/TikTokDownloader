@@ -1,6 +1,5 @@
 from datetime import date
 from datetime import datetime
-from itertools import cycle
 from re import compile
 from time import time
 from types import SimpleNamespace
@@ -11,10 +10,17 @@ from urllib.parse import urlparse
 
 from requests import exceptions
 from requests import request
+from rich.progress import (
+    BarColumn,
+    Progress,
+    TextColumn,
+    TimeElapsedColumn,
+)
 
 from src.Configuration import Parameter
 from src.Customizer import (
     WARNING,
+    PROGRESS
 )
 from src.Customizer import wait
 from src.DataExtractor import Extractor
@@ -135,6 +141,20 @@ class Acquirer:
             end: int = None):
         for i in data[start:end]:
             self.response.append(i)
+
+    def progress_object(self):
+        return Progress(
+            TextColumn(
+                "[progress.description]{task.description}",
+                style=PROGRESS,
+                justify="left"),
+            "•",
+            BarColumn(
+                bar_width=20),
+            "•",
+            TimeElapsedColumn(),
+            console=self.console,
+        )
 
 
 class Share:
@@ -314,14 +334,15 @@ class Account(Acquirer):
             return date.today()
 
     def run(self) -> tuple[list[dict], date, date]:
-        num = 1
-        while not self.finished and self.pages > 0:
-            self.console.print(f"正在获取第 {num} 页数据...")
-            self.get_account_data(self.api)
-            self.early_stop()
-            self.pages -= 1
-            num += 1
-            # break  # 调试代码
+        with self.progress_object() as progress:
+            task_id = progress.add_task(
+                "正在获取账号主页数据", total=None)
+            while not self.finished and self.pages > 0:
+                progress.update(task_id)
+                self.get_account_data(self.api)
+                self.early_stop()
+                self.pages -= 1
+                # break  # 调试代码
         self.summary_works()
         self.favorite_mode()
         return self.response, self.earliest, self.latest
@@ -440,7 +461,6 @@ class Works(Acquirer):
 class Comment(Acquirer):
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
     comment_api_reply = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
-    cycle = cycle(("⇒", "⇓", "⇐", "⇑"))
 
     def __init__(self, params: Parameter, item_id: str, pages: int = None):
         super().__init__(params)
@@ -450,24 +470,28 @@ class Comment(Acquirer):
         self.reply_ids = None
 
     def run(self, extractor: Extractor, recorder, source=False) -> list[dict]:
-        num = 1
-        while not self.finished and self.pages > 0:
-            self.console.print(f"正在获取第 {num} 页数据...")
-            self.get_comments_data(self.comment_api)
-            self.pages -= 1
-            num += 1
-            # break  # 调试代码
+        with self.progress_object() as progress:
+            task_id = progress.add_task(
+                "正在获取作品评论数据", total=None)
+            while not self.finished and self.pages > 0:
+                progress.update(task_id)
+                self.get_comments_data(self.comment_api)
+                self.pages -= 1
+                # break  # 调试代码
         self.all_data, self.reply_ids = extractor.run(
             self.response, recorder, "comment", source=source)
         self.response = []
-        for i in self.reply_ids:
-            self.finished = False
-            self.cursor = 0
-            while not self.finished and self.pages > 0:
-                self.console.print(f"{next(self.cycle)} 正在获取评论回复数据...")
-                self.get_comments_data(self.comment_api_reply, i)
-                self.pages -= 1
-                # break  # 调试代码
+        with self.progress_object() as progress:
+            task_id = progress.add_task(
+                "正在获取评论回复数据", total=None)
+            for i in self.reply_ids:
+                self.finished = False
+                self.cursor = 0
+                while not self.finished and self.pages > 0:
+                    progress.update(task_id)
+                    self.get_comments_data(self.comment_api_reply, i)
+                    self.pages -= 1
+                    # break  # 调试代码
         self.all_data.extend(
             self._check_reply_ids(
                 *
@@ -549,12 +573,13 @@ class Mix(Acquirer):
         self._get_mix_id()
         if not self.mix_id:
             return []
-        num = 1
-        while not self.finished:
-            self.console.print(f"正在获取第 {num} 页数据...")
-            self._get_mix_data()
-            num += 1
-            # break  # 调试代码
+        with self.progress_object() as progress:
+            task_id = progress.add_task(
+                "正在获取合集作品数据", total=None)
+            while not self.finished:
+                progress.update(task_id)
+                self._get_mix_data()
+                # break  # 调试代码
         return self.response
 
     def _get_mix_data(self):
@@ -750,9 +775,13 @@ class Search(Acquirer):
             deal = self._run_general
         else:
             raise ValueError
-        while not self.finished and self.page > 0:
-            deal(data, self.tab)
-            self.page -= 1
+        with self.progress_object() as progress:
+            task_id = progress.add_task(
+                "正在获取搜索结果数据", total=None)
+            while not self.finished and self.page > 0:
+                progress.update(task_id)
+                deal(data, self.tab)
+                self.page -= 1
         return self.response
 
     def _run_user_live(self, data: SimpleNamespace, type_: int):
@@ -904,12 +933,13 @@ class Collection(Acquirer):
         self.info = Info(params, sec_user_id)
 
     def run(self):
-        num = 1
-        while not self.finished and self.pages > 0:
-            self.console.print(f"正在获取第 {num} 页数据...")
-            self._get_account_data()
-            self.pages -= 1
-            num += 1
+        with self.progress_object() as progress:
+            task_id = progress.add_task(
+                "正在获取账号收藏数据", total=None)
+            while not self.finished and self.pages > 0:
+                progress.update(task_id)
+                self._get_account_data()
+                self.pages -= 1
         self._get_owner_data()
         return self.response
 

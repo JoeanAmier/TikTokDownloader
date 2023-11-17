@@ -283,7 +283,7 @@ class TikTokDownloader:
         self.disclaimer()
         self.main_menu(self.parameter.default_mode)
         self.delete_temp()
-        self.console.print("程序结束运行")
+        self.parameter.logger.info("程序结束运行")
 
     def delete_temp(self):
         rmtree(self.PROJECT_ROOT.joinpath("./cache/temp").resolve())
