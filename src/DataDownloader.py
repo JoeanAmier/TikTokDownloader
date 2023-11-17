@@ -104,6 +104,8 @@ class Downloader:
             data: list[dict],
             type_: str,
             **kwargs, ) -> None:
+        if not self.download:
+            return
         if type_ == "batch":
             self.run_batch(data, **kwargs)
         elif type_ == "works":
@@ -195,8 +197,6 @@ class Downloader:
             root: Path,
             statistics=True,
             **kwargs):
-        if not self.download:
-            return
         count = SimpleNamespace(
             downloaded_image=set(),
             skipped_image=set(),

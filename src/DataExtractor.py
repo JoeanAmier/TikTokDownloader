@@ -636,6 +636,8 @@ class Extractor:
                 item["create_timestamp"]).date()
             if container.earliest <= create_time <= container.latest:
                 result.append(item)
+            # else:
+            #     print("丢弃", item)  # 调试代码
         # print("后", len(result))  # 调试代码
         container.all_data = result
 
