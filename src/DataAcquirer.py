@@ -454,8 +454,8 @@ class Works(Acquirer):
             self.log.warning("获取作品数据失败")
             return {}
         try:
-            return data["aweme_detail"] or {}
-        except KeyError:
+            return data["aweme_list"][0] if self.tiktok else data["aweme_detail"] or {}
+        except (KeyError, IndexError):
             self.log.error(f"作品数据响应内容异常: {data}")
 
 
