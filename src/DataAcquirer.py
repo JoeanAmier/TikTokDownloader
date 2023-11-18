@@ -290,11 +290,12 @@ class Account(Acquirer):
             sec_user_id: str,
             tab="post",
             earliest="",
-            latest="", ):
+            latest="",
+            pages: int = None, ):
         super().__init__(params)
         self.sec_user_id = sec_user_id
         self.api, self.favorite, self.pages = self.check_type(
-            tab, params.max_pages)
+            tab, pages or params.max_pages)
         self.earliest, self.latest = self.check_date(earliest, latest)
         self.info = Info(params, sec_user_id)
 
@@ -926,9 +927,10 @@ class Collection(Acquirer):
         "downlink": "5.45",
     }
 
-    def __init__(self, params: Parameter, sec_user_id: str):
+    def __init__(self, params: Parameter, sec_user_id: str,
+                 pages: int = None, ):
         super().__init__(params)
-        self.pages = params.max_pages
+        self.pages = pages or params.max_pages
         self.sec_user_id = bool(sec_user_id)
         self.info = Info(params, sec_user_id)
 

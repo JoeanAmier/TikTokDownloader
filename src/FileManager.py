@@ -4,7 +4,6 @@ from json.decoder import JSONDecodeError
 from pathlib import Path
 
 from src.Customizer import (
-    WARNING,
     ERROR,
 )
 
@@ -17,7 +16,7 @@ def retry(function):
             if function(self, *args, **kwargs):
                 return
             _ = self.console.input(
-                f"[{WARNING}]请关闭所有正在访问作品保存文件夹的窗口和程序，按下回车继续运行！[/{WARNING}]")
+                "请关闭所有正在访问作品保存文件夹的窗口和程序，按下回车继续运行！")
 
     return inner
 

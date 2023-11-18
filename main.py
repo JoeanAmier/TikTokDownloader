@@ -47,8 +47,9 @@ class ColorfulConsole(Console):
     def print(self, *args, style=GENERAL, highlight=False, **kwargs):
         super().print(*args, style=style, highlight=highlight, **kwargs)
 
-    def input(self, prompt="", *args, **kwargs):
-        return super().input(f"[{PROMPT}]{prompt}[/{PROMPT}]", *args, **kwargs)
+    def input(self, prompt_="", *args, **kwargs):
+        return super().input(
+            f"[{PROMPT}]{prompt_}[/{PROMPT}]", *args, **kwargs)
 
 
 def start_cookie_task(function):

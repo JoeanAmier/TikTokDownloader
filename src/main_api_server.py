@@ -44,6 +44,7 @@ class APIServer(WebUI):
                 "tab": request.json.get("tab", "post"),
                 "earliest": request.json.get("earliest", ""),
                 "latest": request.json.get("latest", ""),
+                "pages": request.json.get("pages"),
                 "api": True,
                 "source": request.json.get("source", False),
             }

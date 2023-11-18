@@ -7,6 +7,7 @@ from types import SimpleNamespace
 from requests import exceptions
 from requests import get
 from rich.progress import (
+    SpinnerColumn,
     BarColumn,
     DownloadColumn,
     Progress,
@@ -68,7 +69,7 @@ class Downloader:
                 "[progress.description]{task.description}",
                 style=PROGRESS,
                 justify="left"),
-            "•",
+            SpinnerColumn(),
             BarColumn(
                 bar_width=20),
             "[progress.percentage]{task.percentage:>3.1f}%",
@@ -86,7 +87,7 @@ class Downloader:
                 "[progress.description]{task.description}",
                 style=PROGRESS,
                 justify="left"),
-            "•",
+            SpinnerColumn(),
             BarColumn(
                 bar_width=20),
             "•",

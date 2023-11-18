@@ -194,13 +194,20 @@ class TikTok:
             tab="post",
             earliest="",
             latest="",
+            pages: int = None,
             api=False,
             source=False,
             *args,
             **kwargs,
     ):
         self.logger.info(f"开始处理第 {num} 个账号" if num else "开始处理账号")
-        acquirer = Account(self.parameter, sec_user_id, tab, earliest, latest)
+        acquirer = Account(
+            self.parameter,
+            sec_user_id,
+            tab,
+            earliest,
+            latest,
+            pages)
         account_data, earliest, latest = acquirer.run()
         if not any(account_data):
             self.logger.warning("获取账号主页数据失败")

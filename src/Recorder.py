@@ -114,17 +114,17 @@ class LoggerManager(BaseLogger):
     def info(self, text: str, output=True, **kwargs):
         if output:
             self.console.print(text, style=INFO, **kwargs)
-        self.log.info(text)
+        self.log.info(text.split())
 
     def warning(self, text: str, output=True, **kwargs):
         if output:
             self.console.print(text, style=WARNING, **kwargs)
-        self.log.warning(text)
+        self.log.warning(text.split())
 
     def error(self, text: str, output=True, **kwargs):
         if output:
             self.console.print(text, style=ERROR, **kwargs)
-        self.log.error(text)
+        self.log.error(text.split())
 
 
 class NoneLogger:
