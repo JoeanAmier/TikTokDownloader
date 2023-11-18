@@ -241,12 +241,9 @@ class Downloader:
         with progress:
             with self.__thread(max_workers=max_workers) as self.__pool:
                 for task in tasks:
-                    task_id = progress.add_task(
-                        task[3], start=False, total=None)
                     # noinspection PyTypeChecker
                     self.__pool.submit(
                         self.request_file,
-                        task_id,
                         *task,
                         count=count,
                         **kwargs,
@@ -380,7 +377,6 @@ class Downloader:
     @retry
     def request_file(
             self,
-            task_id,
             url: str,
             temp: Path,
             actual: Path,
@@ -413,7 +409,6 @@ class Downloader:
                     self.log.info(f"{show} 文件大小超出限制，跳过下载")
                     return True
                 return self.download_file(
-                    task_id,
                     temp,
                     actual,
                     show,
@@ -430,7 +425,6 @@ class Downloader:
 
     def download_file(
             self,
-            task_id,
             temp: Path,
             actual: Path,
             show: str,
@@ -439,8 +433,8 @@ class Downloader:
             content: int,
             count: SimpleNamespace,
             progress: Progress) -> bool:
-        progress.update(task_id, total=content or None)
-        progress.start_task(task_id)
+        task_id = progress.add_task(
+            show, total=content or None)
         try:
             with temp.open("wb") as f:
                 for chunk in response.iter_content(chunk_size=self.chunk):
