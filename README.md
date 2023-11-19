@@ -79,6 +79,7 @@
 # 📈 项目状态\(Status\)
 
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已完成测试，所有功能均可正常使用
+* 🟡 未来可能新增可视化编辑配置文件功能
 * 🟡 未来可能支持更多抖音热榜类型
 * 🟡 未来可能新增终端文本用户界面\(TUI\)模式
 * 🟡 未来可能新增账号发布作品监测功能

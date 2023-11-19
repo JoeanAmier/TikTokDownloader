@@ -641,6 +641,20 @@ class Extractor:
         # print("后", len(result))  # 调试代码
         container.all_data = result
 
+    def source_date_filter(
+            self,
+            data: list[dict],
+            earliest,
+            latest) -> list[dict]:
+        result = []
+        for item in data:
+            create_time = datetime.fromtimestamp(
+                item.get("create_time", 0)).date()
+            if earliest <= create_time <= latest:
+                result.append(item)
+        self.summary_works(result)
+        return result
+
     @staticmethod
     def extract_mix_id(data: dict) -> str:
         data = Extractor.generate_data_object(data)

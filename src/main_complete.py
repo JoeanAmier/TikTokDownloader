@@ -306,7 +306,11 @@ class TikTok:
             self.logger.warning("获取账号主页数据失败")
             return None
         if source:
-            return account_data[:None if tab == "post" else -1]
+            return self.extractor.source_date_filter(
+                account_data[:None if tab == "post" else -1],
+                earliest,
+                latest
+            )
         return self._batch_process_works(
             root,
             params,
