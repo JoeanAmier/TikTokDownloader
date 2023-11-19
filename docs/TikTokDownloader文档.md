@@ -332,7 +332,7 @@
     }
   ],
   "owner_url": {
-    "mark": "已登录 Cookie 的账号标识，可以设置为空字符串",
+    "mark": "已登录 Cookie 的账号标识，可以设置为空字符串（可选）",
     "url": "已登录 Cookie 的账号主页链接（可选）"
   },
   "root": "C:\\TikTokDownloader",
@@ -633,6 +633,7 @@ document.body.removeChild(downloadLink);
 <p>账号文件夹格式为 <code>UID123456789_mark_收藏作品</code> 或者 <code>UID123456789_账号昵称_收藏作品</code></p>
 <h2>Web API 接口模式</h2>
 <p>启动服务器，提供 API 调用功能；支持局域网远程访问，可以部署至私有服务器或者公开服务器，建议设置参数验证。</p>
+<p>部分接口支持传入临时 <code>cookie</code> 参数，如果传入临时 <code>cookie</code> 参数，本次 API 请求会使用临时 <code>cookie</code> 向抖音服务器获取数据，如果没有传入 <code>cookie</code> 参数，程序会使用配置文件的 <code>cookie</code> 参数；需要注意临时 <code>cookie</code> 和配置文件 <code>cookie</code> 参数的有效性；程序不会储存临时 <code>cookie</code> 内容。</p>
 <p>目前支持调用 API 获取数据，暂不支持调用 API 下载文件！</p>
 <p><strong>API 接口通用说明：</strong></p>
 <ul>
@@ -691,12 +692,13 @@ print(response.json())
 
 ```json
 {
-  "url": "账号主页链接，字符串，必需",
-  "tab": "发布作品或者喜欢作品，字符串，可选，默认值: post",
-  "earliest": "作品最早发布日期，字符串，可选",
-  "latest": "作品最晚发布日期，字符串，可选",
-  "pages": "账号喜欢作品数据最大请求次数，整数，可选",
-  "source": "是否返回原始数据，布尔值，可选，默认值: false"
+  "url": "账号主页链接，字符串，必需参数",
+  "tab": "发布作品或者喜欢作品，字符串，可选参数，默认值: post",
+  "earliest": "作品最早发布日期，字符串，可选参数",
+  "latest": "作品最晚发布日期，字符串，可选参数",
+  "pages": "账号喜欢作品数据最大请求次数，整数，可选参数",
+  "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
+  "cookie": "抖音 cookie，字符串，可选参数"
 }
 ```
 
@@ -720,8 +722,9 @@ print(response.json())
 
 ```json
 {
-  "url": "作品链接，支持多作品，字符串，必需",
-  "source": "是否返回原始数据，布尔值，可选，默认值: false"
+  "url": "作品链接，支持多作品，字符串，必需参数",
+  "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
+  "cookie": "抖音 cookie，字符串，可选参数"
 }
 ```
 
@@ -745,8 +748,9 @@ print(response.json())
 
 ```json
 {
-  "url": "直播链接，支持多直播，字符串，必需",
-  "source": "是否返回原始数据，布尔值，可选，默认值: false"
+  "url": "直播链接，支持多直播，字符串，必需参数",
+  "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
+  "cookie": "抖音 cookie，字符串，可选参数"
 }
 ```
 
@@ -770,9 +774,10 @@ print(response.json())
 
 ```json
 {
-  "url": "作品链接，字符串，必需",
-  "pages": "作品评论数据最大请求次数，整数，可选",
-  "source": "是否返回原始数据，布尔值，可选，默认值: false"
+  "url": "作品链接，字符串，必需参数",
+  "pages": "作品评论数据最大请求次数，整数，可选参数",
+  "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
+  "cookie": "抖音 cookie，字符串，可选参数"
 }
 ```
 
@@ -796,8 +801,9 @@ print(response.json())
 
 ```json
 {
-  "url": "属于合集的作品链接，字符串，必需",
-  "source": "是否返回原始数据，布尔值，可选，默认值: false"
+  "url": "属于合集的作品链接，字符串，必需参数",
+  "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
+  "cookie": "抖音 cookie，字符串，可选参数"
 }
 ```
 
@@ -821,8 +827,9 @@ print(response.json())
 
 ```json
 {
-  "url": "账号主页链接，支持多账号，字符串，必需",
-  "source": "是否返回原始数据，布尔值，可选，默认值: false"
+  "url": "账号主页链接，支持多账号，字符串，必需参数",
+  "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
+  "cookie": "抖音 cookie，字符串，可选参数"
 }
 ```
 
@@ -846,12 +853,13 @@ print(response.json())
 
 ```json
 {
-  "keyword": "关键词，字符串，必需",
-  "type": "搜索类型，字符串，可选",
-  "page": "结果页数，字符串，可选",
-  "sort_type": "排序依据，字符串，可选",
-  "publish_time": "发布时间，字符串，可选",
-  "source": "是否返回原始数据，布尔值，可选，默认值: false"
+  "keyword": "关键词，字符串，必需参数",
+  "type": "搜索类型，字符串，可选参数",
+  "page": "结果页数，字符串，可选参数",
+  "sort_type": "排序依据，字符串，可选参数",
+  "publish_time": "发布时间，字符串，可选参数",
+  "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
+  "cookie": "抖音 cookie，字符串，可选参数"
 }
 ```
 
@@ -875,7 +883,7 @@ print(response.json())
 
 ```json
 {
-  "source": "是否返回原始数据，布尔值，可选，默认值: false"
+  "source": "是否返回原始数据，布尔值，可选参数，默认值: false"
 }
 ```
 

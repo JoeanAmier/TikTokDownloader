@@ -288,6 +288,7 @@ class TikTok:
             pages: int = None,
             api=False,
             source=False,
+            cookie: str = None,
             *args,
             **kwargs,
     ):
@@ -298,7 +299,8 @@ class TikTok:
             tab,
             earliest,
             latest,
-            pages)
+            pages,
+            cookie)
         account_data, earliest, latest = acquirer.run()
         if not any(account_data):
             self.logger.warning("获取账号主页数据失败")
@@ -399,8 +401,14 @@ class TikTok:
             ids: list[str],
             record,
             api=False,
-            source=False, ):
-        works_data = [Works(self.parameter, i, tiktok).run() for i in ids]
+            source=False,
+            cookie: str = None):
+        works_data = [
+            Works(
+                self.parameter,
+                i,
+                tiktok,
+                cookie).run() for i in ids]
         if not any(works_data):
             return None
         if source:
@@ -576,10 +584,15 @@ class TikTok:
                         mark="",
                         num: int = 0,
                         api=False,
-                        source=False, ):
+                        source=False,
+                        cookie: str = None):
         self.logger.info(f"开始处理第 {num} 个合集" if num else "开始处理合集")
         mix_params = self._generate_mix_params(mix_id, id_)
-        if any(mix_data := Mix(self.parameter, **mix_params).run()):
+        if any(
+                mix_data := Mix(
+                    self.parameter,
+                    **mix_params,
+                    cookie=cookie).run()):
             return (
                 mix_data
                 if source
@@ -616,9 +629,9 @@ class TikTok:
             users = [self._get_user_data(i) for i in sec_user_ids]
             self._deal_user_data(root, params, logger, [i for i in users if i])
 
-    def _get_user_data(self, sec_user_id: str):
+    def _get_user_data(self, sec_user_id: str, cookie: str = None):
         self.logger.info(f"正在获取账号 {sec_user_id} 的数据")
-        data = User(self.parameter, sec_user_id).run()
+        data = User(self.parameter, sec_user_id, cookie=cookie).run()
         return data or {}
 
     def _deal_user_data(
@@ -726,14 +739,15 @@ class TikTok:
             pages: int,
             sort: tuple,
             publish: tuple,
-            source=False):
+            source=False,
+            cookie: str = None, ):
         search_data = Search(
             self.parameter,
             keyword,
             type_[0],
             pages,
             sort[0],
-            publish[0]).run()
+            publish[0], cookie).run()
         if not any(search_data):
             self.logger.warning("采集搜索数据失败")
             return None

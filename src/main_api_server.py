@@ -47,6 +47,7 @@ class APIServer(WebUI):
                 "pages": request.json.get("pages"),
                 "api": True,
                 "source": request.json.get("source", False),
+                "cookie": request.json.get("cookie"),
             }
             self._generate_record_params(params)
             return {
@@ -65,6 +66,7 @@ class APIServer(WebUI):
                 "ids": ids,
                 "api": True,
                 "source": request.json.get("source", False),
+                "cookie": request.json.get("cookie"),
             }
             root, params, logger = self._generate_record_params(
                 data, merge=False)
@@ -83,7 +85,12 @@ class APIServer(WebUI):
             if not params:
                 self.logger.warning(m := f"{u} 提取直播 ID 失败")
                 return {"data": None, "message": m}
-            live_data = [Live(self.parameter, **i).run() for i in params]
+            live_data = [
+                Live(
+                    self.parameter,
+                    **i,
+                    cookie=request.json.get("cookie"),
+                ).run() for i in params]
             if not [i for i in live_data if i]:
                 self.logger.warning(m := "获取直播数据失败")
                 return {"data": None, "message": m}
@@ -113,7 +120,10 @@ class APIServer(WebUI):
             with logger(root, name=name, **params) as record:
                 if result := Comment(
                         self.parameter,
-                        id_, pages=request.json.get("pages")).run(
+                        id_,
+                        pages=request.json.get("pages"),
+                        cookie=request.json.get("cookie"),
+                ).run(
                     self.extractor,
                     record,
                     **data):
@@ -136,6 +146,7 @@ class APIServer(WebUI):
                 "id_": ids[0],
                 "api": True,
                 "source": request.json.get("source", False),
+                "cookie": request.json.get("cookie"),
             }
             self._generate_record_params(params, type_="mix")
             return {
@@ -151,7 +162,11 @@ class APIServer(WebUI):
                 return {"data": None, "message": m}
             params = {"source": request.json.get("source", False)}
             self._generate_record_params(params, type_="user")
-            users = [self._get_user_data(i) for i in sec_user_ids]
+            users = [
+                self._get_user_data(
+                    i,
+                    cookie=request.json.get("cookie"),
+                ) for i in sec_user_ids]
             return {
                 "data": self._deal_user_data(
                     **params,
@@ -176,7 +191,9 @@ class APIServer(WebUI):
                     *params,
                     source=request.json.get(
                         "source",
-                        False)),
+                        False),
+                    cookie=request.json.get("cookie"),
+                ),
                 "message": "success",
             }
 

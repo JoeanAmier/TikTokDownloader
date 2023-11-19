@@ -80,7 +80,7 @@ class Acquirer:
     comment_tiktok_api = "https://www.tiktok.com/api/comment/list/"  # 评论API
     reply_tiktok_api = "https://www.tiktok.com/api/comment/list/reply/"  # 评论回复API
 
-    def __init__(self, params: Parameter):
+    def __init__(self, params: Parameter, cookie: str = None):
         self.PC_headers, self.black_headers = self.init_headers(params.headers)
         self.ua_code = params.ua_code
         self.log = params.logger
@@ -92,6 +92,7 @@ class Acquirer:
         self.cursor = 0
         self.response = []
         self.finished = False
+        self.__set_temp_cookie(cookie)
 
     @staticmethod
     def init_headers(headers: dict) -> tuple:
@@ -158,6 +159,10 @@ class Acquirer:
             TimeElapsedColumn(),
             console=self.console,
         )
+
+    def __set_temp_cookie(self, cookie: str):
+        if cookie:
+            self.PC_headers["Cookie"] = cookie
 
 
 class Share:
@@ -294,13 +299,14 @@ class Account(Acquirer):
             tab="post",
             earliest="",
             latest="",
-            pages: int = None, ):
-        super().__init__(params)
+            pages: int = None,
+            cookie: str = None, ):
+        super().__init__(params, cookie)
         self.sec_user_id = sec_user_id
         self.api, self.favorite, self.pages = self.check_type(
             tab, pages or params.max_pages)
         self.earliest, self.latest = self.check_date(earliest, latest)
-        self.info = Info(params, sec_user_id)
+        self.info = Info(params, sec_user_id, cookie)
 
     def check_type(self, tab: str, pages: int) -> tuple[str, bool, int]:
         if tab == "favorite":
@@ -424,8 +430,9 @@ class Works(Acquirer):
     item_api = "https://www.douyin.com/aweme/v1/web/aweme/detail/"
     item_api_tiktok = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"
 
-    def __init__(self, params: Parameter, item_id: str, tiktok: bool):
-        super().__init__(params)
+    def __init__(self, params: Parameter, item_id: str, tiktok: bool,
+                 cookie: str = None, ):
+        super().__init__(params, cookie)
         self.id = item_id
         self.tiktok = tiktok
 
@@ -466,8 +473,9 @@ class Comment(Acquirer):
     comment_api = "https://www.douyin.com/aweme/v1/web/comment/list/"  # 评论API
     comment_api_reply = "https://www.douyin.com/aweme/v1/web/comment/list/reply/"  # 评论回复API
 
-    def __init__(self, params: Parameter, item_id: str, pages: int = None):
-        super().__init__(params)
+    def __init__(self, params: Parameter, item_id: str, pages: int = None,
+                 cookie: str = None, ):
+        super().__init__(params, cookie)
         self.item_id = item_id
         self.pages = pages or params.max_pages
         self.all_data = None
@@ -567,8 +575,9 @@ class Mix(Acquirer):
             self,
             params: Parameter,
             mix_id: str = None,
-            works_id: str = None):
-        super().__init__(params)
+            works_id: str = None,
+            cookie: str = None, ):
+        super().__init__(params, cookie)
         self.works = Works(params, item_id=works_id, tiktok=False)
         self.mix_id = mix_id
         self.works_id = works_id
@@ -632,8 +641,9 @@ class Live(Acquirer):
             params: Parameter,
             web_rid=None,
             room_id=None,
-            sec_user_id=None):
-        super().__init__(params)
+            sec_user_id=None,
+            cookie: str = None, ):
+        super().__init__(params, cookie)
         self.PC_headers["Referer"] = "https://live.douyin.com/"
         self.web_rid = web_rid
         self.room_id = room_id
@@ -693,8 +703,9 @@ class Live(Acquirer):
 class User(Acquirer):
     user_api = "https://www.douyin.com/aweme/v1/web/user/profile/other/"  # 账号详细数据API
 
-    def __init__(self, params: Parameter, sec_user_id: str):
-        super().__init__(params)
+    def __init__(self, params: Parameter, sec_user_id: str,
+                 cookie: str = None, ):
+        super().__init__(params, cookie)
         self.sec_user_id = sec_user_id
 
     def run(self):
@@ -758,8 +769,9 @@ class Search(Acquirer):
             tab=0,
             page=1,
             sort_type=0,
-            publish_time=0):
-        super().__init__(params)
+            publish_time=0,
+            cookie: str = None, ):
+        super().__init__(params, cookie)
         self.keyword = keyword
         self.tab = tab
         self.page = page
@@ -993,8 +1005,12 @@ class Collection(Acquirer):
 class Info(Acquirer):
     info_api = "https://www.douyin.com/aweme/v1/web/im/user/info/"  # 账号简略数据API
 
-    def __init__(self, params: Parameter, sec_user_id: str):
-        super().__init__(params)
+    def __init__(
+            self,
+            params: Parameter,
+            sec_user_id: str,
+            cookie: str = None):
+        super().__init__(params, cookie)
         self.sec_user_id = sec_user_id
         self.params = {
             "device_platform": "webapp",
