@@ -1,11 +1,14 @@
 from datetime import date
 from datetime import datetime
 from random import choice
+from time import time
+from types import SimpleNamespace
 
 from src.Customizer import (
     WARNING,
+    INFO,
 )
-from src.Customizer import failed
+from src.Customizer import failure_handling
 from src.Customizer import rest
 from src.DataAcquirer import (
     Link,
@@ -138,14 +141,32 @@ class TikTok:
             if not items:
                 self.logger.warning(f"{path} 提取作品 ID 失败")
                 continue
-            for index, uid, nickname, item in enumerate(items, start=1):
+            count = SimpleNamespace(time=time(), success=0, failed=0)
+            for index, (uid, nickname, item) in enumerate(items, start=1):
                 if not self._deal_account_works_tiktok(
                         uid, nickname, item, root, params, logger):
-                    if failed():
+                    count.failed += 1
+                    if failure_handling():
                         continue
                     break
-                rest(index, self.console.print)
+                count.success += 1
+                if index != len(items):
+                    rest(index, self.console.print)
+            self.__summarize_results(count)
         self.logger.info("已退出批量下载账号作品(TikTok)模式")
+
+    def __summarize_results(self, count: SimpleNamespace, name="账号"):
+        time_ = time() - count.time
+        self.console.print(
+            f"程序共处理 {
+            count.success +
+            count.failed} 个{name}，成功 {
+            count.success} 个，失败 {
+            count.failed} 个，耗时 {
+            int(time_ //
+                60)} 分钟 {
+            int(time_ %
+                60)} 秒", style=INFO)
 
     def _deal_account_works_tiktok(
             self,
@@ -202,12 +223,14 @@ class TikTok:
         self.logger.info("已退出批量下载账号作品(抖音)模式")
 
     def account_works_batch(self, root, params, logger):
+        count = SimpleNamespace(time=time(), success=0, failed=0)
         self.logger.info(f"共有 {len(self.accounts)} 个账号的作品等待下载")
         for index, data in enumerate(self.accounts, start=1):
             if not (sec_user_id := self.check_sec_user_id(data.url)):
                 self.logger.warning(
                     f"配置文件 accounts_urls 参数"
                     f"第 {index} 条数据的 url 无效")
+                count.failed += 1
                 continue
             if not self.deal_account_works(
                     index,
@@ -215,11 +238,15 @@ class TikTok:
                     root=root,
                     params=params,
                     logger=logger):
-                if failed():
+                count.failed += 1
+                if failure_handling():
                     continue
                 break
             # break  # 调试代码
-            rest(index, self.console.print)
+            count.success += 1
+            if index != len(self.accounts):
+                rest(index, self.console.print)
+        self.__summarize_results(count)
 
     def check_sec_user_id(self, sec_user_id: str) -> str:
         sec_user_id = self.links.user(sec_user_id)
@@ -230,6 +257,7 @@ class TikTok:
             links = self.links.user(url)
             if not links:
                 self.logger.warning(f"{url} 提取账号 sec_user_id 失败")
+            count = SimpleNamespace(time=time(), success=0, failed=0)
             for index, sec in enumerate(links, start=1):
                 if not self.deal_account_works(
                         index,
@@ -237,10 +265,14 @@ class TikTok:
                         root=root,
                         params=params,
                         logger=logger):
-                    if failed():
+                    count.failed += 1
+                    if failure_handling():
                         continue
                     break
-                rest(index, self.console.print)
+                count.success += 1
+                if index != len(links):
+                    rest(index, self.console.print)
+            self.__summarize_results(count)
 
     def deal_account_works(
             self,
@@ -498,18 +530,25 @@ class TikTok:
             if not ids:
                 self.logger.warning(f"{url} 获取作品 ID 或合集 ID 失败")
                 continue
+            count = SimpleNamespace(time=time(), success=0, failed=0)
             for index, i in enumerate(ids, start=1):
                 if not self._deal_mix_works(root, params, logger, mix_id, i):
-                    if failed():
+                    count.failed += 1
+                    if failure_handling():
                         continue
                     break
-                rest(index, self.console.print)
+                count.success += 1
+                if index != len(ids):
+                    rest(index, self.console.print)
+            self.__summarize_results(count)
 
     def mix_batch(self, root, params, logger):
+        count = SimpleNamespace(time=time(), success=0, failed=0)
         for index, data in enumerate(self.mix, start=1):
             mix_id, id_ = self._check_mix_id(data.url)
             if not id_:
                 self.logger.warning(f"{data.url} 获取作品 ID 或合集 ID 失败")
+                count.failed += 1
                 continue
             if not self._deal_mix_works(
                     root,
@@ -519,10 +558,14 @@ class TikTok:
                     id_,
                     data.mark,
                     index):
-                if failed():
+                count.failed += 1
+                if failure_handling():
                     continue
                 break
-            rest(index, self.console.print)
+            count.success += 1
+            if index != len(self.mix):
+                rest(index, self.console.print)
+        self.__summarize_results(count, "合集")
 
     def _deal_mix_works(self,
                         root,

@@ -15,7 +15,7 @@
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?color=3eb370">
 </div>
 <br>
-<p>🔥 <b>TikTok 视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 Requests 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏的作品；单独下载抖音链接或 TikTok 链接对应的作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
+<p>🔥 <b>TikTok 主页/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 Requests 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号主页作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
 <p>⭐ <b>此文档正在完善中，如有发现任何错误或描述不清楚之处，请告知作者以便改进。</b></p>
 <hr>
 <h1>快速入门</h1>
@@ -89,7 +89,7 @@
 <td align="center">直播</td>
 </tr>
 <tr>
-<td align="center"><code>https://www.tiktok.com/@账号昵称/video/作品ID</code></td>
+<td align="center"><code>https://www.tiktok.com/@TikTok号/video/作品ID</code></td>
 <td align="center">账号、视频、图集</td>
 </tr>
 </tbody></table>
@@ -453,7 +453,7 @@
 </ul>
 
 <h1>高级配置</h1>
-<p>如果想要进一步修改程序功能，可以编辑 <code>src/Customizer.py</code> 文件，按照注释指引和实际需求进行自定义修改。</p>
+<p>如果想要进一步修改程序功能，可以编辑 <code>src/Customizer.py</code> 文件（EXE 程序亦可直接编辑），按照注释指引和实际需求进行自定义修改。</p>
 <b>部分可自定义设置的功能：</b>
 <ul>
 <li>设置作品文件下载的最大线程数量</li>
@@ -476,7 +476,48 @@
 <p>程序自动获取抖音登录二维码，随后会在终端输出二维码，并使用系统默认图片浏览器打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片窗口，并根据提示操作是否开始检查登录结果，确认后程序会检查登录结果并将登录后的 Cookie 写入配置文件。</p>
 <h2>终端命令行模式</h2>
 <p>功能最全面的模式，支持全部功能。</p>
-<h3>批量下载账号作品</h3>
+<h3>批量下载账号作品(TikTok)</h3>
+<p><b>注意：该模式为半自动模式，需要手动将 TikTok 账号主页保存为 HTML 文件后再使用本工具批量下载！</b></p>
+<p>支持输入格式：</p>
+<ol>
+<li>单账号：单个 HTML 文件路径</li>
+<li>多账号：包含 HTML 文件的文件夹路径</li>
+</ol>
+<p>如果仅需下载单个账号的发布/喜欢作品，只需输入对应的 HTML 文件路径；如果需要下载多个账号的发布/喜欢作品，可以将全部 HTML 文件放置在同一文件夹内，输入文件夹路径进行处理；每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_账号昵称_类型</code></p>
+<p><b>HTML 文件获取教程</b></p>
+<ol>
+<li>使用浏览器打开待采集的 TikTok 账号主页页面</li>
+<li>向下滚动页面，直至所有作品完全加载</li>
+<li>按下 <code>F12</code> 打开 <code>开发人员工具</code> 窗口</li>
+<li>切换到 <code>控制台</code> 选项卡</li>
+<li>输入以下命令，按下回车键
+<pre>
+// 获取网页标题
+const title = document.title;
+
+// 创建一个新的 Blob 对象，用于保存 HTML 内容
+const blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
+
+// 创建一个下载链接元素
+const downloadLink = document.createElement('a');
+
+// 将网页标题作为文件名
+downloadLink.download = title + '.html';
+
+// 设置下载链接的属性
+downloadLink.href = URL.createObjectURL(blob);
+
+// 将下载链接添加到页面中并模拟点击下载
+document.body.appendChild(downloadLink);
+downloadLink.click();
+
+// 清理下载链接元素
+document.body.removeChild(downloadLink);
+</pre>
+</li>
+<li>浏览器会弹出下载窗口，下载文件即可</li>
+</ol>
+<h3>批量下载账号作品(抖音)</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts_urls</code> 参数中的账号链接。</li>
 <li>手动输入待采集的账号链接；此选项仅支持批量下载账号发布页作品，暂不支持参数设置。</li>

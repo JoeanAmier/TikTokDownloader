@@ -4,7 +4,7 @@
 __all__ = [
     "MAX_WORKERS",
     "wait",
-    "failed",
+    "failure_handling",
     "illegal_nickname",
     "check_login",
     "DESCRIPTION_LENGTH",
@@ -69,7 +69,7 @@ def wait():
     pass
 
 
-def failed():
+def failure_handling():
     """批量下载账号作品模式 和 批量下载合集作品模式 获取数据失败时，是否继续执行"""
     # 询问用户
     return input("输入任意字符继续运行，直接回车结束运行: ")
