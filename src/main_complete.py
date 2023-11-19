@@ -1,5 +1,6 @@
 from datetime import date
 from datetime import datetime
+from random import choice
 
 from src.Customizer import (
     WARNING,
@@ -17,6 +18,7 @@ from src.DataAcquirer import (
     Search,
     Hot,
     Collection,
+    TikTokAccount,
 )
 from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
@@ -37,7 +39,7 @@ def prompt(
     screen = f"{title}:\n"
     row = 0
     for i, j in enumerate(choose):
-        screen += f"{i + 1}. {j}\n"
+        screen += f"{i + 1: >2d}. {j}\n"
         if separate and row in separate:
             screen += f"{'=' * 25}\n"
         row += 1
@@ -129,6 +131,63 @@ class TikTok:
             return ""
         return text
 
+    def account_acquisition_interactive_tiktok(self):
+        root, params, logger = self.record.run(self.parameter)
+        while path := self._inquire_input(tip="请输入 TikTok 主页 HTML 文件(夹)路径: "):
+            items = TikTokAccount(path).run()
+            if not items:
+                self.logger.warning(f"{path} 提取作品 ID 失败")
+                continue
+            for index, uid, nickname, item in enumerate(items, start=1):
+                if not self._deal_account_works_tiktok(
+                        uid, nickname, item, root, params, logger):
+                    if failed():
+                        continue
+                    break
+                rest(index, self.console.print)
+        self.logger.info("已退出批量下载账号作品(TikTok)模式")
+
+    def _deal_account_works_tiktok(
+            self,
+            uid: str,
+            nickname: str,
+            item: list[str],
+            root,
+            params: dict,
+            logger,
+    ):
+        account_data = [Works(self.parameter, i, True).run() for i in item]
+        if not any(account_data):
+            return False
+        tab = self.__check_post_tiktok(uid, nickname, account_data)
+        return self._batch_process_works(
+            root,
+            params,
+            logger,
+            account_data,
+            "",
+            tab,
+            addition="发布作品" if tab else "喜欢作品", )
+
+    def __check_post_tiktok(self, uid: str, nickname: str, item: list[dict]):
+        cache = self.extractor.generate_data_object(choice(item))
+        uid_ = self.extractor.safe_extract(cache, "author.uid")
+        nickname_ = self.extractor.safe_extract(cache, "author.nickname")
+        match (uid == uid_, nickname == nickname_):
+            case True, True:
+                return True
+            case False, False:
+                item.append({
+                    "author": {
+                        "nickname": nickname,
+                        "uid": uid,
+                    }
+                })
+                return False
+            case _:
+                self.logger.error(f"发生异常: {uid, uid_, nickname, nickname_}")
+                return False
+
     def account_acquisition_interactive(self):
         root, params, logger = self.record.run(self.parameter)
         select = prompt("请选择账号链接来源",
@@ -140,7 +199,7 @@ class TikTok:
             self.account_works_inquire(root, params, logger)
         elif select.upper() == "Q":
             self.running = False
-        self.logger.info("已退出批量下载账号作品模式")
+        self.logger.info("已退出批量下载账号作品(抖音)模式")
 
     def account_works_batch(self, root, params, logger):
         self.logger.info(f"共有 {len(self.accounts)} 个账号的作品等待下载")
@@ -710,44 +769,50 @@ class TikTok:
         while self.running:
             select = prompt(
                 "请选择采集功能",
-                ("批量下载账号作品",
-                 "批量下载链接作品",
-                 "获取直播推流地址",
-                 "采集作品评论数据",
-                 "批量下载合集作品",
-                 "批量采集账号数据",
-                 "采集搜索结果数据",
-                 "采集抖音热榜数据",
-                 "批量下载收藏作品"),
+                (
+                    "批量下载账号作品(TikTok)",
+                    "批量下载账号作品(抖音)",
+                    "批量下载链接作品(通用)",
+                    "获取直播推流地址(抖音)",
+                    "采集作品评论数据(抖音)",
+                    "批量下载合集作品(抖音)",
+                    "批量采集账号数据(抖音)",
+                    "采集搜索结果数据(抖音)",
+                    "采集抖音热榜数据(抖音)",
+                    "批量下载收藏作品(抖音)",
+                ),
                 self.console)
             if select in {"Q", "q"}:
                 self.running = False
             elif not select:
                 break
             elif select == "1":
-                self.logger.info("已选择批量下载账号作品模式")
-                self.account_acquisition_interactive()
+                self.logger.info("已选择批量下载账号作品(TikTok)模式")
+                self.account_acquisition_interactive_tiktok()
             elif select == "2":
+                self.logger.info("已选择批量下载账号作品(抖音)模式")
+                self.account_acquisition_interactive()
+            elif select == "3":
                 self.logger.info("已选择批量下载链接作品模式")
                 self.works_interactive()
-            elif select == "3":
+            elif select == "4":
                 self.logger.info("已选择获取直播推流地址模式")
                 self.live_interactive()
-            elif select == "4":
+            elif select == "5":
                 self.logger.info("已选择采集作品评论数据模式")
                 self.comment_interactive()
-            elif select == "5":
+            elif select == "6":
                 self.logger.info("已选择批量下载合集作品模式")
                 self.mix_interactive()
-            elif select == "6":
+            elif select == "7":
                 self.logger.info("已选择批量采集账号数据模式")
                 self.user_interactive()
-            elif select == "7":
+            elif select == "8":
                 self.logger.info("已选择采集搜索结果数据模式")
                 self.search_interactive()
-            elif select == "8":
+            elif select == "9":
                 self.logger.info("已选择采集抖音热榜数据模式")
                 self.hot_interactive()
-            elif select == "9":
+            elif select == "10":
                 self.logger.info("已选择批量下载收藏作品模式")
                 self.collection_interactive()
