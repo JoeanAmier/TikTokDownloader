@@ -441,11 +441,14 @@ class Downloader:
                 for chunk in response.iter_content(chunk_size=self.chunk):
                     f.write(chunk)
                     progress.update(task_id, advance=len(chunk))
+                progress.remove_task(task_id)
         except exceptions.ChunkedEncodingError:
+            progress.remove_task(task_id)
             self.log.warning(f"{show} 由于网络异常下载中断")
             self.delete_file(temp)
             return False
         self.save_file(temp, actual)
+        self.log.info(f"{show} 文件下载成功")
         self.blacklist.update_id(id_)
         self.add_count(show, id_, count)
         return True

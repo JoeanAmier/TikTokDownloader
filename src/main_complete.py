@@ -6,7 +6,6 @@ from types import SimpleNamespace
 
 from src.Customizer import (
     WARNING,
-    INFO,
 )
 from src.Customizer import failure_handling
 from src.Customizer import rest
@@ -139,12 +138,12 @@ class TikTok:
         while path := self._inquire_input(tip="请输入 TikTok 主页 HTML 文件(夹)路径: "):
             items = TikTokAccount(path).run()
             if not items:
-                self.logger.warning(f"{path} 提取作品 ID 失败")
+                self.logger.warning(f"{path} 读取 HTML 文件失败")
                 continue
             count = SimpleNamespace(time=time(), success=0, failed=0)
             for index, (uid, nickname, item) in enumerate(items, start=1):
                 if not self._deal_account_works_tiktok(
-                        uid, nickname, item, root, params, logger):
+                        index, uid, nickname, item, root, params, logger):
                     count.failed += 1
                     if failure_handling():
                         continue
@@ -157,7 +156,7 @@ class TikTok:
 
     def __summarize_results(self, count: SimpleNamespace, name="账号"):
         time_ = time() - count.time
-        self.console.print(
+        self.logger.info(
             f"程序共处理 {
             count.success +
             count.failed} 个{name}，成功 {
@@ -166,10 +165,11 @@ class TikTok:
             int(time_ //
                 60)} 分钟 {
             int(time_ %
-                60)} 秒", style=INFO)
+                60)} 秒")
 
     def _deal_account_works_tiktok(
             self,
+            num: int,
             uid: str,
             nickname: str,
             item: list[str],
@@ -177,8 +177,10 @@ class TikTok:
             params: dict,
             logger,
     ):
+        self.logger.info(f"开始处理第 {num} 个账号")
         account_data = [Works(self.parameter, i, True).run() for i in item]
         if not any(account_data):
+            self.logger.warning("获取 TikTok 作品数据失败")
             return False
         tab = self.__check_post_tiktok(uid, nickname, account_data)
         return self._batch_process_works(
@@ -257,6 +259,7 @@ class TikTok:
             links = self.links.user(url)
             if not links:
                 self.logger.warning(f"{url} 提取账号 sec_user_id 失败")
+                continue
             count = SimpleNamespace(time=time(), success=0, failed=0)
             for index, sec in enumerate(links, start=1):
                 if not self.deal_account_works(
@@ -335,6 +338,7 @@ class TikTok:
                              latest: date = None,
                              addition: str = None,
                              ):
+        self.logger.info("开始提取作品数据")
         id_, name, mid, title, mark, data = self.extractor.preprocessing_data(
             data, mark, post, mix)
         old_mark = m["mark"] if (
@@ -376,6 +380,7 @@ class TikTok:
             title: str = None,
             addition: str = None,
     ):
+        self.logger.info("开始下载作品文件")
         self.downloader.run(
             data,
             "batch",
@@ -414,6 +419,7 @@ class TikTok:
                 tiktok,
                 cookie).run() for i in ids]
         if not any(works_data):
+            self.logger.warning("获取作品数据失败")
             return None
         if source:
             return works_data
@@ -810,6 +816,7 @@ class TikTok:
             sec_user_id: str,
             api=False,
             source=False):
+        self.logger.info("开始获取收藏数据")
         collection = Collection(self.parameter, sec_user_id).run()
         if not any(collection):
             self.logger.warning("获取账号收藏数据失败")

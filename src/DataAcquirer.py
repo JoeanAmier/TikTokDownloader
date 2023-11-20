@@ -21,7 +21,6 @@ from rich.progress import (
 
 from src.Configuration import Parameter
 from src.Customizer import (
-    WARNING,
     PROGRESS
 )
 from src.Customizer import wait
@@ -51,7 +50,7 @@ def retry(function):
         for i in range(self.max_retry):
             if result := function(self, *args, **kwargs):
                 return result
-            self.console.print(f"正在尝试第 {i + 1} 次重试！", style=WARNING)
+            self.log.warning(f"正在尝试第 {i + 1} 次重试！")
         if not (result := function(self, *args, **kwargs)) and finished:
             self.finished = True
         return result
@@ -131,12 +130,14 @@ class Acquirer:
         try:
             return response.json()
         except exceptions.JSONDecodeError:
-            self.log.warning(f"响应内容不是有效的 JSON 格式：{response.text}")
+            if response.text:
+                self.log.warning(f"响应内容不是有效的 JSON 格式：{response.text}")
+            else:
+                self.log.warning("响应内容为空，可能是接口失效或者 Cookie 失效")
             return False
 
     def deal_url_params(self, params: dict, version=23):
-        xb = self.xb.get_x_bogus(params, self.ua_code, version)
-        params["X-Bogus"] = xb
+        params["X-Bogus"] = self.xb.get_x_bogus(params, self.ua_code, version)
 
     def deal_item_data(
             self,
@@ -174,9 +175,9 @@ class Share:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome"
                       "/116.0.0.0 Safari/537.36", }
 
-    def __init__(self, console, proxies: dict, max_retry=10):
+    def __init__(self, logger, proxies: dict, max_retry=10):
         self.max_retry = max_retry
-        self.console = console
+        self.log = logger
         self.proxies = proxies
 
     def run(self, text: str) -> str:
@@ -311,11 +312,9 @@ class Account(Acquirer):
     def check_type(self, tab: str, pages: int) -> tuple[str, bool, int]:
         if tab == "favorite":
             return self.favorite_api, True, pages
+        elif tab != "post":
+            self.log.warning(f"tab 参数 {tab} 设置错误，程序将使用默认值: post")
         return self.post_api, False, 99999
-
-    @staticmethod
-    def check_tab(tab: str) -> bool:
-        return tab in {"favorite", "post"}
 
     def check_date(self, start: str, end: str) -> tuple[date, date]:
         return self.check_earliest(start), self.check_latest(end)
@@ -1083,5 +1082,5 @@ class TikTokAccount:
     @staticmethod
     def __extract_nickname(text: list):
         if len(text) == 1:
-            return text[0].split()[0] or Account.temp_data()
+            return text[0].strip() or Account.temp_data()
         return Account.temp_data()

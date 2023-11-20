@@ -632,7 +632,8 @@ document.body.removeChild(downloadLink);
 <p>如果未设置 <code>owner_url</code> 参数，程序会使用临时字符串作为账号昵称和 UID。</p>
 <p>账号文件夹格式为 <code>UID123456789_mark_收藏作品</code> 或者 <code>UID123456789_账号昵称_收藏作品</code></p>
 <h2>Web API 接口模式</h2>
-<p>启动服务器，提供 API 调用功能；支持局域网远程访问，可以部署至私有服务器或者公开服务器，建议设置参数验证。</p>
+<p>启动服务器，提供 API 调用功能；支持局域网远程访问，可以部署至私有服务器或者公开服务器，远程部署建议设置参数验证。</p>
+<p>默认禁用局域网访问，如需开启，请修改 <code>src/Customizer.py</code> 文件的 <code>SERVER_HOST</code> 变量。</p>
 <p>部分接口支持传入临时 <code>cookie</code> 参数，如果传入临时 <code>cookie</code> 参数，本次 API 请求会使用临时 <code>cookie</code> 向抖音服务器获取数据，如果没有传入 <code>cookie</code> 参数，程序会使用配置文件的 <code>cookie</code> 参数；需要注意临时 <code>cookie</code> 和配置文件 <code>cookie</code> 参数的有效性；程序不会储存临时 <code>cookie</code> 内容。</p>
 <p>目前支持调用 API 获取数据，暂不支持调用 API 下载文件！</p>
 <p><strong>API 接口通用说明：</strong></p>
@@ -927,10 +928,11 @@ print(response.json())
 ```
 
 <h2>Web UI 交互模式</h2>
-<p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品功能</code> 和 <code>获取直播推流地址功能</code>，支持局域网远程访问，可以部署至私有服务器，不可直接部署至公开服务器。</p>
+<p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品</code> 和 <code>获取直播推流地址</code> 功能，支持局域网远程访问，可以部署至私有服务器，不可直接部署至公开服务器。</p>
+<p>默认禁用局域网访问，如需开启，请修改 <code>src/Customizer.py</code> 文件的 <code>SERVER_HOST</code> 变量。</p>
 <h2>服务器部署模式</h2>
-<p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品功能</code>，用于部署至公开服务器，为网站访客提供作品下载服务。</p>
-<p>为保护访客隐私，<code>服务器部署模式</code> 禁用了数据存储功能，不会记录任何作品提取数据。</p>
+<p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品</code> 功能，用于部署至公开服务器，为网站访客提供作品下载服务，建议设置参数验证。</p>
+<p>默认禁用局域网访问，如需开启，请修改 <code>src/Customizer.py</code> 文件的 <code>SERVER_HOST</code> 变量。</p>
 <p>支持远程修改 <code>settings.json</code> 配置文件，请参考 <code>配置文件修改接口</code></p>
 <h2>启用/禁用检查更新功能</h2>
 <p>启用检查更新功能后，运行程序时会向 <code>https://github.com/JoeanAmier/TikTokDownloader/releases/latest</code>
@@ -945,6 +947,7 @@ print(response.json())
 <p><strong>不建议在程序运行过程中访问记录文件！</strong></p>
 <h2>启用/禁用运行日志记录</h2>
 <p>是否将程序运行日志记录保存到文件，默认关闭，日志文件保存路径：<code>./Log</code></p>
+<p>如果在使用过程中发现程序 Bug，可以及时告知作者，并附上日志文件，日志记录有助于作者分析 Bug 原因和修复 Bug。</p>
 <h1>其他功能说明</h1>
 <h2>单次输入多个链接</h2>
 <p><code>批量下载链接作品</code>、<code>获取直播推流地址</code>、<code>采集作品评论数据</code>、<code>批量下载合集作品</code>、<code>批量采集账号数据</code>

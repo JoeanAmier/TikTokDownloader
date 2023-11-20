@@ -107,6 +107,7 @@ class Extractor:
         [self.extract_batch(container, self.generate_data_object(item))
          for item in data]
         self.date_filter(container)
+        self._extract_item_records(container.all_data)
         self.summary_works(container.all_data)
         self.record_data(recorder, container.all_data)
         return container.all_data
@@ -333,7 +334,8 @@ class Extractor:
             default="无效合集标题")
         mark = self.cleaner.filter_name(
             mark, inquire=False, default=title if mix else name)
-        return id_, name, mid, title, mark, data[:None if post else -1]
+        return id_, name.strip(), mid, title.strip(
+        ), mark.strip(), data[:None if post else -1]
 
     def works(self, data: list[dict], recorder) -> list[dict]:
         container = SimpleNamespace(
@@ -346,6 +348,7 @@ class Extractor:
         )
         [self.extract_batch(container, self.generate_data_object(item))
          for item in data]
+        self._extract_item_records(container.all_data)
         self.record_data(recorder, container.all_data)
         return container.all_data
 
@@ -659,3 +662,7 @@ class Extractor:
     def extract_mix_id(data: dict) -> str:
         data = Extractor.generate_data_object(data)
         return Extractor.safe_extract(data, "mix_info.mix_id")
+
+    def _extract_item_records(self, data: list[dict]):
+        for i in data:
+            self.log.info(f"{i['type']} {i['id']} 数据提取成功", False)
