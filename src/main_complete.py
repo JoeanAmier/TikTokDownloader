@@ -731,9 +731,10 @@ class TikTok:
             sort: str = None,
             publish: str = None) -> str:
         format_ = (
-            datetime.now().strftime("%Y-%m-%d %H.%M.%S"),
+            "搜索数据",
+            f"{datetime.now():%Y_%m_%d_%H_%M_%S}",
             type_,
-            keyword,
+            keyword.strip(),
             sort,
             publish)
         if all(format_):
@@ -792,11 +793,11 @@ class TikTok:
         root, params, logger = self.record.run(self.parameter, type_="hot")
         data = []
         for i, j in board:
-            name = f"{time_}_{Hot.board_params[i].name}"
+            name = f"实时热榜数据_{time_}_{Hot.board_params[i].name}"
             with logger(root, name=name, **params) as record:
                 data.append(
                     {Hot.board_params[i].name: self.extractor.run(j, record, type_="hot")})
-        self.logger.info(f"热榜数据已储存至 {time_} + 榜单类型")
+        self.logger.info(f"热榜数据已储存至: 实时热榜数据_{time_} + 榜单类型")
         # print(time_, data, source)  # 调试代码
         return time_, data
 

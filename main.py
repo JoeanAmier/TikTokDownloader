@@ -54,9 +54,8 @@ class ColorfulConsole(Console):
 
 def start_cookie_task(function):
     def inner(self, *args, **kwargs):
-        if not self.task:
-            self.periodic_tasks()
-            self.task = True
+        if not self.cookie_task.is_alive():
+            self.cookie_task.start()
         return function(self, *args, **kwargs)
 
     return inner
@@ -71,7 +70,7 @@ class TikTokDownloader:
 
     REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
     LICENCE = "GNU General Public License v3.0"
-    DOCUMENTATION = "https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation"
+    DOCUMENTATION_URL = "https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation"
     RELEASES = "https://github.com/JoeanAmier/TikTokDownloader/releases/latest"
     NAME = f"TikTokDownloader v{VERSION}{'' if STABLE else ' Beta'}"
     WIDTH = 50
@@ -116,7 +115,8 @@ class TikTokDownloader:
             self.ua_code)
         self.parameter = None
         self.running = True
-        self.task = False
+        self.cookie_task = Thread(
+            target=self.periodic_update_cookie, daemon=True)
 
     def disclaimer(self):
         if not self.DISCLAIMER["path"].exists():
@@ -134,7 +134,7 @@ class TikTokDownloader:
         self.console.print(f"{self.LINE}\n\n\n{self.NAME.center(
             self.WIDTH)}\n\n\n{self.LINE}\n", style=MASTER)
         self.console.print(f"项目仓库: {self.REPOSITORY}", style=MASTER)
-        self.console.print(f"项目文档: {self.DOCUMENTATION}", style=MASTER)
+        self.console.print(f"项目文档: {self.DOCUMENTATION_URL}", style=MASTER)
         self.console.print(f"开源许可: {self.LICENCE}\n", style=MASTER)
 
     def check_config(self):
@@ -293,10 +293,6 @@ class TikTokDownloader:
         while True:
             self.parameter.update_cookie()
             sleep(COOKIE_UPDATE_INTERVAL)
-
-    def periodic_tasks(self):
-        thread = Thread(target=self.periodic_update_cookie, daemon=True)
-        thread.start()
 
 
 if __name__ == '__main__':

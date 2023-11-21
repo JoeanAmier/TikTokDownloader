@@ -893,7 +893,7 @@ class Hot(Acquirer):
         self.time = None
 
     def run(self):
-        self.time = datetime.now().strftime("%Y-%m-%d %H.%M.%S")
+        self.time = f"{datetime.now():%Y_%m_%d_%H_%M_%S}"
         for i, j in enumerate(self.board_params):
             self._get_board_data(i, j)
         return self.time, self.response

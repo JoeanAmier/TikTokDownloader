@@ -168,7 +168,7 @@ class Downloader:
             self, data: list[tuple[dict, str]], tasks: list, commands: list):
         for i, f, m in data:
             name = self.cleaner.filter_name(
-                f'{i["title"]}{self.split}{i["nickname"]}{self.split}{datetime.now().strftime("%Y-%m-%d %H.%M.%S")}.flv',
+                f'{i["title"]}{self.split}{i["nickname"]}{self.split}{datetime.now():%Y-%m-%d %H.%M.%S}.flv',
                 inquire=False)
             temp_root, actual_root = self.deal_folder_path(
                 self.storage_folder(folder_name="Live"), name, True)

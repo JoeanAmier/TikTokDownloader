@@ -604,7 +604,7 @@ document.body.removeChild(downloadLink);
 <li>时间筛选：<code>0</code>：不限；<code>1</code>：一天内；<code>7</code>：一周内；<code>182</code>：半年内</li>
 </ul>
 <p>参数之间使用空格分隔，<code>类型</code> 和 <code>排序规则</code> 支持输入中文或者对应索引，<code>页数</code> 和 <code>时间筛选</code> 仅支持输入整数。</p>
-<p>程序采集的抖音搜索结果会储存至文件，储存名称格式：<code>搜索时间_搜索类型_关键词_排序依据_时间筛选</code>；不支持直接下载搜索结果作品；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
+<p>程序采集的抖音搜索结果会储存至文件，储存名称格式：<code>搜索数据_搜索时间_搜索类型_关键词_排序依据_时间筛选</code>；不支持直接下载搜索结果作品；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <p><code>用户搜索</code> 和 <code>直播搜索</code> 不需要输入排序依据和时间筛选（输入也不会报错）</p>
 <h4>输入示例</h4>
 <p><strong>输入：</strong><code>猫咪</code></p>
@@ -626,7 +626,7 @@ document.body.removeChild(downloadLink);
 <p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>直播搜索</code>；页数：<code>2</code></p>
 <h3>采集抖音热榜数据</h3>
 <p>采集 <code>抖音热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
-<p>储存名称格式：<code>采集时间_热榜名称</code></p>
+<p>储存名称格式：<code>实时热榜数据_采集时间_热榜名称</code></p>
 <h3>批量下载收藏作品</h3>
 <p>需要在配置文件写入已登录的 Cookie，并在 <code>owner_url</code> 参数填入对应的账号主页链接和账号标识（可选）；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
 <p>如果未设置 <code>owner_url</code> 参数，程序会使用临时字符串作为账号昵称和 UID。</p>

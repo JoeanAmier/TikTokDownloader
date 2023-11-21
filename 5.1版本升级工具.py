@@ -4,7 +4,6 @@ from pathlib import Path
 TIP = (
     "本工具使用说明：",
     "本工具仅适用于 TikTokDownloader 5.0 升级至 5.1",
-    "本工具需要放置于 settings.json 同级文件夹",
     "本工具会更新您的配置文件，并重命名您已下载的作品文件名称为：发布时间-作品类型-账号昵称-描述",
     "本工具仅需在 TikTokDownloader 5.0 升级至 5.1 后运行一次，切勿多次运行",
     "运行本工具时，请关闭所有正在访问作品保存文件夹（root 参数）和配置文件的窗口和程序",
@@ -41,7 +40,7 @@ def rename_file(file_path):
 
 def main():
     if (i := input("\n".join(TIP))) not in {"0", "1"}:
-        print("未进行任何操作，您可以重新运行本工具！")
+        print("未进行任何操作，您可以根据需求重新运行本工具！")
         return
     try:
         with ROOT.joinpath("./settings.json").open("r", encoding="UTF-8") as f:
@@ -55,7 +54,7 @@ def main():
             json.dump(settings, f, indent=4, ensure_ascii=False)
         print("处理完成，请不要再次运行本工具！")
     except FileNotFoundError:
-        print("settings.json 不存在，未进行任何操作，您可以重新运行本工具！")
+        print("settings.json 不存在，未进行任何操作，您可以根据需求重新运行本工具！")
 
 
 if __name__ == '__main__':
