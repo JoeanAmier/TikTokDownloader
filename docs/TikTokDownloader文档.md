@@ -202,7 +202,7 @@
 </tr>
 <tr>
 <td align="center">owner_url[mark, url]</td>
-<td align="center">[dict[str, str]]</td>
+<td align="center">dict[str, str]</td>
 <td align="center">已登录 Cookie 的账号标识, 账号主页链接, 批量下载收藏作品时使用<br>用于获取账号昵称和 UID, 以字典格式包含两个参数</td>
 </tr>
 <tr>
@@ -247,7 +247,7 @@
 </tr>
 <tr>
 <td align="center">cookie</td>
-<td align="center">dict/str</td>
+<td align="center">dict|str</td>
 <td align="center">抖音网页版 Cookie, 必需参数; 建议通过程序写入配置文件，亦可手动编辑</td>
 </tr>
 <tr>
@@ -288,7 +288,7 @@
 <tr>
 <td align="center">max_pages</td>
 <td align="center">int</td>
-<td align="center">批量下载账号喜欢作品、收藏作品或者采集作品评论数据时<br>请求数据的最大次数，默认值: <code>0</code> 代表不限制</td>
+<td align="center">批量下载账号喜欢作品、收藏作品或者采集作品评论数据时<br>请求数据的最大次数（不包括异常重试），默认值: <code>0</code> 代表不限制</td>
 </tr>
 <tr>
 <td align="center">default_mode</td>

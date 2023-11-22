@@ -154,7 +154,7 @@ class TikTokDownloader:
         if self.UPDATE["path"].exists():
             return
         try:
-            response = get(self.RELEASES, allow_redirects=False, timeout=10)
+            response = get(self.RELEASES, allow_redirects=False, timeout=5)
             tag = float(response.headers['Location'].split("/")[-1])
             if tag > self.VERSION:
                 self.console.print(

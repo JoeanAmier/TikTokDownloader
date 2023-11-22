@@ -37,6 +37,12 @@ class Cookie:
             keys = {
                 "passport_csrf_token": None,
                 "passport_csrf_token_default": None,
+                "n_mh": None,
+                "s_v_web_id": None,
+                "sso_uid_tt": None,
+                "sso_uid_tt_ss": None,
+                "toutiao_sso_user": None,
+                "toutiao_sso_user_ss": None,
                 "passport_auth_status": None,
                 "passport_auth_status_ss": None,
                 "sid_guard": None,
@@ -45,9 +51,13 @@ class Cookie:
                 "sid_tt": None,
                 "sessionid": None,
                 "sessionid_ss": None,
+                "passport_assist_user": None,
+                "sid_ucp_sso_v1": None,
+                "ssid_ucp_sso_v1": None,
                 "sid_ucp_v1": None,
                 "ssid_ucp_v1": None,
                 "csrf_session_id": None,
+                "tt_scid": None,
                 "odin_tt": None,
             }
             matches = finditer(self.pattern, cookie)

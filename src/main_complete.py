@@ -145,7 +145,7 @@ class TikTok:
                 if not self._deal_account_works_tiktok(
                         index, uid, nickname, item, root, params, logger):
                     count.failed += 1
-                    if failure_handling():
+                    if index != len(items) and failure_handling():
                         continue
                     break
                 count.success += 1
@@ -241,7 +241,7 @@ class TikTok:
                     params=params,
                     logger=logger):
                 count.failed += 1
-                if failure_handling():
+                if index != len(self.accounts) and failure_handling():
                     continue
                 break
             # break  # 调试代码
@@ -269,7 +269,7 @@ class TikTok:
                         params=params,
                         logger=logger):
                     count.failed += 1
-                    if failure_handling():
+                    if index != len(links) and failure_handling():
                         continue
                     break
                 count.success += 1
@@ -552,7 +552,7 @@ class TikTok:
             for index, i in enumerate(ids, start=1):
                 if not self._deal_mix_works(root, params, logger, mix_id, i):
                     count.failed += 1
-                    if failure_handling():
+                    if index != len(ids) and failure_handling():
                         continue
                     break
                 count.success += 1
@@ -577,7 +577,7 @@ class TikTok:
                     data.mark,
                     index):
                 count.failed += 1
-                if failure_handling():
+                if index != len(self.mix) and failure_handling():
                     continue
                 break
             count.success += 1

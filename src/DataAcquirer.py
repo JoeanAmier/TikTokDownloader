@@ -857,6 +857,7 @@ class Search(Acquirer):
             return
         try:
             self.deal_item_data(data[key])
+            self.cursor = data["cursor"]
         except KeyError:
             self.log.error(f"搜索数据响应内容异常: {data}")
             self.finished = True
