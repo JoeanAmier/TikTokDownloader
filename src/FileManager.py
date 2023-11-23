@@ -1,3 +1,4 @@
+from datetime import datetime
 from json import dump
 from json import load
 from json.decoder import JSONDecodeError
@@ -166,32 +167,39 @@ class FileManager:
 class DownloadRecorder:
     def __init__(self, switch, folder: Path):
         self.switch = switch
+        self.cache = folder.joinpath("backups")
+        self.cache.mkdir(exist_ok=True)
         self.path = folder.joinpath("IDRecorder.txt")
         self.file = None
-        self.record = self.get_set()
+        self.record = self.__get_set()
 
-    def get_set(self) -> set:
-        return self.read_file() if self.switch else set()
+    def __get_set(self) -> set:
+        return self.__read_file() if self.switch else set()
 
-    def read_file(self):
+    def __read_file(self):
         if not self.path.is_file():
             blacklist = set()
         else:
             with self.path.open("r") as f:
                 blacklist = {line.strip() for line in f}
         self.file = self.path.open("w")
-        self.save_file(blacklist)
         return blacklist
 
-    def save_file(self, data):
-        result = [f"{i}\n" for i in data]
-        self.file.write("".join(result))
+    def __save_file(self, file):
+        file.write("\n".join(f"{i}" for i in self.record))
 
     def update_id(self, id_):
-        if self.switch:
-            self.record.add(id_)
-            self.file.write(f"{id_}\n")
+        self.record.add(id_)
+
+    def backup_file(self):
+        if self.file:
+            backup = self.cache.joinpath(
+                f"IDRecorder_{
+                datetime.now():%Y_%m_%d_%H_%M_%S}.txt")
+            with backup.open("w") as f:
+                self.__save_file(f)
 
     def close(self):
         if self.file:
+            self.__save_file(self.file)
             self.file.close()

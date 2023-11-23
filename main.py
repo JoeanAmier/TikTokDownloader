@@ -15,6 +15,7 @@ from src.Configuration import Parameter
 from src.Configuration import Settings
 from src.CookieTool import Cookie
 from src.CookieTool import Register
+from src.Customizer import BACKUP_RECORD_INTERVAL
 from src.Customizer import COOKIE_UPDATE_INTERVAL
 from src.Customizer import (
     MASTER,
@@ -56,6 +57,10 @@ def start_cookie_task(function):
     def inner(self, *args, **kwargs):
         if not self.cookie_task.is_alive():
             self.cookie_task.start()
+        if isinstance(
+                self.backup_task,
+                Thread) and not self.backup_task.is_alive():
+            self.backup_task.start()
         return function(self, *args, **kwargs)
 
     return inner
@@ -117,6 +122,7 @@ class TikTokDownloader:
         self.running = True
         self.cookie_task = Thread(
             target=self.periodic_update_cookie, daemon=True)
+        self.backup_task = None
 
     def disclaimer(self):
         if not self.DISCLAIMER["path"].exists():
@@ -148,6 +154,9 @@ class TikTokDownloader:
             l := self.LOGGING["path"].exists()) else "启用"
         self.blacklist = DownloadRecorder(
             not b, self.PROJECT_ROOT.joinpath("./cache"))
+        self.backup_task = Thread(
+            target=self.periodic_backup_record, daemon=True,
+        )
         self.logger = {True: LoggerManager, False: BaseLogger}[l]
 
     def check_update(self):
@@ -293,6 +302,11 @@ class TikTokDownloader:
         while True:
             self.parameter.update_cookie()
             sleep(COOKIE_UPDATE_INTERVAL)
+
+    def periodic_backup_record(self):
+        while True:
+            self.blacklist.backup_file()
+            sleep(BACKUP_RECORD_INTERVAL)
 
 
 if __name__ == '__main__':
