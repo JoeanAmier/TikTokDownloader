@@ -398,7 +398,7 @@ class TikTok:
         with logger(root, **params) as record:
             while url := self._inquire_input("作品"):
                 tiktok, ids = self.links.works(url)
-                if not ids:
+                if not any(ids):
                     self.logger.warning(f"{url} 提取作品 ID 失败")
                     continue
                 self.input_links_acquisition(tiktok, ids, record)
@@ -442,11 +442,11 @@ class TikTok:
             flv_items: dict,
             m3u8_items: dict) -> tuple | None:
         try:
-            choice = self.console.input(
+            choice_ = self.console.input(
                 "请选择下载清晰度(输入清晰度或者对应序号，直接回车代表不下载): ")
-            if u := flv_items.get(choice):
-                return u, m3u8_items.get(choice)
-            if not 0 <= (i := int(choice) - 1) < len(flv_items):
+            if u := flv_items.get(choice_):
+                return u, m3u8_items.get(choice_)
+            if not 0 <= (i := int(choice_) - 1) < len(flv_items):
                 raise ValueError
         except ValueError:
             return None
@@ -510,7 +510,7 @@ class TikTok:
         root, params, logger = self.record.run(self.parameter, type_="comment")
         while url := self._inquire_input("作品"):
             tiktok, ids = self.links.works(url)
-            if not ids:
+            if not any(ids):
                 self.logger.warning(f"{url} 提取作品 ID 失败")
                 continue
             elif tiktok:
@@ -651,7 +651,7 @@ class TikTok:
             logger,
             data: list[dict],
             source=False):
-        if not data:
+        if not any(data):
             self.logger.warning("采集账号数据失败")
             return None
         if source:
