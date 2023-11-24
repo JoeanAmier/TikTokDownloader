@@ -532,6 +532,7 @@ class Extractor:
         #     pass
         # elif d := self.safe_extract(data, "common_aladdin"):
         #     pass
+        self.log.error(f"Unreported search results: {data}", False)
 
     def search_user(
             self,

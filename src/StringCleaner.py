@@ -75,8 +75,13 @@ class Cleaner:
 
         text = text.strip().strip(".")
 
-        return (text or illegal_nickname() or default or str(
-            time())[:10]) if inquire else (text or default)
+        return (
+                text or self.filter_name(
+            illegal_nickname(),
+            False) or default or str(
+            time())[
+                                 :10]) if inquire else (
+                text or default)
 
     @staticmethod
     def clear_spaces(string: str):
@@ -87,3 +92,4 @@ class Cleaner:
 if __name__ == "__main__":
     demo = Cleaner()
     print(demo.rule)
+    print(demo.filter_name(""))

@@ -210,7 +210,7 @@ class Share:
 class Link:
     # 抖音链接
     account_link = compile(
-        r".*?/user/([^?]+).*?modal_id=(\d{19}).*?")  # 账号主页链接
+        r".*?/user/([^?]+)(?:.*?modal_id=(\d{19}))?.*?")  # 账号主页链接
     account_share = compile(
         r".*?https://www\.iesdouyin\.com/share/user/(.*?)\?.*?"  # 账号主页分享短链
     )
@@ -238,7 +238,7 @@ class Link:
     def user(self, text: str) -> list:
         urls = self.share.run(text)
         if u := self.account_link.findall(urls):
-            return [i[0] for i in u]
+            return [i for i in [i[0] for i in u] if i]
         elif u := self.account_share.findall(urls):
             return u
         return []
@@ -253,7 +253,7 @@ class Link:
             tiktok = False
         elif u := self.account_link.findall(urls):
             tiktok = False
-            u = [i[1] for i in u]
+            u = [i for i in [i[1] for i in u] if i]
         else:
             return None, []
         return tiktok, u
@@ -858,6 +858,7 @@ class Search(Acquirer):
         try:
             self.deal_item_data(data[key])
             self.cursor = data["cursor"]
+            self.finished = not data["has_more"]
         except KeyError:
             self.log.error(f"搜索数据响应内容异常: {data}")
             self.finished = True
