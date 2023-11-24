@@ -1,4 +1,3 @@
-from datetime import datetime
 from json import dump
 from json import load
 from json.decoder import JSONDecodeError
@@ -167,7 +166,7 @@ class FileManager:
 class DownloadRecorder:
     def __init__(self, switch, folder: Path):
         self.switch = switch
-        self.cache = folder.joinpath("backups")
+        self.cache = folder
         self.cache.mkdir(exist_ok=True)
         self.path = folder.joinpath("IDRecorder.txt")
         self.file = None
@@ -193,10 +192,11 @@ class DownloadRecorder:
 
     def backup_file(self):
         if self.file:
-            backup = self.cache.joinpath(
-                f"IDRecorder_{
-                datetime.now():%Y_%m_%d_%H_%M_%S}.txt")
-            with backup.open("w") as f:
+            backup = self.cache.joinpath("IDRecorder_backup.txt")
+            latest = self.cache.joinpath("IDRecorder_latest.txt")
+            if latest.exists():
+                backup.write_text(latest.read_text())
+            with latest.open("w") as f:
                 self.__save_file(f)
 
     def close(self):
