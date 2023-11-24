@@ -114,7 +114,6 @@ TikTokDownloader
 │    ├─ main_api_server.py                 // Web API 接口模式启动入口
 │    └─ main_web_UI.py                     // Web UI 交互模式启动入口
 ├─ cache                                   // 缓存数据文件夹
-│    ├─ backups                            // 作品下载记录备份文件夹
 │    ├─ temp                               // 下载文件临时文件夹
 │    ├─ AccountCache.json                  // 账号管理缓存数据
 │    └─ IDRecorder.txt                     // 作品下载记录数据
@@ -255,12 +254,12 @@ TikTokDownloader
 
 # 💡 代码参考\(Refer\)
 
-* https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://github.com/Johnserf-Seed/TikTokDownload
+* https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://github.com/ihmily/DouyinLiveRecorder
 * https://github.com/davidteather/TikTok-Api
-* https://requests.readthedocs.io/en/latest/
-* https://dormousehole.readthedocs.io/en/latest/
+* https://github.com/psf/requests
+* https://github.com/pallets/flask/
 * https://github.com/Textualize/rich
 * https://ffmpeg.org/ffmpeg-all.html
 * https://html5up.net/hyperspace

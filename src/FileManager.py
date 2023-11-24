@@ -167,7 +167,6 @@ class DownloadRecorder:
     def __init__(self, switch, folder: Path):
         self.switch = switch
         self.cache = folder
-        self.cache.mkdir(exist_ok=True)
         self.path = folder.joinpath("IDRecorder.txt")
         self.file = None
         self.record = self.__get_set()

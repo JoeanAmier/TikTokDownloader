@@ -214,6 +214,7 @@ class Link:
     account_share = compile(
         r".*?https://www\.iesdouyin\.com/share/user/(.*?)\?.*?"  # 账号主页分享短链
     )
+    works_id = compile(r"\b(\d{19})\b")  # 作品 ID
     works_link = compile(
         r".*?https://www\.douyin\.com/(?:video|note)/([0-9]{19}).*?")  # 作品链接
     works_share = compile(
@@ -254,6 +255,8 @@ class Link:
         elif u := self.account_link.findall(urls):
             tiktok = False
             u = [i for i in [i[1] for i in u] if i]
+        # elif u := self.works_id.findall(urls):
+        #     pass
         else:
             return None, []
         return tiktok, u

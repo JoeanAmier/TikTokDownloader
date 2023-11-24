@@ -1,5 +1,6 @@
 # from random import randint
 # from time import sleep
+# from time import time
 
 __all__ = [
     "MAX_WORKERS",
@@ -9,7 +10,7 @@ __all__ = [
     "check_login",
     "DESCRIPTION_LENGTH",
     "TEXT_REPLACEMENT",
-    "conditional_filtering",
+    "condition_filter",
     "SERVER_HOST",
     "SERVER_PORT",
     "MASTER",
@@ -88,6 +89,7 @@ def illegal_nickname():
     # 询问用户
     return input("当前 账号昵称/标识 或者 合集标题/标识 不是有效的文件夹名称，请输入临时的账号标识或者合集标识：")
     # 使用当前时间戳作为账号昵称/标识或者合集标题/标识
+    # 需要将第 3 行代码取消注释
     # return str(time())[:10]
 
 
@@ -99,9 +101,12 @@ def check_login():
     # return False
 
 
-def conditional_filtering(data: list[dict]) -> list[dict]:
-    """自定义作品筛选规则，例如：筛选作品点赞数、作品类型、视频分辨率等"""
-    return data
+def condition_filter(data: dict) -> bool:
+    """
+    自定义作品筛选规则，例如：筛选作品点赞数、作品类型、视频分辨率等
+    需要排除的作品返回 False，否则返回 True
+    """
+    return True
 
 
 def rest(count: int, screen):

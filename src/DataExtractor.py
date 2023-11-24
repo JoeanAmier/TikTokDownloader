@@ -5,7 +5,7 @@ from time import strftime
 from time import time
 from types import SimpleNamespace
 
-from src.Customizer import conditional_filtering
+from src.Customizer import condition_filter
 
 __all__ = ["Extractor"]
 
@@ -103,14 +103,19 @@ class Extractor:
             earliest=earliest,
             latest=latest,
         )
-        data = conditional_filtering(data)
         [self.extract_batch(container, self.generate_data_object(item))
          for item in data]
         self.date_filter(container)
+        self.__condition_filter(container)
         self._extract_item_records(container.all_data)
         self.summary_works(container.all_data)
         self.record_data(recorder, container.all_data)
         return container.all_data
+
+    @staticmethod
+    def __condition_filter(container: SimpleNamespace):
+        result = [i for i in container.all_data if condition_filter(i)]
+        container.all_data = result
 
     def summary_works(self, data: list[dict]):
         self.log.info(f"当前账号筛选作品数量: {len(data)}")
@@ -348,6 +353,7 @@ class Extractor:
         )
         [self.extract_batch(container, self.generate_data_object(item))
          for item in data]
+        self.__condition_filter(container)
         self._extract_item_records(container.all_data)
         self.record_data(recorder, container.all_data)
         return container.all_data

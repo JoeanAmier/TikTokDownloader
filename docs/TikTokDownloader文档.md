@@ -247,7 +247,7 @@
 </tr>
 <tr>
 <td align="center">cookie</td>
-<td align="center">dict|str</td>
+<td align="center">dict | str</td>
 <td align="center">抖音网页版 Cookie, 必需参数; 建议通过程序写入配置文件，亦可手动编辑</td>
 </tr>
 <tr>
@@ -316,7 +316,7 @@
     {
       "mark": "",
       "url": "账号主页链接-2",
-      "tab": "post",
+      "tab": "favorite",
       "earliest": "2023/7/1",
       "latest": ""
     }
@@ -363,6 +363,7 @@
 
 <p><strong>服务器部署模式：</strong> 仅 <code>cookie</code>、<code>proxies</code>、<code>max_retry</code> 参数生效，其余参数均不生效，但仍需正确编辑配置文件。</p>
 <h2>参数详解</h2>
+<h3>文件储存路径</h3>
 
 ```json
 {
@@ -371,7 +372,8 @@
 }
 ```
 
-<p>代表程序会将下载的文件和记录的数据储存至 <code>C:\TikTokDownloader</code> 文件夹内，单独下载的作品文件会储存至 <code>C:\TikTokDownloader\SOLO</code> 文件夹内。</p>
+<p>代表程序会将下载的文件和记录的数据储存至 <code>C:\TikTokDownloader</code> 文件夹内，链接下载的作品文件会储存至 <code>C:\TikTokDownloader\SOLO</code> 文件夹内。</p>
+<h3>文件名称格式</h3>
 
 ```json
 {
@@ -385,6 +387,7 @@
 <li>如果作品没有描述，保存时文件名称的描述内容将替换为作品 ID</li>
 <li>批量下载链接作品时，如果在 <code>name_format</code> 参数中设置了 <code>mark</code> 字段，程序会自动替换为 <code>nickname</code> 字段</li>
 </ul>
+<h3>日期时间格式</h3>
 
 ```json
 {
@@ -393,6 +396,7 @@
 ```
 
 <p>代表发布时间格式为：XXXX年-XX月-XX日，详细设置规则可以 <a href="https://docs.python.org/zh-cn/3/library/time.html?highlight=strftime#time.strftime">查看文档</a></p>
+<h3>数据储存格式</h3>
 
 ```json
 {
@@ -401,6 +405,7 @@
 ```
 
 <p>代表使用 <code>XLSX</code> 格式储存程序采集数据。</p>
+<h3>文件大小限制</h3>
 
 ```json
 {
@@ -409,6 +414,7 @@
 ```
 
 <p>代表作品文件大小限制为 10485760 字节(10 MB)，超过该大小的作品文件会自动跳过下载；直播文件不受限制。</p>
+<h3>文件分块下载</h3>
 
 ```json
 {
@@ -421,6 +427,7 @@
 <li>影响下载速度：较大的 chunk 会增加每次下载的数据量，从而提高下载速度。相反，较小的 chunk 会降低每次下载的数据量，可能导致下载速度稍慢。</li>
 <li>影响内存占用：较大的 chunk 会一次性加载更多的数据到内存中，可能导致内存占用增加。相反，较小的 chunk 会减少每次加载的数据量，从而降低内存占用。</li>
 </ul>
+<h3>请求次数限制</h3>
 
 ```json
 {
@@ -430,6 +437,7 @@
 
 <p>代表批量下载账号喜欢作品、收藏作品或者采集作品评论数据时，仅获取前 <code>2</code> 页数据；用于解决批量下载账号喜欢作品、收藏作品需要获取全部数据的问题，以及作品评论数据数量过多的采集问题。</p>
 <p>不影响批量下载账号发布作品，如需控制账号发布作品数据获取次数，可使用 <code>earliest</code> 和 <code>latest</code> 参数实现。</p>
+<h3>默认启动模式</h3>
 
 ```json
 {
@@ -438,6 +446,7 @@
 ```
 
 <p>代表运行程序自动进入 <code>终端命令行模式</code>，其他示例：<code>4</code> 代表 <code>Web API 接口模式</code>，<code>5</code> 代表 <code>Web UI 交互模式</code>，<code>6</code> 代表 <code>服务器部署模式</code>。</p>
+<h3>程序代理设置</h3>
 
 ```json
 {
@@ -459,13 +468,14 @@
 <li>设置作品文件下载的最大线程数量</li>
 <li>设置文件名称的作品描述长度限制</li>
 <li>设置非法字符替换规则</li>
+<li>开启服务器模式局域网访问功能</li>
 <li>设置服务器模式主机及端口</li>
 <li>设置 Cookie 更新间隔</li>
 <li>设置彩色交互提示颜色</li>
 <li>设置请求数据时间间隔</li>
 <li>设置作品下载记录数据备份时间间隔</li>
 <li>设置获取数据失败时的处理策略</li>
-<li>设置作品筛选规则</li>
+<li>设置自定义作品筛选规则</li>
 <li>设置分批获取数据策略</li>
 <li>设置服务器模式参数验证</li>
 </ul>
