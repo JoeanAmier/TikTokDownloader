@@ -223,7 +223,7 @@
 <tr>
 <td align="center">date_format</td>
 <td align="center">str</td>
-<td align="center">发布时间的格式, 默认值: <code>年-月-日 时.分.秒</code><br>注意: Windows 系统的文件名称不能包含英文冒号 <code>:</code></td>
+<td align="center">日期时间格式, 默认值: <code>年-月-日 时:分:秒</code></td>
 </tr>
 <tr>
 <td align="center">split</td>
@@ -463,6 +463,7 @@
 <li>设置 Cookie 更新间隔</li>
 <li>设置彩色交互提示颜色</li>
 <li>设置请求数据时间间隔</li>
+<li>设置作品下载记录数据备份时间间隔</li>
 <li>设置获取数据失败时的处理策略</li>
 <li>设置作品筛选规则</li>
 <li>设置分批获取数据策略</li>
@@ -528,6 +529,9 @@ document.body.removeChild(downloadLink);
 <li><code>https://www.douyin.com/user/账号ID</code></li>
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
+<p>如果需要大批量采集账号作品，建议启用 <code>src/Customizer.py</code> 文件的 <code>rest</code> 函数。</p>
+<p>如果当前账号昵称或账号标识不是有效的文件夹名称时，程序会提示用户输入临时的账号标识，以便程序继续处理账号。</p>
+<p>处理多个账号时，如果某个账号获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/Customizer.py</code> 文件修改功能）</p>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
 <h3>批量下载链接作品</h3>
 <p>输入作品链接；<strong>支持 TikTok 平台。</strong></p>
@@ -582,6 +586,9 @@ document.body.removeChild(downloadLink);
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/collection/合集ID</code></li>
 </ul>
+<p>如果需要大批量采集合集作品，建议启用 <code>src/Customizer.py</code> 文件的 <code>rest</code> 函数。</p>
+<p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会提示用户输入临时的合集标识，以便程序继续处理合集。</p>
+<p>处理多个合集时，如果某个合集获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/Customizer.py</code> 文件修改功能）</p>
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
 <h3>批量采集账号数据</h3>
 <ol>

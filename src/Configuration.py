@@ -43,7 +43,7 @@ class Settings:
             "root": "",
             "folder_name": "Download",
             "name_format": "create_time type nickname desc",
-            "date_format": "%Y-%m-%d %H.%M.%S",
+            "date_format": "%Y-%m-%d %H:%M:%S",
             "split": "-",
             "folder_mode": False,
             "music": False,
@@ -285,8 +285,8 @@ class Parameter:
             return date_format
         except ValueError:
             self.logger.warning(
-                f"date_format 参数 {date_format} 设置错误，程序将使用默认值：年-月-日 时.分.秒")
-            return "%Y-%m-%d %H.%M.%S"
+                f"date_format 参数 {date_format} 设置错误，程序将使用默认值：年-月-日 时:分:秒")
+            return "%Y-%m-%d %H:%M:%S"
 
     def check_split(self, split: str) -> str:
         for i in split:

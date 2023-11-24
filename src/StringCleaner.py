@@ -69,6 +69,8 @@ class Cleaner:
             inquire=True,
             default: str = "") -> str:
         """过滤文件夹名称中的非法字符"""
+        text = text.replace(":", ".")
+
         text = self.filter(text)
 
         text = replace_emoji(text)

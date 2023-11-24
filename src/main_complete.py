@@ -149,8 +149,8 @@ class TikTok:
                         continue
                     break
                 count.success += 1
-                if index != len(items):
-                    rest(index, self.console.print)
+                # if index != len(items):
+                #     rest(index, self.console.print)
             self.__summarize_results(count)
         self.logger.info("已退出批量下载账号作品(TikTok)模式")
 

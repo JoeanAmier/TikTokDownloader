@@ -46,16 +46,18 @@ def main():
     try:
         with ROOT.joinpath("./settings.json").open("r", encoding="UTF-8") as f:
             settings = json.load(f)
-        if i == "1":
-            settings["name_format"] = "create_time type nickname desc"
-            rename_files_in_directory(Path(r) if (
-                r := settings["root"]) else ROOT)
-        settings["ffmpeg"] = settings.get("ffmpeg_path", "")
-        with ROOT.joinpath("./settings.json").open("w", encoding="UTF-8") as f:
-            json.dump(settings, f, indent=4, ensure_ascii=False)
-        print("处理完成，请不要再次运行本工具！")
     except FileNotFoundError:
         print("settings.json 不存在，未进行任何操作，您可以根据需求重新运行本工具！")
+    if i == "1":
+        settings["name_format"] = "create_time type nickname desc"
+        rename_files_in_directory(Path(r) if (
+            r := settings["root"]) else ROOT)
+    settings["ffmpeg"] = settings.get("ffmpeg_path", "")
+    if settings["date_format"] == "%Y-%m-%d %H.%M.%S":
+        settings["date_format"] = "%Y-%m-%d %H:%M:%S"
+    with ROOT.joinpath("./settings.json").open("w", encoding="UTF-8") as f:
+        json.dump(settings, f, indent=4, ensure_ascii=False)
+    print("处理完成，请不要再次运行本工具！")
 
 
 if __name__ == '__main__':
