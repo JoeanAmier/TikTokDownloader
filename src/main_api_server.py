@@ -51,8 +51,8 @@ class APIServer(WebUI):
             }
             self._generate_record_params(params)
             return {
-                "data": self.deal_account_works(**params),
-                "message": "success",
+                "data": (d := self.deal_account_works(**params)),
+                "message": "success" if d else "failure",
             }
 
         @app.route('/detail/', methods=['POST'])
@@ -72,10 +72,10 @@ class APIServer(WebUI):
                 data, merge=False)
             with logger(root, **params) as record:
                 return {
-                    "data": self.input_links_acquisition(
+                    "data": (d := self.input_links_acquisition(
                         record=record,
-                        **data),
-                    "message": "success",
+                        **data)),
+                    "message": "success" if d else "failure",
                 }
 
         @app.route('/live/', methods=['POST'])
@@ -91,17 +91,17 @@ class APIServer(WebUI):
                     **i,
                     cookie=request.json.get("cookie"),
                 ).run() for i in params]
-            if not [i for i in live_data if i]:
+            if not any(live_data):
                 self.logger.warning(m := "获取直播数据失败")
                 return {"data": None, "message": m}
             return {
-                "data": live_data if request.json.get(
+                "data": (d := (live_data if request.json.get(
                     "source",
                     False) else self.extractor.run(
                     live_data,
                     None,
-                    "live"),
-                "message": "success",
+                    "live"))),
+                "message": "success" if d else "failure",
             }
 
         @app.route('/comment/', methods=['POST'])
@@ -131,8 +131,8 @@ class APIServer(WebUI):
                 else:
                     self.logger.warning("采集评论数据失败")
             return {
-                "data": result or None,
-                "message": "success",
+                "data": (d := result or None),
+                "message": "success" if d else "failure",
             }
 
         @app.route('/mix/', methods=['POST'])
@@ -150,8 +150,8 @@ class APIServer(WebUI):
             }
             self._generate_record_params(params, type_="mix")
             return {
-                "data": self._deal_mix_works(**params),
-                "message": "success",
+                "data": (d := self._deal_mix_works(**params)),
+                "message": "success" if d else "failure",
             }
 
         @app.route("/user/", methods=["POST"])
@@ -168,11 +168,11 @@ class APIServer(WebUI):
                     cookie=request.json.get("cookie"),
                 ) for i in sec_user_ids]
             return {
-                "data": self._deal_user_data(
+                "data": (d := self._deal_user_data(
                     **params,
                     data=[
-                        i for i in users if i]),
-                "message": "success",
+                        i for i in users if i])),
+                "message": "success" if d else "failure",
             }
 
         @app.route("/search/", methods=["POST"])
@@ -187,14 +187,14 @@ class APIServer(WebUI):
             if not all(params):
                 return {"data": None, "message": "搜索参数无效！"}
             return {
-                "data": self._deal_search_data(
+                "data": (d := self._deal_search_data(
                     *params,
                     source=request.json.get(
                         "source",
                         False),
                     cookie=request.json.get("cookie"),
-                ),
-                "message": "success",
+                )),
+                "message": "success" if d else "failure",
             }
 
         @app.route("/hot/", methods=["POST"])
@@ -204,7 +204,7 @@ class APIServer(WebUI):
             return {
                 "time": time_,
                 "data": data,
-                "message": "success",
+                "message": "success" if any(data) else "failure",
             }
 
         return app
