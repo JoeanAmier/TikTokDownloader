@@ -55,6 +55,8 @@ def main():
     settings["ffmpeg"] = settings.get("ffmpeg_path", "")
     if settings["date_format"] == "%Y-%m-%d %H.%M.%S":
         settings["date_format"] = "%Y-%m-%d %H:%M:%S"
+    if settings["chunk"] == 512 * 1024:
+        settings["chunk"] = 1024 * 1024
     with ROOT.joinpath("./settings.json").open("w", encoding="UTF-8") as f:
         json.dump(settings, f, indent=4, ensure_ascii=False)
     print("处理完成，请不要再次运行本工具！")

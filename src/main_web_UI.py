@@ -39,7 +39,7 @@ class WebUI(TikTok):
                 "download"):
             data[i] = {"on": True, None: False}[data.get(i)]
         for i, j in (("max_size", 0),
-                     ("chunk", 512 * 1024),
+                     ("chunk", 1024 * 1024),
                      ("max_retry", 10),
                      ("max_pages", 0),
                      ("default_mode", 0)):

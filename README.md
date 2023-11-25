@@ -76,12 +76,17 @@
 <br><br>
 ![WebAPI模式截图](docs/WebAPI模式截图.png)
 
+# 📽 程序演示
+
+https://github.com/JoeanAmier/TikTokDownloader/assets/49263334/5226315c-c47e-4619-b15f-57f1d4cffd0d
+
 # 📈 项目状态\(Status\)
 
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已完成测试，所有功能均可正常使用
 * 🟡 未来可能新增可视化编辑配置文件功能
 * 🟡 未来可能支持更多抖音热榜类型
 * 🟡 未来可能新增终端文本用户界面\(TUI\)模式
+* 🟡 未来可能新增监听剪贴板下载作品功能
 * 🟡 未来可能新增账号新作品监测功能
 * 🟡 未来可能新增合集新作品监测功能
 * 🟡 未来可能新增直播开播监测功能
@@ -141,7 +146,7 @@ TikTokDownloader
 </li>
 <li>查看屏幕输出的 TikTokDownloader 免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
-<ol><b>手动复制粘贴</b>
+<ol><b>手动复制粘贴(推荐)</b>
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
 <li>选择 <code>复制粘贴写入 Cookie</code> 选项，按照提示将 Cookie 写入配置文件</li>
 </ol>

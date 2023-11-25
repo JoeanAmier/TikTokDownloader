@@ -107,8 +107,8 @@ class Downloader:
             **kwargs, ) -> None:
         if not self.download:
             return
-        self.log.info("开始下载作品文件")
         if type_ == "batch":
+            self.log.info("开始下载作品文件")
             self.run_batch(data, **kwargs)
         elif type_ == "works":
             self.run_general(data, **kwargs)

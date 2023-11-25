@@ -34,7 +34,7 @@
 </li>
 <li>查看屏幕输出的 TikTokDownloader 免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
-<ol><b>手动复制粘贴</b>
+<ol><b>手动复制粘贴(推荐)</b>
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
 <li>选择 <code>复制粘贴写入 Cookie</code> 选项，按照提示将 Cookie 写入配置文件</li>
 </ol>
@@ -278,7 +278,7 @@
 <tr>
 <td align="center">chunk</td>
 <td align="center">int</td>
-<td align="center">每次从服务器接收的数据块大小, 单位字节; 默认值：<code>524288</code>(512 KB)</td>
+<td align="center">每次从服务器接收的数据块大小, 单位字节; 默认值：<code>1048576</code>(1 MB)</td>
 </tr>
 <tr>
 <td align="center">max_retry</td>
@@ -352,8 +352,8 @@
   "original_cover": false,
   "proxies": "http://127.0.0.1:9999",
   "download": true,
-  "max_size": 10485760,
-  "chunk": 1048576,
+  "max_size": 104857600,
+  "chunk": 10485760,
   "max_retry": 10,
   "max_pages": 2,
   "default_mode": 3,
@@ -409,20 +409,20 @@
 
 ```json
 {
-  "max_size": 10485760
+  "max_size": 104857600
 }
 ```
 
-<p>代表作品文件大小限制为 10485760 字节(10 MB)，超过该大小的作品文件会自动跳过下载；直播文件不受限制。</p>
+<p>代表作品文件大小限制为 104857600 字节(100 MB)，超过该大小的作品文件会自动跳过下载；直播文件不受限制。</p>
 <h3>文件分块下载</h3>
 
 ```json
 {
-  "chunk": 1048576
+  "chunk": 10485760
 }
 ```
 
-<p>代表下载文件时每次从服务器接收 1048576 字节 (1 MB)的数据块。</p>
+<p>代表下载文件时每次从服务器接收 10485760 字节 (10 MB)的数据块。</p>
 <ul>
 <li>影响下载速度：较大的 chunk 会增加每次下载的数据量，从而提高下载速度。相反，较小的 chunk 会降低每次下载的数据量，可能导致下载速度稍慢。</li>
 <li>影响内存占用：较大的 chunk 会一次性加载更多的数据到内存中，可能导致内存占用增加。相反，较小的 chunk 会减少每次加载的数据量，从而降低内存占用。</li>

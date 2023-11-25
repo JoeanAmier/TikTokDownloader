@@ -54,7 +54,7 @@ class Settings:
             "proxies": "",
             "download": True,
             "max_size": 0,
-            "chunk": 512 * 1024,  # 每次从服务器接收的数据块大小
+            "chunk": 1024 * 1024,  # 每次从服务器接收的数据块大小
             "max_retry": 10,  # 重试最大次数
             "max_pages": 0,
             "default_mode": 0,
@@ -330,13 +330,13 @@ class Parameter:
         return max_size
 
     def check_chunk(self, chunk: int) -> int:
-        if isinstance(chunk, int) and chunk > 0:
+        if isinstance(chunk, int) and chunk > 1024:
             self.logger.info(f"chunk 参数已设置为 {chunk}", False)
             return chunk
         self.logger.warning(
             f"chunk 参数 {chunk} 设置错误，程序将使用默认值：{
-            512 * 1024}", False)
-        return 512 * 1024
+            1024 * 1024}", False)
+        return 1024 * 1024
 
     def check_max_retry(self, max_retry: int) -> int:
         if isinstance(max_retry, int) and max_retry >= 0:
