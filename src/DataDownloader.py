@@ -107,6 +107,7 @@ class Downloader:
             **kwargs, ) -> None:
         if not self.download:
             return
+        self.log.info("开始下载作品文件")
         if type_ == "batch":
             self.run_batch(data, **kwargs)
         elif type_ == "works":
@@ -498,7 +499,7 @@ class Downloader:
 
     def delete_file(self, path: Path):
         path.unlink()
-        self.log.info(f"文件 {path.name}{path.suffix} 已删除")
+        self.log.info(f"文件 {path.name} 已删除")
 
     def statistics_count(self, count: SimpleNamespace):
         self.log.info(f"跳过视频作品 {len(count.skipped_video)} 个")

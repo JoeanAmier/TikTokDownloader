@@ -202,3 +202,4 @@ class DownloadRecorder:
         if self.file:
             self.__save_file(self.file)
             self.file.close()
+            self.file = None

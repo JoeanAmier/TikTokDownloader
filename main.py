@@ -293,6 +293,7 @@ class TikTokDownloader:
         self.disclaimer()
         self.main_menu(self.parameter.default_mode)
         self.delete_temp()
+        self.blacklist.close()
         self.parameter.logger.info("程序结束运行")
 
     def delete_temp(self):

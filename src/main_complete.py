@@ -380,7 +380,6 @@ class TikTok:
             title: str = None,
             addition: str = None,
     ):
-        self.logger.info("开始下载作品文件")
         self.downloader.run(
             data,
             "batch",

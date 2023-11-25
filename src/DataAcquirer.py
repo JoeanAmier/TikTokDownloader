@@ -210,7 +210,7 @@ class Share:
 class Link:
     # 抖音链接
     account_link = compile(
-        r".*?/user/([^?]+)(?:.*?modal_id=(\d{19}))?.*?")  # 账号主页链接
+        r"https://www\.douyin\.com/user/([A-Za-z0-9_-]+)(?:.*?\bmodal_id=(\d{19}))?")  # 账号主页链接
     account_share = compile(
         r".*?https://www\.iesdouyin\.com/share/user/(.*?)\?.*?"  # 账号主页分享短链
     )
