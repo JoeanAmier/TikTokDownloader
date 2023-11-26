@@ -1,8 +1,8 @@
 from atexit import register
 from pathlib import Path
 from shutil import rmtree
+from threading import Event
 from threading import Thread
-from time import sleep
 
 from flask import Flask
 from flask import abort
@@ -120,8 +120,8 @@ class TikTokDownloader:
             self.ua_code)
         self.parameter = None
         self.running = True
-        self.cookie_task = Thread(
-            target=self.periodic_update_cookie, daemon=True)
+        self.event = Event()
+        self.cookie_task = Thread(target=self.periodic_update_cookie)
         self.backup_task = None
 
     def disclaimer(self):
@@ -155,7 +155,7 @@ class TikTokDownloader:
         self.blacklist = DownloadRecorder(
             not b, self.PROJECT_ROOT.joinpath("./cache"))
         self.backup_task = Thread(
-            target=self.periodic_backup_record, daemon=True,
+            target=self.periodic_backup_record,
         )
         self.logger = {True: LoggerManager, False: BaseLogger}[l]
 
@@ -208,20 +208,26 @@ class TikTokDownloader:
         """终端命令行模式"""
         example = TikTok(self.parameter)
         register(self.blacklist.close)
-        example.run()
-        self.running = example.running
+        try:
+            example.run()
+            self.running = example.running
+        except KeyboardInterrupt:
+            self.running = False
 
     @start_cookie_task
     def server(self, server, token=True):
         """
         服务器模式
         """
+        self.console.print(
+            "如果您看到 WARNING: This is a development server. 提示，这并不是异常错误！\n如需关闭服务器，可以在终端按下 Ctrl + C 快捷键！",
+            style=INFO)
         master = server(self.parameter)
         app = master.run_server(Flask(__name__))
         register(self.blacklist.close)
         if token:
             app.before_request(self.verify_token)
-        app.run(host=SERVER_HOST, port=SERVER_PORT, debug=not self.STABLE)
+        app.run(host=SERVER_HOST, port=SERVER_PORT)
 
     @staticmethod
     def verify_token():
@@ -232,6 +238,8 @@ class TikTokDownloader:
     def change_config(self, file: Path):
         FileManager.deal_config(file)
         self.console.print("修改设置成功！")
+        if self.blacklist:
+            self.blacklist.close()
         self.check_config()
         self.check_settings()
 
@@ -293,6 +301,7 @@ class TikTokDownloader:
         self.disclaimer()
         self.main_menu(self.parameter.default_mode)
         self.delete_temp()
+        self.event.set()
         self.blacklist.close()
         self.parameter.logger.info("程序结束运行")
 
@@ -300,14 +309,15 @@ class TikTokDownloader:
         rmtree(self.PROJECT_ROOT.joinpath("./cache/temp").resolve())
 
     def periodic_update_cookie(self):
-        while True:
+        while not self.event.is_set():
             self.parameter.update_cookie()
-            sleep(COOKIE_UPDATE_INTERVAL)
+            self.event.wait(COOKIE_UPDATE_INTERVAL)
 
     def periodic_backup_record(self):
-        while True:
+        while not self.event.is_set():
             self.blacklist.backup_file()
-            sleep(BACKUP_RECORD_INTERVAL)
+            self.event.wait(BACKUP_RECORD_INTERVAL)
+        self.blacklist.backup_file()
 
 
 if __name__ == '__main__':

@@ -380,6 +380,7 @@ class Parameter:
         return "0"
 
     def update_cookie(self):
+        # self.console.print("Update Cookie")
         if self.cookie:
             self.add_cookie(self.cookie)
             self.headers["Cookie"] = Register.generate_cookie(self.cookie)

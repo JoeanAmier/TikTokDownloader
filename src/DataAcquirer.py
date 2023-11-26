@@ -133,7 +133,7 @@ class Acquirer:
             if response.text:
                 self.log.warning(f"响应内容不是有效的 JSON 格式：{response.text}")
             else:
-                self.log.warning("响应内容为空，可能是接口失效或者 Cookie 失效")
+                self.log.warning("响应内容为空，可能是接口失效或者 Cookie 失效，请尝试更新 Cookie")
             return False
 
     def deal_url_params(self, params: dict, version=23):

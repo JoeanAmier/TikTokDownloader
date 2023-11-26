@@ -191,6 +191,7 @@ class DownloadRecorder:
 
     def backup_file(self):
         if self.file:
+            # print("Backup IDRecorder")
             backup = self.cache.joinpath("IDRecorder_backup.txt")
             latest = self.cache.joinpath("IDRecorder_latest.txt")
             if latest.exists():

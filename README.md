@@ -54,7 +54,7 @@
 * ✅ 支持 Web API 调用
 * ✅ 支持多线程下载作品
 * ✅ 文件完整性处理机制
-* ✅ 自定义筛选作品
+* ✅ 自定义规则筛选作品
 
 # 💻 程序界面\(Screenshot\)
 
@@ -76,9 +76,13 @@
 <br><br>
 ![WebAPI模式截图](docs/WebAPI模式截图.png)
 
-# 📽 程序演示
+# 📽 运行演示\(Example\)
 
-https://github.com/JoeanAmier/TikTokDownloader/assets/49263334/5226315c-c47e-4619-b15f-57f1d4cffd0d
+## 批量下载账号发布作品
+
+[![演示视频](docs/程序运行演示.png)](https://www.bilibili.com/video/BV1Nu4y1L7LW/)
+
+<p><b>点击图片观看演示视频，建议通过配置文件进行管理账号，更多介绍请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">文档</a></b></p>
 
 # 📈 项目状态\(Status\)
 
@@ -129,7 +133,7 @@ TikTokDownloader
 
 # 📋 项目说明\(Instructions\)
 
-**快速入门：**
+## 快速入门
 
 <ol>
 <li><b>下载 EXE 程序</b> 或者 <b>配置运行环境</b>
@@ -163,7 +167,7 @@ TikTokDownloader
 <p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a>（Windows 11 自带默认终端）</p>
 <hr>
 
-**关于 Cookie：**
+## 关于 Cookie
 
 [点击查看 Cookie 获取教程](https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md)
 
@@ -185,7 +189,7 @@ TikTokDownloader
 
 <hr>
 
-**其他说明：**
+## 其他说明
 
 <ul>
 <li>程序提示用户输入时，直接回车代表返回上级菜单，输入 <code>Q</code> 或 <code>q</code> 代表结束运行</li>
@@ -202,7 +206,7 @@ TikTokDownloader
 </ul>
 <hr>
 
-**EXE 如何更新？**
+## EXE 更新
 
 * **方案一：** 下载并解压文件，将旧版本的 `cache` 文件夹和 `settings.json` 文件复制到 `_internal` 文件夹。
 
@@ -228,7 +232,7 @@ TikTokDownloader
 # ✉️ 联系作者\(Contact\)
 
 <ul>
-<li>QQ: 2437596031</li>
+<li>QQ: 2437596031（联系请说明来意）</li>
 <li>QQ Group: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">点击扫码加入群聊</a></li>
 <li>Email: yonglelolu@gmail.com</li>
 </ul>
