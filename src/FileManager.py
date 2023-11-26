@@ -3,8 +3,12 @@ from json import load
 from json.decoder import JSONDecodeError
 from pathlib import Path
 
+from rich import print
+
 from src.Customizer import (
     ERROR,
+    WARNING,
+    INFO,
 )
 
 __all__ = ['Cache', 'FileManager', 'DownloadRecorder']
@@ -166,7 +170,7 @@ class FileManager:
 class DownloadRecorder:
     def __init__(self, switch, folder: Path):
         self.switch = switch
-        self.cache = folder
+        self.backup = folder.joinpath("IDRecorder_backup.txt")
         self.path = folder.joinpath("IDRecorder.txt")
         self.file = None
         self.record = self.__get_set()
@@ -178,9 +182,10 @@ class DownloadRecorder:
         if not self.path.is_file():
             blacklist = set()
         else:
-            with self.path.open("r") as f:
-                blacklist = {line.strip() for line in f}
-        self.file = self.path.open("w")
+            with self.path.open("r", encoding="utf-8") as f:
+                blacklist = self.__restore_data({line.strip() for line in f})
+                # blacklist = self.__restore_data({i for i in range(100)})
+        self.file = self.path.open("w", encoding="utf-8")
         return blacklist
 
     def __save_file(self, file):
@@ -190,13 +195,9 @@ class DownloadRecorder:
         self.record.add(id_)
 
     def backup_file(self):
-        if self.file:
+        if self.file and self.record:
             # print("Backup IDRecorder")
-            backup = self.cache.joinpath("IDRecorder_backup.txt")
-            latest = self.cache.joinpath("IDRecorder_latest.txt")
-            if latest.exists():
-                backup.write_text(latest.read_text())
-            with latest.open("w") as f:
+            with self.backup.open("w", encoding="utf-8") as f:
                 self.__save_file(f)
 
     def close(self):
@@ -204,3 +205,23 @@ class DownloadRecorder:
             self.__save_file(self.file)
             self.file.close()
             self.file = None
+            # print("Close IDRecorder")
+
+    def __restore_data(self, ids: set) -> set:
+        if ids:
+            return ids
+        print(f"[{ERROR}]{self.path.resolve()
+        } 数据为空，可能是程序上次运行异常退出导致数据丢失！[/{ERROR}]")
+        if self.backup.exists():
+            print(
+                f"[{WARNING}]检测到 IDRecorder 备份文件，是否恢复最后一次备份的数据(YES/NO): [/{WARNING}]", end="")
+            if input().upper() == "YES":
+                self.path.write_text(self.backup.read_text())
+                print(f"[{INFO}]IDRecorder 已恢复最后一次备份的数据，请重新运行程序！[/{INFO}]")
+                return set(self.backup.read_text().split())
+            else:
+                print(
+                    f"[{ERROR}]IDRecorder 数据未恢复，下载任意作品之后，备份数据会被覆盖导致无法恢复！[/{ERROR}]")
+        else:
+            print(f"[{ERROR}]未检测到 IDRecorder 备份文件，您的作品下载记录数据无法恢复！[/{ERROR}]")
+        return set()
