@@ -7,7 +7,6 @@ __all__ = [
     "wait",
     "failure_handling",
     "illegal_nickname",
-    "check_login",
     "DESCRIPTION_LENGTH",
     "TEXT_REPLACEMENT",
     "condition_filter",
@@ -91,14 +90,6 @@ def illegal_nickname():
     # 使用当前时间戳作为账号昵称/标识或者合集标题/标识
     # 需要将第 3 行代码取消注释
     # return str(time())[:10]
-
-
-def check_login():
-    """扫描二维码登录账号时，是否询问用户再进行登录结果检查"""
-    # 询问用户
-    return input("是否已完成扫码登录？直接回车开始检查登录结果，输入任何字符放弃操作：")
-    # 直接检查
-    # return False
 
 
 def condition_filter(data: dict) -> bool:

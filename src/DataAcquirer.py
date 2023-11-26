@@ -159,6 +159,7 @@ class Acquirer:
             "•",
             TimeElapsedColumn(),
             console=self.console,
+            transient=True,
         )
 
     def __set_temp_cookie(self, cookie: str):

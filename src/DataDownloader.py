@@ -79,6 +79,7 @@ class Downloader:
             "•",
             TimeRemainingColumn(),
             console=self.console,
+            transient=True,
         )
 
     def __live_progress_object(self):
@@ -95,6 +96,7 @@ class Downloader:
             "•",
             TimeElapsedColumn(),
             console=self.console,
+            transient=True,
         )
 
     @staticmethod

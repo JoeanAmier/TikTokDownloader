@@ -7,10 +7,17 @@ from time import sleep
 from qrcode import QRCode
 from requests import exceptions
 from requests import get
+from rich.progress import (
+    SpinnerColumn,
+    BarColumn,
+    Progress,
+    TextColumn,
+    TimeElapsedColumn,
+)
 
 from src.Customizer import ERROR
+from src.Customizer import PROGRESS
 from src.Customizer import WARNING
-from src.Customizer import check_login
 from src.Parameter import TtWid
 from src.Parameter import VerifyFp
 
@@ -129,6 +136,21 @@ class Register:
         self.ua_code = ua_code
         self.temp = None
 
+    def __check_progress_object(self):
+        return Progress(
+            TextColumn(
+                "[progress.description]{task.description}",
+                style=PROGRESS,
+                justify="left"),
+            SpinnerColumn(),
+            BarColumn(
+                bar_width=20),
+            "•",
+            TimeElapsedColumn(),
+            console=self.console,
+            transient=True,
+        )
+
     @staticmethod
     def generate_cookie(data: dict) -> str:
         if not isinstance(data, dict):
@@ -187,35 +209,40 @@ class Register:
         self.check_params["token"] = token
         self.check_params["verifyFp"] = self.verify_fp
         self.check_params["fp"] = self.verify_fp
-        retry = 0
-        while retry < 15:
-            self.wait()
-            if not (
-                    response := self.request_data(
-                        False,
-                        url=self.check_url,
-                        params=self.check_params)):
-                continue
-            # print(response.json())  # 调试使用
-            data = response.json().get("data")
-            if not data:
-                self.console.print(
-                    f"发生未知错误: {
-                    response.json()}",
-                    style=ERROR)
-                retry = 15
-            elif (s := data["status"]) == "3":
-                redirect_url = data["redirect_url"]
-                cookie = response.headers.get("Set-Cookie")
-                break
-            elif s in ("4", "5"):
-                retry = 15
+        with self.__check_progress_object() as progress:
+            task_id = progress.add_task(
+                "正在检查登录状态", total=None)
+            second = 0
+            while second < 30:
+                sleep(1)
+                progress.update(task_id)
+                if not (
+                        response := self.request_data(
+                            url=self.check_url,
+                            params=self.check_params)):
+                    self.console.print("网络异常，无法获取登录状态！", style=WARNING)
+                    second = 30
+                    continue
+                # print(response)  # 调试使用
+                data = response.get("data")
+                if not data:
+                    self.console.print(
+                        f"发生未知错误: {response}",
+                        style=ERROR)
+                    second = 30
+                elif (s := data["status"]) == "3":
+                    redirect_url = data["redirect_url"]
+                    cookie = response.headers.get("Set-Cookie")
+                    break
+                elif s in ("4", "5"):
+                    second = 30
+                else:
+                    second += 1
             else:
-                retry += 1
-        else:
-            self.console.print("扫码登录失败，请手动获取 Cookie 并写入配置文件！", style=WARNING)
-            return None, None
-        return redirect_url, cookie
+                self.console.print(
+                    "扫码登录失败，请手动获取 Cookie 并写入配置文件！", style=WARNING)
+                return None, None
+            return redirect_url, cookie
 
     def clean_cookie(self, cookie) -> str:
         return self.generate_cookie(self.generate_dict(cookie))
@@ -227,10 +254,6 @@ class Register:
         elif response.history[0].status_code != 302:
             return False
         return self.clean_cookie(response.history[1].headers.get("Set-Cookie"))
-
-    def wait(self):
-        sleep(2)
-        self.console.print("正在检查登录结果！")
 
     def request_data(self, json=True, **kwargs):
         try:
@@ -250,7 +273,5 @@ class Register:
         if not url:
             return False
         self.generate_qr_code(url)
-        if check_login():
-            return False
         url, cookie = self.check_register(token)
         return self.get_cookie(url, cookie) if url else False
