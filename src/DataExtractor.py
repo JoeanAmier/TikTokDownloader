@@ -4,6 +4,7 @@ from time import localtime
 from time import strftime
 from time import time
 from types import SimpleNamespace
+from urllib.parse import urlparse
 
 from src.Customizer import condition_filter
 
@@ -190,6 +191,15 @@ class Extractor:
         item["height"] = self.safe_extract(data, "video.height")
         item["width"] = self.safe_extract(data, "video.width")
         item["ratio"] = self.safe_extract(data, "video.ratio")
+        item["share_url"] = self.__clean_share_url(
+            self.safe_extract(data, "share_url"))
+
+    @staticmethod
+    def __clean_share_url(url: str) -> str:
+        if not url:
+            return url
+        parsed_url = urlparse(url)
+        return f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
 
     def extract_image_info(
             self,

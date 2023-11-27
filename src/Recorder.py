@@ -162,7 +162,6 @@ class CSVLogger(NoneLogger):
             root: Path,
             title_line: tuple,
             field_keys: tuple,
-            id_: bool,
             old=None,
             name="Solo_Download",
             *args,
@@ -174,7 +173,6 @@ class CSVLogger(NoneLogger):
         self.path = root.joinpath(f"{self.name}.{self.__type}")  # 文件路径
         self.title_line = title_line  # 标题行
         self.field_keys = field_keys
-        self.index = 1 if id_ else 0
 
     def __enter__(self):
         self.file = self.path.open(
@@ -191,7 +189,7 @@ class CSVLogger(NoneLogger):
     def title(self):
         if getsize(self.path) == 0:
             # 如果文件没有任何数据，则写入标题行
-            self.save(self.title_line[self.index:])
+            self.save(self.title_line)
 
     def save(self, data, *args, **kwargs):
         self.writer.writerow(data)
@@ -206,7 +204,6 @@ class XLSXLogger(NoneLogger):
             root: Path,
             title_line: tuple,
             field_keys: tuple,
-            id_: bool,
             old=None,
             name="Solo_Download",
             *args,
@@ -218,7 +215,6 @@ class XLSXLogger(NoneLogger):
         self.path = root.joinpath(f"{self.name}.{self.__type}")
         self.title_line = title_line  # 标题行
         self.field_keys = field_keys
-        self.index = 1 if id_ else 0
 
     def __enter__(self):
         self.book = load_workbook(
@@ -234,7 +230,7 @@ class XLSXLogger(NoneLogger):
     def title(self):
         if not self.sheet["A1"].value:
             # 如果文件没有任何数据，则写入标题行
-            for col, value in enumerate(self.title_line[self.index:], start=1):
+            for col, value in enumerate(self.title_line, start=1):
                 self.sheet.cell(row=1, column=col, value=value)
 
     def save(self, data, *args, **kwargs):
@@ -251,7 +247,6 @@ class SQLLogger(NoneLogger):
             title_line: tuple,
             title_type: tuple,
             field_keys: tuple,
-            id_: bool,
             old=None,
             name="Solo_Download", ):
         super().__init__()
@@ -263,7 +258,6 @@ class SQLLogger(NoneLogger):
         self.title_line = title_line  # 数据表列名
         self.title_type = title_type  # 数据表数据类型
         self.field_keys = field_keys
-        self.index = 1 if id_ else 0
 
     def __enter__(self):
         self.db = connect(self.path)
@@ -282,9 +276,8 @@ class SQLLogger(NoneLogger):
         self.db.commit()
 
     def save(self, data, *args, **kwargs):
-        column = self.title_line[self.index:]
-        insert_sql = f"""REPLACE INTO {self.name} ({", ".join(column)}) VALUES ({
-        ", ".join(["?" for _ in column])});"""
+        insert_sql = f"""REPLACE INTO {self.name} ({", ".join(self.title_line)}) VALUES ({
+        ", ".join(["?" for _ in self.title_line])});"""
         self.cursor.execute(insert_sql, data)
         self.db.commit()
 
@@ -315,6 +308,10 @@ class RecordManager:
         "desc",
         "text_extra",
         "duration",
+        "ratio",
+        "height",
+        "width",
+        "share_url",
         "create_time",
         "nickname",
         "user_age",
@@ -345,6 +342,10 @@ class RecordManager:
         "作品描述",
         "作品话题",
         "视频时长",
+        "视频分辨率",
+        "视频高度",
+        "视频宽度",
+        "作品链接",
         "发布时间",
         "账号昵称",
         "年龄",
@@ -371,7 +372,11 @@ class RecordManager:
         "TEXT",
         "TEXT",
         "TEXT",
-        "TEXT PRIMARY KEY",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
+        "TEXT",
         "TEXT",
         "TEXT",
         "TEXT",
@@ -436,7 +441,7 @@ class RecordManager:
     )
     comment_type = (
         "TEXT",
-        "TEXT PRIMARY KEY",
+        "TEXT",
         "TEXT",
         "TEXT",
         "TEXT",
@@ -475,13 +480,12 @@ class RecordManager:
         "cover",
         "aweme_count",
         "total_favorited",
-        "following_count",
-        "follower_count",
         "favoriting_count",
+        "follower_count",
+        "following_count",
         "max_follower_count",
     )
     user_title = (
-        "ID",
         "采集时间",
         "昵称昵称",
         "账号签名",
@@ -508,7 +512,6 @@ class RecordManager:
         "粉丝最大值",
     )
     user_type = (
-        "INTEGER PRIMARY KEY",
         "TEXT",
         "TEXT",
         "TEXT",
@@ -648,49 +651,42 @@ class RecordManager:
             "title_line": works_text,
             "title_type": works_type,
             "field_keys": works_keys,
-            "id_": False,
         },
         "comment": {
             "db_name": "CommentData.db",
             "title_line": comment_title,
             "title_type": comment_type,
             "field_keys": comment_keys,
-            "id_": False,
         },
         "user": {
             "db_name": "UserData.db",
             "title_line": user_title,
             "title_type": user_type,
             "field_keys": user_keys,
-            "id_": True,
         },
         "mix": {
             "db_name": "MixData.db",
             "title_line": works_text,
             "title_type": works_type,
             "field_keys": works_keys,
-            "id_": False,
         },
         "search_user": {
             "db_name": "SearchData.db",
             "title_line": search_user_title,
             "title_type": search_user_type,
             "field_keys": search_user_keys,
-            "id_": False,
         },
         "search_live": {
             "db_name": "SearchData.db",
             "title_line": search_live_title,
             "title_type": search_live_type,
             "field_keys": search_live_keys,
-            "id_": False,
         },
         "hot": {
             "db_name": "BoardData.db",
             "title_line": hot_title,
             "title_type": hot_type,
             "field_keys": hot_keys,
-            "id_": False,
         },
     }
     DataLogger = {
