@@ -960,6 +960,7 @@ print(response.json())
 <li>启用该功能：程序会记录下载成功的作品 ID，如果对作品文件进行移动、重命名或者删除操作，程序不会重复下载该作品，如果想要重新下载该作品，需要删除记录文件中对应的作品 ID 后保存文件并重新运行程序。</li>
 <li>禁用该功能：程序会在下载文件前检测文件是否存在，如果文件存在会自动跳过下载该作品，如果对作品文件进行移动、重命名或者删除操作，程序将会重新下载该作品。</li>
 </ul>
+<p>程序会周期性备份作品下载记录数据，当作品下载记录数据丢失时，程序会尝试通过备份文件恢复数据，备份周期可以通过 <code>src/Customizer.py</code> 文件设置。</p>
 <p>记录文件路径: <code>./cache/IDRecorder.txt</code></p>
 <p><strong>不建议在程序运行过程中访问记录文件！</strong></p>
 <h2>启用/禁用运行日志记录</h2>
@@ -967,11 +968,10 @@ print(response.json())
 <p>如果在使用过程中发现程序 Bug，可以及时告知作者，并附上日志文件，日志记录有助于作者分析 Bug 原因和修复 Bug。</p>
 <h1>其他功能说明</h1>
 <h2>单次输入多个链接</h2>
-<p><code>批量下载链接作品</code>、<code>获取直播推流地址</code>、<code>采集作品评论数据</code>、<code>批量下载合集作品</code>、<code>批量采集账号数据</code>
+<p><code>批量下载账号作品</code>、<code>批量下载链接作品</code>、<code>获取直播推流地址</code>、<code>采集作品评论数据</code>、<code>批量下载合集作品</code>、<code>批量采集账号数据</code>
 支持单次输入多个链接，实现批量下载 / 提取功能；单次输入多个链接时，链接类型需要保持一致，不支持完整链接与分享链接混合输入。</p>
 <h3>输入示例</h3>
-<p><code>批量采集账号数据模式</code> 输入多个长链接时，需要使用空格分隔，其余模式不需要分隔字符，此处示例使用空格分隔仅仅便于观察区分链接。</p>
-<p>无需对复制的链接进行处理，程序会自动提取输入文本中的有效链接。</p>
+<p>输入多个链接时，需要使用空格分隔；无需对复制的链接进行额外处理，程序会自动提取输入文本中的有效链接。</p>
 <ul>
 <li>支持：<code>https://v.douyin.com/abc/</code> <code>https://v.douyin.com/abc/</code></li>
 <li>支持：<code>https://www.douyin.com/video/123456789</code> <code>https://www.douyin.com/note/123456789</code></li>
@@ -1007,7 +1007,7 @@ print(response.json())
 <p>与账号标识作用一致。</p>
 <h3>如何修改标识</h3>
 <p><strong>修改账号标识:</strong> 修改 <code>accounts_urls</code> 的 <code>mark</code> 参数，再次运行 <code>批量下载账号作品</code> 模式，程序会自动应用新的账号标识。</p>
-<p><strong>修改合集标识:</strong> 修改 <code>mix_urls</code> 的 <code>mark</code> 参数，再次运行 <code>批量下载合集作品</code> 模式，程序会自动应用新的账号标识；或者手动输入合集链接，根据程序提示进行设置。</p>
+<p><strong>修改合集标识:</strong> 修改 <code>mix_urls</code> 的 <code>mark</code> 参数，再次运行 <code>批量下载合集作品</code> 模式，程序会自动应用新的账号标识。</p>
 <h3>账户昵称修改</h3>
 <p>在 <code>批量下载账号作品</code> 和 <code>批量下载合集作品</code> 模式下，程序会判断账号昵称是否有修改，如果有修改，程序会自动识别已下载作品文件名称中的账户昵称，并修改至最新账户昵称。</p>
 <h3>AccountCache.json</h3>

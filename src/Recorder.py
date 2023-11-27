@@ -462,6 +462,7 @@ class RecordManager:
     user_keys = (
         "collection_time",
         "nickname",
+        "url",
         "signature",
         "unique_id",
         "user_age",
@@ -488,6 +489,7 @@ class RecordManager:
     user_title = (
         "采集时间",
         "昵称昵称",
+        "账号链接",
         "账号签名",
         "抖音号",
         "年龄",
@@ -512,6 +514,7 @@ class RecordManager:
         "粉丝最大值",
     )
     user_type = (
+        "TEXT",
         "TEXT",
         "TEXT",
         "TEXT",
