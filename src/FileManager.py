@@ -56,7 +56,7 @@ class Cache:
 
     def save_cache(self):
         with self.file.open("w", encoding="UTF-8") as f:
-            dump(self.data, f, indent=4)
+            dump(self.data, f, indent=4, ensure_ascii=False)
         self.log.info("缓存数据已保存至文件")
 
     def update_cache(

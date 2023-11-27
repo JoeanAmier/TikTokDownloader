@@ -181,8 +181,8 @@ class APIServer(WebUI):
                 request.json.get("keyword"),
                 request.json.get("type", "0"),
                 request.json.get("pages", "1"),
-                request.json.get("sort", "0"),
-                request.json.get("publish", "0"),
+                request.json.get("sort_type", "0"),
+                request.json.get("publish_time", "0"),
             )))
             if not all(params):
                 return {"data": None, "message": "搜索参数无效！"}

@@ -66,6 +66,10 @@ class TikTok:
             "视频": 1,
             "用户": 2,
             "直播": 3,
+            "综合搜索": 0,
+            "视频搜索": 1,
+            "用户搜索": 2,
+            "直播搜索": 3,
             "0": 0,
             "1": 1,
             "2": 2,
@@ -675,18 +679,15 @@ class TikTok:
         self.logger.info("已退出批量采集账号数据模式")
 
     def _enter_search_criteria(
-            self, text: str = None) -> None | tuple[list, str]:
+            self, text: str = None) -> None | tuple | bool:
         if not text:
             text = self._inquire_input(
                 tip="请输入搜索条件:\n(关键词 搜索类型 页数 排序规则 时间筛选)\n")
-
         # 分割字符串
         text = text.split()
-
         # 如果列表长度小于指定长度，使用空字符串补齐
         while 0 < len(text) < 5:
             text.append("0")
-
         return self._verify_search_criteria(*text)
 
     def _verify_search_criteria(
@@ -695,9 +696,11 @@ class TikTok:
             type_: str = None,
             pages: str = None,
             sort: str = None,
-            publish: str = None) -> tuple:
+            publish: str = None, *args) -> tuple | bool:
         if not keyword:
-            return (None,)
+            return False
+        if args:
+            return True
         type_ = self.SEARCH["type"].get(type_, 0)
         type_text = self.SEARCH["type_text"][type_]
         pages = self._extract_integer(pages)
@@ -719,8 +722,14 @@ class TikTok:
 
     @check_storage_format
     def search_interactive(self):
-        while all(c := self._enter_search_criteria()):
-            self._deal_search_data(*c)
+        while True:
+            if isinstance(c := self._enter_search_criteria(), tuple):
+                self._deal_search_data(*c)
+            elif c:
+                self.console.print("搜索条件输入格式错误，详细说明请查阅文档！", style=WARNING)
+                continue
+            else:
+                break
         self.logger.info("已退出采集搜索结果数据模式")
 
     @staticmethod

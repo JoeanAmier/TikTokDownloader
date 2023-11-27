@@ -462,7 +462,7 @@
 </ul>
 
 <h1>高级配置</h1>
-<p>如果想要进一步修改程序功能，可以编辑 <code>src/Customizer.py</code> 文件（EXE 程序亦可直接编辑），按照注释指引和实际需求进行自定义修改。</p>
+<p>如果想要进一步修改程序功能，可以编辑 <code>src/Customizer.py</code> 文件（不适用于 EXE 程序），按照注释指引和实际需求进行自定义修改。</p>
 <b>部分可自定义设置的功能：</b>
 <ul>
 <li>设置作品文件下载的最大线程数量</li>
@@ -616,7 +616,7 @@ document.body.removeChild(downloadLink);
 <h4>输入格式</h4>
 <p><strong>格式：</strong><code>关键词</code> <code>类型</code> <code>页数</code> <code>排序规则</code> <code>时间筛选</code></p>
 <ul>
-<li>搜索类型：<code>综合搜索</code> <code>视频搜索</code> <code>用户搜索</code> <code>直播搜索</code></li>
+<li>搜索类型（可省略“搜索”字符）：<code>综合搜索</code> <code>视频搜索</code> <code>用户搜索</code> <code>直播搜索</code></li>
 <li>排序依据：<code>综合排序</code> <code>最新发布</code> <code>最多点赞</code></li>
 <li>时间筛选：<code>0</code>：不限；<code>1</code>：一天内；<code>7</code>：一周内；<code>182</code>：半年内</li>
 </ul>
@@ -873,7 +873,7 @@ print(response.json())
 {
   "keyword": "关键词，字符串，必需参数",
   "type": "搜索类型，字符串，可选参数",
-  "page": "结果页数，字符串，可选参数",
+  "pages": "结果页数，字符串，可选参数",
   "sort_type": "排序依据，字符串，可选参数",
   "publish_time": "发布时间，字符串，可选参数",
   "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
