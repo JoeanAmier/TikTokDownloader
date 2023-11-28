@@ -83,16 +83,16 @@ class TikTok:
         },
         "sort": {
             "综合排序": 0,
-            "最新发布": 1,
-            "最多点赞": 2,
+            "最新发布": 2,
+            "最多点赞": 1,
             "0": 0,
             "1": 1,
             "2": 2,
         },
         "sort_text": {
             0: "综合排序",
-            1: "最新发布",
-            2: "最多点赞",
+            2: "最新发布",
+            1: "最多点赞",
         },
         "publish_text": {
             0: "不限",
@@ -102,8 +102,8 @@ class TikTok:
         },
     }
     DATA_TYPE = {
-        0: "works",
-        1: "works",
+        0: "search_general",
+        1: "search_general",
         2: "search_user",
         3: "search_live"
     }
@@ -345,10 +345,11 @@ class TikTok:
         self.logger.info("开始提取作品数据")
         id_, name, mid, title, mark, data = self.extractor.preprocessing_data(
             data, mark, post, mix)
-        old_mark = m["mark"] if (
+        addition = addition or ("合集作品" if mix else "发布作品" if post else "喜欢作品")
+        old_mark = f"{m["mark"]}_{addition}" if (
             m := self.cache.data.get(
                 mid if mix else id_)) else None
-        with logger(root, name=f"{'MID' if mix else 'UID'}{mid if mix else id_}_{mark}", old=old_mark,
+        with logger(root, name=f"{'MID' if mix else 'UID'}{mid if mix else id_}_{mark}_{addition}", old=old_mark,
                     **params) as recorder:
             data = self.extractor.run(
                 data,
@@ -367,9 +368,10 @@ class TikTok:
             mid if mix else id_,
             mark,
             title if mix else name,
+            addition,
         )
         self.download_account_works(
-            data, id_, name, mark, post, mix, mid, title, addition)
+            data, id_, name, mark, mid, title, addition)
         return True
 
     def download_account_works(
@@ -378,8 +380,6 @@ class TikTok:
             id_: str,
             name: str,
             mark: str,
-            post: bool,
-            mix: bool,
             mid: str = None,
             title: str = None,
             addition: str = None,
@@ -390,8 +390,7 @@ class TikTok:
             id_=id_,
             name=name,
             mark=mark,
-            addition=addition or (
-                "合集作品" if mix else "发布作品" if post else "喜欢作品"),
+            addition=addition,
             mid=mid,
             title=title,
         )
@@ -814,7 +813,15 @@ class TikTok:
         if not (sec_user_id := self.check_sec_user_id(self.owner.url)):
             self.logger.warning(
                 f"配置文件 owner_url 的 url 参数 {self.owner.url} 无效")
+        start = time()
         self._deal_collection_data(root, params, logger, sec_user_id)
+        time_ = time() - start
+        self.logger.info(
+            f"程序运行耗时 {
+            int(time_ //
+                60)} 分钟 {
+            int(time_ %
+                60)} 秒")
         self.logger.info("已退出批量下载收藏作品模式")
 
     def _deal_collection_data(

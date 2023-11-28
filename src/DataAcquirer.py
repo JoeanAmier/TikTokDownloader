@@ -235,7 +235,7 @@ class Link:
         r".*?https://www\.tiktok\.com/@.+?/video/(\d{19}).*?")  # 作品链接
 
     def __init__(self, params: Parameter):
-        self.share = Share(params.console, params.proxies, params.max_retry)
+        self.share = Share(params.logger, params.proxies, params.max_retry)
 
     def user(self, text: str) -> list:
         urls = self.share.run(text)

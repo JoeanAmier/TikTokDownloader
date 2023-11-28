@@ -673,6 +673,12 @@ class RecordManager:
             "title_type": works_type,
             "field_keys": works_keys,
         },
+        "search_general": {
+            "db_name": "SearchData.db",
+            "title_line": works_text,
+            "title_type": works_type,
+            "field_keys": works_keys,
+        },
         "search_user": {
             "db_name": "SearchData.db",
             "title_line": search_user_title,

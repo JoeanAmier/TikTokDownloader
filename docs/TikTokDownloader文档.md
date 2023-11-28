@@ -613,28 +613,28 @@ document.body.removeChild(downloadLink);
 </ul>
 <p>重复获取相同账号数据时会储存为新的数据行，不会覆盖原有数据；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <h3>采集搜索结果数据</h3>
-<h4>输入格式</h4>
-<p><strong>格式：</strong><code>关键词</code> <code>类型</code> <code>页数</code> <code>排序规则</code> <code>时间筛选</code></p>
+<h4>搜索条件输入格式</h4>
+<p><strong>格式：</strong><code>关键词</code> <code>搜索类型</code> <code>页数</code> <code>排序规则</code> <code>时间筛选</code></p>
 <ul>
-<li>搜索类型（可省略“搜索”字符）：<code>综合搜索</code> <code>视频搜索</code> <code>用户搜索</code> <code>直播搜索</code></li>
-<li>排序依据：<code>综合排序</code> <code>最新发布</code> <code>最多点赞</code></li>
+<li>搜索类型：<code>综合搜索</code> <code>视频搜索</code> <code>用户搜索</code> <code>直播搜索</code>（可省略 “ 搜索 ” 字符）</li>
+<li>排序依据：<code>综合排序</code> <code>最多点赞</code> <code>最新发布</code></li>
 <li>时间筛选：<code>0</code>：不限；<code>1</code>：一天内；<code>7</code>：一周内；<code>182</code>：半年内</li>
 </ul>
-<p>参数之间使用空格分隔，<code>类型</code> 和 <code>排序规则</code> 支持输入中文或者对应索引，<code>页数</code> 和 <code>时间筛选</code> 仅支持输入整数。</p>
+<p>参数之间使用空格分隔，<code>搜索类型</code> 和 <code>排序规则</code> 支持输入中文或者对应索引，<code>页数</code> 和 <code>时间筛选</code> 仅支持输入整数。</p>
 <p>程序采集的抖音搜索结果会储存至文件，储存名称格式：<code>搜索数据_搜索时间_搜索类型_关键词_排序依据_时间筛选</code>；不支持直接下载搜索结果作品；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <p><code>用户搜索</code> 和 <code>直播搜索</code> 不需要输入排序依据和时间筛选（输入也不会报错）</p>
 <h4>输入示例</h4>
 <p><strong>输入：</strong><code>猫咪</code></p>
 <p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>综合搜索</code>；页数：<code>1</code>；排序依据：<code>综合排序</code>；时间筛选：<code>不限</code></p>
 <hr>
-<p><strong>输入：</strong><code>猫咪 1 2 1</code> 等效于 <code>猫咪 视频搜索 2 最新发布</code></p>
-<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>视频搜索</code>；页数：<code>2</code>；排序依据：<code>最新发布</code>；时间筛选：<code>不限</code></p>
+<p><strong>输入：</strong><code>猫咪 1 2 1</code> 等效于 <code>猫咪 视频搜索 2 最多点赞</code></p>
+<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>视频搜索</code>；页数：<code>2</code>；排序依据：<code>最多点赞</code>；时间筛选：<code>不限</code></p>
 <hr>
 <p><strong>输入：</strong><code>猫咪 0 10 0 7</code> 等效于 <code>猫咪 综合搜索 10 综合排序 7</code></p>
 <p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>综合搜索</code>；页数：<code>10</code>；排序依据：<code>综合排序</code>；时间筛选：<code>一周内</code></p>
 <hr>
-<p><strong>输入：</strong><code>猫咪 1 5 2 182</code> 等效于 <code>猫咪 视频搜索 5 最多点赞 182</code></p>
-<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>视频搜索</code>；页数：<code>5</code>；排序依据：<code>最多点赞</code>；时间筛选：<code>半年内</code></p>
+<p><strong>输入：</strong><code>猫咪 1 5 2 182</code> 等效于 <code>猫咪 视频搜索 5 最新发布 182</code></p>
+<p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>视频搜索</code>；页数：<code>5</code>；排序依据：<code>最新发布</code>；时间筛选：<code>半年内</code></p>
 <hr>
 <p><strong>输入：</strong><code>猫咪 2 2</code> 等效于 <code>猫咪 用户搜索 2</code></p>
 <p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>用户搜索</code>；页数：<code>2</code></p>

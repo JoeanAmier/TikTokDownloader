@@ -65,9 +65,10 @@ class Cache:
             type_: str,
             id_: str,
             mark: str,
-            name: str):
+            name: str,
+            addition: str, ):
         if self.data.get(id_):
-            self.check_file(solo_mode, type_, id_, mark, name)
+            self.check_file(solo_mode, type_, id_, mark, name, addition)
         self.data[id_] = {"mark": mark, "name": name}
         self.log.info(f"更新缓存数据: {id_, mark, name}", False)
         self.save_cache()
@@ -78,24 +79,30 @@ class Cache:
             type_: str,
             id_: str,
             mark: str,
-            name: str):
-        for i in ("喜欢作品", "收藏作品", "发布作品", "合集作品"):
-            if not (
-                    old_folder := self.root.joinpath(
-                        f"{type_}{id_}_{
-                        self.data[id_]["mark"] or self.data[id_]["name"]}_{i}")).is_dir():
-                self.log.info(f"{old_folder} 文件夹不存在，自动跳过", False)
-                continue
-            if self.data[id_]["mark"] != mark:
-                self.rename_folder(old_folder, type_, id_, mark)
-                if self.mark:
-                    self.scan_file(
-                        solo_mode, type_, id_, mark, name, field="mark")
-            if self.data[id_]["name"] != name and self.name:
-                self.scan_file(solo_mode, type_, id_, mark, name)
+            name: str,
+            addition: str):
+        if not (
+                old_folder := self.root.joinpath(
+                    f"{type_}{id_}_{
+                    self.data[id_]["mark"] or self.data[id_]["name"]}_{addition}")).is_dir():
+            self.log.info(f"{old_folder} 文件夹不存在，自动跳过", False)
+            return
+        if self.data[id_]["mark"] != mark:
+            self.rename_folder(old_folder, type_, id_, mark, addition)
+            if self.mark:
+                self.scan_file(
+                    solo_mode, type_, id_, mark, name, addition, field="mark")
+        if self.data[id_]["name"] != name and self.name:
+            self.scan_file(solo_mode, type_, id_, mark, name, addition)
 
-    def rename_folder(self, old_folder, type_: str, id_: str, mark: str):
-        new_folder = self.root.joinpath(f"{type_}{id_}_{mark}")
+    def rename_folder(
+            self,
+            old_folder,
+            type_: str,
+            id_: str,
+            mark: str,
+            addition: str):
+        new_folder = self.root.joinpath(f"{type_}{id_}_{mark}_{addition}")
         self.rename(old_folder, new_folder, "文件夹")
         self.log.info(f"文件夹 {old_folder} 已重命名为 {new_folder}", False)
         return True
@@ -107,8 +114,9 @@ class Cache:
             id_: str,
             mark: str,
             name: str,
-            field="name"):
-        root = self.root.joinpath(f"{type_}{id_}_{mark}")
+            addition: str,
+            field="name", ):
+        root = self.root.joinpath(f"{type_}{id_}_{mark}_{addition}")
         item_list = root.iterdir()
         if solo_mode:
             for f in item_list:

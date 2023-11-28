@@ -132,9 +132,10 @@ class TikTokDownloader:
                 style=MASTER)
             if self.console.input(
                     "是否已仔细阅读上述免责声明(YES/NO): ").upper() != "YES":
-                exit()
+                return False
             FileManager.deal_config(self.DISCLAIMER["path"])
             self.console.print()
+        return True
 
     def version(self):
         self.console.print(f"{self.LINE}\n\n\n{self.NAME.center(
@@ -298,8 +299,8 @@ class TikTokDownloader:
         self.version()
         self.check_update()
         self.check_settings()
-        self.disclaimer()
-        self.main_menu(self.parameter.default_mode)
+        if self.disclaimer():
+            self.main_menu(self.parameter.default_mode)
         self.delete_temp()
         self.event.set()
         self.blacklist.close()

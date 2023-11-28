@@ -218,16 +218,17 @@ class Register:
                 progress.update(task_id)
                 if not (
                         response := self.request_data(
+                            False,
                             url=self.check_url,
                             params=self.check_params)):
                     self.console.print("网络异常，无法获取登录状态！", style=WARNING)
                     second = 30
                     continue
-                # print(response)  # 调试使用
-                data = response.get("data")
+                # print(response.json())  # 调试使用
+                data = response.json().get("data")
                 if not data:
                     self.console.print(
-                        f"发生未知错误: {response}",
+                        f"响应内容异常: {response.json()}",
                         style=ERROR)
                     second = 30
                 elif (s := data["status"]) == "3":

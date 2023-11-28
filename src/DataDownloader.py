@@ -130,8 +130,8 @@ class Downloader:
         # assert addition in {"喜欢作品", "收藏作品", "发布作品", "合集作品"}, ValueError
         mix = addition == "合集作品"
         root = self.storage_folder(
-            mid or id_,
-            title or name,
+            mid if mix else id_,
+            title if mix else name,
             not mix,
             mark,
             addition,
