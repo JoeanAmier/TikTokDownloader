@@ -55,7 +55,7 @@ class Settings:
             "download": True,
             "max_size": 0,
             "chunk": 1024 * 1024,  # 每次从服务器接收的数据块大小
-            "max_retry": 10,  # 重试最大次数
+            "max_retry": 5,  # 重试最大次数
             "max_pages": 0,
             "default_mode": 0,
             "ffmpeg": "",
@@ -342,8 +342,8 @@ class Parameter:
         if isinstance(max_retry, int) and max_retry >= 0:
             self.logger.info(f"max_retry 参数已设置为 {max_retry}", False)
             return max_retry
-        self.logger.warning(f"max_retry 参数 {max_retry} 设置错误，程序将使用默认值：0", False)
-        return 0
+        self.logger.warning(f"max_retry 参数 {max_retry} 设置错误，程序将使用默认值：5", False)
+        return 5
 
     def check_max_pages(self, max_pages: int) -> int:
         if isinstance(max_pages, int) and max_pages > 0:

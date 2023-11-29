@@ -1009,6 +1009,8 @@ class Collection(Acquirer):
             return False
 
     def _get_owner_data(self):
+        if not any(self.response):
+            return
         if self.sec_user_id and (
                 info := Extractor.get_user_info(
                     self.info.run())):
