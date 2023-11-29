@@ -50,7 +50,7 @@ def retry(function):
         for i in range(self.max_retry):
             if result := function(self, *args, **kwargs):
                 return result
-            self.log.warning(f"正在尝试第 {i + 1} 次重试！")
+            self.log.warning(f"正在尝试第 {i + 1} 次重试")
         if not (result := function(self, *args, **kwargs)) and finished:
             self.finished = True
         return result
@@ -99,7 +99,6 @@ class Acquirer:
             "Referer": "https://www.douyin.com/", },
                 {"User-Agent": headers["User-Agent"]})
 
-    @retry
     def send_request(
             self,
             url: str,
@@ -204,6 +203,7 @@ class Share:
                 exceptions.ConnectionError,
                 exceptions.ReadTimeout,
         ):
+            self.log.warning(f"分享链接 {url} 请求数据失败")
             return ""
         return response.url
 
@@ -352,7 +352,7 @@ class Account(Acquirer):
                 "正在获取账号主页数据", total=None)
             while not self.finished and self.pages > 0:
                 progress.update(task_id)
-                self.get_account_data(self.api)
+                self.get_account_data(self.api, finished=True)
                 self.early_stop()
                 self.pages -= 1
                 # break  # 调试代码
@@ -360,6 +360,7 @@ class Account(Acquirer):
         self.favorite_mode()
         return self.response, self.earliest, self.latest
 
+    @retry
     def get_account_data(self, api: str):
         params = {
             "device_platform": "webapp",
@@ -377,10 +378,9 @@ class Account(Acquirer):
         if not (
                 data := self.send_request(
                     api,
-                    params=params,
-                    finished=True)):
+                    params=params)):
             self.log.warning("获取账号作品数据失败")
-            return
+            return False
         try:
             if (data_list := data["aweme_list"]) is None:
                 self.log.info("该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号")
@@ -389,9 +389,11 @@ class Account(Acquirer):
                 self.cursor = data['max_cursor']
                 self.deal_item_data(data_list)
                 self.finished = not data["has_more"]
+            return True
         except KeyError:
             self.log.error(f"账号作品数据响应内容异常: {data}")
             self.finished = True
+            return False
 
     def early_stop(self):
         """如果获取数据的发布日期已经早于限制日期，就不需要再获取下一页的数据了"""
@@ -439,6 +441,7 @@ class Works(Acquirer):
         self.id = item_id
         self.tiktok = tiktok
 
+    @retry
     def run(self) -> dict:
         if self.tiktok:
             params = {
@@ -470,6 +473,7 @@ class Works(Acquirer):
             return data["aweme_list"][0] if self.tiktok else data["aweme_detail"] or {}
         except (KeyError, IndexError):
             self.log.error(f"作品数据响应内容异常: {data}")
+            return {}
 
 
 class Comment(Acquirer):
@@ -490,7 +494,7 @@ class Comment(Acquirer):
                 "正在获取作品评论数据", total=None)
             while not self.finished and self.pages > 0:
                 progress.update(task_id)
-                self.get_comments_data(self.comment_api)
+                self.get_comments_data(self.comment_api, finished=True)
                 self.pages -= 1
                 # break  # 调试代码
         self.all_data, self.reply_ids = extractor.run(
@@ -504,7 +508,8 @@ class Comment(Acquirer):
                 self.cursor = 0
                 while not self.finished and self.pages > 0:
                     progress.update(task_id)
-                    self.get_comments_data(self.comment_api_reply, i)
+                    self.get_comments_data(
+                        self.comment_api_reply, i, finished=True)
                     self.pages -= 1
                     # break  # 调试代码
         self.all_data.extend(
@@ -517,6 +522,7 @@ class Comment(Acquirer):
                     source=source)))
         return self.all_data
 
+    @retry
     def get_comments_data(self, api: str, reply=""):
         if reply:
             params = {
@@ -550,19 +556,20 @@ class Comment(Acquirer):
         if not (
                 data := self.send_request(
                     api,
-                    params=params,
-                    finished=True)):
+                    params=params)):
             self.log.warning("获取作品评论数据失败")
-            return
+            return False
         try:
             if not (c := data["comments"]):
                 raise KeyError
             self.deal_item_data(c)
             self.cursor = data["cursor"]
             self.finished = not data["has_more"]
+            return True
         except KeyError:
             self.log.error(f"作品评论数据响应内容异常: {data}")
             self.finished = True
+            return False
 
     @staticmethod
     def _check_reply_ids(data: list[dict], ids: list) -> list[dict]:
@@ -594,10 +601,11 @@ class Mix(Acquirer):
                 "正在获取合集作品数据", total=None)
             while not self.finished:
                 progress.update(task_id)
-                self._get_mix_data()
+                self._get_mix_data(finished=True)
                 # break  # 调试代码
         return self.response
 
+    @retry
     def _get_mix_data(self):
         params = {
             "device_platform": "webapp",
@@ -616,19 +624,20 @@ class Mix(Acquirer):
                 data := self.send_request(
                     self.mix_api,
                     params=params,
-                    finished=True,
                 )):
             self.log.warning("获取合集作品数据失败")
-            return
+            return False
         try:
             if not (w := data["aweme_list"]):
                 raise KeyError
             self.deal_item_data(w)
             self.cursor = data['cursor']
             self.finished = not data["has_more"]
+            return True
         except KeyError:
             self.log.error(f"合集数据内容异常: {data}")
             self.finished = True
+            return False
 
     def _get_mix_id(self):
         if not self.mix_id:
@@ -687,6 +696,7 @@ class Live(Acquirer):
         self.deal_url_params(params, 174)
         return self.get_live_data(api, params, headers)
 
+    @retry
     def get_live_data(
             self,
             api: str,
@@ -711,7 +721,8 @@ class User(Acquirer):
         super().__init__(params, cookie)
         self.sec_user_id = sec_user_id
 
-    def run(self):
+    @retry
+    def run(self) -> dict:
         params = {
             "device_platform": "webapp",
             "aid": "6383",
@@ -735,6 +746,7 @@ class User(Acquirer):
             return data["user"] or {}
         except KeyError:
             self.log.error(f"账号数据响应内容异常: {data}")
+            return {}
 
 
 class Search(Acquirer):
@@ -825,7 +837,7 @@ class Search(Acquirer):
         self._get_search_data(
             data.api,
             params,
-            "user_list" if type_ == 2 else "data")
+            "user_list" if type_ == 2 else "data", finished=True)
 
     def _run_general(self, data: SimpleNamespace, *args):
         params = {
@@ -848,24 +860,26 @@ class Search(Acquirer):
             "downlink": "7.7",
         }
         self.deal_url_params(params, 174 if self.cursor else 23)
-        self._get_search_data(data.api, params, "data")
+        self._get_search_data(data.api, params, "data", finished=True)
 
+    @retry
     def _get_search_data(self, api: str, params: dict, key: str):
         if not (
                 data := self.send_request(
                     api,
                     params=params,
-                    finished=True,
                 )):
             self.log.warning("获取搜索数据失败")
-            return
+            return False
         try:
             self.deal_item_data(data[key])
             self.cursor = data["cursor"]
             self.finished = not data["has_more"]
+            return True
         except KeyError:
             self.log.error(f"搜索数据响应内容异常: {data}")
             self.finished = True
+            return False
 
 
 class Hot(Acquirer):
@@ -904,6 +918,7 @@ class Hot(Acquirer):
             self._get_board_data(i, j)
         return self.time, self.response
 
+    @retry
     def _get_board_data(self, index: int, data: SimpleNamespace):
         params = {
             "device_platform": "webapp",
@@ -926,11 +941,13 @@ class Hot(Acquirer):
                     params=params,
                 )):
             self.log.warning(f"获取 {data.name} 数据失败")
-            return
+            return False
         try:
             self.response.append((index, board["data"]["word_list"]))
+            return True
         except KeyError:
             self.log.error(f"{data.name} 数据响应内容异常: {board}")
+            return False
 
 
 class Collection(Acquirer):
@@ -960,11 +977,12 @@ class Collection(Acquirer):
                 "正在获取账号收藏数据", total=None)
             while not self.finished and self.pages > 0:
                 progress.update(task_id)
-                self._get_account_data()
+                self._get_account_data(finished=True)
                 self.pages -= 1
         self._get_owner_data()
         return self.response
 
+    @retry
     def _get_account_data(self):
         params = self.params.copy()
         self.deal_url_params(params)
@@ -977,17 +995,18 @@ class Collection(Acquirer):
                     self.collection_api,
                     params=params,
                     data=form,
-                    method='post',
-                    finished=True)):
+                    method='post')):
             self.log.warning("获取账号收藏数据失败")
-            return
+            return False
         try:
             self.cursor = data['cursor']
             self.deal_item_data(data["aweme_list"])
             self.finished = not data["has_more"]
+            return True
         except KeyError:
             self.log.error(f"账号收藏数据响应内容异常: {data}")
             self.finished = True
+            return False
 
     def _get_owner_data(self):
         if self.sec_user_id and (
@@ -1027,7 +1046,8 @@ class Info(Acquirer):
             "downlink": "10",
         }
 
-    def run(self):
+    @retry
+    def run(self) -> dict:
         self.deal_url_params(self.params)
         form = {
             "sec_user_ids": f'["{self.sec_user_id}"]'
@@ -1045,6 +1065,7 @@ class Info(Acquirer):
             return data["data"][0] or {}
         except (KeyError, IndexError, TypeError):
             self.log.error(f"账号数据响应内容异常: {data}")
+            return {}
 
 
 class TikTokAccount:
