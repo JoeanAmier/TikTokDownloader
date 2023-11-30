@@ -45,10 +45,10 @@ SERVER_HOST = "127.0.0.1"
 SERVER_PORT = 5000
 
 # Cookie 更新间隔，单位：秒
-COOKIE_UPDATE_INTERVAL = 20 * 60
+COOKIE_UPDATE_INTERVAL = 15 * 60
 
 # 作品下载记录数据备份间隔，单位：秒
-BACKUP_RECORD_INTERVAL = 10 * 60
+BACKUP_RECORD_INTERVAL = 5 * 60
 
 # 彩色交互提示颜色设置，支持标准颜色名称、Hex、RGB 格式
 MASTER = "b #fff200"

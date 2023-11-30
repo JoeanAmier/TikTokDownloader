@@ -350,7 +350,11 @@ class TtWid:
             '{"region":"cn","aid":1768,"needFid":false,"service":"www.ixigua.com","migrate_info":'
             '{"ticket":"","source":"node"},"cbUrlProtocol":"https","union":true}')
         try:
-            response = post(api, data=data, headers=headers, timeout=10)
+            response = post(api, data=data, headers=headers, proxies={
+                "http": None,
+                "https": None,
+                "ftp": None,
+            }, timeout=10)
         except (exceptions.ReadTimeout, exceptions.ConnectionError):
             return print("获取 ttwid 参数失败！")
         return clean(response.headers) or None
@@ -437,3 +441,5 @@ class SVWebId:
 if __name__ == "__main__":
     print(VerifyFp.get_verify_fp())
     print(SVWebId.generate_s_v_web_id())
+    for _ in range(10):
+        print(TtWid.get_tt_wid())

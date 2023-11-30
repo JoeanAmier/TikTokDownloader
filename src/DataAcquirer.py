@@ -362,18 +362,47 @@ class Account(Acquirer):
 
     @retry
     def get_account_data(self, api: str):
-        params = {
-            "device_platform": "webapp",
-            "aid": "6383",
-            "channel": "channel_pc_web",
-            "sec_user_id": self.sec_user_id,
-            "max_cursor": self.cursor,
-            "count": "18",
-            "version_code": "170400",
-            "cookie_enabled": "true",
-            "platform": "PC",
-            "downlink": "10",
-        }
+        if self.favorite:
+            params = {
+                "device_platform": "webapp",
+                "aid": "6383",
+                "channel": "channel_pc_web",
+                "sec_user_id": self.sec_user_id,
+                "max_cursor": self.cursor,
+                "min_cursor": "0",
+                "whale_cut_token": "",
+                "cut_version": "1",
+                "count": "18",
+                "publish_video_strategy_type": "2",
+                "pc_client_type": "1",
+                "version_code": "170400",
+                "version_name": "17.4.0",
+                "cookie_enabled": "true",
+                "platform": "PC",
+                "downlink": "10",
+            }
+        else:
+            params = {
+                "device_platform": "webapp",
+                "aid": "6383",
+                "channel": "channel_pc_web",
+                "sec_user_id": self.sec_user_id,
+                "max_cursor": self.cursor,
+                "locate_query": "false",
+                "show_live_replay_strategy": "1",
+                "need_time_list": "0" if self.cursor else "1",
+                "time_list_query": "0",
+                "whale_cut_token": "",
+                "cut_version": "1",
+                "count": "18",
+                "publish_video_strategy_type": "2",
+                "pc_client_type": "1",
+                "version_code": "170400",
+                "version_name": "17.4.0",
+                "cookie_enabled": "true",
+                "platform": "PC",
+                "downlink": "10",
+            }
         self.deal_url_params(params)
         if not (
                 data := self.send_request(
@@ -451,12 +480,16 @@ class Works(Acquirer):
             headers = self.Phone_headers
         else:
             params = {
-                "aweme_id": self.id,
+                "device_platform": "webapp",
                 "aid": "6383",
-                "version_code": "170400",
+                "channel": "channel_pc_web",
+                "aweme_id": self.id,
+                "pc_client_type": "1",
+                "version_code": "190500",
+                "version_name": "19.5.0",
                 "cookie_enabled": "true",
                 "platform": "PC",
-                "downlink": "10"
+                "downlink": "10",
             }
             api = self.item_api
             self.deal_url_params(params)
@@ -531,13 +564,20 @@ class Comment(Acquirer):
                 "channel": "channel_pc_web",
                 "item_id": self.item_id,
                 "comment_id": reply,
+                "whale_cut_token": "",
+                "cut_version": "1",
                 "cursor": self.cursor,
-                "count": "10" if self.cursor else "3",  # 每次返回数据的数量
+                "count": "10" if self.cursor else "3",
+                "item_type": "0",
+                "pc_client_type": "1",
                 "version_code": "170400",
+                "version_name": "17.4.0",
                 "cookie_enabled": "true",
                 "platform": "PC",
                 "downlink": "10",
             }
+            if not self.cursor:
+                del params["whale_cut_token"]
             self.deal_url_params(params, 174)
         else:
             params = {
@@ -547,7 +587,14 @@ class Comment(Acquirer):
                 "aweme_id": self.item_id,
                 "cursor": self.cursor,
                 "count": "20",
+                "item_type": "0",
+                "insert_ids": "",
+                "whale_cut_token": "",
+                "cut_version": "1",
+                "rcFT": "",
+                "pc_client_type": "1",
                 "version_code": "170400",
+                "version_name": "17.4.0",
                 "cookie_enabled": "true",
                 "platform": "PC",
                 "downlink": "10",
@@ -614,7 +661,9 @@ class Mix(Acquirer):
             "mix_id": self.mix_id,
             "cursor": self.cursor,
             "count": "20",
+            "pc_client_type": "1",
             "version_code": "170400",
+            "version_name": "17.4.0",
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
@@ -674,7 +723,8 @@ class Live(Acquirer):
             "aid": "6383",
             "app_name": "douyin_web",
             "device_platform": "web",
-            "version_code": "170400",
+            "language": "zh-CN",
+            "enter_from": "web_live",
             "cookie_enabled": "true",
             "web_rid": self.web_rid,
         }
@@ -727,9 +777,13 @@ class User(Acquirer):
             "device_platform": "webapp",
             "aid": "6383",
             "channel": "channel_pc_web",
+            "publish_video_strategy_type": "2",
             "source": "channel_pc_web",
             "sec_user_id": self.sec_user_id,
+            "personal_center_strategy": "1",
+            "pc_client_type": "1",
             "version_code": "170400",
+            "version_name": "17.4.0",
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",
@@ -825,13 +879,15 @@ class Search(Acquirer):
             "search_source": "switch_tab",
             "query_correct_type": "1",
             "is_filter_search": "0",
+            "from_group_id": "",
             "offset": self.cursor,
             "count": 10 if self.cursor else data.count,
             "pc_client_type": "1",
             "version_code": "170400",
+            "version_name": "17.4.0",
             "cookie_enabled": "true",
             "platform": "PC",
-            "downlink": "7.7",
+            "downlink": "10",
         }
         self.deal_url_params(params, 174 if self.cursor else 23)
         self._get_search_data(
@@ -839,7 +895,7 @@ class Search(Acquirer):
             params,
             "user_list" if type_ == 2 else "data", finished=True)
 
-    def _run_general(self, data: SimpleNamespace, *args):
+    def _run_general(self, data: SimpleNamespace, type_: int, *args):
         params = {
             "device_platform": "webapp",
             "aid": "6383",
@@ -851,13 +907,15 @@ class Search(Acquirer):
             "search_source": "switch_tab",
             "query_correct_type": "1",
             "is_filter_search": {True: 1, False: 0}[any((self.sort_type, self.publish_time))],
+            "from_group_id": "",
             "offset": self.cursor,
             "count": 10 if self.cursor else data.count,
             "pc_client_type": "1",
-            "version_code": "170400",
+            "version_code": "170400" if type_ else "190600",
+            "version_name": "17.4.0" if type_ else "19.6.0",
             "cookie_enabled": "true",
             "platform": "PC",
-            "downlink": "7.7",
+            "downlink": "10",
         }
         self.deal_url_params(params, 174 if self.cursor else 23)
         self._get_search_data(data.api, params, "data", finished=True)
@@ -930,9 +988,10 @@ class Hot(Acquirer):
             "board_sub_type": data.sub_type,
             "pc_client_type": "1",
             "version_code": "170400",
+            "version_name": "17.4.0",
             "cookie_enabled": "true",
             "platform": "PC",
-            "downlink": "1.4",
+            "downlink": "10",
         }
         self.deal_url_params(params)
         if not (
@@ -959,9 +1018,10 @@ class Collection(Acquirer):
         "publish_video_strategy_type": "2",
         "pc_client_type": "1",
         "version_code": "170400",
+        "version_name": "17.4.0",
         "cookie_enabled": "true",
         "platform": "PC",
-        "downlink": "5.45",
+        "downlink": "10",
     }
 
     def __init__(self, params: Parameter, sec_user_id: str,
@@ -1042,7 +1102,9 @@ class Info(Acquirer):
             "device_platform": "webapp",
             "aid": "6383",
             "channel": "channel_pc_web",
+            "pc_client_type": "1",
             "version_code": "170400",
+            "version_name": "17.4.0",
             "cookie_enabled": "true",
             "platform": "PC",
             "downlink": "10",

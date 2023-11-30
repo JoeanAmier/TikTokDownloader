@@ -3,6 +3,7 @@ from pathlib import Path
 from shutil import rmtree
 from threading import Event
 from threading import Thread
+from webbrowser import open
 
 from flask import Flask
 from flask import abort
@@ -228,6 +229,7 @@ class TikTokDownloader:
         register(self.blacklist.close)
         if token:
             app.before_request(self.verify_token)
+        open(f"http://127.0.0.1:{SERVER_PORT}")
         app.run(host=SERVER_HOST, port=SERVER_PORT)
 
     @staticmethod
