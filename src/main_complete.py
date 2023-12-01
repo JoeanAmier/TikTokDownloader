@@ -235,7 +235,7 @@ class TikTok:
             if not (sec_user_id := self.check_sec_user_id(data.url)):
                 self.logger.warning(
                     f"配置文件 accounts_urls 参数"
-                    f"第 {index} 条数据的 url 无效")
+                    f"第 {index} 条数据的 url {data.url} 错误，提取 sec_user_id 失败")
                 count.failed += 1
                 continue
             if not self.deal_account_works(
@@ -567,7 +567,9 @@ class TikTok:
         for index, data in enumerate(self.mix, start=1):
             mix_id, id_ = self._check_mix_id(data.url)
             if not id_:
-                self.logger.warning(f"{data.url} 获取作品 ID 或合集 ID 失败")
+                self.logger.warning(
+                    f"配置文件 mix_urls 参数" f"第 {index} 条数据的 url {
+                    data.url} 错误，获取作品 ID 或合集 ID 失败")
                 count.failed += 1
                 continue
             if not self._deal_mix_works(

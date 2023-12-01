@@ -162,7 +162,7 @@ class Downloader:
             self.downloader_chart(
                 download_tasks,
                 SimpleNamespace(),
-                self.__general_progress_object(),
+                self.__live_progress_object(),
                 len(download_tasks),
                 unknown_size=True,
                 headers=self.black_headers)
@@ -285,10 +285,12 @@ class Downloader:
             if self.is_in_blacklist(id_):
                 count.skipped_image.add(id_)
                 self.log.info(f"图集 {id_} 存在下载记录，跳过下载")
+                count.skipped_image.add(id_)
                 break
             elif self.is_exists(p := actual_root.with_name(f"{name}_{index}.jpeg")):
                 self.log.info(f"图集 {id_}_{index} 文件已存在，跳过下载")
                 self.log.info(f"文件路径: {p.resolve()}", False)
+                count.skipped_image.add(id_)
                 continue
             tasks.append((
                 img,
@@ -452,6 +454,7 @@ class Downloader:
             return False
         self.save_file(temp, actual)
         self.log.info(f"{show} 文件下载成功")
+        self.log.info(f"文件路径 {actual.resolve()}", False)
         self.blacklist.update_id(id_)
         self.add_count(show, id_, count)
         return True

@@ -105,7 +105,20 @@ class Cache:
         new_folder = self.root.joinpath(f"{type_}{id_}_{mark}_{addition}")
         self.rename(old_folder, new_folder, "文件夹")
         self.log.info(f"文件夹 {old_folder} 已重命名为 {new_folder}", False)
-        return True
+
+    def __rename_works_folder(self,
+                              old_: Path,
+                              id_: str,
+                              mark: str,
+                              name: str,
+                              field: str) -> Path:
+        if (s := self.data[id_][field]) in old_.name:
+            new_ = old_.parent / old_.name.replace(
+                s, {"name": name, "mark": mark}[field], 1)
+            self.rename(old_, new_)
+            self.log.info(f"文件夹 {old_} 重命名为 {new_}", False)
+            return new_
+        return old_
 
     def scan_file(
             self,
@@ -120,7 +133,8 @@ class Cache:
         item_list = root.iterdir()
         if solo_mode:
             for f in item_list:
-                if f.isdir():
+                if f.is_dir():
+                    f = self.__rename_works_folder(f, id_, mark, name, field)
                     files = f.iterdir()
                     self.batch_rename(f, files, id_, mark, name, field)
         else:
@@ -129,7 +143,7 @@ class Cache:
     def batch_rename(
             self,
             root: Path,
-            files: tuple,
+            files,
             id_: str,
             mark: str,
             name: str,

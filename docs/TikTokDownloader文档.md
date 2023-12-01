@@ -363,6 +363,38 @@
 
 <p><strong>服务器部署模式：</strong> 仅 <code>cookie</code>、<code>proxies</code>、<code>max_retry</code> 参数生效，其余参数均不生效，但仍需正确编辑配置文件。</p>
 <h2>参数详解</h2>
+<h3>下载喜欢作品</h3>
+
+```json
+{
+  "accounts_urls": [
+    {
+      "mark": "",
+      "url": "账号主页链接-1",
+      "tab": "favorite",
+      "earliest": "",
+      "latest": ""
+    },
+    {
+      "mark": "",
+      "url": "账号主页链接-2",
+      "tab": "post",
+      "earliest": "",
+      "latest": ""
+    },
+    {
+      "mark": "",
+      "url": "账号主页链接-3",
+      "tab": "favorite",
+      "earliest": "",
+      "latest": ""
+    }
+  ]
+}
+```
+
+<p>将待下载的账号信息写入配置文件，每个账号对应一个对象/字典，<code>tab</code> 参数设置为 <code>favorite</code> 代表批量下载喜欢作品，支持多账号。</p>
+
 <h3>文件储存路径</h3>
 
 ```json
@@ -643,10 +675,10 @@ document.body.removeChild(downloadLink);
 <p><strong>输入：</strong><code>猫咪 3 2</code> 等效于 <code>猫咪 直播搜索 2</code></p>
 <p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>直播搜索</code>；页数：<code>2</code></p>
 <h3>采集抖音热榜数据</h3>
-<p>采集 <code>抖音热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
+<p>无需输入，采集 <code>抖音热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <p>储存名称格式：<code>实时热榜数据_采集时间_热榜名称</code></p>
 <h3>批量下载收藏作品</h3>
-<p>需要在配置文件写入已登录的 Cookie，并在 <code>owner_url</code> 参数填入对应的账号主页链接和账号标识（可选）；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
+<p>无需输入，需要在配置文件写入已登录的 Cookie，并在 <code>owner_url</code> 参数填入对应的账号主页链接和账号标识（可选）；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
 <p>如果未设置 <code>owner_url</code> 参数，程序会使用临时字符串作为账号昵称和 UID。</p>
 <p>账号文件夹格式为 <code>UID123456789_mark_收藏作品</code> 或者 <code>UID123456789_账号昵称_收藏作品</code></p>
 <h2>Web API 接口模式</h2>

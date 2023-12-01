@@ -414,7 +414,7 @@ class Parameter:
             "max_retry": self.max_retry,
             "max_pages": self.max_pages,
             "default_mode": int(self.default_mode),
-            "ffmpeg": self.ffmpeg.path,
+            "ffmpeg": self.ffmpeg.path or "",
         }
 
     def update_settings_data(self, data: dict, ):
@@ -451,6 +451,7 @@ class FFMPEG:
             return ['x-terminal-emulator'], False
 
     def __check_ffmpeg_path(self, path: Path):
+        # return None  # 调试使用
         return self.__check_system_ffmpeg() or self.__check_system_ffmpeg(path)
 
     def download(self, data: list[tuple], proxies, timeout, user_agent):

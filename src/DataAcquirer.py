@@ -168,9 +168,9 @@ class Acquirer:
 
 class Share:
     share_link = compile(
-        r".*?(https://v\.douyin\.com/[A-Za-z0-9]+?/).*?")
+        r"\S*?(https://v\.douyin\.com/[^/\s]+)\S*?")
     share_link_tiktok = compile(
-        r".*?(https://vm\.tiktok\.com/[a-zA-Z0-9]+/).*?")
+        r"\S*?(https://vm\.tiktok\.com/[^/\s]+)\S*?")
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome"
                       "/116.0.0.0 Safari/537.36", }
@@ -211,28 +211,30 @@ class Share:
 class Link:
     # 抖音链接
     account_link = compile(
-        r"https://www\.douyin\.com/user/([A-Za-z0-9_-]+)(?:.*?\bmodal_id=(\d{19}))?")  # 账号主页链接
+        r"\S*?https://www\.douyin\.com/user/([A-Za-z0-9_-]+)(?:\S*?\bmodal_id=(\d{19}))?")  # 账号主页链接
     account_share = compile(
-        r".*?https://www\.iesdouyin\.com/share/user/(.*?)\?.*?"  # 账号主页分享短链
+        r"\S*?https://www\.iesdouyin\.com/share/user/(\S*?)\?\S*?"  # 账号主页分享链接
     )
     works_id = compile(r"\b(\d{19})\b")  # 作品 ID
     works_link = compile(
-        r".*?https://www\.douyin\.com/(?:video|note)/([0-9]{19}).*?")  # 作品链接
+        r"\S*?https://www\.douyin\.com/(?:video|note)/([0-9]{19})\S*?")  # 作品链接
     works_share = compile(
-        r".*?https://www\.iesdouyin\.com/share/(?:video|note)/([0-9]{19})/.*?"
-    )  # 作品分享短链
+        r"\S*?https://www\.iesdouyin\.com/share/(?:video|note)/([0-9]{19})/\S*?"
+    )  # 作品分享链接
     mix_link = compile(
-        r".*?https://www\.douyin\.com/collection/(\d{19}).*?")  # 合集链接
-    live_link = compile(r".*?https://live\.douyin\.com/([0-9]+).*?")  # 直播链接
+        r"\S*?https://www\.douyin\.com/collection/(\d{19})\S*?")  # 合集链接
+    mix_share = compile(
+        r"\S*?https://www\.iesdouyin\.com/share/mix/detail/(\d{19})/\S*?")  # 合集分享链接
+    live_link = compile(r"\S*?https://live\.douyin\.com/([0-9]+)\S*?")  # 直播链接
     live_link_self = compile(
-        r".*?https://www\.douyin\.com/follow\?webRid=(\d+).*?"
+        r"\S*?https://www\.douyin\.com/follow\?webRid=(\d+)\S*?"
     )
     live_link_share = compile(
-        r"https://webcast\.amemv\.com/douyin/webcast/reflow/\S+")
+        r"\S*?https://webcast\.amemv\.com/douyin/webcast/reflow/\S+")
 
     # TikTok 链接
     works_link_tiktok = compile(
-        r".*?https://www\.tiktok\.com/@.+?/video/(\d{19}).*?")  # 作品链接
+        r"\S*?https://www\.tiktok\.com/@\S+?/video/(\d{19})\S*?")  # 作品链接
 
     def __init__(self, params: Parameter):
         self.share = Share(params.logger, params.proxies, params.max_retry)
@@ -269,6 +271,8 @@ class Link:
         elif u := self.works_link.findall(urls):
             return False, u
         elif u := self.mix_link.findall(urls):
+            return True, u
+        elif u := self.mix_share.findall(urls):
             return True, u
         return None, []
 

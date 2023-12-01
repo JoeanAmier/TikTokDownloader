@@ -72,7 +72,7 @@ class TikTokDownloader:
     # print(PROJECT_ROOT)  # 调试使用
 
     VERSION = 5.1
-    STABLE = False
+    STABLE = True
 
     REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
     LICENCE = "GNU General Public License v3.0"
