@@ -71,8 +71,8 @@ class TikTokDownloader:
     PROJECT_ROOT = Path(__file__).resolve().parent  # 源码运行
     # print(PROJECT_ROOT)  # 调试使用
 
-    VERSION = 5.1
-    STABLE = True
+    VERSION = 5.2
+    STABLE = False
 
     REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
     LICENCE = "GNU General Public License v3.0"
@@ -124,6 +124,16 @@ class TikTokDownloader:
         self.event = Event()
         self.cookie_task = Thread(target=self.periodic_update_cookie)
         self.backup_task = None
+        self._abnormal = None
+
+    @property
+    def abnormal(self):
+        return self._abnormal
+
+    @abnormal.setter
+    def abnormal(self, value: bool):
+        if not isinstance(self._abnormal, bool):
+            self._abnormal = value
 
     def disclaimer(self):
         if not self.DISCLAIMER["path"].exists():
@@ -146,7 +156,8 @@ class TikTokDownloader:
         self.console.print(f"开源许可: {self.LICENCE}\n", style=MASTER)
 
     def check_config(self):
-        folder = ("./src/config", "./cache", "./cache/temp")
+        folder = ("./src", "./src/config", "./cache", "./cache/temp")
+        self.abnormal = self.PROJECT_ROOT.joinpath(folder[-1]).exists()
         for i in folder:
             self.PROJECT_ROOT.joinpath(i).mkdir(exist_ok=True)
         self.UPDATE["tip"] = "启用" if self.UPDATE["path"].exists() else "禁用"
@@ -155,7 +166,7 @@ class TikTokDownloader:
         self.LOGGING["tip"] = "禁用" if (
             l := self.LOGGING["path"].exists()) else "启用"
         self.blacklist = DownloadRecorder(
-            not b, self.PROJECT_ROOT.joinpath("./cache"))
+            not b, self.PROJECT_ROOT.joinpath("./cache"), not self.abnormal)
         self.backup_task = Thread(
             target=self.periodic_backup_record,
         )

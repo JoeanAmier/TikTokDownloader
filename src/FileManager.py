@@ -190,8 +190,9 @@ class FileManager:
 
 
 class DownloadRecorder:
-    def __init__(self, switch, folder: Path):
+    def __init__(self, switch, folder: Path, state: bool):
         self.switch = switch
+        self.state = state
         self.backup = folder.joinpath("IDRecorder_backup.txt")
         self.path = folder.joinpath("IDRecorder.txt")
         self.file = None
@@ -218,7 +219,7 @@ class DownloadRecorder:
 
     def backup_file(self):
         if self.file and self.record:
-            # print("Backup IDRecorder")
+            # print("Backup IDRecorder")  # 调试代码
             with self.backup.open("w", encoding="utf-8") as f:
                 self.__save_file(f)
 
@@ -227,13 +228,13 @@ class DownloadRecorder:
             self.__save_file(self.file)
             self.file.close()
             self.file = None
-            # print("Close IDRecorder")
+            # print("Close IDRecorder")  # 调试代码
 
     def __restore_data(self, ids: set) -> set:
-        if ids:
+        if self.state:
             return ids
-        print(f"[{ERROR}]{self.path.resolve()
-        } 数据为空，可能是程序上次运行异常退出导致数据丢失！[/{ERROR}]")
+        print(f"[{ERROR}]程序检测到上次运行可能没有正常结束，您的作品下载记录数据可能已经丢失！\n数据文件路径：{
+        self.path.resolve()}[/{ERROR}]")
         if self.backup.exists():
             print(
                 f"[{WARNING}]检测到 IDRecorder 备份文件，是否恢复最后一次备份的数据(YES/NO): [/{WARNING}]", end="")

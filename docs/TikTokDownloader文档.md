@@ -155,6 +155,7 @@
 <h1>配置文件</h1>
 <p>配置文件：项目根目录下的 <code>settings.json</code> 文件，可以自定义设置程序部分运行参数。</p>
 <p><b><code>cookie</code> 参数为必需参数，必须设置该参数才能正常使用程序</b>；其余参数可以根据实际需求进行修改！</p>
+<p>如果您的计算机没有合适的程序编辑 JSON 文件，建议使用 <a href="https://try8.cn/tool/format/json">JSON 在线工具</a> 编辑配置文件内容。</p>
 <p>注意: 手动修改 <code>settings.json</code> 后需要重新运行程序才会生效！</p>
 <h2>参数含义</h2>
 <table>
@@ -708,7 +709,7 @@ print(response.json())
 <h3>配置文件修改接口</h3>
 <p>修改 <code>settings.json</code> 配置文件；无需发送全部参数，仅需发送想要修改的参数；参数格式要求与配置文件格式要求保持一致。</p>
 <p><b>请求接口：</b><code>/settings/</code></p>
-<p><b>请求参数</b></p>
+<p><b>请求参数(可选)</b></p>
 
 ```json
 {

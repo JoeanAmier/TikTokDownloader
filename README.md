@@ -206,6 +206,7 @@ TikTokDownloader
 <li>部分使用者反馈，新发布的作品过早下载会下载到低分辨率的文件，一段时间后才能下载到高分辨率文件，但时间规律尚不明确</li>
 <li>退出程序时，请以正常方式结束运行或者按下 Ctrl + C 结束运行，不要直接点击终端窗口的关闭按钮结束运行，否则会导致数据丢失</li>
 <li>程序默认不启用请求延时，但是建议使用者编辑 <code>src/Customizer.py</code> 文件启用随机延时或固定延时，避免频繁请求导致被抖音风控</li>
+<li>如果您的计算机没有合适的程序编辑 JSON 文件，建议使用 <a href="https://try8.cn/tool/format/json">JSON 在线工具</a> 编辑配置文件内容</li>
 </ul>
 <hr>
 
@@ -245,6 +246,7 @@ TikTokDownloader
 <p>
 <b>如果您通过 Email 联系我，我可能无法及时查看并回复信息，我会尽力在七天内回复您的邮件；如果有紧急事项或需要更快的回复，请通过其他方式与我联系，谢谢理解！</b>
 </p>
+<p><b>如果您对小红书感兴趣，可以了解一下我的另一个开源项目 <a href="https://github.com/JoeanAmier/XHS-Downloader">XHS-Downloader</a></b></p>
 
 # ♥️ 支持项目\(Support\)
 

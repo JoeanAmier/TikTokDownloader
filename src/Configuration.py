@@ -74,7 +74,7 @@ class Settings:
         """读取配置文件，如果没有配置文件，则生成配置文件"""
         try:
             if self.file.exists():
-                with self.file.open("r", encoding="UTF-8") as f:
+                with self.file.open("r", encoding="UTF-8-SIG" if system() == "Windows" else "UTF-8") as f:
                     return self.__check(load(f))
             return self.__create()  # 生成的默认配置文件必须要设置 cookie 才可以正常运行
         except JSONDecodeError:
@@ -422,7 +422,7 @@ class Parameter:
             if key in list(self.check_rules.keys())[3:]:
                 # print(key, hasattr(self, key))  # 调试使用
                 setattr(self, key, self.check_rules[key](value))
-        if c := data["cookie"]:
+        if c := data.get("cookie"):
             setattr(
                 self,
                 "cookie",
