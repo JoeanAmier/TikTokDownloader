@@ -1,6 +1,5 @@
 from platform import system
 from string import whitespace
-from time import time
 
 from emoji import replace_emoji
 
@@ -80,9 +79,7 @@ class Cleaner:
         return (
                 text or self.filter_name(
             illegal_nickname(),
-            False) or default or str(
-            time())[
-                                 :10]) if inquire else (
+            False, default)) if inquire else (
                 text or default)
 
     @staticmethod

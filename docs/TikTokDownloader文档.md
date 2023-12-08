@@ -731,7 +731,8 @@ print(response.json())
   "max_retry": "可选参数",
   "max_pages": "可选参数",
   "default_mode": "可选参数",
-  "ffmpeg": "可选参数"
+  "ffmpeg": "可选参数",
+  "token": "自定义参数"
 }
 ```
 
@@ -750,7 +751,8 @@ print(response.json())
   "latest": "作品最晚发布日期，字符串，可选参数",
   "pages": "账号喜欢作品数据最大请求次数，整数，可选参数",
   "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
-  "cookie": "抖音 cookie，字符串，可选参数"
+  "cookie": "抖音 cookie，字符串，可选参数",
+  "token": "自定义参数"
 }
 ```
 
@@ -776,7 +778,8 @@ print(response.json())
 {
   "url": "作品链接，支持多作品，字符串，必需参数",
   "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
-  "cookie": "抖音 cookie，字符串，可选参数"
+  "cookie": "抖音 cookie，字符串，可选参数",
+  "token": "自定义参数"
 }
 ```
 
@@ -802,7 +805,8 @@ print(response.json())
 {
   "url": "直播链接，支持多直播，字符串，必需参数",
   "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
-  "cookie": "抖音 cookie，字符串，可选参数"
+  "cookie": "抖音 cookie，字符串，可选参数",
+  "token": "自定义参数"
 }
 ```
 
@@ -829,7 +833,8 @@ print(response.json())
   "url": "作品链接，字符串，必需参数",
   "pages": "作品评论数据最大请求次数，整数，可选参数",
   "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
-  "cookie": "抖音 cookie，字符串，可选参数"
+  "cookie": "抖音 cookie，字符串，可选参数",
+  "token": "自定义参数"
 }
 ```
 
@@ -855,7 +860,8 @@ print(response.json())
 {
   "url": "属于合集的作品链接，字符串，必需参数",
   "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
-  "cookie": "抖音 cookie，字符串，可选参数"
+  "cookie": "抖音 cookie，字符串，可选参数",
+  "token": "自定义参数"
 }
 ```
 
@@ -881,7 +887,8 @@ print(response.json())
 {
   "url": "账号主页链接，支持多账号，字符串，必需参数",
   "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
-  "cookie": "抖音 cookie，字符串，可选参数"
+  "cookie": "抖音 cookie，字符串，可选参数",
+  "token": "自定义参数"
 }
 ```
 
@@ -911,7 +918,8 @@ print(response.json())
   "sort_type": "排序依据，字符串，可选参数",
   "publish_time": "发布时间，字符串，可选参数",
   "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
-  "cookie": "抖音 cookie，字符串，可选参数"
+  "cookie": "抖音 cookie，字符串，可选参数",
+  "token": "自定义参数"
 }
 ```
 
@@ -935,7 +943,8 @@ print(response.json())
 
 ```json
 {
-  "source": "是否返回原始数据，布尔值，可选参数，默认值: false"
+  "source": "是否返回原始数据，布尔值，可选参数，默认值: false",
+  "token": "自定义参数"
 }
 ```
 
@@ -1057,7 +1066,8 @@ print(response.json())
 
 ```json
 {
-  "url": "抖音作品链接或 TikTok 作品链接"
+  "url": "抖音作品链接或 TikTok 作品链接",
+  "token": "自定义参数"
 }
 ```
 

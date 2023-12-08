@@ -2,6 +2,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
 from shutil import move
+from time import time
 from types import SimpleNamespace
 
 from requests import exceptions
@@ -171,8 +172,16 @@ class Downloader:
             self, data: list[tuple[dict, str]], tasks: list, commands: list):
         for i, f, m in data:
             name = self.cleaner.filter_name(
-                f'{i["title"]}{self.split}{i["nickname"]}{self.split}{datetime.now():%Y-%m-%d %H.%M.%S}.flv',
-                inquire=False)
+                f'{
+                i["title"]}{
+                self.split}{
+                i["nickname"]}{
+                self.split}{
+                datetime.now():%Y-%m-%d %H.%M.%S}.flv',
+                inquire=False,
+                default=str(
+                    time())[
+                        :10])
             temp_root, actual_root = self.deal_folder_path(
                 self.storage_folder(folder_name="Live"), name, True)
             tasks.append((
@@ -486,8 +495,11 @@ class Downloader:
         return folder
 
     def generate_works_name(self, data: dict) -> str:
-        return self.cleaner.filter_name(self.split.join(
-            data[i] for i in self.name_format), inquire=False)
+        return self.cleaner.filter_name(
+            self.split.join(
+                data[i] for i in self.name_format), inquire=False, default=str(
+                time())[
+                                                                           :10])
 
     def create_works_folder(
             self,

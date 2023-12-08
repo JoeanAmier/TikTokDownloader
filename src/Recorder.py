@@ -6,6 +6,8 @@ from logging import getLogger
 from os.path import getsize
 from pathlib import Path
 from platform import system
+from re import compile
+from re import sub
 from sqlite3 import connect
 from time import localtime
 from time import strftime
@@ -239,6 +241,7 @@ class XLSXLogger(NoneLogger):
 
 class SQLLogger(NoneLogger):
     """SQLite保存数据"""
+    SHEET_NAME = compile(r"[^\u4e00-\u9fa5a-zA-Z0-9_]")
 
     def __init__(
             self,
@@ -282,7 +285,7 @@ class SQLLogger(NoneLogger):
         self.db.commit()
 
     def update_sheet(self):
-        old_sheet, new_sheet = self.name
+        old_sheet, new_sheet = self.__clean_sheet_name(self.name)
         mark = new_sheet.split("_", 1)
         if not old_sheet or mark[-1] == old_sheet:
             self.name = new_sheet
@@ -293,6 +296,17 @@ class SQLLogger(NoneLogger):
         self.cursor.execute(update_sql)
         self.db.commit()
         self.name = new_sheet
+
+    def __clean_sheet_name(self, name: tuple) -> tuple:
+        return self.__clean_characters(
+            name[0]), self.__clean_characters(
+            name[1])
+
+    def __clean_characters(self, text: str | None) -> str | None:
+        if isinstance(text, str):
+            text = self.SHEET_NAME.sub("_", text)
+            text = sub(r"_+", "_", text)
+        return text
 
 
 class RecordManager:

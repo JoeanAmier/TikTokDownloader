@@ -23,7 +23,7 @@ class APIServer(WebUI):
         data["logger"] = logger
 
     def run_server(self, app):
-        @app.route("/")
+        @app.route("/", methods=["GET"])
         def index():
             return redirect(
                 "https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation")
