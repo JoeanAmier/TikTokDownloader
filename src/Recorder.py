@@ -242,6 +242,8 @@ class XLSXLogger(NoneLogger):
 class SQLLogger(NoneLogger):
     """SQLite保存数据"""
     SHEET_NAME = compile(r"[^\u4e00-\u9fa5a-zA-Z0-9_]")
+    CHECK_SQL = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?;"
+    UPDATE_SQL = "ALTER TABLE ? RENAME TO ?;"
 
     def __init__(
             self,
@@ -292,10 +294,15 @@ class SQLLogger(NoneLogger):
             return
         mark[-1] = old_sheet
         old_sheet = "_".join(mark)
-        update_sql = f"ALTER TABLE {old_sheet} RENAME TO {new_sheet};"
-        self.cursor.execute(update_sql)
-        self.db.commit()
+        if self.__check_sheet_exists(old_sheet):
+            self.cursor.execute(self.UPDATE_SQL, (old_sheet, new_sheet))
+            self.db.commit()
         self.name = new_sheet
+
+    def __check_sheet_exists(self, sheet: str) -> bool:
+        self.cursor.execute(self.CHECK_SQL, (sheet,))
+        exists = self.cursor.fetchone()
+        return exists[0] > 0
 
     def __clean_sheet_name(self, name: tuple) -> tuple:
         return self.__clean_characters(
@@ -391,8 +398,8 @@ class RecordManager:
         "TEXT",
         "TEXT",
         "TEXT",
-        "TEXT",
-        "TEXT",
+        "INTEGER",
+        "INTEGER",
         "TEXT",
         "TEXT",
         "TEXT",

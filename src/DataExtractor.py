@@ -188,8 +188,8 @@ class Extractor:
             self.extract_video_info(item, data)
 
     def extract_additional_info(self, item: dict, data: SimpleNamespace):
-        item["height"] = self.safe_extract(data, "video.height")
-        item["width"] = self.safe_extract(data, "video.width")
+        item["height"] = self.safe_extract(data, "video.height", "-1")
+        item["width"] = self.safe_extract(data, "video.width", "-1")
         item["ratio"] = self.safe_extract(data, "video.ratio")
         item["share_url"] = self.__clean_share_url(
             self.safe_extract(data, "share_url"))
@@ -291,7 +291,7 @@ class Extractor:
                 "collect_count",
                 "share_count",
         ):
-            item[i] = str(self.safe_extract(data, i))
+            item[i] = str(self.safe_extract(data, i, "-1"))
 
     def extract_tags(self, item: dict, data: SimpleNamespace) -> None:
         if not (t := self.safe_extract(data, "video_tag")):
@@ -313,7 +313,7 @@ class Extractor:
         container.cache["short_id"] = self.safe_extract(data, "short_id")
         container.cache["unique_id"] = self.safe_extract(data, "unique_id")
         container.cache["signature"] = self.safe_extract(data, "signature")
-        container.cache["user_age"] = self.safe_extract(data, "user_age")
+        container.cache["user_age"] = self.safe_extract(data, "user_age", "-1")
         self.extract_nickname_info(container, data)
 
     def extract_nickname_info(self,
@@ -346,6 +346,7 @@ class Extractor:
             default="无效账号昵称")
         title = self.cleaner.filter_name(self.safe_extract(
             item, "mix_info.mix_name", f"合集_{str(time())[:10]}"),
+            inquire=mix,
             default="无效合集标题")
         mark = self.cleaner.filter_name(
             mark, inquire=False, default=title if mix else name)
@@ -402,11 +403,11 @@ class Extractor:
         container.cache["sticker"] = self.safe_extract(
             data, "sticker.static_url.url_list[-1]")
         container.cache["digg_count"] = str(
-            self.safe_extract(data, "digg_count"))
+            self.safe_extract(data, "digg_count", "-1"))
         container.cache["reply_to_reply_id"] = self.safe_extract(
             data, "reply_to_reply_id")
         container.cache["reply_comment_total"] = str(
-            self.safe_extract(data, "reply_comment_total", 0))
+            self.safe_extract(data, "reply_comment_total", "0"))
         container.cache["reply_id"] = self.safe_extract(data, "reply_id")
         container.cache["cid"] = self.safe_extract(data, "cid")
         self.extract_account_info(container, data, "user")
@@ -418,7 +419,7 @@ class Extractor:
         container.cache = {
             "reply_comment_total": str(
                 self.safe_extract(
-                    cache, "reply_comment_total", 0)), "cid": self.safe_extract(
+                    cache, "reply_comment_total", "0")), "cid": self.safe_extract(
                 cache, "cid")}
         self._filter_reply_ids(container)
         container.all_data.append(data)
@@ -476,15 +477,15 @@ class Extractor:
         container.cache["country"] = self.safe_extract(data, "country")
         container.cache["district"] = self.safe_extract(data, "district")
         container.cache["favoriting_count"] = str(
-            self.safe_extract(data, "favoriting_count"))
+            self.safe_extract(data, "favoriting_count", "-1"))
         container.cache["follower_count"] = str(
-            self.safe_extract(data, "follower_count"))
+            self.safe_extract(data, "follower_count", "-1"))
         container.cache["max_follower_count"] = str(
-            self.safe_extract(data, "max_follower_count"))
+            self.safe_extract(data, "max_follower_count", "-1"))
         container.cache["following_count"] = str(
-            self.safe_extract(data, "following_count"))
+            self.safe_extract(data, "following_count", "-1"))
         container.cache["total_favorited"] = str(
-            self.safe_extract(data, "total_favorited"))
+            self.safe_extract(data, "total_favorited", "-1"))
         container.cache["gender"] = {1: "男", 2: "女"}.get(
             self.safe_extract(data, "gender"), "未知")
         container.cache["ip_location"] = self.safe_extract(data, "ip_location")
@@ -496,12 +497,12 @@ class Extractor:
         container.cache["uid"] = self.safe_extract(data, "uid")
         container.cache["unique_id"] = self.safe_extract(data, "unique_id")
         container.cache["user_age"] = str(
-            self.safe_extract(data, "user_age", -1))
+            self.safe_extract(data, "user_age", "-1"))
         container.cache["cover"] = self.safe_extract(
             data, "cover_url[0].url_list[-1]")
         container.cache["short_id"] = self.safe_extract(data, "short_id")
         container.cache["aweme_count"] = str(
-            self.safe_extract(data, "aweme_count"))
+            self.safe_extract(data, "aweme_count", "-1"))
         container.cache["verify"] = self.safe_extract(
             data, "custom_verify", "无")
         container.cache["enterprise"] = self.safe_extract(
@@ -587,9 +588,9 @@ class Extractor:
             data, "enterprise_verify_reason", "无")
         if user:
             container.cache["follower_count"] = str(
-                self.safe_extract(data, "follower_count"))
+                self.safe_extract(data, "follower_count", "-1"))
             container.cache["total_favorited"] = str(
-                self.safe_extract(data, "total_favorited"))
+                self.safe_extract(data, "total_favorited", "-1"))
             container.cache["unique_id"] = self.safe_extract(data, "unique_id")
             container.all_data.append(container.cache)
         # else:
@@ -630,13 +631,13 @@ class Extractor:
 
     def _deal_hot_data(self, container: list, data: SimpleNamespace):
         cache = {
-            "position": str(self.safe_extract(data, "position", -1)),
+            "position": str(self.safe_extract(data, "position", "-1")),
             "sentence_id": self.safe_extract(data, "sentence_id"),
             "word": self.safe_extract(data, "word"),
-            "video_count": str(self.safe_extract(data, "video_count")),
+            "video_count": str(self.safe_extract(data, "video_count", "-1")),
             "event_time": self.format_date(data, "event_time"),
-            "view_count": str(self.safe_extract(data, "view_count")),
-            "hot_value": str(self.safe_extract(data, "hot_value")),
+            "view_count": str(self.safe_extract(data, "view_count", "-1")),
+            "hot_value": str(self.safe_extract(data, "hot_value", "-1")),
             "cover": self.safe_extract(data, "word_cover.url_list[-1]"),
         }
         container.append(cache)

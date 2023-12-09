@@ -395,7 +395,24 @@
 ```
 
 <p>将待下载的账号信息写入配置文件，每个账号对应一个对象/字典，<code>tab</code> 参数设置为 <code>favorite</code> 代表批量下载喜欢作品，支持多账号。</p>
+<h3>发布日期限制</h3>
 
+```json
+{
+  "accounts_urls": [
+    {
+      "mark": "账号标识",
+      "url": "账号主页链接",
+      "tab": "post",
+      "earliest": "2023/12/1",
+      "latest": ""
+    }
+  ]
+}
+```
+
+<p>如果已经采集某账号的全部发布作品，建议设置 <code>earliest</code> 和 <code>latest</code> 参数以减少后续采集请求次数。</p>
+<p>例如：将 <code>earliest</code> 参数设置为 <code>2023/12/1</code>，程序获取账号发布作品数据时，无需获取早于 <code>2023/12/1</code> 的作品数据，可减少请求次数提高运行效率。</p>
 <h3>文件储存路径</h3>
 
 ```json
