@@ -23,6 +23,8 @@ __all__ = ["Settings", "Parameter"]
 
 
 class Settings:
+    encode = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
+
     def __init__(self, root: Path, console):
         self.file = root.joinpath("./settings.json")  # 配置文件
         self.console = console
@@ -63,7 +65,7 @@ class Settings:
 
     def __create(self) -> dict:
         """创建默认配置文件"""
-        with self.file.open("w", encoding="UTF-8") as f:
+        with self.file.open("w", encoding=self.encode) as f:
             dump(self.__default, f, indent=4, ensure_ascii=False)
         self.console.print(
             "创建默认配置文件 settings.json 成功！\n请参考项目文档的快速入门部分，设置 Cookie 后重新运行程序！\n建议根据实际使用需求"
@@ -74,7 +76,7 @@ class Settings:
         """读取配置文件，如果没有配置文件，则生成配置文件"""
         try:
             if self.file.exists():
-                with self.file.open("r", encoding="UTF-8-SIG" if system() == "Windows" else "UTF-8") as f:
+                with self.file.open("r", encoding=self.encode) as f:
                     return self.__check(load(f))
             return self.__create()  # 生成的默认配置文件必须要设置 cookie 才可以正常运行
         except JSONDecodeError:
@@ -94,7 +96,7 @@ class Settings:
 
     def update(self, settings: dict | SimpleNamespace):
         """更新配置文件"""
-        with self.file.open("w", encoding="UTF-8") as f:
+        with self.file.open("w", encoding=self.encode) as f:
             dump(
                 settings if isinstance(
                     settings,

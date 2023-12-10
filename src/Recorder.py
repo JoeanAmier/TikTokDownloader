@@ -92,6 +92,7 @@ class BaseLogger:
 
 class LoggerManager(BaseLogger):
     """日志记录"""
+    encode = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
 
     def __init__(self, main_path: Path, console, root="", folder="", name=""):
         super().__init__(main_path, console, root, folder, name)
@@ -106,7 +107,7 @@ class LoggerManager(BaseLogger):
                 f"{filename}.log" if filename else f"{strftime(
                     self._name,
                     localtime())}.log"),
-            encoding="UTF-8")
+            encoding=self.encode)
         formatter = Formatter(format_, datefmt="%Y-%m-%d %H:%M:%S")
         file_handler.setFormatter(formatter)
         self.log = getLogger(__name__)
@@ -158,6 +159,7 @@ class NoneLogger:
 class CSVLogger(NoneLogger):
     """CSV格式记录"""
     __type = "csv"
+    encode = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
 
     def __init__(
             self,
@@ -179,7 +181,7 @@ class CSVLogger(NoneLogger):
     def __enter__(self):
         self.file = self.path.open(
             "a",
-            encoding="UTF-8-SIG" if system() == "Windows" else "UTF-8",
+            encoding=self.encode,
             newline="")
         self.writer = writer(self.file)
         self.title()

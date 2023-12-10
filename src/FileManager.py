@@ -2,6 +2,7 @@ from json import dump
 from json import load
 from json.decoder import JSONDecodeError
 from pathlib import Path
+from platform import system
 
 from rich import print
 
@@ -26,6 +27,8 @@ def retry(function):
 
 
 class Cache:
+    encode = "UTF-8"
+
     def __init__(
             self,
             parameter,
@@ -43,7 +46,7 @@ class Cache:
     def read_cache(self):
         try:
             if self.file.exists():
-                with self.file.open("r", encoding="UTF-8") as f:
+                with self.file.open("r", encoding=self.encode) as f:
                     cache = load(f)
                     self.log.info("读取缓存数据成功\n")
                     return cache
@@ -55,7 +58,7 @@ class Cache:
             return {}
 
     def save_cache(self):
-        with self.file.open("w", encoding="UTF-8") as f:
+        with self.file.open("w", encoding=self.encode) as f:
             dump(self.data, f, indent=4, ensure_ascii=False)
         self.log.info("缓存数据已保存至文件")
 
@@ -190,6 +193,8 @@ class FileManager:
 
 
 class DownloadRecorder:
+    encode = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
+
     def __init__(self, switch, folder: Path, state: bool):
         self.switch = switch
         self.state = state
@@ -205,10 +210,10 @@ class DownloadRecorder:
         if not self.path.is_file():
             blacklist = set()
         else:
-            with self.path.open("r", encoding="utf-8") as f:
+            with self.path.open("r", encoding=self.encode) as f:
                 blacklist = self.__restore_data({line.strip() for line in f})
                 # blacklist = self.__restore_data({i for i in range(100)})
-        self.file = self.path.open("w", encoding="utf-8")
+        self.file = self.path.open("w", encoding=self.encode)
         return blacklist
 
     def __save_file(self, file):
@@ -220,7 +225,7 @@ class DownloadRecorder:
     def backup_file(self):
         if self.file and self.record:
             # print("Backup IDRecorder")  # 调试代码
-            with self.backup.open("w", encoding="utf-8") as f:
+            with self.backup.open("w", encoding=self.encode) as f:
                 self.__save_file(f)
 
     def close(self):
