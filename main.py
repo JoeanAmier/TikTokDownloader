@@ -228,7 +228,11 @@ class TikTokDownloader:
             self.running = False
 
     @start_cookie_task
-    def server(self, server, token=True):
+    def server(
+            self,
+            server: APIServer | WebUI | Server,
+            host="0.0.0.0",
+            token=True):
         """
         服务器模式
         """
@@ -241,7 +245,7 @@ class TikTokDownloader:
         if token:
             app.before_request(self.verify_token)
         open(f"http://127.0.0.1:{SERVER_PORT}")
-        app.run(host=SERVER_HOST, port=SERVER_PORT)
+        app.run(host=host, port=SERVER_PORT)
 
     @staticmethod
     def verify_token():
@@ -280,9 +284,9 @@ class TikTokDownloader:
         elif mode == "3":
             self.complete()
         elif mode == "4":
-            self.server(APIServer)
+            self.server(APIServer, SERVER_HOST)
         elif mode == "5":
-            self.server(WebUI, False)
+            self.server(WebUI, token=False)
         elif mode == "6":
             self.server(Server)
         elif mode == "7":

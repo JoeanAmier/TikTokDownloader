@@ -1006,10 +1006,8 @@ print(response.json())
 
 <h2>Web UI 交互模式</h2>
 <p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品</code> 和 <code>获取直播推流地址</code> 功能，支持局域网远程访问，可以部署至私有服务器，不可直接部署至公开服务器。</p>
-<p>默认禁用局域网访问，如需开启，请修改 <code>src/Customizer.py</code> 文件的 <code>SERVER_HOST</code> 变量。</p>
 <h2>服务器部署模式</h2>
-<p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品</code> 功能，用于部署至公开服务器，为网站访客提供作品下载服务，建议设置参数验证。</p>
-<p>默认禁用局域网访问，如需开启，请修改 <code>src/Customizer.py</code> 文件的 <code>SERVER_HOST</code> 变量。</p>
+<p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品</code> 功能，默认启用局域网访问，用于部署至公开服务器，为网站访客提供作品下载服务，建议设置参数验证。</p>
 <p>支持远程修改 <code>settings.json</code> 配置文件，请参考 <code>配置文件修改接口</code></p>
 <h2>启用/禁用检查更新功能</h2>
 <p>启用检查更新功能后，运行程序时会向 <code>https://github.com/JoeanAmier/TikTokDownloader/releases/latest</code>
