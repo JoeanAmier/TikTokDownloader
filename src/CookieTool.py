@@ -18,6 +18,7 @@ from rich.progress import (
 from src.Customizer import ERROR
 from src.Customizer import PROGRESS
 from src.Customizer import WARNING
+from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.Parameter import VerifyFp
 
@@ -194,6 +195,7 @@ class Register:
         self.verify_fp = VerifyFp.get_verify_fp()
         self.get_params["verifyFp"] = self.verify_fp
         self.get_params["fp"] = self.verify_fp
+        self.__set_ms_token()
         self.get_params["X-Bogus"] = self.xb.get_x_bogus(
             self.get_params, self.ua_code, version)
         if not (
@@ -204,6 +206,10 @@ class Register:
         url = data["data"]["qrcode_index_url"]
         token = data["data"]["token"]
         return url, token
+
+    def __set_ms_token(self):
+        if isinstance(t := MsToken.get_real_ms_token(), dict):
+            self.get_params["msToken"] = t["msToken"]
 
     def check_register(self, token):
         self.check_params["token"] = token

@@ -244,9 +244,11 @@ class DownloadRecorder:
             print(
                 f"[{WARNING}]检测到 IDRecorder 备份文件，是否恢复最后一次备份的数据(YES/NO): [/{WARNING}]", end="")
             if input().upper() == "YES":
-                self.path.write_text(self.backup.read_text())
+                self.path.write_text(
+                    self.backup.read_text(
+                        encoding=self.encode))
                 print(f"[{INFO}]IDRecorder 已恢复最后一次备份的数据，请重新运行程序！[/{INFO}]")
-                return set(self.backup.read_text().split())
+                return set(self.backup.read_text(encoding=self.encode).split())
             else:
                 print(
                     f"[{ERROR}]IDRecorder 数据未恢复，下载任意作品之后，备份数据会被覆盖导致无法恢复！[/{ERROR}]")

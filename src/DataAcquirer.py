@@ -88,6 +88,7 @@ class Acquirer:
         self.proxies = params.proxies
         self.max_retry = params.max_retry
         self.timeout = params.timeout
+        self.cookie = params.cookie
         self.cursor = 0
         self.response = []
         self.finished = False
@@ -136,7 +137,12 @@ class Acquirer:
             return False
 
     def deal_url_params(self, params: dict, version=23):
+        self.__add_ms_token(params)
         params["X-Bogus"] = self.xb.get_x_bogus(params, self.ua_code, version)
+
+    def __add_ms_token(self, params: dict):
+        if isinstance(self.cookie, dict):
+            params["msToken"] = self.cookie["msToken"]
 
     def deal_item_data(
             self,

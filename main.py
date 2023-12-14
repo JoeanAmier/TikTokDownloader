@@ -33,7 +33,7 @@ from src.Customizer import verify_token
 from src.FileManager import DownloadRecorder
 from src.FileManager import FileManager
 from src.Parameter import Headers
-from src.Parameter import NewXBogus
+from src.Parameter import XBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.main_api_server import APIServer
@@ -110,7 +110,7 @@ class TikTokDownloader:
         self.logger = None
         self.blacklist = None
         self.user_agent, self.ua_code = Headers.generate_user_agent()
-        self.x_bogus = NewXBogus()
+        self.x_bogus = XBogus()
         self.settings = Settings(self.PROJECT_ROOT, self.console)
         self.cookie = Cookie(self.settings, self.console)
         self.register = Register(

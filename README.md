@@ -269,12 +269,13 @@ TikTokDownloader
 
 # 💡 代码参考\(Refer\)
 
+* https://github.com/Johnserf-Seed/f2
 * https://github.com/Johnserf-Seed/TikTokDownload
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://github.com/ihmily/DouyinLiveRecorder
 * https://github.com/davidteather/TikTok-Api
 * https://github.com/psf/requests
-* https://github.com/pallets/flask/
+* https://github.com/pallets/flask
 * https://github.com/Textualize/rich
+* https://ffmpeg.org/ffmpeg-all.html
 * https://html5up.net/hyperspace
-* https://ffmpeg.org/
