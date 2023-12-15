@@ -1,17 +1,11 @@
 <div align="center">
 <img src="https://github.com/JoeanAmier/TikTokDownloader/blob/master/static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
 <h1>TikTokDownloader</h1>
-<a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">
 <img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader">
-</a>
 <img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?color=eb6ea5">
 <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?color=fff200">
-<a href="https://sourcery.ai">
 <img src="https://img.shields.io/badge/Sourcery-enabled-884898" alt="Sourcery">
-</a>
-<a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">
 <img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader">
-</a>
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?color=3eb370">
 </div>
 <br>
@@ -80,13 +74,14 @@
 
 ## 批量下载账号发布作品
 
-[![演示视频](docs/程序运行演示.png)](https://www.bilibili.com/video/BV1Nu4y1L7LW/)
+<p><b>🎥 点击图片观看演示视频，建议通过配置文件管理账号，更多介绍请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">文档</a></b></p>
 
-<p><b>🎥 点击图片观看演示视频，建议通过配置文件进行管理账号，更多介绍请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">文档</a></b></p>
+[![演示视频](docs/程序运行演示.png)](https://www.bilibili.com/video/BV1Nu4y1L7LW/)
 
 # 📈 项目状态\(Status\)
 
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已完成测试，所有功能均可正常使用
+* 🟡 未来可能使用协程技术优化项目代码
 * 🟡 未来可能新增可视化编辑配置文件功能
 * 🟡 未来可能支持更多抖音热榜类型
 * 🟡 未来可能新增终端文本用户界面\(TUI\)模式

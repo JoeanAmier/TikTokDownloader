@@ -206,22 +206,24 @@ class Extractor:
             item: dict,
             data: SimpleNamespace,
             images: list) -> None:
-        item["type"] = "图集"
+        self.__set_blank_data(item, data)
         item["downloads"] = " ".join(
             self.safe_extract(
                 i, 'url_list[-1]') for i in images)
-        item["duration"] = "00:00:00"
-        self.extract_cover(item, data)
 
     def extract_image_info_tiktok(
             self,
             item: dict,
             data: SimpleNamespace,
             images: dict) -> None:
-        item["type"] = "图集"
+        self.__set_blank_data(item, data)
         item["downloads"] = " ".join(self.safe_extract(
             i, "display_image.url_list[-1]") for i in images["images"])
+
+    def __set_blank_data(self, item: dict, data: SimpleNamespace, ):
+        item["type"] = "图集"
         item["duration"] = "00:00:00"
+        item["uri"] = ""
         self.extract_cover(item, data)
 
     def extract_video_info(self, item: dict, data: SimpleNamespace) -> None:
@@ -230,6 +232,8 @@ class Extractor:
             data, "video.play_addr.url_list[-1]")
         item["duration"] = self._time_conversion(
             self.safe_extract(data, "video.duration", 0))
+        item["uri"] = self.safe_extract(
+            data, "video.play_addr.uri")
         self.extract_cover(item, data, True)
 
     @staticmethod

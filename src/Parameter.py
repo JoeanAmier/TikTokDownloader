@@ -17,13 +17,14 @@ __all__ = ['Headers', 'XBogus', 'MsToken', 'TtWid', 'VerifyFp']
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/"
                   "120.0.0.0 Safari/537.36 Edg/120.0.0.0"}
+RETRY = 3
 
 
 def retry(function):
     def inner(*args, **kwargs):
         if r := function(*args, **kwargs):
             return r
-        for _ in range(3):
+        for _ in range(RETRY):
             if r := function(*args, **kwargs):
                 return r
         return r

@@ -1,22 +1,16 @@
 <div align="center">
 <img src="https://github.com/JoeanAmier/TikTokDownloader/blob/master/static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
 <h1>TikTokDownloader 文档</h1>
-<a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/license">
 <img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader">
-</a>
 <img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?color=eb6ea5">
 <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?color=fff200">
-<a href="https://sourcery.ai">
 <img src="https://img.shields.io/badge/Sourcery-enabled-884898" alt="Sourcery">
-</a>
-<a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">
 <img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader">
-</a>
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?color=3eb370">
 </div>
 <br>
 <p>🔥 <b>TikTok 主页/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 Requests 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号主页作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
-<p>⭐ <b>此文档正在完善中，如有发现任何错误或描述不清楚之处，请告知作者以便改进。</b></p>
+<p>⭐ <b>此文档正在完善中，如有发现任何错误或描述模糊之处，请告知作者以便改进，欢迎各位使用者共同完善项目文档！</b></p>
 <hr>
 <h1>快速入门</h1>
 <ol>

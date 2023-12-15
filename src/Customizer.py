@@ -97,6 +97,8 @@ def condition_filter(data: dict) -> bool:
     自定义作品筛选规则，例如：筛选作品点赞数、作品类型、视频分辨率等
     需要排除的作品返回 False，否则返回 True
     """
+    # if data["ratio"] in ("720p", "540p"):
+    #     return False
     return True
 
 

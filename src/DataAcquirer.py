@@ -141,7 +141,7 @@ class Acquirer:
         params["X-Bogus"] = self.xb.get_x_bogus(params, self.ua_code, version)
 
     def __add_ms_token(self, params: dict):
-        if isinstance(self.cookie, dict):
+        if isinstance(self.cookie, dict) and "msToken" in self.cookie:
             params["msToken"] = self.cookie["msToken"]
 
     def deal_item_data(
