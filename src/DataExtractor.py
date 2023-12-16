@@ -106,11 +106,11 @@ class Extractor:
         )
         [self.extract_batch(container, self.generate_data_object(item))
          for item in data]
+        self._extract_item_records(container.all_data)
+        self.record_data(recorder, container.all_data)
         self.date_filter(container)
         self.__condition_filter(container)
-        self._extract_item_records(container.all_data)
         self.summary_works(container.all_data)
-        self.record_data(recorder, container.all_data)
         return container.all_data
 
     @staticmethod
@@ -368,9 +368,9 @@ class Extractor:
         )
         [self.extract_batch(container, self.generate_data_object(item))
          for item in data]
-        self.__condition_filter(container)
         self._extract_item_records(container.all_data)
         self.record_data(recorder, container.all_data)
+        self.__condition_filter(container)
         return container.all_data
 
     def comment(self, data: list[dict], recorder,

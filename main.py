@@ -68,15 +68,17 @@ def start_cookie_task(function):
 
 
 class TikTokDownloader:
-    PROJECT_ROOT = Path(__file__).resolve().parent  # 源码运行
-    VERSION = 5.2
-    STABLE = False
+    PROJECT_ROOT = Path(__file__).resolve().parent
+    VERSION_MAJOR = 5
+    VERSION_MINOR = 2
+    VERSION_BETA = False
 
     REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
     LICENCE = "GNU General Public License v3.0"
     DOCUMENTATION_URL = "https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation"
     RELEASES = "https://github.com/JoeanAmier/TikTokDownloader/releases/latest"
-    NAME = f"TikTokDownloader v{VERSION}{'' if STABLE else ' Beta'}"
+    NAME = f"TikTokDownloader v{VERSION_MAJOR}.{
+    VERSION_MINOR}{" Beta" if VERSION_BETA else ""}"
     WIDTH = 50
     LINE = ">" * WIDTH
 
@@ -149,7 +151,7 @@ class TikTokDownloader:
     def version(self):
         self.console.print(f"{self.LINE}\n\n\n{self.NAME.center(
             self.WIDTH)}\n\n\n{self.LINE}\n", style=MASTER)
-        self.console.print(f"项目仓库: {self.REPOSITORY}", style=MASTER)
+        self.console.print(f"项目地址: {self.REPOSITORY}", style=MASTER)
         self.console.print(f"项目文档: {self.DOCUMENTATION_URL}", style=MASTER)
         self.console.print(f"开源许可: {self.LICENCE}\n", style=MASTER)
 
@@ -174,17 +176,18 @@ class TikTokDownloader:
         if self.UPDATE["path"].exists():
             return
         try:
-            response = get(self.RELEASES, allow_redirects=False, timeout=5)
-            tag = float(response.headers['Location'].split("/")[-1])
-            if tag > self.VERSION:
+            response = get(self.RELEASES, timeout=5)
+            latest_major, latest_minor = map(
+                int, response.url.split("/")[-1].split(".", 1))
+            if latest_major > self.VERSION_MAJOR or latest_minor > self.VERSION_MINOR:
                 self.console.print(
-                    f"检测到新版本: {tag}", style=WARNING)
+                    f"检测到新版本: {latest_major}.{latest_minor}", style=WARNING)
                 self.console.print(self.RELEASES)
-            elif tag == self.VERSION and not self.STABLE:
+            elif latest_minor == self.VERSION_MINOR and self.VERSION_BETA:
                 self.console.print(
                     "当前版本为开发版, 可更新至正式版", style=WARNING)
                 self.console.print(self.RELEASES)
-            elif not self.STABLE:
+            elif self.VERSION_BETA:
                 self.console.print("当前已是最新开发版", style=WARNING)
             else:
                 self.console.print("当前已是最新正式版", style=INFO)

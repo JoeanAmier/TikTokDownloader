@@ -98,7 +98,7 @@ def condition_filter(data: dict) -> bool:
     需要排除的作品返回 False，否则返回 True
     """
     # if data["ratio"] in ("720p", "540p"):
-    #     return False
+    #     return False  # 过滤低分辨率的视频作品
     return True
 
 
@@ -106,7 +106,7 @@ def rest(count: int, screen):
     """
     如需采集大量数据，请启用该函数，可以在处理指定数量的数据后，暂停一段时间，然后继续运行
     batches: 每次处理的数据数量上限，比如：每次处理 10 个数据，就会暂停程序
-    rest_time: 程序暂停的时间，单位：秒；比如：每处理 10 个数据，就暂停 10 分钟
+    rest_time: 程序暂停的时间，单位：秒；比如：每处理 10 个数据，就暂停 5 分钟
     启用该函数需要将第 2 行代码取消注释
     仅对 终端命令行模式 的 批量下载账号作品模式 和 批量下载合集作品模式 生效
     说明: 此处的一个数据代表一个账号或者一个合集，并非代表一个数据包
@@ -114,7 +114,7 @@ def rest(count: int, screen):
     # 启用该函数
     # batches = 10  # 根据实际需求修改
     # if not count % batches:
-    #     rest_time = 60 * 10  # 根据实际需求修改
+    #     rest_time = 60 * 5  # 根据实际需求修改
     #     screen(
     #         f"程序已经处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，程序已经暂停运行，"
     #         f"在 {rest_time} 秒后继续处理数据！", style=GENERAL)

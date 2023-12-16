@@ -90,6 +90,7 @@
 * 🟡 未来可能新增账号新作品监测功能
 * 🟡 未来可能新增合集新作品监测功能
 * 🟡 未来可能新增直播开播监测功能
+* 🟡 未来可能新增调用 API 下载作品文件功能
 * 🟡 未来可能新增获取账号关注列表功能
 * 🟡 未来可能新增获取账号收藏合集列表功能
 * 🟡 未来可能优化 TikTok 平台批量下载功能
@@ -110,6 +111,7 @@ TikTokDownloader
 │    ├─ DataAcquirer.py                    // 接口数据获取模块
 │    ├─ DataExtractor.py                   // 数据提取储存模块
 │    ├─ DataDownloader.py                  // 作品文件下载模块
+│    ├─ Extender.py                        // 二次开发接口模块
 │    ├─ FileManager.py                     // 作品文件管理模块
 │    ├─ Parameter.py                       // 加密参数生成模块
 │    ├─ Recorder.py                        // 日志及数据记录模块
@@ -140,11 +142,13 @@ TikTokDownloader
 <ol><b>通过源码运行</b>
 <li>安装不低于 <code>3.12</code> 版本的 <a href="https://www.python.org/">Python</a> 解释器</li>
 <li>下载最新的源码或 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的源码至本地</li>
-<li>运行 <code>pip install -r requirements.txt</code> 命令安装程序所需模块</li>
-<li>运行 main.py</li>
+<li>运行 <code>python -m venv venv</code> 命令创建虚拟环境（可选）</li>
+<li>运行 <code>.\venv\Scripts\activate.ps1</code> 或者 <code>venv\Scripts\activate</code> 命令激活虚拟环境（可选）</li>
+<li>运行 <code>pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt</code> 命令安装程序所需模块</li>
+<li>运行 <code>python .\main.py</code> 或者 <code>python main.py</code> 命令启动 TikTokDownloader</li>
 </ol>
 </li>
-<li>查看屏幕输出的 TikTokDownloader 免责声明，根据提示输入内容</li>
+<li>阅读 TikTokDownloader 的免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
 <ol><b>手动复制粘贴(推荐)</b>
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
@@ -156,7 +160,7 @@ TikTokDownloader
 <li>按照提示操作，将 Cookie 写入配置文件</li>
 </ol>
 </li>
-<li>返回程序界面，依次选择 <code>终端命令行模式</code> --> <code>批量下载链接作品</code></li>
+<li>返回程序界面，依次选择 <code>终端命令行模式</code> -> <code>批量下载链接作品</code></li>
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 <li>更多详细说明请查看 <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">项目文档</a></b></li>
 </ol>
@@ -272,5 +276,6 @@ TikTokDownloader
 * https://github.com/psf/requests
 * https://github.com/pallets/flask
 * https://github.com/Textualize/rich
+* https://github.com/pyinstaller/pyinstaller
 * https://ffmpeg.org/ffmpeg-all.html
 * https://html5up.net/hyperspace

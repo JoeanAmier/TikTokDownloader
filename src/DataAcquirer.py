@@ -247,28 +247,20 @@ class Link:
 
     def user(self, text: str) -> list:
         urls = self.share.run(text)
-        if u := self.account_link.findall(urls):
-            return [i for i in [i[0] for i in u] if i]
-        elif u := self.account_share.findall(urls):
-            return u
-        return []
+        link = [i for i in [i[0]
+                            for i in self.account_link.findall(urls)] if i]
+        share = self.account_share.findall(urls)
+        return link + share
 
     def works(self, text: str) -> tuple:
         urls = self.share.run(text)
-        if u := self.works_link.findall(urls):
-            tiktok = False
-        elif u := self.works_link_tiktok.findall(urls):
-            tiktok = True
-        elif u := self.works_share.findall(urls):
-            tiktok = False
-        elif u := self.account_link.findall(urls):
-            tiktok = False
-            u = [i for i in [i[1] for i in u] if i]
-        # elif u := self.works_id.findall(urls):
-        #     pass
-        else:
-            return None, []
-        return tiktok, u
+        if u := self.works_link_tiktok.findall(urls):
+            return True, u
+        link = self.works_link.findall(urls)
+        share = self.works_share.findall(urls)
+        account = [i for i in [i[1]
+                               for i in self.account_link.findall(urls)] if i]
+        return False, link + share + account
 
     def mix(self, text: str) -> tuple:
         urls = self.share.run(text)

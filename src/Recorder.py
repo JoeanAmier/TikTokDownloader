@@ -157,7 +157,7 @@ class NoneLogger:
 
 
 class CSVLogger(NoneLogger):
-    """CSV格式记录"""
+    """CSV 格式保存数据"""
     __type = "csv"
     encode = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
 
@@ -200,7 +200,7 @@ class CSVLogger(NoneLogger):
 
 
 class XLSXLogger(NoneLogger):
-    """XLSX格式"""
+    """XLSX 格式保存数据"""
     __type = "xlsx"
 
     def __init__(
@@ -242,7 +242,7 @@ class XLSXLogger(NoneLogger):
 
 
 class SQLLogger(NoneLogger):
-    """SQLite保存数据"""
+    """SQLite 数据库保存数据"""
     SHEET_NAME = compile(r"[^\u4e00-\u9fa5a-zA-Z0-9_]")
     CHECK_SQL = "SELECT COUNT(*) FROM sqlite_master WHERE type='table' AND name=?;"
     UPDATE_SQL = "ALTER TABLE ? RENAME TO ?;"
@@ -316,6 +316,11 @@ class SQLLogger(NoneLogger):
             text = self.SHEET_NAME.sub("_", text)
             text = sub(r"_+", "_", text)
         return text
+
+
+class MySQLLogger(SQLLogger):
+    """MySQL 数据库保存数据"""
+    pass
 
 
 class RecordManager:
@@ -728,6 +733,7 @@ class RecordManager:
         "csv": CSVLogger,
         "xlsx": XLSXLogger,
         "sql": SQLLogger,
+        "mysql": NoneLogger,
     }
 
     def run(

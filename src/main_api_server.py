@@ -207,4 +207,8 @@ class APIServer(WebUI):
                 "message": "success" if any(data) else "failure",
             }
 
+        @app.route("/download/", methods=["POST"])
+        def download():
+            return {}
+
         return app

@@ -27,6 +27,7 @@ from src.Customizer import (
     WARNING,
 )
 from src.DataAcquirer import retry
+from src.Extender import DownloadExtender
 
 __all__ = ["Downloader"]
 
@@ -327,7 +328,7 @@ class Downloader:
             count.skipped_video.add(id_)
             return
         tasks.append((
-            item["downloads"],
+            DownloadExtender.deal(item),
             temp_root.with_name(f"{name}.mp4"),
             p,
             f"视频 {id_}",
@@ -407,7 +408,7 @@ class Downloader:
                     url,
                     stream=True,
                     proxies=self.proxies,
-                    headers=headers or self.Phone_headers if tiktok else self.PC_headers,
+                    headers=self.__adapter_headers(show, headers, tiktok),
                     timeout=self.timeout) as response:
                 if not (
                         content := int(
@@ -468,6 +469,15 @@ class Downloader:
         self.add_count(show, id_, count)
         return True
 
+    def __adapter_headers(
+            self,
+            type_: str,
+            headers: dict,
+            tiktok: bool) -> dict:
+        return headers or (
+            self.Phone_headers if tiktok else self.black_headers if DownloadExtender.MODIFY and type_.startswith(
+                "视频") else self.PC_headers)
+
     @staticmethod
     def add_count(type_: str, id_: str, count: SimpleNamespace):
         if type_.startswith("图集"):
@@ -498,8 +508,7 @@ class Downloader:
         return self.cleaner.filter_name(
             self.split.join(
                 data[i] for i in self.name_format), inquire=False, default=str(
-                time())[
-                                                                           :10])
+                time())[:10])
 
     def create_works_folder(
             self,
