@@ -175,10 +175,12 @@ class TikTokDownloader:
             return
         try:
             response = get(self.RELEASES, allow_redirects=False, timeout=5)
+            if response.status_code != 200:
+                self.console.print(f"访问检测新版本失败, 状态码: {response.status_code}", style=WARNING)
+                return
             tag = float(response.headers['Location'].split("/")[-1])
             if tag > self.VERSION:
-                self.console.print(
-                    f"检测到新版本: {tag}", style=WARNING)
+                self.console.print(f"检测到新版本: {tag}", style=WARNING)
                 self.console.print(self.RELEASES)
             elif tag == self.VERSION and not self.STABLE:
                 self.console.print(
