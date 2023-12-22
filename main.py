@@ -175,9 +175,13 @@ class TikTokDownloader:
             return
         try:
             response = get(self.RELEASES, allow_redirects=False, timeout=5)
-            if response.status_code != 200:
-                self.console.print(f"访问检测新版本失败, 状态码: {response.status_code}", style=WARNING)
-                return
+            if response.status_code != 200 and response.status_code == 302:
+                redirect_url = response.headers.get('Location')
+                if redirect_url:
+                    redirected_response = get(redirect_url, timeout=5)
+                    if redirected_response.status_code != 200:
+                        self.console.print(f"访问检测新版本失败, 状态码: {response.status_code}", style=WARNING)
+                        return
             tag = float(response.headers['Location'].split("/")[-1])
             if tag > self.VERSION:
                 self.console.print(f"检测到新版本: {tag}", style=WARNING)
