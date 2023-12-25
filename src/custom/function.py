@@ -1,63 +1,16 @@
 # from random import randint
 # from time import sleep
 # from time import time
+# from .static import GENERAL
 
 __all__ = [
-    "MAX_WORKERS",
     "wait",
     "failure_handling",
     "illegal_nickname",
-    "DESCRIPTION_LENGTH",
-    "TEXT_REPLACEMENT",
     "condition_filter",
-    "SERVER_HOST",
-    "SERVER_PORT",
-    "MASTER",
-    "PROMPT",
-    "WARNING",
-    "ERROR",
-    "INFO",
-    "GENERAL",
-    "PROGRESS",
-    "rest",
-    "COOKIE_UPDATE_INTERVAL",
+    "suspend",
     "verify_token",
-    "BACKUP_RECORD_INTERVAL",
 ]
-
-# 线程池最大线程数量，多线程下载文件时使用
-# 短期大批量下载文件可以适当设置更大的值
-# 长期大批量下载文件不建议设置过大的值，可能会导致下载无响应（可能是抖音端风控）
-MAX_WORKERS = 4
-
-# 作品描述最大长度限制，仅对作品文件名称生效，不影响数据储存，设置时需要考虑系统文件名称最大长度限制
-DESCRIPTION_LENGTH = 64
-
-# 非法字符替换规则，key 为替换前的文本，value 为替换后的文本
-TEXT_REPLACEMENT = {
-    " ": " ",
-}
-
-# 服务器模式主机，仅对 Web API 接口模式 生效，设置为 "0.0.0.0" 可以启用局域网访问（外部可用）
-SERVER_HOST = "127.0.0.1"
-
-# 服务器模式端口，对 Web API 接口模式、Web UI 交互模式、服务器部署模式 生效
-SERVER_PORT = 5000
-
-# Cookie 更新间隔，单位：秒
-COOKIE_UPDATE_INTERVAL = 15 * 60
-
-# 作品下载记录数据备份间隔，单位：秒
-BACKUP_RECORD_INTERVAL = 5 * 60
-
-# 彩色交互提示颜色设置，支持标准颜色名称、Hex、RGB 格式
-MASTER = "b #fff200"
-PROMPT = "b turquoise2"
-GENERAL = "b bright_white"
-PROGRESS = "b bright_magenta"
-ERROR = "b bright_red"
-WARNING = "b bright_yellow"
-INFO = "b bright_green"
 
 
 def wait():
@@ -102,12 +55,12 @@ def condition_filter(data: dict) -> bool:
     return True
 
 
-def rest(count: int, screen):
+def suspend(count: int, screen):
     """
     如需采集大量数据，请启用该函数，可以在处理指定数量的数据后，暂停一段时间，然后继续运行
     batches: 每次处理的数据数量上限，比如：每次处理 10 个数据，就会暂停程序
     rest_time: 程序暂停的时间，单位：秒；比如：每处理 10 个数据，就暂停 5 分钟
-    启用该函数需要将第 2 行代码取消注释
+    启用该函数需要将第 2 行和第 4 行代码取消注释
     仅对 终端命令行模式 的 批量下载账号作品模式 和 批量下载合集作品模式 生效
     说明: 此处的一个数据代表一个账号或者一个合集，并非代表一个数据包
     """

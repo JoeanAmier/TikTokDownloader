@@ -4,11 +4,6 @@ from random import choice
 from time import time
 from types import SimpleNamespace
 
-from src.Customizer import (
-    WARNING,
-)
-from src.Customizer import failure_handling
-from src.Customizer import rest
 from src.DataAcquirer import (
     Link,
     Account,
@@ -26,6 +21,11 @@ from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
 from src.FileManager import Cache
 from src.Recorder import RecordManager
+from src.custom import (
+    WARNING,
+)
+from src.custom import failure_handling
+from src.custom import suspend
 
 __all__ = [
     "prompt",
@@ -251,7 +251,7 @@ class TikTok:
             # break  # 调试代码
             count.success += 1
             if index != len(self.accounts):
-                rest(index, self.console.print)
+                suspend(index, self.console.print)
         self.__summarize_results(count)
 
     def check_sec_user_id(self, sec_user_id: str) -> str:
@@ -278,7 +278,7 @@ class TikTok:
                     break
                 count.success += 1
                 if index != len(links):
-                    rest(index, self.console.print)
+                    suspend(index, self.console.print)
             self.__summarize_results(count)
 
     def deal_account_works(
@@ -559,7 +559,7 @@ class TikTok:
                     break
                 count.success += 1
                 if index != len(ids):
-                    rest(index, self.console.print)
+                    suspend(index, self.console.print)
             self.__summarize_results(count)
 
     def mix_batch(self, root, params, logger):
@@ -586,7 +586,7 @@ class TikTok:
                 break
             count.success += 1
             if index != len(self.mix):
-                rest(index, self.console.print)
+                suspend(index, self.console.print)
         self.__summarize_results(count, "合集")
 
     def _deal_mix_works(self,

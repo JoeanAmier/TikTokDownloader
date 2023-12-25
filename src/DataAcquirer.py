@@ -20,11 +20,11 @@ from rich.progress import (
 )
 
 from src.Configuration import Parameter
-from src.Customizer import (
+from src.DataExtractor import Extractor
+from src.custom import (
     PROGRESS
 )
-from src.Customizer import wait
-from src.DataExtractor import Extractor
+from src.custom import wait
 
 __all__ = [
     "retry",

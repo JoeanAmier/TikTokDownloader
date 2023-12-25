@@ -6,7 +6,7 @@ from platform import system
 
 from rich import print
 
-from src.Customizer import (
+from src.custom import (
     ERROR,
     WARNING,
     INFO,

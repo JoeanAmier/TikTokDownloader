@@ -13,11 +13,11 @@ from requests import exceptions
 from requests import get
 
 from src.CookieTool import Register
-from src.Customizer import INFO, ERROR
 from src.DataExtractor import Extractor
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.StringCleaner import Cleaner
+from src.custom import INFO, ERROR
 
 __all__ = ["Settings", "Parameter"]
 

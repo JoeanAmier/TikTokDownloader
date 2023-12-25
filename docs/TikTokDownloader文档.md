@@ -1,12 +1,14 @@
 <div align="center">
 <img src="https://github.com/JoeanAmier/TikTokDownloader/blob/master/static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
 <h1>TikTokDownloader 文档</h1>
-<img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader">
-<img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?color=eb6ea5">
-<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?color=fff200">
-<img src="https://img.shields.io/badge/Sourcery-enabled-884898" alt="Sourcery">
-<img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader">
-<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?color=3eb370">
+<img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ff7a45">
+<img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?style=for-the-badge&color=fa8c16">
+<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ff4d4f">
+<img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/JoeanAmier/TikTokDownloader?style=for-the-badge&color=13c2c2">
+<br>
+<img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader?style=for-the-badge&color=f759ab">
+<img src="https://img.shields.io/badge/Sourcery-enabled-884898?style=for-the-badge&color=1890ff" alt="">
+<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=for-the-badge&color=52c41a">
 </div>
 <br>
 <p>🔥 <b>TikTok 主页/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 Requests 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号主页作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
@@ -587,7 +589,7 @@ document.body.removeChild(downloadLink);
 <li><code>https://www.douyin.com/user/账号ID</code></li>
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
-<p>如果需要大批量采集账号作品，建议启用 <code>src/Customizer.py</code> 文件的 <code>rest</code> 函数。</p>
+<p>如果需要大批量采集账号作品，建议启用 <code>src/Customizer.py</code> 文件的 <code>suspend</code> 函数。</p>
 <p>如果当前账号昵称或账号标识不是有效的文件夹名称时，程序会提示用户输入临时的账号标识，以便程序继续处理账号。</p>
 <p>处理多个账号时，如果某个账号获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/Customizer.py</code> 文件修改功能）</p>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
@@ -644,7 +646,7 @@ document.body.removeChild(downloadLink);
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/collection/合集ID</code></li>
 </ul>
-<p>如果需要大批量采集合集作品，建议启用 <code>src/Customizer.py</code> 文件的 <code>rest</code> 函数。</p>
+<p>如果需要大批量采集合集作品，建议启用 <code>src/Customizer.py</code> 文件的 <code>suspend</code> 函数。</p>
 <p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会提示用户输入临时的合集标识，以便程序继续处理合集。</p>
 <p>处理多个合集时，如果某个合集获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/Customizer.py</code> 文件修改功能）</p>
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>

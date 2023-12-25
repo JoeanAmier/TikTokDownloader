@@ -16,9 +16,15 @@ from src.Configuration import Parameter
 from src.Configuration import Settings
 from src.CookieTool import Cookie
 from src.CookieTool import Register
-from src.Customizer import BACKUP_RECORD_INTERVAL
-from src.Customizer import COOKIE_UPDATE_INTERVAL
-from src.Customizer import (
+from src.FileManager import DownloadRecorder
+from src.FileManager import FileManager
+from src.Parameter import Headers
+from src.Parameter import XBogus
+from src.Recorder import BaseLogger
+from src.Recorder import LoggerManager
+from src.custom import BACKUP_RECORD_INTERVAL
+from src.custom import COOKIE_UPDATE_INTERVAL
+from src.custom import (
     MASTER,
     WARNING,
     PROMPT,
@@ -26,16 +32,10 @@ from src.Customizer import (
     ERROR,
     GENERAL
 )
-from src.Customizer import SERVER_HOST
-from src.Customizer import SERVER_PORT
-from src.Customizer import TEXT_REPLACEMENT
-from src.Customizer import verify_token
-from src.FileManager import DownloadRecorder
-from src.FileManager import FileManager
-from src.Parameter import Headers
-from src.Parameter import XBogus
-from src.Recorder import BaseLogger
-from src.Recorder import LoggerManager
+from src.custom import SERVER_HOST
+from src.custom import SERVER_PORT
+from src.custom import TEXT_REPLACEMENT
+from src.custom import verify_token
 from src.main_api_server import APIServer
 from src.main_complete import TikTok
 from src.main_complete import prompt
@@ -70,8 +70,8 @@ def start_cookie_task(function):
 class TikTokDownloader:
     PROJECT_ROOT = Path(__file__).resolve().parent
     VERSION_MAJOR = 5
-    VERSION_MINOR = 2
-    VERSION_BETA = False
+    VERSION_MINOR = 3
+    VERSION_BETA = True
 
     REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
     LICENCE = "GNU General Public License v3.0"
@@ -319,10 +319,7 @@ class TikTokDownloader:
         self.check_settings()
         if self.disclaimer():
             self.main_menu(self.parameter.default_mode)
-        self.delete_temp()
-        self.event.set()
-        self.blacklist.close()
-        self.parameter.logger.info("程序结束运行")
+        self.close()
 
     def delete_temp(self):
         rmtree(self.PROJECT_ROOT.joinpath("./cache/temp").resolve())
@@ -337,6 +334,12 @@ class TikTokDownloader:
             self.blacklist.backup_file()
             self.event.wait(BACKUP_RECORD_INTERVAL)
         self.blacklist.backup_file()
+
+    def close(self):
+        self.delete_temp()
+        self.event.set()
+        self.blacklist.close()
+        self.parameter.logger.info("程序结束运行")
 
 
 if __name__ == '__main__':

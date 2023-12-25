@@ -1,12 +1,14 @@
 <div align="center">
 <img src="https://github.com/JoeanAmier/TikTokDownloader/blob/master/static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
 <h1>TikTokDownloader</h1>
-<img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader">
-<img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?color=eb6ea5">
-<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?color=fff200">
-<img src="https://img.shields.io/badge/Sourcery-enabled-884898" alt="Sourcery">
-<img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader">
-<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?color=3eb370">
+<img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ff7a45">
+<img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?style=for-the-badge&color=fa8c16">
+<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ff4d4f">
+<img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/JoeanAmier/TikTokDownloader?style=for-the-badge&color=13c2c2">
+<br>
+<img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader?style=for-the-badge&color=f759ab">
+<img src="https://img.shields.io/badge/Sourcery-enabled-884898?style=for-the-badge&color=1890ff" alt="">
+<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=for-the-badge&color=52c41a">
 </div>
 <br>
 <p>🔥 <b>TikTok 主页/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 Requests 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号主页作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
@@ -81,7 +83,8 @@
 # 📈 项目状态\(Status\)
 
 * 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已完成测试，所有功能均可正常使用
-* 🟡 未来可能使用协程技术优化项目代码
+* 🟢 正在重构项目代码，优化项目结构
+* 🟢 即将使用协程技术优化项目代码
 * 🟡 未来可能新增可视化编辑配置文件功能
 * 🟡 未来可能支持更多抖音热榜类型
 * 🟡 未来可能新增终端文本用户界面\(TUI\)模式
@@ -96,38 +99,6 @@
 * 🟡 未来可能优化 TikTok 平台批量下载功能
 * 🔴 最新版本的源码可能存在不稳定的 Bug
 * 🔴 如果在使用过程中发现程序 Bug，请及时告知作者修复
-
-# 📁 项目结构\(Structure\)
-
-```text
-TikTokDownloader
-├─ main.py                                 // 项目程序启动入口
-├─ requirements.txt                        // 程序所需第三方模块信息
-├─ settings.json                           // 运行参数配置文件
-├─ src                                     // 项目模块源码文件夹
-│    ├─ CookieTool.py                      // Cookie 处理模块
-│    ├─ Customizer.py                      // 项目代码调整模块
-│    ├─ Configuration.py                   // 配置文件处理模块
-│    ├─ DataAcquirer.py                    // 接口数据获取模块
-│    ├─ DataExtractor.py                   // 数据提取储存模块
-│    ├─ DataDownloader.py                  // 作品文件下载模块
-│    ├─ Extender.py                        // 二次开发接口模块
-│    ├─ FileManager.py                     // 作品文件管理模块
-│    ├─ Parameter.py                       // 加密参数生成模块
-│    ├─ Recorder.py                        // 日志及数据记录模块
-│    ├─ StringCleaner.py                   // 非法字符处理模块
-│    ├─ main_complete.py                   // 终端命令行模式启动入口
-│    ├─ main_server.py                     // 服务器部署模式启动入口
-│    ├─ main_api_server.py                 // Web API 接口模式启动入口
-│    └─ main_web_UI.py                     // Web UI 交互模式启动入口
-├─ cache                                   // 缓存数据文件夹
-│    ├─ temp                               // 下载文件临时文件夹
-│    ├─ AccountCache.json                  // 账号管理缓存数据
-│    └─ IDRecorder.txt                     // 作品下载记录数据
-├─ static                                  // 静态资源文件夹
-├─ templates                               // HTML 模板文件夹
-└─ docs                                    // 项目文档资源文件夹
-```
 
 # 📋 项目说明\(Instructions\)
 
@@ -199,12 +170,10 @@ TikTokDownloader
 <li>获取私密账号的发布作品数据需要登录后的 Cookie，且登录的账号需要关注该私密账号</li>
 <li>批量下载账号作品或合集作品时，如果对应的昵称或标识发生变化，程序会自动更新已下载作品文件名称中的昵称和标识</li>
 <li>程序下载文件时会先将文件下载至临时文件夹，下载完成后再移动至储存文件夹；程序运行结束时会清空临时文件夹</li>
-<li>如果想要修改程序功能，可以直接修改 <code>src/Customizer.py</code> 文件内容，支持自定义大部分程序功能</li>
 <li><code>批量下载收藏作品模式</code> 目前仅支持下载当前已登录 Cookie 对应账号的收藏作品，暂不支持多账号</li>
 <li>如果想要程序使用代理，必须在 <code>settings.json</code> 设置 <code>proxies</code> 参数，否则程序不会使用代理</li>
 <li>部分使用者反馈，新发布的作品过早下载会下载到低分辨率的文件，一段时间后才能下载到高分辨率文件，但时间规律尚不明确</li>
 <li>退出程序时，请以正常方式结束运行或者按下 Ctrl + C 结束运行，不要直接点击终端窗口的关闭按钮结束运行，否则会导致数据丢失</li>
-<li>程序默认不启用请求延时，但是建议使用者编辑 <code>src/Customizer.py</code> 文件启用随机延时或固定延时，避免频繁请求导致被抖音风控</li>
 <li>如果您的计算机没有合适的程序编辑 JSON 文件，建议使用 <a href="https://try8.cn/tool/format/json">JSON 在线工具</a> 编辑配置文件内容</li>
 <li>当程序请求用户输入内容或链接时，请注意避免输入的内容或链接包含换行符，这可能会导致预期之外的问题</li>
 </ul>

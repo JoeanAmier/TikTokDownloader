@@ -19,15 +19,15 @@ from rich.progress import (
 )
 
 from src.Configuration import Parameter
-from src.Customizer import DESCRIPTION_LENGTH
-from src.Customizer import MAX_WORKERS
-from src.Customizer import (
+from src.DataAcquirer import retry
+from src.Extender import DownloadExtender
+from src.custom import DESCRIPTION_LENGTH
+from src.custom import MAX_WORKERS
+from src.custom import (
     PROGRESS,
     INFO,
     WARNING,
 )
-from src.DataAcquirer import retry
-from src.Extender import DownloadExtender
 
 __all__ = ["Downloader"]
 

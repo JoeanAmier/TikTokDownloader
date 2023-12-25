@@ -15,12 +15,12 @@ from rich.progress import (
     TimeElapsedColumn,
 )
 
-from src.Customizer import ERROR
-from src.Customizer import PROGRESS
-from src.Customizer import WARNING
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.Parameter import VerifyFp
+from src.custom import ERROR
+from src.custom import PROGRESS
+from src.custom import WARNING
 
 __all__ = ["Cookie", "Register"]
 

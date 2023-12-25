@@ -11,7 +11,7 @@ from requests import exceptions
 from requests import post
 from rich import print
 
-from src.Customizer import ERROR
+from src.custom import ERROR
 
 __all__ = ['Headers', 'XBogus', 'MsToken', 'TtWid', 'VerifyFp']
 HEADERS = {

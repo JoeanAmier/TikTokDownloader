@@ -6,7 +6,7 @@ from time import time
 from types import SimpleNamespace
 from urllib.parse import urlparse
 
-from src.Customizer import condition_filter
+from src.custom import condition_filter
 
 __all__ = ["Extractor"]
 
