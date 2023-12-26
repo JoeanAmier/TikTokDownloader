@@ -220,7 +220,8 @@ class DownloadRecorder:
         file.write("\n".join(f"{i}" for i in self.record))
 
     def update_id(self, id_):
-        self.record.add(id_)
+        if self.switch:
+            self.record.add(id_)
 
     def backup_file(self):
         if self.file and self.record:

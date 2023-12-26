@@ -18,9 +18,9 @@ from rich.progress import (
     TransferSpeedColumn,
 )
 
-from src.Configuration import Parameter
 from src.DataAcquirer import retry
 from src.Extender import DownloadExtender
+from src.config import Parameter
 from src.custom import DESCRIPTION_LENGTH
 from src.custom import MAX_WORKERS
 from src.custom import (

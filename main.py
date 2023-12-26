@@ -12,8 +12,6 @@ from requests import exceptions
 from requests import get
 from rich.console import Console
 
-from src.Configuration import Parameter
-from src.Configuration import Settings
 from src.CookieTool import Cookie
 from src.CookieTool import Register
 from src.FileManager import DownloadRecorder
@@ -22,6 +20,8 @@ from src.Parameter import Headers
 from src.Parameter import XBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
+from src.config import Parameter
+from src.config import Settings
 from src.custom import BACKUP_RECORD_INTERVAL
 from src.custom import COOKIE_UPDATE_INTERVAL
 from src.custom import (

@@ -19,8 +19,8 @@ from rich.progress import (
     TimeElapsedColumn,
 )
 
-from src.Configuration import Parameter
 from src.DataExtractor import Extractor
+from src.config import Parameter
 from src.custom import (
     PROGRESS
 )
