@@ -9,8 +9,10 @@ from src.CookieTool import Register
 from src.DataExtractor import Extractor
 from src.Parameter import MsToken
 from src.Parameter import TtWid
-from src.StringCleaner import Cleaner
+from src.module import Cleaner
 from src.module import FFMPEG
+
+__all__ = ["Parameter"]
 
 
 class Parameter:

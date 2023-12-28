@@ -215,10 +215,10 @@ class Extractor:
             self,
             item: dict,
             data: SimpleNamespace,
-            images: dict) -> None:
+            images: SimpleNamespace) -> None:
         self.__set_blank_data(item, data)
         item["downloads"] = " ".join(self.safe_extract(
-            i, "display_image.url_list[-1]") for i in images["images"])
+            i, "display_image.url_list[-1]") for i in images.images)
 
     def __set_blank_data(self, item: dict, data: SimpleNamespace, ):
         item["type"] = "图集"

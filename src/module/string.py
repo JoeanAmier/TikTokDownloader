@@ -5,7 +5,7 @@ from emoji import replace_emoji
 
 from src.custom import illegal_nickname
 
-__all__ = ['Cleaner']
+__all__ = ["Cleaner"]
 
 
 class Cleaner:

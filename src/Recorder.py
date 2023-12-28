@@ -15,8 +15,8 @@ from time import strftime
 from openpyxl import Workbook
 from openpyxl import load_workbook
 
-from src.StringCleaner import Cleaner
 from src.custom import WARNING, ERROR, INFO
+from src.module import Cleaner
 
 __all__ = [
     'BaseLogger',

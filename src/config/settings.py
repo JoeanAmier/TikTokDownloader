@@ -7,6 +7,8 @@ from types import SimpleNamespace
 
 from src.custom import INFO, ERROR
 
+__all__ = ["Settings"]
+
 
 class Settings:
     encode = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
