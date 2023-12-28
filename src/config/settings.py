@@ -63,7 +63,8 @@ class Settings:
         """读取配置文件，如果没有配置文件，则生成配置文件；如果有指定配置文件，则读取指定配置文件"""
         try:
             if custom_settings_file is not None and os.path.exists(custom_settings_file):
-                with open(custom_settings_file, "r", encoding=self.encode) as f:
+                self.file = Path(custom_settings_file)
+                with self.file.open("r", encoding=self.encode) as f:
                     return self.__check(load(f))
             elif self.file.exists():
                 with self.file.open("r", encoding=self.encode) as f:
