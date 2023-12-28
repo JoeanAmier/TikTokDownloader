@@ -1,3 +1,4 @@
+import os.path
 from json import dump
 from json import load
 from json.decoder import JSONDecodeError
@@ -58,10 +59,13 @@ class Settings:
             "修改配置文件 settings.json！\n")
         return self.__default
 
-    def read(self) -> dict:
-        """读取配置文件，如果没有配置文件，则生成配置文件"""
+    def read(self, custom_settings_file: str) -> dict:
+        """读取配置文件，如果没有配置文件，则生成配置文件；如果有指定配置文件，则读取指定配置文件"""
         try:
-            if self.file.exists():
+            if os.path.exists(custom_settings_file):
+                with open(custom_settings_file, "r", encoding=self.encode) as f:
+                    return self.__check(load(f))
+            elif self.file.exists():
                 with self.file.open("r", encoding=self.encode) as f:
                     return self.__check(load(f))
             return self.__create()  # 生成的默认配置文件必须要设置 cookie 才可以正常运行
