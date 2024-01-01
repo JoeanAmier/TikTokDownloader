@@ -12,8 +12,6 @@ from requests import exceptions
 from requests import get
 from rich.console import Console
 
-from src.CookieTool import Cookie
-from src.CookieTool import Register
 from src.FileManager import DownloadRecorder
 from src.FileManager import FileManager
 from src.Parameter import Headers
@@ -41,6 +39,8 @@ from src.main_complete import TikTok
 from src.main_complete import prompt
 from src.main_server import Server
 from src.main_web_UI import WebUI
+from src.module import Cookie
+from src.module import Register
 
 __all__ = []
 

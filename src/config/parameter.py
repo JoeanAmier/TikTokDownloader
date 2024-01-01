@@ -5,12 +5,12 @@ from time import strftime
 from requests import exceptions
 from requests import get
 
-from src.CookieTool import Register
 from src.DataExtractor import Extractor
 from src.Parameter import MsToken
 from src.Parameter import TtWid
 from src.module import Cleaner
 from src.module import FFMPEG
+from src.module import Register
 
 __all__ = ["Parameter"]
 
