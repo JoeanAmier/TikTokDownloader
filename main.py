@@ -1,3 +1,5 @@
+import getopt
+import sys
 from atexit import register
 from pathlib import Path
 from shutil import rmtree
@@ -125,6 +127,7 @@ class TikTokDownloader:
         self.cookie_task = Thread(target=self.periodic_update_cookie)
         self.backup_task = None
         self._abnormal = None
+        self.args = None
 
     @property
     def abnormal(self):
@@ -297,6 +300,20 @@ class TikTokDownloader:
         elif mode == "9":
             self.change_config(self.LOGGING["path"])
 
+    def parse_args(self):
+        short_opts = "-s:"
+        long_opts = ["settings="]
+        try:
+            opts, args = getopt.gnu_getopt(sys.argv[1:], short_opts, long_opts)
+        except getopt.GetoptError:
+            sys.exit("不正确的命令行参数")
+        self.args = {
+            "settings": ""
+        }
+        for opt, arg in opts:
+            if opt in ["-s", "--settings"]:
+                self.args["settings"] = arg
+
     def check_settings(self):
         self.parameter = Parameter(
             self.settings,
@@ -307,12 +324,13 @@ class TikTokDownloader:
             logger=self.logger,
             xb=self.x_bogus,
             console=self.console,
-            **self.settings.read(),
+            **self.settings.read(custom_settings_file=self.args["settings"]),
             blacklist=self.blacklist,
         )
         self.parameter.cleaner.set_rule(TEXT_REPLACEMENT, True)
 
     def run(self):
+        self.parse_args()
         self.check_config()
         self.version()
         self.check_update()
