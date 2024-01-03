@@ -15,7 +15,6 @@ from src.DataAcquirer import (
     Search,
     Hot,
     Collection,
-    TikTokAccount,
 )
 from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
@@ -26,6 +25,7 @@ from src.custom import (
 )
 from src.custom import failure_handling
 from src.custom import suspend
+from src.tools import TikTokAccount
 
 __all__ = [
     "prompt",
