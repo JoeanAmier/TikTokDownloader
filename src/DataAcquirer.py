@@ -1,7 +1,6 @@
 from datetime import date
 from datetime import datetime
 from re import compile
-from time import time
 from types import SimpleNamespace
 from urllib.parse import parse_qs
 from urllib.parse import quote
@@ -23,9 +22,10 @@ from src.custom import (
     PROGRESS
 )
 from src.custom import wait
+from src.tools import retry
+from src.tools import timestamp
 
 __all__ = [
-    "retry",
     "Link",
     "Account",
     "Works",
@@ -37,22 +37,6 @@ __all__ = [
     "Search",
     "Collection",
 ]
-
-
-def retry(function):
-    """发生错误时尝试重新执行，装饰的函数需要返回布尔值"""
-
-    def inner(self, *args, **kwargs):
-        finished = kwargs.pop("finished", False)
-        for i in range(self.max_retry):
-            if result := function(self, *args, **kwargs):
-                return result
-            self.log.warning(f"正在尝试第 {i + 1} 次重试")
-        if not (result := function(self, *args, **kwargs)) and finished:
-            self.finished = True
-        return result
-
-    return inner
 
 
 class Acquirer:
@@ -441,19 +425,15 @@ class Account(Acquirer):
             self.response.append({"author": info})
 
     def generate_temp_data(self):
-        fake_data = self.temp_data()
-        self.log.warning(f"获取账号昵称失败，本次运行将临时使用 {fake_data} 作为账号昵称和 UID")
-        fake_dict = {
+        temp_data = timestamp()
+        self.log.warning(f"获取账号昵称失败，本次运行将临时使用 {temp_data} 作为账号昵称和 UID")
+        temp_dict = {
             "author": {
-                "nickname": fake_data,
-                "uid": fake_data,
+                "nickname": temp_data,
+                "uid": temp_data,
             }
         }
-        self.response.append(fake_dict)
-
-    @staticmethod
-    def temp_data() -> str:
-        return str(time())[:10]
+        self.response.append(temp_dict)
 
     def summary_works(self):
         self.log.info(f"当前账号获取作品数量: {len(self.response)}")
@@ -1075,16 +1055,16 @@ class Collection(Acquirer):
                     self.info.run())):
             self.response.append({"author": info})
         else:
-            temp_data = Account.temp_data()
+            temp_data = timestamp()
             self.log.warning(f"owner_url 参数未设置 或者 获取账号数据失败，本次运行将临时使用 {
             temp_data} 作为账号昵称和 UID")
-            fake_data = {
+            temp_dict = {
                 "author": {
                     "nickname": temp_data,
                     "uid": temp_data,
                 }
             }
-            self.response.append(fake_data)
+            self.response.append(temp_dict)
 
 
 class Info(Acquirer):

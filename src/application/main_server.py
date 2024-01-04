@@ -1,7 +1,7 @@
 from flask import render_template
 from flask import request
 
-from src.main_web_UI import WebUI
+from .main_web_UI import WebUI
 
 __all__ = ["Server"]
 

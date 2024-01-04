@@ -6,6 +6,20 @@ from .function import (
     suspend,
     verify_token,
 )
+from .internal import (
+    PROJECT_ROOT,
+    VERSION_MAJOR,
+    VERSION_MINOR,
+    VERSION_BETA,
+    RELEASES,
+    REPOSITORY,
+    LICENCE,
+    DOCUMENTATION_URL,
+    USERAGENT,
+    X_BOGUS_CODE,
+    RETRY,
+    DISCLAIMER_TEXT,
+)
 from .static import (
     MAX_WORKERS,
     DESCRIPTION_LENGTH,
@@ -44,4 +58,16 @@ __all__ = [
     "PROGRESS",
     "COOKIE_UPDATE_INTERVAL",
     "BACKUP_RECORD_INTERVAL",
+    "PROJECT_ROOT",
+    "VERSION_MAJOR",
+    "VERSION_MINOR",
+    "VERSION_BETA",
+    "REPOSITORY",
+    "LICENCE",
+    "DOCUMENTATION_URL",
+    "RELEASES",
+    "RETRY",
+    "USERAGENT",
+    "X_BOGUS_CODE",
+    "DISCLAIMER_TEXT",
 ]

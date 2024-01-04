@@ -18,34 +18,19 @@ from src.DataAcquirer import (
 )
 from src.DataDownloader import Downloader
 from src.DataExtractor import Extractor
-from src.FileManager import Cache
 from src.Recorder import RecordManager
 from src.custom import (
     WARNING,
 )
 from src.custom import failure_handling
 from src.custom import suspend
+from src.manager import Cache
 from src.tools import TikTokAccount
+from src.tools import choose
 
 __all__ = [
-    "prompt",
     "TikTok",
 ]
-
-
-def prompt(
-        title: str,
-        choose: tuple | list,
-        console,
-        separate=None) -> str:
-    screen = f"{title}:\n"
-    row = 0
-    for i, j in enumerate(choose):
-        screen += f"{i + 1: >2d}. {j}\n"
-        if separate and row in separate:
-            screen += f"{'=' * 25}\n"
-        row += 1
-    return console.input(screen)
 
 
 def check_storage_format(function):
@@ -217,7 +202,7 @@ class TikTok:
 
     def account_acquisition_interactive(self):
         root, params, logger = self.record.run(self.parameter)
-        select = prompt("请选择账号链接来源",
+        select = choose("请选择账号链接来源",
                         ("使用 accounts_urls 参数的账号链接(推荐)",
                          "手动输入待采集的账号链接"), self.console)
         if select == "1":
@@ -529,7 +514,7 @@ class TikTok:
 
     def mix_interactive(self):
         root, params, logger = self.record.run(self.parameter, type_="mix")
-        select = prompt("请选择合集链接来源",
+        select = choose("请选择合集链接来源",
                         ("使用 mix_urls 参数的合集链接(推荐)",
                          "手动输入待采集的合集/作品链接"), self.console)
         if select == "1":
@@ -667,7 +652,7 @@ class TikTok:
 
     @check_storage_format
     def user_interactive(self):
-        select = prompt(
+        select = choose(
             "请选择账号链接来源",
             ("使用 accounts_urls 参数的账号链接",
              "手动输入待采集的账号链接"), self.console)
@@ -853,7 +838,7 @@ class TikTok:
 
     def run(self):
         while self.running:
-            select = prompt(
+            select = choose(
                 "请选择采集功能",
                 (
                     "批量下载账号作品(TikTok)",

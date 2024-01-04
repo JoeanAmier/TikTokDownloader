@@ -18,8 +18,6 @@ from rich.progress import (
     TransferSpeedColumn,
 )
 
-from src.DataAcquirer import retry
-from src.Extender import DownloadExtender
 from src.config import Parameter
 from src.custom import DESCRIPTION_LENGTH
 from src.custom import MAX_WORKERS
@@ -28,6 +26,8 @@ from src.custom import (
     INFO,
     WARNING,
 )
+from src.extend import VideoDownloader
+from src.tools import retry
 
 __all__ = ["Downloader"]
 
@@ -170,7 +170,7 @@ class Downloader:
                 headers=self.black_headers)
 
     def generate_live_tasks(
-            self, data: list[tuple[dict, str]], tasks: list, commands: list):
+            self, data: list[tuple], tasks: list, commands: list):
         for i, f, m in data:
             name = self.cleaner.filter_name(
                 f'{
@@ -328,7 +328,7 @@ class Downloader:
             count.skipped_video.add(id_)
             return
         tasks.append((
-            DownloadExtender.deal(item),
+            VideoDownloader.deal(item),
             temp_root.with_name(f"{name}.mp4"),
             p,
             f"视频 {id_}",
@@ -475,7 +475,7 @@ class Downloader:
             headers: dict,
             tiktok: bool) -> dict:
         return headers or (
-            self.Phone_headers if tiktok else self.black_headers if DownloadExtender.MODIFY and type_.startswith(
+            self.Phone_headers if tiktok else self.black_headers if VideoDownloader.MODIFY and type_.startswith(
                 "视频") else self.PC_headers)
 
     @staticmethod

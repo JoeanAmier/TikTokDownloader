@@ -3,7 +3,7 @@ from flask import request
 from flask import url_for
 
 from src.DataAcquirer import Live
-from src.main_complete import TikTok
+from .main_complete import TikTok
 
 __all__ = ["WebUI"]
 

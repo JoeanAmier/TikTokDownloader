@@ -1,9 +1,9 @@
 from types import SimpleNamespace
 
-__all__ = ["DownloadExtender"]
+__all__ = ["VideoDownloader"]
 
 
-class DownloadExtender:
+class VideoDownloader:
     MODIFY = False
 
     @staticmethod

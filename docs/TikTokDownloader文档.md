@@ -511,7 +511,7 @@
 </ul>
 
 <h1>高级配置</h1>
-<p>如果想要进一步修改程序功能，可以编辑 <code>src/Customizer.py</code> 文件（不适用于 EXE 程序），按照注释指引和实际需求进行自定义修改。</p>
+<p>如果想要进一步修改程序功能，可以编辑 <code>src/custom</code> 文件夹内容（仅适用于通过源码运行项目），按照注释指引和实际需求进行自定义修改。</p>
 <b>部分可自定义设置的功能：</b>
 <ul>
 <li>设置作品文件下载的最大线程数量</li>
@@ -589,9 +589,9 @@ document.body.removeChild(downloadLink);
 <li><code>https://www.douyin.com/user/账号ID</code></li>
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
-<p>如果需要大批量采集账号作品，建议启用 <code>src/Customizer.py</code> 文件的 <code>suspend</code> 函数。</p>
+<p>如果需要大批量采集账号作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
 <p>如果当前账号昵称或账号标识不是有效的文件夹名称时，程序会提示用户输入临时的账号标识，以便程序继续处理账号。</p>
-<p>处理多个账号时，如果某个账号获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/Customizer.py</code> 文件修改功能）</p>
+<p>处理多个账号时，如果某个账号获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/custom/function.py</code> 文件修改功能）</p>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
 <h3>批量下载链接作品</h3>
 <p>输入作品链接；<strong>支持 TikTok 平台。</strong></p>
@@ -646,9 +646,9 @@ document.body.removeChild(downloadLink);
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/collection/合集ID</code></li>
 </ul>
-<p>如果需要大批量采集合集作品，建议启用 <code>src/Customizer.py</code> 文件的 <code>suspend</code> 函数。</p>
+<p>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
 <p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会提示用户输入临时的合集标识，以便程序继续处理合集。</p>
-<p>处理多个合集时，如果某个合集获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/Customizer.py</code> 文件修改功能）</p>
+<p>处理多个合集时，如果某个合集获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/custom/function.py</code> 文件修改功能）</p>
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
 <h3>批量采集账号数据</h3>
 <ol>
@@ -700,7 +700,7 @@ document.body.removeChild(downloadLink);
 <p>账号文件夹格式为 <code>UID123456789_mark_收藏作品</code> 或者 <code>UID123456789_账号昵称_收藏作品</code></p>
 <h2>Web API 接口模式</h2>
 <p>启动服务器，提供 API 调用功能；支持局域网远程访问，可以部署至私有服务器或者公开服务器，远程部署建议设置参数验证。</p>
-<p>默认禁用局域网访问，如需开启，请修改 <code>src/Customizer.py</code> 文件的 <code>SERVER_HOST</code> 变量。</p>
+<p>默认禁用局域网访问，如需开启，请修改 <code>src/custom/static.py</code> 文件的 <code>SERVER_HOST</code> 变量。</p>
 <p>部分接口支持传入临时 <code>cookie</code> 参数，如果传入临时 <code>cookie</code> 参数，本次 API 请求会使用临时 <code>cookie</code> 向抖音服务器获取数据，如果没有传入 <code>cookie</code> 参数，程序会使用配置文件的 <code>cookie</code> 参数；需要注意临时 <code>cookie</code> 和配置文件 <code>cookie</code> 参数的有效性；程序不会储存临时 <code>cookie</code> 内容。</p>
 <p>目前支持调用 API 获取数据，暂不支持调用 API 下载文件！</p>
 <p><strong>API 接口通用说明：</strong></p>
@@ -1017,7 +1017,7 @@ print(response.json())
 <li>启用该功能：程序会记录下载成功的作品 ID，如果对作品文件进行移动、重命名或者删除操作，程序不会重复下载该作品，如果想要重新下载该作品，需要删除记录文件中对应的作品 ID 后保存文件并重新运行程序。</li>
 <li>禁用该功能：程序会在下载文件前检测文件是否存在，如果文件存在会自动跳过下载该作品，如果对作品文件进行移动、重命名或者删除操作，程序将会重新下载该作品。</li>
 </ul>
-<p>程序会周期性备份作品下载记录数据，当作品下载记录数据丢失时，程序会尝试通过备份文件恢复数据，备份周期可以通过 <code>src/Customizer.py</code> 文件设置。</p>
+<p>程序会周期性备份作品下载记录数据，当作品下载记录数据丢失时，程序会尝试通过备份文件恢复数据，备份周期可以通过 <code>src/custom/static.py</code> 文件设置。</p>
 <p>记录文件路径: <code>./cache/IDRecorder.txt</code></p>
 <p><strong>不建议在程序运行过程中访问记录文件！</strong></p>
 <h2>启用/禁用运行日志记录</h2>

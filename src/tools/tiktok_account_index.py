@@ -3,8 +3,7 @@ from re import compile
 
 from lxml.etree import HTML
 
-from src.DataAcquirer import Account
-from src.DataAcquirer import Link
+from .temporary import timestamp
 
 __all__ = ["TikTokAccount"]
 
@@ -14,6 +13,8 @@ class TikTokAccount:
     uid = "//*[@id=\"main-content-others_homepage\"]/div/div[1]/div[1]/div[2]/div/div[2]/a/@href"
     uid_re = compile(r".*?u=(\d+).*?")
     nickname = "//*[@id=\"main-content-others_homepage\"]/div/div[1]/div[1]/div[2]/h2/text()"
+    works_link_tiktok = compile(
+        r"\S*?https://www\.tiktok\.com/@\S+?/video/(\d{19})\S*?")
 
     def __init__(self, path: str):
         self.path = Path(path.replace("\"", ""))
@@ -38,17 +39,16 @@ class TikTokAccount:
         urls = html_tree.xpath(self.urls)
         uid = self.__extract_uid(html_tree.xpath(self.uid))
         nickname = self.__extract_nickname(html_tree.xpath(self.nickname))
-        return uid, nickname, Link.works_link_tiktok.findall(" ".join(urls))
+        return uid, nickname, self.works_link_tiktok.findall(" ".join(urls))
 
     def __extract_uid(self, text: list):
         if len(text) == 1:
             return u.group(1) if (
                 u := self.uid_re.search(
-                    text[0])) else Account.temp_data()
-        return Account.temp_data()
+                    text[0])) else timestamp()
+        return timestamp()
 
     @staticmethod
     def __extract_nickname(text: list):
-        if len(text) == 1:
-            return text[0].strip() or Account.temp_data()
-        return Account.temp_data()
+        return text[0].strip() or timestamp() if len(
+            text) == 1 else timestamp()

@@ -2,28 +2,13 @@ from json import dump
 from json import load
 from json.decoder import JSONDecodeError
 from pathlib import Path
-from platform import system
-
-from rich import print
 
 from src.custom import (
     ERROR,
-    WARNING,
-    INFO,
 )
+from src.tools import retry_infinite
 
-__all__ = ['Cache', 'FileManager', 'DownloadRecorder']
-
-
-def retry(function):
-    def inner(self, *args, **kwargs):
-        while True:
-            if function(self, *args, **kwargs):
-                return
-            _ = self.console.input(
-                "请关闭所有正在访问作品保存文件夹的窗口和程序，按下回车继续运行！")
-
-    return inner
+__all__ = ["Cache"]
 
 
 class Cache:
@@ -170,7 +155,7 @@ class Cache:
         self.log.info(f"文件 {old_file} 重命名为 {new_file}", False)
         return True
 
-    @retry
+    @retry_infinite
     def rename(self, old_: Path, new_: Path, type_="文件") -> bool:
         try:
             old_.rename(new_)
@@ -181,78 +166,3 @@ class Cache:
         except FileExistsError as e:
             self.console.print(f"{type_}名称重复，重命名失败: {e}", style=ERROR)
             return False
-
-
-class FileManager:
-    @staticmethod
-    def deal_config(path: Path):
-        if path.exists():
-            path.unlink()
-        else:
-            path.touch()
-
-
-class DownloadRecorder:
-    encode = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
-
-    def __init__(self, switch, folder: Path, state: bool):
-        self.switch = switch
-        self.state = state
-        self.backup = folder.joinpath("IDRecorder_backup.txt")
-        self.path = folder.joinpath("IDRecorder.txt")
-        self.file = None
-        self.record = self.__get_set()
-
-    def __get_set(self) -> set:
-        return self.__read_file() if self.switch else set()
-
-    def __read_file(self):
-        if not self.path.is_file():
-            blacklist = set()
-        else:
-            with self.path.open("r", encoding=self.encode) as f:
-                blacklist = self.__restore_data({line.strip() for line in f})
-                # blacklist = self.__restore_data({i for i in range(100)})
-        self.file = self.path.open("w", encoding=self.encode)
-        return blacklist
-
-    def __save_file(self, file):
-        file.write("\n".join(f"{i}" for i in self.record))
-
-    def update_id(self, id_):
-        if self.switch:
-            self.record.add(id_)
-
-    def backup_file(self):
-        if self.file and self.record:
-            # print("Backup IDRecorder")  # 调试代码
-            with self.backup.open("w", encoding=self.encode) as f:
-                self.__save_file(f)
-
-    def close(self):
-        if self.file:
-            self.__save_file(self.file)
-            self.file.close()
-            self.file = None
-            # print("Close IDRecorder")  # 调试代码
-
-    def __restore_data(self, ids: set) -> set:
-        if self.state:
-            return ids
-        print(f"[{ERROR}]程序检测到上次运行可能没有正常结束，您的作品下载记录数据可能已经丢失！\n数据文件路径：{
-        self.path.resolve()}[/{ERROR}]")
-        if self.backup.exists():
-            print(
-                f"[{WARNING}]检测到 IDRecorder 备份文件，是否恢复最后一次备份的数据(YES/NO): [/{WARNING}]", end="")
-            if input().upper() == "YES":
-                self.path.write_text(
-                    self.backup.read_text(
-                        encoding=self.encode))
-                print(f"[{INFO}]IDRecorder 已恢复最后一次备份的数据，请重新运行程序！[/{INFO}]")
-                return set(self.backup.read_text(encoding=self.encode).split())
-            else:
-                print(
-                    f"[{ERROR}]IDRecorder 数据未恢复，下载任意作品之后，备份数据会被覆盖导致无法恢复！[/{ERROR}]")
-        else:
-            print(f"[{ERROR}]未检测到 IDRecorder 备份文件，您的作品下载记录数据无法恢复！[/{ERROR}]")
-        return set()
