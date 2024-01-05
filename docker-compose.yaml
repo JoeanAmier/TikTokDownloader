@@ -1,0 +1,10 @@
+version : '3.8'
+services:
+  tiktok:
+    container_name: tiktokDownloader
+    build:
+      context: .
+    volumes:
+      - ./Download:/app/Download
+    ports:
+      - "5000:5000"
