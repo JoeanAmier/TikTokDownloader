@@ -36,13 +36,13 @@
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
 <li>选择 <code>复制粘贴写入 Cookie</code> 选项，按照提示将 Cookie 写入配置文件</li>
 </ol>
-<ol><b>扫码登录获取</b>
+<ol><b>扫码登录获取(即将移除)</b>
 <li>选择 <code>扫码登陆写入 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</li>
 <li>使用抖音 APP 扫描二维码并登录账号</li>
 <li>按照提示操作，将 Cookie 写入配置文件</li>
 </ol>
 </li>
-<li>返回程序界面，依次选择 <code>终端命令行模式</code> -> <code>批量下载链接作品</code></li>
+<li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品</code></li>
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 </ol>
 <h1>获取 Cookie</h1>
@@ -494,7 +494,7 @@
 }
 ```
 
-<p>代表运行程序自动进入 <code>终端命令行模式</code>，其他示例：<code>4</code> 代表 <code>Web API 接口模式</code>，<code>5</code> 代表 <code>Web UI 交互模式</code>，<code>6</code> 代表 <code>服务器部署模式</code>。</p>
+<p>代表运行程序自动进入 <code>终端交互模式</code>，其他示例：<code>4</code> 代表 <code>Web API 接口模式</code>，<code>5</code> 代表 <code>Web UI 交互模式</code>，<code>6</code> 代表 <code>服务器部署模式</code>。</p>
 <h3>程序代理设置</h3>
 
 ```json
@@ -535,7 +535,7 @@
 <h2>扫码登录写入 Cookie</h2>
 <p>程序自动获取抖音登录二维码，随后会在终端输出二维码，并使用系统默认图片浏览器打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片窗口，程序会自动检查登录结果并将登录后的 Cookie 写入配置文件。</p>
 <p><b>注意：</b>扫码登录获取的 Cookie 有效期更短，且频繁扫码登录容易导致账号被风控！</p>
-<h2>终端命令行模式</h2>
+<h2>终端交互模式</h2>
 <p>功能最全面的模式，支持全部功能。</p>
 <h3>批量下载账号作品(TikTok)</h3>
 <p><b>注意：该模式为半自动模式，需要手动将 TikTok 账号主页保存为 HTML 文件后再使用本工具批量下载！</b></p>
@@ -698,6 +698,8 @@ document.body.removeChild(downloadLink);
 <p>无需输入，需要在配置文件写入已登录的 Cookie，并在 <code>owner_url</code> 参数填入对应的账号主页链接和账号标识（可选）；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
 <p>如果未设置 <code>owner_url</code> 参数，程序会使用临时字符串作为账号昵称和 UID。</p>
 <p>账号文件夹格式为 <code>UID123456789_mark_收藏作品</code> 或者 <code>UID123456789_账号昵称_收藏作品</code></p>
+<h2>后台监测模式</h2>
+<p>敬请期待！</p>
 <h2>Web API 接口模式</h2>
 <p>启动服务器，提供 API 调用功能；支持局域网远程访问，可以部署至私有服务器或者公开服务器，远程部署建议设置参数验证。</p>
 <p>默认禁用局域网访问，如需开启，请修改 <code>src/custom/static.py</code> 文件的 <code>SERVER_HOST</code> 变量。</p>
