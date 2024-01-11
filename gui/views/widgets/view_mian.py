@@ -67,7 +67,7 @@ class ViewMain(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None) -> None:
         super().__init__(parent)
         self.setupUi(self)
-        self.setWindowTitle("谱蓝直播水军小工具 - 小菜")
+        self.setWindowTitle("TikTok视频下载小工具 - 小菜")
         # 变量初始
         self._move = False
         self.win_max_status = False
