@@ -3,26 +3,24 @@
 # @Time   : 2023-12-28 23:25
 # @Name   : controller_main.py
 
-
+import os
 import sys
 from datetime import time
 from types import SimpleNamespace
 
-from PySide6.QtGui import QTextCursor
-from PySide6.QtWidgets import QRadioButton, QCheckBox
-
 from PySide6.QtCore import (QObject, Signal, Slot, QTimer)
+from PySide6.QtGui import QTextCursor
 
 from gui.models.console import ColorfulConsole
 from gui.models.model_main import ModelMain
 from gui.views.widgets.view_mian import ViewMain
-from main import (TikTokDownloader)
 from src.DataAcquirer import (Live, Comment)
-from src.custom import (failure_handling, suspend, WARNING, SERVER_HOST, PROJECT_ROOT)
+from src.application import TikTokDownloader
 from src.application.main_api_server import APIServer
 from src.application.main_complete import TikTok
 from src.application.main_server import Server
 from src.application.main_web_UI import WebUI
+from src.custom import (failure_handling, suspend, WARNING, SERVER_HOST, PROJECT_ROOT)
 from src.tools import TikTokAccount
 
 
@@ -83,11 +81,14 @@ class ControllerMain(QObject):
         self.view.check_box_enable_check_update.clicked.connect(self.manual_update_setting)
         self.view.check_box_enable_download_record.clicked.connect(self.manual_update_setting)
         self.view.check_box_enable_log.clicked.connect(self.manual_update_setting)
+        #
+        self.view.closeAppBtn.clicked.connect(self.close)
 
     def start_run_mode(self):
         self.run_mode_type = self.sender().objectName()  # 获取发送信号的按钮
         # 任务初始化
-        self.view.btn_result.click()
+        if self.run_mode_type == 'btn_run_local':
+            self.view.btn_result.click()
         QTimer.singleShot(500, self._init)
 
     def _init(self):
@@ -95,7 +96,7 @@ class ControllerMain(QObject):
             func_list = [
                 self.ttk.check_config,
                 self.ttk.version,
-                self.ttk.check_update,  # TODO 需要修正, check_update 如果存在文件则会 return
+                self.ttk.check_update,
             ]
             self.model.initial(func_list)
             self.run_mode_map[self.run_mode_type] = True
@@ -107,7 +108,7 @@ class ControllerMain(QObject):
             return
         # 弹窗提示
         self.ttk.console.input(
-            "初次使用，点击左下角查看详细说明文档！\n 大致操作过程如下：\n    1. 设置Cookie\n    2. 选择一个运行模式\n    4. 看图界面就行"
+            "初次使用，点击左下角查看详细说明文档！\n 大致操作过程如下：\n&nbsp;&nbsp;&nbsp;&nbsp;1. 在设置界面选择一个运行模式\n&nbsp;&nbsp;&nbsp;&nbsp;2. 设置Cookie\n&nbsp;&nbsp;&nbsp;&nbsp;3. 看图界面就行"
         )
         self.ttk.change_config(FIRST_USE['path'])
 
@@ -464,3 +465,4 @@ class ControllerMain(QObject):
         self.ttk.event.set()
         self.ttk.blacklist.close()
         self.ttk.parameter.logger.info("程序结束运行")
+        os._exit(0)

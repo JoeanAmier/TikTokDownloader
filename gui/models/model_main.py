@@ -67,7 +67,7 @@ class ModelMain(QObject):
         if self.task_status_map.get(thread_name):
             return
         self.task_status_map[thread_name] = True
-        print('====> 我启动了', self.task_status_map)
+        # print('====> 我启动了', self.task_status_map)
         task = WorkerRunnable(
             func,
             *args,

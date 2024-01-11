@@ -1,3 +1,4 @@
+import os
 from atexit import register
 from pathlib import Path
 from shutil import rmtree
@@ -217,7 +218,8 @@ class TikTokDownloader:
             "如果您看到 WARNING: This is a development server. 提示，这并不是异常错误！\n如需关闭服务器，可以在终端按下 Ctrl + C 快捷键！",
             style=INFO)
         master = server(self.parameter)
-        app = master.run_server(Flask(__name__))
+        # app = master.run_server(Flask(__name__))
+        app = master.run_server(Flask('__main__'))
         register(self.blacklist.close)
         if token:
             app.before_request(self.verify_token)
