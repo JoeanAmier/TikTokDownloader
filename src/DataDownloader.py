@@ -475,8 +475,12 @@ class Downloader:
             headers: dict,
             tiktok: bool) -> dict:
         return headers or (
-            self.Phone_headers if tiktok else self.black_headers if VideoDownloader.MODIFY and type_.startswith(
-                "视频") else self.PC_headers)
+            self.Phone_headers if tiktok else self.PC_headers if self.__video_extend_headers(
+                type_.startswith("视频")) else self.black_headers)
+
+    @staticmethod
+    def __video_extend_headers(video: bool) -> bool:
+        return VideoDownloader.COOKIE if video else True
 
     @staticmethod
     def add_count(type_: str, id_: str, count: SimpleNamespace):

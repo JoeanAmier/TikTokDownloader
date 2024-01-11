@@ -4,7 +4,7 @@ __all__ = ["VideoDownloader"]
 
 
 class VideoDownloader:
-    MODIFY = False
+    COOKIE = True
 
     @staticmethod
     def deal(data: dict | SimpleNamespace, *args, **kwargs) -> str:

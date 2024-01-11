@@ -21,7 +21,7 @@
 
 **截图示例：**
 
-<img src="Cookie教程_1.png" alt="开发人员工具">
+<img src="Cookie教程1.png" alt="开发人员工具">
 
 **方法二\(不适用\)：**
 
@@ -37,4 +37,4 @@
 
 **截图示例：**
 
-<img src="Cookie教程_2.png" alt="开发人员工具">
+<img src="Cookie教程2.png" alt="开发人员工具">

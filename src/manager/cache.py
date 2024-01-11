@@ -3,6 +3,7 @@ from json import load
 from json.decoder import JSONDecodeError
 from pathlib import Path
 
+from src.config import Parameter
 from src.custom import (
     ERROR,
 )
@@ -16,7 +17,7 @@ class Cache:
 
     def __init__(
             self,
-            parameter,
+            parameter: Parameter,
             mark: bool,
             name: bool):
         self.console = parameter.console

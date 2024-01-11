@@ -1,6 +1,7 @@
 from pathlib import Path
 from time import localtime
 from time import strftime
+from types import SimpleNamespace
 
 from requests import exceptions
 from requests import get
@@ -8,9 +9,13 @@ from requests import get
 from src.DataExtractor import Extractor
 from src.encrypt import MsToken
 from src.encrypt import TtWid
+from src.manager import DownloadRecorder
 from src.module import Cleaner
+from src.module import ColorfulConsole
+from src.module import Cookie
 from src.module import FFMPEG
 from src.module import Register
+from .settings import Settings
 
 __all__ = ["Parameter"]
 
@@ -29,14 +34,14 @@ class Parameter:
 
     def __init__(
             self,
-            settings,
-            cookie_object,
+            settings: Settings,
+            cookie_object: Cookie,
             main_path: Path,
             user_agent: str,
             ua_code: tuple,
             logger,
             xb,
-            console,
+            console: ColorfulConsole,
             cookie: dict | str,
             root: str,
             accounts_urls: dict,
@@ -59,7 +64,7 @@ class Parameter:
             default_mode: int,
             owner_url: dict,
             ffmpeg: str,
-            blacklist,
+            blacklist: DownloadRecorder,
             timeout=10,
             **kwargs,
     ):
@@ -95,9 +100,12 @@ class Parameter:
         self.max_pages = self.check_max_pages(max_pages)
         self.blacklist = blacklist
         self.timeout = self.check_timeout(timeout)
-        self.accounts_urls = Extractor.generate_data_object(accounts_urls)
-        self.mix_urls = Extractor.generate_data_object(mix_urls)
-        self.owner_url = Extractor.generate_data_object(owner_url)
+        self.accounts_urls: SimpleNamespace = Extractor.generate_data_object(
+            accounts_urls)
+        self.mix_urls: SimpleNamespace = Extractor.generate_data_object(
+            mix_urls)
+        self.owner_url: SimpleNamespace = Extractor.generate_data_object(
+            owner_url)
         self.default_mode = self.check_default_mode(default_mode)
         self.preview = "static/images/blank.png"
         self.ffmpeg = self._generate_ffmpeg_object(ffmpeg)

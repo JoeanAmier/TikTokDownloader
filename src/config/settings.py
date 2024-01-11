@@ -6,6 +6,7 @@ from platform import system
 from types import SimpleNamespace
 
 from src.custom import INFO, ERROR
+from src.module import ColorfulConsole
 
 __all__ = ["Settings"]
 
@@ -51,7 +52,7 @@ class Settings:
         "ffmpeg": "",
     }  # 默认配置
 
-    def __init__(self, root: Path, console):
+    def __init__(self, root: Path, console: ColorfulConsole):
         self.file = root.joinpath("./settings.json")  # 配置文件
         self.console = console
 

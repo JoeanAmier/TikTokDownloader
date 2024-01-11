@@ -883,7 +883,7 @@ class Search(Acquirer):
             "sort_type": self.sort_type,
             "publish_time": self.publish_time,
             "keyword": self.keyword,
-            "search_source": "switch_tab",
+            "search_source": "tab_search",
             "query_correct_type": "1",
             "is_filter_search": {True: 1, False: 0}[any((self.sort_type, self.publish_time))],
             "from_group_id": "",
