@@ -5,7 +5,7 @@
 
 from collections import defaultdict
 
-from PySide6.QtCore import QRunnable, QObject, QThreadPool, Signal, Slot
+from PySide6.QtCore import (QRunnable, QObject, QThreadPool, Signal, Slot)
 
 
 class WorkerRunnable(QRunnable):

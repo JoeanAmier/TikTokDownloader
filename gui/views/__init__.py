@@ -5,3 +5,4 @@
 
 from gui.views.ui.ui_main import Ui_MainWindow
 from gui.views.widgets.custom_grips import CustomGrip
+from gui.views.widgets.view_main import (ViewMain, TextInputDialog)

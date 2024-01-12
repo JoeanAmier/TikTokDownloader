@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 # @Author : Frica01
 # @Time   : 2023-12-30 18:18
-# @Name   : view_mian.py
+# @Name   : view_main.py
 
 
-from PySide6.QtCore import (Qt, QPoint, QTimer, QEvent, QPropertyAnimation, QEasingCurve, QParallelAnimationGroup, Slot,
-                            QUrl, QRect)
-from PySide6.QtGui import (QColor, QIcon, QDesktopServices, QFontMetrics, QFont)
+from PySide6.QtCore import (Qt, QPoint, QTimer, QEvent, QPropertyAnimation, QEasingCurve, QParallelAnimationGroup)
+from PySide6.QtGui import (QColor, QIcon)
 from PySide6.QtWidgets import (QMainWindow, QGraphicsDropShadowEffect, QSizeGrip, QPushButton, QRadioButton,
-                               QTableWidgetItem, QHeaderView, QCheckBox, QListWidget, QListWidgetItem,
-                               QAbstractItemView, QTableWidget, QApplication, QMessageBox, QDialog, QTextEdit,
+                               QMessageBox, QDialog, QTextEdit,
                                QDialogButtonBox, QVBoxLayout, QButtonGroup, QHBoxLayout)
 
 from gui.views import (CustomGrip, Ui_MainWindow)

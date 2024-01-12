@@ -10,7 +10,7 @@ from collections import defaultdict
 from rich.console import Console
 from rich.style import Style
 
-from gui.views.widgets.view_mian import TextInputDialog
+from gui.views import TextInputDialog
 from src.custom import (
     PROMPT,
     WARNING,

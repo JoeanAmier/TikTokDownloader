@@ -11,9 +11,8 @@ from types import SimpleNamespace
 from PySide6.QtCore import (QObject, Signal, Slot, QTimer)
 from PySide6.QtGui import QTextCursor
 
-from gui.models.console import ColorfulConsole
-from gui.models.model_main import ModelMain
-from gui.views.widgets.view_mian import ViewMain
+from gui.models import (ColorfulConsole, ModelMain)
+from gui.views import ViewMain
 from src.DataAcquirer import (Live, Comment)
 from src.application import TikTokDownloader
 from src.application.main_api_server import APIServer

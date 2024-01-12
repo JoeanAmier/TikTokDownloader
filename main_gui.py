@@ -9,7 +9,8 @@ from ctypes import windll
 
 from PySide6 import QtGui
 from PySide6.QtWidgets import QApplication
-from gui.controllers.controller_main import ControllerMain
+
+from gui.controllers import ControllerMain
 
 if __name__ == '__main__':
     windll.shell32.SetCurrentProcessExplicitAppUserModelID('nothing')
