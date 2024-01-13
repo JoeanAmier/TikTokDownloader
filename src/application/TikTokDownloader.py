@@ -3,6 +3,7 @@ from pathlib import Path
 from shutil import rmtree
 from threading import Event
 from threading import Thread
+from typing import Type
 from webbrowser import open
 
 from flask import Flask
@@ -11,8 +12,6 @@ from flask import request
 from requests import exceptions
 from requests import get
 
-from src.Parameter import Headers
-from src.Parameter import XBogus
 from src.Recorder import BaseLogger
 from src.Recorder import LoggerManager
 from src.config import Parameter
@@ -40,6 +39,8 @@ from src.custom import SERVER_HOST
 from src.custom import SERVER_PORT
 from src.custom import TEXT_REPLACEMENT
 from src.custom import verify_token
+from src.encrypt import Headers
+from src.encrypt import XBogus
 from src.manager import DownloadRecorder
 from src.module import ColorfulConsole
 from src.module import Cookie
@@ -73,9 +74,18 @@ class TikTokDownloader:
     WIDTH = 50
     LINE = ">" * WIDTH
 
-    UPDATE = {"path": PROJECT_ROOT.joinpath("./src/config/Disable_Update")}
-    RECORD = {"path": PROJECT_ROOT.joinpath("./src/config/Disable_Record")}
-    LOGGING = {"path": PROJECT_ROOT.joinpath("./src/config/Enable_Logging")}
+    UPDATE = {
+        "path": PROJECT_ROOT.joinpath("./src/config/Disable_Update"),
+        "tip": "",
+    }
+    RECORD = {
+        "path": PROJECT_ROOT.joinpath("./src/config/Disable_Record"),
+        "tip": "",
+    }
+    LOGGING = {
+        "path": PROJECT_ROOT.joinpath("./src/config/Enable_Logging"),
+        "tip": "",
+    }
     DISCLAIMER = {"path": PROJECT_ROOT.joinpath(
         "./src/config/Consent_Disclaimer")}
 
@@ -99,6 +109,7 @@ class TikTokDownloader:
         self.cookie_task = Thread(target=self.periodic_update_cookie)
         self.backup_task = None
         self._abnormal = None
+        self.function = None
 
     @property
     def abnormal(self):
@@ -108,6 +119,38 @@ class TikTokDownloader:
     def abnormal(self, value: bool):
         if not isinstance(self._abnormal, bool):
             self._abnormal = value
+
+    def __update_menu(self):
+        self.function = (
+            ("复制粘贴写入 Cookie(推荐)", self.write_cookie),
+            ("扫码登录写入 Cookie(弃用)", self.auto_cookie),
+            ("终端交互模式", self.complete),
+            ("后台监测模式", lambda: self.console.print("敬请期待！")),
+            ("Web API 模式", self.__api_object),
+            ("Web UI 模式", self.__web_ui_object),
+            ("服务器部署模式", self.__server_object),
+            (f"{self.UPDATE['tip']}自动检查更新", self.__modify_update),
+            (f"{self.RECORD['tip']}作品下载记录", self.__modify_recode),
+            (f"{self.LOGGING['tip']}运行日志记录", self.__modify_logging),
+        )
+
+    def __api_object(self):
+        self.server(APIServer, SERVER_HOST)
+
+    def __web_ui_object(self):
+        self.server(WebUI, token=False)
+
+    def __server_object(self):
+        self.server(Server)
+
+    def __modify_update(self):
+        self.change_config(self.UPDATE["path"])
+
+    def __modify_recode(self):
+        self.change_config(self.RECORD["path"])
+
+    def __modify_logging(self):
+        self.change_config(self.LOGGING["path"])
 
     def disclaimer(self):
         if not self.DISCLAIMER["path"].exists():
@@ -174,28 +217,21 @@ class TikTokDownloader:
     def main_menu(self, default_mode="0"):
         """选择运行模式"""
         while self.running:
-            if default_mode not in {"3", "4", "5", "6"}:
+            self.__update_menu()
+            if default_mode not in {"3", "4", "5", "6", "7"}:
                 default_mode = choose(
                     "请选择 TikTokDownloader 运行模式",
-                    ("复制粘贴写入 Cookie",
-                     "扫码登录写入 Cookie",
-                     "终端命令行模式",
-                     "Web API 接口模式",
-                     "Web UI 交互模式",
-                     "服务器部署模式",
-                     f"{self.UPDATE['tip']}自动检查更新",
-                     f"{self.RECORD['tip']}作品下载记录",
-                     f"{self.LOGGING['tip']}运行日志记录",),
+                    [i[0] for i in self.function],
                     self.console,
                     separate=(
                         1,
-                        5))
+                        6))
             self.compatible(default_mode)
             default_mode = "0"
 
     @start_cookie_task
     def complete(self):
-        """终端命令行模式"""
+        """终端交互模式"""
         example = TikTok(self.parameter)
         register(self.blacklist.close)
         try:
@@ -207,7 +243,7 @@ class TikTokDownloader:
     @start_cookie_task
     def server(
             self,
-            server: APIServer | WebUI | Server,
+            server: Type[APIServer | WebUI | Server],
             host="0.0.0.0",
             token=True):
         """
@@ -217,7 +253,7 @@ class TikTokDownloader:
             "如果您看到 WARNING: This is a development server. 提示，这并不是异常错误！\n如需关闭服务器，可以在终端按下 Ctrl + C 快捷键！",
             style=INFO)
         master = server(self.parameter)
-        app = master.run_server(Flask(__name__))
+        app = master.run_server(Flask("__main__"))
         register(self.blacklist.close)
         if token:
             app.before_request(self.verify_token)
@@ -254,24 +290,8 @@ class TikTokDownloader:
     def compatible(self, mode: str):
         if mode in {"Q", "q", ""}:
             self.running = False
-        elif mode == "1":
-            self.write_cookie()
-        elif mode == "2":
-            self.auto_cookie()
-        elif mode == "3":
-            self.complete()
-        elif mode == "4":
-            self.server(APIServer, SERVER_HOST)
-        elif mode == "5":
-            self.server(WebUI, token=False)
-        elif mode == "6":
-            self.server(Server)
-        elif mode == "7":
-            self.change_config(self.UPDATE["path"])
-        elif mode == "8":
-            self.change_config(self.RECORD["path"])
-        elif mode == "9":
-            self.change_config(self.LOGGING["path"])
+        elif (n := int(mode) - 1) in set(range(len(self.function))):
+            self.function[n][1]()
 
     def check_settings(self):
         self.parameter = Parameter(
@@ -297,7 +317,8 @@ class TikTokDownloader:
             self.main_menu(self.parameter.default_mode)
         self.close()
 
-    def delete_temp(self):
+    @staticmethod
+    def delete_temp():
         rmtree(PROJECT_ROOT.joinpath("./cache/temp").resolve())
 
     def periodic_update_cookie(self):
