@@ -12,8 +12,6 @@ from flask import request
 from requests import exceptions
 from requests import get
 
-from src.Recorder import BaseLogger
-from src.Recorder import LoggerManager
 from src.config import Parameter
 from src.config import Settings
 from src.custom import BACKUP_RECORD_INTERVAL
@@ -45,6 +43,8 @@ from src.manager import DownloadRecorder
 from src.module import ColorfulConsole
 from src.module import Cookie
 from src.module import Register
+from src.record import BaseLogger
+from src.record import LoggerManager
 from src.tools import FileSwitch
 from src.tools import choose
 from .main_api_server import APIServer

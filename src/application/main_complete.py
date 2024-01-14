@@ -17,14 +17,14 @@ from src.DataAcquirer import (
     Collection,
 )
 from src.DataDownloader import Downloader
-from src.DataExtractor import Extractor
-from src.Recorder import RecordManager
 from src.custom import (
     WARNING,
 )
 from src.custom import failure_handling
 from src.custom import suspend
+from src.extract import Extractor
 from src.manager import Cache
+from src.storage import RecordManager
 from src.tools import TikTokAccount
 from src.tools import choose
 

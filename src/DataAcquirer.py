@@ -16,12 +16,12 @@ from rich.progress import (
     TimeElapsedColumn,
 )
 
-from src.DataExtractor import Extractor
 from src.config import Parameter
 from src.custom import (
     PROGRESS
 )
 from src.custom import wait
+from src.extract import Extractor
 from src.tools import retry
 from src.tools import timestamp
 

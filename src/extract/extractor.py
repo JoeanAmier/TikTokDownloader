@@ -4,15 +4,19 @@ from time import localtime
 from time import strftime
 from time import time
 from types import SimpleNamespace
+from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
 from src.custom import condition_filter
+
+if TYPE_CHECKING:
+    from src.config import Parameter
 
 __all__ = ["Extractor"]
 
 
 class Extractor:
-    def __init__(self, params):
+    def __init__(self, params: "Parameter"):
         self.log = params.logger
         self.date_format = params.date_format
         self.cleaner = params.cleaner

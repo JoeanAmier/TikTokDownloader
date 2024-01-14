@@ -2,20 +2,23 @@ from pathlib import Path
 from time import localtime
 from time import strftime
 from types import SimpleNamespace
+from typing import TYPE_CHECKING
 
 from requests import exceptions
 from requests import get
 
-from src.DataExtractor import Extractor
 from src.encrypt import MsToken
 from src.encrypt import TtWid
-from src.manager import DownloadRecorder
+from src.extract import Extractor
 from src.module import Cleaner
 from src.module import ColorfulConsole
 from src.module import Cookie
 from src.module import FFMPEG
 from src.module import Register
 from .settings import Settings
+
+if TYPE_CHECKING:
+    from src.manager import DownloadRecorder
 
 __all__ = ["Parameter"]
 
@@ -64,7 +67,7 @@ class Parameter:
             default_mode: int,
             owner_url: dict,
             ffmpeg: str,
-            blacklist: DownloadRecorder,
+            blacklist: "DownloadRecorder",
             timeout=10,
             **kwargs,
     ):
@@ -297,7 +300,7 @@ class Parameter:
             self.logger.warning(f"default_mode 参数 {default_mode} 设置错误")
         return "0"
 
-    def update_cookie(self):
+    def update_cookie(self) -> None:
         # self.console.print("Update Cookie")
         if self.cookie:
             self.add_cookie(self.cookie)
@@ -306,7 +309,7 @@ class Parameter:
             self.headers["Cookie"] = self.add_cookie(self.cookie_cache)
 
     @staticmethod
-    def _generate_ffmpeg_object(ffmpeg_path: str):
+    def _generate_ffmpeg_object(ffmpeg_path: str) -> FFMPEG:
         return FFMPEG(ffmpeg_path)
 
     def get_settings_data(self) -> dict:
@@ -335,7 +338,7 @@ class Parameter:
             "ffmpeg": self.ffmpeg.path or "",
         }
 
-    def update_settings_data(self, data: dict, ):
+    def update_settings_data(self, data: dict, ) -> dict:
         for key, value in data.items():
             if key in list(self.check_rules.keys())[3:]:
                 # print(key, hasattr(self, key))  # 调试使用

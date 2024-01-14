@@ -1,7 +1,8 @@
-# from random import randint
-# from time import sleep
+from random import randint
+from time import sleep
+
 # from time import time
-# from .static import GENERAL
+from .static import GENERAL
 
 __all__ = [
     "wait",
@@ -13,17 +14,16 @@ __all__ = [
 ]
 
 
-def wait():
+def wait() -> None:
     """
     设置网络请求间隔时间，仅对获取数据生效，不影响下载文件
-    启用延时需要将第 1 ~ 2 行代码取消注释
     """
     # 随机延时
-    # sleep(randint(15, 35) * 0.1)
+    sleep(randint(15, 45) * 0.1)
     # 固定延时
     # sleep(2)
     # 取消延时
-    pass
+    # pass
 
 
 def failure_handling():
@@ -41,7 +41,7 @@ def illegal_nickname():
     # 询问用户
     return input("当前 账号昵称/标识 或者 合集标题/标识 不是有效的文件夹名称，请输入临时的账号标识或者合集标识：")
     # 使用当前时间戳作为账号昵称/标识或者合集标题/标识
-    # 需要将第 3 行代码取消注释
+    # 需要将第 4 行代码取消注释
     # return str(time())[:10]
 
 
@@ -60,20 +60,19 @@ def suspend(count: int, screen):
     如需采集大量数据，请启用该函数，可以在处理指定数量的数据后，暂停一段时间，然后继续运行
     batches: 每次处理的数据数量上限，比如：每次处理 10 个数据，就会暂停程序
     rest_time: 程序暂停的时间，单位：秒；比如：每处理 10 个数据，就暂停 5 分钟
-    启用该函数需要将第 2 行和第 4 行代码取消注释
     仅对 批量下载账号作品模式 和 批量下载合集作品模式 生效
     说明: 此处的一个数据代表一个账号或者一个合集，并非代表一个数据包
     """
     # 启用该函数
-    # batches = 10  # 根据实际需求修改
-    # if not count % batches:
-    #     rest_time = 60 * 5  # 根据实际需求修改
-    #     screen(
-    #         f"程序已经处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，程序已经暂停运行，"
-    #         f"在 {rest_time} 秒后继续处理数据！", style=GENERAL)
-    #     sleep(rest_time)
+    batches = 10  # 根据实际需求修改
+    if not count % batches:
+        rest_time = 60 * 5  # 根据实际需求修改
+        screen(
+            f"程序已经处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，程序已经暂停运行，"
+            f"在 {rest_time} 秒后继续处理数据！", style=GENERAL)
+        sleep(rest_time)
     # 默认不启用
-    pass
+    # pass
 
 
 def verify_token(token: str) -> bool:

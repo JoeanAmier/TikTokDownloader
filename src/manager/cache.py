@@ -2,12 +2,15 @@ from json import dump
 from json import load
 from json.decoder import JSONDecodeError
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from src.config import Parameter
 from src.custom import (
     ERROR,
 )
 from src.tools import retry_infinite
+
+if TYPE_CHECKING:
+    from src.config import Parameter
 
 __all__ = ["Cache"]
 
@@ -17,7 +20,7 @@ class Cache:
 
     def __init__(
             self,
-            parameter: Parameter,
+            parameter: "Parameter",
             mark: bool,
             name: bool):
         self.console = parameter.console
