@@ -335,7 +335,7 @@ class TikTok:
             m := self.cache.data.get(
                 mid if mix else id_)) else None
         with logger(root, name=f"{'MID' if mix else 'UID'}{mid if mix else id_}_{mark}_{addition}", old=old_mark,
-                    **params) as recorder:
+                    console=self.console, **params) as recorder:
             data = self.extractor.run(
                 data,
                 recorder,
@@ -382,7 +382,7 @@ class TikTok:
 
     def works_interactive(self):
         root, params, logger = self.record.run(self.parameter)
-        with logger(root, **params) as record:
+        with logger(root, console=self.console, **params) as record:
             while url := self._inquire_input("作品"):
                 tiktok, ids = self.links.works(url)
                 if not any(ids):
@@ -505,7 +505,7 @@ class TikTok:
                 continue
             for i in ids:
                 name = f"作品{i}_评论数据"
-                with logger(root, name=name, **params) as record:
+                with logger(root, name=name, console=self.console, **params) as record:
                     if Comment(self.parameter, i).run(self.extractor, record):
                         self.logger.info(f"作品评论数据已储存至 {name}")
                     else:
@@ -645,7 +645,7 @@ class TikTok:
             return None
         if source:
             return data
-        with logger(root, name="UserData", **params) as recorder:
+        with logger(root, name="UserData", console=self.console, **params) as recorder:
             data = self.extractor.run(data, recorder, type_="user")
         self.logger.info("账号数据已保存至文件")
         return data
@@ -763,7 +763,7 @@ class TikTok:
             keyword, type_[1], sort[1], publish[1])
         root, params, logger = self.record.run(self.parameter,
                                                type_=self.DATA_TYPE[type_[0]])
-        with logger(root, name=name, **params) as logger:
+        with logger(root, name=name, console=self.console, **params) as logger:
             search_data = self.extractor.run(
                 search_data,
                 logger,
@@ -788,7 +788,7 @@ class TikTok:
         data = []
         for i, j in board:
             name = f"实时热榜数据_{time_}_{Hot.board_params[i].name}"
-            with logger(root, name=name, **params) as record:
+            with logger(root, name=name, console=self.console, **params) as record:
                 data.append(
                     {Hot.board_params[i].name: self.extractor.run(j, record, type_="hot")})
         self.logger.info(f"热榜数据已储存至: 实时热榜数据_{time_} + 榜单类型")

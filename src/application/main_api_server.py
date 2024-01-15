@@ -70,7 +70,7 @@ class APIServer(WebUI):
             }
             root, params, logger = self._generate_record_params(
                 data, merge=False)
-            with logger(root, **params) as record:
+            with logger(root, console=self.console, **params) as record:
                 return {
                     "data": (d := self.input_links_acquisition(
                         record=record,
@@ -117,7 +117,7 @@ class APIServer(WebUI):
             data = {"source": request.json.get("source", False)}
             root, params, logger = self._generate_record_params(
                 data, merge=False, type_="comment")
-            with logger(root, name=name, **params) as record:
+            with logger(root, name=name, console=self.console, **params) as record:
                 if result := Comment(
                         self.parameter,
                         id_,

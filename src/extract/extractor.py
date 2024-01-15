@@ -195,8 +195,17 @@ class Extractor:
         item["height"] = self.safe_extract(data, "video.height", "-1")
         item["width"] = self.safe_extract(data, "video.width", "-1")
         item["ratio"] = self.safe_extract(data, "video.ratio")
-        item["share_url"] = self.__clean_share_url(
-            self.safe_extract(data, "share_url"))
+        item["share_url"] = self.__generate_link(item["type"], item["id"])
+
+    @staticmethod
+    def __generate_link(type_: str, id_: str) -> str:
+        match type_:
+            case "视频":
+                return f"https://www.douyin.com/video/{id_}"
+            case "图集":
+                return f"https://www.douyin.com/note/{id_}"
+            case _:
+                return ""
 
     @staticmethod
     def __clean_share_url(url: str) -> str:

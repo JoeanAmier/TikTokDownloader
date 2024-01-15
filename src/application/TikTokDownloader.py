@@ -131,6 +131,7 @@ class TikTokDownloader:
             ("服务器部署模式", self.__server_object),
             (f"{self.UPDATE['tip']}自动检查更新", self.__modify_update),
             (f"{self.RECORD['tip']}作品下载记录", self.__modify_recode),
+            # ("编辑作品下载记录", lambda: self.console.print("敬请期待！")),
             (f"{self.LOGGING['tip']}运行日志记录", self.__modify_logging),
         )
 

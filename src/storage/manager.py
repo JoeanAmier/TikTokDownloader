@@ -61,7 +61,7 @@ class RecordManager:
         "账号昵称",
         "年龄",
         "账号签名",
-        "作品地址",
+        "下载地址",
         "音乐作者",
         "音乐标题",
         "音乐链接",
@@ -414,7 +414,7 @@ class RecordManager:
         "csv": CSVLogger,
         "xlsx": XLSXLogger,
         "sql": SQLLogger,
-        "mysql": BaseTextLogger,
+        # "mysql": BaseTextLogger,
     }
 
     def run(

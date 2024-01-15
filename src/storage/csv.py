@@ -3,6 +3,7 @@ from os.path import getsize
 from pathlib import Path
 from platform import system
 
+from src.module import ColorfulConsole
 from .text import BaseTextLogger
 
 
@@ -16,11 +17,13 @@ class CSVLogger(BaseTextLogger):
             root: Path,
             title_line: tuple,
             field_keys: tuple,
+            console: ColorfulConsole,
             old=None,
             name="Solo_Download",
             *args,
             **kwargs):
         super().__init__(*args, **kwargs)
+        self.console = console
         self.file = None  # 文件对象
         self.writer = None  # CSV对象
         self.name = self._rename(root, self.__type, old, name)  # 文件名称

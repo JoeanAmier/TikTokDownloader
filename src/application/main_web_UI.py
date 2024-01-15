@@ -60,7 +60,7 @@ class WebUI(TikTok):
             self.logger.warning(f"{url} 提取作品 ID 失败")
             return {}
         root, params, logger = self.record.run(self.parameter)
-        with logger(root, **params) as record:
+        with logger(root, console=self.console, **params) as record:
             return self.generate_works_data(d) if (d := self.input_links_acquisition(
                 tiktok, ids[:1], record, not download)) else {}
 

@@ -79,6 +79,14 @@
 <td align="center">合集</td>
 </tr>
 <tr>
+<td align="center"><code>https://www.douyin.com/search/关键词?modal_id=作品ID</code></td>
+<td align="center">视频、图集</td>
+</tr>
+<tr>
+<td align="center"><code>https://www.douyin.com/discover?modal_id=作品ID</code></td>
+<td align="center">视频、图集</td>
+</tr>
+<tr>
 <td align="center"><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></td>
 <td align="center">账号、视频、图集</td>
 </tr>
@@ -601,7 +609,9 @@ document.body.removeChild(downloadLink);
 <li><code>https://vm.tiktok.com/分享码/</code></li>
 <li><code>https://www.douyin.com/note/作品ID</code></li>
 <li><code>https://www.douyin.com/video/作品ID</code></li>
+<li><code>https://www.douyin.com/discover?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
+<li><code>https://www.douyin.com/search/关键词?modal_id=作品ID</code></li>
 <li><code>https://www.tiktok.com/@账号昵称/video/作品ID</code></li>
 </ul>
 <p>作品会下载至 <code>root</code> 参数和 <code>folder_name</code> 参数拼接成的文件夹。</p>
@@ -629,7 +639,9 @@ document.body.removeChild(downloadLink);
 <li><code>https://v.douyin.com/分享码/</code></li>
 <li><code>https://www.douyin.com/note/作品ID</code></li>
 <li><code>https://www.douyin.com/video/作品ID</code></li>
+<li><code>https://www.douyin.com/discover?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
+<li><code>https://www.douyin.com/search/关键词?modal_id=作品ID</code></li>
 </ul>
 <p>支持采集评论回复、评论表情、评论图片；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <p>储存名称格式：<code>作品123456789_评论数据</code></p>
@@ -643,7 +655,9 @@ document.body.removeChild(downloadLink);
 <li><code>https://v.douyin.com/分享码/</code></li>
 <li><code>https://www.douyin.com/note/作品ID</code></li>
 <li><code>https://www.douyin.com/video/作品ID</code></li>
+<li><code>https://www.douyin.com/discover?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
+<li><code>https://www.douyin.com/search/关键词?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/collection/合集ID</code></li>
 </ul>
 <p>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>

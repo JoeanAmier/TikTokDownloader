@@ -15,6 +15,7 @@ from src.module import ColorfulConsole
 from src.module import Cookie
 from src.module import FFMPEG
 from src.module import Register
+from src.storage import RecordManager
 from .settings import Settings
 
 if TYPE_CHECKING:
@@ -90,13 +91,13 @@ class Parameter:
         self.name_format = self.check_name_format(name_format)
         self.date_format = self.check_date_format(date_format)
         self.split = self.check_split(split)
-        self.music = music
-        self.folder_mode = folder_mode
+        self.music = self._check_bool(music)
+        self.folder_mode = self._check_bool(folder_mode)
         self.storage_format = self.check_storage_format(storage_format)
-        self.dynamic_cover = dynamic_cover
-        self.original_cover = original_cover
+        self.dynamic_cover = self._check_bool(dynamic_cover)
+        self.original_cover = self._check_bool(original_cover)
         self.proxies = self.check_proxies(proxies)
-        self.download = download
+        self.download = self._check_bool(download)
         self.max_size = self.check_max_size(max_size)
         self.chunk = self.check_chunk(chunk)
         self.max_retry = self.check_max_retry(max_retry)
@@ -137,8 +138,8 @@ class Parameter:
         }
 
     @staticmethod
-    def _check_bool(value: bool) -> bool:
-        return value if isinstance(value, bool) else False
+    def _check_bool(value: bool, default=False) -> bool:
+        return value if isinstance(value, bool) else default
 
     def check_cookie(self, cookie: dict | str) -> dict:
         if isinstance(cookie, dict):
@@ -283,7 +284,7 @@ class Parameter:
         return 10
 
     def check_storage_format(self, storage_format: str) -> str:
-        if storage_format in {"xlsx", "csv", "sql"}:
+        if storage_format in RecordManager.DataLogger.keys():
             self.logger.info(f"storage_format 参数已设置为 {storage_format}", False)
             return storage_format
         if not storage_format:

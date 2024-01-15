@@ -3,6 +3,7 @@ from pathlib import Path
 from openpyxl import Workbook
 from openpyxl import load_workbook
 
+from src.module import ColorfulConsole
 from .text import BaseTextLogger
 
 
@@ -15,11 +16,13 @@ class XLSXLogger(BaseTextLogger):
             root: Path,
             title_line: tuple,
             field_keys: tuple,
+            console: ColorfulConsole,
             old=None,
             name="Solo_Download",
             *args,
             **kwargs):
         super().__init__(*args, **kwargs)
+        self.console = console
         self.book = None  # XLSX数据簿
         self.sheet = None  # XLSX数据表
         self.name = self._rename(root, self.__type, old, name)  # 文件名称

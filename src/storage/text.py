@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from src.tools import retry_infinite
+
 
 class BaseTextLogger:
     def __init__(self, *args, **kwargs):
@@ -14,14 +16,23 @@ class BaseTextLogger:
     def save(self, *args, **kwargs):
         pass
 
-    @staticmethod
-    def _rename(root: Path, type_: str, old: str, new_: str) -> str:
+    @classmethod
+    def _rename(cls, root: Path, type_: str, old: str, new_: str) -> str:
         mark = new_.split("_", 1)
         if not old or mark[-1] == old:
             return new_
         mark[-1] = old
         old_file = root.joinpath(f'{"_".join(mark)}.{type_}')
-        if old_file.exists():
-            new_file = root.joinpath(f"{new_}.{type_}")
-            old_file.rename(new_file)
+        cls.__rename_file(old_file, root.joinpath(f"{new_}.{type_}"))
         return new_
+
+    @staticmethod
+    @retry_infinite
+    def __rename_file(old_file: Path, new_file: Path) -> bool:
+        if old_file.exists() and not new_file.exists():
+            try:
+                old_file.rename(new_file)
+                return True
+            except PermissionError:
+                return False
+        return True
