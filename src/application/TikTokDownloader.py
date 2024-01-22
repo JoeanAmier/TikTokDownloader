@@ -38,7 +38,6 @@ from src.custom import SERVER_HOST
 from src.custom import SERVER_PORT
 from src.custom import TEXT_REPLACEMENT
 from src.custom import verify_token
-from src.encrypt import Headers
 from src.encrypt import XBogus
 from src.manager import DownloadRecorder
 from src.module import ColorfulConsole
@@ -94,7 +93,6 @@ class TikTokDownloader:
         self.console = ColorfulConsole()
         self.logger = None
         self.blacklist = None
-        self.user_agent, self.ua_code = Headers.generate_user_agent()
         self.x_bogus = XBogus()
         self.settings = Settings(PROJECT_ROOT, self.console)
         self.cookie = Cookie(self.settings, self.console)
@@ -102,27 +100,26 @@ class TikTokDownloader:
             self.settings,
             self.console,
             self.x_bogus,
-            self.user_agent,
-            self.ua_code)
+        )
         self.parameter = None
         self.running = True
         self.event = Event()
         self.cookie_task = Thread(target=self.periodic_update_cookie)
         self.backup_task = None
-        self._abnormal = None
-        self.function = None
+        self.__abnormal = None
+        self.__function = None
 
     @property
     def abnormal(self):
-        return self._abnormal
+        return self.__abnormal
 
     @abnormal.setter
     def abnormal(self, value: bool):
-        if not isinstance(self._abnormal, bool):
-            self._abnormal = value
+        if not isinstance(self.__abnormal, bool):
+            self.__abnormal = value
 
     def __update_menu(self):
-        self.function = (
+        self.__function = (
             ("复制粘贴写入 Cookie(推荐)", self.write_cookie),
             ("扫码登录写入 Cookie(弃用)", self.auto_cookie),
             ("终端交互模式", self.complete),
@@ -132,7 +129,7 @@ class TikTokDownloader:
             ("服务器部署模式", self.__server_object),
             (f"{self.UPDATE['tip']}自动检查更新", self.__modify_update),
             (f"{self.RECORD['tip']}作品下载记录", self.__modify_recode),
-            ("编辑作品下载记录", lambda: self.console.print("敬请期待！")),
+            ("删除作品下载记录", lambda: self.console.print("开发中！")),
             (f"{self.LOGGING['tip']}运行日志记录", self.__modify_logging),
         )
 
@@ -223,7 +220,7 @@ class TikTokDownloader:
             if default_mode not in {"3", "4", "5", "6", "7"}:
                 default_mode = choose(
                     "请选择 TikTokDownloader 运行模式",
-                    [i for i, _ in self.function],
+                    [i for i, _ in self.__function],
                     self.console,
                     separate=(
                         1,
@@ -293,16 +290,14 @@ class TikTokDownloader:
         with suppress(ValueError):
             if mode in {"Q", "q", ""}:
                 self.running = False
-            elif (n := int(mode) - 1) in range(len(self.function)):
-                self.function[n][1]()
+            elif (n := int(mode) - 1) in range(len(self.__function)):
+                self.__function[n][1]()
 
     def check_settings(self):
         self.parameter = Parameter(
             self.settings,
             self.cookie,
             main_path=PROJECT_ROOT,
-            user_agent=self.user_agent,
-            ua_code=self.ua_code,
             logger=self.logger,
             xb=self.x_bogus,
             console=self.console,

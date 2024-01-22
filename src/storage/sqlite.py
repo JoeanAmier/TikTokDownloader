@@ -16,8 +16,10 @@ class SQLLogger(BaseSQLLogger):
             title_type: tuple,
             field_keys: tuple,
             old=None,
-            name="Solo_Download", ):
-        super().__init__()
+            name="Solo_Download",
+            *args,
+            **kwargs, ):
+        super().__init__(*args, **kwargs)
         self.db = None  # 数据库
         self.cursor = None  # 游标对象
         self.name = (old, name)  # 数据表名称

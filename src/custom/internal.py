@@ -13,6 +13,7 @@ __all__ = [
     "USERAGENT",
     "X_BOGUS_CODE",
     "DISCLAIMER_TEXT",
+    "BLANK_PREVIEW",
 ]
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -45,8 +46,11 @@ RETRY = 5
 
 USERAGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 "
-    "Safari/537.36 Edg/120.0.0.0")
+    "Safari/537.36")
 X_BOGUS_CODE = (
-    (55, 52,),
-    (153, 253,),
+    (147, 136,),
+    (80, 235,),
+    (170, 197,),
 )
+
+BLANK_PREVIEW = "static/images/blank.png"

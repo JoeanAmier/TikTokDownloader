@@ -13,10 +13,10 @@
 <br>
 <p>🔥 <b>TikTok 主页/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 Requests 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号主页作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
 <p>⭐ Windows 10 及以上用户可前往 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 下载已编译的 exe 程序，开箱即用！</p>
-<p>❤️ 作者仅在 GitHub 发布 TikTokDownloader，未与任何个人或网站合作，且没有任何收费计划！</p>
+<p>❤️ 作者仅在 GitHub 发布 TikTokDownloader，未与任何个人或网站合作发布，项目没有任何收费计划，谨防上当受骗！</p>
 <hr>
 
-# 📝 功能清单\(Function\)
+# 📝 项目功能\(Function\)
 
 * ✅ 下载抖音无水印视频/图集
 * ✅ 下载 TikTok 无水印视频/图集
@@ -82,28 +82,12 @@
 
 # 📈 项目状态\(Status\)
 
-* 🟢 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已完成测试，所有功能均可正常使用
-* 🟢 正在重构项目代码，优化项目结构
-* 🟢 正在使用协程技术优化项目代码
-* 🟡 未来可能新增监听剪贴板下载作品功能
-* 🟡 未来可能新增可视化编辑配置文件功能
-* 🟡 未来可能新增终端文本用户界面\(TUI\)模式
-* 🟡 未来可能支持全功能版的 Web UI 交互模式
-* 🟡 未来可能新增账号新作品监测功能
-* 🟡 未来可能新增合集新作品监测功能
-* 🟡 未来可能新增直播开播监测功能
-* 🟡 未来可能新增调用 API 下载作品功能
-* 🟡 未来可能优化 TikTok 平台批量下载功能
-* 🟡 未来可能支持 TikTok 平台更多功能
-* 🟡 未来可能移除项目部分数据采集功能
-* 🟡 未来可能支持更多抖音热榜类型
-* 🟡 未来可能新增获取账号关注列表功能
-* 🟡 未来可能新增获取账号收藏合集列表功能
-* 🔴 最新版本的源码可能存在不稳定的 Bug
+* 🟢 经过测试，[Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已经验证所有功能正常可用
+* 🟡 TikTokDownloader 开发计划及进度可前往 [Projects](https://github.com/users/JoeanAmier/projects/2) 查阅
+* 🔴 请注意，最新源码可能存在一些不稳定的 Bug
 * 🔴 如果在使用过程中发现程序 Bug，请及时告知作者修复
 * 🔴 采集 TikTok 图集作品导致异常退出，已修复
 * 🔴 某些情况下读取 HTML 文件失败，已修复
-* 🔴 发现 Cookie 会影响下载的视频作品文件分辨率
 
 # 📋 项目说明\(Instructions\)
 
@@ -111,7 +95,7 @@
 
 <ol>
 <li><b>下载 EXE 程序</b> 或者 <b>配置运行环境</b>
-<ol><b>直接运行程序</b>
+<ol><b>下载程序运行</b>
 <li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的 EXE 程序压缩包</li>
 <li>解压后打开程序文件夹，双击运行 <code>main.exe</code></li>
 </ol>
@@ -161,15 +145,18 @@
 |  采集热榜数据  | ❌无需登录  |
 | 下载账号收藏作品 | ✔️需要登录 |
 
-**Cookie 仅需在失效后重新写入配置文件，并非每次运行程序都要写入配置文件！**
-
-**程序获取数据失败时，可以尝试更新 Cookie 或者使用已登录的 Cookie！**
+> * Cookie 仅需在失效后重新写入配置文件，并非每次运行程序都要写入配置文件！
+>
+> * Cookie 会影响下载的视频文件分辨率，如果无法下载 1080P 视频文件，请尝试更新 Cookie！
+>
+> * 程序获取数据失败时，可以尝试更新 Cookie 或者使用已登录的 Cookie！
 
 <hr>
 
 ## 其他说明
 
 <ul>
+<li><b>项目部分功能默认禁用，如需启用功能，请通过源码运行项目，并将相应代码取消注释</b></li>
 <li>程序提示用户输入时，直接回车代表返回上级菜单，输入 <code>Q</code> 或 <code>q</code> 代表结束运行</li>
 <li>由于获取账号喜欢作品和收藏作品数据仅返回喜欢 / 收藏作品的发布日期，不返回操作日期，因此程序需要获取全部喜欢 / 收藏作品数据再进行日期筛选；如果作品数量较多，可能会花费较长的时间；可通过 <code>max_pages</code> 参数控制请求次数</li>
 <li>获取私密账号的发布作品数据需要登录后的 Cookie，且登录的账号需要关注该私密账号</li>
@@ -219,6 +206,9 @@
 <li>QQ Group: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">点击扫码加入群聊</a></li>
 <li>Email: yonglelolu@gmail.com</li>
 </ul>
+<p>
+<b>如果您在使用 TikTokDownloader 的时候遇到问题，请先阅读<a href="https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/main/README-zh_CN.md">《提问的智慧》</a>，然后加入 QQ 群聊寻求帮助！</b>
+</p>
 <p>
 <b>如果您通过 Email 联系我，我可能无法及时查看并回复信息，我会尽力在七天内回复您的邮件；如果有紧急事项或需要更快的回复，请通过其他方式与我联系，谢谢理解！</b>
 </p>

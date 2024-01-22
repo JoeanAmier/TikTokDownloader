@@ -30,9 +30,9 @@ class Cache:
         self.root = parameter.root  # 作品文件保存根目录
         self.mark = mark
         self.name = name
-        self.data = self.read_cache()
+        self.data = self.__read_cache()
 
-    def read_cache(self):
+    def __read_cache(self):
         try:
             if self.file.exists():
                 with self.file.open("r", encoding=self.encode) as f:
@@ -46,7 +46,7 @@ class Cache:
             self.log.warning("缓存数据文件已损坏\n")
             return {}
 
-    def save_cache(self):
+    def __save_cache(self):
         with self.file.open("w", encoding=self.encode) as f:
             dump(self.data, f, indent=4, ensure_ascii=False)
         self.log.info("缓存数据已保存至文件")
@@ -60,12 +60,12 @@ class Cache:
             name: str,
             addition: str, ):
         if self.data.get(id_):
-            self.check_file(solo_mode, type_, id_, mark, name, addition)
+            self.__check_file(solo_mode, type_, id_, mark, name, addition)
         self.data[id_] = {"mark": mark, "name": name}
         self.log.info(f"更新缓存数据: {id_, mark, name}", False)
-        self.save_cache()
+        self.__save_cache()
 
-    def check_file(
+    def __check_file(
             self,
             solo_mode: bool,
             type_: str,
@@ -80,14 +80,14 @@ class Cache:
             self.log.info(f"{old_folder} 文件夹不存在，自动跳过", False)
             return
         if self.data[id_]["mark"] != mark:
-            self.rename_folder(old_folder, type_, id_, mark, addition)
+            self.__rename_folder(old_folder, type_, id_, mark, addition)
             if self.mark:
-                self.scan_file(
+                self.__scan_file(
                     solo_mode, type_, id_, mark, name, addition, field="mark")
         if self.data[id_]["name"] != name and self.name:
-            self.scan_file(solo_mode, type_, id_, mark, name, addition)
+            self.__scan_file(solo_mode, type_, id_, mark, name, addition)
 
-    def rename_folder(
+    def __rename_folder(
             self,
             old_folder,
             type_: str,
@@ -95,7 +95,7 @@ class Cache:
             mark: str,
             addition: str):
         new_folder = self.root.joinpath(f"{type_}{id_}_{mark}_{addition}")
-        self.rename(old_folder, new_folder, "文件夹")
+        self.__rename(old_folder, new_folder, "文件夹")
         self.log.info(f"文件夹 {old_folder} 已重命名为 {new_folder}", False)
 
     def __rename_works_folder(self,
@@ -107,12 +107,12 @@ class Cache:
         if (s := self.data[id_][field]) in old_.name:
             new_ = old_.parent / old_.name.replace(
                 s, {"name": name, "mark": mark}[field], 1)
-            self.rename(old_, new_)
+            self.__rename(old_, new_)
             self.log.info(f"文件夹 {old_} 重命名为 {new_}", False)
             return new_
         return old_
 
-    def scan_file(
+    def __scan_file(
             self,
             solo_mode: bool,
             type_: str,
@@ -128,11 +128,11 @@ class Cache:
                 if f.is_dir():
                     f = self.__rename_works_folder(f, id_, mark, name, field)
                     files = f.iterdir()
-                    self.batch_rename(f, files, id_, mark, name, field)
+                    self.__batch_rename(f, files, id_, mark, name, field)
         else:
-            self.batch_rename(root, item_list, id_, mark, name, field)
+            self.__batch_rename(root, item_list, id_, mark, name, field)
 
-    def batch_rename(
+    def __batch_rename(
             self,
             root: Path,
             files,
@@ -143,9 +143,9 @@ class Cache:
         for old_file in files:
             if (s := self.data[id_][field]) not in old_file.name:
                 break
-            self.rename_file(root, old_file, s, mark, name, field)
+            self.__rename_file(root, old_file, s, mark, name, field)
 
-    def rename_file(
+    def __rename_file(
             self,
             root: Path,
             old_file: Path,
@@ -155,12 +155,12 @@ class Cache:
             field: str):
         new_file = root.joinpath(old_file.name.replace(
             key_words, {"name": name, "mark": mark}[field], 1))
-        self.rename(old_file, new_file)
+        self.__rename(old_file, new_file)
         self.log.info(f"文件 {old_file} 重命名为 {new_file}", False)
         return True
 
     @retry_infinite
-    def rename(self, old_: Path, new_: Path, type_="文件") -> bool:
+    def __rename(self, old_: Path, new_: Path, type_="文件") -> bool:
         try:
             old_.rename(new_)
             return True

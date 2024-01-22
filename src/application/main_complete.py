@@ -113,7 +113,7 @@ class TikTok:
             "mark" in parameter.name_format,
             "nickname" in parameter.name_format
         )
-        self.function = (
+        self.__function = (
             ("批量下载账号作品(TikTok)", self.account_acquisition_interactive_tiktok,),
             ("批量下载账号作品(抖音)", self.account_acquisition_interactive,),
             ("批量下载链接作品(通用)", self.works_interactive,),
@@ -124,6 +124,14 @@ class TikTok:
             ("采集搜索结果数据(抖音)", self.search_interactive,),
             ("采集抖音热榜数据(抖音)", self.hot_interactive,),
             ("批量下载收藏作品(抖音)", self.collection_interactive,),
+        )
+        self.__function_account = (
+            ("使用 accounts_urls 参数的账号链接", self.account_works_batch),
+            ("手动输入待采集的账号链接", self.account_works_inquire)
+        )
+        self.__function_mix = (
+            ("使用 mix_urls 参数的合集链接", self.mix_batch),
+            ("手动输入待采集的合集/作品链接", self.mix_inquire),
         )
 
     def _inquire_input(self, url: str = None, tip: str = None) -> str:
@@ -343,6 +351,8 @@ class TikTok:
         self.logger.info("开始提取作品数据")
         id_, name, mid, title, mark, data = self.extractor.preprocessing_data(
             data, mark, post, mix)
+        self.__display_extracted_information(
+            mix, id_, name, mid, title, mark, )
         addition = addition or ("合集作品" if mix else "发布作品" if post else "喜欢作品")
         old_mark = f"{m["mark"]}_{addition}" if (
             m := self.cache.data.get(
@@ -371,6 +381,18 @@ class TikTok:
         self.download_account_works(
             data, id_, name, mark, mid, title, addition)
         return True
+
+    def __display_extracted_information(
+            self,
+            mix: bool,
+            id_: str,
+            name: str,
+            mid: str,
+            title: str,
+            mark: str,
+    ) -> None:
+        self.logger.info(f"合集标题：{title}；合集标识：{mark}；合集 ID：{mid}", mix, )
+        self.logger.info(f"账号昵称：{name}；账号标识：{mark}；账号 ID：{id_}", not mix, )
 
     def download_account_works(
             self,
@@ -558,7 +580,7 @@ class TikTok:
                 count.success += 1
                 if index != len(ids):
                     suspend(index, self.console.print)
-            self.__summarize_results(count)
+            self.__summarize_results(count, "合集")
 
     def mix_batch(self, root, params, logger):
         count = SimpleNamespace(time=time(), success=0, failed=0)
@@ -854,11 +876,11 @@ class TikTok:
             while self.running:
                 select = choose(
                     "请选择采集功能",
-                    [i for i, _ in self.function],
+                    [i for i, _ in self.__function],
                     self.console)
                 if select in {"Q", "q"}:
                     self.running = False
                 elif not select:
                     break
-                elif (n := int(select) - 1) in range(len(self.function)):
-                    self.function[n][1]()
+                elif (n := int(select) - 1) in range(len(self.__function)):
+                    self.__function[n][1]()

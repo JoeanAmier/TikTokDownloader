@@ -62,7 +62,6 @@ class Acquirer:
 
     def __init__(self, params: Parameter, cookie: str = None):
         self.PC_headers, self.black_headers = self.init_headers(params.headers)
-        self.ua_code = params.ua_code
         self.log = params.logger
         self.xb = params.xb
         self.console = params.console
@@ -117,9 +116,9 @@ class Acquirer:
                 self.log.warning("响应内容为空，可能是接口失效或者 Cookie 失效，请尝试更新 Cookie")
             return False
 
-    def deal_url_params(self, params: dict, version=23):
+    def deal_url_params(self, params: dict, number=8):
         self.__add_ms_token(params)
-        params["X-Bogus"] = self.xb.get_x_bogus(params, self.ua_code, version)
+        params["X-Bogus"] = self.xb.get_x_bogus(params, number)
 
     def __add_ms_token(self, params: dict):
         if isinstance(self.cookie, dict) and "msToken" in self.cookie:
@@ -565,7 +564,6 @@ class Comment(Acquirer):
             }
             if not self.cursor:
                 del params["whale_cut_token"]
-            self.deal_url_params(params, 174)
         else:
             params = {
                 "device_platform": "webapp",
@@ -586,7 +584,7 @@ class Comment(Acquirer):
                 "platform": "PC",
                 "downlink": "10",
             }
-            self.deal_url_params(params)
+        self.deal_url_params(params)
         if not (
                 data := self.send_request(
                     api,
@@ -729,7 +727,7 @@ class Live(Acquirer):
         }
         api = self.live_api_share
         headers = self.black_headers
-        self.deal_url_params(params, 174)
+        self.deal_url_params(params, 4)
         return self.get_live_data(api, params, headers)
 
     @retry
@@ -875,7 +873,7 @@ class Search(Acquirer):
             "platform": "PC",
             "downlink": "10",
         }
-        self.deal_url_params(params, 174 if self.cursor else 23)
+        self.deal_url_params(params, 4 if self.cursor else 8)
         self._get_search_data(
             data.api,
             params,
@@ -903,7 +901,7 @@ class Search(Acquirer):
             "platform": "PC",
             "downlink": "10",
         }
-        self.deal_url_params(params, 174 if self.cursor else 23)
+        self.deal_url_params(params, 4 if self.cursor else 8)
         self._get_search_data(data.api, params, "data", finished=True)
 
     @retry

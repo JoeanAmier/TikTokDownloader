@@ -17,6 +17,7 @@ from rich.progress import (
 
 from src.custom import ERROR
 from src.custom import PROGRESS
+from src.custom import USERAGENT
 from src.custom import WARNING
 from src.encrypt import MsToken
 from src.encrypt import TtWid
@@ -53,17 +54,16 @@ class Register:
         "language": "zh",
     }
 
-    def __init__(self, settings, console, xb, user_agent, ua_code):
+    def __init__(self, settings, console, xb):
         self.xb = xb
         self.settings = settings
         self.console = console
         self.headers = {
-            "User-Agent": user_agent,
+            "User-Agent": USERAGENT,
             "Referer": "https://www.douyin.com/",
             "Cookie": self.generate_cookie(TtWid.get_tt_wid()),
         }
         self.verify_fp = None
-        self.ua_code = ua_code
         self.temp = None
 
     def __check_progress_object(self):
@@ -120,13 +120,12 @@ class Register:
         elif s == "Linux":  # Linux
             run(["xdg-open", self.temp])
 
-    def get_qr_code(self, version=23):
+    def get_qr_code(self):
         self.verify_fp = VerifyFp.get_verify_fp()
         self.get_params["verifyFp"] = self.verify_fp
         self.get_params["fp"] = self.verify_fp
         self.__set_ms_token()
-        self.get_params["X-Bogus"] = self.xb.get_x_bogus(
-            self.get_params, self.ua_code, version)
+        self.get_params["X-Bogus"] = self.xb.get_x_bogus(self.get_params)
         if not (
                 data := self.request_data(
                     url=self.get_url,

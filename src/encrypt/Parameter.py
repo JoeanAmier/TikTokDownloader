@@ -12,8 +12,9 @@ from requests import post
 from rich import print
 
 from src.custom import ERROR
+from src.custom import X_BOGUS_CODE
 
-__all__ = ['Headers', 'XBogus', 'MsToken', 'TtWid', 'VerifyFp']
+__all__ = ['XBogus', 'MsToken', 'TtWid', 'VerifyFp']
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/"
                   "120.0.0.0 Safari/537.36 Edg/120.0.0.0"}
@@ -46,106 +47,13 @@ def send_request(url: str, headers: dict, data: str):
         return False
 
 
-class Headers:
-    USER_AGENT = (
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome"
-            "/115.0.0.0 Safari/537.36 Edg/115.0.1901.183",
-            ((86,
-              138),
-             (238,
-              238,
-              ),
-             )),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome"
-            "/114.0.0.0 Safari/537.36",
-            ((42,
-              110),
-             (95,
-              187),
-             )),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome"
-            "/115.0.0.0 Safari/537.36",
-            ((115,
-              235,
-              ),
-             (151,
-              95),
-             )),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome"
-            "/115.0.0.0 Safari/537.36 Edg/115.0.1901.188",
-            ((155,
-              54),
-             (11,
-              101))),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome"
-            "/114.0.0.0 Safari/537.36 Edg/114.0.1788.0",
-            ((56,
-              22),
-             (77,
-              86)),
-        ),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome"
-            "/114.0.0.0 Safari/537.36 Edg/114.0.0.0",
-            ((116,
-              247),
-             (11,
-              146))),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; WOW64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome"
-            "/113.0.5666.197 Safari/537.36",
-            ((244,
-              163),
-             (18,
-              102))),
-        (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome"
-            "/113.0.0.0 Safari/537.36",
-            ((107,
-              91),
-             (236,
-              31))),
-    )
-
-    @staticmethod
-    def generate_user_agent() -> tuple[str, tuple]:
-        return Headers.USER_AGENT[randint(0, len(Headers.USER_AGENT) - 1)]
-
-
-def run_time(function):
-    def inner(self, *args, **kwargs):
-        start = time()
-        result = function(self, *args, **kwargs)
-        print(f"{function.__name__}运行耗时: {time() - start}s")
-        return result
-
-    return inner
-
-
 class XBogus:
     __string = "Dkdpgh4ZKsQB80/Mfvw36XI1R25-WUAlEi7NLboqYTOPuzmFjJnryx9HVGcaStCe="
     __array = [None for _ in range(
         48)] + list(range(10)) + [None for _ in range(39)] + list(range(10, 16))
-    __canvas = {
-        23: 1256363761,
-        20: None,
-        174: 1256363761,
-    }
-    __params = {
-        23: 14,
-        174: 4,
-        20: None,
-    }
-    __index = {
-        23: 0,
-        174: 1,
-        20: None,
-    }
+    __canvas = 1956339248
+    __params = (4, 8, 12,)
+    __code = X_BOGUS_CODE
 
     @staticmethod
     def disturb_array(
@@ -286,27 +194,26 @@ class XBogus:
     def generate_x_bogus(
             self,
             query: list,
-            version: int,
-            code: tuple,
+            params: int,
             timestamp: int):
         array = [
             64,
             0.00390625,
             1,
-            self.__params[version],
+            params,
             query[-2],
             query[-1],
             69,
             63,
-            *code,
+            *self.__code[self.__params.index(params)],
             timestamp >> 24 & 255,
             timestamp >> 16 & 255,
             timestamp >> 8 & 255,
             timestamp >> 0 & 255,
-            self.__canvas[version] >> 24 & 255,
-            self.__canvas[version] >> 16 & 255,
-            self.__canvas[version] >> 8 & 255,
-            self.__canvas[version] >> 0 & 255,
+            self.__canvas >> 24 & 255,
+            self.__canvas >> 16 & 255,
+            self.__canvas >> 8 & 255,
+            self.__canvas >> 0 & 255,
             None,
         ]
         zero = 0
@@ -324,13 +231,11 @@ class XBogus:
     def get_x_bogus(
             self,
             query: dict,
-            user_agent: tuple,
-            version=23,
+            params=8,
             test_time=None):
         timestamp = int(test_time or time())
         query = self.process_url_path(urlencode(query))
-        return self.generate_x_bogus(
-            query, version, user_agent[self.__index[version]], timestamp)
+        return self.generate_x_bogus(query, params, timestamp)
 
 
 class MsToken:

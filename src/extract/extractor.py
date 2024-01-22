@@ -21,13 +21,13 @@ class Extractor:
         self.date_format = params.date_format
         self.cleaner = params.cleaner
         self.type = {
-            "batch": self.batch,
-            "works": self.works,
-            "comment": self.comment,
-            "live": self.live,
-            "user": self.user,
-            "search": self.search,
-            "hot": self.hot,
+            "batch": self.__batch,
+            "works": self.__works,
+            "comment": self.__comment,
+            "live": self.__live,
+            "user": self.__user,
+            "search": self.__search,
+            "hot": self.__hot,
         }
 
     @staticmethod
@@ -86,7 +86,7 @@ class Extractor:
             raise ValueError
         return self.type[type_](data, recorder, **kwargs)
 
-    def batch(
+    def __batch(
             self,
             data: list[dict],
             recorder,
@@ -108,13 +108,13 @@ class Extractor:
             earliest=earliest,
             latest=latest,
         )
-        [self.extract_batch(container, self.generate_data_object(item))
+        [self.__extract_batch(container, self.generate_data_object(item))
          for item in data]
-        self._extract_item_records(container.all_data)
-        self.record_data(recorder, container.all_data)
-        self.date_filter(container)
+        self.__extract_item_records(container.all_data)
+        self.__record_data(recorder, container.all_data)
+        self.__date_filter(container)
         self.__condition_filter(container)
-        self.summary_works(container.all_data)
+        self.__summary_works(container.all_data)
         return container.all_data
 
     @staticmethod
@@ -122,24 +122,24 @@ class Extractor:
         result = [i for i in container.all_data if condition_filter(i)]
         container.all_data = result
 
-    def summary_works(self, data: list[dict]):
+    def __summary_works(self, data: list[dict]):
         self.log.info(f"当前账号筛选作品数量: {len(data)}")
 
-    def extract_batch(
+    def __extract_batch(
             self,
             container: SimpleNamespace,
             data: SimpleNamespace) -> None:
         container.cache = container.template.copy()
-        self.extract_works_info(container.cache, data)
-        self.extract_account_info(container, data)
-        self.extract_music(container.cache, data)
-        self.extract_statistics(container.cache, data)
-        self.extract_tags(container.cache, data)
-        self._extract_extra_info(container.cache, data)
-        self.extract_additional_info(container.cache, data)
+        self.__extract_works_info(container.cache, data)
+        self.__extract_account_info(container, data)
+        self.__extract_music(container.cache, data)
+        self.__extract_statistics(container.cache, data)
+        self.__extract_tags(container.cache, data)
+        self.__extract_extra_info(container.cache, data)
+        self.__extract_additional_info(container.cache, data)
         container.all_data.append(container.cache)
 
-    def _extract_extra_info(self, item: dict, data: SimpleNamespace):
+    def __extract_extra_info(self, item: dict, data: SimpleNamespace):
         if e := self.safe_extract(data, "anchor_info"):
             extra = dumps(
                 e,
@@ -150,13 +150,13 @@ class Extractor:
             extra = ""
         item["extra"] = extra
 
-    def _extract_commodity_data(self, item: dict, data: SimpleNamespace):
+    def __extract_commodity_data(self, item: dict, data: SimpleNamespace):
         pass
 
-    def _extract_game_data(self, item: dict, data: SimpleNamespace):
+    def __extract_game_data(self, item: dict, data: SimpleNamespace):
         pass
 
-    def extract_description(self, data: SimpleNamespace) -> str:
+    def __extract_description(self, data: SimpleNamespace) -> str:
         # 2023/11/11: 抖音不再折叠过长的作品描述
         return self.safe_extract(data, "desc")
         # if len(desc := self.safe_extract(data, "desc")) < 107:
@@ -165,33 +165,33 @@ class Extractor:
         # return long_desc.split(
         #     "  ", 1)[-1].split("  %s", 1)[0].replace("# ", "#")
 
-    def clean_description(self, desc: str) -> str:
+    def __clean_description(self, desc: str) -> str:
         return self.cleaner.clear_spaces(self.cleaner.filter(desc))
 
-    def format_date(self, data: SimpleNamespace, key: str = None) -> str:
+    def __format_date(self, data: SimpleNamespace, key: str = None) -> str:
         return strftime(
             self.date_format,
             localtime(
                 self.safe_extract(data, key or "create_time") or None))
 
-    def extract_works_info(self, item: dict, data: SimpleNamespace) -> None:
+    def __extract_works_info(self, item: dict, data: SimpleNamespace) -> None:
         item["id"] = self.safe_extract(data, "aweme_id")
-        item["desc"] = self.clean_description(
-            self.extract_description(data)) or item["id"]
-        item["create_time"] = self.format_date(data)
+        item["desc"] = self.__clean_description(
+            self.__extract_description(data)) or item["id"]
+        item["create_time"] = self.__format_date(data)
         item["create_timestamp"] = self.safe_extract(data, "create_time")
-        self._extract_text_extra(item, data)
-        self.classifying_works(item, data)
+        self.__extract_text_extra(item, data)
+        self.__classifying_works(item, data)
 
-    def classifying_works(self, item: dict, data: SimpleNamespace) -> None:
+    def __classifying_works(self, item: dict, data: SimpleNamespace) -> None:
         if images := self.safe_extract(data, "images"):
-            self.extract_image_info(item, data, images)
+            self.__extract_image_info(item, data, images)
         elif images := self.safe_extract(data, "image_post_info"):
-            self.extract_image_info_tiktok(item, data, images)
+            self.__extract_image_info_tiktok(item, data, images)
         else:
-            self.extract_video_info(item, data)
+            self.__extract_video_info(item, data)
 
-    def extract_additional_info(self, item: dict, data: SimpleNamespace):
+    def __extract_additional_info(self, item: dict, data: SimpleNamespace):
         item["height"] = self.safe_extract(data, "video.height", "-1")
         item["width"] = self.safe_extract(data, "video.width", "-1")
         item["ratio"] = self.safe_extract(data, "video.ratio")
@@ -214,7 +214,7 @@ class Extractor:
         parsed_url = urlparse(url)
         return f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
 
-    def extract_image_info(
+    def __extract_image_info(
             self,
             item: dict,
             data: SimpleNamespace,
@@ -224,7 +224,7 @@ class Extractor:
             self.safe_extract(
                 i, 'url_list[-1]') for i in images)
 
-    def extract_image_info_tiktok(
+    def __extract_image_info_tiktok(
             self,
             item: dict,
             data: SimpleNamespace,
@@ -237,20 +237,20 @@ class Extractor:
         item["type"] = "图集"
         item["duration"] = "00:00:00"
         item["uri"] = ""
-        self.extract_cover(item, data)
+        self.__extract_cover(item, data)
 
-    def extract_video_info(self, item: dict, data: SimpleNamespace) -> None:
+    def __extract_video_info(self, item: dict, data: SimpleNamespace) -> None:
         item["type"] = "视频"
         item["downloads"] = self.safe_extract(
             data, "video.play_addr.url_list[-1]")
-        item["duration"] = self._time_conversion(
+        item["duration"] = self.time_conversion(
             self.safe_extract(data, "video.duration", 0))
         item["uri"] = self.safe_extract(
             data, "video.play_addr.uri")
-        self.extract_cover(item, data, True)
+        self.__extract_cover(item, data, True)
 
     @staticmethod
-    def _time_conversion(time_: int) -> str:
+    def time_conversion(time_: int) -> str:
         return f"{
         time_ //
         1000 //
@@ -264,7 +264,7 @@ class Extractor:
         3600 %
         60:0>2d}"
 
-    def _extract_text_extra(self, item: dict, data: SimpleNamespace):
+    def __extract_text_extra(self, item: dict, data: SimpleNamespace):
         text = [
             self.safe_extract(i, "hashtag_name")
             for i in self.safe_extract(
@@ -273,7 +273,7 @@ class Extractor:
         ]
         item["text_extra"] = ", ".join(i for i in text if i)
 
-    def extract_cover(
+    def __extract_cover(
             self,
             item: dict,
             data: SimpleNamespace,
@@ -288,7 +288,7 @@ class Extractor:
         else:
             item["dynamic_cover"], item["origin_cover"] = "", ""
 
-    def extract_music(self, item: dict, data: SimpleNamespace) -> None:
+    def __extract_music(self, item: dict, data: SimpleNamespace) -> None:
         if music_data := self.safe_extract(data, "music"):
             author = self.safe_extract(music_data, "author")
             title = self.safe_extract(music_data, "title")
@@ -300,7 +300,7 @@ class Extractor:
         item["music_title"] = title
         item["music_url"] = url
 
-    def extract_statistics(self, item: dict, data: SimpleNamespace) -> None:
+    def __extract_statistics(self, item: dict, data: SimpleNamespace) -> None:
         data = self.safe_extract(data, "statistics")
         for i in (
                 "digg_count",
@@ -310,7 +310,7 @@ class Extractor:
         ):
             item[i] = str(self.safe_extract(data, i, "-1"))
 
-    def extract_tags(self, item: dict, data: SimpleNamespace) -> None:
+    def __extract_tags(self, item: dict, data: SimpleNamespace) -> None:
         if not (t := self.safe_extract(data, "video_tag")):
             tags = ["", "", ""]
         else:
@@ -318,7 +318,7 @@ class Extractor:
         for tag, value in zip(("tag_1", "tag_2", "tag_3"), tags):
             item[tag] = value
 
-    def extract_account_info(
+    def __extract_account_info(
             self,
             container: SimpleNamespace,
             data: SimpleNamespace,
@@ -331,11 +331,11 @@ class Extractor:
         container.cache["unique_id"] = self.safe_extract(data, "unique_id")
         container.cache["signature"] = self.safe_extract(data, "signature")
         container.cache["user_age"] = self.safe_extract(data, "user_age", "-1")
-        self.extract_nickname_info(container, data)
+        self.__extract_nickname_info(container, data)
 
-    def extract_nickname_info(self,
-                              container: SimpleNamespace,
-                              data: SimpleNamespace) -> None:
+    def __extract_nickname_info(self,
+                                container: SimpleNamespace,
+                                data: SimpleNamespace) -> None:
         if container.same:
             container.cache["nickname"] = container.name
             container.cache["mark"] = container.mark or container.name
@@ -370,7 +370,7 @@ class Extractor:
         return id_, name.strip(), mid, title.strip(
         ), mark.strip(), data[:None if post else -1]
 
-    def works(self, data: list[dict], recorder) -> list[dict]:
+    def __works(self, data: list[dict], recorder) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
             template={
@@ -379,15 +379,15 @@ class Extractor:
             cache=None,
             same=False,
         )
-        [self.extract_batch(container, self.generate_data_object(item))
+        [self.__extract_batch(container, self.generate_data_object(item))
          for item in data]
-        self._extract_item_records(container.all_data)
-        self.record_data(recorder, container.all_data)
+        self.__extract_item_records(container.all_data)
+        self.__record_data(recorder, container.all_data)
         self.__condition_filter(container)
         return container.all_data
 
-    def comment(self, data: list[dict], recorder,
-                source=False) -> tuple[list[dict], list]:
+    def __comment(self, data: list[dict], recorder,
+                  source=False) -> tuple[list[dict], list]:
         if not any(data):
             return [{}], []
         container = SimpleNamespace(
@@ -400,19 +400,19 @@ class Extractor:
             same=False,
         )
         if source:
-            [self._extract_reply_ids(container, i) for i in data]
+            [self.__extract_reply_ids(container, i) for i in data]
         else:
-            [self._extract_comments_data(
+            [self.__extract_comments_data(
                 container, self.generate_data_object(i)) for i in data]
-            self.record_data(recorder, container.all_data)
+            self.__record_data(recorder, container.all_data)
         return container.all_data, container.reply_ids
 
-    def _extract_comments_data(
+    def __extract_comments_data(
             self,
             container: SimpleNamespace,
             data: SimpleNamespace):
         container.cache = container.template.copy()
-        container.cache["create_time"] = self.format_date(data)
+        container.cache["create_time"] = self.__format_date(data)
         container.cache["ip_label"] = self.safe_extract(data, "ip_label", "未知")
         container.cache["text"] = self.safe_extract(data, "text")
         container.cache["image"] = self.safe_extract(
@@ -427,32 +427,32 @@ class Extractor:
             self.safe_extract(data, "reply_comment_total", "0"))
         container.cache["reply_id"] = self.safe_extract(data, "reply_id")
         container.cache["cid"] = self.safe_extract(data, "cid")
-        self.extract_account_info(container, data, "user")
-        self._filter_reply_ids(container)
+        self.__extract_account_info(container, data, "user")
+        self.__filter_reply_ids(container)
         container.all_data.append(container.cache)
 
-    def _extract_reply_ids(self, container: SimpleNamespace, data: dict):
+    def __extract_reply_ids(self, container: SimpleNamespace, data: dict):
         cache = self.generate_data_object(data)
         container.cache = {
             "reply_comment_total": str(
                 self.safe_extract(
                     cache, "reply_comment_total", "0")), "cid": self.safe_extract(
                 cache, "cid")}
-        self._filter_reply_ids(container)
+        self.__filter_reply_ids(container)
         container.all_data.append(data)
 
     @staticmethod
-    def _filter_reply_ids(container: SimpleNamespace):
+    def __filter_reply_ids(container: SimpleNamespace):
         if container.cache["reply_comment_total"] != "0":
             container.reply_ids.append(container.cache["cid"])
 
-    def live(self, data: list[dict], *args) -> list[dict]:
+    def __live(self, data: list[dict], *args) -> list[dict]:
         container = SimpleNamespace(all_data=[])
-        [self.extract_live_data(container,
-                                self.generate_data_object(i)) for i in data]
+        [self.__extract_live_data(container,
+                                  self.generate_data_object(i)) for i in data]
         return container.all_data
 
-    def extract_live_data(
+    def __extract_live_data(
             self,
             container: SimpleNamespace,
             data: SimpleNamespace):
@@ -470,7 +470,7 @@ class Extractor:
                      "user_count_str": self.safe_extract(data, "stats.user_count_str"), }
         container.all_data.append(live_data)
 
-    def user(self, data: list[dict], recorder) -> list[dict]:
+    def __user(self, data: list[dict], recorder) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
             cache=None,
@@ -478,12 +478,12 @@ class Extractor:
                 "collection_time": datetime.now().strftime(self.date_format),
             },
         )
-        [self._extract_user_data(container,
-                                 self.generate_data_object(i)) for i in data]
-        self.record_data(recorder, container.all_data)
+        [self.__extract_user_data(container,
+                                  self.generate_data_object(i)) for i in data]
+        self.__record_data(recorder, container.all_data)
         return container.all_data
 
-    def _extract_user_data(
+    def __extract_user_data(
             self,
             container: SimpleNamespace,
             data: SimpleNamespace):
@@ -528,15 +528,15 @@ class Extractor:
         container.cache["sec_uid"]}"
         container.all_data.append(container.cache)
 
-    def search(self, data: list[dict], recorder, tab: int) -> list[dict]:
+    def __search(self, data: list[dict], recorder, tab: int) -> list[dict]:
         if tab in {0, 1}:
-            return self.search_general(data, recorder)
+            return self.__search_general(data, recorder)
         elif tab == 2:
-            return self.search_user(data, recorder)
+            return self.__search_user(data, recorder)
         elif tab == 3:
-            return self.search_live(data, recorder)
+            return self.__search_live(data, recorder)
 
-    def search_general(self, data: list[dict], recorder) -> list[dict]:
+    def __search_general(self, data: list[dict], recorder) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
             cache=None,
@@ -545,23 +545,23 @@ class Extractor:
             },
             same=False,
         )
-        [self._search_result_classify(
+        [self.__search_result_classify(
             container, self.generate_data_object(i)) for i in data]
-        self.record_data(recorder, container.all_data)
+        self.__record_data(recorder, container.all_data)
         return container.all_data
 
-    def _search_result_classify(
+    def __search_result_classify(
             self,
             container: SimpleNamespace,
             data: SimpleNamespace):
         if d := self.safe_extract(data, "aweme_info"):
-            self.extract_batch(container, d)
+            self.__extract_batch(container, d)
         elif d := self.safe_extract(data, "aweme_mix_info.mix_items"):
-            [self.extract_batch(container, i) for i in d]
+            [self.__extract_batch(container, i) for i in d]
         elif d := self.safe_extract(data, "card_info.attached_info.aweme_list"):
-            [self.extract_batch(container, i) for i in d]
+            [self.__extract_batch(container, i) for i in d]
         elif d := self.safe_extract(data, "user_list[0].items"):
-            [self.extract_batch(container, i) for i in d]
+            [self.__extract_batch(container, i) for i in d]
         # elif d := self.safe_extract(data, "user_list.user_info"):
         #     pass
         # elif d := self.safe_extract(data, "music_list"):
@@ -570,7 +570,7 @@ class Extractor:
         #     pass
         self.log.error(f"Unreported search results: {data}", False)
 
-    def search_user(
+    def __search_user(
             self,
             data: list[dict],
             recorder) -> list[dict]:
@@ -581,15 +581,15 @@ class Extractor:
                 "collection_time": datetime.now().strftime(self.date_format),
             },
         )
-        [self._deal_search_user_live(container, self.generate_data_object(
+        [self.__deal_search_user_live(container, self.generate_data_object(
             i["user_info"])) for i in data]
-        self.record_data(recorder, container.all_data)
+        self.__record_data(recorder, container.all_data)
         return container.all_data
 
-    def _deal_search_user_live(self,
-                               container: SimpleNamespace,
-                               data: SimpleNamespace,
-                               user=True):
+    def __deal_search_user_live(self,
+                                container: SimpleNamespace,
+                                data: SimpleNamespace,
+                                user=True):
         if user:
             container.cache = container.template.copy()
         container.cache["avatar"] = self.safe_extract(
@@ -613,7 +613,7 @@ class Extractor:
         # else:
         #     pass
 
-    def search_live(
+    def __search_live(
             self,
             data: list[dict],
             recorder) -> list[dict]:
@@ -624,51 +624,51 @@ class Extractor:
                 "collection_time": datetime.now().strftime(self.date_format),
             },
         )
-        [self._deal_search_live(
+        [self.__deal_search_live(
             container, self.generate_data_object(i["lives"])) for i in data]
-        self.record_data(recorder, container.all_data)
+        self.__record_data(recorder, container.all_data)
         return container.all_data
 
-    def _deal_search_live(self,
-                          container: SimpleNamespace,
-                          data: SimpleNamespace):
+    def __deal_search_live(self,
+                           container: SimpleNamespace,
+                           data: SimpleNamespace):
         container.cache = container.template.copy()
-        self._deal_search_user_live(
+        self.__deal_search_user_live(
             container, self.safe_extract(
                 data, "author"), False)
         container.cache["room_id"] = self.safe_extract(data, "aweme_id")
         container.all_data.append(container.cache)
 
-    def hot(self, data: list[dict], recorder) -> list[dict]:
+    def __hot(self, data: list[dict], recorder) -> list[dict]:
         all_data = []
-        [self._deal_hot_data(all_data, self.generate_data_object(i))
+        [self.__deal_hot_data(all_data, self.generate_data_object(i))
          for i in data]
-        self.record_data(recorder, all_data)
+        self.__record_data(recorder, all_data)
         return all_data
 
-    def _deal_hot_data(self, container: list, data: SimpleNamespace):
+    def __deal_hot_data(self, container: list, data: SimpleNamespace):
         cache = {
             "position": str(self.safe_extract(data, "position", "-1")),
             "sentence_id": self.safe_extract(data, "sentence_id"),
             "word": self.safe_extract(data, "word"),
             "video_count": str(self.safe_extract(data, "video_count", "-1")),
-            "event_time": self.format_date(data, "event_time"),
+            "event_time": self.__format_date(data, "event_time"),
             "view_count": str(self.safe_extract(data, "view_count", "-1")),
             "hot_value": str(self.safe_extract(data, "hot_value", "-1")),
             "cover": self.safe_extract(data, "word_cover.url_list[-1]"),
         }
         container.append(cache)
 
-    def record_data(self, record, data: list[dict]):
+    def __record_data(self, record, data: list[dict]):
         for i in data:
-            record.save(self.extract_values(record, i))
+            record.save(self.__extract_values(record, i))
 
     @staticmethod
-    def extract_values(record, data: dict) -> list:
+    def __extract_values(record, data: dict) -> list:
         return [data[key] for key in record.field_keys]
 
     @staticmethod
-    def date_filter(container: SimpleNamespace):
+    def __date_filter(container: SimpleNamespace):
         # print("前", len(container.all_data))  # 调试代码
         result = []
         for item in container.all_data:
@@ -692,7 +692,7 @@ class Extractor:
                 item.get("create_time", 0)).date()
             if earliest <= create_time <= latest:
                 result.append(item)
-        self.summary_works(result)
+        self.__summary_works(result)
         return result
 
     @staticmethod
@@ -700,6 +700,6 @@ class Extractor:
         data = Extractor.generate_data_object(data)
         return Extractor.safe_extract(data, "mix_info.mix_id")
 
-    def _extract_item_records(self, data: list[dict]):
+    def __extract_item_records(self, data: list[dict]):
         for i in data:
             self.log.info(f"{i['type']} {i['id']} 数据提取成功", False)

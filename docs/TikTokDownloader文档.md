@@ -17,7 +17,7 @@
 <h1>快速入门</h1>
 <ol>
 <li><b>下载 EXE 程序</b> 或者 <b>配置运行环境</b>
-<ol><b>直接运行程序</b>
+<ol><b>下载程序运行</b>
 <li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的 EXE 程序压缩包</li>
 <li>解压后打开程序文件夹，双击运行 <code>main.exe</code></li>
 </ol>
@@ -46,7 +46,7 @@
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 </ol>
 <h1>获取 Cookie</h1>
-<p><a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">点击查看 Cookie 获取教程</a>，无效的 Cookie 会导致程序获取数据失败或者无法下载高分辨率视频文件；目前尚无检查 Cookie 有效性的方法。</p>
+<p><a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">点击查看 Cookie 获取教程</a>，无效 / 过期的 Cookie 会导致程序获取数据失败或者无法下载高分辨率的视频文件；目前尚无判断 Cookie 无效 / 过期的方法，<a href="https://github.com/JoeanAmier/TikTokDownloader#%E5%85%B3%E4%BA%8E-cookie">更多 Cookie 说明</a>！</p>
 <h1>入门说明</h1>
 <h2>关于终端</h2>
 <p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a>（Windows 11 自带默认终端）运行程序以便获得最佳彩色交互显示效果！</p>
@@ -158,6 +158,8 @@
 <td align="center">文件下载，数据采集</td>
 </tr>
 </tbody></table>
+<h1>启用功能</h1>
+<p>项目部分功能默认禁用，如需启用功能，请通过源码运行项目，并将相应代码取消注释！</p>
 <h1>配置文件</h1>
 <p>配置文件：项目根目录下的 <code>settings.json</code> 文件，可以自定义设置程序部分运行参数。</p>
 <p><b><code>cookie</code> 参数为必需参数，必须设置该参数才能正常使用程序</b>；其余参数可以根据实际需求进行修改！</p>
@@ -1037,7 +1039,7 @@ print(response.json())
 <p>记录文件路径: <code>./cache/IDRecorder.txt</code></p>
 <p><strong>不建议在程序运行过程中访问记录文件！</strong></p>
 <h2>删除作品下载记录</h2>
-<p>输入一个或多个作品 ID，删除作品下载记录中对应的数据，开发中！</p>
+<p>输入作品 ID（多个作品 ID 之间使用空格分隔），删除作品下载记录中对应的数据，如果输入 <code>all</code>，代表清空作品下载记录数据！</p>
 <h2>启用/禁用运行日志记录</h2>
 <p>是否将程序运行日志记录保存到文件，默认关闭，日志文件保存路径：<code>./Log</code></p>
 <p>如果在使用过程中发现程序 Bug，可以及时告知作者，并附上日志文件，日志记录有助于作者分析 Bug 原因和修复 Bug。</p>
