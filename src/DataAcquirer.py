@@ -594,9 +594,8 @@ class Comment(Acquirer):
             self.log.warning("获取作品评论数据失败")
             return False
         try:
-            if not (c := data["comments"]):
-                raise KeyError
-            self.deal_item_data(c)
+            if c := data["comments"]:
+                self.deal_item_data(c)
             self.cursor = data["cursor"]
             self.finished = not data["has_more"]
             return True

@@ -1,4 +1,5 @@
 from atexit import register
+from contextlib import suppress
 from pathlib import Path
 from shutil import rmtree
 from threading import Event
@@ -131,7 +132,7 @@ class TikTokDownloader:
             ("服务器部署模式", self.__server_object),
             (f"{self.UPDATE['tip']}自动检查更新", self.__modify_update),
             (f"{self.RECORD['tip']}作品下载记录", self.__modify_recode),
-            # ("编辑作品下载记录", lambda: self.console.print("敬请期待！")),
+            ("编辑作品下载记录", lambda: self.console.print("敬请期待！")),
             (f"{self.LOGGING['tip']}运行日志记录", self.__modify_logging),
         )
 
@@ -222,7 +223,7 @@ class TikTokDownloader:
             if default_mode not in {"3", "4", "5", "6", "7"}:
                 default_mode = choose(
                     "请选择 TikTokDownloader 运行模式",
-                    [i[0] for i in self.function],
+                    [i for i, _ in self.function],
                     self.console,
                     separate=(
                         1,
@@ -289,10 +290,11 @@ class TikTokDownloader:
             self.console.print("扫码登录失败，未写入 Cookie！", style=WARNING)
 
     def compatible(self, mode: str):
-        if mode in {"Q", "q", ""}:
-            self.running = False
-        elif (n := int(mode) - 1) in set(range(len(self.function))):
-            self.function[n][1]()
+        with suppress(ValueError):
+            if mode in {"Q", "q", ""}:
+                self.running = False
+            elif (n := int(mode) - 1) in range(len(self.function)):
+                self.function[n][1]()
 
     def check_settings(self):
         self.parameter = Parameter(

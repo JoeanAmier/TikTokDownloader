@@ -1,3 +1,4 @@
+from contextlib import suppress
 from datetime import date
 from datetime import datetime
 from random import choice
@@ -111,6 +112,18 @@ class TikTok:
             parameter,
             "mark" in parameter.name_format,
             "nickname" in parameter.name_format
+        )
+        self.function = (
+            ("批量下载账号作品(TikTok)", self.account_acquisition_interactive_tiktok,),
+            ("批量下载账号作品(抖音)", self.account_acquisition_interactive,),
+            ("批量下载链接作品(通用)", self.works_interactive,),
+            ("获取直播推流地址(抖音)", self.live_interactive,),
+            ("采集作品评论数据(抖音)", self.comment_interactive,),
+            ("批量下载合集作品(抖音)", self.mix_interactive,),
+            ("批量采集账号数据(抖音)", self.user_interactive,),
+            ("采集搜索结果数据(抖音)", self.search_interactive,),
+            ("采集抖音热榜数据(抖音)", self.hot_interactive,),
+            ("批量下载收藏作品(抖音)", self.collection_interactive,),
         )
 
     def _inquire_input(self, url: str = None, tip: str = None) -> str:
@@ -837,53 +850,15 @@ class TikTok:
             addition="收藏作品", )
 
     def run(self):
-        while self.running:
-            select = choose(
-                "请选择采集功能",
-                (
-                    "批量下载账号作品(TikTok)",
-                    "批量下载账号作品(抖音)",
-                    "批量下载链接作品(通用)",
-                    "获取直播推流地址(抖音)",
-                    "采集作品评论数据(抖音)",
-                    "批量下载合集作品(抖音)",
-                    "批量采集账号数据(抖音)",
-                    "采集搜索结果数据(抖音)",
-                    "采集抖音热榜数据(抖音)",
-                    "批量下载收藏作品(抖音)",
-                ),
-                self.console)
-            if select in {"Q", "q"}:
-                self.running = False
-            elif not select:
-                break
-            elif select == "1":
-                self.logger.info("已选择批量下载账号作品(TikTok)模式")
-                self.account_acquisition_interactive_tiktok()
-            elif select == "2":
-                self.logger.info("已选择批量下载账号作品(抖音)模式")
-                self.account_acquisition_interactive()
-            elif select == "3":
-                self.logger.info("已选择批量下载链接作品模式")
-                self.works_interactive()
-            elif select == "4":
-                self.logger.info("已选择获取直播推流地址模式")
-                self.live_interactive()
-            elif select == "5":
-                self.logger.info("已选择采集作品评论数据模式")
-                self.comment_interactive()
-            elif select == "6":
-                self.logger.info("已选择批量下载合集作品模式")
-                self.mix_interactive()
-            elif select == "7":
-                self.logger.info("已选择批量采集账号数据模式")
-                self.user_interactive()
-            elif select == "8":
-                self.logger.info("已选择采集搜索结果数据模式")
-                self.search_interactive()
-            elif select == "9":
-                self.logger.info("已选择采集抖音热榜数据模式")
-                self.hot_interactive()
-            elif select == "10":
-                self.logger.info("已选择批量下载收藏作品模式")
-                self.collection_interactive()
+        with suppress(ValueError):
+            while self.running:
+                select = choose(
+                    "请选择采集功能",
+                    [i for i, _ in self.function],
+                    self.console)
+                if select in {"Q", "q"}:
+                    self.running = False
+                elif not select:
+                    break
+                elif (n := int(select) - 1) in range(len(self.function)):
+                    self.function[n][1]()
