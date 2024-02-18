@@ -129,7 +129,7 @@ class TikTokDownloader:
             ("服务器部署模式", self.__server_object),
             (f"{self.UPDATE['tip']}自动检查更新", self.__modify_update),
             (f"{self.RECORD['tip']}作品下载记录", self.__modify_recode),
-            ("删除作品下载记录", lambda: self.console.print("开发中！")),
+            ("删除指定下载记录", self.delete_works_ids),
             (f"{self.LOGGING['tip']}运行日志记录", self.__modify_logging),
         )
 
@@ -292,6 +292,13 @@ class TikTokDownloader:
                 self.running = False
             elif (n := int(mode) - 1) in range(len(self.__function)):
                 self.__function[n][1]()
+
+    def delete_works_ids(self):
+        if self.RECORD["tip"] == "启用":
+            self.console.print("作品下载记录功能已禁用！", style=WARNING)
+            return
+        self.blacklist.delete_ids(self.console.input("请输入需要删除的作品 ID："))
+        self.console.print("删除作品下载记录成功！", style=INFO)
 
     def check_settings(self):
         self.parameter = Parameter(

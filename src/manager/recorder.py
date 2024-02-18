@@ -1,5 +1,6 @@
 from pathlib import Path
 from platform import system
+from re import compile
 
 from src.custom import (
     ERROR,
@@ -13,6 +14,7 @@ __all__ = ["DownloadRecorder"]
 
 class DownloadRecorder:
     encode = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
+    works_id = compile(r"\d{19}")
 
     def __init__(
             self,
@@ -46,6 +48,21 @@ class DownloadRecorder:
     def update_id(self, id_):
         if self.switch:
             self.record.add(id_)
+
+    def __extract_ids(self, ids: str) -> list[str]:
+        ids = ids.split()
+        result = []
+        for i in ids:
+            if id_ := self.works_id.search(i):
+                result.append(id_.group())
+        return result
+
+    def delete_ids(self, ids: str) -> None:
+        if ids.upper() == "ALL":
+            self.record.clear()
+        else:
+            ids = self.__extract_ids(ids)
+            [self.record.remove(i) for i in ids if i in self.record]
 
     def backup_file(self):
         if self.file and self.record:

@@ -242,7 +242,7 @@ class Extractor:
     def __extract_video_info(self, item: dict, data: SimpleNamespace) -> None:
         item["type"] = "视频"
         item["downloads"] = self.safe_extract(
-            data, "video.play_addr.url_list[-1]")
+            data, "video.play_addr.url_list[0]")
         item["duration"] = self.time_conversion(
             self.safe_extract(data, "video.duration", 0))
         item["uri"] = self.safe_extract(
