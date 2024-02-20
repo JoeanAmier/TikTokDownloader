@@ -36,8 +36,11 @@
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
 <li>选择 <code>复制粘贴写入 Cookie</code> 选项，按照提示将 Cookie 写入配置文件</li>
 </ol>
-<ol><b>扫码登录获取(即将移除)</b>
-<li>选择 <code>扫码登陆写入 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</li>
+<ol><b>从浏览器获取(推荐)</b>
+<li>选择 <code>从浏览器获取 Cookie</code> 选项，按照提示选择浏览器类型</li>
+</ol>
+<ol><b>扫码登录获取(停用)</b>
+<li>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</li>
 <li>使用抖音 APP 扫描二维码并登录账号</li>
 <li>按照提示操作，将 Cookie 写入配置文件</li>
 </ol>
@@ -542,7 +545,9 @@
 <h2>复制粘贴写入 Cookie</h2>
 <p>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，手动从浏览器复制所需 Cookie 至剪贴板，按照程序提示输入 Cookie 后回车确认，程序会自动处理 Cookie 并写入配置文件。</p>
 <p><b>推荐使用该方法获取 Cookie</b>，如果粘贴 Cookie 至终端后无响应，可能是 Cookie 文本长度超出终端最大文本长度限制，请考虑更换终端或者其他写入方式。</p>
-<h2><del>扫码登录写入 Cookie</del></h2>
+<h2>从浏览器获取 Cookie</h2>
+<p>自动读取本地浏览器的 Cookie 数据，并提取所需 Cookie 写入配置文件，需要完全关闭对应浏览器才能读取 Cookie 数据。</p>
+<h2><del>扫码登录获取 Cookie</del></h2>
 <p><del>程序自动获取抖音登录二维码，随后会在终端输出二维码，并使用系统默认图片浏览器打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片窗口，程序会自动检查登录结果并将登录后的 Cookie 写入配置文件。</del></p>
 <p><del><b>注意：</b>扫码登录获取的 Cookie 有效期更短，且频繁扫码登录容易导致账号被风控！</del></p>
 <h2>终端交互模式</h2>

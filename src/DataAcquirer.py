@@ -1044,7 +1044,7 @@ class Collection(Acquirer):
             return False
         try:
             self.cursor = data['cursor']
-            self.deal_item_data(data["aweme_list"])
+            self.deal_item_data(data["aweme_list"] or [])
             self.finished = not data["has_more"]
             return True
         except KeyError:

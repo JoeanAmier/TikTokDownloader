@@ -5,3 +5,4 @@ qrcode>=7.4.2
 emoji>=2.8.0
 rich>=13.6.0
 lxml>=4.9.3
+browser-cookie3>=0.19.1

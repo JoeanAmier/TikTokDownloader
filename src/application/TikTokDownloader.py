@@ -40,6 +40,7 @@ from src.custom import TEXT_REPLACEMENT
 from src.custom import verify_token
 from src.encrypt import XBogus
 from src.manager import DownloadRecorder
+from src.module import Browser
 from src.module import ColorfulConsole
 from src.module import Cookie
 from src.module import Register
@@ -120,8 +121,9 @@ class TikTokDownloader:
 
     def __update_menu(self):
         self.__function = (
-            ("复制粘贴写入 Cookie(推荐)", self.write_cookie),
-            ("扫码登录写入 Cookie(弃用)", self.auto_cookie),
+            ("复制粘贴写入 Cookie", self.write_cookie),
+            ("从浏览器获取 Cookie", self.browser_cookie),
+            ("扫码登录获取 Cookie", self.auto_cookie),
             ("终端交互模式", self.complete),
             ("后台监测模式", lambda: self.console.print("敬请期待！")),
             ("Web API 模式", self.__api_object),
@@ -223,8 +225,8 @@ class TikTokDownloader:
                     [i for i, _ in self.__function],
                     self.console,
                     separate=(
-                        1,
-                        6))
+                        2,
+                        7))
             self.compatible(default_mode)
             default_mode = "0"
 
@@ -274,6 +276,9 @@ class TikTokDownloader:
         self.check_settings()
 
     def write_cookie(self):
+        self.console.print(
+            "Cookie 获取教程：https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95"
+            "%99%E7%A8%8B.md")
         self.cookie.run()
         self.check_settings()
         self.parameter.update_cookie()
@@ -342,3 +347,6 @@ class TikTokDownloader:
         self.event.set()
         self.blacklist.close()
         self.parameter.logger.info("程序结束运行")
+
+    def browser_cookie(self):
+        Browser(self.parameter, self.cookie).run()

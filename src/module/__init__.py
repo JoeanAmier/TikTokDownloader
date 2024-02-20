@@ -1,3 +1,4 @@
+from .browser import Browser
 from .console import ColorfulConsole
 from .cookie import Cookie
 from .ffmpeg import FFMPEG
@@ -10,4 +11,5 @@ __all__ = [
     "Register",
     "Cookie",
     "ColorfulConsole",
+    "Browser",
 ]
