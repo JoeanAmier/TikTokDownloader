@@ -1,6 +1,6 @@
 from re import finditer
 
-__all__ = ["Cookie"]
+__all__ = ["Cookie", "CookieTikTok"]
 
 
 class Cookie:
@@ -105,4 +105,11 @@ class Cookie:
     def write(self, text: dict | str):
         data = self.settings.read()
         data["cookie"] = text
+        self.settings.update(data)
+
+
+class CookieTikTok(Cookie):
+    def write(self, text: dict | str):
+        data = self.settings.read()
+        data["cookie_tiktok"] = text
         self.settings.update(data)

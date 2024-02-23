@@ -48,7 +48,7 @@ class Settings:
         "chunk": 1024 * 1024,  # 每次从服务器接收的数据块大小
         "max_retry": 5,  # 重试最大次数
         "max_pages": 0,
-        "default_mode": 0,
+        "default_mode": "",
         "ffmpeg": "",
     }  # 默认配置
 

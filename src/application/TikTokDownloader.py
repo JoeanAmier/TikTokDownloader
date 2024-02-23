@@ -43,11 +43,13 @@ from src.manager import DownloadRecorder
 from src.module import Browser
 from src.module import ColorfulConsole
 from src.module import Cookie
+from src.module import CookieTikTok
 from src.module import Register
 from src.record import BaseLogger
 from src.record import LoggerManager
 from src.tools import FileSwitch
 from src.tools import choose
+from src.tools import safe_pop
 from .main_api_server import APIServer
 from .main_complete import TikTok
 from .main_server import Server
@@ -97,6 +99,7 @@ class TikTokDownloader:
         self.x_bogus = XBogus()
         self.settings = Settings(PROJECT_ROOT, self.console)
         self.cookie = Cookie(self.settings, self.console)
+        self.cookie_tiktok = CookieTikTok(self.settings, self.console)
         self.register = Register(
             self.settings,
             self.console,
@@ -104,6 +107,7 @@ class TikTokDownloader:
         )
         self.parameter = None
         self.running = True
+        self.default_mode = None
         self.event = Event()
         self.cookie_task = Thread(target=self.periodic_update_cookie)
         self.backup_task = None
@@ -215,11 +219,11 @@ class TikTokDownloader:
             self.console.print("检测新版本失败", style=ERROR)
         self.console.print()
 
-    def main_menu(self, default_mode="0"):
+    def main_menu(self, default_mode=None):
         """选择运行模式"""
         while self.running:
             self.__update_menu()
-            if default_mode not in {"3", "4", "5", "6", "7"}:
+            if not default_mode:
                 default_mode = choose(
                     "请选择 TikTokDownloader 运行模式",
                     [i for i, _ in self.__function],
@@ -228,7 +232,7 @@ class TikTokDownloader:
                         2,
                         7))
             self.compatible(default_mode)
-            default_mode = "0"
+            default_mode = None
 
     @start_cookie_task
     def complete(self):
@@ -236,7 +240,7 @@ class TikTokDownloader:
         example = TikTok(self.parameter)
         register(self.blacklist.close)
         try:
-            example.run()
+            example.run(self.default_mode)
             self.running = example.running
         except KeyboardInterrupt:
             self.running = False
@@ -316,6 +320,7 @@ class TikTokDownloader:
             **self.settings.read(),
             blacklist=self.blacklist,
         )
+        self.default_mode = self.parameter.default_mode.copy()
         self.parameter.cleaner.set_rule(TEXT_REPLACEMENT, True)
 
     def run(self):
@@ -324,7 +329,7 @@ class TikTokDownloader:
         self.check_update()
         self.check_settings()
         if self.disclaimer():
-            self.main_menu(self.parameter.default_mode)
+            self.main_menu(safe_pop(self.default_mode))
         self.close()
 
     @staticmethod

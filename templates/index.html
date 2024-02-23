@@ -102,20 +102,9 @@
                             </div>
                             <div class="field quarter">
                                 <label for="default_mode">默认启动模式(default_mode)</label>
-                                <select name="default_mode" id="default_mode">
-                                    <option value="0" {% if default_mode == 0 %}selected="selected"{% endif %}>默认
-                                    </option>
-                                    <option value="3" {% if default_mode == 3 %}selected="selected"{% endif %}>终端命令行模式
-                                    </option>
-                                    <option value="4" {% if default_mode == 5 %}selected="selected"{% endif %}>Web API
-                                        接口模式
-                                    </option>
-                                    <option value="5" {% if default_mode == 5 %}selected="selected"{% endif %}>Web UI
-                                        交互模式
-                                    </option>
-                                    <option value="6" {% if default_mode == 6 %}selected="selected"{% endif %}>服务器部署模式
-                                    </option>
-                                </select>
+                                <label>
+                                    <input type="text" id="default_mode" value="{{ default_mode }}"/>
+                                </label>
                             </div>
                             <div class="field quarter">
                                 <label for="folder_name">保存文件夹名称(folder_name)</label>

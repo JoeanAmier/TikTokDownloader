@@ -12,28 +12,15 @@ from requests import post
 from rich import print
 
 from src.custom import ERROR
+from src.custom import USERAGENT
 from src.custom import X_BOGUS_CODE
+from src.tools import retry_lite
 
 __all__ = ['XBogus', 'MsToken', 'TtWid', 'VerifyFp']
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/"
-                  "120.0.0.0 Safari/537.36 Edg/120.0.0.0"}
-RETRY = 3
+HEADERS = {"User-Agent": USERAGENT}
 
 
-def retry(function):
-    def inner(*args, **kwargs):
-        if r := function(*args, **kwargs):
-            return r
-        for _ in range(RETRY):
-            if r := function(*args, **kwargs):
-                return r
-        return r
-
-    return inner
-
-
-@retry
+@retry_lite
 def send_request(url: str, headers: dict, data: str):
     try:
         return post(url, data=data, timeout=10, headers=headers)

@@ -1,5 +1,6 @@
 from .choose import choose
 from .file_switch import FileSwitch
+from .list_pop import safe_pop
 from .retry import retry
 from .retry import retry_infinite
 from .retry import retry_lite
@@ -16,4 +17,5 @@ __all__ = [
     "timestamp",
     "choose",
     "FileSwitch",
+    "safe_pop",
 ]

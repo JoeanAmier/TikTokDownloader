@@ -226,7 +226,7 @@ class Link:
 
     # TikTok 链接
     works_link_tiktok = compile(
-        r"\S*?https://www\.tiktok\.com/@\S+?/video/(\d{19})\S*?")  # 作品链接
+        r"\S*?https://www\.tiktok\.com/@\S+?/(?:video|photo)/(\d{19})\S*?")  # 作品链接
 
     def __init__(self, params: Parameter):
         self.share = Share(params.logger, params.proxies, params.max_retry)

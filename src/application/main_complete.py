@@ -28,6 +28,7 @@ from src.manager import Cache
 from src.storage import RecordManager
 from src.tools import TikTokAccount
 from src.tools import choose
+from src.tools import safe_pop
 
 __all__ = [
     "TikTok",
@@ -95,6 +96,7 @@ class TikTok:
     }
 
     def __init__(self, parameter):
+        self.default_mode = None
         self.parameter = parameter
         self.console = parameter.console
         self.logger = parameter.logger
@@ -143,7 +145,7 @@ class TikTok:
             return ""
         return text
 
-    def account_acquisition_interactive_tiktok(self):
+    def account_acquisition_interactive_tiktok(self, *args, **kwargs):
         root, params, logger = self.record.run(self.parameter)
         while path := self._inquire_input(tip="请输入 TikTok 主页 HTML 文件(夹)路径: "):
             items = TikTokAccount(path).run()
@@ -221,11 +223,12 @@ class TikTok:
                 self.logger.error(f"发生异常: {uid, uid_, nickname, nickname_}")
                 return False
 
-    def account_acquisition_interactive(self):
+    def account_acquisition_interactive(self, select=None, *args, **kwargs):
         root, params, logger = self.record.run(self.parameter)
-        select = choose("请选择账号链接来源",
-                        ("使用 accounts_urls 参数的账号链接(推荐)",
-                         "手动输入待采集的账号链接"), self.console)
+        if not select:
+            select = choose("请选择账号链接来源",
+                            ("使用 accounts_urls 参数的账号链接(推荐)",
+                             "手动输入待采集的账号链接"), self.console)
         if select == "1":
             self.account_works_batch(root, params, logger)
         elif select == "2":
@@ -415,7 +418,7 @@ class TikTok:
             title=title,
         )
 
-    def works_interactive(self):
+    def works_interactive(self, *args, **kwargs):
         root, params, logger = self.record.run(self.parameter)
         with logger(root, console=self.console, **params) as record:
             while url := self._inquire_input("作品"):
@@ -474,7 +477,7 @@ class TikTok:
             return None
         return list(flv_items.values())[i], list(m3u8_items.values())[i]
 
-    def live_interactive(self):
+    def live_interactive(self, *args, **kwargs):
         while url := self._inquire_input("直播"):
             params = self._generate_live_params(*self.links.live(url))
             if not params:
@@ -528,7 +531,7 @@ class TikTok:
                         item["hls_pull_url_map"])) else u)
 
     @check_storage_format
-    def comment_interactive(self):
+    def comment_interactive(self, *args, **kwargs):
         root, params, logger = self.record.run(self.parameter, type_="comment")
         while url := self._inquire_input("作品"):
             tiktok, ids = self.links.works(url)
@@ -547,11 +550,12 @@ class TikTok:
                         self.logger.warning("采集评论数据失败")
         self.logger.info("已退出采集作品评论数据模式")
 
-    def mix_interactive(self):
+    def mix_interactive(self, select=None, *args, **kwargs):
         root, params, logger = self.record.run(self.parameter, type_="mix")
-        select = choose("请选择合集链接来源",
-                        ("使用 mix_urls 参数的合集链接(推荐)",
-                         "手动输入待采集的合集/作品链接"), self.console)
+        if not select:
+            select = choose("请选择合集链接来源",
+                            ("使用 mix_urls 参数的合集链接(推荐)",
+                             "手动输入待采集的合集/作品链接"), self.console)
         if select == "1":
             self.mix_batch(root, params, logger)
         elif select == "2":
@@ -686,11 +690,12 @@ class TikTok:
         return data
 
     @check_storage_format
-    def user_interactive(self):
-        select = choose(
-            "请选择账号链接来源",
-            ("使用 accounts_urls 参数的账号链接",
-             "手动输入待采集的账号链接"), self.console)
+    def user_interactive(self, select=None, *args, **kwargs):
+        if not select:
+            select = choose(
+                "请选择账号链接来源",
+                ("使用 accounts_urls 参数的账号链接",
+                 "手动输入待采集的账号链接"), self.console)
         if select == "1":
             self.user_batch()
         elif select == "2":
@@ -742,7 +747,7 @@ class TikTok:
             return 1
 
     @check_storage_format
-    def search_interactive(self):
+    def search_interactive(self, *args, **kwargs):
         while True:
             if isinstance(c := self._enter_search_criteria(), tuple):
                 self._deal_search_data(*c)
@@ -809,7 +814,7 @@ class TikTok:
         return search_data
 
     @check_storage_format
-    def hot_interactive(self):
+    def hot_interactive(self, *args, **kwargs):
         self._deal_hot_data()
         self.logger.info("已退出采集抖音热榜数据模式")
 
@@ -830,7 +835,7 @@ class TikTok:
         # print(time_, data, source)  # 调试代码
         return time_, data
 
-    def collection_interactive(self):
+    def collection_interactive(self, *args, **kwargs):
         root, params, logger = self.record.run(self.parameter)
         if not (sec_user_id := self.check_sec_user_id(self.owner.url)):
             self.logger.warning(
@@ -871,16 +876,18 @@ class TikTok:
             api=api,
             addition="收藏作品", )
 
-    def run(self):
+    def run(self, default_mode: list):
+        self.default_mode = default_mode
         with suppress(ValueError):
             while self.running:
-                select = choose(
-                    "请选择采集功能",
-                    [i for i, _ in self.__function],
-                    self.console)
+                if not (select := safe_pop(self.default_mode)):
+                    select = choose(
+                        "请选择采集功能",
+                        [i for i, _ in self.__function],
+                        self.console)
                 if select in {"Q", "q"}:
                     self.running = False
                 elif not select:
                     break
                 elif (n := int(select) - 1) in range(len(self.__function)):
-                    self.__function[n][1]()
+                    self.__function[n][1](safe_pop(self.default_mode))

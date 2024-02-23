@@ -1,4 +1,7 @@
-from src.module import ColorfulConsole
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from src.module import ColorfulConsole
 
 __all__ = ["choose"]
 
@@ -6,7 +9,7 @@ __all__ = ["choose"]
 def choose(
         title: str,
         options: tuple | list,
-        console: ColorfulConsole,
+        console: "ColorfulConsole",
         separate=None) -> str:
     screen = f"{title}:\n"
     row = 0

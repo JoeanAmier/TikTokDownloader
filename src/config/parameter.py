@@ -36,6 +36,35 @@ class Parameter:
         "mark",
         "type",
     )
+    default_mode_values = {
+        "1",
+        "2",
+        "3",
+        "4",
+        "4 1",
+        "4 2",
+        "4 2 1",
+        "4 2 2",
+        "4 2 3",
+        "4 3",
+        "4 4",
+        "4 5",
+        "4 6",
+        "4 6 1",
+        "4 6 2",
+        "4 6 3",
+        "4 7",
+        "4 7 1",
+        "4 7 2",
+        "4 7 3",
+        "4 8",
+        "4 9",
+        "4 10",
+        "5",
+        "6",
+        "7",
+        "8",
+    }
     cleaner = Cleaner()
 
     def __init__(
@@ -47,9 +76,12 @@ class Parameter:
             xb,
             console: ColorfulConsole,
             cookie: dict | str,
+            # cookie_tiktok: dict | str,
             root: str,
             accounts_urls: dict,
+            # accounts_urls_tiktok: dict,
             mix_urls: dict,
+            # mix_urls_tiktok: dict,
             folder_name: str,
             name_format: str,
             date_format: str,
@@ -60,12 +92,13 @@ class Parameter:
             dynamic_cover: bool,
             original_cover: bool,
             proxies: str,
+            # proxies_tiktok: str,
             download: bool,
             max_size: int,
             chunk: int,
             max_retry: int,
             max_pages: int,
-            default_mode: int,
+            default_mode: str,
             owner_url: dict,
             ffmpeg: str,
             blacklist: "DownloadRecorder",
@@ -293,12 +326,12 @@ class Parameter:
                 f"storage_format 参数 {storage_format} 设置错误，程序默认不会储存任何数据至文件")
         return ""
 
-    def __check_default_mode(self, default_mode: int) -> str:
-        if default_mode in range(3, 7):
-            return str(default_mode)
+    def __check_default_mode(self, default_mode: str) -> list:
+        if default_mode in self.default_mode_values:
+            return default_mode.split()[::-1]
         if default_mode:
             self.logger.warning(f"default_mode 参数 {default_mode} 设置错误")
-        return "0"
+        return []
 
     def update_cookie(self) -> None:
         # self.console.print("Update Cookie")
@@ -334,7 +367,7 @@ class Parameter:
             "chunk": self.chunk,
             "max_retry": self.max_retry,
             "max_pages": self.max_pages,
-            "default_mode": int(self.default_mode),
+            "default_mode": " ".join(self.default_mode[::-1]),
             "ffmpeg": self.ffmpeg.path or "",
         }
 

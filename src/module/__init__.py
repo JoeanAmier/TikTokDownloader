@@ -1,6 +1,6 @@
 from .browser import Browser
 from .console import ColorfulConsole
-from .cookie import Cookie
+from .cookie import Cookie, CookieTikTok
 from .ffmpeg import FFMPEG
 from .register import Register
 from .string import Cleaner
@@ -10,6 +10,7 @@ __all__ = [
     "Cleaner",
     "Register",
     "Cookie",
+    "CookieTikTok",
     "ColorfulConsole",
     "Browser",
 ]

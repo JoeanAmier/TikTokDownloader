@@ -125,7 +125,7 @@
 <li>按照提示操作，将 Cookie 写入配置文件</li>
 </ol>
 </li>
-<li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品</code></li>
+<li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品(通用)</code></li>
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 <li>更多详细说明请查看 <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">项目文档</a></b></li>
 </ol>
