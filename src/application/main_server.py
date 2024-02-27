@@ -7,8 +7,8 @@ __all__ = ["Server"]
 
 
 class Server(WebUI):
-    def __init__(self, parameter):
-        super().__init__(parameter)
+    def __init__(self, parameter, key=None):
+        super().__init__(parameter, key)
 
     def run_server(self, app):
         @app.route("/", methods=["GET"])

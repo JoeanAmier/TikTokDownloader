@@ -19,7 +19,7 @@ __all__ = [
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 VERSION_MAJOR = 5
 VERSION_MINOR = 3
-VERSION_BETA = True
+VERSION_BETA = False
 
 REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
 LICENCE = "GNU General Public License v3.0"

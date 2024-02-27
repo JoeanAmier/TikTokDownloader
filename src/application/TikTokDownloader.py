@@ -72,6 +72,9 @@ def start_cookie_task(function):
 
 
 class TikTokDownloader:
+    REDUCED = (1, 1, 1, 1, 0, 1, 0, 0, 1, 1)  # 禁用项目部分功能
+    # REDUCED = False  # 启用项目全部功能
+
     NAME = f"TikTokDownloader v{VERSION_MAJOR}.{
     VERSION_MINOR}{" Beta" if VERSION_BETA else ""}"
     WIDTH = 50
@@ -219,7 +222,7 @@ class TikTokDownloader:
             self.console.print("检测新版本失败", style=ERROR)
         self.console.print()
 
-    def main_menu(self, default_mode=None):
+    def main_menu(self, default_mode=""):
         """选择运行模式"""
         while self.running:
             self.__update_menu()
@@ -237,7 +240,7 @@ class TikTokDownloader:
     @start_cookie_task
     def complete(self):
         """终端交互模式"""
-        example = TikTok(self.parameter)
+        example = TikTok(self.parameter, self.REDUCED)
         register(self.blacklist.close)
         try:
             example.run(self.default_mode)
@@ -319,6 +322,7 @@ class TikTokDownloader:
             console=self.console,
             **self.settings.read(),
             blacklist=self.blacklist,
+            reduced=bool(self.REDUCED),
         )
         self.default_mode = self.parameter.default_mode.copy()
         self.parameter.cleaner.set_rule(TEXT_REPLACEMENT, True)

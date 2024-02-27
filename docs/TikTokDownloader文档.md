@@ -45,7 +45,7 @@
 <li>按照提示操作，将 Cookie 写入配置文件</li>
 </ol>
 </li>
-<li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品(通用)</code></li>
+<li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品(通用)</code> -> <code>手动输入待采集的作品链接</code></li>
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 </ol>
 <h1>获取 Cookie</h1>
@@ -105,7 +105,7 @@
 <ul>
 <li>账号/作品/直播完整链接：使用浏览器打开抖音或 TikTok 链接时，地址栏所显示的 URL 地址。</li>
 <li>分享链接：点击 APP 或网页版的分享按钮得到的 URL 地址，抖音平台以 <code>https://v.</code> 开头，掺杂中文和其他字符；TikTok
-平台以 <code>https://vm</code> 开头，不掺杂其他字符；使用时不需要手动去除中文和其他字符，程序会自动提取 URL 链接。</li>
+平台以 <code>https://vm</code> 开头，不掺杂其他字符；使用时<b>不需要</b>手动去除中文和其他字符，程序会自动提取 URL 链接。</li>
 </ul>
 <h2>数据储存</h2>
 <ul>
@@ -113,9 +113,21 @@
 <li><code>采集作品评论数据</code>、<code>批量采集账号数据</code>、<code>采集搜索结果数据</code>、<code>采集抖音热榜数据</code> 模式必须设置 <code>storage_format</code> 参数才能正常使用。</li>
 <li>程序所有数据均储存至 <code>root</code> 参数路径下的 <code>Data</code> 文件夹。</li>
 </ul>
+<h2>文本文档</h2>
+<p>项目部分功能支持从文本文档（TXT）读取链接，如需使用，请在计算机任意路径创建一个空白文本文档，然后编辑文件内容，每行输入单个链接，编辑完成后保存文件。</p>
+<p>文本文档编码：UTF-8</p>
+<h3>文本文档内容示例</h3>
+
+```text
+https://www.douyin.com/user/abcd?vid=123456789
+https://www.douyin.com/search/key?modal_id=123456789
+https://www.douyin.com/video/123456789
+https://www.douyin.com/note/123456789
+```
+
 <h2>直播下载</h2>
 <p><code>获取直播推流地址</code> 功能支持调用 <code>ffmpeg</code> 下载直播，程序会优先调用系统环境的 <code>ffmpeg</code>，其次调用 <code>ffmpeg</code> 参数指定的 <code>ffmpeg</code>，如果 <code>ffmpeg</code> 不可用，程序将会调用内置下载器下载直播。</p>
-<p>建议配置 <code>ffmpeg</code> 环境，<code>ffmpeg.exe</code> 可前往 <a href="http://ffmpeg.org/download.html">官方网站</a> 获取。</p>
+<p>建议配置 <code>ffmpeg</code> 环境，<code>ffmpeg.exe</code> 可前往 <a href="https://ffmpeg.org/download.html">官方网站</a> 获取。</p>
 <h2>功能简介</h2>
 <table>
 <thead>
@@ -599,6 +611,7 @@ document.body.removeChild(downloadLink);
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts_urls</code> 参数中的账号链接。</li>
 <li>手动输入待采集的账号链接；此选项仅支持批量下载账号发布页作品，暂不支持参数设置。</li>
+<li>输入文本文档路径，读取文件包含的账号链接；此选项仅支持批量下载账号发布页作品，暂不支持参数设置。</li>
 </ol>
 <p>支持链接格式：</p>
 <ul>
@@ -611,7 +624,11 @@ document.body.removeChild(downloadLink);
 <p>处理多个账号时，如果某个账号获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/custom/function.py</code> 文件修改功能）</p>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
 <h3>批量下载链接作品</h3>
-<p>输入作品链接；<strong>支持 TikTok 平台。</strong></p>
+<p><strong>支持 TikTok 平台。</strong></p>
+<ol>
+<li>手动输入待采集的作品链接。</li>
+<li>输入文本文档路径，读取文件包含的作品链接。</li>
+</ol>
 <p>支持链接格式：</p>
 <ul>
 <li><code>https://v.douyin.com/分享码/</code></li>
@@ -642,7 +659,10 @@ document.body.removeChild(downloadLink);
 <li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹</li>
 </ul>
 <h3>采集作品评论数据</h3>
-<p>输入作品链接。</p>
+<ol>
+<li>手动输入待采集的作品链接。</li>
+<li>输入文本文档路径，读取文件包含的作品链接。</li>
+</ol>
 <p>支持链接格式：</p>
 <ul>
 <li><code>https://v.douyin.com/分享码/</code></li>
@@ -658,6 +678,7 @@ document.body.removeChild(downloadLink);
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>mix_urls</code> 参数中的合集链接或作品链接。</li>
 <li>输入合集链接，或者属于合集的任意一个作品链接。</li>
+<li>输入文本文档路径，读取文件包含的作品链接或合集链接；该选项暂不支持设置合集标识。</li>
 </ol>
 <p>支持链接格式：</p>
 <ul>
@@ -677,6 +698,7 @@ document.body.removeChild(downloadLink);
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts_urls</code> 参数中的账号链接。</li>
 <li>手动输入待采集的账号链接。</li>
+<li>输入文本文档路径，读取文件包含的账号链接。</li>
 </ol>
 <p>支持链接格式：</p>
 <ul>

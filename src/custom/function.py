@@ -26,17 +26,17 @@ def wait() -> None:
     # pass
 
 
-def failure_handling():
+def failure_handling() -> bool:
     """批量下载账号作品模式 和 批量下载合集作品模式 获取数据失败时，是否继续执行"""
     # 询问用户
-    return input("输入任意字符继续处理账号/合集，直接回车停止处理账号/合集: ")
+    return bool(input("输入任意字符继续处理账号/合集，直接回车停止处理账号/合集: "))
     # 继续执行
     # return True
     # 结束执行
     # return False
 
 
-def illegal_nickname():
+def illegal_nickname() -> str:
     """当 账号昵称/标识 或者 合集标题/标识 过滤非法字符后不是有效的文件夹名称时，如何处理异常"""
     # 询问用户
     return input("当前 账号昵称/标识 或者 合集标题/标识 不是有效的文件夹名称，请输入临时的账号标识或者合集标识：")
@@ -55,7 +55,7 @@ def condition_filter(data: dict) -> bool:
     return True
 
 
-def suspend(count: int, screen):
+def suspend(count: int, screen) -> None:
     """
     如需采集大量数据，请启用该函数，可以在处理指定数量的数据后，暂停一段时间，然后继续运行
     batches: 每次处理的数据数量上限，比如：每次处理 10 个数据，就会暂停程序

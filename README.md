@@ -79,7 +79,7 @@
 
 <p><b>🎥 点击图片观看演示视频，建议通过配置文件管理账号，更多介绍请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">文档</a></b></p>
 
-[![演示视频](docs/程序运行演示.png)](https://www.bilibili.com/video/BV1Nu4y1L7LW/)
+[![演示视频](docs/程序运行演示.png)](https://www.bilibili.com/video/BV1KH4y177Ev/)
 
 # 📈 项目状态\(Status\)
 
@@ -87,8 +87,6 @@
 * 🟡 TikTokDownloader 开发计划及进度可前往 [Projects](https://github.com/users/JoeanAmier/projects/2) 查阅
 * 🔴 请注意，最新源码可能存在一些不稳定的 Bug
 * 🔴 如果在使用过程中发现程序 Bug，请及时告知作者修复
-* 🔴 采集 TikTok 图集作品导致异常退出，已修复
-* 🔴 某些情况下读取 HTML 文件失败，已修复
 * 🔴 夜晚无法下载高分辨率视频，疑似抖音服务端限制
 
 # 📋 项目说明\(Instructions\)
@@ -125,7 +123,7 @@
 <li>按照提示操作，将 Cookie 写入配置文件</li>
 </ol>
 </li>
-<li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品(通用)</code></li>
+<li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品(通用)</code> -> <code>手动输入待采集的作品链接</code></li>
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 <li>更多详细说明请查看 <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">项目文档</a></b></li>
 </ol>
@@ -185,7 +183,7 @@
 >
 > ### 安装程序
 >
->> **敬请期待！**
+>> **直接使用安装程序覆盖安装。**
 
 # ⚠️ 免责声明\(Disclaimers\)
 

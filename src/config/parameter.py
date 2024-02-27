@@ -36,7 +36,7 @@ class Parameter:
         "mark",
         "type",
     )
-    default_mode_values = {
+    mode_complete_values = {
         "1",
         "2",
         "3",
@@ -47,8 +47,12 @@ class Parameter:
         "4 2 2",
         "4 2 3",
         "4 3",
+        "4 3 1",
+        "4 3 2",
         "4 4",
         "4 5",
+        "4 5 1",
+        "4 5 2",
         "4 6",
         "4 6 1",
         "4 6 2",
@@ -60,6 +64,31 @@ class Parameter:
         "4 8",
         "4 9",
         "4 10",
+        "5",
+        "6",
+        "7",
+        "8",
+    }
+    mode_reduced_values = {
+        "1",
+        "2",
+        "3",
+        "4",
+        "4 1",
+        "4 2",
+        "4 2 1",
+        "4 2 2",
+        "4 2 3",
+        "4 3",
+        "4 3 1",
+        "4 3 2",
+        "4 4",
+        "4 5",
+        "4 5 1",
+        "4 5 2",
+        "4 5 3",
+        "4 6",
+        "4 7",
         "5",
         "6",
         "7",
@@ -102,6 +131,7 @@ class Parameter:
             owner_url: dict,
             ffmpeg: str,
             blacklist: "DownloadRecorder",
+            reduced: bool,
             timeout=10,
             **kwargs,
     ):
@@ -142,6 +172,7 @@ class Parameter:
             mix_urls)
         self.owner_url: SimpleNamespace = Extractor.generate_data_object(
             owner_url)
+        self.__reduced = reduced
         self.default_mode = self.__check_default_mode(default_mode)
         self.preview = BLANK_PREVIEW
         self.ffmpeg = self.__generate_ffmpeg_object(ffmpeg)
@@ -327,7 +358,7 @@ class Parameter:
         return ""
 
     def __check_default_mode(self, default_mode: str) -> list:
-        if default_mode in self.default_mode_values:
+        if default_mode in self.mode_reduced_values if self.__reduced else self.mode_complete_values:
             return default_mode.split()[::-1]
         if default_mode:
             self.logger.warning(f"default_mode 参数 {default_mode} 设置错误")

@@ -9,8 +9,8 @@ __all__ = ['APIServer']
 
 
 class APIServer(WebUI):
-    def __init__(self, parameter):
-        super().__init__(parameter)
+    def __init__(self, parameter, key=None):
+        super().__init__(parameter, key)
 
     def _generate_record_params(self, data: dict, merge=True, **kwargs):
         root, params, logger = self.record.run(self.parameter,

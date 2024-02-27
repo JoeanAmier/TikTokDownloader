@@ -9,8 +9,8 @@ __all__ = ["WebUI"]
 
 
 class WebUI(TikTok):
-    def __init__(self, parameter):
-        super().__init__(parameter)
+    def __init__(self, parameter, key=None):
+        super().__init__(parameter, key)
         self.cookie = parameter.cookie
         self.preview = parameter.preview
         self.error_works = {
@@ -41,8 +41,7 @@ class WebUI(TikTok):
         for i, j in (("max_size", 0),
                      ("chunk", 1024 * 1024),
                      ("max_retry", 5),
-                     ("max_pages", 0),
-                     ("default_mode", 0)):
+                     ("max_pages", 0),):
             try:
                 data[i] = int(data[i])
             except ValueError:
