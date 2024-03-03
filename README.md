@@ -96,8 +96,8 @@
 <ol>
 <li><b>下载 EXE 程序</b> 或者 <b>配置运行环境</b>
 <ol><b>下载程序运行</b>
-<li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的 EXE 程序压缩包</li>
-<li>解压后打开程序文件夹，双击运行 <code>main.exe</code></li>
+<li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的 EXE 程序压缩包或安装包</li>
+<li>解压或安装后打开程序文件夹，双击运行 <code>main.exe</code></li>
 </ol>
 <ol><b>通过源码运行</b>
 <li>安装不低于 <code>3.12</code> 版本的 <a href="https://www.python.org/">Python</a> 解释器</li>

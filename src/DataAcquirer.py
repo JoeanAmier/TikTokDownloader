@@ -260,7 +260,7 @@ class Link:
             return False, u
         link = self.mix_link.findall(urls)
         share = self.mix_share.findall(urls)
-        return True, u if (u := link + share) else None, []
+        return (True, u) if (u := link + share) else (None, [])
 
     def live(self, text: str) -> tuple:
         urls = self.share.run(text)

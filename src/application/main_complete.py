@@ -19,12 +19,12 @@ from src.DataAcquirer import (
     Hot,
     Collection,
 )
-from src.DataDownloader import Downloader
 from src.custom import (
     WARNING,
 )
 from src.custom import failure_handling
 from src.custom import suspend
+from src.downloader import Downloader
 from src.extract import Extractor
 from src.manager import Cache
 from src.storage import RecordManager
@@ -770,7 +770,7 @@ class TikTok:
 
     def txt_inquire(self) -> str:
         path = self.console.input("请输入文本文档路径：")
-        if not (t := Path(path)).is_file():
+        if not (t := Path(path.replace("\"", ""))).is_file():
             self.console.print(f"{path} 文件不存在！")
             return ""
         with t.open("r", encoding=self.ENCODE) as f:
