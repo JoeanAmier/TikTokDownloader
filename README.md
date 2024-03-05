@@ -93,7 +93,71 @@
 
 ## 快速入门
 
-<ol>
+### 📌 第 1 步: 启动应用
+
+选择以下任意一种运行方式
+
+> 通过程序运行
+
+1. 前往 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 下载 `压缩包` 或 `安装包`
+
+2. 解压或安装后打开程序文件夹，双击运行 `main.exe`
+
+> 通过源码运行
+
+1. 安装不低于 3.12 版本的 [Python](https://www.python.org/) 解释器
+
+2. 下载最新的源码或 [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码至本地
+
+3. 运行 `python -m venv venv` 命令创建虚拟环境（可选）
+
+4. 运行 `.\venv\Scripts\activate.ps1` 或者 `venv\Scripts\activate` 命令激活虚拟环境（可选）
+
+5. 运行 `pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt` 命令安装程序所需模块
+
+6. 运行 `python .\main.py` 或者 `python main.py` 命令启动 TikTokDownloader
+
+### 📌 第 2 步: 阅读 TikTokDownloader 的免责声明
+
+根据提示输入内容
+
+### 📌 第 3 步: 将 Cookie 信息写入配置文件
+
+> 手动复制粘贴(推荐) ✅
+
+1. 参考 [Cookie](https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md) 提取教程，复制所需 Cookie 至剪贴板
+
+2. 选择 `复制粘贴写入 Cookie` 选项，按照提示将 Cookie 写入配置文件
+
+> 从浏览器获取(推荐) ✅
+
+1. 选择 `从浏览器获取 Cookie` 选项，按照提示选择浏览器类型
+
+> 扫码登录获取(停用) ❗️
+
+1. 选择 `扫码登录获取 Cookie` 选项，程序会显示登录二维码图片，并使用默认应用打开图片
+
+2. 使用抖音 APP 扫描二维码并登录账号
+
+3. 按照提示操作，将 Cookie 写入配置文件
+
+### 📌 第 4 步: 返回程序界面
+
+依次选择 `终端交互模式` -> `批量下载链接作品(通用)` -> `手动输入待采集的作品链接`
+
+### 📌 第 5 步: 下载作品文件
+
+输入抖音或 TikTok 作品链接即可下载作品文件
+
+### 📌 第 6 步: 更多详细说明
+
+请查看 [项目文档](https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation)
+
+### 📌 最后
+
+⭐ 推荐使用 [Windows 终端](https://learn.microsoft.com/zh-cn/windows/terminal/install)（Windows 11 自带默认终端）
+
+<!-- <ol>
 <li><b>下载 EXE 程序</b> 或者 <b>配置运行环境</b>
 <ol><b>下载程序运行</b>
 <li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的 EXE 程序压缩包或安装包</li>
@@ -107,8 +171,8 @@
 <li>运行 <code>pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt</code> 命令安装程序所需模块</li>
 <li>运行 <code>python .\main.py</code> 或者 <code>python main.py</code> 命令启动 TikTokDownloader</li>
 </ol>
-</li>
-<li>阅读 TikTokDownloader 的免责声明，根据提示输入内容</li>
+</li> -->
+<!-- <li>阅读 TikTokDownloader 的免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
 <ol><b>手动复制粘贴(推荐)</b>
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
@@ -128,7 +192,7 @@
 <li>更多详细说明请查看 <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">项目文档</a></b></li>
 </ol>
 <p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a>（Windows 11 自带默认终端）</p>
-<hr>
+<hr> -->
 
 ## 关于 Cookie
 
