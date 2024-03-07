@@ -485,6 +485,7 @@ class TikTok:
             if not any(ids):
                 self.logger.warning(f"{url} 提取作品 ID 失败")
                 continue
+            self.console.print(f"共提取到 {len(ids)} 个作品，开始处理！")
             self.input_links_acquisition(tiktok, ids, record)
 
     def __works_txt(self, record):
@@ -494,6 +495,7 @@ class TikTok:
         if not any(ids):
             self.logger.warning("从文本文档提取作品 ID 失败")
             return
+        self.console.print(f"共提取到 {len(ids)} 个作品，开始处理！")
         self.input_links_acquisition(tiktok, ids, record)
 
     def input_links_acquisition(
@@ -620,6 +622,7 @@ class TikTok:
             elif tiktok:
                 self.console.print("目前项目暂不支持采集 TikTok 作品评论数据！", style=WARNING)
                 continue
+            self.console.print(f"共提取到 {len(ids)} 个作品，开始处理！")
             self.__comment_handle(ids, root, params, logger)
 
     def __comment_txt(self, root, params, logger):
@@ -632,6 +635,7 @@ class TikTok:
         elif tiktok:
             self.console.print("目前项目暂不支持采集 TikTok 作品评论数据！", style=WARNING)
             return
+        self.console.print(f"共提取到 {len(ids)} 个作品，开始处理！")
         self.__comment_handle(ids, root, params, logger)
 
     def __comment_handle(self, ids: list, root, params, logger):

@@ -284,8 +284,8 @@ class TikTokDownloader:
 
     def write_cookie(self):
         self.console.print(
-            "Cookie 获取教程：https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95"
-            "%99%E7%A8%8B.md")
+            "Cookie 获取教程：https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6"
+            "%95%99%E7%A8%8B.md")
         self.cookie.run()
         self.check_settings()
         self.parameter.update_cookie()
@@ -336,9 +336,8 @@ class TikTokDownloader:
             self.main_menu(safe_pop(self.default_mode))
         self.close()
 
-    @staticmethod
-    def delete_temp():
-        rmtree(PROJECT_ROOT.joinpath("./cache/temp").resolve())
+    def delete_temp(self):
+        rmtree(self.parameter.temp.resolve())
 
     def periodic_update_cookie(self):
         while not self.event.is_set():

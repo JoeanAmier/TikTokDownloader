@@ -111,7 +111,7 @@
 <li>阅读 TikTokDownloader 的免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
 <ol><b>手动复制粘贴(推荐)</b>
-<li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
+<li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
 <li>选择 <code>复制粘贴写入 Cookie</code> 选项，按照提示将 Cookie 写入配置文件</li>
 </ol>
 <ol><b>从浏览器获取(推荐)</b>
@@ -132,7 +132,7 @@
 
 ## 关于 Cookie
 
-[点击查看 Cookie 获取教程](https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E6%95%99%E7%A8%8B.md)
+[点击查看 Cookie 获取教程](https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md)
 
 |   程序功能   | 是否需要登录 |
 |:--------:|:------:|
@@ -205,16 +205,10 @@
 # ✉️ 联系作者\(Contact\)
 
 <ul>
-<li>QQ: 2437596031（联系请说明来意）</li>
-<li>QQ Group: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">点击扫码加入群聊</a></li>
-<li>Email: yonglelolu@gmail.com</li>
+<li>微信: Downloader_Tools</li>
+<li>微信公众号: Downloader Tools</li>
+<li>QQ 群聊(使用交流): <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">扫码加入群聊</a></li>
 </ul>
-<p>
-<b>如果您在使用 TikTokDownloader 的时候遇到问题，请先阅读<a href="https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/main/README-zh_CN.md">《提问的智慧》</a>，然后加入 QQ 群聊寻求帮助！</b>
-</p>
-<p>
-<b>如果您通过 Email 联系我，我可能无法及时查看并回复信息，我会尽力在七天内回复您的邮件；如果有紧急事项或需要更快的回复，请通过其他方式与我联系，谢谢理解！</b>
-</p>
 <p><b>如果您对小红书感兴趣，可以了解一下我的另一个开源项目 <a href="https://github.com/JoeanAmier/XHS-Downloader">XHS-Downloader</a></b></p>
 
 # ♥️ 支持项目\(Support\)

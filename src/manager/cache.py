@@ -170,3 +170,6 @@ class Cache:
         except FileExistsError as e:
             self.console.print(f"{type_}名称重复，重命名失败: {e}", style=ERROR)
             return False
+        except OSError as e:
+            self.console.print(f"处理{type_}时发生预期之外的错误: {e}", style=ERROR)
+            return True

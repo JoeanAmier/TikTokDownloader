@@ -3,6 +3,7 @@ from .console import ColorfulConsole
 from .cookie import Cookie, CookieTikTok
 from .ffmpeg import FFMPEG
 from .register import Register
+from .session import Session
 from .string import Cleaner
 
 __all__ = [
@@ -13,4 +14,5 @@ __all__ = [
     "CookieTikTok",
     "ColorfulConsole",
     "Browser",
+    "Session",
 ]

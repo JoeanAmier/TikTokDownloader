@@ -36,7 +36,8 @@ def retry_infinite(function):
         while True:
             if function(self, *args, **kwargs):
                 return
-            _ = self.console.input(
-                "请关闭所有正在访问作品保存文件夹的窗口和程序，按下回车继续运行！")
+            if self.console.input(
+                    "如需重新尝试处理该对象，请关闭所有正在访问该对象的窗口或程序，然后直接按下回车键！\n如需跳过处理该对象，请输入任意字符后按下回车键！"):
+                return
 
     return inner

@@ -14,12 +14,13 @@ __all__ = [
     "X_BOGUS_CODE",
     "DISCLAIMER_TEXT",
     "BLANK_PREVIEW",
+    "TIMEOUT",
 ]
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 VERSION_MAJOR = 5
-VERSION_MINOR = 3
-VERSION_BETA = False
+VERSION_MINOR = 4
+VERSION_BETA = True
 
 REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
 LICENCE = "GNU General Public License v3.0"
@@ -43,6 +44,7 @@ DISCLAIMER_TEXT = (
 )
 
 RETRY = 5
+TIMEOUT = 10
 
 USERAGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 "

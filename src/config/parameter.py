@@ -138,7 +138,8 @@ class Parameter:
         self.settings = settings
         self.cookie_object = cookie_object
         self.main_path = main_path  # 项目根路径
-        self.temp = main_path.joinpath("./cache/temp")  # 缓存路径
+        self.cache = main_path.joinpath("cache")  # 缓存路径
+        self.temp = self.cache.joinpath("temp")  # 临时文件路径
         self.headers = {
             "User-Agent": USERAGENT,
         }
