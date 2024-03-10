@@ -1,13 +1,16 @@
 from pathlib import Path
 from platform import system
 from re import compile
+from typing import TYPE_CHECKING
 
 from src.custom import (
     ERROR,
     WARNING,
     INFO,
 )
-from src.module import ColorfulConsole
+
+if TYPE_CHECKING:
+    from src.tools import ColorfulConsole
 
 __all__ = ["DownloadRecorder"]
 
@@ -21,7 +24,7 @@ class DownloadRecorder:
             switch: bool,
             folder: Path,
             state: bool,
-            console: ColorfulConsole):
+            console: "ColorfulConsole"):
         self.switch = switch
         self.state = state
         self.backup = folder.joinpath("IDRecorder_backup.txt")

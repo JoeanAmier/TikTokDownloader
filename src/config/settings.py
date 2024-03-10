@@ -1,12 +1,15 @@
 from json import dump
 from json import load
 from json.decoder import JSONDecodeError
-from pathlib import Path
 from platform import system
 from types import SimpleNamespace
+from typing import TYPE_CHECKING
 
 from src.custom import INFO, ERROR
-from src.module import ColorfulConsole
+
+if TYPE_CHECKING:
+    from src.tools import ColorfulConsole
+    from pathlib import Path
 
 __all__ = ["Settings"]
 
@@ -21,14 +24,15 @@ class Settings:
              "earliest": "作品最早发布日期",
              "latest": "作品最晚发布日期"},
         ],
-        # "accounts_urls_tiktok": None,
+        "accounts_urls_tiktok": None,
         "mix_urls": [
             {"mark": "合集标识，可以设置为空字符串",
              "url": "合集链接或者作品链接"},
         ],
-        # "mix_urls_tiktok": None,
+        "mix_urls_tiktok": None,
         "owner_url": {"mark": "账号标识，可以设置为空字符串",
                       "url": "账号主页链接", },
+        "owner_url_tiktok": None,
         "root": "",
         "folder_name": "Download",
         "name_format": "create_time type nickname desc",
@@ -38,11 +42,11 @@ class Settings:
         "music": False,
         "storage_format": "",
         "cookie": "",
-        # "cookie_tiktok": "",
+        "cookie_tiktok": None,
         "dynamic_cover": False,
         "original_cover": False,
         "proxies": "",
-        # "proxies_tiktok": "",
+        "proxies_tiktok": None,
         "download": True,
         "max_size": 0,
         "chunk": 1024 * 1024,  # 每次从服务器接收的数据块大小
@@ -52,7 +56,7 @@ class Settings:
         "ffmpeg": "",
     }  # 默认配置
 
-    def __init__(self, root: Path, console: ColorfulConsole):
+    def __init__(self, root: "Path", console: "ColorfulConsole"):
         self.file = root.joinpath("./settings.json")  # 配置文件
         self.console = console
 
@@ -79,10 +83,12 @@ class Settings:
             return self.default  # 读取配置文件发生错误时返回空配置
 
     def __check(self, data: dict) -> dict:
-        if set(self.default.keys()).issubset(set(data.keys())):
+        default_keys = self.default.keys()
+        data_keys = set(data.keys())
+        if not (miss := default_keys - data_keys):
             return data
-        if self.console.input(
-                f"[{ERROR}]配置文件 settings.json 缺少必要的参数，是否需要生成默认配置文件(YES/NO): [/{ERROR}]").upper() == "YES":
+        if self.console.input(f"[{ERROR}]配置文件 settings.json 缺少 {"、".join(
+                i for i in miss)} 参数，是否需要生成默认配置文件(YES/NO): [/{ERROR}]").upper() == "YES":
             self.__create()
         self.console.print("本次运行将会使用各项参数默认值，程序功能可能无法正常使用！")
         return self.default

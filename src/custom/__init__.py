@@ -21,6 +21,7 @@ from .internal import (
     DISCLAIMER_TEXT,
     BLANK_PREVIEW,
     TIMEOUT,
+    PROJECT_NAME,
 )
 from .static import (
     MAX_WORKERS,
@@ -74,4 +75,5 @@ __all__ = [
     "DISCLAIMER_TEXT",
     "BLANK_PREVIEW",
     "TIMEOUT",
+    "PROJECT_NAME",
 ]

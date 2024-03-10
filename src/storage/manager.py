@@ -1,7 +1,14 @@
+from typing import TYPE_CHECKING
+
 from .csv import CSVLogger
 from .sqlite import SQLLogger
 from .text import BaseTextLogger
 from .xlsx import XLSXLogger
+
+if TYPE_CHECKING:
+    from src.config import Parameter
+
+__all__ = ["RecordManager"]
 
 
 class RecordManager:
@@ -419,7 +426,7 @@ class RecordManager:
 
     def run(
             self,
-            parameter,
+            parameter: "Parameter",
             folder="",
             type_="works",
             blank=False, ):

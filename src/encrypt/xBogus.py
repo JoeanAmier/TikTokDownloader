@@ -2,7 +2,6 @@ from hashlib import md5
 from time import time
 from urllib.parse import urlencode
 
-# from src.tools import run_time
 from src.custom import X_BOGUS_CODE
 
 __all__ = ["XBogus", "XBogusTikTok"]
@@ -151,7 +150,6 @@ class XBogus:
         string = [i >> j for i, j in zip(string, range(18, -1, -6))]
         return "".join([self.__string[i] for i in string])
 
-    # @run_time
     def generate_x_bogus(
             self,
             query: list,

@@ -4,6 +4,7 @@ from pathlib import Path
 from shutil import move
 from time import time
 from types import SimpleNamespace
+from typing import TYPE_CHECKING
 
 from requests import exceptions
 from requests import get
@@ -18,7 +19,6 @@ from rich.progress import (
     TransferSpeedColumn,
 )
 
-from src.config import Parameter
 from src.custom import DESCRIPTION_LENGTH
 from src.custom import MAX_WORKERS
 from src.custom import (
@@ -27,7 +27,10 @@ from src.custom import (
     WARNING,
 )
 from src.extend import VideoDownloader
-from src.tools import retry
+from src.tools import PrivateRetry
+
+if TYPE_CHECKING:
+    from src.config import Parameter
 
 __all__ = ["Downloader"]
 
@@ -37,7 +40,7 @@ class Downloader:
         'User-Agent': 'com.ss.android.ugc.trill/494+Mozilla/5.0+(Linux;+Android+12;+2112123G+Build/SKQ1.211006.001;+wv)'
                       '+AppleWebKit/537.36+(KHTML,+like+Gecko)+Version/4.0+Chrome/107.0.5304.105+Mobile+Safari/537.36'}
 
-    def __init__(self, params: Parameter):
+    def __init__(self, params: "Parameter"):
         self.cleaner = params.cleaner
         self.cookie = params.cookie
         self.PC_headers, self.black_headers = self.init_headers(params.headers)
@@ -389,7 +392,7 @@ class Downloader:
     def check_deal_music(self, url: str, path: Path) -> bool:
         return all((self.music, url, not self.is_exists(path)))
 
-    @retry
+    @PrivateRetry.retry
     def request_file(
             self,
             url: str,

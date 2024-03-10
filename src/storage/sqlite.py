@@ -4,6 +4,8 @@ from sqlite3 import connect
 
 from .sql import BaseSQLLogger
 
+__all__ = ["SQLLogger"]
+
 
 class SQLLogger(BaseSQLLogger):
     """SQLite 数据库保存数据"""

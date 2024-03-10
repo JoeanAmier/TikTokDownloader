@@ -3,7 +3,7 @@ from re import compile
 
 from lxml.etree import HTML
 
-from .temporary import timestamp
+from src.tools import timestamp
 
 __all__ = ["TikTokAccount"]
 

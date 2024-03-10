@@ -1,7 +1,7 @@
 from .sql import BaseSQLLogger
 
-__all__ = ["MySQL"]
+__all__ = ["MySQLLogger"]
 
 
-class MySQL(BaseSQLLogger):
+class MySQLLogger(BaseSQLLogger):
     pass

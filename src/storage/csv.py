@@ -2,9 +2,14 @@ from csv import writer
 from os.path import getsize
 from pathlib import Path
 from platform import system
+from typing import TYPE_CHECKING
 
-from src.module import ColorfulConsole
 from .text import BaseTextLogger
+
+if TYPE_CHECKING:
+    from src.tools import ColorfulConsole
+
+__all__ = ["CSVLogger"]
 
 
 class CSVLogger(BaseTextLogger):
@@ -17,7 +22,7 @@ class CSVLogger(BaseTextLogger):
             root: Path,
             title_line: tuple,
             field_keys: tuple,
-            console: ColorfulConsole,
+            console: "ColorfulConsole",
             old=None,
             name="Solo_Download",
             *args,

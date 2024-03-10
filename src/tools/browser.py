@@ -15,6 +15,7 @@ from browser_cookie3 import (
 )
 
 from src.custom import WARNING
+from .format import cookie_jar_to_dict
 
 if TYPE_CHECKING:
     from src.module import Cookie
@@ -49,7 +50,7 @@ class Browser:
             "请先关闭对应的浏览器，然后输入浏览器序号：")
         try:
             cookie = self.browser[int(browser) - 1](domain_name=domain)
-            cookie = self.__extract_cookie(cookie)
+            cookie = cookie_jar_to_dict(cookie)
             self.__save_cookie(cookie)
         except ValueError:
             self.console.print("浏览器序号错误，未写入 Cookie！")
@@ -62,9 +63,5 @@ class Browser:
                 "获取 Cookie 失败，未找到对应浏览器的 Cookie 数据！",
                 style=WARNING)
 
-    @staticmethod
-    def __extract_cookie(cookie) -> dict:
-        return {i.name: i.value for i in cookie}
-
     def __save_cookie(self, cookie: dict):
-        self.cookie_object.write(cookie)
+        self.cookie_object.save_cookie(cookie)

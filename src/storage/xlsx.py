@@ -1,10 +1,15 @@
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from openpyxl import Workbook
 from openpyxl import load_workbook
 
-from src.module import ColorfulConsole
 from .text import BaseTextLogger
+
+if TYPE_CHECKING:
+    from src.tools import ColorfulConsole
+
+__all__ = ["XLSXLogger"]
 
 
 class XLSXLogger(BaseTextLogger):
@@ -16,7 +21,7 @@ class XLSXLogger(BaseTextLogger):
             root: Path,
             title_line: tuple,
             field_keys: tuple,
-            console: ColorfulConsole,
+            console: "ColorfulConsole",
             old=None,
             name="Solo_Download",
             *args,

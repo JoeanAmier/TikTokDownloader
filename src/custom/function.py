@@ -1,8 +1,12 @@
 from random import randint
 from time import sleep
+from typing import TYPE_CHECKING
 
 # from time import time
 from .static import GENERAL
+
+if TYPE_CHECKING:
+    from src.tools import ColorfulConsole
 
 __all__ = [
     "wait",
@@ -41,7 +45,7 @@ def illegal_nickname() -> str:
     # 询问用户
     return input("当前 账号昵称/标识 或者 合集标题/标识 不是有效的文件夹名称，请输入临时的账号标识或者合集标识：")
     # 使用当前时间戳作为账号昵称/标识或者合集标题/标识
-    # 需要将第 4 行代码取消注释
+    # 需要将第 5 行代码取消注释
     # return str(time())[:10]
 
 
@@ -55,7 +59,7 @@ def condition_filter(data: dict) -> bool:
     return True
 
 
-def suspend(count: int, screen) -> None:
+def suspend(count: int, console: "ColorfulConsole") -> None:
     """
     如需采集大量数据，请启用该函数，可以在处理指定数量的数据后，暂停一段时间，然后继续运行
     batches: 每次处理的数据数量上限，比如：每次处理 10 个数据，就会暂停程序
@@ -67,7 +71,7 @@ def suspend(count: int, screen) -> None:
     batches = 10  # 根据实际需求修改
     if not count % batches:
         rest_time = 60 * 5  # 根据实际需求修改
-        screen(
+        console.print(
             f"程序已经处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，程序已经暂停运行，"
             f"在 {rest_time} 秒后继续处理数据！", style=GENERAL)
         sleep(rest_time)

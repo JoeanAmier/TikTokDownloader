@@ -14,13 +14,14 @@ from rich import print
 from src.custom import ERROR
 from src.custom import USERAGENT
 from src.custom import X_BOGUS_CODE
-from src.tools import retry_lite
+from src.tools import PrivateRetry
 
 __all__ = ['XBogus', 'MsToken', 'TtWid', 'VerifyFp']
+
 HEADERS = {"User-Agent": USERAGENT}
 
 
-@retry_lite
+@PrivateRetry.retry_lite
 def send_request(url: str, headers: dict, data: str):
     try:
         return post(url, data=data, timeout=10, headers=headers)

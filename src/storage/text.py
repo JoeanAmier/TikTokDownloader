@@ -1,6 +1,8 @@
 from pathlib import Path
 
-from src.tools import retry_infinite
+from src.tools import PrivateRetry
+
+__all__ = ["BaseTextLogger"]
 
 
 class BaseTextLogger:
@@ -27,7 +29,7 @@ class BaseTextLogger:
         return new_
 
     @staticmethod
-    @retry_infinite
+    @PrivateRetry.retry_infinite
     def __rename_file(old_file: Path, new_file: Path) -> bool:
         if old_file.exists() and not new_file.exists():
             try:

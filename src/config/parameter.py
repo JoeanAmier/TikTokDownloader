@@ -3,6 +3,7 @@ from time import localtime
 from time import strftime
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
+from typing import Type
 
 from requests import exceptions
 from requests import get
@@ -12,16 +13,18 @@ from src.custom import USERAGENT
 from src.encrypt import MsToken
 from src.encrypt import TtWid
 from src.extract import Extractor
-from src.module import Cleaner
-from src.module import ColorfulConsole
-from src.module import Cookie
 from src.module import FFMPEG
-from src.module import Register
+from src.record import BaseLogger
+from src.record import LoggerManager
 from src.storage import RecordManager
-from .settings import Settings
+from src.tools import Cleaner
+from src.tools import cookie_dict_to_str
 
 if TYPE_CHECKING:
     from src.manager import DownloadRecorder
+    from src.tools import ColorfulConsole
+    from .settings import Settings
+    from src.module import Cookie
 
 __all__ = ["Parameter"]
 
@@ -98,19 +101,19 @@ class Parameter:
 
     def __init__(
             self,
-            settings: Settings,
-            cookie_object: Cookie,
+            settings: "Settings",
+            cookie_object: "Cookie",
             main_path: Path,
-            logger,
+            logger: Type[BaseLogger | LoggerManager],
             xb,
-            console: ColorfulConsole,
+            console: "ColorfulConsole",
             cookie: dict | str,
-            # cookie_tiktok: dict | str,
+            cookie_tiktok: dict | str,
             root: str,
             accounts_urls: dict,
-            # accounts_urls_tiktok: dict,
+            accounts_urls_tiktok: dict,
             mix_urls: dict,
-            # mix_urls_tiktok: dict,
+            mix_urls_tiktok: dict,
             folder_name: str,
             name_format: str,
             date_format: str,
@@ -121,7 +124,7 @@ class Parameter:
             dynamic_cover: bool,
             original_cover: bool,
             proxies: str,
-            # proxies_tiktok: str,
+            proxies_tiktok: str,
             download: bool,
             max_size: int,
             chunk: int,
@@ -129,6 +132,7 @@ class Parameter:
             max_pages: int,
             default_mode: str,
             owner_url: dict,
+            owner_url_tiktok: dict,
             ffmpeg: str,
             blacklist: "DownloadRecorder",
             reduced: bool,
@@ -149,6 +153,8 @@ class Parameter:
         self.console = console
         self.cookie_cache = None
         self.cookie = self.__check_cookie(cookie)
+        self.cookie_tiktok_cache = None
+        self.cookie_tiktok = None
         self.root = self.__check_root(root)
         self.folder_name = self.__check_folder_name(folder_name)
         self.name_format = self.__check_name_format(name_format)
@@ -160,6 +166,7 @@ class Parameter:
         self.dynamic_cover = self.__check_bool(dynamic_cover)
         self.original_cover = self.__check_bool(original_cover)
         self.proxies = self.__check_proxies(proxies)
+        self.proxies_tiktok = self.__check_proxies(proxies_tiktok, True)
         self.download = self.__check_bool(download)
         self.max_size = self.__check_max_size(max_size)
         self.chunk = self.__check_chunk(chunk)
@@ -224,7 +231,7 @@ class Parameter:
         elif isinstance(cookie, str):
             for i in parameters:
                 if isinstance(i, dict):
-                    cookie += Register.generate_cookie(i)
+                    cookie += cookie_dict_to_str(i)
             return cookie
 
     def __check_root(self, root: str) -> Path:
@@ -282,7 +289,7 @@ class Parameter:
         self.logger.info(f"split 参数已设置为 {split}", False)
         return split
 
-    def __check_proxies(self, proxies: str) -> dict:
+    def __check_proxies(self, proxies: str, tiktok=False) -> dict:
         if isinstance(proxies, str) and proxies:
             proxies_dict = {
                 "http": proxies,
@@ -291,7 +298,9 @@ class Parameter:
             }
             try:
                 response = get(
-                    "https://www.baidu.com/", proxies=proxies_dict, timeout=10)
+                    "https://www.google.com/" if tiktok else "https://www.baidu.com/",
+                    proxies=proxies_dict,
+                    timeout=10)
                 if response.status_code == 200:
                     self.logger.info(f"代理 {proxies} 测试成功")
                     return proxies_dict
@@ -369,7 +378,7 @@ class Parameter:
         # self.console.print("Update Cookie")
         if self.cookie:
             self.__add_cookie(self.cookie)
-            self.headers["Cookie"] = Register.generate_cookie(self.cookie)
+            self.headers["Cookie"] = cookie_dict_to_str(self.cookie)
         elif self.cookie_cache:
             self.headers["Cookie"] = self.__add_cookie(self.cookie_cache)
 
@@ -414,7 +423,7 @@ class Parameter:
                 "cookie",
                 self.cookie_object.extract(
                     c,
-                    return_=True))
+                    False))
             self.update_cookie()
         self.settings.update(data := self.get_settings_data())
         # print(data)  # 调试使用

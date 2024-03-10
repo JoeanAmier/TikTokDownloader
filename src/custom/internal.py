@@ -15,12 +15,14 @@ __all__ = [
     "DISCLAIMER_TEXT",
     "BLANK_PREVIEW",
     "TIMEOUT",
+    "PROJECT_NAME",
 ]
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 VERSION_MAJOR = 5
 VERSION_MINOR = 4
 VERSION_BETA = True
+PROJECT_NAME = f"TikTokDownloader V{VERSION_MAJOR}.{VERSION_MINOR}{" Beta" if VERSION_BETA else ""}"
 
 REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
 LICENCE = "GNU General Public License v3.0"

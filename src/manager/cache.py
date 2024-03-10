@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from src.custom import (
     ERROR,
 )
-from src.tools import retry_infinite
+from src.tools import PrivateRetry
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -159,7 +159,7 @@ class Cache:
         self.log.info(f"文件 {old_file} 重命名为 {new_file}", False)
         return True
 
-    @retry_infinite
+    @PrivateRetry.retry_limited
     def __rename(self, old_: Path, new_: Path, type_="文件") -> bool:
         try:
             old_.rename(new_)

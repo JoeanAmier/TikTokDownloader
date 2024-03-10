@@ -32,14 +32,14 @@
 </li>
 <li>阅读 TikTokDownloader 的免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
-<ol><b>手动复制粘贴(推荐)</b>
+<ol><b>手动复制粘贴 Cookie(推荐)</b>
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
 <li>选择 <code>复制粘贴写入 Cookie</code> 选项，按照提示将 Cookie 写入配置文件</li>
 </ol>
-<ol><b>从浏览器获取(推荐)</b>
+<ol><b>从浏览器获取 Cookie(推荐)</b>
 <li>选择 <code>从浏览器获取 Cookie</code> 选项，按照提示选择浏览器类型</li>
 </ol>
-<ol><b>扫码登录获取(停用)</b>
+<ol><b>扫码登录获取 Cookie(不推荐)</b>
 <li>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</li>
 <li>使用抖音 APP 扫描二维码并登录账号</li>
 <li>按照提示操作，将 Cookie 写入配置文件</li>
@@ -100,6 +100,14 @@
 <tr>
 <td align="center"><code>https://www.tiktok.com/@TikTok号/video/作品ID</code></td>
 <td align="center">账号、视频、图集</td>
+</tr>
+<tr>
+<td align="center"><code>https://www.douyin.com/channel/分区ID?modal_id=作品ID</code></td>
+<td align="center">视频、图集</td>
+</tr>
+<tr>
+<td align="center"><code>https://www.douyin.com/lvdetail/作品ID</code></td>
+<td align="center">视频（暂不支持）</td>
 </tr>
 </tbody></table>
 <ul>
@@ -217,17 +225,32 @@ https://www.douyin.com/note/123456789
 <tr>
 <td align="center">accounts_urls[mark, url, tab, earliest, latest]</td>
 <td align="center">list[dict[str, str, str, str, str]]</td>
-<td align="center">账号标识, 账号链接, 批量下载类型, 最早发布日期, 最晚发布日期; 批量下载账号作品时使用, 支持多账号, 以字典格式包含五个参数</td>
+<td align="center">抖音平台：账号标识, 账号链接, 批量下载类型, 最早发布日期, 最晚发布日期; 批量下载账号作品时使用, 支持多账号, 以字典格式包含五个参数</td>
 </tr>
 <tr>
 <td align="center">mix_urls[mark, url]</td>
 <td align="center">list[dict[str, str]]</td>
-<td align="center">合集标识, 合集链接或作品链接, 批量下载合集作品时使用<br>支持多合集, 以字典格式包含两个参数</td>
+<td align="center">抖音平台：合集标识, 合集链接或作品链接, 批量下载合集作品时使用<br>支持多合集, 以字典格式包含两个参数</td>
 </tr>
 <tr>
 <td align="center">owner_url[mark, url]</td>
 <td align="center">dict[str, str]</td>
-<td align="center">已登录 Cookie 的账号标识, 账号主页链接, 批量下载收藏作品时使用<br>用于获取账号昵称和 UID, 以字典格式包含两个参数</td>
+<td align="center">抖音平台：已登录 Cookie 的账号标识, 账号主页链接, 批量下载收藏作品时使用<br>用于获取账号昵称和 UID, 以字典格式包含两个参数</td>
+</tr>
+<tr>
+<td align="center">accounts_urls_tiktok[mark, url, tab, earliest, latest]</td>
+<td align="center">list[dict[str, str, str, str, str]]</td>
+<td align="center">未生效</td>
+</tr>
+<tr>
+<td align="center">mix_urls_tiktok[mark, url]</td>
+<td align="center">list[dict[str, str]]</td>
+<td align="center">未生效</td>
+</tr>
+<tr>
+<td align="center">owner_url_tiktok[mark, url]</td>
+<td align="center">dict[str, str]</td>
+<td align="center">未生效</td>
 </tr>
 <tr>
 <td align="center">root</td>
@@ -275,6 +298,11 @@ https://www.douyin.com/note/123456789
 <td align="center">抖音网页版 Cookie, 必需参数; 建议通过程序写入配置文件，亦可手动编辑</td>
 </tr>
 <tr>
+<td align="center">cookie_tiktok</td>
+<td align="center">dict | str</td>
+<td align="center">未生效</td>
+</tr>
+<tr>
 <td align="center">dynamic_cover</td>
 <td align="center">bool</td>
 <td align="center">是否下载动态封面图, 默认值: <code>false</code></td>
@@ -288,6 +316,11 @@ https://www.douyin.com/note/123456789
 <td align="center">proxies</td>
 <td align="center">str</td>
 <td align="center">代理地址, 设置为空字符串代表不使用代理</td>
+</tr>
+<tr>
+<td align="center">proxies_tiktok</td>
+<td align="center">str</td>
+<td align="center">未生效</td>
 </tr>
 <tr>
 <td align="center">download</td>
@@ -345,6 +378,7 @@ https://www.douyin.com/note/123456789
       "latest": ""
     }
   ],
+  "accounts_urls_tiktok": "参数设置规则同上",
   "mix_urls": [
     {
       "mark": "",
@@ -355,10 +389,12 @@ https://www.douyin.com/note/123456789
       "url": "合集链接或者作品链接"
     }
   ],
+  "mix_urls_tiktok": "参数设置规则同上",
   "owner_url": {
     "mark": "已登录 Cookie 的账号标识，可以设置为空字符串（可选）",
     "url": "已登录 Cookie 的账号主页链接（可选）"
   },
+  "owner_url_tiktok": "参数设置规则同上",
   "root": "C:\\TikTokDownloader",
   "folder_name": "SOLO",
   "name_format": "create_time uid id",
@@ -372,9 +408,11 @@ https://www.douyin.com/note/123456789
     "passport_csrf_token_default": "demo",
     "odin_tt": "demo"
   },
+  "cookie_tiktok": "参数设置规则同上",
   "dynamic_cover": false,
   "original_cover": false,
   "proxies": "http://127.0.0.1:9999",
+  "proxies_tiktok": "参数设置规则同上",
   "download": true,
   "max_size": 104857600,
   "chunk": 10485760,
@@ -417,7 +455,7 @@ https://www.douyin.com/note/123456789
 }
 ```
 
-<p>将待下载的账号信息写入配置文件，每个账号对应一个对象/字典，<code>tab</code> 参数设置为 <code>favorite</code> 代表批量下载喜欢作品，支持多账号。</p>
+<p>将待下载的抖音账号信息写入配置文件，每个账号对应一个对象/字典，<code>tab</code> 参数设置为 <code>favorite</code> 代表批量下载喜欢作品，支持多账号。</p>
 <p><b>批量下载账号喜欢作品需要使用已登录的 Cookie，否则可能无法获取正确的账号信息！</b></p>
 <h3>发布日期限制</h3>
 
@@ -557,13 +595,12 @@ https://www.douyin.com/note/123456789
 <h1>功能介绍</h1>
 <h2>复制粘贴写入 Cookie</h2>
 <p>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，手动从浏览器复制所需 Cookie 至剪贴板，按照程序提示输入 Cookie 后回车确认，程序会自动处理 Cookie 并写入配置文件。</p>
-<p><b>推荐使用该方法获取 Cookie</b>，如果粘贴 Cookie 至终端后无响应，可能是 Cookie 文本长度超出终端最大文本长度限制，请考虑更换终端或者其他写入方式。</p>
+<p>如果粘贴 Cookie 至终端后无响应，可能是 Cookie 文本长度超出终端最大文本长度限制，请考虑更换终端或者其他写入方式。</p>
 <h2>从浏览器获取 Cookie</h2>
 <p>自动读取本地浏览器的 Cookie 数据，并提取所需 Cookie 写入配置文件，需要完全关闭对应浏览器才能读取 Cookie 数据。</p>
-<h2><del>扫码登录获取 Cookie</del></h2>
-<p><del>程序自动获取抖音登录二维码，随后会在终端输出二维码，并使用系统默认图片浏览器打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片窗口，程序会自动检查登录结果并将登录后的 Cookie 写入配置文件。</del></p>
-<p><del><b>注意：</b>扫码登录获取的 Cookie 有效期更短，且频繁扫码登录容易导致账号被风控！</del></p>
-<p>当前已失效，未来可能修复或移除！</p>
+<h2>扫码登录获取 Cookie</h2>
+<p>程序自动获取抖音登录二维码，随后会在终端输出二维码，并使用系统默认图片浏览器打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片窗口，程序会自动检查登录结果并将登录后的 Cookie 写入配置文件。</p>
+<p><b>注意：</b>频繁扫码登录容易导致账号被风控，未来可能移除该功能！</p>
 <h2>终端交互模式</h2>
 <p>功能最全面的模式，支持全部功能。</p>
 <h3>批量下载账号作品(TikTok)</h3>
@@ -639,6 +676,7 @@ document.body.removeChild(downloadLink);
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/search/关键词?modal_id=作品ID</code></li>
 <li><code>https://www.tiktok.com/@账号昵称/video/作品ID</code></li>
+<li><code>https://www.douyin.com/channel/分区ID?modal_id=作品ID</code></li>
 </ul>
 <p>作品会下载至 <code>root</code> 参数和 <code>folder_name</code> 参数拼接成的文件夹。</p>
 <h3>获取直播推流地址</h3>
@@ -671,6 +709,7 @@ document.body.removeChild(downloadLink);
 <li><code>https://www.douyin.com/discover?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/search/关键词?modal_id=作品ID</code></li>
+<li><code>https://www.douyin.com/channel/分区ID?modal_id=作品ID</code></li>
 </ul>
 <p>支持采集评论回复、评论表情、评论图片；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <p>储存名称格式：<code>作品123456789_评论数据</code></p>
@@ -689,6 +728,7 @@ document.body.removeChild(downloadLink);
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/search/关键词?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/collection/合集ID</code></li>
+<li><code>https://www.douyin.com/channel/分区ID?modal_id=作品ID</code></li>
 </ul>
 <p>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
 <p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会提示用户输入临时的合集标识，以便程序继续处理合集。</p>

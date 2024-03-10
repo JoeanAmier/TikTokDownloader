@@ -6,10 +6,17 @@ from pathlib import Path
 from platform import system
 from time import localtime
 from time import strftime
+from typing import TYPE_CHECKING
 
-from src.custom import WARNING, ERROR, INFO
-from src.module import ColorfulConsole
+from src.custom import (
+    WARNING,
+    ERROR,
+    INFO,
+)
 from .base import BaseLogger
+
+if TYPE_CHECKING:
+    from src.tools import ColorfulConsole
 
 
 class LoggerManager(BaseLogger):
@@ -19,7 +26,7 @@ class LoggerManager(BaseLogger):
     def __init__(
             self,
             main_path: Path,
-            console: ColorfulConsole,
+            console: "ColorfulConsole",
             root="",
             folder="",
             name=""):

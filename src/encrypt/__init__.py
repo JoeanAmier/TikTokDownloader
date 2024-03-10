@@ -8,5 +8,7 @@ from .Parameter import (
 # from .xBogus import XBogus, XBogusTikTok
 # from .msToken import MsToken, MsTokenTikTok
 # from .ttWid import TtWid, TtWidTikTok
+# from .webID import WebId
+# from .verifyFp import VerifyFp
 
 __all__ = ['XBogus', 'MsToken', 'TtWid', 'VerifyFp']

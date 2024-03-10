@@ -33,6 +33,7 @@ from src.custom import (
     LICENCE,
     DOCUMENTATION_URL,
     DISCLAIMER_TEXT,
+    PROJECT_NAME,
 )
 from src.custom import SERVER_HOST
 from src.custom import SERVER_PORT
@@ -40,13 +41,13 @@ from src.custom import TEXT_REPLACEMENT
 from src.custom import verify_token
 from src.encrypt import XBogus
 from src.manager import DownloadRecorder
-from src.module import Browser
-from src.module import ColorfulConsole
 from src.module import Cookie
 from src.module import CookieTikTok
 from src.module import Register
 from src.record import BaseLogger
 from src.record import LoggerManager
+from src.tools import Browser
+from src.tools import ColorfulConsole
 from src.tools import FileSwitch
 from src.tools import choose
 from src.tools import safe_pop
@@ -75,8 +76,7 @@ class TikTokDownloader:
     REDUCED = (1, 1, 1, 1, 0, 1, 0, 0, 1, 1)  # 禁用项目部分功能
     # REDUCED = False  # 启用项目全部功能
 
-    NAME = f"TikTokDownloader v{VERSION_MAJOR}.{
-    VERSION_MINOR}{" Beta" if VERSION_BETA else ""}"
+    NAME = PROJECT_NAME
     WIDTH = 50
     LINE = ">" * WIDTH
 
@@ -95,7 +95,12 @@ class TikTokDownloader:
     DISCLAIMER = {"path": PROJECT_ROOT.joinpath(
         "./src/config/Consent_Disclaimer")}
 
-    def __init__(self):
+    FUNCTION_OPTIONS = {
+        True: "禁用",
+        False: "启用",
+    }
+
+    def __init__(self, **kwargs):
         self.console = ColorfulConsole()
         self.logger = None
         self.blacklist = None
@@ -103,11 +108,6 @@ class TikTokDownloader:
         self.settings = Settings(PROJECT_ROOT, self.console)
         self.cookie = Cookie(self.settings, self.console)
         self.cookie_tiktok = CookieTikTok(self.settings, self.console)
-        self.register = Register(
-            self.settings,
-            self.console,
-            self.x_bogus,
-        )
         self.parameter = None
         self.running = True
         self.default_mode = None
@@ -184,11 +184,11 @@ class TikTokDownloader:
         self.abnormal = PROJECT_ROOT.joinpath(folder[-1]).exists()
         for i in folder:
             PROJECT_ROOT.joinpath(i).mkdir(exist_ok=True)
-        self.UPDATE["tip"] = "启用" if self.UPDATE["path"].exists() else "禁用"
-        self.RECORD["tip"] = "启用" if (
-            b := self.RECORD["path"].exists()) else "禁用"
-        self.LOGGING["tip"] = "禁用" if (
-            l := self.LOGGING["path"].exists()) else "启用"
+        self.UPDATE["tip"] = self.FUNCTION_OPTIONS[not self.UPDATE["path"].exists()]
+        self.RECORD["tip"] = self.FUNCTION_OPTIONS[not (
+            b := self.RECORD["path"].exists())]
+        self.LOGGING["tip"] = self.FUNCTION_OPTIONS[(
+            l := self.LOGGING["path"].exists())]
         self.blacklist = DownloadRecorder(
             not b,
             PROJECT_ROOT.joinpath("./cache"),
@@ -291,8 +291,12 @@ class TikTokDownloader:
         self.parameter.update_cookie()
 
     def auto_cookie(self):
-        if cookie := self.register.run(self.parameter.temp):
-            self.cookie.extract(cookie, False)
+        if cookie := Register(
+                self.settings,
+                self.console,
+                self.x_bogus,
+        ).run(self.parameter.temp):
+            self.cookie.extract(cookie)
             self.check_settings()
             self.parameter.update_cookie()
         else:

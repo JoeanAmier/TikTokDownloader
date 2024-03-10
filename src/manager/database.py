@@ -1,18 +1,18 @@
-from asyncio import run
 from typing import TYPE_CHECKING
 
 from aiosqlite import connect
 
 if TYPE_CHECKING:
     from src.config import Parameter
+
 __all__ = ["Database"]
 
 
 class Database:
     __FILE = "TikTokDownloader.db"
 
-    def __init__(self, parameter: "Parameter", debug=None):
-        self.file = debug or parameter.cache.joinpath(self.__FILE)
+    def __init__(self, parameter: "Parameter"):
+        self.file = parameter.cache.joinpath(self.__FILE)
         self.database = None
         self.cursor = None
 
@@ -80,13 +80,3 @@ class Database:
     async def __aexit__(self, exc_type, exc_value, traceback):
         await self.cursor.close()
         await self.database.close()
-
-
-async def debug():
-    root = r""
-    async with Database(None, root) as demo:
-        print(await demo.read_config_data())
-
-
-if __name__ == '__main__':
-    run(debug())

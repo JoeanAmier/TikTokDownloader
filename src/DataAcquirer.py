@@ -22,7 +22,7 @@ from src.custom import (
 )
 from src.custom import wait
 from src.extract import Extractor
-from src.tools import retry
+from src.tools import PrivateRetry
 from src.tools import timestamp
 
 __all__ = [
@@ -172,7 +172,7 @@ class Share:
             return " ".join(self.get_url(i) for i in u)
         return text
 
-    @retry
+    @PrivateRetry.retry
     def get_url(self, url: str) -> str:
         try:
             response = request(
@@ -223,7 +223,10 @@ class Link:
     )
     live_link_share = compile(
         r"\S*?https://webcast\.amemv\.com/douyin/webcast/reflow/\S+")
-
+    channel_link = compile(
+        r"\S*?https://www\.douyin\.com/channel/\d+?\?modal_id=\d{19}\S*?")
+    lv_detail_link = compile(
+        r"\S*?https://www\.douyin\.com/[a-z]+?/\d{19}\S*?")
     # TikTok 链接
     works_link_tiktok = compile(
         r"\S*?https://www\.tiktok\.com/@\S+?/(?:video|photo)/(\d{19})\S*?")  # 作品链接
@@ -248,7 +251,9 @@ class Link:
                                for i in self.account_link.findall(urls)] if i]
         search = self.works_search.findall(urls)
         discover = self.works_discover.findall(urls)
-        return False, link + share + account + search + discover
+        channel = self.channel_link.findall(urls)
+        # detail = self.lv_detail_link.findall(urls)
+        return False, link + share + account + search + discover + channel
 
     def mix(self, text: str) -> tuple:
         urls = self.share.run(text)
@@ -256,7 +261,9 @@ class Link:
         link = self.works_link.findall(urls)
         search = self.works_search.findall(urls)
         discover = self.works_discover.findall(urls)
-        if u := share + link + search + discover:
+        channel = self.channel_link.findall(urls)
+        # detail = self.lv_detail_link.findall(urls)
+        if u := share + link + search + discover + channel:
             return False, u
         link = self.mix_link.findall(urls)
         share = self.mix_share.findall(urls)
@@ -350,7 +357,7 @@ class Account(Acquirer):
         self.favorite_mode()
         return self.response, self.earliest, self.latest
 
-    @retry
+    @PrivateRetry.retry
     def get_account_data(self, api: str):
         if self.favorite:
             params = {
@@ -456,7 +463,7 @@ class Works(Acquirer):
         self.id = item_id
         self.tiktok = tiktok
 
-    @retry
+    @PrivateRetry.retry
     def run(self) -> dict:
         if self.tiktok:
             params = {
@@ -541,7 +548,7 @@ class Comment(Acquirer):
                     source=source)))
         return self.all_data
 
-    @retry
+    @PrivateRetry.retry
     def get_comments_data(self, api: str, reply=""):
         if reply:
             params = {
@@ -636,7 +643,7 @@ class Mix(Acquirer):
                 # break  # 调试代码
         return self.response
 
-    @retry
+    @PrivateRetry.retry
     def _get_mix_data(self):
         params = {
             "device_platform": "webapp",
@@ -730,7 +737,7 @@ class Live(Acquirer):
         self.deal_url_params(params, 4)
         return self.get_live_data(api, params, headers)
 
-    @retry
+    @PrivateRetry.retry
     def get_live_data(
             self,
             api: str,
@@ -755,7 +762,7 @@ class User(Acquirer):
         super().__init__(params, cookie)
         self.sec_user_id = sec_user_id
 
-    @retry
+    @PrivateRetry.retry
     def run(self) -> dict:
         params = {
             "device_platform": "webapp",
@@ -904,7 +911,7 @@ class Search(Acquirer):
         self.deal_url_params(params, 4 if self.cursor else 8)
         self._get_search_data(data.api, params, "data", finished=True)
 
-    @retry
+    @PrivateRetry.retry
     def _get_search_data(self, api: str, params: dict, key: str):
         if not (
                 data := self.send_request(
@@ -960,7 +967,7 @@ class Hot(Acquirer):
             self._get_board_data(i, j)
         return self.time, self.response
 
-    @retry
+    @PrivateRetry.retry
     def _get_board_data(self, index: int, data: SimpleNamespace):
         params = {
             "device_platform": "webapp",
@@ -1026,7 +1033,7 @@ class Collection(Acquirer):
         self._get_owner_data()
         return self.response
 
-    @retry
+    @PrivateRetry.retry
     def _get_account_data(self):
         params = self.params.copy()
         self.deal_url_params(params)
@@ -1094,7 +1101,7 @@ class Info(Acquirer):
             "downlink": "10",
         }
 
-    @retry
+    @PrivateRetry.retry
     def run(self) -> dict:
         self.deal_url_params(self.params)
         form = {

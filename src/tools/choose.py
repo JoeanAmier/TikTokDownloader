@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.module import ColorfulConsole
+    from src.tools import ColorfulConsole
 
 __all__ = ["choose"]
 

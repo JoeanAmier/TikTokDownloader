@@ -1,8 +1,8 @@
 from pathlib import Path
 from platform import system
-from re import finditer
 from subprocess import run
 from time import sleep
+from typing import TYPE_CHECKING
 
 from qrcode import QRCode
 from requests import exceptions
@@ -20,48 +20,42 @@ from src.custom import PROGRESS
 from src.custom import USERAGENT
 from src.custom import WARNING
 from src.encrypt import MsToken
-from src.encrypt import TtWid
 from src.encrypt import VerifyFp
-from src.module.cookie import Cookie
+from src.tools import cookie_str_to_str
+
+if TYPE_CHECKING:
+    from src.config import Settings
+    from src.tools import ColorfulConsole
+    from src.encrypt import XBogus
 
 __all__ = ["Register"]
 
 
 class Register:
-    """
-    逻辑参考: https://github.com/Johnserf-Seed/TikTokDownload/blob/main/Util/Login.py
-    """
     get_url = "https://sso.douyin.com/get_qrcode/"
     check_url = "https://sso.douyin.com/check_qrconnect/"
-    get_params = {
+    url_params = {
         "service": "https://www.douyin.com",
         "need_logo": "false",
         "need_short_url": "true",
-        "device_platform": "web_app",
-        "aid": "6383",
         "account_sdk_source": "sso",
-        "sdk_version": "2.2.5",
-        "language": "zh",
-    }
-    check_params = {
-        "service": "https://www.douyin.com",
-        "need_logo": "false",
-        "need_short_url": "false",
-        "device_platform": "web_app",
         "aid": "6383",
-        "account_sdk_source": "sso",
-        "sdk_version": "2.2.5",
         "language": "zh",
+        "sdk_version": "2.2.7-beta.6",
+        "device_platform": "web_app",
     }
 
-    def __init__(self, settings, console, xb):
+    def __init__(
+            self,
+            settings: "Settings",
+            console: "ColorfulConsole",
+            xb: "XBogus"):
         self.xb = xb
         self.settings = settings
         self.console = console
         self.headers = {
             "User-Agent": USERAGENT,
             "Referer": "https://www.douyin.com/",
-            "Cookie": self.generate_cookie(TtWid.get_tt_wid()),
         }
         self.verify_fp = None
         self.temp = None
@@ -81,25 +75,6 @@ class Register:
             transient=True,
         )
 
-    @staticmethod
-    def generate_cookie(data: dict) -> str:
-        if not isinstance(data, dict):
-            return ""
-        result = [f"{k}={v}" for k, v in data.items()]
-        return "; ".join(result)
-
-    @staticmethod
-    def generate_dict(data: str) -> dict:
-        cookie = {}
-        if not isinstance(data, str):
-            return cookie
-        matches = finditer(Cookie.pattern, data)
-        for match in matches:
-            key = match.group('key').strip()
-            value = match.group('value').strip()
-            cookie[key] = value
-        return cookie
-
     def generate_qr_code(self, url: str):
         qr_code = QRCode()
         # assert url, "无效的登录二维码数据"
@@ -109,7 +84,7 @@ class Register:
         img = qr_code.make_image()
         img.save(self.temp)
         self.console.print(
-            "请使用抖音 APP 扫描二维码登录，如果二维码无法识别，请尝试更换终端或者手动复制粘贴写入 Cookie！")
+            "请使用抖音 APP 扫描二维码登录，如果二维码无法识别，请尝试更换终端或者选择其他方式写入 Cookie！")
         self._open_qrcode_image()
 
     def _open_qrcode_image(self):
@@ -122,14 +97,13 @@ class Register:
 
     def get_qr_code(self):
         self.verify_fp = VerifyFp.get_verify_fp()
-        self.get_params["verifyFp"] = self.verify_fp
-        self.get_params["fp"] = self.verify_fp
-        self.__set_ms_token()
-        self.get_params["X-Bogus"] = self.xb.get_x_bogus(self.get_params)
+        self.url_params["verifyFp"] = self.verify_fp
+        self.url_params["fp"] = self.verify_fp
+        self.url_params["X-Bogus"] = self.xb.get_x_bogus(self.url_params)
         if not (
                 data := self.request_data(
                     url=self.get_url,
-                    params=self.get_params)):
+                    params=self.url_params)):
             return None, None
         url = data["data"]["qrcode_index_url"]
         token = data["data"]["token"]
@@ -137,12 +111,10 @@ class Register:
 
     def __set_ms_token(self):
         if isinstance(t := MsToken.get_real_ms_token(), dict):
-            self.get_params["msToken"] = t["msToken"]
+            self.url_params["msToken"] = t["msToken"]
 
     def check_register(self, token):
-        self.check_params["token"] = token
-        self.check_params["verifyFp"] = self.verify_fp
-        self.check_params["fp"] = self.verify_fp
+        self.url_params["token"] = token
         with self.__check_progress_object() as progress:
             task_id = progress.add_task(
                 "正在检查登录状态", total=None)
@@ -154,22 +126,27 @@ class Register:
                         response := self.request_data(
                             False,
                             url=self.check_url,
-                            params=self.check_params)):
+                            params=self.url_params)):
                     self.console.print("网络异常，无法获取登录状态！", style=WARNING)
                     second = 30
                     continue
                 # print(response.json())  # 调试使用
-                data = response.json().get("data")
-                if not data:
+                json_data: dict = response.json()
+                if json_data.get("error_code"):
                     self.console.print(
-                        f"响应内容异常: {response.json()}",
+                        f"该账号疑似被风控，建议近期避免扫码登录账号！\n响应数据: {json_data}",
+                        style=WARNING)
+                    second = 30
+                elif not (data := json_data.get("data")):
+                    self.console.print(
+                        f"响应内容异常: {json_data}",
                         style=ERROR)
                     second = 30
                 elif (s := data["status"]) == "3":
                     redirect_url = data["redirect_url"]
                     cookie = response.headers.get("Set-Cookie")
                     break
-                elif s in ("4", "5"):
+                elif s in ("4", "5",):
                     second = 30
                 else:
                     second += 1
@@ -179,16 +156,13 @@ class Register:
                 return None, None
             return redirect_url, cookie
 
-    def clean_cookie(self, cookie) -> str:
-        return self.generate_cookie(self.generate_dict(cookie))
-
     def get_cookie(self, url, cookie):
-        self.headers["Cookie"] = self.clean_cookie(cookie)
+        self.headers["Cookie"] = cookie_str_to_str(cookie)
         if not (response := self.request_data(False, url=url)):
             return False
         elif response.history[0].status_code != 302:
             return False
-        return self.clean_cookie(response.history[1].headers.get("Set-Cookie"))
+        return cookie_str_to_str(response.history[1].headers.get("Set-Cookie"))
 
     def request_data(self, json=True, **kwargs):
         try:
