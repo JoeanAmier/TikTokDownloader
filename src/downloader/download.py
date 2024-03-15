@@ -26,7 +26,6 @@ from src.custom import (
     INFO,
     WARNING,
 )
-from src.extend import VideoDownloader
 from src.tools import PrivateRetry
 
 if TYPE_CHECKING:
@@ -330,7 +329,7 @@ class Downloader:
             count.skipped_video.add(id_)
             return
         tasks.append((
-            VideoDownloader.deal(item),
+            item["downloads"],
             temp_root.with_name(f"{name}.mp4"),
             p,
             f"视频 {id_}",
@@ -410,7 +409,7 @@ class Downloader:
                     url,
                     stream=True,
                     proxies=self.proxies,
-                    headers=self.__adapter_headers(show, headers, tiktok),
+                    headers=self.__adapter_headers(headers, tiktok),
                     timeout=self.timeout) as response:
                 if not (
                         content := int(
@@ -473,16 +472,10 @@ class Downloader:
 
     def __adapter_headers(
             self,
-            type_: str,
             headers: dict,
             tiktok: bool) -> dict:
         return headers or (
-            self.Phone_headers if tiktok else self.PC_headers if self.__video_extend_headers(
-                type_.startswith("视频")) else self.black_headers)
-
-    @staticmethod
-    def __video_extend_headers(video: bool) -> bool:
-        return VideoDownloader.COOKIE if video else True
+            self.Phone_headers if tiktok else self.black_headers)
 
     @staticmethod
     def add_count(type_: str, id_: str, count: SimpleNamespace):

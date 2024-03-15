@@ -455,7 +455,7 @@ class Account(Acquirer):
 
 class Works(Acquirer):
     item_api = "https://www.douyin.com/aweme/v1/web/aweme/detail/"
-    item_api_tiktok = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/"
+    item_api_tiktok = "https://api22-normal-c-useast2a.tiktokv.com/aweme/v1/feed/"
 
     def __init__(self, params: Parameter, item_id: str, tiktok: bool,
                  cookie: str = None, ):

@@ -147,14 +147,16 @@ class Parameter:
         self.headers = {
             "User-Agent": USERAGENT,
         }
+        self.headers_tiktok = {
+            "User-Agent": USERAGENT,
+        }
         self.logger = logger(main_path, console)
         self.logger.run()
         self.xb = xb
         self.console = console
-        self.cookie_cache = None
-        self.cookie = self.__check_cookie(cookie)
-        self.cookie_tiktok_cache = None
-        self.cookie_tiktok = None
+        self.cookie, self.cookie_cache = self.__check_cookie(cookie)
+        self.cookie_tiktok, self.cookie_tiktok_cache = self.__check_cookie_tiktok(
+            cookie_tiktok)
         self.root = self.__check_root(root)
         self.folder_name = self.__check_folder_name(folder_name)
         self.name_format = self.__check_name_format(name_format)
@@ -165,19 +167,23 @@ class Parameter:
         self.storage_format = self.__check_storage_format(storage_format)
         self.dynamic_cover = self.__check_bool(dynamic_cover)
         self.original_cover = self.__check_bool(original_cover)
+        self.timeout = self.__check_timeout(timeout)
         self.proxies = self.__check_proxies(proxies)
-        self.proxies_tiktok = self.__check_proxies(proxies_tiktok, True)
+        self.proxies_tiktok = self.__check_proxies_tiktok(proxies_tiktok)
         self.download = self.__check_bool(download)
         self.max_size = self.__check_max_size(max_size)
         self.chunk = self.__check_chunk(chunk)
         self.max_retry = self.__check_max_retry(max_retry)
         self.max_pages = self.__check_max_pages(max_pages)
         self.blacklist = blacklist
-        self.timeout = self.__check_timeout(timeout)
-        self.accounts_urls: SimpleNamespace = Extractor.generate_data_object(
+        self.accounts_urls: list[SimpleNamespace] = Extractor.generate_data_object(
             accounts_urls)
-        self.mix_urls: SimpleNamespace = Extractor.generate_data_object(
+        self.accounts_urls_tiktok: list[SimpleNamespace] = Extractor.generate_data_object(
+            accounts_urls_tiktok)
+        self.mix_urls: list[SimpleNamespace] = Extractor.generate_data_object(
             mix_urls)
+        self.mix_urls_tiktok: list[SimpleNamespace] = Extractor.generate_data_object(
+            mix_urls_tiktok)
         self.owner_url: SimpleNamespace = Extractor.generate_data_object(
             owner_url)
         self.__reduced = reduced
@@ -188,6 +194,9 @@ class Parameter:
             "accounts_urls": None,
             "mix_urls": None,
             "owner_url": None,
+            "accounts_urls_tiktok": None,
+            "mix_urls_tiktok": None,
+            "owner_url_tiktok": None,
             "root": self.__check_root,
             "folder_name": self.__check_folder_name,
             "name_format": self.__check_name_format,
@@ -199,6 +208,7 @@ class Parameter:
             "dynamic_cover": self.__check_bool,
             "original_cover": self.__check_bool,
             "proxies": self.__check_proxies,
+            "proxies_tiktok": self.__check_proxies_tiktok,
             "download": self.__check_bool,
             "max_size": self.__check_max_size,
             "chunk": self.__check_chunk,
@@ -212,18 +222,36 @@ class Parameter:
     def __check_bool(value: bool, default=False) -> bool:
         return value if isinstance(value, bool) else default
 
-    def __check_cookie(self, cookie: dict | str) -> dict:
+    def __check_cookie_tiktok(self, cookie: dict | str, ) -> [dict, str]:
+        return self.__check_cookie(cookie, name="cookie_tiktok")
+
+    def __check_cookie(self, cookie: dict | str, name="cookie") -> [dict, str]:
         if isinstance(cookie, dict):
-            return cookie
+            return cookie, ""
         elif isinstance(cookie, str):
-            self.cookie_cache = cookie
+            return {}, cookie
         else:
-            self.logger.warning("Cookie 参数格式错误")
-        return {}
+            self.logger.warning(f"{name} 参数格式错误")
+        return {}, ""
+
+    def __get_cookie(self, cookie: dict | str, ):
+        return self.__check_cookie(cookie)[0]
+
+    def __get_cookie_cache(self, cookie: dict | str, ):
+        return self.__check_cookie(cookie)[1]
+
+    def __get_cookie_tiktok(self, cookie: dict | str, ):
+        return self.__check_cookie_tiktok(cookie)[0]
+
+    def __get_cookie_tiktok_cache(self, cookie: dict | str, ):
+        return self.__check_cookie_tiktok(cookie)[1]
 
     @staticmethod
-    def __add_cookie(cookie: dict | str) -> None | str:
-        parameters = (MsToken.get_real_ms_token(), TtWid.get_tt_wid(),)
+    def __add_cookie(cookie: dict | str, tiktok=False) -> None | str:
+        if tiktok:
+            parameters = ()
+        else:
+            parameters = (MsToken.get_real_ms_token(), TtWid.get_tt_wid(),)
         if isinstance(cookie, dict):
             for i in parameters:
                 if isinstance(i, dict):
@@ -289,7 +317,13 @@ class Parameter:
         self.logger.info(f"split 参数已设置为 {split}", False)
         return split
 
-    def __check_proxies(self, proxies: str, tiktok=False) -> dict:
+    def __check_proxies_tiktok(self, proxies: str) -> dict:
+        return self.__check_proxies(proxies, "https://www.google.com/")
+
+    def __check_proxies(
+            self,
+            proxies: str,
+            url="https://www.baidu.com/") -> dict:
         if isinstance(proxies, str) and proxies:
             proxies_dict = {
                 "http": proxies,
@@ -298,9 +332,9 @@ class Parameter:
             }
             try:
                 response = get(
-                    "https://www.google.com/" if tiktok else "https://www.baidu.com/",
+                    url,
                     proxies=proxies_dict,
-                    timeout=10)
+                    timeout=self.timeout)
                 if response.status_code == 200:
                     self.logger.info(f"代理 {proxies} 测试成功")
                     return proxies_dict
@@ -376,11 +410,28 @@ class Parameter:
 
     def update_cookie(self) -> None:
         # self.console.print("Update Cookie")
-        if self.cookie:
-            self.__add_cookie(self.cookie)
-            self.headers["Cookie"] = cookie_dict_to_str(self.cookie)
-        elif self.cookie_cache:
-            self.headers["Cookie"] = self.__add_cookie(self.cookie_cache)
+        self.__update_cookie(
+            self.headers,
+            self.cookie,
+            self.cookie_cache,
+            False)
+        self.__update_cookie(
+            self.headers_tiktok,
+            self.cookie_tiktok,
+            self.cookie_tiktok_cache,
+            True, )
+
+    def __update_cookie(
+            self,
+            headers: dict,
+            cookie: dict,
+            cache: str,
+            tiktok=False) -> None:
+        if cookie:
+            self.__add_cookie(cookie, tiktok, )
+            headers["Cookie"] = cookie_dict_to_str(cookie)
+        elif cache:
+            headers["Cookie"] = self.__add_cookie(cache, tiktok, )
 
     @staticmethod
     def __generate_ffmpeg_object(ffmpeg_path: str) -> FFMPEG:
@@ -389,7 +440,9 @@ class Parameter:
     def get_settings_data(self) -> dict:
         return {
             "accounts_urls": [vars(i) for i in self.accounts_urls],
+            "accounts_urls_tiktok": [vars(i) for i in self.accounts_urls_tiktok],
             "mix_urls": [vars(i) for i in self.mix_urls],
+            "mix_urls_tiktok": [vars(i) for i in self.mix_urls_tiktok],
             "owner_url": vars(self.owner_url),
             "root": str(self.root.resolve()),
             "folder_name": self.folder_name,
@@ -400,9 +453,11 @@ class Parameter:
             "music": self.music,
             "storage_format": self.storage_format,
             "cookie": self.cookie_cache or self.cookie,
+            "cookie_tiktok": self.cookie_tiktok_cache or self.cookie_tiktok,
             "dynamic_cover": self.dynamic_cover,
             "original_cover": self.original_cover,
             "proxies": self.proxies["https"] or "",
+            "proxies_tiktok": self.proxies_tiktok["https"] or "",
             "download": self.download,
             "max_size": self.max_size,
             "chunk": self.chunk,
@@ -413,18 +468,24 @@ class Parameter:
         }
 
     def update_settings_data(self, data: dict, ) -> dict:
+        keys = list(self.check_rules.keys())[6:]
         for key, value in data.items():
-            if key in list(self.check_rules.keys())[3:]:
+            if key in keys:
                 # print(key, hasattr(self, key))  # 调试使用
                 setattr(self, key, self.check_rules[key](value))
-        if c := data.get("cookie"):
-            setattr(
-                self,
-                "cookie",
-                self.cookie_object.extract(
-                    c,
-                    False))
-            self.update_cookie()
+        self.__update_cookie_data(data)
         self.settings.update(data := self.get_settings_data())
         # print(data)  # 调试使用
         return data
+
+    def __update_cookie_data(self, data: dict) -> None:
+        for i in ("cookie", "cookie_tiktok"):
+            if c := data.get(i):
+                setattr(
+                    self,
+                    i,
+                    self.cookie_object.extract(
+                        c,
+                        False,
+                        key=i))
+        self.update_cookie()

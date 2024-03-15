@@ -42,7 +42,6 @@ from src.custom import verify_token
 from src.encrypt import XBogus
 from src.manager import DownloadRecorder
 from src.module import Cookie
-from src.module import CookieTikTok
 from src.module import Register
 from src.record import BaseLogger
 from src.record import LoggerManager
@@ -75,6 +74,10 @@ def start_cookie_task(function):
 class TikTokDownloader:
     REDUCED = (1, 1, 1, 1, 0, 1, 0, 0, 1, 1)  # 禁用项目部分功能
     # REDUCED = False  # 启用项目全部功能
+    PLATFORM = {
+        "1": "cookie",
+        "2": "cookie_tiktok",
+    }
 
     NAME = PROJECT_NAME
     WIDTH = 50
@@ -107,7 +110,6 @@ class TikTokDownloader:
         self.x_bogus = XBogus()
         self.settings = Settings(PROJECT_ROOT, self.console)
         self.cookie = Cookie(self.settings, self.console)
-        self.cookie_tiktok = CookieTikTok(self.settings, self.console)
         self.parameter = None
         self.running = True
         self.default_mode = None
@@ -286,11 +288,13 @@ class TikTokDownloader:
         self.console.print(
             "Cookie 获取教程：https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6"
             "%95%99%E7%A8%8B.md")
-        self.cookie.run()
-        self.check_settings()
-        self.parameter.update_cookie()
+        if (p := self.__select_platform()) in self.PLATFORM:
+            self.cookie.run(self.PLATFORM[p])
+            self.check_settings()
+            self.parameter.update_cookie()
 
     def auto_cookie(self):
+        self.console.print("该功能仅支持抖音平台，未来可能会移除！")
         if cookie := Register(
                 self.settings,
                 self.console,
@@ -361,4 +365,15 @@ class TikTokDownloader:
         self.parameter.logger.info("程序结束运行")
 
     def browser_cookie(self):
-        Browser(self.parameter, self.cookie).run()
+        if (p := self.__select_platform()) in self.PLATFORM:
+            Browser(self.parameter, self.cookie).run(p == "2")
+
+    def __select_platform(self) -> str:
+        return choose(
+            "请选择平台：",
+            (
+                "抖音平台",
+                "TikTok 平台",
+            ),
+            self.console,
+        )

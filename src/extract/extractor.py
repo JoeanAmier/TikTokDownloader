@@ -42,7 +42,8 @@ class Extractor:
             return {}
 
     @staticmethod
-    def generate_data_object(data: dict) -> SimpleNamespace:
+    def generate_data_object(
+            data: dict) -> SimpleNamespace | list[SimpleNamespace]:
         def depth_conversion(element):
             if isinstance(element, dict):
                 return SimpleNamespace(

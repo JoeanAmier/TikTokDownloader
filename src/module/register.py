@@ -34,16 +34,6 @@ __all__ = ["Register"]
 class Register:
     get_url = "https://sso.douyin.com/get_qrcode/"
     check_url = "https://sso.douyin.com/check_qrconnect/"
-    url_params = {
-        "service": "https://www.douyin.com",
-        "need_logo": "false",
-        "need_short_url": "true",
-        "account_sdk_source": "sso",
-        "aid": "6383",
-        "language": "zh",
-        "sdk_version": "2.2.7-beta.6",
-        "device_platform": "web_app",
-    }
 
     def __init__(
             self,
@@ -59,6 +49,32 @@ class Register:
         }
         self.verify_fp = None
         self.temp = None
+        self.url_params = {
+            "service": "https://www.douyin.com",
+            "need_logo": "false",
+            "need_short_url": "true",
+            "account_sdk_source": "sso",
+            "account_sdk_source_info": "7e276d64776172647760466a6b66707777606b667c273f3433292772606761776c736077273f63"
+                                       "646976602927756970626c6b76273f5e2755414325536c60726077272927466d776a6860255541"
+                                       "4325536c60726077272927466d776a686c70682555414325536c60726077272927486c66776a76"
+                                       "6a637125406162602555414325536c607260772729275260674e6c712567706c6971286c6b2555"
+                                       "414327582927756077686c76766c6a6b76273f5e7e276b646860273f2762606a696a6664716c6a"
+                                       "6b2729277671647160273f2761606b6c60612778297e276b646860273f276b6a716c636c666471"
+                                       "6c6a6b762729277671647160273f2775776a6875712778297e276b646860273f27736c61606a5a"
+                                       "666475717077602729277671647160273f2761606b6c60612778297e276b646860273f27647061"
+                                       "6c6a5a666475717077602729277671647160273f2761606b6c606127785829276c6b6b60774d60"
+                                       "6c626d71273f32333529276c6b6b6077526c61716d273f3430363329276a707160774d606c626d"
+                                       "71273f3d333129276a70716077526c61716d273f34303633292767606d64736c6a77273f7e2771"
+                                       "6a70666d273f63646976602927686a707660273f7177706029276e607c476a647761273f717770"
+                                       "607829277260676269273f7e27736077766c6a6b273f27526067424925342b35252d4a75606b42"
+                                       "4925405625372b3525466d776a686c70682c27292773606b616a77273f275260674e6c71272927"
+                                       "77606b6160776077273f275260674e6c71255260674249277878",
+            "biz_trace_id": "03dcf18c",
+            "aid": "6383",
+            "language": "zh",
+            "passport_jssdk_version": "3.0.1",
+            "device_platform": "web_app",
+        }
 
     def __check_progress_object(self):
         return Progress(
@@ -99,6 +115,7 @@ class Register:
         self.verify_fp = VerifyFp.get_verify_fp()
         self.url_params["verifyFp"] = self.verify_fp
         self.url_params["fp"] = self.verify_fp
+        self.__set_ms_token()
         self.url_params["X-Bogus"] = self.xb.get_x_bogus(self.url_params)
         if not (
                 data := self.request_data(
@@ -115,6 +132,7 @@ class Register:
 
     def check_register(self, token):
         self.url_params["token"] = token
+        self.url_params |= {"is_frontier": "false"}
         with self.__check_progress_object() as progress:
             task_id = progress.add_task(
                 "正在检查登录状态", total=None)

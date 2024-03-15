@@ -378,7 +378,7 @@ https://www.douyin.com/note/123456789
       "latest": ""
     }
   ],
-  "accounts_urls_tiktok": "参数设置规则同上",
+  "accounts_urls_tiktok": "参数规则与 accounts_urls 一致",
   "mix_urls": [
     {
       "mark": "",
@@ -389,12 +389,12 @@ https://www.douyin.com/note/123456789
       "url": "合集链接或者作品链接"
     }
   ],
-  "mix_urls_tiktok": "参数设置规则同上",
+  "mix_urls_tiktok": "参数规则与 mix_urls 一致",
   "owner_url": {
     "mark": "已登录 Cookie 的账号标识，可以设置为空字符串（可选）",
     "url": "已登录 Cookie 的账号主页链接（可选）"
   },
-  "owner_url_tiktok": "参数设置规则同上",
+  "owner_url_tiktok": "参数规则与 owner_url 一致",
   "root": "C:\\TikTokDownloader",
   "folder_name": "SOLO",
   "name_format": "create_time uid id",
@@ -408,11 +408,11 @@ https://www.douyin.com/note/123456789
     "passport_csrf_token_default": "demo",
     "odin_tt": "demo"
   },
-  "cookie_tiktok": "参数设置规则同上",
+  "cookie_tiktok": "参数规则与 cookie 一致",
   "dynamic_cover": false,
   "original_cover": false,
   "proxies": "http://127.0.0.1:9999",
-  "proxies_tiktok": "参数设置规则同上",
+  "proxies_tiktok": "参数规则与 proxies 一致",
   "download": true,
   "max_size": 104857600,
   "chunk": 10485760,
