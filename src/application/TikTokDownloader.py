@@ -74,6 +74,7 @@ def start_cookie_task(function):
 class TikTokDownloader:
     REDUCED = (1, 1, 1, 1, 0, 1, 0, 0, 1, 1)  # 禁用项目部分功能
     # REDUCED = False  # 启用项目全部功能
+
     PLATFORM = {
         "1": "cookie",
         "2": "cookie_tiktok",
@@ -294,7 +295,10 @@ class TikTokDownloader:
             self.parameter.update_cookie()
 
     def auto_cookie(self):
-        self.console.print("该功能仅支持抖音平台，未来可能会移除！")
+        self.console.print(
+            "警告：该功能可能会导致抖音账号被风控，建议使用其他方式获取 Cookie！",
+            style=ERROR)
+        self.console.print("该功能仅支持抖音平台，未来可能会禁用该功能！", style=WARNING)
         if cookie := Register(
                 self.settings,
                 self.console,

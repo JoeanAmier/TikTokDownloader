@@ -6,3 +6,5 @@ emoji>=2.10.1
 rich>=13.7.1
 lxml>=5.1.0
 browser-cookie3>=0.19.1
+aiohttp>=3.9.3
+aiosqlite>=0.20.0

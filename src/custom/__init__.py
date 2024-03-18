@@ -22,6 +22,9 @@ from .internal import (
     BLANK_PREVIEW,
     TIMEOUT,
     PROJECT_NAME,
+    DATA_HEADERS,
+    PARAMS_HEADERS,
+    WID_COOKIE,
 )
 from .static import (
     MAX_WORKERS,
@@ -74,6 +77,9 @@ __all__ = [
     "X_BOGUS_CODE",
     "DISCLAIMER_TEXT",
     "BLANK_PREVIEW",
+    "WID_COOKIE",
     "TIMEOUT",
     "PROJECT_NAME",
+    "PARAMS_HEADERS",
+    "DATA_HEADERS",
 ]

@@ -18,10 +18,11 @@ class WebId:
     API = "https://mcs.zijieapi.com/webid"
 
     @classmethod
-    async def get_web_id(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"], user_agent: str) -> str | None:
+    async def get_web_id(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"], user_agent: str,
+                         proxy: str = None, ) -> str | None:
         data = (f'{{"app_id":6383,"url":"https://www.douyin.com/","user_agent":'
                 f'"{user_agent}","referer":"https://www.douyin.com/","user_unique_id":""}}')
-        if response := await request_post(logger, cls.API, data, user_agent, content="json"):
+        if response := await request_post(logger, cls.API, data, user_agent, content="json", proxy=proxy):
             return response.get("web_id")
         logger.error(f"获取 {cls.NAME} 参数失败！")
 

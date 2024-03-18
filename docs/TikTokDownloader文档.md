@@ -32,14 +32,14 @@
 </li>
 <li>阅读 TikTokDownloader 的免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
-<ol><b>手动复制粘贴 Cookie(推荐)</b>
+<ol><b>手动复制粘贴 Cookie（推荐）</b>
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
 <li>选择 <code>复制粘贴写入 Cookie</code> 选项，按照提示将 Cookie 写入配置文件</li>
 </ol>
-<ol><b>从浏览器获取 Cookie(推荐)</b>
+<ol><b>从浏览器获取 Cookie（推荐）</b>
 <li>选择 <code>从浏览器获取 Cookie</code> 选项，按照提示选择浏览器类型</li>
 </ol>
-<ol><b>扫码登录获取 Cookie(不推荐)</b>
+<ol><b>扫码登录获取 Cookie（不推荐）</b>
 <li>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</li>
 <li>使用抖音 APP 扫描二维码并登录账号</li>
 <li>按照提示操作，将 Cookie 写入配置文件</li>
@@ -583,7 +583,7 @@ https://www.douyin.com/note/123456789
 <li>设置非法字符替换规则</li>
 <li>开启服务器模式局域网访问功能</li>
 <li>设置服务器模式主机及端口</li>
-<li>设置 Cookie 更新间隔</li>
+<li>设置 Cookie 参数更新间隔</li>
 <li>设置彩色交互提示颜色</li>
 <li>设置请求数据时间间隔</li>
 <li>设置作品下载记录数据备份间隔</li>
@@ -600,7 +600,7 @@ https://www.douyin.com/note/123456789
 <p>自动读取本地浏览器的 Cookie 数据，并提取所需 Cookie 写入配置文件，需要完全关闭对应浏览器才能读取 Cookie 数据。</p>
 <h2>扫码登录获取 Cookie</h2>
 <p>程序自动获取抖音登录二维码，随后会在终端输出二维码，并使用系统默认图片浏览器打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片窗口，程序会自动检查登录结果并将登录后的 Cookie 写入配置文件。</p>
-<p><b>注意：</b>频繁扫码登录容易导致账号被风控，未来可能移除该功能！</p>
+<p><b>注意：</b>扫码登录可能会导致抖音账号被风控，未来可能禁用该功能！</p>
 <h2>终端交互模式</h2>
 <p>功能最全面的模式，支持全部功能。</p>
 <h3>批量下载账号作品(TikTok)</h3>

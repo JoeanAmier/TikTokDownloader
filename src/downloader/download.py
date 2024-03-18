@@ -43,6 +43,7 @@ class Downloader:
         self.cleaner = params.cleaner
         self.cookie = params.cookie
         self.PC_headers, self.black_headers = self.init_headers(params.headers)
+        self.PC_headers_tiktok = params.headers_tiktok
         self.log = params.logger
         self.xb = params.xb
         self.console = params.console
@@ -55,6 +56,7 @@ class Downloader:
         self.dynamic = params.dynamic_cover
         self.original = params.original_cover
         self.proxies = params.proxies
+        self.proxies_tiktok = params.proxies_tiktok
         self.download = params.download
         self.max_size = params.max_size
         self.chunk = params.chunk

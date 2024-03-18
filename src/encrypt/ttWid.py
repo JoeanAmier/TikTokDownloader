@@ -3,6 +3,8 @@ from http import cookies
 from typing import TYPE_CHECKING
 from typing import Union
 
+from src.custom import PARAMS_HEADERS
+from src.custom import WID_COOKIE
 from src.testers import Logger
 from src.tools import request_post
 
@@ -21,8 +23,9 @@ class TtWid:
         '{"ticket":"","source":"node"},"cbUrlProtocol":"https","union":true}')
 
     @classmethod
-    async def get_tt_wid(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"], ) -> dict | None:
-        if response := await request_post(logger, cls.API, cls.DATA):
+    async def get_tt_wid(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
+                         proxy: str = None, ) -> dict | None:
+        if response := await request_post(logger, cls.API, cls.DATA, proxy=proxy):
             return cls.extract(logger, response, cls.NAME)
         logger.error(f"获取 {cls.NAME} 参数失败！")
 
@@ -39,11 +42,25 @@ class TtWid:
 
 
 class TtWidTikTok(TtWid):
-    pass
+    API = "https://www.tiktok.com/ttwid/check/"
+    DATA = (
+        '{"aid":1988,"service":"www.tiktok.com","union":false,"unionHost":"","needFid":false,"fid":"",'
+        '"migrate_priority":0}')
+
+    @classmethod
+    async def get_tt_wid(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
+                         proxy: str = None, ) -> dict | None:
+        if response := await request_post(logger, cls.API, cls.DATA, headers=PARAMS_HEADERS | {
+            "Cookie": WID_COOKIE,
+            "Content-Type": "text/plain",
+        }, proxy=proxy):
+            return cls.extract(logger, response, cls.NAME)
+        logger.error(f"获取 {cls.NAME} 参数失败！")
 
 
 async def demo():
-    print(await TtWid.get_tt_wid(Logger()))
+    print("抖音", await TtWid.get_tt_wid(Logger()))
+    print("TikTok", await TtWidTikTok.get_tt_wid(Logger(), "http://localhost:10809"))
 
 
 if __name__ == "__main__":

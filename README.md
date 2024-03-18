@@ -86,8 +86,9 @@
 * 🟡 TikTokDownloader 开发计划及进度可前往 [Projects](https://github.com/users/JoeanAmier/projects/2) 查阅
 * 🔴 请注意，最新源码可能存在一些不稳定的 Bug
 * 🔴 如果在使用过程中发现程序 Bug，请及时告知作者修复
-* 🔴 TikTok 平台作品下载功能失效，已修复
+* 🔴 某些情况下会下载到错误的 TikTok 作品，未修复
 * 🔴 夜晚无法下载高分辨率视频，疑似抖音服务端限制
+* 🔴 TikTok 平台作品下载功能失效，已修复
 
 # 📋 项目说明\(Instructions\)
 
@@ -110,14 +111,14 @@
 </li>
 <li>阅读 TikTokDownloader 的免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
-<ol><b>手动复制粘贴 Cookie(推荐)</b>
+<ol><b>手动复制粘贴 Cookie（推荐）</b>
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
 <li>选择 <code>复制粘贴写入 Cookie</code> 选项，按照提示将 Cookie 写入配置文件</li>
 </ol>
-<ol><b>从浏览器获取 Cookie(推荐)</b>
+<ol><b>从浏览器获取 Cookie（推荐）</b>
 <li>选择 <code>从浏览器获取 Cookie</code> 选项，按照提示选择浏览器类型</li>
 </ol>
-<ol><b>扫码登录获取 Cookie(不推荐)</b>
+<ol><b>扫码登录获取 Cookie（不推荐）</b>
 <li>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</li>
 <li>使用抖音 APP 扫描二维码并登录账号</li>
 <li>按照提示操作，将 Cookie 写入配置文件</li>
@@ -233,16 +234,16 @@
 </table>
 <p>如果您愿意，可以考虑提供资助为 <b>TikTokDownloader</b> 提供额外的支持！</p>
 
-# 💡 代码参考\(Refer\)
+# 💡 项目参考\(Refer\)
 
 * https://github.com/Johnserf-Seed/f2
 * https://github.com/Johnserf-Seed/TikTokDownload
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://github.com/ihmily/DouyinLiveRecorder
-* https://github.com/psf/requests
-* https://github.com/pallets/flask
-* https://github.com/Textualize/rich
-* https://github.com/pyinstaller/pyinstaller
 * https://docs.aiohttp.org/en/stable/
+* https://github.com/Textualize/rich
+* https://github.com/omnilib/aiosqlite
+* https://github.com/borisbabic/browser_cookie3
+* https://github.com/pyinstaller/pyinstaller
 * https://ffmpeg.org/ffmpeg-all.html
 * https://html5up.net/hyperspace

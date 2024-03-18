@@ -69,7 +69,7 @@ class Register:
                                        "607829277260676269273f7e27736077766c6a6b273f27526067424925342b35252d4a75606b42"
                                        "4925405625372b3525466d776a686c70682c27292773606b616a77273f275260674e6c71272927"
                                        "77606b6160776077273f275260674e6c71255260674249277878",
-            "biz_trace_id": "03dcf18c",
+            # "biz_trace_id": "03dcf18c",
             "aid": "6383",
             "language": "zh",
             "passport_jssdk_version": "3.0.1",
@@ -170,7 +170,7 @@ class Register:
                     second += 1
             else:
                 self.console.print(
-                    "扫码登录失败，请手动获取 Cookie 并写入配置文件！", style=WARNING)
+                    "扫码登录失败，请使用其他方式获取 Cookie 并写入配置文件！", style=WARNING)
                 return None, None
             return redirect_url, cookie
 

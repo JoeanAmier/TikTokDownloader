@@ -2,11 +2,14 @@ __all__ = ["Logger"]
 
 
 class Logger:
-    def info(self, *args, **kwargs):
-        pass
+    @staticmethod
+    def info(*args, ):
+        print(args)
 
-    def warning(self, *args, **kwargs):
-        pass
+    @staticmethod
+    def warning(*args, ):
+        print(args)
 
-    def error(self, *args, **kwargs):
-        pass
+    @staticmethod
+    def error(*args, ):
+        print(args)

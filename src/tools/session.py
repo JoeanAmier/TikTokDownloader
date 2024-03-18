@@ -17,9 +17,13 @@ if TYPE_CHECKING:
 __all__ = ["request_post", "request_get", "base_session"]
 
 
-def base_session(user_agent: str, timeout: int) -> ClientSession:
+def base_session(
+        user_agent=USERAGENT,
+        timeout=TIMEOUT,
+        headers: dict = None,
+) -> ClientSession:
     return ClientSession(
-        headers={"User-Agent": user_agent, },
+        headers=headers or {"User-Agent": user_agent, },
         timeout=ClientTimeout(connect=timeout),
     )
 
@@ -33,11 +37,12 @@ async def request_post(logger: Union["BaseLogger", "LoggerManager"],
                        timeout=TIMEOUT,
                        headers: dict = None,
                        content="headers",
+                       proxy: str = None,
                        **kwargs):
     async with ClientSession(headers=headers or {
         "User-Agent": useragent,
     }, timeout=ClientTimeout(connect=timeout), ) as session:
-        async with session.post(url, data=data, **kwargs) as response:
+        async with session.post(url, data=data, proxy=proxy, **kwargs) as response:
             match content:
                 case "headers":
                     return response.headers
@@ -60,11 +65,12 @@ async def request_get(logger: Union["BaseLogger", "LoggerManager"],
                       timeout=TIMEOUT,
                       headers: dict = None,
                       content="json",
+                      proxy: str = None,
                       **kwargs):
     async with ClientSession(headers=headers or {
         "User-Agent": useragent,
     }, timeout=ClientTimeout(connect=timeout), ) as session:
-        async with session.get(url, allow_redirects=allow_redirects, **kwargs) as response:
+        async with session.get(url, allow_redirects=allow_redirects, proxy=proxy, **kwargs) as response:
             match content:
                 case "headers":
                     return response.headers

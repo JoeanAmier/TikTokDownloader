@@ -8,10 +8,10 @@ from src.tools import base_session
 if TYPE_CHECKING:
     from src.config import Parameter
 
-__all__ = ["Inspector"]
+__all__ = ["Requester"]
 
 
-class Inspector:
+class Requester:
     URL = compile(r"(https?://\S+)")
 
     def __init__(self, params: "Parameter"):
