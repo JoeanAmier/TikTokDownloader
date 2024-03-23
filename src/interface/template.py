@@ -44,7 +44,7 @@ class API:
         self.log = params.logger
         self.xb = params.xb
         self.console = params.console
-        self.proxies = params.proxies
+        self.proxy = params.proxy
         self.max_retry = params.max_retry
         self.timeout = params.timeout
         self.cookie = params.cookie

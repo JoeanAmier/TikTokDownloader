@@ -98,7 +98,7 @@ class TikTok:
     }
     ENCODE = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
 
-    def __init__(self, parameter, key: tuple = None):
+    def __init__(self, parameter):
         self.default_mode = None
         self.parameter = parameter
         self.console = parameter.console
@@ -118,7 +118,7 @@ class TikTok:
             "mark" in parameter.name_format,
             "nickname" in parameter.name_format
         )
-        self.__all_function = (
+        self.__function = (
             ("批量下载账号作品(TikTok)", self.account_acquisition_interactive_tiktok,),
             ("批量下载账号作品(抖音)", self.account_acquisition_interactive,),
             ("批量下载链接作品(通用)", self.works_interactive,),
@@ -130,11 +130,6 @@ class TikTok:
             ("采集抖音热榜数据(抖音)", self.hot_interactive,),
             ("批量下载收藏作品(抖音)", self.collection_interactive,),
         )
-        self.__function = [
-            x for x,
-            y in zip(
-                self.__all_function,
-                key) if y] if key else self.__all_function
         self.__function_account = (
             ("使用 accounts_urls 参数的账号链接(推荐)", self.account_works_batch),
             ("手动输入待采集的账号链接", self.account_works_inquire),

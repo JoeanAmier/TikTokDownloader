@@ -4,10 +4,10 @@ __all__ = ["ClipboardMonitor", "WorksMonitor"]
 
 
 class ClipboardMonitor(TikTok):
-    def __init__(self, parameter, key=None):
-        super().__init__(parameter, key)
+    def __init__(self, parameter):
+        super().__init__(parameter)
 
 
 class WorksMonitor(TikTok):
-    def __init__(self, parameter, key=None):
-        super().__init__(parameter, key)
+    def __init__(self, parameter):
+        super().__init__(parameter)

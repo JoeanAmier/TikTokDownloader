@@ -72,9 +72,6 @@ def start_cookie_task(function):
 
 
 class TikTokDownloader:
-    REDUCED = (1, 1, 1, 1, 0, 1, 0, 0, 1, 1)  # 禁用项目部分功能
-    # REDUCED = False  # 启用项目全部功能
-
     PLATFORM = {
         "1": "cookie",
         "2": "cookie_tiktok",
@@ -243,7 +240,7 @@ class TikTokDownloader:
     @start_cookie_task
     def complete(self):
         """终端交互模式"""
-        example = TikTok(self.parameter, self.REDUCED)
+        example = TikTok(self.parameter)
         register(self.blacklist.close)
         try:
             example.run(self.default_mode)
@@ -296,9 +293,10 @@ class TikTokDownloader:
 
     def auto_cookie(self):
         self.console.print(
-            "警告：该功能可能会导致抖音账号被风控，建议使用其他方式获取 Cookie！",
+            "该功能为实验性功能，仅适用于学习和研究目的；目前仅支持抖音平台，建议使用其他方式获取 Cookie，未来可能会禁用该功能！",
             style=ERROR)
-        self.console.print("该功能仅支持抖音平台，未来可能会禁用该功能！", style=WARNING)
+        if self.console.input("是否返回上一级菜单(YES/NO)").upper() == "YES":
+            return
         if cookie := Register(
                 self.settings,
                 self.console,
@@ -334,7 +332,6 @@ class TikTokDownloader:
             console=self.console,
             **self.settings.read(),
             blacklist=self.blacklist,
-            reduced=bool(self.REDUCED),
         )
         self.default_mode = self.parameter.default_mode.copy()
         self.parameter.cleaner.set_rule(TEXT_REPLACEMENT, True)

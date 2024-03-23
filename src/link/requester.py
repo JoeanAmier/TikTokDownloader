@@ -20,17 +20,19 @@ class Requester:
         self.log = params.logger
         self.max_retry = params.max_retry
 
-    async def run(self, text: str) -> list[str]:
+    async def run(self, text: str, proxy: str = None) -> str:
         urls = self.URL.finditer(text)
+        if not urls:
+            return ""
         result = []
         for i in urls:
-            result.append(await self.request_url(i.group()))
-        return [i for i in result if i]
+            result.append(await self.request_url(i.group(), proxy))
+        return " ".join(i for i in result if i)
 
     @PrivateRetry.retry
     @capture_error_url
-    async def request_url(self, url: str) -> str:
-        async with self.session.get(url) as response:
+    async def request_url(self, url: str, proxy: str = None) -> str:
+        async with self.session.get(url, proxy=proxy) as response:
             return str(response.url)
 
     async def close(self):

@@ -9,8 +9,8 @@ __all__ = ["WebUI"]
 
 
 class WebUI(TikTok):
-    def __init__(self, parameter, key=None):
-        super().__init__(parameter, key)
+    def __init__(self, parameter):
+        super().__init__(parameter)
         self.cookie = parameter.cookie
         self.preview = parameter.preview
         self.error_works = {

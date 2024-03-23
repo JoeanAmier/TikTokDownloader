@@ -54,8 +54,8 @@ class Settings:
         "cookie_tiktok": "",
         "dynamic_cover": False,
         "original_cover": False,
-        "proxies": "",
-        "proxies_tiktok": "",
+        "proxy": "",
+        "proxy_tiktok": "",
         "download": True,
         "max_size": 0,
         "chunk": 1024 * 1024,  # 每次从服务器接收的数据块大小

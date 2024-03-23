@@ -65,7 +65,7 @@ class Acquirer:
         self.log = params.logger
         self.xb = params.xb
         self.console = params.console
-        self.proxies = params.proxies
+        self.proxy = params.proxy
         self.max_retry = params.max_retry
         self.timeout = params.timeout
         self.cookie = params.cookie
@@ -92,7 +92,7 @@ class Acquirer:
                 method,
                 url,
                 params=params,
-                proxies=self.proxies,
+                proxies=self.proxy,
                 timeout=self.timeout,
                 headers=headers or self.PC_headers, **kwargs)
             wait()
@@ -232,7 +232,7 @@ class Link:
         r"\S*?https://www\.tiktok\.com/@\S+?/(?:video|photo)/(\d{19})\S*?")  # 作品链接
 
     def __init__(self, params: Parameter):
-        self.share = Share(params.logger, params.proxies, params.max_retry)
+        self.share = Share(params.logger, params.proxy, params.max_retry)
 
     def user(self, text: str) -> list:
         urls = self.share.run(text)

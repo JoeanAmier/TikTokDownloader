@@ -75,7 +75,7 @@ def suspend(count: int, console: "ColorfulConsole") -> None:
             f"程序已经处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，程序已经暂停运行，"
             f"在 {rest_time} 秒后继续处理数据！", style=GENERAL)
         sleep(rest_time)
-    # 默认不启用
+    # 禁用该函数
     # pass
 
 

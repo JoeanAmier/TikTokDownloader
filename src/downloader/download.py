@@ -35,10 +35,6 @@ __all__ = ["Downloader"]
 
 
 class Downloader:
-    Phone_headers = {
-        'User-Agent': 'com.ss.android.ugc.trill/494+Mozilla/5.0+(Linux;+Android+12;+2112123G+Build/SKQ1.211006.001;+wv)'
-                      '+AppleWebKit/537.36+(KHTML,+like+Gecko)+Version/4.0+Chrome/107.0.5304.105+Mobile+Safari/537.36'}
-
     def __init__(self, params: "Parameter"):
         self.cleaner = params.cleaner
         self.cookie = params.cookie
@@ -55,8 +51,8 @@ class Downloader:
         self.music = params.music
         self.dynamic = params.dynamic_cover
         self.original = params.original_cover
-        self.proxies = params.proxies
-        self.proxies_tiktok = params.proxies_tiktok
+        self.proxy = params.proxy
+        self.proxy_tiktok = params.proxy_tiktok
         self.download = params.download
         self.max_size = params.max_size
         self.chunk = params.chunk
@@ -111,20 +107,22 @@ class Downloader:
     def run(self,
             data: list[dict],
             type_: str,
+            tiktok=False,
             **kwargs, ) -> None:
         if not self.download:
             return
         if type_ == "batch":
             self.log.info("开始下载作品文件")
-            self.run_batch(data, **kwargs)
+            self.run_batch(data, tiktok, **kwargs)
         elif type_ == "works":
-            self.run_general(data, **kwargs)
+            self.run_general(data, tiktok, )
         else:
             raise ValueError
 
     def run_batch(
             self,
             data: list[dict],
+            tiktok: bool,
             id_: str,
             name: str,
             mark="",
@@ -141,11 +139,11 @@ class Downloader:
             mark,
             addition,
             mix)
-        self.batch_processing(data, root)
+        self.batch_processing(data, root, tiktok=tiktok, )
 
     def run_general(self, data: list[dict], tiktok: bool):
         root = self.storage_folder()
-        self.batch_processing(data, root, False, tiktok=tiktok)
+        self.batch_processing(data, root, False, tiktok=tiktok, )
 
     def run_live(self, data: list[tuple]):
         if not data or not self.download:
@@ -203,7 +201,7 @@ class Downloader:
     def __download_live(self, commands: list):
         self.ffmpeg.download(
             commands,
-            self.proxies["https"],
+            self.proxy["https"],
             self.timeout,
             self.black_headers["User-Agent"],
         )
@@ -410,7 +408,7 @@ class Downloader:
             with get(
                     url,
                     stream=True,
-                    proxies=self.proxies,
+                    proxies=self.proxy_tiktok if tiktok else self.proxy,
                     headers=self.__adapter_headers(headers, tiktok),
                     timeout=self.timeout) as response:
                 if not (
@@ -476,8 +474,7 @@ class Downloader:
             self,
             headers: dict,
             tiktok: bool) -> dict:
-        return headers or (
-            self.Phone_headers if tiktok else self.black_headers)
+        return headers or self.black_headers
 
     @staticmethod
     def add_count(type_: str, id_: str, count: SimpleNamespace):
