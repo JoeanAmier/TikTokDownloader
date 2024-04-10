@@ -11,11 +11,12 @@ from src.custom import (
 
 if TYPE_CHECKING:
     from src.tools import ColorfulConsole
+    from .database import Database
 
-__all__ = ["DownloadRecorder"]
+__all__ = ["DownloadRecorder", ]
 
 
-class DownloadRecorder:
+class __DownloadRecorder:
     encode = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
     works_id = compile(r"\d{19}")
 
@@ -104,3 +105,37 @@ class DownloadRecorder:
                 "未检测到 IDRecorder 备份文件，您的作品下载记录数据无法恢复！",
                 style=ERROR)
         return set()
+
+
+class DownloadRecorder:
+    detail = compile(r"\d{19}")
+
+    def __init__(self,
+                 database: "Database",
+                 switch: bool,
+                 console: "ColorfulConsole"):
+        self.switch = switch
+        self.console = console
+        self.database = database
+
+    async def has_ids(self, ids: str) -> bool:
+        return await self.database.has_download_data(ids)
+
+    async def update_id(self, id_: str):
+        if self.switch:
+            await self.database.write_download_data(id_)
+
+    async def delete_ids(self, ids: str) -> None:
+        if ids.upper() == "ALL":
+            await self.database.delete_all_download_data()
+        else:
+            ids = self.__extract_ids(ids)
+            await self.database.delete_download_data(ids)
+
+    def __extract_ids(self, ids: str) -> list[str]:
+        ids = ids.split()
+        result = []
+        for i in ids:
+            if id_ := self.detail.search(i):
+                result.append(id_.group())
+        return result

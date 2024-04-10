@@ -1,21 +1,23 @@
-from atexit import register
+from asyncio import TimeoutError
+from asyncio import run
+from asyncio import sleep as asleep
 from contextlib import suppress
-from pathlib import Path
 from shutil import rmtree
 from threading import Event
 from threading import Thread
-from typing import Type
-from webbrowser import open
+# from typing import Type
+# from webbrowser import open
+from time import sleep
 
-from flask import Flask
+# from typing import Type
+# from webbrowser import open
+from aiohttp import ClientError
+# from flask import Flask
 from flask import abort
 from flask import request
-from requests import exceptions
-from requests import get
 
 from src.config import Parameter
 from src.config import Settings
-from src.custom import BACKUP_RECORD_INTERVAL
 from src.custom import COOKIE_UPDATE_INTERVAL
 from src.custom import (
     MASTER,
@@ -35,11 +37,12 @@ from src.custom import (
     DISCLAIMER_TEXT,
     PROJECT_NAME,
 )
-from src.custom import SERVER_HOST
-from src.custom import SERVER_PORT
+# from src.custom import SERVER_HOST
+# from src.custom import SERVER_PORT
 from src.custom import TEXT_REPLACEMENT
 from src.custom import verify_token
 from src.encrypt import XBogus
+from src.manager import Database
 from src.manager import DownloadRecorder
 from src.module import Cookie
 from src.module import Register
@@ -47,132 +50,122 @@ from src.record import BaseLogger
 from src.record import LoggerManager
 from src.tools import Browser
 from src.tools import ColorfulConsole
-from src.tools import FileSwitch
 from src.tools import choose
 from src.tools import safe_pop
-from .main_api_server import APIServer
+# from .main_api_server import APIServer
 from .main_complete import TikTok
-from .main_server import Server
-from .main_web_UI import WebUI
+
+# from .main_server import Server
+# from .main_web_UI import WebUI
 
 __all__ = ["TikTokDownloader"]
 
 
-def start_cookie_task(function):
-    def inner(self, *args, **kwargs):
-        if not self.cookie_task.is_alive():
-            self.cookie_task.start()
-        if isinstance(
-                self.backup_task,
-                Thread) and not self.backup_task.is_alive():
-            self.backup_task.start()
-        return function(self, *args, **kwargs)
-
-    return inner
-
-
 class TikTokDownloader:
-    PLATFORM = {
-        "1": "cookie",
-        "2": "cookie_tiktok",
+    PLATFORM = (
+        "cookie",
+        "cookie_tiktok",
+    )
+    FUNCTION_OPTIONS = {
+        1: "禁用",
+        0: "启用",
     }
-
     NAME = PROJECT_NAME
     WIDTH = 50
     LINE = ">" * WIDTH
 
-    UPDATE = {
-        "path": PROJECT_ROOT.joinpath("./src/config/Disable_Update"),
-        "tip": "",
-    }
-    RECORD = {
-        "path": PROJECT_ROOT.joinpath("./src/config/Disable_Record"),
-        "tip": "",
-    }
-    LOGGING = {
-        "path": PROJECT_ROOT.joinpath("./src/config/Enable_Logging"),
-        "tip": "",
-    }
-    DISCLAIMER = {"path": PROJECT_ROOT.joinpath(
-        "./src/config/Consent_Disclaimer")}
-
-    FUNCTION_OPTIONS = {
-        True: "禁用",
-        False: "启用",
-    }
-
-    def __init__(self, **kwargs):
+    def __init__(self, ):
         self.console = ColorfulConsole()
         self.logger = None
-        self.blacklist = None
+        self.recorder = None
         self.x_bogus = XBogus()
         self.settings = Settings(PROJECT_ROOT, self.console)
+        self.event = Event()
         self.cookie = Cookie(self.settings, self.console)
+        self.cookie_task = None
         self.parameter = None
         self.running = True
         self.default_mode = None
-        self.event = Event()
-        self.cookie_task = Thread(target=self.periodic_update_cookie)
-        self.backup_task = None
-        self.__abnormal = None
-        self.__function = None
+        self.database = Database()
+        self.config = None
+        self.__function_menu = None
 
-    @property
-    def abnormal(self):
-        return self.__abnormal
+    async def read_config(self):
+        self.config = self.__format_config(await self.database.read_config_data())
 
-    @abnormal.setter
-    def abnormal(self, value: bool):
-        if not isinstance(self.__abnormal, bool):
-            self.__abnormal = value
+    @staticmethod
+    def __format_config(config: list) -> dict:
+        return {i["NAME"]: i["VALUE"] for i in config}
+
+    async def __aenter__(self):
+        await self.database.__aenter__()
+        await self.read_config()
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.database.__aexit__(exc_type, exc_val, exc_tb)
+        await self.parameter.close_session()
+        self.close()
 
     def __update_menu(self):
-        self.__function = (
-            ("复制粘贴写入 Cookie", self.write_cookie),
-            ("从浏览器获取 Cookie", self.browser_cookie),
-            ("扫码登录获取 Cookie", self.auto_cookie),
+        self.__function_menu = (
+            ("复制粘贴写入 Cookie (抖音)", self.write_cookie),
+            ("从浏览器获取 Cookie (抖音)", self.browser_cookie),
+            ("扫码登录获取 Cookie (抖音)", self.auto_cookie),
+            ("复制粘贴写入 Cookie (TikTok)", self.write_cookie_tiktok),
+            ("从浏览器获取 Cookie (TikTok)", self.browser_cookie_tiktok),
             ("终端交互模式", self.complete),
-            ("后台监测模式", lambda: self.console.print("敬请期待！")),
-            ("Web API 模式", self.__api_object),
-            ("Web UI 模式", self.__web_ui_object),
-            ("服务器部署模式", self.__server_object),
-            (f"{self.UPDATE['tip']}自动检查更新", self.__modify_update),
-            (f"{self.RECORD['tip']}作品下载记录", self.__modify_recode),
-            ("删除指定下载记录", self.delete_works_ids),
-            (f"{self.LOGGING['tip']}运行日志记录", self.__modify_logging),
+            ("后台监测模式", self.temporary),
+            ("Web API 模式", self.temporary),
+            ("Web UI 模式", self.temporary),
+            ("服务器部署模式", self.temporary),
+            # ("Web API 模式", self.__api_object),
+            # ("Web UI 模式", self.__web_ui_object),
+            # ("服务器部署模式", self.__server_object),
+            (f"{self.FUNCTION_OPTIONS[self.config["Update"]]
+            }自动检查更新", self.__modify_update),
+            (f"{self.FUNCTION_OPTIONS[self.config["Record"]]
+            }作品下载记录", self.__modify_record),
+            ("删除作品下载记录", self.delete_works_ids),
+            (f"{self.FUNCTION_OPTIONS[self.config["Logger"]]
+            }运行日志记录", self.__modify_logging),
         )
 
-    def __api_object(self):
-        self.server(APIServer, SERVER_HOST)
+    async def temporary(self):
+        # TODO: 重构完成后移除
+        self.console.print("代码正在重构，暂不可用！")
 
-    def __web_ui_object(self):
-        self.server(WebUI, token=False)
+    # def __api_object(self):
+    #     self.server(APIServer, SERVER_HOST)
 
-    def __server_object(self):
-        self.server(Server)
+    # def __web_ui_object(self):
+    #     self.server(WebUI, token=False)
 
-    def __modify_update(self):
-        self.change_config(self.UPDATE["path"])
+    # def __server_object(self):
+    #     self.server(Server)
 
-    def __modify_recode(self):
-        self.change_config(self.RECORD["path"])
+    async def __modify_update(self):
+        await self.change_config("Update")
 
-    def __modify_logging(self):
-        self.change_config(self.LOGGING["path"])
+    async def __modify_record(self):
+        await self.change_config("Record")
 
-    def disclaimer(self):
-        if not self.DISCLAIMER["path"].exists():
+    async def __modify_logging(self):
+        await self.change_config("Logger")
+
+    async def disclaimer(self):
+        if not self.config["Disclaimer"]:
             self.console.print(
                 "\n".join(DISCLAIMER_TEXT),
                 style=MASTER)
             if self.console.input(
                     "是否已仔细阅读上述免责声明(YES/NO): ").upper() != "YES":
                 return False
-            FileSwitch.deal_config(self.DISCLAIMER["path"])
+            await self.database.update_config_data("Disclaimer", 1)
             self.console.print()
         return True
 
-    def version(self):
+    def project_info(self):
         self.console.print(f"{self.LINE}\n\n\n{self.NAME.center(
             self.WIDTH)}\n\n\n{self.LINE}\n", style=MASTER)
         self.console.print(f"项目地址: {REPOSITORY}", style=MASTER)
@@ -180,93 +173,79 @@ class TikTokDownloader:
         self.console.print(f"开源许可: {LICENCE}\n", style=MASTER)
 
     def check_config(self):
-        folder = ("./src", "./src/config", "./cache", "./cache/temp")
-        self.abnormal = PROJECT_ROOT.joinpath(folder[-1]).exists()
-        for i in folder:
-            PROJECT_ROOT.joinpath(i).mkdir(exist_ok=True)
-        self.UPDATE["tip"] = self.FUNCTION_OPTIONS[not self.UPDATE["path"].exists()]
-        self.RECORD["tip"] = self.FUNCTION_OPTIONS[not (
-            b := self.RECORD["path"].exists())]
-        self.LOGGING["tip"] = self.FUNCTION_OPTIONS[(
-            l := self.LOGGING["path"].exists())]
-        self.blacklist = DownloadRecorder(
-            not b,
-            PROJECT_ROOT.joinpath("./cache"),
-            not self.abnormal,
-            self.console)
-        self.backup_task = Thread(
-            target=self.periodic_backup_record,
-        )
-        self.logger = {True: LoggerManager, False: BaseLogger}[l]
+        self.recorder = DownloadRecorder(
+            self.database,
+            self.config["Record"],
+            self.console, )
+        self.logger = {1: LoggerManager, 0: BaseLogger}[self.config["Logger"]]
 
-    def check_update(self):
-        if self.UPDATE["path"].exists():
+    async def check_update(self):
+        if not self.config["Update"]:
             return
         try:
-            response = get(RELEASES, timeout=5)
-            latest_major, latest_minor = map(
-                int, response.url.split("/")[-1].split(".", 1))
-            if latest_major > VERSION_MAJOR or latest_minor > VERSION_MINOR:
-                self.console.print(
-                    f"检测到新版本: {latest_major}.{latest_minor}", style=WARNING)
-                self.console.print(RELEASES)
-            elif latest_minor == VERSION_MINOR and VERSION_BETA:
-                self.console.print(
-                    "当前版本为开发版, 可更新至正式版", style=WARNING)
-                self.console.print(RELEASES)
-            elif VERSION_BETA:
-                self.console.print("当前已是最新开发版", style=WARNING)
-            else:
-                self.console.print("当前已是最新正式版", style=INFO)
-        except (exceptions.ReadTimeout, exceptions.ConnectionError):
+            async with self.parameter.session.get(RELEASES, timeout=5) as response:
+                latest_major, latest_minor = map(
+                    int, str(response.url).split("/")[-1].split(".", 1))
+                if latest_major > VERSION_MAJOR or latest_minor > VERSION_MINOR:
+                    self.console.print(
+                        f"检测到新版本: {latest_major}.{latest_minor}", style=WARNING)
+                    self.console.print(RELEASES)
+                elif latest_minor == VERSION_MINOR and VERSION_BETA:
+                    self.console.print(
+                        "当前版本为开发版, 可更新至正式版", style=WARNING)
+                    self.console.print(RELEASES)
+                elif VERSION_BETA:
+                    self.console.print("当前已是最新开发版", style=WARNING)
+                else:
+                    self.console.print("当前已是最新正式版", style=INFO)
+        except (ClientError, TimeoutError,):
             self.console.print("检测新版本失败", style=ERROR)
         self.console.print()
 
-    def main_menu(self, default_mode=""):
+    async def main_menu(self, default_mode=""):
         """选择运行模式"""
         while self.running:
             self.__update_menu()
             if not default_mode:
                 default_mode = choose(
                     "请选择 TikTokDownloader 运行模式",
-                    [i for i, _ in self.__function],
+                    [i for i, _ in self.__function_menu],
                     self.console,
                     separate=(
-                        2,
-                        7))
-            self.compatible(default_mode)
+                        4,
+                        9))
+            await self.compatible(default_mode)
             default_mode = None
 
-    @start_cookie_task
-    def complete(self):
+    # @start_cookie_task
+    async def complete(self):
         """终端交互模式"""
-        example = TikTok(self.parameter)
-        register(self.blacklist.close)
+        example = TikTok(self.parameter, self.database, )
         try:
-            example.run(self.default_mode)
+            await example.run(self.default_mode)
             self.running = example.running
         except KeyboardInterrupt:
             self.running = False
 
-    @start_cookie_task
-    def server(
-            self,
-            server: Type[APIServer | WebUI | Server],
-            host="0.0.0.0",
-            token=True):
-        """
-        服务器模式
-        """
-        self.console.print(
-            "如果您看到 WARNING: This is a development server. 提示，这并不是异常错误！\n如需关闭服务器，可以在终端按下 Ctrl + C 快捷键！",
-            style=INFO)
-        master = server(self.parameter)
-        app = master.run_server(Flask("__main__"))
-        register(self.blacklist.close)
-        if token:
-            app.before_request(self.verify_token)
-        open(f"http://127.0.0.1:{SERVER_PORT}")
-        app.run(host=host, port=SERVER_PORT)
+    # @start_cookie_task
+    # def server(
+    #         self,
+    #         server: Type[APIServer | WebUI | Server],
+    #         host="0.0.0.0",
+    #         token=True):
+    #     """
+    #     服务器模式
+    #     """
+    #     self.console.print(
+    #         "如果您看到 WARNING: This is a development server. 提示，这并不是异常错误！\n如需关闭服务器，可以在终端按下 Ctrl + C 快捷键！",
+    #         style=INFO)
+    #     master = server(self.parameter)
+    #     app = master.run_server(Flask("__main__"))
+    #     register(self.recorder.close)
+    #     if token:
+    #         app.before_request(self.verify_token)
+    #     open(f"http://127.0.0.1:{SERVER_PORT}")
+    #     app.run(host=host, port=SERVER_PORT)
 
     @staticmethod
     def verify_token():
@@ -274,107 +253,117 @@ class TikTokDownloader:
                 request.json.get("token")):
             return abort(403)
 
-    def change_config(self, file: Path):
-        FileSwitch.deal_config(file)
+    async def change_config(self, key: str, ):
+        self.config[key] = 0 if self.config[key] else 1
+        await self.database.update_config_data(key, self.config[key])
         self.console.print("修改设置成功！")
-        if self.blacklist:
-            self.blacklist.close()
         self.check_config()
-        self.check_settings()
+        await self.check_settings()
 
-    def write_cookie(self):
+    async def write_cookie(self):
+        await self.__write_cookie()
+
+    async def write_cookie_tiktok(self):
+        await self.__write_cookie(1)
+
+    async def __write_cookie(self, index=0):
         self.console.print(
             "Cookie 获取教程：https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6"
             "%95%99%E7%A8%8B.md")
-        if (p := self.__select_platform()) in self.PLATFORM:
-            self.cookie.run(self.PLATFORM[p])
-            self.check_settings()
-            self.parameter.update_cookie()
+        if self.cookie.run(self.PLATFORM[index]):
+            await self.check_settings()
+            # await self.parameter.update_cookie()
 
-    def auto_cookie(self):
+    async def auto_cookie(self):
         self.console.print(
-            "该功能为实验性功能，仅适用于学习和研究目的；目前仅支持抖音平台，建议使用其他方式获取 Cookie，未来可能会禁用该功能！",
+            "该功能为实验性功能，仅适用于学习和研究目的；目前仅支持抖音平台，建议使用其他方式获取 Cookie，未来可能会禁用或移除该功能！",
             style=ERROR)
-        if self.console.input("是否返回上一级菜单(YES/NO)").upper() == "YES":
+        if self.console.input("是否返回上一级菜单(YES/NO)").upper() != "NO":
             return
-        if cookie := Register(
+        if cookie := await Register(
+                self.parameter,
                 self.settings,
-                self.console,
-                self.x_bogus,
-        ).run(self.parameter.temp):
+        ).run():
             self.cookie.extract(cookie)
-            self.check_settings()
-            self.parameter.update_cookie()
+            await self.check_settings()
+            # await self.parameter.update_cookie()
         else:
             self.console.print("扫码登录失败，未写入 Cookie！", style=WARNING)
 
-    def compatible(self, mode: str):
+    async def compatible(self, mode: str):
         with suppress(ValueError):
             if mode in {"Q", "q", ""}:
                 self.running = False
-            elif (n := int(mode) - 1) in range(len(self.__function)):
-                self.__function[n][1]()
+            elif (n := int(mode) - 1) in range(len(self.__function_menu)):
+                await self.__function_menu[n][1]()
 
-    def delete_works_ids(self):
-        if self.RECORD["tip"] == "启用":
+    async def delete_works_ids(self):
+        if not self.config["Record"]:
             self.console.print("作品下载记录功能已禁用！", style=WARNING)
             return
-        self.blacklist.delete_ids(self.console.input("请输入需要删除的作品 ID："))
+        self.recorder.delete_ids(self.console.input("请输入需要删除的作品 ID："))
         self.console.print("删除作品下载记录成功！", style=INFO)
 
-    def check_settings(self):
+    async def check_settings(self, restart=True):
+        if restart:
+            await self.parameter.close_session()
         self.parameter = Parameter(
             self.settings,
             self.cookie,
-            main_path=PROJECT_ROOT,
             logger=self.logger,
             xb=self.x_bogus,
             console=self.console,
             **self.settings.read(),
-            blacklist=self.blacklist,
+            recorder=self.recorder,
         )
+        await self.parameter.check_proxy()
+        self.restart_cycle_task(restart, )
+        await asleep(5)
         self.default_mode = self.parameter.default_mode.copy()
         self.parameter.cleaner.set_rule(TEXT_REPLACEMENT, True)
 
-    def run(self):
+    async def run(self):
+        self.project_info()
+        self.console.print(
+            "注意：本项目正在重构代码，功能尚不稳定，不适合日常使用！\n",
+            style=ERROR,
+        )  # 正式发布后移除该提示
         self.check_config()
-        self.version()
-        self.check_update()
-        self.check_settings()
-        if self.disclaimer():
-            self.main_menu(safe_pop(self.default_mode))
-        self.close()
+        await self.check_settings(False, )
+        await self.check_update()
+        if await self.disclaimer():
+            await self.main_menu(safe_pop(self.default_mode))
 
     def delete_temp(self):
         rmtree(self.parameter.temp.resolve())
 
     def periodic_update_cookie(self):
-        while not self.event.is_set():
-            self.parameter.update_cookie()
-            self.event.wait(COOKIE_UPDATE_INTERVAL)
+        async def inner():
+            while not self.event.is_set():
+                await self.parameter.update_cookie()
+                self.event.wait(COOKIE_UPDATE_INTERVAL)
 
-    def periodic_backup_record(self):
-        while not self.event.is_set():
-            self.blacklist.backup_file()
-            self.event.wait(BACKUP_RECORD_INTERVAL)
-        self.blacklist.backup_file()
+        with suppress(RuntimeError):
+            run(inner())
+
+    def restart_cycle_task(self, restart=True, ):
+        if restart:
+            self.event.set()
+            while self.cookie_task.is_alive():
+                sleep(1)
+        self.cookie_task = Thread(target=self.periodic_update_cookie)
+        self.event.clear()
+        self.cookie_task.start()
 
     def close(self):
-        self.delete_temp()
         self.event.set()
-        self.blacklist.close()
-        self.parameter.logger.info("程序结束运行")
+        self.delete_temp()
+        self.parameter.logger.info("程序即将关闭")
 
-    def browser_cookie(self):
-        if (p := self.__select_platform()) in self.PLATFORM:
-            Browser(self.parameter, self.cookie).run(p == "2")
+    async def browser_cookie(self, ):
+        if Browser(self.parameter, self.cookie).run():
+            await self.check_settings()
 
-    def __select_platform(self) -> str:
-        return choose(
-            "请选择平台：",
-            (
-                "抖音平台",
-                "TikTok 平台",
-            ),
-            self.console,
-        )
+    async def browser_cookie_tiktok(self, ):
+        if Browser(self.parameter, self.cookie).run(True):
+            await self.check_settings()

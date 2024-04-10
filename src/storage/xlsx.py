@@ -35,14 +35,14 @@ class XLSXLogger(BaseTextLogger):
         self.title_line = title_line  # 标题行
         self.field_keys = field_keys
 
-    def __enter__(self):
+    async def __aenter__(self):
         self.book = load_workbook(
             self.path) if self.path.exists() else Workbook()
         self.sheet = self.book.active
         self.title()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
         self.book.save(self.path)
         self.book.close()
 
@@ -52,5 +52,5 @@ class XLSXLogger(BaseTextLogger):
             for col, value in enumerate(self.title_line, start=1):
                 self.sheet.cell(row=1, column=col, value=value)
 
-    def save(self, data, *args, **kwargs):
+    async def save(self, data, *args, **kwargs):
         self.sheet.append(data)

@@ -20,8 +20,9 @@ class Cookie:
         if not (
                 cookie := self.console.input(
                     "请粘贴 Cookie 内容: ")):
-            return
+            return False
         self.extract(cookie, key=key)
+        return True
 
     def extract(self, cookie: str, write=True, key="cookie", ) -> dict:
         cookie_dict = cookie_str_to_dict(cookie)

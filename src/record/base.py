@@ -80,3 +80,9 @@ class BaseLogger:
     def error(self, text: str, output=True, **kwargs):
         if output:
             self.console.print(text, style=ERROR, **kwargs)
+
+    def debug(self, text: str, **kwargs):
+        pass
+
+    def print(self, text: str, **kwargs) -> None:
+        self.console.print(text, **kwargs)

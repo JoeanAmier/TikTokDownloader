@@ -54,8 +54,8 @@ class Settings:
         "cookie_tiktok": "",
         "dynamic_cover": False,
         "original_cover": False,
-        "proxy": "",
-        "proxy_tiktok": "",
+        "proxy": None,
+        "proxy_tiktok": None,
         "download": True,
         "max_size": 0,
         "chunk": 1024 * 1024,  # 每次从服务器接收的数据块大小
@@ -63,6 +63,8 @@ class Settings:
         "max_pages": 0,
         "default_mode": "",
         "ffmpeg": "",
+        "update_cookie": True,
+        "update_cookie_tiktok": True,
     }  # 默认配置
 
     def __init__(self, root: "Path", console: "ColorfulConsole"):

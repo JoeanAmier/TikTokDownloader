@@ -25,7 +25,7 @@ class TtWid:
     @classmethod
     async def get_tt_wid(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
                          proxy: str = None, ) -> dict | None:
-        if response := await request_post(logger, cls.API, cls.DATA, proxy=proxy):
+        if response := await request_post(logger, cls.API, cls.DATA, headers=PARAMS_HEADERS, proxy=proxy):
             return cls.extract(logger, response, cls.NAME)
         logger.error(f"获取 {cls.NAME} 参数失败！")
 

@@ -11,7 +11,7 @@
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=for-the-badge&color=52c41a">
 </div>
 <br>
-<p>🔥 <b>TikTok 主页/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 Requests 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号主页作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
+<p>🔥 <b>TikTok 主页/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 AIOHTTP 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号发布作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
 <p>⭐ <b>项目文档正在完善中，如有发现任何错误或描述模糊之处，请告知作者以便改进！</b></p>
 <hr>
 <h1>快速入门</h1>
@@ -39,7 +39,7 @@
 <ol><b>从浏览器获取 Cookie（推荐）</b>
 <li>选择 <code>从浏览器获取 Cookie</code> 选项，按照提示选择浏览器类型</li>
 </ol>
-<ol><b>扫码登录获取 Cookie（不推荐）</b>
+<ol><b>扫码登录获取 Cookie（停用）</b>
 <li>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</li>
 <li>使用抖音 APP 扫描二维码并登录账号</li>
 <li>按照提示操作，将 Cookie 写入配置文件</li>
@@ -49,7 +49,7 @@
 <li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
 </ol>
 <h1>获取 Cookie</h1>
-<p><a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">点击查看 Cookie 获取教程</a>，无效 / 过期的 Cookie 会导致程序获取数据失败或者无法下载高分辨率的视频文件；目前尚无判断 Cookie 无效 / 过期的方法，<a href="https://github.com/JoeanAmier/TikTokDownloader#%E5%85%B3%E4%BA%8E-cookie">更多 Cookie 说明</a>！</p>
+<p><a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">点击查看 Cookie 获取教程</a>，无效 / 过期的 Cookie 会导致程序获取数据失败或者无法下载高分辨率的视频文件；目前尚无主动判断 Cookie 无效 / 过期的方法，<a href="https://github.com/JoeanAmier/TikTokDownloader#%E5%85%B3%E4%BA%8E-cookie">更多 Cookie 说明</a>！</p>
 <h1>入门说明</h1>
 <h2>关于终端</h2>
 <p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a>（Windows 11 自带默认终端）运行程序以便获得最佳彩色交互显示效果！</p>
@@ -98,6 +98,10 @@
 <td align="center">直播</td>
 </tr>
 <tr>
+<td align="center"><code>https://www.tiktok.com/@TikTok号</code></td>
+<td align="center">账号</td>
+</tr>
+<tr>
 <td align="center"><code>https://www.tiktok.com/@TikTok号/video/作品ID</code></td>
 <td align="center">账号、视频、图集</td>
 </tr>
@@ -118,7 +122,7 @@
 <h2>数据储存</h2>
 <ul>
 <li>配置文件 <code>settings.json</code> 的 <code>storage_format</code> 参数可设置数据储存格式类型，如果不设置该参数，程序不会储存任何数据至文件。</li>
-<li><code>采集作品评论数据</code>、<code>批量采集账号数据</code>、<code>采集搜索结果数据</code>、<code>采集抖音热榜数据</code> 模式必须设置 <code>storage_format</code> 参数才能正常使用。</li>
+<li><code>采集作品评论数据</code>、<code>采集账号详细数据</code>、<code>采集搜索结果数据</code>、<code>采集抖音热榜数据</code> 模式必须设置 <code>storage_format</code> 参数才能正常使用。</li>
 <li>程序所有数据均储存至 <code>root</code> 参数路径下的 <code>Data</code> 文件夹。</li>
 </ul>
 <h2>文本文档</h2>
@@ -165,7 +169,7 @@ https://www.douyin.com/note/123456789
 <td align="center">文件下载, 数据采集</td>
 </tr>
 <tr>
-<td align="center">批量采集账号数据</td>
+<td align="center">采集账号详细数据</td>
 <td align="center">数据采集</td>
 </tr>
 <tr>
@@ -180,9 +184,15 @@ https://www.douyin.com/note/123456789
 <td align="center">批量下载收藏作品</td>
 <td align="center">文件下载，数据采集</td>
 </tr>
+<tr>
+<td align="center">批量下载收藏夹作品</td>
+<td align="center">文件下载，数据采集</td>
+</tr>
 </tbody></table>
-<h1>启用功能</h1>
-<p>项目部分功能默认禁用，如需启用功能，请通过源码运行项目，并将相应代码取消注释！</p>
+<h2>自动更新 Cookie 参数</h2>
+<p>程序会周期性更新抖音与 TikTok Cookie 的部分参数，以保持 Cookie 的有效性。</p>
+<p>该功能无法防止 Cookie 失效，Cookie 失效后需要重新写入！</p>
+<p>使用者可自行启用或禁用该功能，如果您不需要使用该平台的功能，建议禁用该平台的自动更新功能！</p>
 <h1>配置文件</h1>
 <p>配置文件：项目根目录下的 <code>settings.json</code> 文件，可以自定义设置程序部分运行参数。</p>
 <p><b><code>cookie</code> 参数为必需参数，必须设置该参数才能正常使用程序</b>；其余参数可以根据实际需求进行修改！</p>
@@ -238,19 +248,19 @@ https://www.douyin.com/note/123456789
 <td align="center">抖音平台：已登录 Cookie 的账号标识, 账号主页链接, 批量下载收藏作品时使用<br>用于获取账号昵称和 UID, 以字典格式包含两个参数</td>
 </tr>
 <tr>
-<td align="center">accounts_urls_tiktok[mark, url, tab, earliest, latest]</td>
+<td align="center">(即将生效)accounts_urls_tiktok[mark, url, tab, earliest, latest]</td>
 <td align="center">list[dict[str, str, str, str, str]]</td>
-<td align="center">未生效</td>
+<td align="center">TikTok 平台：账号标识, 账号链接, 批量下载类型, 最早发布日期, 最晚发布日期; 批量下载账号作品时使用, 支持多账号, 以字典格式包含五个参数</td>
 </tr>
 <tr>
-<td align="center">mix_urls_tiktok[mark, url]</td>
+<td align="center">(未生效)mix_urls_tiktok[mark, url]</td>
 <td align="center">list[dict[str, str]]</td>
-<td align="center">未生效</td>
+<td align="center">TikTok 平台：合集标识, 合集链接或作品链接, 批量下载合集作品时使用<br>支持多合集, 以字典格式包含两个参数</td>
 </tr>
 <tr>
-<td align="center">owner_url_tiktok[mark, url]</td>
+<td align="center">(未生效)owner_url_tiktok[mark, url]</td>
 <td align="center">dict[str, str]</td>
-<td align="center">未生效</td>
+<td align="center">TikTok 平台：已登录 Cookie 的账号标识, 账号主页链接, 批量下载收藏作品时使用<br>用于获取账号昵称和 UID, 以字典格式包含两个参数</td>
 </tr>
 <tr>
 <td align="center">root</td>
@@ -300,7 +310,7 @@ https://www.douyin.com/note/123456789
 <tr>
 <td align="center">cookie_tiktok</td>
 <td align="center">dict | str</td>
-<td align="center">未生效</td>
+<td align="center">TikTok 网页版 Cookie, 必需参数; 建议通过程序写入配置文件，亦可手动编辑</td>
 </tr>
 <tr>
 <td align="center">dynamic_cover</td>
@@ -315,12 +325,12 @@ https://www.douyin.com/note/123456789
 <tr>
 <td align="center">proxies</td>
 <td align="center">str</td>
-<td align="center">代理地址, 设置为空字符串代表不使用代理</td>
+<td align="center">抖音请求代理地址, 设置为空字符串代表不使用代理</td>
 </tr>
 <tr>
 <td align="center">proxies_tiktok</td>
 <td align="center">str</td>
-<td align="center">未生效</td>
+<td align="center">TikTok 请求代理地址, 设置为空字符串代表不使用代理</td>
 </tr>
 <tr>
 <td align="center">download</td>
@@ -356,6 +366,16 @@ https://www.douyin.com/note/123456789
 <td align="center">ffmpeg</td>
 <td align="center">str</td>
 <td align="center"><code>ffmpeg.exe</code> 路径，下载直播时使用，如果系统环境存在 <code>ffmpeg</code> 或者不想使用 <code>ffmpeg</code>，可以不设置该参数</td>
+</tr>
+<tr>
+<td align="center">update_cookie</td>
+<td align="center">bool</td>
+<td align="center">是否启用自动更新抖音 Cookie 参数功能，默认值: <code>true</code></td>
+</tr>
+<tr>
+<td align="center">update_cookie_tiktok</td>
+<td align="center">bool</td>
+<td align="center">是否启用自动更新 TikTok Cookie 参数功能，默认值: <code>true</code></td>
 </tr>
 </tbody></table>
 <h2>配置示例</h2>
@@ -419,7 +439,9 @@ https://www.douyin.com/note/123456789
   "max_retry": 10,
   "max_pages": 2,
   "default_mode": "4 2 1",
-  "ffmpeg": "C:\\TikTokDownloader\\ffmpeg.exe"
+  "ffmpeg": "C:\\TikTokDownloader\\ffmpeg.exe",
+  "update_cookie": true,
+  "update_cookie_tiktok": true
 }
 ```
 
@@ -603,47 +625,6 @@ https://www.douyin.com/note/123456789
 <p><b>注意：</b>扫码登录可能会导致抖音账号被风控，未来可能禁用该功能！</p>
 <h2>终端交互模式</h2>
 <p>功能最全面的模式，支持全部功能。</p>
-<h3>批量下载账号作品(TikTok)</h3>
-<p><b>注意：该模式为半自动模式，需要手动将 TikTok 账号主页保存为 HTML 文件后再使用本工具批量下载！未来将会支持自动模式！</b></p>
-<p>支持输入格式：</p>
-<ol>
-<li>单账号：单个 HTML 文件路径</li>
-<li>多账号：包含 HTML 文件的文件夹路径</li>
-</ol>
-<p>如果仅需下载单个账号的发布/喜欢作品，只需输入对应的 HTML 文件路径；如果需要下载多个账号的发布/喜欢作品，可以将全部 HTML 文件放置在同一文件夹内，输入文件夹路径进行处理；每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_账号昵称_类型</code></p>
-<p><b>HTML 文件获取教程</b></p>
-<ol>
-<li>使用浏览器打开待采集的 TikTok 账号主页页面</li>
-<li>向下滚动页面，直至所有作品完全加载</li>
-<li>按下 <code>F12</code> 打开 <code>开发人员工具</code> 窗口</li>
-<li>切换到 <code>控制台</code> 选项卡</li>
-<li>输入以下命令，按下回车键
-<pre>
-// 获取网页标题
-const title = document.title;
-
-// 创建一个新的 Blob 对象，用于保存 HTML 内容
-const blob = new Blob([document.documentElement.outerHTML], {type: 'text/html'});
-
-// 创建一个下载链接元素
-const downloadLink = document.createElement('a');
-
-// 将网页标题作为文件名
-downloadLink.download = title + '.html';
-
-// 设置下载链接的属性
-downloadLink.href = URL.createObjectURL(blob);
-
-// 将下载链接添加到页面中并模拟点击下载
-document.body.appendChild(downloadLink);
-downloadLink.click();
-
-// 清理下载链接元素
-document.body.removeChild(downloadLink);
-</pre>
-</li>
-<li>浏览器会弹出下载窗口，下载文件即可</li>
-</ol>
 <h3>批量下载账号作品(抖音)</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts_urls</code> 参数中的账号链接。</li>
@@ -660,8 +641,7 @@ document.body.removeChild(downloadLink);
 <p>如果当前账号昵称或账号标识不是有效的文件夹名称时，程序会提示用户输入临时的账号标识，以便程序继续处理账号。</p>
 <p>处理多个账号时，如果某个账号获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/custom/function.py</code> 文件修改功能）</p>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
-<h3>批量下载链接作品</h3>
-<p><strong>支持 TikTok 平台。</strong></p>
+<h3>批量下载链接作品(抖音)</h3>
 <ol>
 <li>手动输入待采集的作品链接。</li>
 <li>输入文本文档路径，读取文件包含的作品链接。</li>
@@ -679,7 +659,7 @@ document.body.removeChild(downloadLink);
 <li><code>https://www.douyin.com/channel/分区ID?modal_id=作品ID</code></li>
 </ul>
 <p>作品会下载至 <code>root</code> 参数和 <code>folder_name</code> 参数拼接成的文件夹。</p>
-<h3>获取直播推流地址</h3>
+<h3>获取直播推流地址(抖音)</h3>
 <p>输入直播链接，不支持已结束的直播。</p>
 <p>支持链接格式：</p>
 <ul>
@@ -696,7 +676,7 @@ document.body.removeChild(downloadLink);
 <li>程序调用内置下载器下载的直播文件，视频时长会显示为直播总时长，实际视频内容从下载时间开始，靠后部分的片段无法播放。</li>
 <li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹</li>
 </ul>
-<h3>采集作品评论数据</h3>
+<h3>采集作品评论数据(抖音)</h3>
 <ol>
 <li>手动输入待采集的作品链接。</li>
 <li>输入文本文档路径，读取文件包含的作品链接。</li>
@@ -713,7 +693,7 @@ document.body.removeChild(downloadLink);
 </ul>
 <p>支持采集评论回复、评论表情、评论图片；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <p>储存名称格式：<code>作品123456789_评论数据</code></p>
-<h3>批量下载合集作品</h3>
+<h3>批量下载合集作品(抖音)</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>mix_urls</code> 参数中的合集链接或作品链接。</li>
 <li>输入合集链接，或者属于合集的任意一个作品链接。</li>
@@ -734,7 +714,7 @@ document.body.removeChild(downloadLink);
 <p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会提示用户输入临时的合集标识，以便程序继续处理合集。</p>
 <p>处理多个合集时，如果某个合集获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/custom/function.py</code> 文件修改功能）</p>
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
-<h3>批量采集账号数据</h3>
+<h3>采集账号详细数据(抖音)</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts_urls</code> 参数中的账号链接。</li>
 <li>手动输入待采集的账号链接。</li>
@@ -776,13 +756,47 @@ document.body.removeChild(downloadLink);
 <hr>
 <p><strong>输入：</strong><code>猫咪 3 2</code> 等效于 <code>猫咪 直播搜索 2</code></p>
 <p><strong>含义：</strong> 关键词：<code>猫咪</code>；搜索类型：<code>直播搜索</code>；页数：<code>2</code></p>
-<h3>采集抖音热榜数据</h3>
+<h3>采集抖音热榜数据(抖音)</h3>
 <p>无需输入，采集 <code>抖音热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
-<p>储存名称格式：<code>实时热榜数据_采集时间_热榜名称</code></p>
-<h3>批量下载收藏作品</h3>
+<p>储存名称格式：<code>热榜数据_采集时间_热榜名称</code></p>
+<h3>批量下载话题作品(抖音)</h3>
+<p>尚未支持！</p>
+<h3>批量下载收藏作品(抖音)</h3>
 <p>无需输入，需要在配置文件写入已登录的 Cookie，并在 <code>owner_url</code> 参数填入对应的账号主页链接和账号标识（可选）；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
 <p>如果未设置 <code>owner_url</code> 参数，程序会使用临时字符串作为账号昵称和 UID。</p>
 <p>账号文件夹格式为 <code>UID123456789_mark_收藏作品</code> 或者 <code>UID123456789_账号昵称_收藏作品</code></p>
+<h3>批量下载收藏夹作品(抖音)</h3>
+<p>尚未支持！</p>
+<h3>批量下载账号作品(TikTok)</h3>
+<p>目前仅支持下载账号发布作品，即将支持下载账号喜欢作品。</p>
+<ol>
+<li>使用 <code>settings.json</code> 的 <code>accounts_urls_tiktok</code> 参数中的账号链接。</li>
+<li>手动输入待采集的账号链接；此选项仅支持批量下载账号发布页作品，暂不支持参数设置。</li>
+<li>输入文本文档路径，读取文件包含的账号链接；此选项仅支持批量下载账号发布页作品，暂不支持参数设置。</li>
+</ol>
+<p>支持链接格式：</p>
+<ul>
+<li><code>https://www.tiktok.com/@TikTok号</code></li>
+<li><code>https://www.tiktok.com/@TikTok号/video/作品ID</code></li>
+</ul>
+<p>如果需要大批量采集账号作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
+<p>如果当前账号昵称或账号标识不是有效的文件夹名称时，程序会提示用户输入临时的账号标识，以便程序继续处理账号。</p>
+<p>处理多个账号时，如果某个账号获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/custom/function.py</code> 文件修改功能）</p>
+<p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
+<h3>批量下载链接作品(TikTok)</h3>
+<ol>
+<li>手动输入待采集的作品链接。</li>
+<li>输入文本文档路径，读取文件包含的作品链接。</li>
+</ol>
+<p>支持链接格式：</p>
+<ul>
+<li><code>https://www.tiktok.com/@TikTok号/video/作品ID</code></li>
+</ul>
+<p>作品会下载至 <code>root</code> 参数和 <code>folder_name</code> 参数拼接成的文件夹。</p>
+<h3>批量下载合集作品(TikTok)</h3>
+<p>尚未支持！</p>
+<h3>获取直播推流地址TikTok)</h3>
+<p>尚未支持！</p>
 <h2>后台监测模式</h2>
 <p>敬请期待！</p>
 <h2>Web API 接口模式</h2>
@@ -1115,7 +1129,7 @@ print(response.json())
 <p>如果在使用过程中发现程序 Bug，可以及时告知作者，并附上日志文件，日志记录有助于作者分析 Bug 原因和修复 Bug。</p>
 <h1>其他功能说明</h1>
 <h2>单次输入多个链接</h2>
-<p><code>批量下载账号作品</code>、<code>批量下载链接作品</code>、<code>获取直播推流地址</code>、<code>采集作品评论数据</code>、<code>批量下载合集作品</code>、<code>批量采集账号数据</code>
+<p><code>批量下载账号作品</code>、<code>批量下载链接作品</code>、<code>获取直播推流地址</code>、<code>采集作品评论数据</code>、<code>批量下载合集作品</code>、<code>采集账号详细数据</code>
 功能支持单次输入多个链接，实现批量下载 / 提取功能；单次输入多个链接时，链接类型需要保持一致，不支持完整链接与分享链接混合输入。</p>
 <h3>输入示例</h3>
 <p>输入多个链接时，需要使用空格分隔；无需对复制的链接进行额外处理，程序会自动提取输入文本中的有效链接。</p>

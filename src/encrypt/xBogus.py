@@ -1,8 +1,9 @@
+from base64 import b64encode
 from hashlib import md5
 from time import time
 from urllib.parse import urlencode
 
-from src.custom import X_BOGUS_CODE
+from src.custom import USERAGENT
 
 __all__ = ["XBogus", "XBogusTikTok"]
 
@@ -11,9 +12,7 @@ class XBogus:
     __string = "Dkdpgh4ZKsQB80/Mfvw36XI1R25-WUAlEi7NLboqYTOPuzmFjJnryx9HVGcaStCe="
     __array = [None for _ in range(
         48)] + list(range(10)) + [None for _ in range(39)] + list(range(10, 16))
-    __canvas = 1956339248
-    __params = (4, 8, 12,)
-    __code = X_BOGUS_CODE
+    __canvas = 3873194319
 
     @staticmethod
     def disturb_array(
@@ -150,11 +149,40 @@ class XBogus:
         string = [i >> j for i, j in zip(string, range(18, -1, -6))]
         return "".join([self.__string[i] for i in string])
 
+    @staticmethod
+    def handle_ua(a, b):
+        d = list(range(256))
+        c = 0
+        result = bytearray(len(b))
+
+        for i in range(256):
+            c = (c + d[i] + ord(a[i % len(a)])) % 256
+            d[i], d[c] = d[c], d[i]
+
+        t = 0
+        c = 0
+
+        for i in range(len(b)):
+            t = (t + 1) % 256
+            c = (c + d[t]) % 256
+            d[t], d[c] = d[c], d[t]
+            result[i] = b[i] ^ d[(d[t] + d[c]) % 256]
+
+        return result
+
+    def generate_ua_array(self, user_agent: str, params: int) -> list:
+        ua_key = ['\u0000', '\u0001', chr(params)]
+        value = self.handle_ua(ua_key, user_agent.encode("utf-8"))
+        value = b64encode(value)
+        return list(md5(value).digest())
+
     def generate_x_bogus(
             self,
             query: list,
             params: int,
+            user_agent: str,
             timestamp: int):
+        ua_array = self.generate_ua_array(user_agent, params)
         array = [
             64,
             0.00390625,
@@ -164,7 +192,8 @@ class XBogus:
             query[-1],
             69,
             63,
-            *self.__code[self.__params.index(params)],
+            ua_array[-2],
+            ua_array[-1],
             timestamp >> 24 & 255,
             timestamp >> 16 & 255,
             timestamp >> 8 & 255,
@@ -191,10 +220,11 @@ class XBogus:
             self,
             query: dict,
             params=8,
+            user_agent=USERAGENT,
             test_time=None):
         timestamp = int(test_time or time())
         query = self.process_url_path(urlencode(query))
-        return self.generate_x_bogus(query, params, timestamp)
+        return self.generate_x_bogus(query, params, user_agent, timestamp)
 
 
 class XBogusTikTok(XBogus):

@@ -36,22 +36,22 @@ class CSVLogger(BaseTextLogger):
         self.title_line = title_line  # 标题行
         self.field_keys = field_keys
 
-    def __enter__(self):
+    async def __aenter__(self):
         self.file = self.path.open(
             "a",
             encoding=self.encode,
             newline="")
         self.writer = writer(self.file)
-        self.title()
+        await self.title()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
         self.file.close()
 
-    def title(self):
+    async def title(self):
         if getsize(self.path) == 0:
             # 如果文件没有任何数据，则写入标题行
-            self.save(self.title_line)
+            await self.save(self.title_line)
 
-    def save(self, data, *args, **kwargs):
+    async def save(self, data, *args, **kwargs):
         self.writer.writerow(data)

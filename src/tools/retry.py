@@ -1,4 +1,5 @@
 from src.custom import RETRY
+from src.custom import wait
 
 __all__ = ["PrivateRetry"]
 
@@ -10,13 +11,14 @@ class PrivateRetry:
     def retry(function):
         """发生错误时尝试重新执行，装饰的函数需要返回布尔值"""
 
-        def inner(self, *args, **kwargs):
+        async def inner(self, *args, **kwargs):
             finished = kwargs.pop("finished", False)
             for i in range(self.max_retry):
-                if result := function(self, *args, **kwargs):
+                if result := await function(self, *args, **kwargs):
                     return result
-                self.log.warning(f"正在尝试第 {i + 1} 次重试")
-            if not (result := function(self, *args, **kwargs)) and finished:
+                self.log.warning(f"正在进行第 {i + 1} 次重试")
+                await wait()
+            if not (result := await function(self, *args, **kwargs)) and finished:
                 self.finished = True
             return result
 
@@ -24,12 +26,13 @@ class PrivateRetry:
 
     @staticmethod
     def retry_lite(function):
-        def inner(*args, **kwargs):
-            if r := function(*args, **kwargs):
+        async def inner(*args, **kwargs):
+            if r := await function(*args, **kwargs):
                 return r
             for _ in range(RETRY):
-                if r := function(*args, **kwargs):
+                if r := await function(*args, **kwargs):
                     return r
+                await wait()
             return r
 
         return inner

@@ -1,5 +1,5 @@
+from asyncio import sleep
 from random import randint
-from time import sleep
 from typing import TYPE_CHECKING
 
 # from time import time
@@ -18,14 +18,14 @@ __all__ = [
 ]
 
 
-def wait() -> None:
+async def wait() -> None:
     """
     设置网络请求间隔时间，仅对获取数据生效，不影响下载文件
     """
     # 随机延时
-    sleep(randint(15, 45) * 0.1)
+    await sleep(randint(15, 45) * 0.1)
     # 固定延时
-    # sleep(2)
+    # await sleep(2)
     # 取消延时
     # pass
 
@@ -59,7 +59,7 @@ def condition_filter(data: dict) -> bool:
     return True
 
 
-def suspend(count: int, console: "ColorfulConsole") -> None:
+async def suspend(count: int, console: "ColorfulConsole") -> None:
     """
     如需采集大量数据，请启用该函数，可以在处理指定数量的数据后，暂停一段时间，然后继续运行
     batches: 每次处理的数据数量上限，比如：每次处理 10 个数据，就会暂停程序
@@ -73,8 +73,8 @@ def suspend(count: int, console: "ColorfulConsole") -> None:
         rest_time = 60 * 5  # 根据实际需求修改
         console.print(
             f"程序已经处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，程序已经暂停运行，"
-            f"在 {rest_time} 秒后继续处理数据！", style=GENERAL)
-        sleep(rest_time)
+            f"将在 {rest_time} 秒后继续处理数据！", style=GENERAL)
+        await sleep(rest_time)
     # 禁用该函数
     # pass
 

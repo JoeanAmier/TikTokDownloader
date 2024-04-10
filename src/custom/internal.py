@@ -11,7 +11,6 @@ __all__ = [
     "RELEASES",
     "RETRY",
     "USERAGENT",
-    "X_BOGUS_CODE",
     "DISCLAIMER_TEXT",
     "BLANK_PREVIEW",
     "TIMEOUT",
@@ -19,6 +18,9 @@ __all__ = [
     "PARAMS_HEADERS",
     "DATA_HEADERS",
     "WID_COOKIE",
+    "DOWNLOAD_HEADERS",
+    "QRCODE_HEADERS",
+    "DOWNLOAD_HEADERS_TIKTOK",
 ]
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -53,15 +55,18 @@ RETRY = 5
 TIMEOUT = 10
 
 USERAGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 "
-    "Safari/537.36")
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 "
+    "Safari/537.36 Edg/124.0.0.0")
+SEC_CH_UA = "\"Chromium\";v=\"124\", \"Microsoft Edge\";v=\"124\", \"Not-A.Brand\";v=\"99\""
 PARAMS_HEADERS = {
     "Accept": "*/*",
     "Accept-Encoding": "gzip, deflate, br, zstd",
     "Accept-Language": "zh-CN,zh;q=0.9",
     "Content-Type": "text/plain;charset=UTF-8",
     "Dnt": "1",
-    "Sec-Ch-Ua": "\"Chromium\";v=\"122\", \"Not(A:Brand\";v=\"24\", \"Google Chrome\";v=\"122\"",
+    "Origin": "https://www.douyin.com",
+    "Referer": "https://www.douyin.com/",
+    "Sec-Ch-Ua": SEC_CH_UA,
     "Sec-Ch-Ua-Mobile": "?0",
     "Sec-Ch-Ua-Platform": "\"Windows\"",
     "Sec-Fetch-Dest": "empty",
@@ -69,24 +74,75 @@ PARAMS_HEADERS = {
     "Sec-Fetch-Site": "cross-site",
     "User-Agent": USERAGENT,
 }
-WID_COOKIE = (
-    "ttwid=1%7ClUkcrkPthAKpcjH3HGW8U6C7psW4vw1FXnc8qNLQ2d8%7C1710765220"
-    "%7C425dac317b8203020c14f83c19f1f56bcfaab011da16761c3603320e48d2babd; "
-    "tt_csrf_token=TNeGw38p-u2UcA7XOJtlrgKZLQAQOoTSJnbk; tt_chain_token=is5ckUq43X20AK+0nwIesw==; "
-    "ak_bmsc=9C1069BDAC21AD3530A2EC8373560C9E~000000000000000000000000000000"
-    "~YAAQGRAjF8jlFBiOAQAAgqONURfPY2uMquEui"
-    "+rNbDyxTmSOq48iWYuL09jkOdEeWeLlHGhcaHFV4cMBsqz4OE1S1kLYMlUNFa4E/kj1SGwrTp8REpvzTwFIgJmZdY/aChw"
-    "/X9GHH9te6yXD+Ho8+b3AoYeSfyq6lhewyVczKdJU/A6MYsGBJSNtMh7kSzoQ1qIWP/4XrEv"
-    "+BwnIXRkLwnUbKHiQ5AyjALu3dcwHfzPFdW3ZJFH1ZoHT4/Zs+f4m/QVO16aOPPd2hf/WZdzoXUS7zB0"
-    "+j0LSZvq69WAdCp9vpLmD/XZ0CqJ/SKzmdeaAvzAOR7cOMRFMklURoDIvzVVg8Isrm75HEPQPqy3rrtjtaL5Oi1LrRsE4zCC3"
-    "/hULJ2s5+eWK57JS0g==")
-DATA_HEADERS = PARAMS_HEADERS | {
+DATA_HEADERS = {
     "Accept": "application/json, text/plain, */*",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+    "Dnt": "1",
+    "Referer": "https://www.douyin.com/?recommend=1",
+    "Sec-Ch-Ua": SEC_CH_UA,
+    "Sec-Ch-Ua-Mobile": "?0",
+    "Sec-Ch-Ua-Platform": "\"Windows\"",
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-origin",
+    "User-Agent": USERAGENT}
+DOWNLOAD_HEADERS = {
+    'Accept': '*/*',
+    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+    'Dnt': '1',
+    'Origin': 'https://www.douyin.com',
+    'Priority': 'i',
+    'Range': 'bytes=0-',
+    'Referer': 'https://www.douyin.com/',
+    'Sec-Ch-Ua': SEC_CH_UA,
+    'Sec-Ch-Ua-Mobile': '?0',
+    'Sec-Ch-Ua-Platform': '"Windows"',
+    # 'Sec-Fetch-Dest': 'video',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'cross-site',
+    'User-Agent': USERAGENT,
 }
-X_BOGUS_CODE = (
-    (147, 136,),
-    (80, 235,),
-    (170, 197,),
-)
+DOWNLOAD_HEADERS_TIKTOK = {
+    'Accept': '*/*',
+    'Accept-Language': 'zh-CN,zh;q=0.9',
+    'Dnt': '1',
+    'Origin': 'https://www.tiktok.com',
+    'Priority': 'i',
+    'Range': 'bytes=0-',
+    'Referer': 'https://www.tiktok.com/',
+    'Sec-Ch-Ua': SEC_CH_UA,
+    'Sec-Ch-Ua-Mobile': '?0',
+    'Sec-Ch-Ua-Platform': '"Windows"',
+    # 'Sec-Fetch-Dest': 'video',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Site': 'same-site',
+    'User-Agent': USERAGENT,
+}
+QRCODE_HEADERS = {
+    "Accept": "application/json, text/javascript",
+    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Dnt": "1",
+    "Origin": "https://www.douyin.com",
+    "Referer": "https://www.douyin.com/",
+    "Sec-Ch-Ua": SEC_CH_UA,
+    "Sec-Ch-Ua-Mobile": "?0",
+    "Sec-Ch-Ua-Platform": "\"Windows\"",
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-site",
+    "User-Agent": USERAGENT,
+}
+WID_COOKIE = (
+    "ttwid=1%7Cznatb_I92hSI92DSLFuzG4dH4UGyTM6iA4u8oVJhh5Q%7C1713708721"
+    "%7Cbefda5206897461f8f07ad2b907a09899ee962d721f8494fa0bbaeb21165e913; "
+    "tt_csrf_token=w6agcZyI-EjvAR03XH7lT_658y7enOeZ0-9g; tt_chain_token=8E/OiizxuQi7/JroG1Ox+A==; "
+    "ak_bmsc=2B9322FE0CED5C3A9AC3A1554D146008~000000000000000000000000000000~YAAQEwzEF1MnQcyOAQAADOX"
+    "/ABfoCqW70939e+uu3kswNd/hL1xa5lV0oOlFUMKpaNLhc2wMa2sq78ckNYECSPD5DfuKjVmjeGTHux6sLZX"
+    "+Pv5WSD6yTeG7eRiQNYMXneEkYLrHjVPu8Wn+XUjDhLRqifMt9U"
+    "/lIDNXqaVr7GKpidqBM15bpftOcrXxZTpPJoAX6BnxmDvoX9NdzQOImDYjYRsFNP11yNIpFv8yjnRbeYol0VSY7h5IphMH8ChiWvl"
+    "9Ea4uo875GNH1twNfvnLDOTM8W/DBkSKYH+UWk1VXVPpN31shuSgVG46TctLZV9AcpU9vFOM8px/LOZ04x32NlU9LCaFhkXnl9Nh3"
+    "RNoBc2s+VAIIwQY0E9ofhMDW35D3j7TfTU6fEZg=")
 
 BLANK_PREVIEW = "static/images/blank.png"

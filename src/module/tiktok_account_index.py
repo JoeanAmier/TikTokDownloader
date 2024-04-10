@@ -5,10 +5,10 @@ from lxml.etree import HTML
 
 from src.tools import timestamp
 
-__all__ = ["TikTokAccount"]
+__all__ = []
 
 
-class TikTokAccount:
+class __TikTokAccount:
     urls = "//*[@id=\"main-content-others_homepage\"]/div/div[2]/div[last()]/div/div/div/div/div/a/@href"
     uid = "//*[@id=\"main-content-others_homepage\"]/div/div[1]/div[1]/div[2]/div/div[2]/a/@href"
     uid_re = compile(r".*?u=(\d+).*?")

@@ -1,9 +1,8 @@
 from re import compile
 from typing import TYPE_CHECKING
 
-from src.module import capture_error_url
 from src.tools import PrivateRetry
-from src.tools import base_session
+from src.tools import capture_error_request
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -15,8 +14,7 @@ class Requester:
     URL = compile(r"(https?://\S+)")
 
     def __init__(self, params: "Parameter"):
-        self.session = base_session(
-            params.headers["User-Agent"], params.timeout)
+        self.session = params.session
         self.log = params.logger
         self.max_retry = params.max_retry
 
@@ -30,10 +28,17 @@ class Requester:
         return " ".join(i for i in result if i)
 
     @PrivateRetry.retry
-    @capture_error_url
-    async def request_url(self, url: str, proxy: str = None) -> str:
+    @capture_error_request
+    async def request_url(self, url: str, proxy: str = None, content="url", ) -> str:
         async with self.session.get(url, proxy=proxy) as response:
-            return str(response.url)
-
-    async def close(self):
-        await self.session.close()
+            match content:
+                case "headers":
+                    return response.headers
+                case "text":
+                    return await response.text()
+                case "json":
+                    return await response.json()
+                case "url":
+                    return str(response.url)
+                case _:
+                    raise ValueError

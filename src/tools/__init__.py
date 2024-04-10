@@ -1,5 +1,6 @@
 from .browser import Browser
 from .capture import capture_error_params
+from .capture import capture_error_request
 from .choose import choose
 from .cleaner import Cleaner
 from .console import ColorfulConsole
@@ -38,4 +39,5 @@ __all__ = [
     "PrivateRetry",
     "base_session",
     "capture_error_params",
+    "capture_error_request",
 ]

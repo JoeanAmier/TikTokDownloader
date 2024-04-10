@@ -1,14 +1,14 @@
 from typing import TYPE_CHECKING
 
-from .template import API
+from .template import APITikTok
 
 if TYPE_CHECKING:
     from src.config import Parameter
 
-__all__ = ["Detail"]
+__all__ = ["DetailTikTok"]
 
 
-class Detail(API):
+class DetailTikTok(APITikTok):
     def __init__(self,
                  params: "Parameter",
                  cookie: str = None,
@@ -17,23 +17,21 @@ class Detail(API):
                  ):
         super().__init__(params, cookie, proxy, )
         self.detail_id = detail_id
-        self.api = f"{self.domain}aweme/v1/web/aweme/detail/"
+        self.api = f"{self.domain}/api/item/detail/"
         self.text = "作品数据"
 
     def generate_params(self, ) -> dict:
         return self.params | {
-            "aweme_id": self.detail_id,
-            "version_code": "190500",
-            "version_name": "19.5.0",
+            "itemId": self.detail_id,
         }
 
     async def run(self,
                   referer: str = None,
                   single_page=True,
-                  data_key: str = "aweme_detail",
+                  data_key: str = None,
                   error_text="",
-                  cursor="cursor",
-                  has_more="has_more",
+                  cursor=None,
+                  has_more=None,
                   params: dict = None,
                   data: dict = None,
                   method="get",
@@ -60,15 +58,15 @@ class Detail(API):
 
     def check_response(self,
                        data_dict: dict,
-                       data_key: str,
+                       data_key: str = None,
                        error_text="",
-                       cursor="cursor",
-                       has_more="has_more",
+                       cursor=None,
+                       has_more=None,
                        *args,
                        **kwargs,
                        ):
         try:
-            if not (d := data_dict[data_key]):
+            if not (d := data_dict["itemInfo"]["itemStruct"]):
                 self.log.info(error_text)
             else:
                 self.response = d

@@ -16,7 +16,6 @@ from .internal import (
     LICENCE,
     DOCUMENTATION_URL,
     USERAGENT,
-    X_BOGUS_CODE,
     RETRY,
     DISCLAIMER_TEXT,
     BLANK_PREVIEW,
@@ -24,7 +23,10 @@ from .internal import (
     PROJECT_NAME,
     DATA_HEADERS,
     PARAMS_HEADERS,
+    DOWNLOAD_HEADERS,
     WID_COOKIE,
+    QRCODE_HEADERS,
+    DOWNLOAD_HEADERS_TIKTOK,
 )
 from .static import (
     MAX_WORKERS,
@@ -40,7 +42,6 @@ from .static import (
     GENERAL,
     PROGRESS,
     COOKIE_UPDATE_INTERVAL,
-    BACKUP_RECORD_INTERVAL,
 )
 
 __all__ = [
@@ -63,7 +64,6 @@ __all__ = [
     "GENERAL",
     "PROGRESS",
     "COOKIE_UPDATE_INTERVAL",
-    "BACKUP_RECORD_INTERVAL",
     "PROJECT_ROOT",
     "VERSION_MAJOR",
     "VERSION_MINOR",
@@ -74,7 +74,6 @@ __all__ = [
     "RELEASES",
     "RETRY",
     "USERAGENT",
-    "X_BOGUS_CODE",
     "DISCLAIMER_TEXT",
     "BLANK_PREVIEW",
     "WID_COOKIE",
@@ -82,4 +81,7 @@ __all__ = [
     "PROJECT_NAME",
     "PARAMS_HEADERS",
     "DATA_HEADERS",
+    "QRCODE_HEADERS",
+    "DOWNLOAD_HEADERS_TIKTOK",
+    "DOWNLOAD_HEADERS",
 ]

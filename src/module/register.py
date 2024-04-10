@@ -1,12 +1,9 @@
-from pathlib import Path
 from platform import system
 from subprocess import run
 from time import sleep
 from typing import TYPE_CHECKING
 
 from qrcode import QRCode
-from requests import exceptions
-from requests import get
 from rich.progress import (
     SpinnerColumn,
     BarColumn,
@@ -17,16 +14,17 @@ from rich.progress import (
 
 from src.custom import ERROR
 from src.custom import PROGRESS
-from src.custom import USERAGENT
+from src.custom import QRCODE_HEADERS
 from src.custom import WARNING
 from src.encrypt import MsToken
 from src.encrypt import VerifyFp
+from src.tools import PrivateRetry
+from src.tools import capture_error_request
 from src.tools import cookie_str_to_str
 
 if TYPE_CHECKING:
     from src.config import Settings
-    from src.tools import ColorfulConsole
-    from src.encrypt import XBogus
+    from src.config import Parameter
 
 __all__ = ["Register"]
 
@@ -37,18 +35,18 @@ class Register:
 
     def __init__(
             self,
+            params: "Parameter",
             settings: "Settings",
-            console: "ColorfulConsole",
-            xb: "XBogus"):
-        self.xb = xb
+    ):
+        self.xb = params.xb
+        self.session = params.session
         self.settings = settings
-        self.console = console
-        self.headers = {
-            "User-Agent": USERAGENT,
-            "Referer": "https://www.douyin.com/",
-        }
+        self.proxy = params.proxy
+        self.console = params.console
+        self.log = params.logger
+        self.headers = QRCODE_HEADERS
         self.verify_fp = None
-        self.temp = None
+        self.temp = params.temp
         self.url_params = {
             "service": "https://www.douyin.com",
             "need_logo": "false",
@@ -83,12 +81,12 @@ class Register:
                 style=PROGRESS,
                 justify="left"),
             SpinnerColumn(),
-            BarColumn(
-                bar_width=20),
+            BarColumn(),
             "•",
             TimeElapsedColumn(),
             console=self.console,
             transient=True,
+            expand=True,
         )
 
     def generate_qr_code(self, url: str):
@@ -111,26 +109,29 @@ class Register:
         elif s == "Linux":  # Linux
             run(["xdg-open", self.temp])
 
-    def get_qr_code(self):
+    async def get_qr_code(self):
         self.verify_fp = VerifyFp.get_verify_fp()
         self.url_params["verifyFp"] = self.verify_fp
         self.url_params["fp"] = self.verify_fp
-        self.__set_ms_token()
+        await self.__set_ms_token()
         self.url_params["X-Bogus"] = self.xb.get_x_bogus(self.url_params)
-        if not (
-                data := self.request_data(
-                    url=self.get_url,
-                    params=self.url_params)):
+        data, _, _ = await self.request_data(
+            url=self.get_url,
+            params=self.url_params)
+        if not data:
             return None, None
-        url = data["data"]["qrcode_index_url"]
-        token = data["data"]["token"]
-        return url, token
+        try:
+            url = data["data"]["qrcode_index_url"]
+            token = data["data"]["token"]
+            return url, token
+        except KeyError:
+            return None, None
 
-    def __set_ms_token(self):
-        if isinstance(t := MsToken.get_real_ms_token(), dict):
+    async def __set_ms_token(self):
+        if isinstance(t := await MsToken.get_real_ms_token(self.log, self.proxy), dict):
             self.url_params["msToken"] = t["msToken"]
 
-    def check_register(self, token):
+    async def check_register(self, token):
         self.url_params["token"] = token
         self.url_params |= {"is_frontier": "false"}
         with self.__check_progress_object() as progress:
@@ -140,29 +141,27 @@ class Register:
             while second < 30:
                 sleep(1)
                 progress.update(task_id)
-                if not (
-                        response := self.request_data(
-                            False,
-                            url=self.check_url,
-                            params=self.url_params)):
+                data, headers, _ = await self.request_data(
+                    url=self.check_url,
+                    params=self.url_params)
+                if not data:
                     self.console.print("网络异常，无法获取登录状态！", style=WARNING)
                     second = 30
                     continue
                 # print(response.json())  # 调试使用
-                json_data: dict = response.json()
-                if json_data.get("error_code"):
+                if data.get("error_code"):
                     self.console.print(
-                        f"该账号疑似被风控，建议近期避免扫码登录账号！\n响应数据: {json_data}",
+                        f"该账号疑似被风控，建议近期避免扫码登录账号！\n响应数据: {data}",
                         style=WARNING)
                     second = 30
-                elif not (data := json_data.get("data")):
+                elif not (data := data.get("data")):
                     self.console.print(
-                        f"响应内容异常: {json_data}",
+                        f"响应内容异常: {data}",
                         style=ERROR)
                     second = 30
                 elif (s := data["status"]) == "3":
                     redirect_url = data["redirect_url"]
-                    cookie = response.headers.get("Set-Cookie")
+                    cookie = headers.get('Set-Cookie')
                     break
                 elif s in ("4", "5",):
                     second = 30
@@ -174,31 +173,27 @@ class Register:
                 return None, None
             return redirect_url, cookie
 
-    def get_cookie(self, url, cookie):
+    async def get_cookie(self, url, cookie):
         self.headers["Cookie"] = cookie_str_to_str(cookie)
-        if not (response := self.request_data(False, url=url)):
+        _, _, history = await self.request_data(False, url=url)
+        if not history or history[0].status_code != 302:
             return False
-        elif response.history[0].status_code != 302:
-            return False
-        return cookie_str_to_str(response.history[1].headers.get("Set-Cookie"))
+        return cookie_str_to_str(history[1].headers.get("Set-Cookie"))
 
-    def request_data(self, json=True, **kwargs):
-        try:
-            response = get(timeout=10, headers=self.headers, **kwargs)
-            return response.json() if json else response
-        except (
-                exceptions.ReadTimeout,
-                exceptions.ChunkedEncodingError,
-                exceptions.ConnectionError,
-                exceptions.JSONDecodeError
-        ):
-            return None
+    @PrivateRetry.retry_lite
+    @capture_error_request
+    async def request_data(self, json=True, **kwargs):
+        async with self.session.get(headers=self.headers, **kwargs) as response:
+            data = await response.json() if json else None
+            headers = response.headers
+            history = response.history
+            return data, headers, history
 
-    def run(self, temp: Path):
-        self.temp = str(temp.joinpath("扫码后请关闭该图片.png"))
-        url, token = self.get_qr_code()
+    async def run(self, ):
+        self.temp = str(self.temp.joinpath("扫码后请关闭该图片.png"))
+        url, token = await self.get_qr_code()
         if not url:
             return False
         self.generate_qr_code(url)
-        url, cookie = self.check_register(token)
-        return self.get_cookie(url, cookie) if url else False
+        url, cookie = await self.check_register(token)
+        return await self.get_cookie(url, cookie) if url else False

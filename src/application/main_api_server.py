@@ -51,7 +51,7 @@ class APIServer(WebUI):
             }
             self._generate_record_params(params)
             return {
-                "data": (d := self.deal_account_works(**params)),
+                "data": (d := self.deal_account_detail(**params)),
                 "message": "success" if d else "failure",
             }
 
@@ -150,7 +150,7 @@ class APIServer(WebUI):
             }
             self._generate_record_params(params, type_="mix")
             return {
-                "data": (d := self._deal_mix_works(**params)),
+                "data": (d := self._deal_mix_detail(**params)),
                 "message": "success" if d else "failure",
             }
 

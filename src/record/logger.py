@@ -63,3 +63,6 @@ class LoggerManager(BaseLogger):
         if output:
             self.console.print(text, style=ERROR, **kwargs)
         self.log.error(text.strip())
+
+    def debug(self, text: str, **kwargs):
+        self.log.debug(text.strip())

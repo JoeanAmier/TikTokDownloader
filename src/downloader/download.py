@@ -1,4 +1,5 @@
-from concurrent.futures import ThreadPoolExecutor
+from asyncio import Semaphore
+from asyncio import gather
 from datetime import datetime
 from pathlib import Path
 from shutil import move
@@ -6,8 +7,7 @@ from time import time
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
-from requests import exceptions
-from requests import get
+from aiohttp import ClientError
 from rich.progress import (
     SpinnerColumn,
     BarColumn,
@@ -35,11 +35,13 @@ __all__ = ["Downloader"]
 
 
 class Downloader:
+    semaphore = Semaphore(MAX_WORKERS)
+
     def __init__(self, params: "Parameter"):
         self.cleaner = params.cleaner
-        self.cookie = params.cookie
-        self.PC_headers, self.black_headers = self.init_headers(params.headers)
-        self.PC_headers_tiktok = params.headers_tiktok
+        self.session = params.session
+        self.headers = params.headers_download
+        self.headers_tiktok = params.headers_download_tiktok
         self.log = params.logger
         self.xb = params.xb
         self.console = params.console
@@ -51,20 +53,21 @@ class Downloader:
         self.music = params.music
         self.dynamic = params.dynamic_cover
         self.original = params.original_cover
+        # self.cookie = params.cookie
+        # self.cookie_tiktok = params.cookie_tiktok
         self.proxy = params.proxy
         self.proxy_tiktok = params.proxy_tiktok
         self.download = params.download
         self.max_size = params.max_size
         self.chunk = params.chunk
         self.max_retry = params.max_retry
-        self.blacklist = params.blacklist
+        self.recorder = params.recorder
         self.timeout = params.timeout
         self.ffmpeg = params.ffmpeg
-        self.__thread = ThreadPoolExecutor
-        self.__pool = None
         self.__temp = params.temp
 
     def __general_progress_object(self):
+        """文件下载进度条"""
         return Progress(
             TextColumn(
                 "[progress.description]{task.description}",
@@ -81,9 +84,11 @@ class Downloader:
             TimeRemainingColumn(),
             console=self.console,
             transient=True,
+            expand=True,
         )
 
     def __live_progress_object(self):
+        """直播下载进度条"""
         return Progress(
             TextColumn(
                 "[progress.description]{task.description}",
@@ -98,28 +103,25 @@ class Downloader:
             TimeElapsedColumn(),
             console=self.console,
             transient=True,
+            expand=True,
         )
 
-    @staticmethod
-    def init_headers(headers: dict) -> tuple:
-        return headers, {"User-Agent": headers["User-Agent"]}
-
-    def run(self,
-            data: list[dict],
-            type_: str,
-            tiktok=False,
-            **kwargs, ) -> None:
-        if not self.download:
+    async def run(self,
+                  data: list[dict],
+                  type_: str,
+                  tiktok=False,
+                  **kwargs, ) -> None:
+        if not self.download or not data:
             return
         if type_ == "batch":
             self.log.info("开始下载作品文件")
-            self.run_batch(data, tiktok, **kwargs)
-        elif type_ == "works":
-            self.run_general(data, tiktok, )
+            await self.run_batch(data, tiktok, **kwargs)
+        elif type_ == "detail":
+            await self.run_general(data, tiktok, )
         else:
             raise ValueError
 
-    def run_batch(
+    async def run_batch(
             self,
             data: list[dict],
             tiktok: bool,
@@ -139,13 +141,13 @@ class Downloader:
             mark,
             addition,
             mix)
-        self.batch_processing(data, root, tiktok=tiktok, )
+        await self.batch_processing(data, root, tiktok=tiktok, )
 
-    def run_general(self, data: list[dict], tiktok: bool):
+    async def run_general(self, data: list[dict], tiktok: bool):
         root = self.storage_folder()
-        self.batch_processing(data, root, False, tiktok=tiktok, )
+        await self.batch_processing(data, root, tiktok=tiktok, )
 
-    def run_live(self, data: list[tuple]):
+    async def run_live(self, data: list[tuple]):
         if not data or not self.download:
             return
         download_tasks = []
@@ -162,13 +164,13 @@ class Downloader:
                 "未检测到 ffmpeg，程序将会调用内置下载器下载直播，您需要保持 TikTokDownloader 运行直到直播结束！",
                 style=WARNING,
             )
-            self.downloader_chart(
+            await self.downloader_chart(
                 download_tasks,
                 SimpleNamespace(),
                 self.__live_progress_object(),
-                len(download_tasks),
+                semaphore=Semaphore(len(download_tasks)),
                 unknown_size=True,
-                headers=self.black_headers)
+                headers=self.headers)
 
     def generate_live_tasks(
             self, data: list[tuple], tasks: list, commands: list):
@@ -201,16 +203,15 @@ class Downloader:
     def __download_live(self, commands: list):
         self.ffmpeg.download(
             commands,
-            self.proxy["https"],
+            self.proxy,
             self.timeout,
-            self.black_headers["User-Agent"],
+            self.headers["User-Agent"],
         )
 
-    def batch_processing(
+    async def batch_processing(
             self,
             data: list[dict],
             root: Path,
-            statistics=True,
             **kwargs):
         count = SimpleNamespace(
             downloaded_image=set(),
@@ -219,9 +220,10 @@ class Downloader:
             skipped_video=set()
         )
         tasks = []
-        for item in data:
+        # TODO: 调试代码，待修改
+        for item in data[:1]:
             item["desc"] = item["desc"][:DESCRIPTION_LENGTH]
-            name = self.generate_works_name(item)
+            name = self.generate_detail_name(item)
             temp_root, actual_root = self.deal_folder_path(root, name)
             params = {
                 "tasks": tasks,
@@ -233,56 +235,53 @@ class Downloader:
                 "actual_root": actual_root
             }
             if (t := item["type"]) == "图集":
-                self.download_image(**params)
+                await self.download_image(**params)
             elif t == "视频":
-                self.download_video(**params)
+                await self.download_video(**params)
             self.download_music(**params)
             self.download_cover(**params)
-        self.downloader_chart(
+        await self.downloader_chart(
             tasks,
             count,
             self.__general_progress_object(),
             **kwargs)
-        if statistics:
-            self.statistics_count(count)
+        self.statistics_count(count)
 
-    def downloader_chart(
+    async def downloader_chart(
             self,
             tasks: list[tuple],
             count: SimpleNamespace,
             progress: Progress,
-            max_workers=MAX_WORKERS,
+            semaphore: Semaphore = None,
             **kwargs):
         with progress:
-            with self.__thread(max_workers=max_workers) as self.__pool:
-                for task in tasks:
-                    # noinspection PyTypeChecker
-                    self.__pool.submit(
-                        self.request_file,
-                        *task,
-                        count=count,
-                        **kwargs,
-                        progress=progress)
+            tasks = [self.request_file(
+                *task,
+                count=count,
+                **kwargs,
+                progress=progress,
+                semaphore=semaphore, ) for task in tasks]
+            await gather(*tasks)
 
     def deal_folder_path(self, root: Path, name: str,
                          pass_=False) -> tuple[Path, Path]:
-        root = self.create_works_folder(root, name, pass_)
+        root = self.create_detail_folder(root, name, pass_)
         root.mkdir(exist_ok=True)
         temp = self.__temp.joinpath(name)
         actual = root.joinpath(name)
         return temp, actual
 
-    def is_in_blacklist(self, id_: str) -> bool:
-        return id_ in self.blacklist.record
+    async def is_downloaded(self, id_: str) -> bool:
+        return await self.recorder.has_ids(id_)
 
     @staticmethod
     def is_exists(path: Path) -> bool:
         return path.exists()
 
-    def is_skip(self, id_: str, path: Path) -> bool:
-        return self.is_in_blacklist(id_) or self.is_exists(path)
+    async def is_skip(self, id_: str, path: Path) -> bool:
+        return await self.is_downloaded(id_) or self.is_exists(path)
 
-    def download_image(
+    async def download_image(
             self,
             tasks: list,
             name: str,
@@ -293,7 +292,7 @@ class Downloader:
             actual_root: Path) -> None:
         for index, img in enumerate(
                 item["downloads"].split(" "), start=1):
-            if self.is_in_blacklist(id_):
+            if await self.is_downloaded(id_):
                 count.skipped_image.add(id_)
                 self.log.info(f"图集 {id_} 存在下载记录，跳过下载")
                 count.skipped_image.add(id_)
@@ -312,7 +311,7 @@ class Downloader:
                 id_,
             ))
 
-    def download_video(
+    async def download_video(
             self,
             tasks: list,
             name: str,
@@ -321,7 +320,7 @@ class Downloader:
             count: SimpleNamespace,
             temp_root: Path,
             actual_root: Path) -> None:
-        if self.is_skip(
+        if await self.is_skip(
                 id_, p := actual_root.with_name(
                     f"{name}.mp4")):
             self.log.info(f"视频 {id_} 存在下载记录或文件已存在，跳过下载")
@@ -392,7 +391,7 @@ class Downloader:
         return all((self.music, url, not self.is_exists(path)))
 
     @PrivateRetry.retry
-    def request_file(
+    async def request_file(
             self,
             url: str,
             temp: Path,
@@ -403,44 +402,43 @@ class Downloader:
             progress: Progress,
             headers: dict = None,
             tiktok=False,
-            unknown_size=False) -> bool:
-        try:
-            with get(
-                    url,
-                    stream=True,
-                    proxies=self.proxy_tiktok if tiktok else self.proxy,
-                    headers=self.__adapter_headers(headers, tiktok),
-                    timeout=self.timeout) as response:
-                if not (
-                        content := int(
-                            response.headers.get(
-                                'content-length',
-                                0))) and not unknown_size:
-                    self.log.warning(f"{url} 响应内容为空")
-                    return False
-                if response.status_code != 200:
-                    self.log.warning(
-                        f"{response.url} 响应码异常: {response.status_code}")
-                    return False
-                elif all((self.max_size, content, content > self.max_size)):
-                    self.log.info(f"{show} 文件大小超出限制，跳过下载")
-                    return True
-                return self.download_file(
-                    temp,
-                    actual,
-                    show,
-                    id_,
-                    response,
-                    content,
-                    count,
-                    progress)
-        except (exceptions.ConnectionError,
-                exceptions.ChunkedEncodingError,
-                exceptions.ReadTimeout) as e:
-            self.log.warning(f"网络异常: {e}")
-            return False
+            unknown_size=False,
+            semaphore: Semaphore = None,
+    ) -> bool:
+        async with semaphore or self.semaphore:
+            try:
+                async with self.session.get(
+                        url,
+                        proxy=self.proxy_tiktok if tiktok else self.proxy,
+                        headers=self.__adapter_headers(headers, tiktok, ), ) as response:
+                    if not (
+                            content := int(
+                                response.headers.get(
+                                    'content-length',
+                                    0))) and not unknown_size:  # 响应内容大小判断
+                        self.log.warning(f"{url} 响应内容为空")
+                        return False
+                    if response.status > 400:  # 响应码判断
+                        self.log.warning(
+                            f"{response.url} 响应码异常: {response.status}")
+                        return False
+                    elif all((self.max_size, content, content > self.max_size)):  # 文件下载跳过判断
+                        self.log.info(f"{show} 文件大小超出限制，跳过下载")
+                        return True
+                    return await self.download_file(
+                        temp,
+                        actual,
+                        show,
+                        id_,
+                        response,
+                        content,
+                        count,
+                        progress)
+            except ClientError as e:
+                self.log.warning(f"网络异常: {e}")
+                return False
 
-    def download_file(
+    async def download_file(
             self,
             temp: Path,
             actual: Path,
@@ -454,27 +452,31 @@ class Downloader:
             show, total=content or None)
         try:
             with temp.open("wb") as f:
-                for chunk in response.iter_content(chunk_size=self.chunk):
+                async for chunk in response.content.iter_chunked(self.chunk):
                     f.write(chunk)
                     progress.update(task_id, advance=len(chunk))
                 progress.remove_task(task_id)
-        except exceptions.ChunkedEncodingError:
-            progress.remove_task(task_id)
-            self.log.warning(f"{show} 由于网络异常下载中断")
+        except (
+                ClientError,
+                StopAsyncIteration,
+        ) as e:
+            self.log.warning(f"{show} 下载中断，错误信息：{e}")
             self.delete_file(temp)
             return False
         self.save_file(temp, actual)
         self.log.info(f"{show} 文件下载成功")
         self.log.info(f"文件路径 {actual.resolve()}", False)
-        self.blacklist.update_id(id_)
+        await self.recorder.update_id(id_)
         self.add_count(show, id_, count)
         return True
 
     def __adapter_headers(
             self,
             headers: dict,
-            tiktok: bool) -> dict:
-        return headers or self.black_headers
+            tiktok: bool,
+            *args,
+            **kwargs, ) -> dict:
+        return headers or (self.headers_tiktok if tiktok else self.headers)
 
     @staticmethod
     def add_count(type_: str, id_: str, count: SimpleNamespace):
@@ -502,13 +504,13 @@ class Downloader:
         folder.mkdir(exist_ok=True)
         return folder
 
-    def generate_works_name(self, data: dict) -> str:
+    def generate_detail_name(self, data: dict) -> str:
         return self.cleaner.filter_name(
             self.split.join(
                 data[i] for i in self.name_format), inquire=False, default=str(
                 time())[:10])
 
-    def create_works_folder(
+    def create_detail_folder(
             self,
             root: Path,
             name: str,

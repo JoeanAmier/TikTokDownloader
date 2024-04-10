@@ -1,25 +1,18 @@
-from .Parameter import (
-    XBogus,
-    MsToken,
-    TtWid,
-    VerifyFp,
-)
+from .aBogus import ABogus
+from .msToken import MsToken, MsTokenTikTok
+from .ttWid import TtWid, TtWidTikTok
+from .verifyFp import VerifyFp
+from .webID import WebId
+from .xBogus import XBogus, XBogusTikTok
 
-__all__ = ['XBogus', 'MsToken', 'TtWid', 'VerifyFp']
-
-# from .xBogus import XBogus, XBogusTikTok
-# from .msToken import MsToken, MsTokenTikTok
-# from .ttWid import TtWid, TtWidTikTok
-# from .webID import WebId
-# from .verifyFp import VerifyFp
-#
-# __all__ = [
-#     "XBogus",
-#     "XBogusTikTok",
-#     "MsToken",
-#     "MsTokenTikTok",
-#     "TtWid",
-#     "TtWidTikTok",
-#     "VerifyFp",
-#     "WebId",
-# ]
+__all__ = [
+    "XBogus",
+    "XBogusTikTok",
+    "ABogus",
+    "MsToken",
+    "MsTokenTikTok",
+    "TtWid",
+    "TtWidTikTok",
+    "VerifyFp",
+    "WebId",
+]

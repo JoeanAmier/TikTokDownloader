@@ -11,8 +11,9 @@
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=for-the-badge&color=52c41a">
 </div>
 <br>
-<p>🔥 <b>TikTok 主页/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 Requests 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号主页作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
+<p>🔥 <b>TikTok 主页/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 AIOHTTP 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号发布作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；采集抖音作品评论数据；批量下载抖音合集作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
 <p>⭐ Windows 10 及以上用户可前往 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 下载已编译的 exe 程序，开箱即用！</p>
+<p>⚠️ 注意：项目正在重构代码，最新源码 <code>5.4 Beta</code> 的功能尚不稳定，请谨慎使用！日常使用请前往 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 下载！</p>
 <hr>
 
 # 📝 项目功能\(Function\)
@@ -86,7 +87,6 @@
 * 🟡 TikTokDownloader 开发计划及进度可前往 [Projects](https://github.com/users/JoeanAmier/projects/2) 查阅
 * 🔴 请注意，最新源码可能存在一些不稳定的 Bug
 * 🔴 如果在使用过程中发现程序 Bug，请及时告知作者修复
-* 🔴 某些情况下会下载到错误的 TikTok 作品，未修复
 * 🔴 夜晚无法下载高分辨率视频，疑似抖音服务端限制
 * 🔴 TikTok 平台作品下载功能失效，已修复
 
@@ -118,7 +118,7 @@
 <ol><b>从浏览器获取 Cookie（推荐）</b>
 <li>选择 <code>从浏览器获取 Cookie</code> 选项，按照提示选择浏览器类型</li>
 </ol>
-<ol><b>扫码登录获取 Cookie（不推荐）</b>
+<ol><b>扫码登录获取 Cookie（停用）</b>
 <li>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</li>
 <li>使用抖音 APP 扫描二维码并登录账号</li>
 <li>按照提示操作，将 Cookie 写入配置文件</li>
@@ -135,19 +135,21 @@
 
 [点击查看 Cookie 获取教程](https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md)
 
-|   程序功能   | 是否需要登录 |
-|:--------:|:------:|
-| 下载账号发布作品 | ⭕建议登录  |
-| 下载账号喜欢作品 | ⭕建议登录  |
-|  下载链接作品  | ⭕建议登录  |
-| 获取直播推流地址 | ❌无需登录  |
-|  下载直播视频  | ❌无需登录  |
-| 获取作品评论数据 | ⭕建议登录  |
-|  下载合集作品  | ⭕建议登录  |
-|  获取账号数据  | ⭕建议登录  |
-|  采集搜索结果  | ⭕建议登录  |
-|  采集热榜数据  | ❌无需登录  |
-| 下载账号收藏作品 | ✔️需要登录 |
+|    程序功能    | 是否需要登录 |
+|:----------:|:------:|
+|  下载账号发布作品  | ⭕建议登录  |
+|  下载账号喜欢作品  | ⭕建议登录  |
+|   下载链接作品   | ⭕建议登录  |
+|  获取直播推流地址  | ❌无需登录  |
+|   下载直播视频   | ❌无需登录  |
+|  获取作品评论数据  | ⭕建议登录  |
+|   下载合集作品   | ⭕建议登录  |
+|   获取账号数据   | ⭕建议登录  |
+|   采集搜索结果   | ⭕建议登录  |
+|   采集热榜数据   | ❌无需登录  |
+|  下载账号收藏作品  | ✔️需要登录 |
+| 下载账号收藏夹作品  | ✔️需要登录 |
+| 获取账号收藏合集数据 | ✔️需要登录 |
 
 > * Cookie 仅需在失效后重新写入配置文件，并非每次运行程序都要写入配置文件！
 >
@@ -174,17 +176,11 @@
 </ul>
 <hr>
 
-## 程序更新
+## EXE 更新
 
-> ### 免安装程序
->
->> **方案一：** 下载并解压文件，将旧版本的 `cache` 文件夹和 `settings.json` 文件复制到 `_internal` 文件夹。
->
->> **方案二：** 下载并解压文件，复制全部文件，直接覆盖旧版本文件。
->
-> ### 安装程序
->
->> **直接使用安装程序覆盖安装。**
+> **方案一：** 下载并解压文件，将旧版本的 `cache` 文件夹和 `settings.json` 文件复制到 `_internal` 文件夹。
+
+> **方案二：** 下载并解压文件，复制全部文件，直接覆盖旧版本文件。
 
 # ⚠️ 免责声明\(Disclaimers\)
 
@@ -208,6 +204,7 @@
 <ul>
 <li>微信: Downloader_Tools</li>
 <li>微信公众号: Downloader Tools</li>
+<li>Discord: <a href="https://discord.com/invite/ZYtmgKud9Y">点击加入社区</a></li>
 <li>QQ 群聊(使用交流): <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">扫码加入群聊</a></li>
 </ul>
 <p>✨ <b>作者的其他开源项目：</b></p>
