@@ -109,6 +109,7 @@ class Parameter:
             original_cover: bool,
             proxy: str | None,
             proxy_tiktok: str | None,
+            proxy_tiktok_region: str,
             download: bool,
             max_size: int,
             chunk: int,
@@ -153,6 +154,7 @@ class Parameter:
         self.timeout = self.__check_timeout(timeout)
         self.proxy = proxy
         self.proxy_tiktok = proxy_tiktok
+        self.proxy_tiktok_region = proxy_tiktok_region
         self.download = self.__check_bool(download)
         self.max_size = self.__check_max_size(max_size)
         self.chunk = self.__check_chunk(chunk)
@@ -205,12 +207,17 @@ class Parameter:
         self.update_cookie_dy = self.__check_bool(update_cookie, True)
         self.update_cookie_tk = self.__check_bool(update_cookie_tiktok, True)
         self.__generate_folders()
+        # self.__update_download_headers()
 
     @staticmethod
     def __check_bool(value: bool, default=False) -> bool:
         return value if isinstance(value, bool) else default
 
     def __check_cookie_tiktok(self, cookie: dict | str, ) -> [dict, str]:
+        # if isinstance(cookie, str):
+        #     self.console.print(
+        #         "参数 cookie_tiktok 应为字典格式！请修改配置文件后重新运行程序！",
+        #         style=ERROR)
         return self.__check_cookie(cookie, name="cookie_tiktok")
 
     def __check_cookie(self, cookie: dict | str, name="cookie") -> [dict, str]:
@@ -234,7 +241,10 @@ class Parameter:
     def __get_cookie_tiktok_cache(self, cookie: str, ) -> str:
         return self.__check_cookie_tiktok(cookie)[1]
 
-    async def __add_cookie(self, cookie: dict | str, tiktok=False) -> None | str:
+    async def __add_cookie(
+            self,
+            cookie: dict | str,
+            tiktok=False) -> None | str:
         if tiktok:
             parameters = (
                 await MsTokenTikTok.get_real_ms_token(
@@ -384,6 +394,7 @@ class Parameter:
         return ""
 
     def __check_default_mode(self, default_mode: str) -> list:
+        # TODO: 暂时禁用检查
         return default_mode.split()[::-1]
         # if default_mode in self.mode_values:
         #     return default_mode.split()[::-1]
@@ -423,7 +434,13 @@ class Parameter:
             headers["Cookie"] = await self.__add_cookie(cache, tiktok, )
 
     def __update_download_headers(self):
-        self.headers_download_tiktok["Cookie"] = self.headers_tiktok["Cookie"]
+        # key = "tt_chain_token"
+        # if tk := self.cookie_tiktok.get(key, ):
+        #     self.headers_download_tiktok["Cookie"] = f"{key}={tk}"
+        # else:
+        #     self.headers_download_tiktok["Cookie"] = self.cookie_tiktok_cache
+        self.headers_download_tiktok["Cookie"] = self.headers_tiktok.get(
+            "Cookie", "")
 
     @staticmethod
     def __generate_ffmpeg_object(ffmpeg_path: str) -> FFMPEG:
@@ -497,3 +514,9 @@ class Parameter:
     def __generate_folders(self):
         self.cache.mkdir(exist_ok=True)
         self.temp.mkdir(exist_ok=True)
+
+    def __check_proxy_tiktok_region(self, region: str) -> str:
+        if region and isinstance(region, str):
+            return region
+        self.logger.warning("proxy_tiktok_region 参数设置错误")
+        return "SG"

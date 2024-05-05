@@ -150,6 +150,8 @@
 |  下载账号收藏作品  | ✔️需要登录 |
 | 下载账号收藏夹作品  | ✔️需要登录 |
 | 获取账号收藏合集数据 | ✔️需要登录 |
+| 获取账号收藏音乐数据 | ✔️需要登录 |
+| 获取账号收藏短剧数据 | ✔️需要登录 |
 
 > * Cookie 仅需在失效后重新写入配置文件，并非每次运行程序都要写入配置文件！
 >
@@ -204,7 +206,7 @@
 <ul>
 <li>微信: Downloader_Tools</li>
 <li>微信公众号: Downloader Tools</li>
-<li>Discord: <a href="https://discord.com/invite/ZYtmgKud9Y">点击加入社区</a></li>
+<li><b>Discord 社区</b>: <a href="https://discord.com/invite/ZYtmgKud9Y">点击加入社区</a></li>
 <li>QQ 群聊(使用交流): <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">扫码加入群聊</a></li>
 </ul>
 <p>✨ <b>作者的其他开源项目：</b></p>
@@ -236,6 +238,7 @@
 * https://github.com/Johnserf-Seed/f2
 * https://github.com/Johnserf-Seed/TikTokDownload
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
+* https://github.com/NearHuiwen/TiktokDouyinCrawler
 * https://github.com/ihmily/DouyinLiveRecorder
 * https://docs.aiohttp.org/en/stable/
 * https://github.com/Textualize/rich

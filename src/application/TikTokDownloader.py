@@ -131,9 +131,8 @@ class TikTokDownloader:
             }运行日志记录", self.__modify_logging),
         )
 
-    async def temporary(self):
-        # TODO: 重构完成后移除
-        self.console.print("代码正在重构，暂不可用！")
+    async def temporary(self, *args, **kwargs, ):
+        self.console.print("该功能暂不可用！", style=WARNING)
 
     # def __api_object(self):
     #     self.server(APIServer, SERVER_HOST)
@@ -319,7 +318,8 @@ class TikTokDownloader:
         await self.parameter.check_proxy()
         self.restart_cycle_task(restart, )
         await asleep(5)
-        self.default_mode = self.parameter.default_mode.copy()
+        if not restart:
+            self.default_mode = self.parameter.default_mode.copy()
         self.parameter.cleaner.set_rule(TEXT_REPLACEMENT, True)
 
     async def run(self):

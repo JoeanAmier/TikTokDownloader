@@ -104,20 +104,22 @@ DOWNLOAD_HEADERS = {
     'User-Agent': USERAGENT,
 }
 DOWNLOAD_HEADERS_TIKTOK = {
-    'Accept': '*/*',
-    'Accept-Language': 'zh-CN,zh;q=0.9',
-    'Dnt': '1',
-    'Origin': 'https://www.tiktok.com',
-    'Priority': 'i',
-    'Range': 'bytes=0-',
-    'Referer': 'https://www.tiktok.com/',
-    'Sec-Ch-Ua': SEC_CH_UA,
-    'Sec-Ch-Ua-Mobile': '?0',
-    'Sec-Ch-Ua-Platform': '"Windows"',
-    # 'Sec-Fetch-Dest': 'video',
-    'Sec-Fetch-Mode': 'cors',
-    'Sec-Fetch-Site': 'same-site',
-    'User-Agent': USERAGENT,
+    "Accept": "*/*",
+    # "Accept-Encoding": "identity;q=1, *;q=0",
+    "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
+    "Connection": "keep-alive",
+    "DNT": "1",
+    # "Host": "v16-webapp-prime.us.tiktok.com",
+    "Origin": "https://www.tiktok.com",
+    "Range": "bytes=0-",
+    "Referer": "https://www.tiktok.com/",
+    # "Sec-Fetch-Dest": "video",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-site",
+    "User-Agent": USERAGENT,
+    "sec-ch-ua": SEC_CH_UA,
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Windows\""
 }
 QRCODE_HEADERS = {
     "Accept": "application/json, text/javascript",
@@ -135,14 +137,7 @@ QRCODE_HEADERS = {
     "User-Agent": USERAGENT,
 }
 WID_COOKIE = (
-    "ttwid=1%7Cznatb_I92hSI92DSLFuzG4dH4UGyTM6iA4u8oVJhh5Q%7C1713708721"
-    "%7Cbefda5206897461f8f07ad2b907a09899ee962d721f8494fa0bbaeb21165e913; "
-    "tt_csrf_token=w6agcZyI-EjvAR03XH7lT_658y7enOeZ0-9g; tt_chain_token=8E/OiizxuQi7/JroG1Ox+A==; "
-    "ak_bmsc=2B9322FE0CED5C3A9AC3A1554D146008~000000000000000000000000000000~YAAQEwzEF1MnQcyOAQAADOX"
-    "/ABfoCqW70939e+uu3kswNd/hL1xa5lV0oOlFUMKpaNLhc2wMa2sq78ckNYECSPD5DfuKjVmjeGTHux6sLZX"
-    "+Pv5WSD6yTeG7eRiQNYMXneEkYLrHjVPu8Wn+XUjDhLRqifMt9U"
-    "/lIDNXqaVr7GKpidqBM15bpftOcrXxZTpPJoAX6BnxmDvoX9NdzQOImDYjYRsFNP11yNIpFv8yjnRbeYol0VSY7h5IphMH8ChiWvl"
-    "9Ea4uo875GNH1twNfvnLDOTM8W/DBkSKYH+UWk1VXVPpN31shuSgVG46TctLZV9AcpU9vFOM8px/LOZ04x32NlU9LCaFhkXnl9Nh3"
-    "RNoBc2s+VAIIwQY0E9ofhMDW35D3j7TfTU6fEZg=")
+    "ttwid=1%7CovVQu2St-HXSHAdEfZ7tljPe151SZ88AbrlTirlaC6w%7C1701072604"
+    "%7C49b17849da69bafc3638e794f3f26b30fe9677c5253e65a2a5f615489846ce02")
 
 BLANK_PREVIEW = "static/images/blank.png"

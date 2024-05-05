@@ -5,7 +5,11 @@ from platform import system
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
-from src.custom import INFO, ERROR
+from src.custom import (
+    INFO,
+    ERROR,
+    WARNING,
+)
 
 if TYPE_CHECKING:
     from src.tools import ColorfulConsole
@@ -18,26 +22,38 @@ class Settings:
     encode = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
     default = {
         "accounts_urls": [
-            {"mark": "账号标识，可以设置为空字符串",
-             "url": "账号主页链接",
-             "tab": "账号主页类型",
-             "earliest": "作品最早发布日期",
-             "latest": "作品最晚发布日期"},
+            {
+                "mark": "账号标识，可以设置为空字符串",
+                "url": "账号主页链接",
+                "tab": "账号主页类型",
+                "earliest": "作品最早发布日期",
+                "latest": "作品最晚发布日期",
+                "enable": True,
+            },
         ],
         "accounts_urls_tiktok": [
-            {"mark": "账号标识，可以设置为空字符串",
-             "url": "账号主页链接",
-             "tab": "账号主页类型",
-             "earliest": "作品最早发布日期",
-             "latest": "作品最晚发布日期"},
+            {
+                "mark": "账号标识，可以设置为空字符串",
+                "url": "账号主页链接",
+                "tab": "账号主页类型",
+                "earliest": "作品最早发布日期",
+                "latest": "作品最晚发布日期",
+                "enable": True,
+            },
         ],
         "mix_urls": [
-            {"mark": "合集标识，可以设置为空字符串",
-             "url": "合集链接或者作品链接"},
+            {
+                "mark": "合集标识，可以设置为空字符串",
+                "url": "合集链接或者作品链接",
+                "enable": True,
+            },
         ],
         "mix_urls_tiktok": [
-            {"mark": "合集标识，可以设置为空字符串",
-             "url": "合集链接或者作品链接"},
+            {
+                "mark": "合集标识，可以设置为空字符串",
+                "url": "合集链接或者作品链接",
+                "enable": True,
+            },
         ],
         "owner_url": {"mark": "账号标识，可以设置为空字符串",
                       "url": "账号主页链接", },
@@ -56,6 +72,7 @@ class Settings:
         "original_cover": False,
         "proxy": None,
         "proxy_tiktok": None,
+        "proxy_tiktok_region": "SG",
         "download": True,
         "max_size": 0,
         "chunk": 1024 * 1024,  # 每次从服务器接收的数据块大小
@@ -98,10 +115,11 @@ class Settings:
         data_keys = set(data.keys())
         if not (miss := default_keys - data_keys):
             return data
-        if self.console.input(f"[{ERROR}]配置文件 settings.json 缺少 {"、".join(
-                i for i in miss)} 参数，是否需要生成默认配置文件(YES/NO): [/{ERROR}]").upper() == "YES":
+        if self.console.input(
+                f"配置文件 settings.json 缺少 {"、".join(miss)} 参数，是否需要生成默认配置文件(YES/NO): ",
+                style=ERROR).upper() == "YES":
             self.__create()
-        self.console.print("本次运行将会使用各项参数默认值，程序功能可能无法正常使用！")
+        self.console.print("本次运行将会使用各项参数默认值，程序功能可能无法正常使用！", style=WARNING)
         return self.default
 
     def update(self, settings: dict | SimpleNamespace):

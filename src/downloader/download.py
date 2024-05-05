@@ -462,6 +462,7 @@ class Downloader:
         ) as e:
             self.log.warning(f"{show} 下载中断，错误信息：{e}")
             self.delete_file(temp)
+            await self.recorder.delete_id(id_)
             return False
         self.save_file(temp, actual)
         self.log.info(f"{show} 文件下载成功")

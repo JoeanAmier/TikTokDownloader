@@ -1,7 +1,13 @@
 from .account import Account
 from .account_tiktok import AccountTikTok
 from .collection import Collection
-from .collects import Collects, CollectsDetail
+from .collects import (
+    Collects,
+    CollectsDetail,
+    CollectsMix,
+    CollectsMusic,
+    CollectsSeries,
+)
 from .comment import Comment, Reply
 from .detail import Detail
 from .detail_tiktok import DetailTikTok
@@ -30,4 +36,7 @@ __all__ = [
     "User",
     "HashTag",
     "DetailTikTok",
+    "CollectsMusic",
+    "CollectsSeries",
+    "CollectsMix"
 ]

@@ -339,13 +339,13 @@ class Extractor:
         second = time_ // 1000
         return f"{
         second //
-        3600:0>2d}:{
+        3600: 0 > 2d}: {
         second %
         3600 //
-        60:0>2d}:{
+        60: 0 > 2d}: {
         second %
         3600 %
-        60:0>2d}"
+        60: 0 > 2d}"
 
     @staticmethod
     def time_conversion_tiktok(seconds: int) -> str:
@@ -540,7 +540,12 @@ class Extractor:
             [self.__extract_batch(container, self.generate_data_object(item))
              for item in data]
 
-    async def __detail(self, data: list[dict], recorder, tiktok: bool, ) -> list[dict]:
+    async def __detail(
+            self,
+            data: list[dict],
+            recorder,
+            tiktok: bool,
+    ) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
             template={
@@ -580,7 +585,10 @@ class Extractor:
             container: SimpleNamespace,
             data: SimpleNamespace):
         container.cache = container.template.copy()
-        container.cache["create_time"] = self.__format_date(data)
+        container.cache["create_timestamp"] = self.safe_extract(
+            data, "create_time")
+        container.cache["create_time"] = self.__format_date(
+            container.cache["create_timestamp"])
         container.cache["ip_label"] = self.safe_extract(data, "ip_label", "未知")
         container.cache["text"] = self.safe_extract(data, "text")
         container.cache["image"] = self.safe_extract(
@@ -619,7 +627,11 @@ class Extractor:
         if container.cache["reply_comment_total"] != "0":
             container.reply_ids.append(container.cache["cid"])
 
-    async def __live(self, data: list[dict], tiktok: bool, *args) -> list[dict]:
+    async def __live(
+            self,
+            data: list[dict],
+            tiktok: bool,
+            *args) -> list[dict]:
         container = SimpleNamespace(all_data=[])
         [self.__extract_live_data(container,
                                   self.generate_data_object(i)) for i in data]
@@ -643,7 +655,12 @@ class Extractor:
                      "user_count_str": self.safe_extract(data, "stats.user_count_str"), }
         container.all_data.append(live_data)
 
-    async def __user(self, data: list[dict], recorder, tiktok: bool, ) -> list[dict]:
+    async def __user(
+            self,
+            data: list[dict],
+            recorder,
+            tiktok: bool,
+    ) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
             cache=None,
@@ -697,11 +714,16 @@ class Extractor:
             data, "custom_verify", "无")
         container.cache["enterprise"] = self.safe_extract(
             data, "enterprise_verify_reason", "无")
-        container.cache["url"] = f"https://www.douyin.com/user/{
+        container.cache["url"] = f"https: // www.douyin.com / user / {
         container.cache["sec_uid"]}"
         container.all_data.append(container.cache)
 
-    async def __search(self, data: list[dict], recorder, tiktok: bool, tab: int) -> list[dict]:
+    async def __search(
+            self,
+            data: list[dict],
+            recorder,
+            tiktok: bool,
+            tab: int) -> list[dict]:
         if tab in {0, 1}:
             return await self.__search_general(data, recorder)
         elif tab == 2:
@@ -812,7 +834,12 @@ class Extractor:
         container.cache["room_id"] = self.safe_extract(data, "aweme_id")
         container.all_data.append(container.cache)
 
-    async def __hot(self, data: list[dict], recorder, tiktok: bool, ) -> list[dict]:
+    async def __hot(
+            self,
+            data: list[dict],
+            recorder,
+            tiktok: bool,
+    ) -> list[dict]:
         all_data = []
         [self.__deal_hot_data(all_data, self.generate_data_object(i))
          for i in data]
@@ -868,11 +895,22 @@ class Extractor:
         self.__summary_detail(result)
         return result
 
-    @staticmethod
-    def extract_mix_id(data: dict) -> str:
-        data = Extractor.generate_data_object(data)
-        return Extractor.safe_extract(data, "mix_info.mix_id")
+    @classmethod
+    def extract_mix_id(cls, data: dict) -> str:
+        data = cls.generate_data_object(data)
+        return cls.safe_extract(data, "mix_info.mix_id")
 
     def __extract_item_records(self, data: list[dict]):
         for i in data:
             self.log.info(f"{i['type']} {i['id']} 数据提取成功", False)
+
+    @classmethod
+    def extract_mix_collect_info(cls, data: dict) -> list[dict]:
+        data = cls.generate_data_object(data)
+        return [
+            {
+                "title": Extractor.safe_extract(i, "mix_name"),
+                "id": Extractor.safe_extract(i, "mix_id"),
+            }
+            for i in data
+        ]

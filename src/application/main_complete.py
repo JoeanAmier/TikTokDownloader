@@ -27,6 +27,7 @@ from src.interface import (
     User,
     HashTag,
     DetailTikTok,
+    CollectsMix,
 )
 from src.link import Extractor as LinkExtractor
 from src.link import ExtractorTikTok
@@ -142,6 +143,8 @@ class TikTok:
             ("采集抖音热榜数据(抖音)", self.hot_interactive,),
             ("批量下载话题作品(抖音)", self.hashtag_interactive,),
             ("批量下载收藏作品(抖音)", self.collection_interactive,),
+            ("批量下载收藏音乐(抖音)", self.temporary,),
+            ("批量下载收藏短剧(抖音)", self.temporary,),
             ("批量下载收藏夹作品(抖音)", self.temporary,),
             ("批量下载账号作品(TikTok)", self.account_acquisition_interactive_tiktok,),
             ("批量下载链接作品(TikTok)", self.detail_interactive_tiktok,),
@@ -155,12 +158,12 @@ class TikTok:
         )
         self.__function_account_tiktok = (
             # ("使用 accounts_urls_tiktok 参数的账号链接(推荐)", self.account_detail_batch),
-            ("手动输入待采集的账号链接", self.account_detail_inquire),
+            ("手动输入待采集的账号链接", self.account_detail_inquire_tiktok),
             # ("从文本文档读取待采集的账号链接", self.account_detail_txt),
         )
         self.__function_mix = (
             ("使用 mix_urls 参数的合集链接(推荐)", self.mix_batch),
-            ("获取当前账号收藏合集列表", self.temporary),
+            ("获取当前账号收藏合集列表", self.mix_collection),
             ("手动输入待采集的合集/作品链接", self.mix_inquire),
             ("从文本文档读取待采集的合集/作品链接", self.mix_txt),
         )
@@ -183,8 +186,7 @@ class TikTok:
         )
 
     async def temporary(self, *args, **kwargs, ):
-        # TODO: 重构完成后移除
-        self.console.print("功能正在开发，暂不可用！", style=WARNING)
+        self.console.print("该功能暂不可用！", style=WARNING)
 
     def _inquire_input(self, url: str = None, tip: str = None) -> str:
         text = self.console.input(tip or f"请输入{url}链接: ")
@@ -195,7 +197,8 @@ class TikTok:
             return ""
         return text
 
-    async def account_acquisition_interactive_tiktok(self, select="", *args, **kwargs):
+    async def account_acquisition_interactive_tiktok(
+            self, select="", *args, **kwargs):
         root, params, logger = self.record.run(self.parameter)
         await self.__account_secondary_menu(
             root,
@@ -262,7 +265,8 @@ class TikTok:
     #             self.logger.error(f"发生异常: {uid, uid_, nickname, nickname_}")
     #             return False
 
-    async def account_acquisition_interactive(self, select="", *args, **kwargs):
+    async def account_acquisition_interactive(
+            self, select="", *args, **kwargs):
         root, params, logger = self.record.run(self.parameter)
         await self.__account_secondary_menu(
             root,
@@ -320,7 +324,7 @@ class TikTok:
 
     async def account_detail_inquire(self, root, params, logger):
         while url := self._inquire_input("账号主页"):
-            links = await self.links_tiktok.run(url, "user")
+            links = await self.links.run(url, "user")
             if not links:
                 self.logger.warning(f"{url} 提取账号 sec_user_id 失败")
                 continue
@@ -328,7 +332,7 @@ class TikTok:
 
     async def account_detail_inquire_tiktok(self, root, params, logger):
         while url := self._inquire_input("账号主页"):
-            links = await self.links.run(url, "user")
+            links = await self.links_tiktok.run(url, "user")
             if not links:
                 self.logger.warning(f"{url} 提取账号 sec_user_id 失败")
                 continue
@@ -343,7 +347,14 @@ class TikTok:
             return
         await self.__account_detail_handle(root, params, logger, links)
 
-    async def __account_detail_handle(self, root, params, logger, links, tiktok=False, ):
+    async def __account_detail_handle(
+            self,
+            root,
+            params,
+            logger,
+            links,
+            tiktok=False,
+    ):
         count = SimpleNamespace(time=time(), success=0, failed=0)
         for index, sec in enumerate(links, start=1):
             if not await self.deal_account_detail(
@@ -616,7 +627,12 @@ class TikTok:
             return None
         return list(flv_items.values())[i], list(m3u8_items.values())[i]
 
-    async def live_interactive(self, cookie: str = None, proxy: str = None, *args, **kwargs):
+    async def live_interactive(
+            self,
+            cookie: str = None,
+            proxy: str = None,
+            *args,
+            **kwargs):
         while url := self._inquire_input("直播"):
             params = self._generate_live_params(*await self.links.run(url, type_="live"))
             if not params:
@@ -696,7 +712,15 @@ class TikTok:
         if ids := await self.__read_detail_txt():
             await self.__comment_handle(ids, root, params, logger)
 
-    async def __comment_handle(self, ids: list, root, params, logger, cookie: str = None, proxy: str = None, ):
+    async def __comment_handle(
+            self,
+            ids: list,
+            root,
+            params,
+            logger,
+            cookie: str = None,
+            proxy: str = None,
+    ):
         for i in ids:
             name = f"作品{i}_评论数据"
             async with logger(root, name=name, console=self.console, **params) as record:
@@ -730,6 +754,31 @@ class TikTok:
                 continue
             await self.__mix_handle(root, params, logger, mix_id, ids)
 
+    async def mix_collection(self, root, params, logger):
+        if id_ := await self.mix_inquire_collection():
+            await self.__mix_handle(root, params, logger, True, id_)
+
+    async def mix_inquire_collection(self) -> list[str]:
+        data = await CollectsMix(self.parameter).run()
+        if not data:
+            return []
+        data = self.extractor.extract_mix_collect_info(data)
+        return self.input_mix_collect_index(data)
+
+    def input_mix_collect_index(self, data: list[dict]) -> list[str]:
+        for i, j in enumerate(data, start=1):
+            self.console.print(f"{i}. {j["title"]}")
+        index = self.console.input("请输入需要下载的合集序号(输入 ALL 下载全部合集)：")
+        try:
+            if index.upper() == "ALL":
+                return [i["id"] for i in data]
+            if 0 <= (i := int(index) - 1) <= len(data):
+                return [data[i]["id"]]
+            self.console.print("合集序号错误！", style=WARNING)
+            raise ValueError
+        except ValueError:
+            return []
+
     async def mix_txt(self, root, params, logger):
         if not (url := self.txt_inquire()):
             return
@@ -739,7 +788,13 @@ class TikTok:
             return
         await self.__mix_handle(root, params, logger, mix_id, ids)
 
-    async def __mix_handle(self, root, params, logger, mix_id, ids):
+    async def __mix_handle(
+            self,
+            root,
+            params,
+            logger,
+            mix_id: bool,
+            ids: list[str]):
         count = SimpleNamespace(time=time(), success=0, failed=0)
         for index, i in enumerate(ids, start=1):
             if not await self._deal_mix_detail(root, params, logger, mix_id, i):
@@ -852,7 +907,12 @@ class TikTok:
         users = [await self._get_user_data(i) for i in sec_user_ids]
         await self._deal_user_data(root, params, logger, [i for i in users if i])
 
-    async def _get_user_data(self, sec_user_id: str, cookie: str = None, proxy: str = None, ):
+    async def _get_user_data(
+            self,
+            sec_user_id: str,
+            cookie: str = None,
+            proxy: str = None,
+    ):
         self.logger.info(f"正在获取账号 {sec_user_id} 的数据")
         data = await User(self.parameter, cookie, proxy, sec_user_id, ).run()
         return data or {}
@@ -1004,7 +1064,12 @@ class TikTok:
         await self._deal_hot_data()
         self.logger.info("已退出采集抖音热榜数据模式")
 
-    async def _deal_hot_data(self, source=False, cookie: str = None, proxy: str = None, ):
+    async def _deal_hot_data(
+            self,
+            source=False,
+            cookie: str = None,
+            proxy: str = None,
+    ):
         time_, board = await Hot(self.parameter, cookie, proxy, ).run()
         if not any(board):
             return None, None
@@ -1069,7 +1134,13 @@ class TikTok:
             addition="收藏作品",
         )
 
-    async def hashtag_interactive(self, cookie: str = None, proxy: str = None, *args, **kwargs, ):
+    async def hashtag_interactive(
+            self,
+            cookie: str = None,
+            proxy: str = None,
+            *args,
+            **kwargs,
+    ):
         await HashTag(self.parameter, cookie, proxy, ).run()
 
     async def run(self, default_mode: list):

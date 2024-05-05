@@ -119,11 +119,15 @@ class DownloadRecorder:
         self.database = database
 
     async def has_ids(self, ids: str) -> bool:
-        return await self.database.has_download_data(ids)
+        return await self.database.has_download_data(ids) if self.switch else False
 
     async def update_id(self, id_: str):
         if self.switch:
             await self.database.write_download_data(id_)
+
+    async def delete_id(self, id_: str) -> None:
+        if self.switch:
+            await self.database.delete_download_data(id_)
 
     async def delete_ids(self, ids: str) -> None:
         if ids.upper() == "ALL":

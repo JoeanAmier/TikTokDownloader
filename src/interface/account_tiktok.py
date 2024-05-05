@@ -15,7 +15,7 @@ __all__ = ["AccountTikTok"]
 
 class AccountTikTok(Account, APITikTok, ):
     post_api = f"{APITikTok.domain}api/post/item_list/"
-    favorite_api = ""
+    favorite_api = f"{APITikTok.domain}api/favorite/item_list/"
 
     def __init__(self,
                  params: "Parameter",
@@ -137,22 +137,12 @@ class AccountTikTok(Account, APITikTok, ):
     #         self.response.append({"author": info})
 
     def generate_favorite_params(self) -> dict:
-        return self.params | {
-            "sec_user_id": self.sec_user_id,
-            "max_cursor": self.cursor,
-            "min_cursor": "0",
-            "whale_cut_token": "",
-            "cut_version": "1",
-            "count": self.count,
-            "publish_video_strategy_type": "2",
-            "version_code": "170400",
-            "version_name": "17.4.0",
-        }
+        return self.generate_post_params()
 
     def generate_post_params(self) -> dict:
         return self.params | {
             "secUid": self.sec_user_id,
             "count": self.count,
             "cursor": self.cursor,
-            "coverFormat": "2",
+            "coverFormat": "2"
         }

@@ -284,7 +284,7 @@ class API:
 
     def deal_url_params(self, params: dict, number=8):
         if params:
-            # self.__add_ms_token(params)
+            self.__add_ms_token(params)
             params["X-Bogus"] = quote(self.xb.get_x_bogus(params,
                                                           number), safe="")
 
@@ -328,7 +328,7 @@ class APITikTok(API):
     params = {
         "WebIdLastTime": int(time()),
         "aid": "1988",
-        "app_language": "en",
+        "app_language": "zh-Hans",
         "app_name": "tiktok_web",
         "browser_language": "zh-CN",
         "browser_name": "Mozilla",
@@ -337,22 +337,27 @@ class APITikTok(API):
         "browser_version": quote(USERAGENT.lstrip("Mozilla/"), safe=""),
         "channel": "tiktok_web",
         "cookie_enabled": "true",
-        "device_id": "7338412233406662187",
+        # "count": "35",
+        # "coverFormat": "2",
+        # "cursor": "0",
+        "device_id": "7367953287817676308",
         "device_platform": "web_pc",
         "focus_state": "true",
         "from_page": "user",
-        "history_len": "3",
+        "history_len": "2",
         "is_fullscreen": "false",
         "is_page_visible": "true",
-        "language": "en",
+        "language": "zh-Hans",
+        "odinId": "7367953265152525328",
         "os": "windows",
-        # "priority_region": "MY",
+        "priority_region": "",
         "referer": "",
-        "region": "US",
+        "region": "SG",
         "screen_height": "864",
         "screen_width": "1536",
         "tz_name": quote("Asia/Shanghai", safe=""),
-        "webcast_language": "en",
+        "webcast_language": "zh-Hans",
+        "msToken": "",
     }
 
     def __init__(self,

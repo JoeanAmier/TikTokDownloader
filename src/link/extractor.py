@@ -53,7 +53,8 @@ class Extractor:
         self.requester = Requester(params)
         self.proxy = params.proxy
 
-    async def run(self, urls: str, type_="detail") -> Union[list[str], tuple[bool, list[str]]]:
+    async def run(self, urls: str,
+                  type_="detail") -> Union[list[str], tuple[bool, list[str]]]:
         urls = await self.requester.run(urls, self.proxy)
         match type_:
             case "detail":
@@ -129,7 +130,7 @@ class Extractor:
 
 
 class ExtractorTikTok(Extractor):
-    secUid = compile(r'"secUid":"([a-zA-Z0-9_]+)"')
+    secUid = compile(r'"secUid":"([a-zA-Z0-9_-]+)"')
 
     account_link = compile(r"\S*?(https://www\.tiktok\.com/@[^\s/]+)\S*?")
 
@@ -140,7 +141,8 @@ class ExtractorTikTok(Extractor):
         super().__init__(params)
         self.proxy = params.proxy_tiktok
 
-    async def run(self, urls: str, type_="detail") -> Union[list[str], tuple[bool, list[str]]]:
+    async def run(self, urls: str,
+                  type_="detail") -> Union[list[str], tuple[bool, list[str]]]:
         urls = await self.requester.run(urls, self.proxy)
         match type_:
             case "detail":
@@ -158,8 +160,8 @@ class ExtractorTikTok(Extractor):
 
     async def user(self, urls: str, ) -> list[str]:
         link = self.extract_info(self.account_link, urls, 1)
-        link = (await self.__get_sec_uid(i) for i in link)
-        return list(chain(link, ))
+        link = [await self.__get_sec_uid(i) for i in link]
+        return list(chain((i for i in link if i), ))
 
     def __extract_detail(self, urls: str, ) -> list[str]:
         link = self.extract_info(self.detail_link, urls, 1)
