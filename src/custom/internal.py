@@ -54,10 +54,9 @@ DISCLAIMER_TEXT = (
 RETRY = 5
 TIMEOUT = 10
 
-USERAGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 "
-    "Safari/537.36 Edg/124.0.0.0")
-SEC_CH_UA = "\"Chromium\";v=\"124\", \"Microsoft Edge\";v=\"124\", \"Not-A.Brand\";v=\"99\""
+USERAGENT = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 "
+             "Safari/537.36")
+SEC_CH_UA = '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"'
 PARAMS_HEADERS = {
     "Accept": "*/*",
     "Accept-Encoding": "gzip, deflate, br, zstd",
@@ -86,7 +85,8 @@ DATA_HEADERS = {
     "Sec-Fetch-Dest": "empty",
     "Sec-Fetch-Mode": "cors",
     "Sec-Fetch-Site": "same-origin",
-    "User-Agent": USERAGENT}
+    "User-Agent": USERAGENT,
+}
 DOWNLOAD_HEADERS = {
     'Accept': '*/*',
     'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',

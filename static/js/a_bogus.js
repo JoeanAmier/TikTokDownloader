@@ -169,7 +169,6 @@ function SM3() {
     this.size = 0;
     this.reset()
 }
-
 SM3.prototype.reset = reset;
 SM3.prototype.write = write;
 SM3.prototype.sum = sum;

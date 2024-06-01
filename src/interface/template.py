@@ -14,6 +14,7 @@ from rich.progress import (
 from src.custom import PROGRESS
 from src.custom import USERAGENT
 from src.custom import wait
+from src.encrypt import ABogus
 from src.tools import PrivateRetry
 from src.tools import capture_error_request
 
@@ -62,6 +63,7 @@ class API:
             **kwargs):
         self.headers = params.headers
         self.log = params.logger
+        self.ab = ABogus()
         self.xb = params.xb
         self.console = params.console
         self.api = ""
@@ -285,8 +287,10 @@ class API:
     def deal_url_params(self, params: dict, number=8):
         if params:
             self.__add_ms_token(params)
-            params["X-Bogus"] = quote(self.xb.get_x_bogus(params,
-                                                          number), safe="")
+            params["a_bogus"] = self.ab.get_value(params)
+            # X-Bogus 依旧可用
+            # params["X-Bogus"] = quote(self.xb.get_x_bogus(params,
+            #                                               number), safe="")
 
     def __add_ms_token(self, params: dict):
         if isinstance(self.cookie, dict) and "msToken" in self.cookie:
@@ -372,6 +376,12 @@ class APITikTok(API):
         self.cookie = cookie or params.cookie_tiktok
         self.proxy = proxy or params.proxy_tiktok
         self.set_temp_cookie(cookie)
+
+    def deal_url_params(self, params: dict, number=8):
+        if params:
+            self.__add_ms_token(params)
+            params["X-Bogus"] = quote(self.xb.get_x_bogus(params,
+                                                          number), safe="")
 
     # async def run(self,
     #               referer: str = None,

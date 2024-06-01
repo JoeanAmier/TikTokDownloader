@@ -337,15 +337,7 @@ class Extractor:
     @staticmethod
     def time_conversion(time_: int) -> str:
         second = time_ // 1000
-        return f"{
-        second //
-        3600: 0 > 2d}: {
-        second %
-        3600 //
-        60: 0 > 2d}: {
-        second %
-        3600 %
-        60: 0 > 2d}"
+        return f"{second // 3600:0>2d}:{second % 3600 // 60:0>2d}:{second % 3600 % 60:0>2d}"
 
     @staticmethod
     def time_conversion_tiktok(seconds: int) -> str:

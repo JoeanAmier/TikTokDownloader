@@ -16,6 +16,7 @@ from src.custom import ERROR
 from src.custom import PROGRESS
 from src.custom import QRCODE_HEADERS
 from src.custom import WARNING
+from src.encrypt import ABogus
 from src.encrypt import MsToken
 from src.encrypt import VerifyFp
 from src.tools import PrivateRetry
@@ -38,7 +39,7 @@ class Register:
             params: "Parameter",
             settings: "Settings",
     ):
-        self.xb = params.xb
+        # self.xb = params.xb
         self.session = params.session
         self.settings = settings
         self.proxy = params.proxy
@@ -114,7 +115,8 @@ class Register:
         self.url_params["verifyFp"] = self.verify_fp
         self.url_params["fp"] = self.verify_fp
         await self.__set_ms_token()
-        self.url_params["X-Bogus"] = self.xb.get_x_bogus(self.url_params)
+        self.url_params["a_bogus"] = ABogus().get_value(self.url_params)
+        # self.url_params["X-Bogus"] = self.xb.get_x_bogus(self.url_params)
         data, _, _ = await self.request_data(
             url=self.get_url,
             params=self.url_params)
