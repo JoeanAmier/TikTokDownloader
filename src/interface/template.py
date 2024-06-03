@@ -1,4 +1,5 @@
 from time import time
+from typing import Callable
 from typing import Coroutine
 from typing import TYPE_CHECKING
 from typing import Type
@@ -32,26 +33,27 @@ class API:
         "aid": "6383",
         "channel": "channel_pc_web",
         "pc_client_type": "1",
+        "update_version_code": "170400",
         "version_code": "290100",
         "version_name": "29.1.0",
         "cookie_enabled": "true",
         "screen_width": "1536",
         "screen_height": "864",
-        "browser_language": "zh-CN",
+        "browser_language": "zh-SG",
         "browser_platform": "Win32",
-        "browser_name": "Edge",
-        "browser_version": "124.0.0.0",
+        "browser_name": "Chrome",
+        "browser_version": "125.0.0.0",
         "browser_online": "true",
         "engine_name": "Blink",
-        "engine_version": "124.0.0.0",
+        "engine_version": "125.0.0.0",
         "os_name": "Windows",
         "os_version": "10",
         "cpu_core_num": "16",
         "device_memory": "8",
         "platform": "PC",
-        "downlink": "1.45",
+        "downlink": "1.55",
         "effective_type": "3g",
-        "round_trip_time": "350",
+        "round_trip_time": "600",
     }
 
     def __init__(
@@ -83,8 +85,11 @@ class API:
         if cookie:
             self.headers["Cookie"] = cookie
 
-    def generate_params(self, *args, **kwargs) -> dict:
+    def generate_params(self, ) -> dict:
         return self.params
+
+    def generate_data(self, *args, **kwargs) -> dict:
+        return {}
 
     async def run(self,
                   referer: str = None,
@@ -93,8 +98,8 @@ class API:
                   error_text="",
                   cursor="cursor",
                   has_more="has_more",
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,
@@ -140,8 +145,8 @@ class API:
                          error_text="",
                          cursor="cursor",
                          has_more="has_more",
-                         params: dict = None,
-                         data: dict = None,
+                         params: Callable = lambda: {},
+                         data: Callable = lambda: {},
                          method="get",
                          headers: dict = None,
                          proxy: str = None,
@@ -149,8 +154,8 @@ class API:
                          **kwargs,
                          ):
         if data := await self.request_data(self.api,
-                                           params=params or self.generate_params(),
-                                           data=data,
+                                           params=params() or self.generate_params(),
+                                           data=data() or self.generate_data(),
                                            method=method,
                                            headers=headers,
                                            proxy=proxy,
@@ -172,8 +177,8 @@ class API:
                         error_text="",
                         cursor="cursor",
                         has_more="has_more",
-                        params: dict = None,
-                        data: dict = None,
+                        params: Callable = lambda: {},
+                        data: Callable = lambda: {},
                         method="get",
                         headers: dict = None,
                         proxy: str = None,
@@ -201,8 +206,6 @@ class API:
                 self.pages -= 1
                 if callback:
                     await callback()
-                # TODO: 调试代码，待注释
-                break
 
     def check_response(self,
                        data_dict: dict,
@@ -286,13 +289,12 @@ class API:
 
     def deal_url_params(self, params: dict, number=8):
         if params:
-            self.__add_ms_token(params)
+            self.add_ms_token(params)
             params["a_bogus"] = self.ab.get_value(params)
             # X-Bogus 依旧可用
-            # params["X-Bogus"] = quote(self.xb.get_x_bogus(params,
-            #                                               number), safe="")
+            params["X-Bogus"] = self.xb.get_x_bogus(params, number)
 
-    def __add_ms_token(self, params: dict):
+    def add_ms_token(self, params: dict):
         if isinstance(self.cookie, dict) and "msToken" in self.cookie:
             params["msToken"] = self.cookie["msToken"]
 
@@ -334,17 +336,14 @@ class APITikTok(API):
         "aid": "1988",
         "app_language": "zh-Hans",
         "app_name": "tiktok_web",
-        "browser_language": "zh-CN",
+        "browser_language": "zh-SG",
         "browser_name": "Mozilla",
         "browser_online": "true",
         "browser_platform": "Win32",
-        "browser_version": quote(USERAGENT.lstrip("Mozilla/"), safe=""),
+        "browser_version": quote(USERAGENT[8:], safe=""),
         "channel": "tiktok_web",
         "cookie_enabled": "true",
-        # "count": "35",
-        # "coverFormat": "2",
-        # "cursor": "0",
-        "device_id": "7367953287817676308",
+        "device_id": "7365710297916884498",
         "device_platform": "web_pc",
         "focus_state": "true",
         "from_page": "user",
@@ -352,9 +351,8 @@ class APITikTok(API):
         "is_fullscreen": "false",
         "is_page_visible": "true",
         "language": "zh-Hans",
-        "odinId": "7367953265152525328",
         "os": "windows",
-        "priority_region": "",
+        "priority_region": "CN",
         "referer": "",
         "region": "SG",
         "screen_height": "864",
@@ -379,86 +377,5 @@ class APITikTok(API):
 
     def deal_url_params(self, params: dict, number=8):
         if params:
-            self.__add_ms_token(params)
-            params["X-Bogus"] = quote(self.xb.get_x_bogus(params,
-                                                          number), safe="")
-
-    # async def run(self,
-    #               referer: str = None,
-    #               single_page=False,
-    #               data_key: str = "",
-    #               error_text="",
-    #               cursor="cursor",
-    #               has_more="hasMore",
-    #               params: dict = None,
-    #               *args,
-    #               **kwargs,
-    #               ):
-    #     return await super().run(
-    #         referer,
-    #         single_page,
-    #         data_key,
-    #         error_text,
-    #         cursor,
-    #         has_more,
-    #         params,
-    #         *args,
-    #         **kwargs, )
-    #
-    # async def run_single(self,
-    #                      data_key: str,
-    #                      error_text="",
-    #                      cursor="cursor",
-    #                      has_more="hasMore",
-    #                      params: dict = None,
-    #                      *args,
-    #                      **kwargs,
-    #                      ):
-    #     await super().run_single(
-    #         data_key,
-    #         error_text,
-    #         cursor,
-    #         has_more,
-    #         params,
-    #         *args,
-    #         **kwargs,
-    #     )
-    #
-    # async def run_batch(self,
-    #                     data_key: str,
-    #                     error_text="",
-    #                     cursor="cursor",
-    #                     has_more="hasMore",
-    #                     params: dict = None,
-    #                     callback: Type[Coroutine] = None,
-    #                     *args,
-    #                     **kwargs, ):
-    #     await super().run_batch(
-    #         data_key,
-    #         error_text,
-    #         cursor,
-    #         has_more,
-    #         params,
-    #         callback,
-    #         *args,
-    #         **kwargs,
-    #     )
-    #
-    # def check_response(self,
-    #                    data_dict: dict,
-    #                    data_key: str,
-    #                    error_text="",
-    #                    cursor="cursor",
-    #                    has_more="hasMore",
-    #                    *args,
-    #                    **kwargs,
-    #                    ):
-    #     super().check_response(
-    #         data_dict,
-    #         data_key,
-    #         error_text,
-    #         cursor,
-    #         has_more,
-    #         *args,
-    #         **kwargs,
-    #     )
+            self.add_ms_token(params)
+            params["X-Bogus"] = self.xb.get_x_bogus(params, number)

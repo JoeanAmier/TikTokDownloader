@@ -1,3 +1,4 @@
+from typing import Callable
 from typing import TYPE_CHECKING
 
 from src.extract import Extractor
@@ -37,8 +38,8 @@ class Collection(API):
                   error_text="",
                   cursor="cursor",
                   has_more="has_more",
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="post",
                   headers: dict = None,
                   proxy: str = None,
@@ -63,7 +64,7 @@ class Collection(API):
         await self.__get_owner_data()
         return self.response
 
-    def generate_params(self, *args, **kwargs) -> dict:
+    def generate_params(self, ) -> dict:
         return self.params | {
             "publish_video_strategy_type": "2",
             "version_code": "170400",
@@ -90,7 +91,7 @@ class Collection(API):
         return await super().request_data(
             url,
             params,
-            data or self.generate_data(),
+            data,
             method,
             headers,
             proxy,

@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
 from src.custom import condition_filter
+from src.tools import TikTokDownloaderError
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -23,6 +24,9 @@ class Extractor:
         "share_count",
         "play_count",
     )
+    detail_necessary_keys = "id"
+    comment_necessary_keys = "cid"
+    user_necessary_keys = "sec_uid"
 
     def __init__(self, params: "Parameter"):
         self.log = params.logger
@@ -121,6 +125,8 @@ class Extractor:
             latest=latest,
         )
         self.__platform_classify_detail(data, container, tiktok, )
+        container.all_data = self.__clean_extract_data(
+            container.all_data, self.detail_necessary_keys)
         self.__extract_item_records(container.all_data)
         await self.__record_data(recorder, container.all_data)
         self.__date_filter(container)
@@ -502,11 +508,19 @@ class Extractor:
 
     def preprocessing_data(self,
                            data: list[dict],
+                           id_: str,
                            mark="",
                            post=True,
                            mix=False) -> tuple:
-        item = self.generate_data_object(data[-1])
-        mid = self.safe_extract(item, "mix_info.mix_id")
+        for item in data:
+            item = self.generate_data_object(item)
+            if id_ in {
+                self.safe_extract(item, "author.sec_uid"),
+                mid := self.safe_extract(item, "mix_info.mix_id"),
+            }:
+                break
+        else:
+            raise TikTokDownloaderError("提取账号信息或合集信息失败，请向作者反馈！")
         id_ = self.safe_extract(item, "author.uid")
         name = self.cleaner.filter_name(self.safe_extract(
             item, "author.nickname", f"账号_{str(time())[:10]}"),
@@ -547,6 +561,8 @@ class Extractor:
             same=False,
         )
         self.__platform_classify_detail(data, container, tiktok, )
+        container.all_data = self.__clean_extract_data(
+            container.all_data, self.detail_necessary_keys)
         self.__extract_item_records(container.all_data)
         await self.__record_data(recorder, container.all_data)
         self.__condition_filter(container)
@@ -569,6 +585,8 @@ class Extractor:
         else:
             [self.__extract_comments_data(
                 container, self.generate_data_object(i)) for i in data]
+            container.all_data = self.__clean_extract_data(
+                container.all_data, self.comment_necessary_keys)
             await self.__record_data(recorder, container.all_data)
         return container.all_data
 
@@ -662,6 +680,8 @@ class Extractor:
         )
         [self.__extract_user_data(container,
                                   self.generate_data_object(i)) for i in data]
+        container.all_data = self.__clean_extract_data(
+            container.all_data, self.user_necessary_keys)
         await self.__record_data(recorder, container.all_data)
         return container.all_data
 
@@ -844,7 +864,7 @@ class Extractor:
             "sentence_id": self.safe_extract(data, "sentence_id"),
             "word": self.safe_extract(data, "word"),
             "video_count": str(self.safe_extract(data, "video_count", "-1")),
-            "event_time": self.__format_date(data, "event_time"),
+            "event_time": self.__format_date(self.safe_extract(data, "event_time")),
             "view_count": str(self.safe_extract(data, "view_count", "-1")),
             "hot_value": str(self.safe_extract(data, "hot_value", "-1")),
             "cover": self.safe_extract(data, "word_cover.url_list[-1]"),
@@ -906,3 +926,7 @@ class Extractor:
             }
             for i in data
         ]
+
+    @staticmethod
+    def __clean_extract_data(data: list[dict], key: str) -> list[dict]:
+        return [i for i in data if i.get(key)]

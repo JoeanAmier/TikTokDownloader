@@ -17,6 +17,7 @@ from .info import Info
 from .live import Live
 from .mix import Mix
 from .search import Search
+from .template import APITikTok
 from .user import User
 
 __all__ = [
@@ -38,5 +39,6 @@ __all__ = [
     "DetailTikTok",
     "CollectsMusic",
     "CollectsSeries",
-    "CollectsMix"
+    "CollectsMix",
+    "APITikTok",
 ]

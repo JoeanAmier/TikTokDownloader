@@ -1,6 +1,7 @@
 from re import compile
 from typing import TYPE_CHECKING
 
+from src.custom import wait
 from src.tools import PrivateRetry
 from src.tools import capture_error_request
 
@@ -25,6 +26,7 @@ class Requester:
         result = []
         for i in urls:
             result.append(await self.request_url(i.group(), proxy))
+            await wait()
         return " ".join(i for i in result if i)
 
     @PrivateRetry.retry

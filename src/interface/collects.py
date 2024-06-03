@@ -1,3 +1,4 @@
+from typing import Callable
 from typing import TYPE_CHECKING
 
 from .template import API
@@ -45,8 +46,8 @@ class Collects(API):
                   error_text="当前账号无收藏夹",
                   cursor="cursor",
                   has_more="has_more",
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,
@@ -82,10 +83,12 @@ class CollectsDetail(API):
                  *args,
                  **kwargs,
                  ):
-        super().__init__(params, cookie, proxy, cursor, count, *args, **kwargs, )
+        super().__init__(params, cookie, proxy, *args, **kwargs, )
         self.collects_id = collects_id
         self.pages = pages or params.max_pages
         self.api = f"{self.domain}aweme/v1/web/collects/video/list/"
+        self.cursor = cursor
+        self.count = count
         self.text = "收藏夹作品数据"
 
     def generate_params(self, ) -> dict:
@@ -104,8 +107,8 @@ class CollectsDetail(API):
                   error_text="",
                   cursor="cursor",
                   has_more="has_more",
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,
@@ -161,8 +164,8 @@ class CollectsMix(API):
                   error_text="当前账号无收藏合集",
                   cursor="cursor",
                   has_more="has_more",
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,
@@ -209,8 +212,8 @@ class CollectsSeries(CollectsMix):
                   error_text="当前账号无收藏短剧",
                   cursor="cursor",
                   has_more="has_more",
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,
@@ -257,8 +260,8 @@ class CollectsMusic(CollectsMix):
                   error_text="当前账号无收藏音乐",
                   cursor="cursor",
                   has_more="has_more",
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,

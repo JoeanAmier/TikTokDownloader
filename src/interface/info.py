@@ -39,7 +39,7 @@ class Info(API):
         await super().run_single(
             "",
             params=self.static_params,
-            data=self.__generate_data(),
+            data=self.__generate_data,
             method="post",
         )
 

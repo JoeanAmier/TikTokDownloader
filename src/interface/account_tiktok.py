@@ -1,3 +1,4 @@
+from typing import Callable
 from typing import Coroutine
 from typing import TYPE_CHECKING
 from typing import Type
@@ -54,8 +55,8 @@ class AccountTikTok(Account, APITikTok, ):
                   error_text="",
                   cursor="cursor",
                   has_more="hasMore",
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,
@@ -70,7 +71,7 @@ class AccountTikTok(Account, APITikTok, ):
                     error_text=error_text or f"获取{self.text}失败",
                     cursor=cursor,
                     has_more=has_more,
-                    params=params or self.generate_params(self.favorite),
+                    params=params,
                     data=data,
                     method=method,
                     headers=headers,
@@ -85,7 +86,7 @@ class AccountTikTok(Account, APITikTok, ):
                     error_text=error_text or f"获取{self.text}失败",
                     cursor=cursor,
                     has_more=has_more,
-                    params=params or self.generate_params(self.favorite),
+                    params=params,
                     data=data,
                     method=method,
                     headers=headers,
@@ -101,8 +102,8 @@ class AccountTikTok(Account, APITikTok, ):
                         error_text="",
                         cursor="cursor",
                         has_more="hasMore",
-                        params: dict = None,
-                        data: dict = None,
+                        params: Callable = lambda: {},
+                        data: Callable = lambda: {},
                         method="get",
                         headers: dict = None,
                         proxy: str = None,

@@ -72,7 +72,9 @@ class Settings:
         "original_cover": False,
         "proxy": None,
         "proxy_tiktok": None,
-        "proxy_tiktok_region": "SG",
+        "tiktok_region": "SG",
+        "tiktok_tw": "",
+        "device_id": "",
         "download": True,
         "max_size": 0,
         "chunk": 1024 * 1024,  # 每次从服务器接收的数据块大小

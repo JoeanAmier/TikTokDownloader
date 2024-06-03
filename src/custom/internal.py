@@ -54,8 +54,9 @@ DISCLAIMER_TEXT = (
 RETRY = 5
 TIMEOUT = 10
 
-USERAGENT = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 "
-             "Safari/537.36")
+USERAGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 "
+    "Safari/537.36")
 SEC_CH_UA = '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"'
 PARAMS_HEADERS = {
     "Accept": "*/*",
@@ -108,18 +109,17 @@ DOWNLOAD_HEADERS_TIKTOK = {
     # "Accept-Encoding": "identity;q=1, *;q=0",
     "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
     "Connection": "keep-alive",
-    "DNT": "1",
+    "Dnt": "1",
     # "Host": "v16-webapp-prime.us.tiktok.com",
-    "Origin": "https://www.tiktok.com",
     "Range": "bytes=0-",
     "Referer": "https://www.tiktok.com/",
+    "Sec-Ch-Ua": SEC_CH_UA,
+    "Sec-Ch-Ua-Mobile": "?0",
+    "Sec-Ch-Ua-Platform": "\"Windows\"",
     # "Sec-Fetch-Dest": "video",
-    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Mode": "no-cors",
     "Sec-Fetch-Site": "same-site",
     "User-Agent": USERAGENT,
-    "sec-ch-ua": SEC_CH_UA,
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": "\"Windows\""
 }
 QRCODE_HEADERS = {
     "Accept": "application/json, text/javascript",
@@ -137,7 +137,7 @@ QRCODE_HEADERS = {
     "User-Agent": USERAGENT,
 }
 WID_COOKIE = (
-    "ttwid=1%7CovVQu2St-HXSHAdEfZ7tljPe151SZ88AbrlTirlaC6w%7C1701072604"
-    "%7C49b17849da69bafc3638e794f3f26b30fe9677c5253e65a2a5f615489846ce02")
+    "ttwid=1%7ClbU5LydubbFYMMy-Awb01FuJsgDO4sKIuVphLlfWyEw%7C1717906488"
+    "%7C84cc5b5937828f23c2636720ada4bf41af6d52cb22dd4f19245f1daa6b397296")
 
 BLANK_PREVIEW = "static/images/blank.png"

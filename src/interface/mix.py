@@ -1,3 +1,4 @@
+from typing import Callable
 from typing import TYPE_CHECKING
 
 from src.extract import Extractor
@@ -31,7 +32,7 @@ class Mix(API):
         self.text = "合集作品数据"
         self.detail = Detail(params, cookie, proxy, self.detail_id, )
 
-    def generate_params(self, *args, **kwargs) -> dict:
+    def generate_params(self, ) -> dict:
         return self.params | {
             "mix_id": self.mix_id,
             "cursor": self.cursor,
@@ -47,8 +48,8 @@ class Mix(API):
                   error_text="",
                   cursor="cursor",
                   has_more="has_more",
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,

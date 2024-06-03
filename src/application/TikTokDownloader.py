@@ -42,6 +42,7 @@ from src.custom import (
 from src.custom import TEXT_REPLACEMENT
 from src.custom import verify_token
 from src.encrypt import XBogus
+from src.interface import APITikTok
 from src.manager import Database
 from src.manager import DownloadRecorder
 from src.module import Cookie
@@ -132,7 +133,7 @@ class TikTokDownloader:
         )
 
     async def temporary(self, *args, **kwargs, ):
-        self.console.print("该功能暂不可用！", style=WARNING)
+        self.console.print("项目正在重构代码，该功能暂不可用！", style=WARNING)
 
     # def __api_object(self):
     #     self.server(APIServer, SERVER_HOST)
@@ -315,6 +316,7 @@ class TikTokDownloader:
             **self.settings.read(),
             recorder=self.recorder,
         )
+        self.__set_api_params()
         await self.parameter.check_proxy()
         self.restart_cycle_task(restart, )
         await asleep(5)
@@ -367,3 +369,7 @@ class TikTokDownloader:
     async def browser_cookie_tiktok(self, ):
         if Browser(self.parameter, self.cookie).run(True):
             await self.check_settings()
+
+    def __set_api_params(self):
+        APITikTok.params["region"] = self.parameter.tiktok_region
+        APITikTok.params["device_id"] = self.parameter.device_id

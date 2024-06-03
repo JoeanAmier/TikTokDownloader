@@ -1,3 +1,4 @@
+from typing import Callable
 from typing import TYPE_CHECKING
 
 from .template import API
@@ -34,8 +35,8 @@ class Detail(API):
                   error_text="",
                   cursor="cursor",
                   has_more="has_more",
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,

@@ -1,5 +1,6 @@
 from datetime import datetime
 from types import SimpleNamespace
+from typing import Callable
 from typing import TYPE_CHECKING
 
 from .template import API
@@ -44,14 +45,15 @@ class Hot(API):
         super().__init__(params, cookie, proxy, *args, **kwargs, )
         self.headers = self.headers | {"Cookie": "", }
         self.api = f"{self.domain}aweme/v1/web/hot/search/list/"
+        self.index = None
         self.time = None
 
-    def generate_params(self, space: SimpleNamespace, *args, **kwargs) -> dict:
+    def generate_params(self, ) -> dict:
         return self.params | {
             "detail_list": "1",
             "source": "6",
-            "board_type": space.type,
-            "board_sub_type": space.sub_type,
+            "board_type": self.board_params[self.index].type,
+            "board_sub_type": self.board_params[self.index].sub_type,
             "version_code": "170400",
             "version_name": "17.4.0",
         }
@@ -63,8 +65,8 @@ class Hot(API):
                   error_text=None,
                   cursor=None,
                   has_more=None,
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,
@@ -74,13 +76,14 @@ class Hot(API):
         self.time = f"{datetime.now():%Y_%m_%d_%H_%M_%S}"
         self.set_referer(referer)
         for index, space in enumerate(self.board_params):
+            self.index = index
             self.text = f"{space.name}数据"
             await self.run_single(
                 data_key,
                 f"获取{space.name}数据失败",
                 cursor,
                 has_more,
-                params=self.generate_params(space),
+                params=self.generate_params,
                 data=data,
                 method=method,
                 headers=headers,

@@ -47,7 +47,7 @@ class Search(API):
                  ):
         super().__init__(params, cookie, proxy, *args, **kwargs, )
 
-    def generate_params(self, space: SimpleNamespace, *args, **kwargs) -> dict:
+    def generate_params(self, ) -> dict:
         return self.params
 
     async def run(self, *args, **kwargs):

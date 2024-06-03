@@ -1,3 +1,4 @@
+from typing import Callable
 from typing import Coroutine, Type
 from typing import TYPE_CHECKING
 
@@ -57,8 +58,8 @@ class Comment(API):
                   error_text="",
                   cursor="cursor",
                   has_more="has_more",
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,
@@ -73,6 +74,7 @@ class Comment(API):
             cursor=cursor,
             has_more=has_more,
             data=data,
+            params=params,
             method=method,
             headers=headers,
             proxy=proxy,
@@ -86,8 +88,8 @@ class Comment(API):
                         error_text="",
                         cursor="cursor",
                         has_more="has_more",
-                        params: dict = None,
-                        data: dict = None,
+                        params: Callable = lambda: {},
+                        data: Callable = lambda: {},
                         method="get",
                         headers: dict = None,
                         proxy: str = None,
@@ -117,8 +119,8 @@ class Comment(API):
                               error_text="",
                               cursor="cursor",
                               has_more="has_more",
-                              params: dict = None,
-                              data: dict = None,
+                              params: Callable = lambda: {},
+                              data: Callable = lambda: {},
                               method="get",
                               headers: dict = None,
                               proxy: str = None,
@@ -144,8 +146,6 @@ class Comment(API):
             self.pages -= 1
             if callback:
                 await callback()
-            # TODO: 调试代码，待注释
-            break
 
     async def run_reply(self, ):
         reply_ids = Extractor.extract_reply_ids(self.current_page)
@@ -167,8 +167,6 @@ class Comment(API):
                 self.pages = p
             else:
                 break
-            # TODO: 调试代码，待注释
-            break
 
     def check_response(self,
                        data_dict: dict,
@@ -236,8 +234,8 @@ class Reply(Comment):
                   error_text="",
                   cursor="cursor",
                   has_more="has_more",
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,
@@ -263,8 +261,8 @@ class Reply(Comment):
                         error_text="",
                         cursor="cursor",
                         has_more="has_more",
-                        params: dict = None,
-                        data: dict = None,
+                        params: Callable = lambda: {},
+                        data: Callable = lambda: {},
                         method="get",
                         headers: dict = None,
                         proxy: str = None,

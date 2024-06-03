@@ -136,12 +136,12 @@ class TikTok:
             ("批量下载账号作品(抖音)", self.account_acquisition_interactive,),
             ("批量下载链接作品(抖音)", self.detail_interactive,),
             ("获取直播推流地址(抖音)", self.live_interactive,),
-            ("采集作品评论数据(抖音)", self.comment_interactive,),
+            # ("采集作品评论数据(抖音)", self.comment_interactive,),
             ("批量下载合集作品(抖音)", self.mix_interactive,),
-            ("采集账号详细数据(抖音)", self.user_interactive,),
-            ("采集搜索结果数据(抖音)", self.search_interactive,),
+            # ("采集账号详细数据(抖音)", self.user_interactive,),
+            # ("采集搜索结果数据(抖音)", self.search_interactive,),
             ("采集抖音热榜数据(抖音)", self.hot_interactive,),
-            ("批量下载话题作品(抖音)", self.hashtag_interactive,),
+            # ("批量下载话题作品(抖音)", self.hashtag_interactive,),
             ("批量下载收藏作品(抖音)", self.collection_interactive,),
             ("批量下载收藏音乐(抖音)", self.temporary,),
             ("批量下载收藏短剧(抖音)", self.temporary,),
@@ -186,7 +186,7 @@ class TikTok:
         )
 
     async def temporary(self, *args, **kwargs, ):
-        self.console.print("该功能暂不可用！", style=WARNING)
+        self.console.print("该功能正在开发，尚未完成！", style=WARNING)
 
     def _inquire_input(self, url: str = None, tip: str = None) -> str:
         text = self.console.input(tip or f"请输入{url}链接: ")
@@ -432,6 +432,7 @@ class TikTok:
             params,
             logger,
             account_data,
+            sec_user_id,
             mark,
             tab == "post",
             api=api,
@@ -443,6 +444,7 @@ class TikTok:
                                     params: dict,
                                     logger,
                                     data,
+                                    id_,
                                     mark,
                                     post=True,
                                     mix=False,
@@ -453,7 +455,7 @@ class TikTok:
                                     ):
         self.logger.info("开始提取作品数据")
         id_, name, mid, title, mark, data = self.extractor.preprocessing_data(
-            data, mark, post, mix)
+            data, id_, mark, post, mix)
         self.__display_extracted_information(
             mix, id_, name, mid, title, mark, )
         addition = addition or ("合集作品" if mix else "发布作品" if post else "喜欢作品")
@@ -849,17 +851,18 @@ class TikTok:
                                ):
         self.logger.info(f"开始处理第 {num} 个合集" if num else "开始处理合集")
         mix_params = self._generate_mix_params(mix_id, id_)
+        mix_obj = Mix(
+            self.parameter,
+            cookie,
+            proxy,
+            **mix_params, )
         if any(
-                mix_data := await Mix(
-                    self.parameter,
-                    cookie,
-                    proxy,
-                    **mix_params, ).run()):
+                mix_data := await mix_obj.run()):
             return (
                 mix_data
                 if source
                 else await self._batch_process_detail(
-                    root, params, logger, mix_data, mark, mix=True, api=api
+                    root, params, logger, mix_data, mix_obj.mix_id, mark, mix=True, api=api
                 )
             )
         self.logger.warning("采集合集作品数据失败")
@@ -1128,6 +1131,7 @@ class TikTok:
             params,
             logger,
             collection,
+            sec_user_id,
             self.owner.mark,
             False,
             api=api,

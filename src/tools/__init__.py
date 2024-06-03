@@ -4,6 +4,7 @@ from .capture import capture_error_request
 from .choose import choose
 from .cleaner import Cleaner
 from .console import ColorfulConsole
+from .error import TikTokDownloaderError
 from .file_switch import FileSwitch
 from .format import (
     cookie_dict_to_str,
@@ -40,4 +41,5 @@ __all__ = [
     "base_session",
     "capture_error_params",
     "capture_error_request",
+    "TikTokDownloaderError",
 ]

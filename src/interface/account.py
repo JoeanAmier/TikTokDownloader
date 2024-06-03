@@ -1,5 +1,6 @@
 from datetime import date
 from datetime import datetime
+from typing import Callable
 from typing import Coroutine
 from typing import TYPE_CHECKING
 from typing import Type
@@ -50,8 +51,8 @@ class Account(API):
                   error_text="该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号",
                   cursor="max_cursor",
                   has_more="has_more",
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,
@@ -69,7 +70,7 @@ class Account(API):
                     error_text,
                     cursor,
                     has_more,
-                    params or self.generate_params(self.favorite),
+                    params,
                     data,
                     method,
                     headers,
@@ -84,7 +85,7 @@ class Account(API):
                     error_text,
                     cursor,
                     has_more,
-                    params or self.generate_params(self.favorite),
+                    params,
                     data,
                     method,
                     headers,
@@ -95,13 +96,40 @@ class Account(API):
                 return self.response, self.earliest, self.latest
         raise ValueError
 
+    async def run_single(self,
+                         data_key: str = "aweme_list",
+                         error_text="该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号",
+                         cursor="max_cursor",
+                         has_more="has_more",
+                         params: Callable = lambda: {},
+                         data: Callable = lambda: {},
+                         method="get",
+                         headers: dict = None,
+                         proxy: str = None,
+                         *args,
+                         **kwargs,
+                         ):
+        await super().run_single(
+            data_key,
+            error_text,
+            cursor,
+            has_more,
+            params,
+            data,
+            method,
+            headers,
+            proxy,
+            *args,
+            **kwargs,
+        )
+
     async def run_batch(self,
                         data_key: str = "aweme_list",
                         error_text="该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号",
                         cursor="max_cursor",
                         has_more="has_more",
-                        params: dict = None,
-                        data: dict = None,
+                        params: Callable = lambda: {},
+                        data: Callable = lambda: {},
                         method="get",
                         headers: dict = None,
                         proxy: str = None,
@@ -114,7 +142,7 @@ class Account(API):
             error_text,
             cursor,
             has_more,
-            params or self.generate_params(self.favorite),
+            params,
             data,
             method,
             headers,
@@ -154,8 +182,8 @@ class Account(API):
                 max(int(self.cursor) / 1000, 0)).date():
             self.finished = True
 
-    def generate_params(self, favorite: bool) -> dict:
-        match favorite:
+    def generate_params(self, ) -> dict:
+        match self.favorite:
             case True:
                 return self.generate_favorite_params()
             case False:

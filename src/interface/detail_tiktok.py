@@ -1,3 +1,4 @@
+from typing import Callable
 from typing import TYPE_CHECKING
 
 from .template import APITikTok
@@ -32,8 +33,8 @@ class DetailTikTok(APITikTok):
                   error_text="",
                   cursor=None,
                   has_more=None,
-                  params: dict = None,
-                  data: dict = None,
+                  params: Callable = lambda: {},
+                  data: Callable = lambda: {},
                   method="get",
                   headers: dict = None,
                   proxy: str = None,

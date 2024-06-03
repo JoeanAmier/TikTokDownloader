@@ -109,7 +109,9 @@ class Parameter:
             original_cover: bool,
             proxy: str | None,
             proxy_tiktok: str | None,
-            proxy_tiktok_region: str,
+            tiktok_region: str,
+            tiktok_tw: str,
+            device_id: int | str,
             download: bool,
             max_size: int,
             chunk: int,
@@ -154,7 +156,8 @@ class Parameter:
         self.timeout = self.__check_timeout(timeout)
         self.proxy = proxy
         self.proxy_tiktok = proxy_tiktok
-        self.proxy_tiktok_region = proxy_tiktok_region
+        self.tiktok_region = tiktok_region
+        self.device_id = self.__check_device_id(device_id)
         self.download = self.__check_bool(download)
         self.max_size = self.__check_max_size(max_size)
         self.chunk = self.__check_chunk(chunk)
@@ -520,3 +523,11 @@ class Parameter:
             return region
         self.logger.warning("proxy_tiktok_region 参数设置错误")
         return "SG"
+
+    def __check_device_id(self, device_id: int | str) -> int | str:
+        if isinstance(device_id, str):
+            if len(device_id) == 19:
+                return device_id
+            self.logger.warning("device_id 参数未设置或设置错误，TikTok 平台下载功能无法正常使用")
+            return ""
+        return device_id
