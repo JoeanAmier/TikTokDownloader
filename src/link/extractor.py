@@ -1,9 +1,8 @@
-from itertools import chain
 from re import compile
-from typing import Iterator
 from typing import TYPE_CHECKING
 from typing import Union
 from urllib.parse import parse_qs
+from urllib.parse import unquote
 from urllib.parse import urlparse
 
 from .requester import Requester
@@ -23,9 +22,9 @@ class Extractor:
 
     detail_id = compile(r"\b(\d{19})\b")  # 作品 ID
     detail_link = compile(
-        r"\S*?https://www\.douyin\.com/(?:video|note)/([0-9]{19})\S*?")  # 作品链接
+        r"\S*?https://www\.douyin\.com/(?:video|note|slides)/([0-9]{19})\S*?")  # 作品链接
     detail_share = compile(
-        r"\S*?https://www\.iesdouyin\.com/share/(?:video|note)/([0-9]{19})/\S*?"
+        r"\S*?https://www\.iesdouyin\.com/share/(?:video|note|slides)/([0-9]{19})/\S*?"
     )  # 作品分享链接
     detail_search = compile(
         r"\S*?https://www\.douyin\.com/search/\S+?modal_id=(\d{19})\S*?"
@@ -73,28 +72,19 @@ class Extractor:
     def user(self, urls: str, ) -> list[str]:
         link = self.extract_info(self.account_link, urls, 1)
         share = self.extract_info(self.account_share, urls, 1)
-        # return chain(link, share)
-        return list(chain(link, share))
+        return link + share
 
     def mix(self, urls: str, ) -> [bool, list[str]]:
         if detail := self.__extract_detail(urls):
             return False, detail
         link = self.extract_info(self.mix_link, urls, 1)
         share = self.extract_info(self.mix_share, urls, 1)
-        return (
-            True,
-            m) if (
-            m := self.__convert_iterator(
-                chain(
-                    link,
-                    share))) else (
-            None,
-            [])
+        return (True, m) if (m := link + share) else (None, [])
 
     def live(self, urls: str, ) -> [bool, list]:
         live_link = self.extract_info(self.live_link, urls, 1)
         live_link_self = self.extract_info(self.live_link_self, urls, 1)
-        if live := self.__convert_iterator(chain(live_link, live_link_self)):
+        if live := live_link + live_link_self:
             return True, live
         live_link_share = self.extract_info(self.live_link_share, urls, 0)
         return False, self.extract_sec_user_id(live_link_share)
@@ -106,15 +96,10 @@ class Extractor:
         search = self.extract_info(self.detail_search, urls, 1)
         discover = self.extract_info(self.detail_discover, urls, 1)
         channel = self.extract_info(self.channel_link, urls, 1)
-        # return chain(link, share, account, search, discover, channel)
-        return list(chain(link, share, account, search, discover, channel))
+        return link + share + account + search + discover + channel
 
     @staticmethod
-    def __convert_iterator(data: Iterator) -> list:
-        return list(data)
-
-    @staticmethod
-    def extract_sec_user_id(urls: Iterator[str]) -> list[list]:
+    def extract_sec_user_id(urls: list[str]) -> list[list]:
         data = []
         for url in urls:
             url = urlparse(url)
@@ -124,18 +109,29 @@ class Extractor:
         return data
 
     @staticmethod
-    def extract_info(pattern, urls: str, index=1) -> Iterator[str]:
+    def extract_info(pattern, urls: str, index=1) -> list[str]:
         result = pattern.finditer(urls)
-        return (i.group(index) for i in result) if result else []
+        return [i for i in (i.group(index)
+                            for i in result) if i] if result else []
 
 
 class ExtractorTikTok(Extractor):
-    secUid = compile(r'"secUid":"([a-zA-Z0-9_-]+)"')
+    SEC_UID = compile(r'"secUid":"([a-zA-Z0-9_-]+)"')
+    ROOD_ID = compile(r'room_id=(\d+)"')
+    MIX_ID = compile(r'"playlistId":"(\d{19})"')
 
     account_link = compile(r"\S*?(https://www\.tiktok\.com/@[^\s/]+)\S*?")
 
     detail_link = compile(
-        r"\S*?https://www\.tiktok\.com/@[^\s/]+(?:/(?:video|photo)/(\d{19}))?\S*?")  # 作品链接
+        r"\S*?https://www\.tiktok\.com/@[^\s/]+(?:/(?:video|photo)/(\d{19}))?\S*?"
+    )  # 作品链接
+
+    mix_link = compile(
+        r"\S*?https://www\.tiktok\.com/@\S+/playlist/(.+?)-(\d{19})\?\S*?"
+    )  # 合集链接
+
+    live_link = compile(
+        r"\S*?https://www\.tiktok\.com/@[^\s/]+/live\S*?")  # 直播链接
 
     def __init__(self, params: "Parameter"):
         super().__init__(params)
@@ -146,30 +142,40 @@ class ExtractorTikTok(Extractor):
         urls = await self.requester.run(urls, self.proxy)
         match type_:
             case "detail":
-                return self.detail(urls)
+                return await self.detail(urls)
             case "user":
                 return await self.user(urls)
-            # case "mix":
-            #     return self.mix(urls)
-            # case "live":
-            #     return self.live(urls)
+            case "mix":
+                return await self.mix(urls)
+            case "live":
+                return await self.live(urls)
         raise ValueError
 
-    def detail(self, urls: str, ) -> list[str]:
+    async def detail(self, urls: str, ) -> list[str]:
         return self.__extract_detail(urls)
 
     async def user(self, urls: str, ) -> list[str]:
         link = self.extract_info(self.account_link, urls, 1)
-        link = [await self.__get_sec_uid(i) for i in link]
-        return list(chain((i for i in link if i), ))
+        link = [await self.__get_html_data(i, self.SEC_UID) for i in link]
+        return [i for i in link if i]
 
-    def __extract_detail(self, urls: str, ) -> list[str]:
-        link = self.extract_info(self.detail_link, urls, 1)
-        return list(chain(link, ))
+    def __extract_detail(self, urls: str, index=1, ) -> list[str]:
+        link = self.extract_info(self.detail_link, urls, index)
+        return link
 
-    async def __get_sec_uid(self, url: str) -> str:
+    async def __get_html_data(self, url: str, pattern, index=1, ) -> str:
         html = await self.requester.request_url(url, self.proxy, "text", )
-        return self.__extract_sec_uid(html) if html else ""
+        return m.group(index) if (m := pattern.search(html or "")) else ""
 
-    def __extract_sec_uid(self, html: str) -> str:
-        return m.group(1) if (m := self.secUid.search(html)) else ""
+    async def mix(self, urls: str, ) -> [bool, list[str]]:
+        detail = self.__extract_detail(urls, index=0)
+        detail = [await self.__get_html_data(i, self.MIX_ID) for i in detail]
+        detail = [i for i in detail if i]
+        mix = self.extract_info(self.mix_link, urls, 2)
+        title = [unquote(i) for i in self.extract_info(self.mix_link, urls, 1)]
+        return True, detail + mix, [None for _ in detail] + title
+
+    async def live(self, urls: str, ) -> [bool, list[str]]:
+        link = self.extract_info(self.live_link, urls, 0)
+        link = [await self.__get_html_data(i, self.ROOD_ID) for i in link]
+        return True, [i for i in link if i]

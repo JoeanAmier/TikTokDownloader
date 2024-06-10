@@ -1,18 +1,14 @@
 from asyncio import TimeoutError
 from asyncio import run
-from asyncio import sleep as asleep
 from contextlib import suppress
 from shutil import rmtree
 from threading import Event
 from threading import Thread
-# from typing import Type
-# from webbrowser import open
 from time import sleep
 
 # from typing import Type
 # from webbrowser import open
 from aiohttp import ClientError
-# from flask import Flask
 from flask import abort
 from flask import request
 
@@ -42,7 +38,6 @@ from src.custom import (
 from src.custom import TEXT_REPLACEMENT
 from src.custom import verify_token
 from src.encrypt import XBogus
-from src.interface import APITikTok
 from src.manager import Database
 from src.manager import DownloadRecorder
 from src.module import Cookie
@@ -116,10 +111,10 @@ class TikTokDownloader:
             ("复制粘贴写入 Cookie (TikTok)", self.write_cookie_tiktok),
             ("从浏览器获取 Cookie (TikTok)", self.browser_cookie_tiktok),
             ("终端交互模式", self.complete),
-            ("后台监测模式", self.temporary),
-            ("Web API 模式", self.temporary),
-            ("Web UI 模式", self.temporary),
-            ("服务器部署模式", self.temporary),
+            ("后台监测模式", self.disable_function),
+            ("Web API 模式", self.disable_function),
+            ("Web UI 模式", self.disable_function),
+            ("服务器部署模式", self.disable_function),
             # ("Web API 模式", self.__api_object),
             # ("Web UI 模式", self.__web_ui_object),
             # ("服务器部署模式", self.__server_object),
@@ -132,8 +127,8 @@ class TikTokDownloader:
             }运行日志记录", self.__modify_logging),
         )
 
-    async def temporary(self, *args, **kwargs, ):
-        self.console.print("项目正在重构代码，该功能暂不可用！", style=WARNING)
+    async def disable_function(self, *args, **kwargs, ):
+        self.console.print("该功能暂不开放！", style=WARNING)
 
     # def __api_object(self):
     #     self.server(APIServer, SERVER_HOST)
@@ -316,10 +311,12 @@ class TikTokDownloader:
             **self.settings.read(),
             recorder=self.recorder,
         )
-        self.__set_api_params()
         await self.parameter.check_proxy()
-        self.restart_cycle_task(restart, )
-        await asleep(5)
+        await self.parameter.get_token_params()
+        self.parameter.update_headers_cookie()
+        # TODO: 暂时移除
+        # self.restart_cycle_task(restart, )
+        # await asleep(5)
         if not restart:
             self.default_mode = self.parameter.default_mode.copy()
         self.parameter.cleaner.set_rule(TEXT_REPLACEMENT, True)
@@ -336,8 +333,8 @@ class TikTokDownloader:
         if await self.disclaimer():
             await self.main_menu(safe_pop(self.default_mode))
 
-    def delete_temp(self):
-        rmtree(self.parameter.temp.resolve())
+    def delete_cache(self):
+        rmtree(self.parameter.cache.resolve())
 
     def periodic_update_cookie(self):
         async def inner():
@@ -359,8 +356,8 @@ class TikTokDownloader:
 
     def close(self):
         self.event.set()
-        self.delete_temp()
-        self.parameter.logger.info("程序即将关闭")
+        self.delete_cache()
+        # self.parameter.logger.info("正在关闭程序")
 
     async def browser_cookie(self, ):
         if Browser(self.parameter, self.cookie).run():
@@ -369,7 +366,3 @@ class TikTokDownloader:
     async def browser_cookie_tiktok(self, ):
         if Browser(self.parameter, self.cookie).run(True):
             await self.check_settings()
-
-    def __set_api_params(self):
-        APITikTok.params["region"] = self.parameter.tiktok_region
-        APITikTok.params["device_id"] = self.parameter.device_id

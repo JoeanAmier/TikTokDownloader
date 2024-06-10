@@ -511,24 +511,67 @@ class Extractor:
                            id_: str,
                            mark="",
                            post=True,
-                           mix=False) -> tuple:
+                           mix=False,
+                           tiktok=False,
+                           mix_title=None,
+                           ) -> tuple:
+        if tiktok:
+            params = {
+                "sec_uid": "author.secUid",
+                "mix_id": "playlistId",
+                "uid": "author.id",
+                "nickname": "author.nickname",
+                "mix_name": "playlistId",
+                "mix_title": mix_title,
+            }
+        else:
+            params = {
+                "sec_uid": "author.sec_uid",
+                "mix_id": "mix_info.mix_id",
+                "uid": "author.uid",
+                "nickname": "author.nickname",
+                "mix_name": "mix_info.mix_name",
+                "mix_title": "",
+            }
+        return self.__preprocessing_data(
+            data,
+            id_,
+            mark,
+            post,
+            mix,
+            **params,
+        )
+
+    def __preprocessing_data(self,
+                             data: list[dict],
+                             id_: str,
+                             mark="",
+                             post=True,
+                             mix=False,
+                             sec_uid="",
+                             mix_id="",
+                             uid="",
+                             nickname="",
+                             mix_name="",
+                             mix_title="",
+                             ) -> tuple:
         for item in data:
             item = self.generate_data_object(item)
             if id_ in {
-                self.safe_extract(item, "author.sec_uid"),
-                mid := self.safe_extract(item, "mix_info.mix_id"),
+                self.safe_extract(item, sec_uid),
+                mid := self.safe_extract(item, mix_id),
             }:
                 break
         else:
             raise TikTokDownloaderError("提取账号信息或合集信息失败，请向作者反馈！")
-        id_ = self.safe_extract(item, "author.uid")
+        id_ = self.safe_extract(item, uid)
         name = self.cleaner.filter_name(self.safe_extract(
-            item, "author.nickname", f"账号_{str(time())[:10]}"),
+            item, nickname, f"账号_{str(time())[:10]}"),
             default="无效账号昵称")
-        title = self.cleaner.filter_name(self.safe_extract(
-            item, "mix_info.mix_name", f"合集_{str(time())[:10]}"),
-            inquire=mix,
-            default="无效合集标题")
+        title = self.cleaner.filter_name(mix_title or self.safe_extract(
+            item, mix_name, f"合集_{str(time())[:10]}"),
+                                         inquire=mix,
+                                         default="无效合集标题")
         mark = self.cleaner.filter_name(
             mark, inquire=False, default=title if mix else name)
         return id_, name.strip(), mid, title.strip(
@@ -640,11 +683,16 @@ class Extractor:
     async def __live(
             self,
             data: list[dict],
+            recorder,
             tiktok: bool,
             *args) -> list[dict]:
         container = SimpleNamespace(all_data=[])
-        [self.__extract_live_data(container,
-                                  self.generate_data_object(i)) for i in data]
+        if tiktok:
+            [self.__extract_live_data_tiktok(
+                container, self.generate_data_object(i)) for i in data]
+        else:
+            [self.__extract_live_data(
+                container, self.generate_data_object(i)) for i in data]
         return container.all_data
 
     def __extract_live_data(
@@ -663,6 +711,26 @@ class Extractor:
                      "cover": self.safe_extract(data, "cover.url_list[-1]"),
                      "total_user_str": self.safe_extract(data, "stats.total_user_str"),
                      "user_count_str": self.safe_extract(data, "stats.user_count_str"), }
+        container.all_data.append(live_data)
+
+    def __extract_live_data_tiktok(
+            self,
+            container: SimpleNamespace,
+            data: SimpleNamespace):
+        data = self.safe_extract(data, "data")
+        live_data = {
+            "create_time": datetime.fromtimestamp(t) if (
+                t := self.safe_extract(data, "create_time")) else "未知",
+            "id_str": self.safe_extract(data, "id_str"),
+            "like_count": self.safe_extract(data, "like_count"),
+            "nickname": self.safe_extract(data, "owner.nickname"),
+            "display_id": self.safe_extract(data, "owner.display_id"),
+            "title": self.safe_extract(data, "title"),
+            "user_count": self.safe_extract(data, "user_count"),
+            "flv_pull_url": vars(self.safe_extract(data, "stream_url.flv_pull_url")),
+            "message": self.safe_extract(data, "message"),
+            "prompts": self.safe_extract(data, "prompts"),
+        }
         container.all_data.append(live_data)
 
     async def __user(

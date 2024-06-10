@@ -27,13 +27,14 @@ __all__ = ["API", "APITikTok", ]
 
 class API:
     domain = "https://www.douyin.com/"
+    short_domain = "https://www.iesdouyin.com/"
     referer = f"{domain}?recommend=1"
     params = {
         "device_platform": "webapp",
         "aid": "6383",
         "channel": "channel_pc_web",
-        "pc_client_type": "1",
         "update_version_code": "170400",
+        "pc_client_type": "1",
         "version_code": "290100",
         "version_name": "29.1.0",
         "cookie_enabled": "true",
@@ -51,9 +52,11 @@ class API:
         "cpu_core_num": "16",
         "device_memory": "8",
         "platform": "PC",
-        "downlink": "1.55",
-        "effective_type": "3g",
-        "round_trip_time": "600",
+        "downlink": "10",
+        "effective_type": "4g",
+        "round_trip_time": "200",
+        # "webid": "",
+        "msToken": "",
     }
 
     def __init__(
@@ -289,14 +292,8 @@ class API:
 
     def deal_url_params(self, params: dict, number=8):
         if params:
-            self.add_ms_token(params)
-            params["a_bogus"] = self.ab.get_value(params)
-            # X-Bogus 依旧可用
-            params["X-Bogus"] = self.xb.get_x_bogus(params, number)
-
-    def add_ms_token(self, params: dict):
-        if isinstance(self.cookie, dict) and "msToken" in self.cookie:
-            params["msToken"] = self.cookie["msToken"]
+            params["a_bogus"] = self.ab.get_value(
+                params, self.headers.get("User-Agent", USERAGENT))
 
     def summary_works(self, ) -> None:
         self.log.info(f"共获取到 {len(self.response)} 个{self.text}")
@@ -330,35 +327,39 @@ class API:
 
 class APITikTok(API):
     domain = "https://www.tiktok.com/"
+    short_domain = ""
     referer = domain
     params = {
         "WebIdLastTime": int(time()),
         "aid": "1988",
-        "app_language": "zh-Hans",
+        "app_language": "en",
         "app_name": "tiktok_web",
         "browser_language": "zh-SG",
         "browser_name": "Mozilla",
         "browser_online": "true",
         "browser_platform": "Win32",
-        "browser_version": quote(USERAGENT[8:], safe=""),
+        "browser_version": quote(
+            "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
+            safe=""),
         "channel": "tiktok_web",
         "cookie_enabled": "true",
-        "device_id": "7365710297916884498",
+        "device_id": "",
         "device_platform": "web_pc",
         "focus_state": "true",
         "from_page": "user",
-        "history_len": "2",
+        "history_len": "3",
         "is_fullscreen": "false",
         "is_page_visible": "true",
-        "language": "zh-Hans",
+        "language": "en",
         "os": "windows",
         "priority_region": "CN",
         "referer": "",
-        "region": "SG",
+        "region": "US",
         "screen_height": "864",
         "screen_width": "1536",
         "tz_name": quote("Asia/Shanghai", safe=""),
-        "webcast_language": "zh-Hans",
+        # "userId": "7139490804330333186",
+        "webcast_language": "en",
         "msToken": "",
     }
 
@@ -377,5 +378,6 @@ class APITikTok(API):
 
     def deal_url_params(self, params: dict, number=8):
         if params:
-            self.add_ms_token(params)
-            params["X-Bogus"] = self.xb.get_x_bogus(params, number)
+            params["X-Bogus"] = self.xb.get_x_bogus(
+                params, number, self.headers.get(
+                    "User-Agent", USERAGENT))

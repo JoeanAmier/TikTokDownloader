@@ -1,6 +1,7 @@
 from re import compile
 from typing import TYPE_CHECKING
 
+# from src.custom import PHONE_HEADERS
 from src.custom import wait
 from src.tools import PrivateRetry
 from src.tools import capture_error_request
@@ -25,14 +26,14 @@ class Requester:
             return ""
         result = []
         for i in urls:
-            result.append(await self.request_url(i.group(), proxy))
+            result.append(await self.request_url(u := i.group(), proxy) or u)
             await wait()
         return " ".join(i for i in result if i)
 
     @PrivateRetry.retry
     @capture_error_request
     async def request_url(self, url: str, proxy: str = None, content="url", ) -> str:
-        async with self.session.get(url, proxy=proxy) as response:
+        async with self.session.get(url, proxy=proxy, ) as response:
             match content:
                 case "headers":
                     return response.headers

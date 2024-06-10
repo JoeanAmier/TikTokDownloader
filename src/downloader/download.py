@@ -39,7 +39,7 @@ class Downloader:
 
     def __init__(self, params: "Parameter"):
         self.cleaner = params.cleaner
-        self.session = params.session
+        self.session = params.session_download
         self.headers = params.headers_download
         self.headers_tiktok = params.headers_download_tiktok
         self.log = params.logger
@@ -64,7 +64,7 @@ class Downloader:
         self.recorder = params.recorder
         self.timeout = params.timeout
         self.ffmpeg = params.ffmpeg
-        self.__temp = params.temp
+        self.cache = params.cache
 
     def __general_progress_object(self):
         """文件下载进度条"""
@@ -147,7 +147,7 @@ class Downloader:
         root = self.storage_folder()
         await self.batch_processing(data, root, tiktok=tiktok, )
 
-    async def run_live(self, data: list[tuple]):
+    async def run_live(self, data: list[tuple], tiktok=False, ):
         if not data or not self.download:
             return
         download_tasks = []
@@ -158,7 +158,7 @@ class Downloader:
                 "检测到 ffmpeg，程序将会调用 ffmpeg 下载直播，关闭 TikTokDownloader 不会中断下载！",
                 style=INFO,
             )
-            self.__download_live(download_command)
+            self.__download_live(download_command, tiktok)
         else:
             self.console.print(
                 "未检测到 ffmpeg，程序将会调用内置下载器下载直播，您需要保持 TikTokDownloader 运行直到直播结束！",
@@ -170,7 +170,9 @@ class Downloader:
                 self.__live_progress_object(),
                 semaphore=Semaphore(len(download_tasks)),
                 unknown_size=True,
-                headers=self.headers)
+                headers=self.headers,
+                tiktok=tiktok,
+            )
 
     def generate_live_tasks(
             self, data: list[tuple], tasks: list, commands: list):
@@ -200,10 +202,10 @@ class Downloader:
                 str(actual_root.with_name(f"{actual_root.stem}.mp4").resolve()),
             ))
 
-    def __download_live(self, commands: list):
+    def __download_live(self, commands: list, tiktok: bool, ):
         self.ffmpeg.download(
             commands,
-            self.proxy,
+            self.proxy_tiktok if tiktok else self.proxy,
             self.timeout,
             self.headers["User-Agent"],
         )
@@ -267,9 +269,9 @@ class Downloader:
                          pass_=False) -> tuple[Path, Path]:
         root = self.create_detail_folder(root, name, pass_)
         root.mkdir(exist_ok=True)
-        temp = self.__temp.joinpath(name)
+        cache = self.cache.joinpath(name)
         actual = root.joinpath(name)
-        return temp, actual
+        return cache, actual
 
     async def is_downloaded(self, id_: str) -> bool:
         return await self.recorder.has_ids(id_)
@@ -440,7 +442,7 @@ class Downloader:
 
     async def download_file(
             self,
-            temp: Path,
+            cache: Path,
             actual: Path,
             show: str,
             id_: str,
@@ -451,7 +453,7 @@ class Downloader:
         task_id = progress.add_task(
             show, total=content or None)
         try:
-            with temp.open("wb") as f:
+            with cache.open("wb") as f:
                 async for chunk in response.content.iter_chunked(self.chunk):
                     f.write(chunk)
                     progress.update(task_id, advance=len(chunk))
@@ -461,10 +463,10 @@ class Downloader:
                 StopAsyncIteration,
         ) as e:
             self.log.warning(f"{show} 下载中断，错误信息：{e}")
-            self.delete_file(temp)
+            self.delete_file(cache)
             await self.recorder.delete_id(id_)
             return False
-        self.save_file(temp, actual)
+        self.save_file(cache, actual)
         self.log.info(f"{show} 文件下载成功")
         self.log.info(f"文件路径 {actual.resolve()}", False)
         await self.recorder.update_id(id_)
@@ -521,8 +523,8 @@ class Downloader:
         return root.joinpath(name) if self.folder_mode else root
 
     @staticmethod
-    def save_file(temp: Path, actual: Path):
-        move(temp.resolve(), actual.resolve())
+    def save_file(cache: Path, actual: Path):
+        move(cache.resolve(), actual.resolve())
 
     def delete_file(self, path: Path):
         path.unlink()

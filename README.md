@@ -29,10 +29,12 @@
 * ✅ 持久化保存采集数据
 * ✅ 下载动态/静态封面图
 * ✅ 获取抖音直播推流地址
+* ✅ 获取 TikTok直播推流地址
 * ✅ 调用 ffmpeg 下载直播
 * ✅ Web UI 交互界面
 * ✅ 采集抖音作品评论数据
 * ✅ 批量下载抖音合集作品
+* ✅ 批量下载 TikTok 合集作品
 * ✅ 记录点赞收藏等统计数据
 * ✅ 筛选作品发布时间
 * ✅ 支持账号作品增量下载
@@ -87,8 +89,7 @@
 * 🟡 TikTokDownloader 开发计划及进度可前往 [Projects](https://github.com/users/JoeanAmier/projects/2) 查阅
 * 🔴 请注意，最新源码可能存在一些不稳定的 Bug
 * 🔴 如果在使用过程中发现程序 Bug，请及时告知作者修复
-* 🔴 夜晚无法下载高分辨率视频，疑似抖音服务端限制
-* 🔴 TikTok 平台作品下载功能失效，已修复
+* 🔴 夜晚无法下载抖音高分辨率视频文件，疑似抖音服务端限制
 
 # 📋 项目说明\(Instructions\)
 
@@ -125,7 +126,7 @@
 </ol>
 </li>
 <li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品(通用)</code> -> <code>手动输入待采集的作品链接</code></li>
-<li>输入抖音或 TikTok 作品链接即可下载作品文件</li>
+<li>输入抖音作品链接即可下载作品文件（TikTok 平台需要更多步骤，详见文档）</li>
 <li>更多详细说明请查看 <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">项目文档</a></b></li>
 </ol>
 <p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a>（Windows 11 自带默认终端）</p>

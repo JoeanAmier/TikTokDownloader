@@ -145,5 +145,6 @@ class AccountTikTok(Account, APITikTok, ):
             "secUid": self.sec_user_id,
             "count": self.count,
             "cursor": self.cursor,
-            "coverFormat": "2"
+            "coverFormat": "2",
+            "post_item_list_request_type": "0",
         }

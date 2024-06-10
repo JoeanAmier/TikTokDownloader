@@ -1,7 +1,6 @@
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
-from src.custom import WARNING
 from .template import API
 
 if TYPE_CHECKING:
@@ -51,5 +50,4 @@ class Search(API):
         return self.params
 
     async def run(self, *args, **kwargs):
-        self.console.print("该功能暂不开放！", style=WARNING)
         return self.response

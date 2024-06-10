@@ -25,17 +25,17 @@ class FFMPEG:
         # return None  # 调试使用
         return self.__check_system_ffmpeg() or self.__check_system_ffmpeg(path)
 
-    def download(self, data: list[tuple], proxies, timeout, user_agent):
+    def download(self, data: list[tuple], proxy, timeout, user_agent):
         for u, p in data:
             command = self.__generate_command(
-                u, p, proxies, timeout, user_agent)
+                u, p, proxy, timeout, user_agent)
             Popen(command, shell=self.shell)
 
     def __generate_command(
             self,
             url,
             file,
-            proxies,
+            proxy,
             timeout,
             user_agent) -> str:
         command = self.command.copy()
@@ -58,9 +58,9 @@ class FFMPEG:
             "-max_muxing_queue_size", "64",
             "-correct_ts_overflow", "1",
         ])
-        if proxies:
+        if proxy:
             for insert_index, item in enumerate(
-                    ("-http_proxy", proxies), start=len(self.command) + 2):
+                    ("-http_proxy", proxy), start=len(self.command) + 2):
                 command.insert(insert_index, item)
         command.append(f'"{file}"')
         # print(" ".join(command))  # 调试使用

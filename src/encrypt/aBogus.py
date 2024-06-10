@@ -522,6 +522,7 @@ class ABogus:
                   user_agent: str = USERAGENT,
                   start_time=0,
                   end_time=0,
+                  length=40,
                   random_num_1=None,
                   random_num_2=None,
                   random_num_3=None,
@@ -539,4 +540,4 @@ class ABogus:
         )
         string = string_1 + string_2
         return self.generate_result(
-            string, 40, "s4") + self.generate_result_end(string, "s4")
+            string, length, "s4") + self.generate_result_end(string, "s4")

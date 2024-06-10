@@ -4,6 +4,7 @@ from time import strftime
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 from typing import Type
+from urllib.parse import quote
 
 from aiohttp import ClientError
 from aiohttp.client_exceptions import ClientConnectorError
@@ -21,6 +22,8 @@ from src.encrypt import MsTokenTikTok
 from src.encrypt import TtWid
 from src.encrypt import TtWidTikTok
 from src.extract import Extractor
+from src.interface import API
+from src.interface import APITikTok
 from src.module import FFMPEG
 from src.record import BaseLogger
 from src.record import LoggerManager
@@ -49,39 +52,6 @@ class Parameter:
         "mark",
         "type",
     )
-    mode_values = {
-        "1",
-        "2",
-        "3",
-        "4",
-        "4 1",
-        "4 2",
-        "4 2 1",
-        "4 2 2",
-        "4 2 3",
-        "4 3",
-        "4 3 1",
-        "4 3 2",
-        "4 4",
-        "4 5",
-        "4 5 1",
-        "4 5 2",
-        "4 6",
-        "4 6 1",
-        "4 6 2",
-        "4 6 3",
-        "4 7",
-        "4 7 1",
-        "4 7 2",
-        "4 7 3",
-        "4 8",
-        "4 9",
-        "4 10",
-        "5",
-        "6",
-        "7",
-        "8",
-    }
     cleaner = Cleaner()
 
     def __init__(
@@ -109,9 +79,7 @@ class Parameter:
             original_cover: bool,
             proxy: str | None,
             proxy_tiktok: str | None,
-            tiktok_region: str,
-            tiktok_tw: str,
-            device_id: int | str,
+            twc_tiktok: str,
             download: bool,
             max_size: int,
             chunk: int,
@@ -122,6 +90,8 @@ class Parameter:
             owner_url_tiktok: dict,
             ffmpeg: str,
             recorder: "DownloadRecorder",
+            browser_info: dict,
+            browser_info_tiktok: dict,
             timeout=10,
             update_cookie=True,
             update_cookie_tiktok=True,
@@ -131,9 +101,8 @@ class Parameter:
         self.cookie_object = cookie_object
         self.ROOT = PROJECT_ROOT  # 项目根路径
         self.cache = PROJECT_ROOT.joinpath("cache")  # 缓存路径
-        self.temp = self.cache.joinpath("temp")  # 临时文件路径
         self.headers = DATA_HEADERS
-        self.headers_tiktok = DATA_HEADERS
+        self.headers_tiktok = DATA_HEADERS.copy()
         self.headers_download = DOWNLOAD_HEADERS
         self.headers_download_tiktok = DOWNLOAD_HEADERS_TIKTOK
         self.logger = logger(PROJECT_ROOT, console)
@@ -156,8 +125,6 @@ class Parameter:
         self.timeout = self.__check_timeout(timeout)
         self.proxy = proxy
         self.proxy_tiktok = proxy_tiktok
-        self.tiktok_region = tiktok_region
-        self.device_id = self.__check_device_id(device_id)
         self.download = self.__check_bool(download)
         self.max_size = self.__check_max_size(max_size)
         self.chunk = self.__check_chunk(chunk)
@@ -180,6 +147,7 @@ class Parameter:
         self.preview = BLANK_PREVIEW
         self.ffmpeg = self.__generate_ffmpeg_object(ffmpeg)
         self.session = base_session(timeout=self.timeout)
+        self.session_download = base_session(timeout=self.timeout)
         self.check_rules = {
             "accounts_urls": self.__check_accounts_urls,
             "mix_urls": self.__check_mix_urls,
@@ -210,7 +178,12 @@ class Parameter:
         self.update_cookie_dy = self.__check_bool(update_cookie, True)
         self.update_cookie_tk = self.__check_bool(update_cookie_tiktok, True)
         self.__generate_folders()
-        # self.__update_download_headers()
+        self.__update_download_headers()
+        self.twc_tiktok = twc_tiktok if isinstance(twc_tiktok, str) else ""
+        self.ms_token = ""
+        self.ms_token_tiktok = ""
+        self.__check_browser_info(browser_info)
+        self.__check_browser_info_tiktok(browser_info_tiktok)
 
     @staticmethod
     def __check_bool(value: bool, default=False) -> bool:
@@ -250,12 +223,12 @@ class Parameter:
             tiktok=False) -> None | str:
         if tiktok:
             parameters = (
-                await MsTokenTikTok.get_real_ms_token(
+                await MsTokenTikTok.get_long_ms_token(
                     self.logger, self.proxy_tiktok, ), await TtWidTikTok.get_tt_wid(
-                    self.logger, self.proxy_tiktok, ),)
+                    self.logger, self.proxy_tiktok, self.twc_tiktok, ),)
         else:
             parameters = (
-                await MsToken.get_real_ms_token(
+                await MsToken.get_long_ms_token(
                     self.logger, self.proxy, ), await TtWid.get_tt_wid(
                     self.logger, self.proxy, ),)
         if isinstance(cookie, dict):
@@ -396,14 +369,11 @@ class Parameter:
                 f"storage_format 参数 {storage_format} 设置错误，程序默认不会储存任何数据至文件")
         return ""
 
-    def __check_default_mode(self, default_mode: str) -> list:
-        # TODO: 暂时禁用检查
-        return default_mode.split()[::-1]
-        # if default_mode in self.mode_values:
-        #     return default_mode.split()[::-1]
-        # if default_mode:
-        #     self.logger.warning(f"default_mode 参数 {default_mode} 设置错误")
-        # return []
+    @staticmethod
+    def __check_default_mode(default_mode: str) -> list:
+        if default_mode:
+            return default_mode.split()[::-1]
+        return []
 
     async def update_cookie(self) -> None:
         if self.update_cookie_dy:
@@ -413,6 +383,7 @@ class Parameter:
                 self.cookie,
                 self.cookie_cache,
                 False)
+            API.params["msToken"] = self.cookie.get("msToken")
             self.console.print("抖音 Cookie 参数更新完毕！", style=INFO)
         if self.update_cookie_tk:
             self.console.print("正在更新 TikTok Cookie 参数，请稍等...", style=INFO)
@@ -421,7 +392,8 @@ class Parameter:
                 self.cookie_tiktok,
                 self.cookie_tiktok_cache,
                 True, )
-            self.__update_download_headers()
+            # self.__update_download_headers()
+            APITikTok.params["msToken"] = self.cookie_tiktok.get("msToken")
             self.console.print("TikTok Cookie 参数更新完毕！", style=INFO)
 
     async def __update_cookie(
@@ -436,14 +408,36 @@ class Parameter:
         elif cache:
             headers["Cookie"] = await self.__add_cookie(cache, tiktok, )
 
+    def update_headers_cookie(self, ) -> None:
+        if self.cookie:
+            self.headers["Cookie"] = cookie_dict_to_str(self.cookie)
+        elif self.cookie_cache:
+            self.headers["Cookie"] = self.cookie_cache
+        if self.cookie_tiktok:
+            self.headers_tiktok["Cookie"] = cookie_dict_to_str(
+                self.cookie_tiktok)
+        elif self.cookie_tiktok_cache:
+            self.headers_tiktok["Cookie"] = self.cookie_tiktok_cache
+        API.params["msToken"] = self.cookie.get("msToken", self.ms_token)
+        APITikTok.params["msToken"] = self.cookie_tiktok.get(
+            "msToken", self.ms_token_tiktok)
+
     def __update_download_headers(self):
-        # key = "tt_chain_token"
-        # if tk := self.cookie_tiktok.get(key, ):
-        #     self.headers_download_tiktok["Cookie"] = f"{key}={tk}"
-        # else:
-        #     self.headers_download_tiktok["Cookie"] = self.cookie_tiktok_cache
-        self.headers_download_tiktok["Cookie"] = self.headers_tiktok.get(
-            "Cookie", "")
+        key = "tt_chain_token"
+        if tk := self.cookie_tiktok.get(key, ):
+            self.headers_download_tiktok["Cookie"] = f"{key}={tk}"
+        else:
+            self.headers_download_tiktok["Cookie"] = self.cookie_tiktok_cache
+        # self.headers_download_tiktok["Cookie"] = self.headers_tiktok.get(
+        #     "Cookie", "")
+
+    async def get_token_params(self):
+        if self.update_cookie_dy and not self.cookie.get("msToken"):
+            self.ms_token = m[MsToken.NAME] if (m := await MsToken.get_long_ms_token(
+                self.logger, self.proxy, )) else ""
+        if self.update_cookie_tk and not self.cookie_tiktok.get("msToken"):
+            self.ms_token_tiktok = m[MsTokenTikTok.NAME] if (m := await MsTokenTikTok.get_long_ms_token(
+                self.logger, self.proxy, )) else ""
 
     @staticmethod
     def __generate_ffmpeg_object(ffmpeg_path: str) -> FFMPEG:
@@ -500,7 +494,9 @@ class Parameter:
                         c,
                         False,
                         key=i))
-        await self.update_cookie()
+        # await self.update_cookie()
+        await self.get_token_params()
+        self.update_headers_cookie()
 
     def __check_accounts_urls(self, data: list[dict]) -> list[dict]:
         pass
@@ -513,21 +509,37 @@ class Parameter:
 
     async def close_session(self) -> None:
         await self.session.close()
+        await self.session_download.close()
 
     def __generate_folders(self):
         self.cache.mkdir(exist_ok=True)
-        self.temp.mkdir(exist_ok=True)
 
-    def __check_proxy_tiktok_region(self, region: str) -> str:
-        if region and isinstance(region, str):
-            return region
-        self.logger.warning("proxy_tiktok_region 参数设置错误")
-        return "SG"
+    def __check_browser_info(self, info: dict, ):
+        for i in ("Sec-Ch-Ua", "User-Agent", "Sec-Ch-Ua-Platform",):
+            self.headers[i] = info.get(i, "")
+            self.headers_download[i] = info.get(i, "")
+        for i in (
+                'browser_platform',
+                'browser_name',
+                'browser_version',
+                'engine_name',
+                'engine_version',
+                'os_name',
+                'os_version',
+                # 'webid',
+        ):
+            API.params[i] = info.get(i, "")
 
-    def __check_device_id(self, device_id: int | str) -> int | str:
-        if isinstance(device_id, str):
-            if len(device_id) == 19:
-                return device_id
-            self.logger.warning("device_id 参数未设置或设置错误，TikTok 平台下载功能无法正常使用")
-            return ""
-        return device_id
+    def __check_browser_info_tiktok(self, info: dict, ):
+        for i in ("Sec-Ch-Ua", "User-Agent", "Sec-Ch-Ua-Platform",):
+            self.headers_tiktok[i] = info.get(i, "")
+            self.headers_download_tiktok[i] = info.get(i, "")
+        for i in (
+                'browser_name',
+                'browser_platform',
+                'device_id',
+                'os',
+        ):
+            APITikTok.params[i] = info.get(i, "")
+        APITikTok.params["browser_version"] = quote(
+            info.get("browser_version", ""), safe="")

@@ -72,9 +72,7 @@ class Settings:
         "original_cover": False,
         "proxy": None,
         "proxy_tiktok": None,
-        "tiktok_region": "SG",
-        "tiktok_tw": "",
-        "device_id": "",
+        "twc_tiktok": "",
         "download": True,
         "max_size": 0,
         "chunk": 1024 * 1024,  # 每次从服务器接收的数据块大小
@@ -84,6 +82,32 @@ class Settings:
         "ffmpeg": "",
         "update_cookie": True,
         "update_cookie_tiktok": True,
+        "browser_info": {
+            "Sec-Ch-Ua": '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
+            "Sec-Ch-Ua-Platform": '"Windows"',
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/125.0.0.0 Safari/537.36",
+            "browser_platform": "Win32",
+            "browser_name": "Chrome",
+            "browser_version": "125.0.0.0",
+            "engine_name": "Blink",
+            "engine_version": "125.0.0.0",
+            "os_name": "Windows",
+            "os_version": "10",
+            "webid": "",
+        },
+        "browser_info_tiktok": {
+            "Sec-Ch-Ua": '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
+            "Sec-Ch-Ua-Platform": '"Windows"',
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/125.0.0.0 Safari/537.36",
+            "browser_name": " Mozilla",
+            "browser_platform": "Win32",
+            "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                               "Chrome/125.0.0.0 Safari/537.36",
+            "device_id": "",
+            "os": "windows",
+        }
     }  # 默认配置
 
     def __init__(self, root: "Path", console: "ColorfulConsole"):

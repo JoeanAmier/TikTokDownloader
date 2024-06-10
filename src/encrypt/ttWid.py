@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from src.custom import PARAMS_HEADERS
-from src.custom import WID_COOKIE
 from src.testers import Logger
 from src.tools import request_post
 
@@ -48,11 +47,14 @@ class TtWidTikTok(TtWid):
         '"migrate_priority":0}')
 
     @classmethod
-    async def get_tt_wid(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                         proxy: str = None, ) -> dict | None:
+    async def get_tt_wid(cls,
+                         logger: Union["BaseLogger", "LoggerManager", "Logger"],
+                         proxy: str = None,
+                         cookie: str = "",
+                         ) -> dict | None:
         if response := await request_post(logger, cls.API, cls.DATA, headers=PARAMS_HEADERS | {
-            "Cookie": WID_COOKIE,
-            "Content-Type": "text/plain",
+            "Cookie": cookie,
+            "Content-Type": "application/x-www-form-urlencoded",
         }, proxy=proxy):
             return cls.extract(logger, response, cls.NAME)
         logger.error(f"获取 {cls.NAME} 参数失败！")

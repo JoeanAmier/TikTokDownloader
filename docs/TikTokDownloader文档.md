@@ -333,6 +333,26 @@ https://www.douyin.com/note/123456789
 <td align="center">TikTok 请求代理地址, 设置为空字符串代表不使用代理</td>
 </tr>
 <tr>
+<td align="center">region_tiktok</td>
+<td align="center">str</td>
+<td align="center">TikTok 平台地区代码</td>
+</tr>
+<tr>
+<td align="center">twc_tiktok</td>
+<td align="center">str</td>
+<td align="center">TikTok 参数 Cookie</td>
+</tr>
+<tr>
+<td align="center">device_id_tiktok</td>
+<td align="center">str</td>
+<td align="center">TikTok 平台设备 ID</td>
+</tr>
+<tr>
+<td align="center">device_id（未使用）</td>
+<td align="center">str</td>
+<td align="center">抖音平台设备 ID</td>
+</tr>
+<tr>
 <td align="center">download</td>
 <td align="center">bool</td>
 <td align="center">是否打开下载功能, 如果关闭, 程序将不会下载任何文件; 默认值: <code>true</code></td>
@@ -375,7 +395,7 @@ https://www.douyin.com/note/123456789
 <tr>
 <td align="center">update_cookie_tiktok</td>
 <td align="center">bool</td>
-<td align="center">是否启用自动更新 TikTok Cookie 参数功能，默认值: <code>true</code></td>
+<td align="center">是否启用自动更新 TikTok Cookie 参数功能，默认值: <code>false</code></td>
 </tr>
 </tbody></table>
 <h2>配置示例</h2>

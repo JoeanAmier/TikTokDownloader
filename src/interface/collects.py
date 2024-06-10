@@ -152,7 +152,6 @@ class CollectsMix(API):
         return self.params | {
             "cursor": self.cursor,
             "count": self.count,
-            "update_version_code": "170400",
             "version_code": "170400",
             "version_name": "17.4.0",
         }

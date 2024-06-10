@@ -24,9 +24,9 @@ from .internal import (
     DATA_HEADERS,
     PARAMS_HEADERS,
     DOWNLOAD_HEADERS,
-    WID_COOKIE,
     QRCODE_HEADERS,
     DOWNLOAD_HEADERS_TIKTOK,
+    PHONE_HEADERS,
 )
 from .static import (
     MAX_WORKERS,
@@ -76,7 +76,6 @@ __all__ = [
     "USERAGENT",
     "DISCLAIMER_TEXT",
     "BLANK_PREVIEW",
-    "WID_COOKIE",
     "TIMEOUT",
     "PROJECT_NAME",
     "PARAMS_HEADERS",
@@ -84,4 +83,5 @@ __all__ = [
     "QRCODE_HEADERS",
     "DOWNLOAD_HEADERS_TIKTOK",
     "DOWNLOAD_HEADERS",
+    "PHONE_HEADERS",
 ]

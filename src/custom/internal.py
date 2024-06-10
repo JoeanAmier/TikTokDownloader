@@ -17,10 +17,10 @@ __all__ = [
     "PROJECT_NAME",
     "PARAMS_HEADERS",
     "DATA_HEADERS",
-    "WID_COOKIE",
     "DOWNLOAD_HEADERS",
     "QRCODE_HEADERS",
     "DOWNLOAD_HEADERS_TIKTOK",
+    "PHONE_HEADERS",
 ]
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -54,21 +54,25 @@ DISCLAIMER_TEXT = (
 RETRY = 5
 TIMEOUT = 10
 
+PHONE_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) "
+                  "CriOS/125.0.6422.51 Mobile/15E148 Safari/604.1", }
 USERAGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 "
     "Safari/537.36")
 SEC_CH_UA = '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"'
+SEC_CH_UA_PLATFORM = '"Windows"'
 PARAMS_HEADERS = {
     "Accept": "*/*",
     "Accept-Encoding": "gzip, deflate, br, zstd",
-    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
     "Content-Type": "text/plain;charset=UTF-8",
     "Dnt": "1",
     "Origin": "https://www.douyin.com",
     "Referer": "https://www.douyin.com/",
     "Sec-Ch-Ua": SEC_CH_UA,
     "Sec-Ch-Ua-Mobile": "?0",
-    "Sec-Ch-Ua-Platform": "\"Windows\"",
+    "Sec-Ch-Ua-Platform": SEC_CH_UA_PLATFORM,
     "Sec-Fetch-Dest": "empty",
     "Sec-Fetch-Mode": "cors",
     "Sec-Fetch-Site": "cross-site",
@@ -77,12 +81,12 @@ PARAMS_HEADERS = {
 DATA_HEADERS = {
     "Accept": "application/json, text/plain, */*",
     "Accept-Encoding": "gzip, deflate, br, zstd",
-    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8",
+    "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
     "Dnt": "1",
     "Referer": "https://www.douyin.com/?recommend=1",
     "Sec-Ch-Ua": SEC_CH_UA,
     "Sec-Ch-Ua-Mobile": "?0",
-    "Sec-Ch-Ua-Platform": "\"Windows\"",
+    "Sec-Ch-Ua-Platform": SEC_CH_UA_PLATFORM,
     "Sec-Fetch-Dest": "empty",
     "Sec-Fetch-Mode": "cors",
     "Sec-Fetch-Site": "same-origin",
@@ -90,7 +94,7 @@ DATA_HEADERS = {
 }
 DOWNLOAD_HEADERS = {
     'Accept': '*/*',
-    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+    'Accept-Language': 'zh-SG,zh-CN;q=0.9,zh;q=0.8',
     'Dnt': '1',
     'Origin': 'https://www.douyin.com',
     'Priority': 'i',
@@ -98,7 +102,7 @@ DOWNLOAD_HEADERS = {
     'Referer': 'https://www.douyin.com/',
     'Sec-Ch-Ua': SEC_CH_UA,
     'Sec-Ch-Ua-Mobile': '?0',
-    'Sec-Ch-Ua-Platform': '"Windows"',
+    'Sec-Ch-Ua-Platform': SEC_CH_UA_PLATFORM,
     # 'Sec-Fetch-Dest': 'video',
     'Sec-Fetch-Mode': 'cors',
     'Sec-Fetch-Site': 'cross-site',
@@ -115,7 +119,7 @@ DOWNLOAD_HEADERS_TIKTOK = {
     "Referer": "https://www.tiktok.com/",
     "Sec-Ch-Ua": SEC_CH_UA,
     "Sec-Ch-Ua-Mobile": "?0",
-    "Sec-Ch-Ua-Platform": "\"Windows\"",
+    "Sec-Ch-Ua-Platform": SEC_CH_UA_PLATFORM,
     # "Sec-Fetch-Dest": "video",
     "Sec-Fetch-Mode": "no-cors",
     "Sec-Fetch-Site": "same-site",
@@ -124,20 +128,17 @@ DOWNLOAD_HEADERS_TIKTOK = {
 QRCODE_HEADERS = {
     "Accept": "application/json, text/javascript",
     "Accept-Encoding": "gzip, deflate, br, zstd",
-    "Accept-Language": "zh-CN,zh;q=0.9",
+    "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
     "Dnt": "1",
     "Origin": "https://www.douyin.com",
     "Referer": "https://www.douyin.com/",
     "Sec-Ch-Ua": SEC_CH_UA,
     "Sec-Ch-Ua-Mobile": "?0",
-    "Sec-Ch-Ua-Platform": "\"Windows\"",
+    "Sec-Ch-Ua-Platform": SEC_CH_UA_PLATFORM,
     "Sec-Fetch-Dest": "empty",
     "Sec-Fetch-Mode": "cors",
     "Sec-Fetch-Site": "same-site",
     "User-Agent": USERAGENT,
 }
-WID_COOKIE = (
-    "ttwid=1%7ClbU5LydubbFYMMy-Awb01FuJsgDO4sKIuVphLlfWyEw%7C1717906488"
-    "%7C84cc5b5937828f23c2636720ada4bf41af6d52cb22dd4f19245f1daa6b397296")
 
 BLANK_PREVIEW = "static/images/blank.png"
