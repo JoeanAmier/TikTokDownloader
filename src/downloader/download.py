@@ -7,7 +7,8 @@ from time import time
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
-from aiohttp import ClientError
+from httpx import RequestError
+from httpx import StreamError
 from rich.progress import (
     SpinnerColumn,
     BarColumn,
@@ -38,8 +39,9 @@ class Downloader:
     semaphore = Semaphore(MAX_WORKERS)
 
     def __init__(self, params: "Parameter"):
-        self.cleaner = params.cleaner
-        self.session = params.session_download
+        self.cleaner = params.CLEANER
+        self.client = params.client
+        self.client_tiktok = params.client_tiktok
         self.headers = params.headers_download
         self.headers_tiktok = params.headers_download_tiktok
         self.log = params.logger
@@ -55,8 +57,8 @@ class Downloader:
         self.original = params.original_cover
         # self.cookie = params.cookie
         # self.cookie_tiktok = params.cookie_tiktok
-        self.proxy = params.proxy
-        self.proxy_tiktok = params.proxy_tiktok
+        self.proxy = params.proxy_str
+        self.proxy_tiktok = params.proxy_str_tiktok
         self.download = params.download
         self.max_size = params.max_size
         self.chunk = params.chunk
@@ -222,8 +224,7 @@ class Downloader:
             skipped_video=set()
         )
         tasks = []
-        # TODO: 调试代码，待修改
-        for item in data[:1]:
+        for item in data:
             item["desc"] = item["desc"][:DESCRIPTION_LENGTH]
             name = self.generate_detail_name(item)
             temp_root, actual_root = self.deal_folder_path(root, name)
@@ -408,10 +409,11 @@ class Downloader:
             semaphore: Semaphore = None,
     ) -> bool:
         async with semaphore or self.semaphore:
+            client = self.client_tiktok if tiktok else self.client
             try:
-                async with self.session.get(
+                async with client.stream(
+                        "GET",
                         url,
-                        proxy=self.proxy_tiktok if tiktok else self.proxy,
                         headers=self.__adapter_headers(headers, tiktok, ), ) as response:
                     if not (
                             content := int(
@@ -420,9 +422,9 @@ class Downloader:
                                     0))) and not unknown_size:  # 响应内容大小判断
                         self.log.warning(f"{url} 响应内容为空")
                         return False
-                    if response.status > 400:  # 响应码判断
+                    if response.status_code >= 400:  # 响应码判断
                         self.log.warning(
-                            f"{response.url} 响应码异常: {response.status}")
+                            f"{response.url} 响应码异常: {response.status_code}")
                         return False
                     elif all((self.max_size, content, content > self.max_size)):  # 文件下载跳过判断
                         self.log.info(f"{show} 文件大小超出限制，跳过下载")
@@ -436,7 +438,7 @@ class Downloader:
                         content,
                         count,
                         progress)
-            except ClientError as e:
+            except RequestError as e:
                 self.log.warning(f"网络异常: {e}")
                 return False
 
@@ -454,13 +456,13 @@ class Downloader:
             show, total=content or None)
         try:
             with cache.open("wb") as f:
-                async for chunk in response.content.iter_chunked(self.chunk):
+                async for chunk in response.aiter_bytes(self.chunk):
                     f.write(chunk)
                     progress.update(task_id, advance=len(chunk))
                 progress.remove_task(task_id)
         except (
-                ClientError,
-                StopAsyncIteration,
+                RequestError,
+                StreamError,
         ) as e:
             self.log.warning(f"{show} 下载中断，错误信息：{e}")
             self.delete_file(cache)

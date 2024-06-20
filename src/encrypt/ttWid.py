@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from src.custom import PARAMS_HEADERS
+from src.custom import PARAMS_HEADERS_TIKTOK
 from src.testers import Logger
 from src.tools import request_post
 
@@ -23,8 +24,9 @@ class TtWid:
 
     @classmethod
     async def get_tt_wid(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                         proxy: str = None, ) -> dict | None:
-        if response := await request_post(logger, cls.API, cls.DATA, headers=PARAMS_HEADERS, proxy=proxy):
+                         headers: dict,
+                         **kwargs, ) -> dict | None:
+        if response := await request_post(logger, cls.API, cls.DATA, headers=headers, **kwargs, ):
             return cls.extract(logger, response, cls.NAME)
         logger.error(f"获取 {cls.NAME} 参数失败！")
 
@@ -49,20 +51,24 @@ class TtWidTikTok(TtWid):
     @classmethod
     async def get_tt_wid(cls,
                          logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                         proxy: str = None,
+                         headers: dict,
                          cookie: str = "",
+                         **kwargs,
                          ) -> dict | None:
-        if response := await request_post(logger, cls.API, cls.DATA, headers=PARAMS_HEADERS | {
+        if response := await request_post(logger, cls.API, cls.DATA, headers=headers | {
             "Cookie": cookie,
             "Content-Type": "application/x-www-form-urlencoded",
-        }, proxy=proxy):
+        }, **kwargs, ):
             return cls.extract(logger, response, cls.NAME)
         logger.error(f"获取 {cls.NAME} 参数失败！")
 
 
 async def demo():
-    print("抖音", await TtWid.get_tt_wid(Logger()))
-    print("TikTok", await TtWidTikTok.get_tt_wid(Logger(), "http://localhost:10809"))
+    print("抖音", await TtWid.get_tt_wid(Logger(), PARAMS_HEADERS, proxies={"http://": None, "https://": None}))
+    print("TikTok",
+          await TtWidTikTok.get_tt_wid(Logger(), PARAMS_HEADERS_TIKTOK,
+                                       cookie="",
+                                       proxy="http://localhost:10809"))
 
 
 if __name__ == "__main__":

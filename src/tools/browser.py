@@ -41,9 +41,11 @@ class Browser:
         safari)
     platform = {
         False: SimpleNamespace(
+            name="抖音",
             domain=("douyin.com",),
             key="cookie"),
         True: SimpleNamespace(
+            name="TikTok",
             domain=("tiktok.com",),
             key="cookie_tiktok"),
     }
@@ -54,7 +56,7 @@ class Browser:
 
     def run(self, tiktok=False):
         browser = self.console.input(
-            "自动读取指定浏览器的 Cookie 并写入配置文件\n"
+            f"自动读取指定浏览器的 {self.platform[tiktok].name} Cookie 并写入配置文件\n"
             "支持浏览器：1 Chrome, 2 Chromium, 3 Opera, 4 Opera GX, 5 Brave, 6 Edge, 7 Vivaldi, 8 Firefox, 9 LibreWolf, "
             "10 Safari\n"
             "请关闭所有浏览器，然后输入浏览器序号：")

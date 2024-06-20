@@ -497,7 +497,7 @@ class TikTok:
             addition,
         )
         await self.download_account_detail(
-            data, id_, name, mark, mid, title, addition)
+            data, id_, name, mark, mid, title, addition, tiktok, )
         return True
 
     def __display_extracted_information(
@@ -521,10 +521,12 @@ class TikTok:
             mid: str = None,
             title: str = None,
             addition: str = None,
+            tiktok: bool = False,
     ):
         await self.downloader.run(
             data,
             "batch",
+            tiktok,
             id_=id_,
             name=name,
             mark=mark,
@@ -927,6 +929,7 @@ class TikTok:
                     logger,
                     mix_id,
                     i,
+                    num=index,
                     tiktok=tiktok,
                     mix_title=mix_title_map[index - 1] if mix_title_map else None,
             ):

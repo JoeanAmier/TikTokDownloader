@@ -1,16 +1,13 @@
-from asyncio import TimeoutError
 from asyncio import run
+from asyncio import sleep as asleep
 from contextlib import suppress
 from shutil import rmtree
 from threading import Event
 from threading import Thread
 from time import sleep
 
-# from typing import Type
-# from webbrowser import open
-from aiohttp import ClientError
-from flask import abort
-from flask import request
+from httpx import RequestError
+from httpx import get
 
 from src.config import Parameter
 from src.config import Settings
@@ -36,8 +33,6 @@ from src.custom import (
 # from src.custom import SERVER_HOST
 # from src.custom import SERVER_PORT
 from src.custom import TEXT_REPLACEMENT
-from src.custom import verify_token
-from src.encrypt import XBogus
 from src.manager import Database
 from src.manager import DownloadRecorder
 from src.module import Cookie
@@ -50,6 +45,11 @@ from src.tools import choose
 from src.tools import safe_pop
 # from .main_api_server import APIServer
 from .main_complete import TikTok
+
+# from typing import Type
+# from webbrowser import open
+# from flask import abort
+# from flask import request
 
 # from .main_server import Server
 # from .main_web_UI import WebUI
@@ -74,7 +74,6 @@ class TikTokDownloader:
         self.console = ColorfulConsole()
         self.logger = None
         self.recorder = None
-        self.x_bogus = XBogus()
         self.settings = Settings(PROJECT_ROOT, self.console)
         self.event = Event()
         self.cookie = Cookie(self.settings, self.console)
@@ -100,7 +99,7 @@ class TikTokDownloader:
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.database.__aexit__(exc_type, exc_val, exc_tb)
-        await self.parameter.close_session()
+        await self.parameter.close_client()
         self.close()
 
     def __update_menu(self):
@@ -174,26 +173,28 @@ class TikTokDownloader:
             self.console, )
         self.logger = {1: LoggerManager, 0: BaseLogger}[self.config["Logger"]]
 
-    async def check_update(self):
+    def check_update(self):
         if not self.config["Update"]:
             return
         try:
-            async with self.parameter.session.get(RELEASES, timeout=5) as response:
-                latest_major, latest_minor = map(
-                    int, str(response.url).split("/")[-1].split(".", 1))
-                if latest_major > VERSION_MAJOR or latest_minor > VERSION_MINOR:
-                    self.console.print(
-                        f"检测到新版本: {latest_major}.{latest_minor}", style=WARNING)
-                    self.console.print(RELEASES)
-                elif latest_minor == VERSION_MINOR and VERSION_BETA:
-                    self.console.print(
-                        "当前版本为开发版, 可更新至正式版", style=WARNING)
-                    self.console.print(RELEASES)
-                elif VERSION_BETA:
-                    self.console.print("当前已是最新开发版", style=WARNING)
-                else:
-                    self.console.print("当前已是最新正式版", style=INFO)
-        except (ClientError, TimeoutError,):
+            response = get(RELEASES, timeout=5, follow_redirects=True, )
+            latest_major, latest_minor = map(
+                int, str(response.url).split("/")[-1].split(".", 1))
+            if latest_major > VERSION_MAJOR or latest_minor > VERSION_MINOR:
+                self.console.print(
+                    f"检测到新版本: {latest_major}.{latest_minor}", style=WARNING)
+                self.console.print(RELEASES)
+            elif latest_minor == VERSION_MINOR and VERSION_BETA:
+                self.console.print(
+                    "当前版本为开发版, 可更新至正式版", style=WARNING)
+                self.console.print(RELEASES)
+            elif VERSION_BETA:
+                self.console.print("当前已是最新开发版", style=WARNING)
+            else:
+                self.console.print("当前已是最新正式版", style=INFO)
+        except (
+                RequestError,
+        ):
             self.console.print("检测新版本失败", style=ERROR)
         self.console.print()
 
@@ -242,11 +243,11 @@ class TikTokDownloader:
     #     open(f"http://127.0.0.1:{SERVER_PORT}")
     #     app.run(host=host, port=SERVER_PORT)
 
-    @staticmethod
-    def verify_token():
-        if request.method == "POST" and not verify_token(
-                request.json.get("token")):
-            return abort(403)
+    # @staticmethod
+    # def verify_token():
+    #     if request.method == "POST" and not verify_token(
+    #             request.json.get("token")):
+    #         return abort(403)
 
     async def change_config(self, key: str, ):
         self.config[key] = 0 if self.config[key] else 1
@@ -265,7 +266,7 @@ class TikTokDownloader:
         self.console.print(
             "Cookie 获取教程：https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6"
             "%95%99%E7%A8%8B.md")
-        if self.cookie.run(self.PLATFORM[index]):
+        if self.cookie.run(self.PLATFORM[index], index):
             await self.check_settings()
             # await self.parameter.update_cookie()
 
@@ -301,35 +302,28 @@ class TikTokDownloader:
 
     async def check_settings(self, restart=True):
         if restart:
-            await self.parameter.close_session()
+            await self.parameter.close_client()
         self.parameter = Parameter(
             self.settings,
             self.cookie,
             logger=self.logger,
-            xb=self.x_bogus,
             console=self.console,
             **self.settings.read(),
             recorder=self.recorder,
         )
-        await self.parameter.check_proxy()
-        await self.parameter.get_token_params()
-        self.parameter.update_headers_cookie()
-        # TODO: 暂时移除
-        # self.restart_cycle_task(restart, )
-        # await asleep(5)
+        # await self.parameter.get_token_params()
+        # self.parameter.set_headers_cookie()
+        self.restart_cycle_task(restart, )
+        await asleep(5)
         if not restart:
             self.default_mode = self.parameter.default_mode.copy()
-        self.parameter.cleaner.set_rule(TEXT_REPLACEMENT, True)
+        self.parameter.CLEANER.set_rule(TEXT_REPLACEMENT, True)
 
     async def run(self):
         self.project_info()
-        self.console.print(
-            "注意：本项目正在重构代码，功能尚不稳定，不适合日常使用！\n",
-            style=ERROR,
-        )  # 正式发布后移除该提示
         self.check_config()
         await self.check_settings(False, )
-        await self.check_update()
+        self.check_update()
         if await self.disclaimer():
             await self.main_menu(safe_pop(self.default_mode))
 
@@ -357,7 +351,7 @@ class TikTokDownloader:
     def close(self):
         self.event.set()
         self.delete_cache()
-        # self.parameter.logger.info("正在关闭程序")
+        self.parameter.logger.info("正在关闭程序")
 
     async def browser_cookie(self, ):
         if Browser(self.parameter, self.cookie).run():

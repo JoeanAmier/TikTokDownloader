@@ -35,9 +35,8 @@ class DetailTikTok(APITikTok):
                   has_more=None,
                   params: Callable = lambda: {},
                   data: Callable = lambda: {},
-                  method="get",
+                  method="GET",
                   headers: dict = None,
-                  proxy: str = None,
                   *args,
                   **kwargs,
                   ):
@@ -52,7 +51,6 @@ class DetailTikTok(APITikTok):
             data,
             method,
             headers,
-            proxy,
             *args,
             **kwargs,
         )

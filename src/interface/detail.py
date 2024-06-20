@@ -37,9 +37,8 @@ class Detail(API):
                   has_more="has_more",
                   params: Callable = lambda: {},
                   data: Callable = lambda: {},
-                  method="get",
+                  method="GET",
                   headers: dict = None,
-                  proxy: str = None,
                   *args,
                   **kwargs,
                   ):
@@ -54,7 +53,6 @@ class Detail(API):
             data,
             method,
             headers,
-            proxy,
             *args,
             **kwargs,
         )

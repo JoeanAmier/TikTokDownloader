@@ -48,13 +48,13 @@ class Extractor:
     channel_link = compile(
         r"\S*?https://www\.douyin\.com/channel/\d+?\?modal_id=(\d{19})\S*?")
 
-    def __init__(self, params: "Parameter"):
-        self.requester = Requester(params)
-        self.proxy = params.proxy
+    def __init__(self, params: "Parameter", tiktok=False, ):
+        self.client = params.client_tiktok if tiktok else params.client
+        self.requester = Requester(params, self.client, )
 
     async def run(self, urls: str,
                   type_="detail") -> Union[list[str], tuple[bool, list[str]]]:
-        urls = await self.requester.run(urls, self.proxy)
+        urls = await self.requester.run(urls, )
         match type_:
             case "detail":
                 return self.detail(urls)
@@ -134,12 +134,11 @@ class ExtractorTikTok(Extractor):
         r"\S*?https://www\.tiktok\.com/@[^\s/]+/live\S*?")  # 直播链接
 
     def __init__(self, params: "Parameter"):
-        super().__init__(params)
-        self.proxy = params.proxy_tiktok
+        super().__init__(params, True, )
 
     async def run(self, urls: str,
                   type_="detail") -> Union[list[str], tuple[bool, list[str]]]:
-        urls = await self.requester.run(urls, self.proxy)
+        urls = await self.requester.run(urls, )
         match type_:
             case "detail":
                 return await self.detail(urls)
@@ -164,7 +163,7 @@ class ExtractorTikTok(Extractor):
         return link
 
     async def __get_html_data(self, url: str, pattern, index=1, ) -> str:
-        html = await self.requester.request_url(url, self.proxy, "text", )
+        html = await self.requester.request_url(url, "text", )
         return m.group(index) if (m := pattern.search(html or "")) else ""
 
     async def mix(self, urls: str, ) -> [bool, list[str]]:

@@ -40,7 +40,7 @@ class Info(API):
             "",
             params=self.static_params,
             data=self.__generate_data,
-            method="post",
+            method="POST",
         )
 
     def check_response(self, data_dict: dict, *args, **kwargs, ):

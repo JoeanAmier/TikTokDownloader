@@ -53,9 +53,8 @@ class Account(API):
                   has_more="has_more",
                   params: Callable = lambda: {},
                   data: Callable = lambda: {},
-                  method="get",
+                  method="GET",
                   headers: dict = None,
-                  proxy: str = None,
                   *args,
                   **kwargs, ):
         if self.favorite:
@@ -74,7 +73,6 @@ class Account(API):
                     data,
                     method,
                     headers,
-                    proxy,
                     *args,
                     **kwargs,
                 )
@@ -89,7 +87,6 @@ class Account(API):
                     data,
                     method,
                     headers,
-                    proxy,
                     *args,
                     **kwargs,
                 )
@@ -103,9 +100,8 @@ class Account(API):
                          has_more="has_more",
                          params: Callable = lambda: {},
                          data: Callable = lambda: {},
-                         method="get",
+                         method="GET",
                          headers: dict = None,
-                         proxy: str = None,
                          *args,
                          **kwargs,
                          ):
@@ -118,7 +114,6 @@ class Account(API):
             data,
             method,
             headers,
-            proxy,
             *args,
             **kwargs,
         )
@@ -130,9 +125,8 @@ class Account(API):
                         has_more="has_more",
                         params: Callable = lambda: {},
                         data: Callable = lambda: {},
-                        method="get",
+                        method="GET",
                         headers: dict = None,
-                        proxy: str = None,
                         callback: Type[Coroutine] = None,
                         *args,
                         **kwargs,
@@ -146,7 +140,6 @@ class Account(API):
             data,
             method,
             headers,
-            proxy,
             callback=callback or self.early_stop,
             *args,
             **kwargs,

@@ -18,6 +18,7 @@ from .info import Info
 from .live import Live
 from .live_tiktok import LiveTikTok
 from .mix import Mix
+from .mix_tiktok import MixListTikTok
 from .mix_tiktok import MixTikTok
 from .search import Search
 from .template import API
@@ -50,4 +51,5 @@ __all__ = [
     "API",
     # "CommentTikTok",
     # "ReplyTikTok",
+    "MixListTikTok",
 ]

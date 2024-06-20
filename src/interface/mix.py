@@ -51,9 +51,8 @@ class Mix(API):
                   has_more="has_more",
                   params: Callable = lambda: {},
                   data: Callable = lambda: {},
-                  method="get",
+                  method="GET",
                   headers: dict = None,
-                  proxy: str = None,
                   *args,
                   **kwargs,
                   ):
@@ -72,7 +71,6 @@ class Mix(API):
             data,
             method,
             headers,
-            proxy,
             *args,
             **kwargs,
         )

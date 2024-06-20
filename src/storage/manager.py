@@ -214,7 +214,7 @@ class RecordManager:
             type_="detail",
             blank=False, ):
         root = parameter.root.joinpath(
-            parameter.cleaner.filter_name(folder, False, "Data"))
+            parameter.CLEANER.filter_name(folder, False, "Data"))
         root.mkdir(exist_ok=True)
         params = self.LoggerParams[type_]
         logger = BaseTextLogger if blank else self.DataLogger.get(

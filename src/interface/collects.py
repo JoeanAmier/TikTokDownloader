@@ -48,9 +48,8 @@ class Collects(API):
                   has_more="has_more",
                   params: Callable = lambda: {},
                   data: Callable = lambda: {},
-                  method="get",
+                  method="GET",
                   headers: dict = None,
-                  proxy: str = None,
                   *args,
                   **kwargs,
                   ):
@@ -65,7 +64,6 @@ class Collects(API):
             data,
             method,
             headers,
-            proxy,
             *args,
             **kwargs,
         )
@@ -109,9 +107,8 @@ class CollectsDetail(API):
                   has_more="has_more",
                   params: Callable = lambda: {},
                   data: Callable = lambda: {},
-                  method="get",
+                  method="GET",
                   headers: dict = None,
-                  proxy: str = None,
                   *args,
                   **kwargs,
                   ):
@@ -126,7 +123,6 @@ class CollectsDetail(API):
             data,
             method,
             headers,
-            proxy,
             *args,
             **kwargs,
         )
@@ -165,7 +161,7 @@ class CollectsMix(API):
                   has_more="has_more",
                   params: Callable = lambda: {},
                   data: Callable = lambda: {},
-                  method="get",
+                  method="GET",
                   headers: dict = None,
                   proxy: str = None,
                   *args,
@@ -213,9 +209,8 @@ class CollectsSeries(CollectsMix):
                   has_more="has_more",
                   params: Callable = lambda: {},
                   data: Callable = lambda: {},
-                  method="get",
+                  method="GET",
                   headers: dict = None,
-                  proxy: str = None,
                   *args,
                   **kwargs,
                   ):
@@ -230,7 +225,6 @@ class CollectsSeries(CollectsMix):
             data,
             method,
             headers,
-            proxy,
             *args,
             **kwargs,
         )
@@ -261,9 +255,8 @@ class CollectsMusic(CollectsMix):
                   has_more="has_more",
                   params: Callable = lambda: {},
                   data: Callable = lambda: {},
-                  method="get",
+                  method="GET",
                   headers: dict = None,
-                  proxy: str = None,
                   *args,
                   **kwargs,
                   ):
@@ -278,7 +271,6 @@ class CollectsMusic(CollectsMix):
             data,
             method,
             headers,
-            proxy,
             *args,
             **kwargs,
         )

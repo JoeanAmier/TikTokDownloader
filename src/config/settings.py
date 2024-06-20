@@ -70,8 +70,14 @@ class Settings:
         "cookie_tiktok": "",
         "dynamic_cover": False,
         "original_cover": False,
-        "proxy": None,
-        "proxy_tiktok": None,
+        "proxy": {
+            "http://": None,
+            "https://": None,
+        },
+        "proxy_tiktok": {
+            "http://": None,
+            "https://": None,
+        },
         "twc_tiktok": "",
         "download": True,
         "max_size": 0,
@@ -83,30 +89,31 @@ class Settings:
         "update_cookie": True,
         "update_cookie_tiktok": True,
         "browser_info": {
-            "Sec-Ch-Ua": '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
+            "Sec-Ch-Ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
             "Sec-Ch-Ua-Platform": '"Windows"',
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                          "Chrome/125.0.0.0 Safari/537.36",
+                          "Chrome/126.0.0.0 Safari/537.36",
             "browser_platform": "Win32",
             "browser_name": "Chrome",
-            "browser_version": "125.0.0.0",
+            "browser_version": "126.0.0.0",
             "engine_name": "Blink",
-            "engine_version": "125.0.0.0",
+            "engine_version": "126.0.0.0",
             "os_name": "Windows",
             "os_version": "10",
             "webid": "",
         },
         "browser_info_tiktok": {
-            "Sec-Ch-Ua": '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"',
+            "Sec-Ch-Ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
             "Sec-Ch-Ua-Platform": '"Windows"',
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                          "Chrome/125.0.0.0 Safari/537.36",
-            "browser_name": " Mozilla",
+                          "Chrome/126.0.0.0 Safari/537.36",
+            "browser_name": "Mozilla",
             "browser_platform": "Win32",
             "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                               "Chrome/125.0.0.0 Safari/537.36",
+                               "Chrome/126.0.0.0 Safari/537.36",
             "device_id": "",
             "os": "windows",
+            "tz_name": "Asia/Shanghai",
         }
     }  # 默认配置
 

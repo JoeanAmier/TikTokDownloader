@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from src.custom import PARAMS_HEADERS
+from src.custom import PARAMS_HEADERS_TIKTOK
 from src.encrypt.ttWid import TtWid
 from src.encrypt.xBogus import XBogusTikTok
 from src.testers import Logger
@@ -23,7 +24,6 @@ __all__ = ["MsToken", "MsTokenTikTok"]
 
 class MsToken:
     NAME = "msToken"
-    HEADERS = PARAMS_HEADERS
     # API = "https://mssdk.bytedance.com/web/report"
     API = "https://mssdk.bytedance.com/web/common"
     DATA = {
@@ -73,7 +73,9 @@ class MsToken:
         "tspFromClient": 0,
         "ulr": 0,
     }
-    TOKEN = "TxdpTz-pcVsDhVqz9nLZl5vtHpz_GX-iZnYiWDv_0Dmel-jA5Ix5WhKfoe16w6Yau0ljq10lozdji_DI7AHjs_Bf9sA-u-xOiNZpfrnCpKuXLFeAOxH3zQ=="
+    TOKEN = (
+        "TxdpTz-pcVsDhVqz9nLZl5vtHpz_GX-iZnYiWDv_0Dmel-jA5Ix5WhKfoe16w6Yau0ljq10lozdji_DI7AHjs_Bf9sA-u"
+        "-xOiNZpfrnCpKuXLFeAOxH3zQ==")
 
     @staticmethod
     def get_fake_ms_token(key="msToken", size=156) -> dict:
@@ -87,22 +89,23 @@ class MsToken:
 
     @classmethod
     async def get_real_ms_token(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                                proxy: str = None, token="", *args, **kwargs, ) -> dict | None:
+                                headers: dict,
+                                token="", **kwargs, ) -> dict | None:
         params = {cls.NAME: token}
         if response := await request_post(logger, cls.API, dumps(cls.DATA | {"tspFromClient": int(time() * 1000)}),
-                                          headers=cls.HEADERS, proxy=proxy, params=params, ):
+                                          headers=headers, params=params, **kwargs, ):
             return TtWid.extract(logger, response, cls.NAME)
         logger.error(f"获取 {cls.NAME} 参数失败！")
 
     @classmethod
     async def get_long_ms_token(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                                proxy: str = None, token="", *args, **kwargs, ) -> dict | None:
-        return await cls.get_real_ms_token(logger, proxy, token or cls.TOKEN, *args, **kwargs, )
+                                headers: dict,
+                                token="", **kwargs, ) -> dict | None:
+        return await cls.get_real_ms_token(logger, headers, token or cls.TOKEN, **kwargs, )
 
 
 class MsTokenTikTok(MsToken):
     REFERER = "https://www.tiktok.com/"
-    HEADERS = PARAMS_HEADERS | {"Origin": REFERER[:-1], "Referer": REFERER}
     API = "https://mssdk-ttp2.tiktokw.us/web/report"
     DATA = {
         "magic": 538969122,
@@ -164,29 +167,33 @@ class MsTokenTikTok(MsToken):
 
     @classmethod
     async def get_real_ms_token(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                                proxy: str = None, token="", *args, **kwargs, ) -> dict | None:
+                                headers: dict,
+                                token="", **kwargs, ) -> dict | None:
         params = {cls.NAME: token}
         if token:
-            headers = cls.HEADERS | {"Cookie": f"{cls.NAME}={token}"}
+            headers = headers | {"Cookie": f"{cls.NAME}={token}"}
             params["X-Bogus"] = XBogusTikTok().get_x_bogus(params)
-        else:
-            headers = cls.HEADERS
         if response := await request_post(logger, cls.API, dumps(cls.DATA | {"tspFromClient": int(time() * 1000)}),
-                                          headers=headers, proxy=proxy, params=params):
+                                          headers=headers, params=params, **kwargs, ):
             return TtWid.extract(logger, response, cls.NAME)
         logger.error(f"获取 {cls.NAME} 参数失败！")
 
     @classmethod
     async def get_long_ms_token(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                                proxy: str = None, token="", *args, **kwargs, ) -> dict | None:
-        return await cls.get_real_ms_token(logger, proxy, token or cls.TOKEN, *args, **kwargs, )
+                                headers: dict,
+                                token="", **kwargs, ) -> dict | None:
+        return await cls.get_real_ms_token(logger, headers, token or cls.TOKEN, **kwargs, )
 
 
 async def demo():
-    print("抖音", await MsToken.get_real_ms_token(Logger()))
-    print("抖音", await MsToken.get_long_ms_token(Logger()))
-    print("TikTok", await MsTokenTikTok.get_real_ms_token(Logger(), "http://127.0.0.1:10809"))
-    print("TikTok", await MsTokenTikTok.get_long_ms_token(Logger(), "http://127.0.0.1:10809"))
+    print("抖音",
+          await MsToken.get_real_ms_token(Logger(), PARAMS_HEADERS, proxies={"http://": None, "https://": None}))
+    print("抖音",
+          await MsToken.get_long_ms_token(Logger(), PARAMS_HEADERS, proxies={"http://": None, "https://": None}))
+    print("TikTok",
+          await MsTokenTikTok.get_real_ms_token(Logger(), PARAMS_HEADERS_TIKTOK, proxy="http://127.0.0.1:10809"))
+    print("TikTok",
+          await MsTokenTikTok.get_long_ms_token(Logger(), PARAMS_HEADERS_TIKTOK, proxy="http://127.0.0.1:10809"))
 
 
 if __name__ == "__main__":

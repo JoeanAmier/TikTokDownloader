@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 from typing import Type
 from urllib.parse import quote
 
+from httpx import AsyncClient
 from rich.progress import (
     BarColumn,
     Progress,
@@ -15,8 +16,8 @@ from rich.progress import (
 from src.custom import PROGRESS
 from src.custom import USERAGENT
 from src.custom import wait
-from src.encrypt import ABogus
 from src.tools import PrivateRetry
+from src.tools import TikTokDownloaderError
 from src.tools import capture_error_request
 
 if TYPE_CHECKING:
@@ -68,15 +69,15 @@ class API:
             **kwargs):
         self.headers = params.headers
         self.log = params.logger
-        self.ab = ABogus()
+        self.ab = params.ab
         self.xb = params.xb
         self.console = params.console
         self.api = ""
-        self.proxy = proxy or params.proxy
+        self.proxy = params.extract_proxy(proxy)
         self.max_retry = params.max_retry
         self.timeout = params.timeout
         self.cookie = cookie or params.cookie
-        self.session = params.session
+        self.client: AsyncClient = params.client
         self.pages = 99999
         self.cursor = 0
         self.response = []
@@ -103,9 +104,8 @@ class API:
                   has_more="has_more",
                   params: Callable = lambda: {},
                   data: Callable = lambda: {},
-                  method="get",
+                  method="GET",
                   headers: dict = None,
-                  proxy: str = None,
                   *args,
                   **kwargs,
                   ):
@@ -121,7 +121,6 @@ class API:
                     data,
                     method,
                     headers,
-                    proxy,
                     *args,
                     **kwargs,
                 )
@@ -135,12 +134,11 @@ class API:
                     data,
                     method,
                     headers,
-                    proxy,
                     *args,
                     **kwargs,
                 )
             case _:
-                raise ValueError
+                raise TikTokDownloaderError
         return self.response
 
     async def run_single(self,
@@ -150,9 +148,8 @@ class API:
                          has_more="has_more",
                          params: Callable = lambda: {},
                          data: Callable = lambda: {},
-                         method="get",
+                         method="GET",
                          headers: dict = None,
-                         proxy: str = None,
                          *args,
                          **kwargs,
                          ):
@@ -161,7 +158,6 @@ class API:
                                            data=data() or self.generate_data(),
                                            method=method,
                                            headers=headers,
-                                           proxy=proxy,
                                            finished=True,
                                            ):
             self.check_response(
@@ -182,9 +178,8 @@ class API:
                         has_more="has_more",
                         params: Callable = lambda: {},
                         data: Callable = lambda: {},
-                        method="get",
+                        method="GET",
                         headers: dict = None,
-                        proxy: str = None,
                         callback: Type[Coroutine] = None,
                         *args,
                         **kwargs, ):
@@ -202,7 +197,6 @@ class API:
                     data,
                     method,
                     headers,
-                    proxy,
                     *args,
                     **kwargs,
                 )
@@ -238,23 +232,22 @@ class API:
                            url: str,
                            params: dict = None,
                            data: dict = None,
-                           method="get",
+                           method="GET",
                            headers: dict = None,
-                           proxy: str = None,
                            number=8,
                            finished=False,
                            *args,
                            **kwargs):
         self.deal_url_params(params, number, )
         match method:
-            case "get":
-                return await self.__request_data_get(url, params, headers or self.headers, proxy or self.proxy,
+            case "GET":
+                return await self.__request_data_get(url, params, headers or self.headers,
                                                      finished, *args, **kwargs)
-            case "post":
-                return await self.__request_data_post(url, params, data, headers or self.headers, proxy or self.proxy,
+            case "POST":
+                return await self.__request_data_post(url, params, data, headers or self.headers,
                                                       finished, *args, **kwargs)
             case _:
-                raise ValueError(f"尚未支持的请求方法 {method}")
+                raise TikTokDownloaderError(f"尚未支持的请求方法 {method}")
 
     @PrivateRetry.retry
     @capture_error_request
@@ -262,16 +255,16 @@ class API:
                                  url: str,
                                  params: dict,
                                  headers: dict,
-                                 proxy: str,
                                  finished=False,
                                  **kwargs,
                                  ):
-        async with self.session.get(url, params=params, headers=headers, proxy=proxy, **kwargs) as response:
-            await wait()
-            if response.status != 200:
-                self.log.error(f"请求 {url} 失败，响应码 {response.status}")
-                return
-            return await response.json()
+        # TODO: 临时代理未生效
+        response = await self.client.get(url, params=params, headers=headers, **kwargs)
+        await wait()
+        if response.status_code != 200:
+            self.log.error(f"请求 {url} 失败，响应码 {response.status_code}")
+            return
+        return response.json()
 
     @PrivateRetry.retry
     @capture_error_request
@@ -280,20 +273,20 @@ class API:
                                   params: dict,
                                   data: dict,
                                   headers: dict,
-                                  proxy: str,
                                   finished=False,
                                   **kwargs):
-        async with self.session.post(url, params=params, data=data, headers=headers, proxy=proxy, **kwargs) as response:
-            await wait()
-            if response.status != 200:
-                self.log.error(f"请求 {url} 失败，响应码 {response.status}")
-                return
-            return await response.json()
+        # TODO: 临时代理未生效
+        response = await self.client.post(url, params=params, data=data, headers=headers, **kwargs)
+        await wait()
+        if response.status_code != 200:
+            self.log.error(f"请求 {url} 失败，响应码 {response.status_code}")
+            return
+        return response.json()
 
     def deal_url_params(self, params: dict, number=8):
         if params:
-            params["a_bogus"] = self.ab.get_value(
-                params, self.headers.get("User-Agent", USERAGENT))
+            params["a_bogus"] = quote(self.ab.get_value(
+                params, self.headers.get("User-Agent", USERAGENT)), safe="", )
 
     def summary_works(self, ) -> None:
         self.log.info(f"共获取到 {len(self.response)} 个{self.text}")
@@ -339,26 +332,26 @@ class APITikTok(API):
         "browser_online": "true",
         "browser_platform": "Win32",
         "browser_version": quote(
-            "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-            safe=""),
+            "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+        ),
         "channel": "tiktok_web",
         "cookie_enabled": "true",
         "device_id": "",
         "device_platform": "web_pc",
         "focus_state": "true",
         "from_page": "user",
-        "history_len": "3",
+        "history_len": "4",
         "is_fullscreen": "false",
         "is_page_visible": "true",
         "language": "en",
         "os": "windows",
         "priority_region": "CN",
         "referer": "",
-        "region": "US",
+        "region": "JP",
         "screen_height": "864",
         "screen_width": "1536",
-        "tz_name": quote("Asia/Shanghai", safe=""),
-        # "userId": "7139490804330333186",
+        "tz_name": "Asia/Shanghai",
+        # "userId": "",
         "webcast_language": "en",
         "msToken": "",
     }
@@ -373,11 +366,11 @@ class APITikTok(API):
         super().__init__(params, cookie, proxy, *args, **kwargs, )
         self.headers = params.headers_tiktok
         self.cookie = cookie or params.cookie_tiktok
-        self.proxy = proxy or params.proxy_tiktok
+        self.client: AsyncClient = params.client_tiktok
         self.set_temp_cookie(cookie)
 
     def deal_url_params(self, params: dict, number=8):
         if params:
-            params["X-Bogus"] = self.xb.get_x_bogus(
+            params["X-Bogus"] = quote(self.xb.get_x_bogus(
                 params, number, self.headers.get(
-                    "User-Agent", USERAGENT))
+                    "User-Agent", USERAGENT)), safe="", )

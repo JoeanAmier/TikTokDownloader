@@ -21,6 +21,8 @@ __all__ = [
     "QRCODE_HEADERS",
     "DOWNLOAD_HEADERS_TIKTOK",
     "PHONE_HEADERS",
+    "PARAMS_HEADERS_TIKTOK",
+    "DATA_HEADERS_TIKTOK",
 ]
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
@@ -58,9 +60,9 @@ PHONE_HEADERS = {
     "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) "
                   "CriOS/125.0.6422.51 Mobile/15E148 Safari/604.1", }
 USERAGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 "
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 "
     "Safari/537.36")
-SEC_CH_UA = '"Google Chrome";v="125", "Chromium";v="125", "Not.A/Brand";v="24"'
+SEC_CH_UA = '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"'
 SEC_CH_UA_PLATFORM = '"Windows"'
 PARAMS_HEADERS = {
     "Accept": "*/*",
@@ -78,6 +80,10 @@ PARAMS_HEADERS = {
     "Sec-Fetch-Site": "cross-site",
     "User-Agent": USERAGENT,
 }
+PARAMS_HEADERS_TIKTOK = PARAMS_HEADERS | {
+    "Origin": "https://www.tiktok.com",
+    "Referer": "https://www.tiktok.com/",
+}
 DATA_HEADERS = {
     "Accept": "application/json, text/plain, */*",
     "Accept-Encoding": "gzip, deflate, br, zstd",
@@ -91,6 +97,9 @@ DATA_HEADERS = {
     "Sec-Fetch-Mode": "cors",
     "Sec-Fetch-Site": "same-origin",
     "User-Agent": USERAGENT,
+}
+DATA_HEADERS_TIKTOK = DATA_HEADERS | {
+    "Referer": "https://www.tiktok.com/",
 }
 DOWNLOAD_HEADERS = {
     'Accept': '*/*',

@@ -2,7 +2,9 @@ from platform import system
 from subprocess import run
 from time import sleep
 from typing import TYPE_CHECKING
+from urllib.parse import quote
 
+from httpx import HTTPError
 from qrcode import QRCode
 from rich.progress import (
     SpinnerColumn,
@@ -16,11 +18,9 @@ from src.custom import ERROR
 from src.custom import PROGRESS
 from src.custom import QRCODE_HEADERS
 from src.custom import WARNING
-from src.encrypt import ABogus
 from src.encrypt import MsToken
-from src.encrypt import VerifyFp
+# from src.encrypt import VerifyFp
 from src.tools import PrivateRetry
-from src.tools import capture_error_request
 from src.tools import cookie_str_to_str
 
 if TYPE_CHECKING:
@@ -42,20 +42,20 @@ class Register:
             params: "Parameter",
             settings: "Settings",
     ):
-        # self.xb = params.xb
-        self.session = params.session
+        self.ab = params.ab
+        self.xb = params.xb
+        self.client = params.client
         self.settings = settings
-        self.proxy = params.proxy
         self.console = params.console
         self.log = params.logger
         self.headers = QRCODE_HEADERS
-        self.verify_fp = None
+        # self.verify_fp = None
         self.cache = params.cache
         self.url_params = {
             "service": "https://www.douyin.com",
             "need_logo": "false",
             "need_short_url": "true",
-            "passport_jssdk_version": "1.0.18",
+            "passport_jssdk_version": "1.0.22",
             "passport_jssdk_type": "pro",
             "aid": "6383",
             "language": "zh",
@@ -76,13 +76,12 @@ class Register:
                                        "b273f27526067424925342b35252d4a75606b424925405625372b3525466d776a686c70682c"
                                        "27292773606b616a77273f275260674e6c7127292777606b6160776077273f275260674e6c7"
                                        "125526067424927782927776074706076715a6d6a7671273f277272722b616a707c6c6b2b66"
-                                       "6a68272927776074706076715a7564716d6b646860273f272a707660772a48563172496f444"
-                                       "7444444446268556c567670556c377543405d403369605c71616e6d565c55677052476b4a3c"
-                                       "4857714362696334346f6e5d7c4328755060734f284b33285171544435503c2778",
+                                       "6a68272927776074706076715a7564716d6b646860273f272a2778",
             "passport_ztsdk": "0",
-            "passport_verify": "1.0.12",
-            # "biz_trace_id": "4fdfa99e",
+            "passport_verify": "1.0.14",
+            # "biz_trace_id": "26eba5d6",
             "device_platform": "web_app",
+            "msToken": "",
         }
 
     def __check_progress_object(self):
@@ -121,15 +120,17 @@ class Register:
             run(["xdg-open", self.cache])
 
     async def get_qr_code(self):
-        self.verify_fp = VerifyFp.get_verify_fp()
-        self.url_params["verifyFp"] = self.verify_fp
-        self.url_params["fp"] = self.verify_fp
+        # self.verify_fp = VerifyFp.get_verify_fp()
+        # self.url_params["verifyFp"] = self.verify_fp
+        # self.url_params["fp"] = self.verify_fp
         await self.__set_ms_token()
-        self.url_params["a_bogus"] = ABogus().get_value(self.url_params)
+        self.url_params["a_bogus"] = quote(
+            self.ab.get_value(self.url_params), safe="")
         # self.url_params["X-Bogus"] = self.xb.get_x_bogus(self.url_params)
         data, _, _ = await self.request_data(
             url=self.get_url,
-            params=self.url_params)
+            params=self.url_params,
+        )
         if not data:
             return None, None
         try:
@@ -140,7 +141,7 @@ class Register:
             return None, None
 
     async def __set_ms_token(self):
-        if isinstance(t := await MsToken.get_real_ms_token(self.log, self.proxy), dict):
+        if isinstance(t := await MsToken.get_long_ms_token(self.log, ), dict):
             self.url_params["msToken"] = t["msToken"]
 
     async def check_register(self, token):
@@ -193,13 +194,17 @@ class Register:
         return cookie_str_to_str(history[1].headers.get("Set-Cookie"))
 
     @PrivateRetry.retry_lite
-    @capture_error_request
     async def request_data(self, json=True, **kwargs):
-        async with self.session.get(headers=self.headers, **kwargs) as response:
-            data = await response.json() if json else None
+        try:
+            response = await self.client.get(headers=self.headers, **kwargs)
+            data = response.json() if json else None
             headers = response.headers
             history = response.history
             return data, headers, history
+        except HTTPError as e:
+            self.console.print(
+                f"扫码登录发生异常，请向作者反馈，错误信息: {e}", style=ERROR)
+            return None, None, None
 
     async def run(self, ):
         self.cache = str(self.cache.joinpath("扫码后请关闭该图片.png"))

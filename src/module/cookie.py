@@ -10,16 +10,20 @@ __all__ = ["Cookie"]
 
 
 class Cookie:
+    PLATFORM = (
+        "抖音",
+        "TikTok",
+    )
 
     def __init__(self, settings: "Settings", console: "ColorfulConsole"):
         self.settings = settings
         self.console = console
 
-    def run(self, key="cookie"):
+    def run(self, key="cookie", tiktok=0, ):
         """提取 Cookie 并写入配置文件"""
         if not (
                 cookie := self.console.input(
-                    "请粘贴 Cookie 内容: ")):
+                    f"请粘贴 {self.PLATFORM[tiktok]} Cookie 内容: ")):
             return False
         self.extract(cookie, key=key)
         return True

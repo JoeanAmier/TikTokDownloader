@@ -11,9 +11,9 @@
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=for-the-badge&color=52c41a">
 </div>
 <br>
-<p>🔥 <b>TikTok 主页/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/<del>评论</del>/<del>账号</del>/<del>搜索</del>/热榜数据采集工具：</b>完全开源，基于 AIOHTTP 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号发布作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；<del>采集抖音作品评论数据</del>；批量下载抖音合集作品；<del>采集抖音账号详细数据</del>；<del>采集抖音用户 / 作品 / 直播搜索结果</del>；采集抖音热榜数据。</p>
+<p>🔥 <b>TikTok 主页/合辑/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/<del>评论</del>/<del>账号</del>/<del>搜索</del>/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号发布作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；<del>采集抖音作品评论数据</del>；批量下载抖音合集作品；批量下载 TikTok 合辑作品；<del>采集抖音账号详细数据</del>；<del>采集抖音用户 / 作品 / 直播搜索结果</del>；采集抖音热榜数据。</p>
 <p>⭐ Windows 10 及以上用户可前往 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 下载已编译的 exe 程序，开箱即用！</p>
-<p>⚠️ 注意：项目正在重构代码，最新源码 <code>5.4 Beta</code> 的功能尚不稳定，请谨慎使用！日常使用请前往 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 下载！</p>
+<p>⚠️ 注意：项目正在重构代码，最新源码 <code>5.4 Beta</code> 的功能尚不稳定，请谨慎使用！</p>
 <hr>
 
 # 📝 项目功能\(Function\)
@@ -29,12 +29,12 @@
 * ✅ 持久化保存采集数据
 * ✅ 下载动态/静态封面图
 * ✅ 获取抖音直播推流地址
-* ✅ 获取 TikTok直播推流地址
+* ✅ 获取 TikTok 直播推流地址
 * ✅ 调用 ffmpeg 下载直播
 * ✅ Web UI 交互界面
 * ✅ 采集抖音作品评论数据
 * ✅ 批量下载抖音合集作品
-* ✅ 批量下载 TikTok 合集作品
+* ✅ 批量下载 TikTok 合辑作品
 * ✅ 记录点赞收藏等统计数据
 * ✅ 筛选作品发布时间
 * ✅ 支持账号作品增量下载
@@ -241,7 +241,7 @@
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://github.com/NearHuiwen/TiktokDouyinCrawler
 * https://github.com/ihmily/DouyinLiveRecorder
-* https://docs.aiohttp.org/en/stable/
+* https://github.com/encode/httpx/
 * https://github.com/Textualize/rich
 * https://github.com/omnilib/aiosqlite
 * https://github.com/borisbabic/browser_cookie3

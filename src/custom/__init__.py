@@ -27,6 +27,8 @@ from .internal import (
     QRCODE_HEADERS,
     DOWNLOAD_HEADERS_TIKTOK,
     PHONE_HEADERS,
+    PARAMS_HEADERS_TIKTOK,
+    DATA_HEADERS_TIKTOK,
 )
 from .static import (
     MAX_WORKERS,
@@ -84,4 +86,6 @@ __all__ = [
     "DOWNLOAD_HEADERS_TIKTOK",
     "DOWNLOAD_HEADERS",
     "PHONE_HEADERS",
+    "DATA_HEADERS_TIKTOK",
+    "PARAMS_HEADERS_TIKTOK",
 ]

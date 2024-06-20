@@ -1,9 +1,10 @@
-from asyncio import TimeoutError
+from json.decoder import JSONDecodeError
 from typing import TYPE_CHECKING
 from typing import Union
 
-from aiohttp import ClientError
-from aiohttp import ContentTypeError
+from httpx import NetworkError
+from httpx import RequestError
+from httpx import TimeoutException
 
 if TYPE_CHECKING:
     from src.record import BaseLogger
@@ -16,12 +17,14 @@ def capture_error_params(function):
     async def inner(logger: Union["BaseLogger", "LoggerManager"], *args, **kwargs):
         try:
             return await function(logger, *args, **kwargs)
-        except ContentTypeError as e:
-            logger.error(f"响应内容异常：{e}")
-        except ClientError as e:
+        except JSONDecodeError:
+            logger.error("响应内容不是有效的 JSON 数据")
+        except NetworkError as e:
             logger.error(f"网络异常：{e}")
-        except TimeoutError as e:
+        except TimeoutException as e:
             logger.error(f"请求超时：{e}")
+        except RequestError as e:
+            logger.error(f"网络异常：{e}")
         return None
 
     return inner
@@ -31,12 +34,14 @@ def capture_error_request(function):
     async def inner(self, *args, **kwargs):
         try:
             return await function(self, *args, **kwargs)
-        except ContentTypeError as e:
-            self.log.error(f"响应内容异常：{e}")
-        except ClientError as e:
+        except JSONDecodeError:
+            self.log.error("响应内容不是有效的 JSON 数据")
+        except NetworkError as e:
             self.log.error(f"网络异常：{e}")
-        except TimeoutError as e:
+        except TimeoutException as e:
             self.log.error(f"请求超时：{e}")
+        except RequestError as e:
+            self.log.error(f"网络异常：{e}")
         return None
 
     return inner

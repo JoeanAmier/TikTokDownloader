@@ -67,9 +67,8 @@ class Hot(API):
                   has_more=None,
                   params: Callable = lambda: {},
                   data: Callable = lambda: {},
-                  method="get",
+                  method="GET",
                   headers: dict = None,
-                  proxy: str = None,
                   *args,
                   **kwargs,
                   ):
@@ -87,7 +86,6 @@ class Hot(API):
                 data=data,
                 method=method,
                 headers=headers,
-                proxy=proxy,
                 index=index,
                 *args,
                 **kwargs,
