@@ -203,7 +203,7 @@
 
 <ul>
 <li>QQ: 2437596031 (please state your intention when contacting)</li>
-<li>QQ Group: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7 %BB%B4%E7%A0%81.png">Click to scan the QR code to join the group chat</a></li>
+<li>QQ Group: <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">Click to scan the QR code to join the group chat</a></li>
 <li>Email: yonglelolu@gmail.com</li>
 </ul>
 <p>
