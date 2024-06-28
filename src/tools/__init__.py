@@ -15,8 +15,7 @@ from .format import (
 from .list_pop import safe_pop
 from .retry import PrivateRetry
 from .session import (
-    request_post,
-    request_get,
+    request_params,
     create_client,
 )
 from .temporary import timestamp
@@ -31,8 +30,7 @@ __all__ = [
     "choose",
     "FileSwitch",
     "safe_pop",
-    "request_post",
-    "request_get",
+    "request_params",
     "cookie_dict_to_str",
     "cookie_str_to_dict",
     "cookie_jar_to_dict",

@@ -46,6 +46,7 @@ class AccountTikTok(Account, APITikTok, ):
             *args,
             **kwargs,
         )
+        # TODO: 未适配 TikTok 平台喜欢作品
         # self.info = Info(params, sec_user_id, cookie, proxy, )
 
     async def run(self,

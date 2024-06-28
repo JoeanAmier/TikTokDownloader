@@ -242,8 +242,9 @@ class Parameter:
     ) -> None | str:
         if tiktok:
             parameters = (
-                await MsTokenTikTok.get_long_ms_token(self.logger, self.headers_params_tiktok, token,
-                                                      **self.proxy_tiktok, ),
+                # TODO: 参数异常，待研究
+                # await MsTokenTikTok.get_long_ms_token(self.logger, self.headers_params_tiktok, token,
+                #                                       **self.proxy_tiktok, ),
                 await TtWidTikTok.get_tt_wid(self.logger, self.headers_params_tiktok, self.twc_tiktok,
                                              **self.proxy_tiktok, ),
             )
@@ -411,7 +412,7 @@ class Parameter:
                 self.cookie_cache,
                 False)
             if self.cookie:
-                API.params["msToken"] = self.cookie.get("msToken")
+                API.params["msToken"] = self.cookie.get("msToken", "")
             self.console.print("抖音 Cookie 参数更新完毕！", style=INFO)
         if self.update_cookie_tk:
             self.console.print("正在更新 TikTok Cookie 参数，请稍等...", style=INFO)
@@ -421,7 +422,8 @@ class Parameter:
                 self.cookie_tiktok_cache,
                 True, )
             if self.cookie_tiktok:
-                APITikTok.params["msToken"] = self.cookie_tiktok.get("msToken")
+                APITikTok.params["msToken"] = self.cookie_tiktok.get(
+                    "msToken", "")
             # self.__update_download_headers()
             self.console.print("TikTok Cookie 参数更新完毕！", style=INFO)
 
@@ -587,7 +589,7 @@ class Parameter:
                 'engine_version',
                 'os_name',
                 'os_version',
-                # 'webid',
+                'webid',
         ):
             API.params[i] = info.get(i, "")
 

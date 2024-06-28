@@ -141,7 +141,7 @@ class Register:
             return None, None
 
     async def __set_ms_token(self):
-        if isinstance(t := await MsToken.get_long_ms_token(self.log, ), dict):
+        if isinstance(t := await MsToken.get_long_ms_token(self.log, self.headers), dict):
             self.url_params["msToken"] = t["msToken"]
 
     async def check_register(self, token):

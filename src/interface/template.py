@@ -56,7 +56,7 @@ class API:
         "downlink": "10",
         "effective_type": "4g",
         "round_trip_time": "200",
-        # "webid": "",
+        "webid": "",
         "msToken": "",
     }
 
@@ -242,10 +242,10 @@ class API:
         match method:
             case "GET":
                 return await self.__request_data_get(url, params, headers or self.headers,
-                                                     finished, *args, **kwargs)
+                                                     finished=finished, *args, **kwargs)
             case "POST":
                 return await self.__request_data_post(url, params, data, headers or self.headers,
-                                                      finished, *args, **kwargs)
+                                                      finished=finished, *args, **kwargs)
             case _:
                 raise TikTokDownloaderError(f"尚未支持的请求方法 {method}")
 

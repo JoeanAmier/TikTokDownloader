@@ -139,8 +139,8 @@ class TikTok:
             ("批量下载账号作品(抖音)", self.account_acquisition_interactive,),
             ("批量下载链接作品(抖音)", self.detail_interactive,),
             ("获取直播推流地址(抖音)", self.live_interactive,),
+            # TODO: 该功能暂不开放，千万不要取消注释！
             # ("采集作品评论数据(抖音)", self.comment_interactive,),
-            # ("采集作品评论数据(抖音)", self.disable_function,),
             ("批量下载合集作品(抖音)", self.mix_interactive,),
             # ("采集账号详细数据(抖音)", self.disable_function,),
             # ("采集搜索结果数据(抖音)", self.disable_function,),
@@ -300,7 +300,7 @@ class TikTok:
                 continue
             if not await self.deal_account_detail(
                     index,
-                    **vars(data) | {"sec_user_id": sec_user_id},
+                    **vars(data) | {"sec_user_id": sec_user_id[0]},
                     root=root,
                     params=params,
                     logger=logger,
@@ -718,7 +718,9 @@ class TikTok:
             self.console.print("开播时间:", item["create_time"])
             self.console.print("在线观众:", item["user_count"])
             self.console.print("点赞次数:", item["like_count"])
-            self.show_live_stream_url_tiktok(item, download_tasks)
+            # TODO: TikTok 直播下载功能异常，代理错误
+            # self.show_live_stream_url_tiktok(item, download_tasks)
+        self.console.print("TikTok 直播下载功能尚未完成！")  # 完成后移除
         return [i for i in download_tasks if isinstance(i, tuple)]
 
     def show_live_stream_url(self, item: dict, tasks: list):

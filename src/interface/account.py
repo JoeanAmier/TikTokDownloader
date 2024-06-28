@@ -158,13 +158,14 @@ class Account(API):
         else:
             self.response.append({"author": info})
 
-    def __generate_temp_data(self):
+    def __generate_temp_data(self, ):
         temp_data = timestamp()
         self.log.warning(f"获取账号昵称失败，本次运行将临时使用 {temp_data} 作为账号昵称和 UID")
         temp_dict = {
             "author": {
                 "nickname": temp_data,
                 "uid": temp_data,
+                "sec_uid": self.sec_user_id,
             }
         }
         self.response.append(temp_dict)

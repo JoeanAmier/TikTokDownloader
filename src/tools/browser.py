@@ -70,11 +70,11 @@ class Browser:
             self.console.print("浏览器序号错误，未写入 Cookie！")
         except PermissionError:
             self.console.print(
-                "获取 Cookie 失败，浏览器未完全关闭！",
+                "读取 Cookie 失败，浏览器未完全关闭！",
                 style=WARNING)
         except BrowserCookieError:
             self.console.print(
-                "获取 Cookie 失败，未找到对应浏览器的 Cookie 数据！",
+                "读取 Cookie 失败，未找到对应浏览器的 Cookie 数据！",
                 style=WARNING)
         return False
 

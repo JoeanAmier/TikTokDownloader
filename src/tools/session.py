@@ -1,10 +1,11 @@
-from typing import Any
 from typing import TYPE_CHECKING
 from typing import Union
 
 from httpx import AsyncClient
 from httpx import Client
+from httpx import Limits
 
+from src.custom import MAX_WORKERS
 from src.custom import TIMEOUT
 from src.custom import USERAGENT
 from src.tools import TikTokDownloaderError
@@ -15,13 +16,14 @@ if TYPE_CHECKING:
     from src.record import BaseLogger
     from src.record import LoggerManager
 
-__all__ = ["request_post", "request_get", "create_client"]
+__all__ = ["request_params", "create_client"]
 
 
 def create_client(
         user_agent=USERAGENT,
         timeout=TIMEOUT,
         headers: dict = None,
+        max_connections=MAX_WORKERS,
         *args,
         **kwargs,
 ) -> AsyncClient:
@@ -29,62 +31,48 @@ def create_client(
         headers=headers or {"User-Agent": user_agent, },
         timeout=timeout,
         follow_redirects=True,
+        verify=False,
+        limits=Limits(max_connections=max_connections),
         *args,
         **kwargs,
     )
 
 
-async def request_post(
+async def request_params(
         logger: Union["BaseLogger", "LoggerManager"],
         url: str,
-        data: Any = None,
+        method: str = "POST",
+        params: dict | str = None,
+        data: dict | str = None,
         useragent=USERAGENT,
         timeout=TIMEOUT,
         headers: dict = None,
-        content="headers",
+        resp="headers",
+        proxy: str = None,
+        proxies: dict = None,
         **kwargs,
 ):
     with Client(
             headers=headers or {
                 "User-Agent": useragent,
+                "Content-Type": "application/json; charset=utf-8",
+                "Referer": "https://www.douyin.com/"
             },
+            follow_redirects=True,
             timeout=timeout,
-            **kwargs,
+            verify=False,
+            proxy=proxy,
+            proxies=proxies,
     ) as client:
         return await request(
             logger,
             client,
-            "POST",
+            method,
             url,
-            content,
+            resp,
+            params=params,
             data=data,
-        )
-
-
-async def request_get(
-        logger: Union["BaseLogger", "LoggerManager"],
-        url: str,
-        data: Any = None,
-        useragent=USERAGENT,
-        timeout=TIMEOUT,
-        headers: dict = None,
-        content="headers",
-        **kwargs,
-):
-    with Client(
-            headers=headers or {
-                "User-Agent": useragent,
-            },
-            timeout=timeout,
             **kwargs,
-    ) as client:
-        return await request(
-            logger,
-            client,
-            "GET",
-            url,
-            content,
-            data=data,
         )
 
 
@@ -94,10 +82,11 @@ async def request(logger: Union["BaseLogger", "LoggerManager"],
                   client: Client,
                   method: str,
                   url: str,
-                  content="json",
-                  **kwargs):
+                  resp="json",
+                  **kwargs,
+                  ):
     response = client.request(method, url, **kwargs)
-    match content:
+    match resp:
         case "headers":
             return response.headers
         case "text":
@@ -108,5 +97,7 @@ async def request(logger: Union["BaseLogger", "LoggerManager"],
             return response.json()
         case "url":
             return str(response.url)
+        case "response":
+            return response
         case _:
             raise TikTokDownloaderError

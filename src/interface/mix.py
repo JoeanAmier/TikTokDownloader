@@ -19,7 +19,7 @@ class Mix(API):
                  mix_id: str = None,
                  detail_id: str = None,
                  cursor=0,
-                 count=20,
+                 count=12,
                  *args,
                  **kwargs,
                  ):

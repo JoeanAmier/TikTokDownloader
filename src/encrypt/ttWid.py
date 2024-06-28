@@ -6,7 +6,7 @@ from typing import Union
 from src.custom import PARAMS_HEADERS
 from src.custom import PARAMS_HEADERS_TIKTOK
 from src.testers import Logger
-from src.tools import request_post
+from src.tools import request_params
 
 if TYPE_CHECKING:
     from src.record import BaseLogger
@@ -26,7 +26,7 @@ class TtWid:
     async def get_tt_wid(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
                          headers: dict,
                          **kwargs, ) -> dict | None:
-        if response := await request_post(logger, cls.API, cls.DATA, headers=headers, **kwargs, ):
+        if response := await request_params(logger, cls.API, data=cls.DATA, headers=headers, **kwargs, ):
             return cls.extract(logger, response, cls.NAME)
         logger.error(f"获取 {cls.NAME} 参数失败！")
 
@@ -55,7 +55,7 @@ class TtWidTikTok(TtWid):
                          cookie: str = "",
                          **kwargs,
                          ) -> dict | None:
-        if response := await request_post(logger, cls.API, cls.DATA, headers=headers | {
+        if response := await request_params(logger, cls.API, data=cls.DATA, headers=headers | {
             "Cookie": cookie,
             "Content-Type": "application/x-www-form-urlencoded",
         }, **kwargs, ):

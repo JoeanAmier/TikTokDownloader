@@ -38,7 +38,7 @@ class Info(API):
     async def run_single(self, *args, **kwargs, ):
         await super().run_single(
             "",
-            params=self.static_params,
+            params=lambda: self.static_params,
             data=self.__generate_data,
             method="POST",
         )
