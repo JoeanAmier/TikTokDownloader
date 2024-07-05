@@ -17,7 +17,10 @@ def capture_error_params(function):
     async def inner(logger: Union["BaseLogger", "LoggerManager"], *args, **kwargs):
         try:
             return await function(logger, *args, **kwargs)
-        except JSONDecodeError:
+        except (
+                JSONDecodeError,
+                UnicodeDecodeError,
+        ):
             logger.error("响应内容不是有效的 JSON 数据")
         except NetworkError as e:
             logger.error(f"网络异常：{e}")
@@ -36,6 +39,8 @@ def capture_error_request(function):
             return await function(self, *args, **kwargs)
         except JSONDecodeError:
             self.log.error("响应内容不是有效的 JSON 数据")
+        except UnicodeDecodeError as e:
+            self.log.error(f"响应异常：{e}")
         except NetworkError as e:
             self.log.error(f"网络异常：{e}")
         except TimeoutException as e:

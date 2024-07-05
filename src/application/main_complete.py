@@ -752,37 +752,28 @@ class TikTok:
 
     @check_storage_format
     async def comment_interactive_tiktok(self, select="", *args, **kwargs):
-        root, params, logger = self.record.run(self.parameter, type_="comment")
-        if not select:
-            select = choose(
-                "请选择作品链接来源", [
-                    i[0] for i in self.__function_comment], self.console)
-        if select.upper() == "Q":
-            self.running = False
-        try:
-            n = int(select) - 1
-        except ValueError:
-            return
-        if n in range(len(self.__function_comment)):
-            await self.__function_comment[n][1](root, params, logger)
+        await self.__comment_interactive(self.__function_comment_tiktok, select, *args, **kwargs, )
         self.logger.info("已退出采集作品评论数据(TikTok)模式")
 
     @check_storage_format
     async def comment_interactive(self, select="", *args, **kwargs):
+        await self.__comment_interactive(self.__function_comment, select, *args, **kwargs, )
+        self.logger.info("已退出采集作品评论数据(抖音)模式")
+
+    async def __comment_interactive(self, function: tuple | list = ..., select="", *args, **kwargs):
         root, params, logger = self.record.run(self.parameter, type_="comment")
         if not select:
             select = choose(
                 "请选择作品链接来源", [
-                    i[0] for i in self.__function_comment], self.console)
+                    i[0] for i in function], self.console)
         if select.upper() == "Q":
             self.running = False
         try:
             n = int(select) - 1
         except ValueError:
             return
-        if n in range(len(self.__function_comment)):
-            await self.__function_comment[n][1](root, params, logger)
-        self.logger.info("已退出采集作品评论数据(抖音)模式")
+        if n in range(len(function)):
+            await function[n][1](root, params, logger)
 
     async def __comment_inquire(self, root, params, logger):
         while url := self._inquire_input("作品"):
@@ -1359,6 +1350,6 @@ class TikTok:
             try:
                 n = int(select) - 1
             except ValueError:
-                return
+                continue
             if n in range(len(self.__function)):
                 await self.__function[n][1](safe_pop(self.default_mode))

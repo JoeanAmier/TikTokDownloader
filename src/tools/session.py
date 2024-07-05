@@ -56,7 +56,7 @@ async def request_params(
             headers=headers or {
                 "User-Agent": useragent,
                 "Content-Type": "application/json; charset=utf-8",
-                "Referer": "https://www.douyin.com/"
+                # "Referer": "https://www.douyin.com/"
             },
             follow_redirects=True,
             timeout=timeout,
