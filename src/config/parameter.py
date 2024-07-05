@@ -326,7 +326,7 @@ class Parameter:
             self,
             proxy: str | dict,
             url="https://www.baidu.com/") -> dict:
-        if not proxy:
+        if not self.extract_proxy(proxy):
             return {"proxies": self.NO_PROXY}
         if isinstance(proxy, str):
             kwarg = {"proxy": proxy}
@@ -589,7 +589,7 @@ class Parameter:
                 'engine_version',
                 'os_name',
                 'os_version',
-                'webid',
+                # 'webid',
         ):
             API.params[i] = info.get(i, "")
 
@@ -615,9 +615,9 @@ class Parameter:
             APITikTok.params[i] = quote(info.get(i, ""))
 
     @staticmethod
-    def extract_proxy(proxy: str | dict) -> str | None:
+    def extract_proxy(proxy: str | dict | None) -> str | None:
         if isinstance(proxy, dict):
-            return proxy.get("https://", "")
+            return proxy.get("https://") or proxy.get("http://")
         if isinstance(proxy, str):
             return proxy
         return None

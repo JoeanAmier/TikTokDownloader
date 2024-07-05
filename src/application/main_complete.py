@@ -1,4 +1,3 @@
-from contextlib import suppress
 from datetime import date
 from datetime import datetime
 from pathlib import Path
@@ -256,11 +255,7 @@ class TikTok:
         if not select:
             select = choose("请选择账号链接来源",
                             [i[0] for i in function], self.console)
-        with suppress(ValueError):
-            if select.upper() == "Q":
-                self.running = False
-            elif (n := int(select) - 1) in range(len(function)):
-                await function[n][1](root, params, logger)
+        await self.__multiple_choice(select, function, root, params, logger, )
 
     async def account_detail_batch(self, root, params, logger):
         count = SimpleNamespace(time=time(), success=0, failed=0)
@@ -550,11 +545,14 @@ class TikTok:
                 select = choose(
                     "请选择作品链接来源", [
                         i[0] for i in menu], self.console)
-            with suppress(ValueError):
-                if select.upper() == "Q":
-                    self.running = False
-                elif (n := int(select) - 1) in range(len(menu)):
-                    await menu[n][1](record)
+            if select.upper() == "Q":
+                self.running = False
+            try:
+                n = int(select) - 1
+            except ValueError:
+                return
+            if n in range(len(menu)):
+                await menu[n][1](record)
 
     async def __detail_inquire(self, record, tiktok=False, ):
         while url := self._inquire_input("作品"):
@@ -759,11 +757,14 @@ class TikTok:
             select = choose(
                 "请选择作品链接来源", [
                     i[0] for i in self.__function_comment], self.console)
-        with suppress(ValueError):
-            if select.upper() == "Q":
-                self.running = False
-            elif (n := int(select) - 1) in range(len(self.__function_comment)):
-                await self.__function_comment[n][1](root, params, logger)
+        if select.upper() == "Q":
+            self.running = False
+        try:
+            n = int(select) - 1
+        except ValueError:
+            return
+        if n in range(len(self.__function_comment)):
+            await self.__function_comment[n][1](root, params, logger)
         self.logger.info("已退出采集作品评论数据(TikTok)模式")
 
     @check_storage_format
@@ -773,11 +774,14 @@ class TikTok:
             select = choose(
                 "请选择作品链接来源", [
                     i[0] for i in self.__function_comment], self.console)
-        with suppress(ValueError):
-            if select.upper() == "Q":
-                self.running = False
-            elif (n := int(select) - 1) in range(len(self.__function_comment)):
-                await self.__function_comment[n][1](root, params, logger)
+        if select.upper() == "Q":
+            self.running = False
+        try:
+            n = int(select) - 1
+        except ValueError:
+            return
+        if n in range(len(self.__function_comment)):
+            await self.__function_comment[n][1](root, params, logger)
         self.logger.info("已退出采集作品评论数据(抖音)模式")
 
     async def __comment_inquire(self, root, params, logger):
@@ -843,12 +847,18 @@ class TikTok:
         if not select:
             select = choose("请选择合集链接来源",
                             [i[0] for i in function], self.console)
-        with suppress(ValueError):
-            if select.upper() == "Q":
-                self.running = False
-            elif (n := int(select) - 1) in range(len(function)):
-                await function[n][1](root, params, logger)
-            self.logger.info(f"已退出批量下载合集作品{"(TikTok)" if tiktok else "(抖音)"}模式")
+        await self.__multiple_choice(select, function, root, params, logger, )
+        self.logger.info(f"已退出批量下载合集作品{"(TikTok)" if tiktok else "(抖音)"}模式")
+
+    async def __multiple_choice(self, select: str, function, *args, **kwargs, ):
+        if select.upper() == "Q":
+            self.running = False
+        try:
+            n = int(select) - 1
+        except ValueError:
+            return
+        if n in range(len(function)):
+            await function[n][1](*args, **kwargs, )
 
     @staticmethod
     def _generate_mix_params(mix: bool, id_: str) -> dict:
@@ -1338,16 +1348,17 @@ class TikTok:
 
     async def run(self, default_mode: list):
         self.default_mode = default_mode
-        with suppress(ValueError):
-            while self.running:
-                if not (select := safe_pop(self.default_mode)):
-                    select = choose(
-                        "请选择采集功能",
-                        [i for i, _ in self.__function],
-                        self.console)
-                if select in {"Q", "q"}:
-                    self.running = False
-                elif not select:
-                    break
-                elif (n := int(select) - 1) in range(len(self.__function)):
-                    await self.__function[n][1](safe_pop(self.default_mode))
+        while self.running:
+            if not (select := safe_pop(self.default_mode)):
+                select = choose(
+                    "请选择采集功能",
+                    [i for i, _ in self.__function],
+                    self.console)
+            if select in {"Q", "q", ""}:
+                self.running = False
+            try:
+                n = int(select) - 1
+            except ValueError:
+                return
+            if n in range(len(self.__function)):
+                await self.__function[n][1](safe_pop(self.default_mode))

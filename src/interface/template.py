@@ -56,7 +56,7 @@ class API:
         "downlink": "10",
         "effective_type": "4g",
         "round_trip_time": "200",
-        "webid": "",
+        # "webid": "",
         "msToken": "",
     }
 

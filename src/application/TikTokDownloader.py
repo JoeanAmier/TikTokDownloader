@@ -287,11 +287,14 @@ class TikTokDownloader:
             self.console.print("扫码登录失败，未写入 Cookie！", style=WARNING)
 
     async def compatible(self, mode: str):
-        with suppress(ValueError):
-            if mode in {"Q", "q", ""}:
-                self.running = False
-            elif (n := int(mode) - 1) in range(len(self.__function_menu)):
-                await self.__function_menu[n][1]()
+        if mode in {"Q", "q", ""}:
+            self.running = False
+        try:
+            n = int(mode) - 1
+        except ValueError:
+            return
+        if n in range(len(self.__function_menu)):
+            await self.__function_menu[n][1]()
 
     async def delete_works_ids(self):
         if not self.config["Record"]:
