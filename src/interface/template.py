@@ -4,6 +4,7 @@ from typing import Coroutine
 from typing import TYPE_CHECKING
 from typing import Type
 from urllib.parse import quote
+from urllib.parse import urlencode
 
 from httpx import AsyncClient
 from rich.progress import (
@@ -285,8 +286,10 @@ class API:
 
     def deal_url_params(self, params: dict, number=8):
         if params:
-            params["a_bogus"] = quote(self.ab.get_value(
-                params, self.headers.get("User-Agent", USERAGENT)), safe="", )
+            # params["a_bogus"] = quote(self.ab.get_value(
+            # params, self.headers.get("User-Agent", USERAGENT)), safe="", )
+            params["a_bogus"] = quote(self.ab.generate_abogus(
+                urlencode(params), "GET")[1], safe="", )
 
     def summary_works(self, ) -> None:
         self.log.info(f"共获取到 {len(self.response)} 个{self.text}")
