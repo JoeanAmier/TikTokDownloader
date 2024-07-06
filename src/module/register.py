@@ -49,6 +49,7 @@ class Register:
         self.console = params.console
         self.log = params.logger
         self.headers = QRCODE_HEADERS
+        self.proxy = params.proxy
         # self.verify_fp = None
         self.cache = params.cache
         self.url_params = {
@@ -141,7 +142,7 @@ class Register:
             return None, None
 
     async def __set_ms_token(self):
-        if isinstance(t := await MsToken.get_long_ms_token(self.log, self.headers), dict):
+        if isinstance(t := await MsToken.get_real_ms_token(self.log, self.headers, **self.proxy, ), dict):
             self.url_params["msToken"] = t["msToken"]
 
     async def check_register(self, token):

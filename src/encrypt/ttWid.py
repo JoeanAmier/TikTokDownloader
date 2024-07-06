@@ -19,8 +19,8 @@ class TtWid:
     NAME = "ttwid"
     API = "https://ttwid.bytedance.com/ttwid/union/register/"
     DATA = (
-        '{"region":"cn","aid":1768,"needFid":false,"service":"www.ixigua.com","migrate_info":'
-        '{"ticket":"","source":"node"},"cbUrlProtocol":"https","union":true}')
+        '{"region":"cn","aid":1768,"needFid":false,"service":"www.ixigua.com","migrate_info":{"ticket":"",'
+        '"source":"node"},"cbUrlProtocol":"https","union":true}')
 
     @classmethod
     async def get_tt_wid(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
@@ -67,7 +67,7 @@ async def demo():
     print("抖音", await TtWid.get_tt_wid(Logger(), PARAMS_HEADERS, proxies={"http://": None, "https://": None}))
     print("TikTok",
           await TtWidTikTok.get_tt_wid(Logger(), PARAMS_HEADERS_TIKTOK,
-                                       cookie="",
+                                       cookie="需要填入 Cookie",
                                        proxy="http://localhost:10809"))
 
 

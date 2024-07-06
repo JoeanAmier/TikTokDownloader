@@ -1,5 +1,4 @@
 from asyncio import run
-from asyncio import sleep as asleep
 from contextlib import suppress
 from shutil import rmtree
 from threading import Event
@@ -314,10 +313,8 @@ class TikTokDownloader:
             **self.settings.read(),
             recorder=self.recorder,
         )
-        # await self.parameter.get_token_params()
-        # self.parameter.set_headers_cookie()
+        self.parameter.set_headers_cookie()
         self.restart_cycle_task(restart, )
-        await asleep(5)
         if not restart:
             self.default_mode = self.parameter.default_mode.copy()
         self.parameter.CLEANER.set_rule(TEXT_REPLACEMENT, True)
@@ -336,7 +333,7 @@ class TikTokDownloader:
     def periodic_update_cookie(self):
         async def inner():
             while not self.event.is_set():
-                await self.parameter.update_cookie()
+                await self.parameter.update_params()
                 self.event.wait(COOKIE_UPDATE_INTERVAL)
 
         with suppress(RuntimeError):

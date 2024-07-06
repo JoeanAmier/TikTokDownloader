@@ -20,12 +20,12 @@ from src.custom import (
     QRCODE_HEADERS,
     PARAMS_HEADERS_TIKTOK,
     DATA_HEADERS_TIKTOK,
-    INFO,
     USERAGENT,
 )
 from src.encrypt import ABogus
 from src.encrypt import MsToken
 from src.encrypt import MsTokenTikTok
+from src.encrypt import TtWid
 from src.encrypt import TtWidTikTok
 from src.encrypt import XBogus
 from src.extract import Extractor
@@ -242,7 +242,6 @@ class Parameter:
     ) -> None | str:
         if tiktok:
             parameters = (
-                # TODO: 参数异常，待研究
                 # await MsTokenTikTok.get_long_ms_token(self.logger, self.headers_params_tiktok, token,
                 #                                       **self.proxy_tiktok, ),
                 await TtWidTikTok.get_tt_wid(self.logger, self.headers_params_tiktok, self.twc_tiktok,
@@ -250,9 +249,9 @@ class Parameter:
             )
         else:
             parameters = (
-                # TODO: 参数异常，待研究
-                # await MsToken.get_long_ms_token(self.logger, self.headers_params, token, **self.proxy, ),
-                # await TtWid.get_tt_wid(self.logger, self.headers_params, **self.proxy, ),
+                # await MsToken.get_real_ms_token(self.logger,
+                # self.headers_params, token, **self.proxy, ),
+                await TtWid.get_tt_wid(self.logger, self.headers_params, **self.proxy, ),
             )
         if isinstance(cookie, dict):
             for i in parameters:
@@ -403,29 +402,30 @@ class Parameter:
             return default_mode.split()[::-1]
         return []
 
-    async def update_cookie(self) -> None:
+    async def update_params(self) -> None:
+        await self.set_token_params()
         if self.update_cookie_dy:
-            self.console.print("正在更新抖音 Cookie 参数，请稍等...", style=INFO)
+            # self.console.print("正在更新抖音 Cookie 参数，请稍等...", style=INFO)
             await self.__update_cookie(
                 self.headers,
                 self.cookie,
                 self.cookie_cache,
                 False)
-            if self.cookie:
-                API.params["msToken"] = self.cookie.get("msToken", "")
-            self.console.print("抖音 Cookie 参数更新完毕！", style=INFO)
+            # if self.cookie:
+            #     API.params["msToken"] = self.cookie.get("msToken", "")
+            # self.console.print("抖音 Cookie 参数更新完毕！", style=INFO)
         if self.update_cookie_tk:
-            self.console.print("正在更新 TikTok Cookie 参数，请稍等...", style=INFO)
+            # self.console.print("正在更新 TikTok Cookie 参数，请稍等...", style=INFO)
             await self.__update_cookie(
                 self.headers_tiktok,
                 self.cookie_tiktok,
                 self.cookie_tiktok_cache,
                 True, )
-            if self.cookie_tiktok:
-                APITikTok.params["msToken"] = self.cookie_tiktok.get(
-                    "msToken", "")
+            # if self.cookie_tiktok:
+            #     APITikTok.params["msToken"] = self.cookie_tiktok.get(
+            #         "msToken", "")
             # self.__update_download_headers()
-            self.console.print("TikTok Cookie 参数更新完毕！", style=INFO)
+            # self.console.print("TikTok Cookie 参数更新完毕！", style=INFO)
 
     async def __update_cookie(
             self,
@@ -449,9 +449,6 @@ class Parameter:
                 self.cookie_tiktok)
         elif self.cookie_tiktok_cache:
             self.headers_tiktok["Cookie"] = self.cookie_tiktok_cache
-        API.params["msToken"] = self.cookie.get("msToken", self.ms_token)
-        APITikTok.params["msToken"] = self.cookie_tiktok.get(
-            "msToken", self.ms_token_tiktok)
 
     def __update_download_headers(self):
         key = "tt_chain_token"
@@ -462,40 +459,45 @@ class Parameter:
         # self.headers_download_tiktok["Cookie"] = self.headers_tiktok.get(
         #     "Cookie", "")
 
-    async def get_token_params(self):
-        await self.__get_token_params()
+    async def set_token_params(self):
+        # await self.__get_token_params()
         await self.__get_token_params_tiktok()
+        # API.params["msToken"] = self.ms_token
+        APITikTok.params["msToken"] = self.ms_token_tiktok
 
     async def __get_token_params(self):
         if not self.update_cookie_dy:
             return
-        if not (m := self.cookie.get("msToken")):
-            self.logger.warning("抖音 cookie 缺少必需的键值对，请尝试重新写入 cookie")
-            return
-        # TODO: 参数异常，待研究
-        if (d := await MsToken.get_long_ms_token(
+        # if not (m := self.cookie.get("msToken")):
+        #     self.logger.warning("抖音 cookie 缺少必需的键值对，请尝试重新写入 cookie")
+        #     return
+        if (d := await MsToken.get_real_ms_token(
                 self.logger,
                 self.headers_params,
-                m,
+                # m,
                 **self.proxy,
         )):
-            self.cookie |= d
+            # self.cookie |= d
             self.ms_token = d[MsToken.NAME]
+        else:
+            self.ms_token = self.cookie.get("msToken", "")
 
     async def __get_token_params_tiktok(self):
         if not self.update_cookie_tk:
             return
-        if not (m := self.cookie_tiktok.get("msToken")):
-            self.logger.warning("TikTok cookie 缺少必需的键值对，请尝试重新写入 cookie")
-            return
+        # if not (m := self.cookie_tiktok.get("msToken")):
+        #     self.logger.warning("TikTok cookie 缺少必需的键值对，请尝试重新写入 cookie")
+        #     return
         if (d := await MsTokenTikTok.get_long_ms_token(
                 self.logger,
                 self.headers_params_tiktok,
-                m,
+                # m,
                 **self.proxy,
         )):
-            self.cookie_tiktok |= d
+            # self.cookie_tiktok |= d
             self.ms_token_tiktok = d[MsTokenTikTok.NAME]
+        else:
+            self.ms_token = self.cookie_tiktok.get("msToken", "")
 
     @staticmethod
     def __generate_ffmpeg_object(ffmpeg_path: str) -> FFMPEG:
@@ -552,8 +554,8 @@ class Parameter:
                         c,
                         False,
                         key=i))
-        # await self.update_cookie()
-        await self.get_token_params()
+        await self.update_params()
+        await self.set_token_params()
         self.set_headers_cookie()
 
     def __check_accounts_urls(self, data: list[dict]) -> list[dict]:

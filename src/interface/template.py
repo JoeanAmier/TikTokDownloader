@@ -57,7 +57,7 @@ class API:
         "effective_type": "4g",
         "round_trip_time": "200",
         # "webid": "",
-        "msToken": "",
+        # "msToken": "",
     }
 
     def __init__(
