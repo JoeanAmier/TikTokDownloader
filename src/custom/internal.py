@@ -85,8 +85,8 @@ PARAMS_HEADERS_TIKTOK = PARAMS_HEADERS | {
     "Referer": "https://www.tiktok.com/",
 }
 DATA_HEADERS = {
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Encoding": "gzip, deflate, br, zstd",
+    "Accept": "*/*",
+    "Accept-Encoding": "*/*",
     "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
     "Dnt": "1",
     "Referer": "https://www.douyin.com/?recommend=1",
