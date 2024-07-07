@@ -76,5 +76,4 @@ class Live(API):
             self.live_api_share,
             params,
             headers=self.black_headers,
-            number=12,
         )

@@ -1,10 +1,13 @@
+from random import choice
 from random import randint
 from random import random
 from re import compile
 from time import time
 from urllib.parse import urlencode
 
-from src.custom import USERAGENT
+from gmssl import sm3, func
+
+# from src.custom import USERAGENT
 
 __all__ = ["ABogus", ]
 
@@ -12,73 +15,10 @@ __all__ = ["ABogus", ]
 class ABogus:
     __filter = compile(r'%([0-9A-F]{2})')
     __arguments = [0, 1, 14]
+    __ua_key = "\u0000\u0001\u000e"
     __end_string = "cus"
     __version = [1, 0, 1, 5]
-    __env = [
-        49,
-        53,
-        51,
-        54,
-        124,
-        55,
-        52,
-        50,
-        124,
-        49,
-        53,
-        51,
-        54,
-        124,
-        56,
-        54,
-        52,
-        124,
-        48,
-        124,
-        48,
-        124,
-        48,
-        124,
-        48,
-        124,
-        49,
-        53,
-        51,
-        54,
-        124,
-        56,
-        54,
-        52,
-        124,
-        49,
-        53,
-        51,
-        54,
-        124,
-        56,
-        54,
-        52,
-        124,
-        49,
-        53,
-        51,
-        54,
-        124,
-        55,
-        52,
-        50,
-        124,
-        50,
-        52,
-        124,
-        50,
-        52,
-        124,
-        87,
-        105,
-        110,
-        51,
-        50]
+    __browser = "1536|742|1536|864|0|0|0|0|1536|864|1536|864|1536|742|24|24|Win32"
     __reg = [
         1937774191,
         1226093241,
@@ -94,12 +34,26 @@ class ABogus:
         "s1": "Dkdpgh4ZKsQB80/Mfvw36XI1R25+WUAlEi7NLboqYTOPuzmFjJnryx9HVGcaStCe=",
         "s2": "Dkdpgh4ZKsQB80/Mfvw36XI1R25-WUAlEi7NLboqYTOPuzmFjJnryx9HVGcaStCe=",
         "s3": "ckdp1h4ZKsUB80/Mfvw36XIgR25+WQAlEi7NLboqYTOPuzmFjJnryx9HVGDaStCe",
-        "s4": "Dkdpgh2ZmsQB80/MfvV36XI1R45-WUAlEixNLwoqYTOPuzKFjJnry79HbGcaStCe"}
+        "s4": "Dkdpgh2ZmsQB80/MfvV36XI1R45-WUAlEixNLwoqYTOPuzKFjJnry79HbGcaStCe",
+    }
 
-    def __init__(self, ):
+    def __init__(self,
+                 # user_agent: str = USERAGENT,
+                 platform: str = None, ):
         self.chunk = []
         self.size = 0
         self.reg = self.__reg[:]
+        # self.ua_code = self.generate_ua_code(user_agent)
+        self.ua_code = [
+            34, 167, 211, 143, 231, 217, 33, 244,
+            208, 33, 142, 226, 219, 0, 182, 214,
+            50, 32, 197, 93, 75, 3, 223, 172,
+            226, 95, 80, 143, 61, 49, 216, 112
+        ]
+        self.browser = self.generate_browser_info(
+            platform) if platform else self.__browser
+        self.browser_len = len(self.browser)
+        self.browser_code = self.char_code_at(self.browser)
 
     @classmethod
     def list_1(cls, random_num=None, a=170, b=85, c=45, ) -> list:
@@ -180,57 +134,50 @@ class ABogus:
     def generate_string_2(
             self,
             url_params: str,
-            user_agent: str,
+            method="GET",
             start_time=0,
             end_time=0,
     ) -> str:
         a = self.generate_string_2_list(
             url_params,
-            user_agent,
+            method,
             start_time,
             end_time,
         )
         e = self.end_check_num(a)
-        a.extend(self.__env)
+        a.extend(self.browser_code)
         a.append(e)
         return self.rc4_encrypt(self.from_char_code(*a), "y")
 
     def generate_string_2_list(
             self,
             url_params: str,
-            user_agent: str,
+            method="GET",
             start_time=0,
             end_time=0,
     ) -> list:
         start_time = start_time or int(time() * 1000)
         end_time = end_time or (start_time + randint(4, 8))
-        params_array = self.sum(self.sum(url_params))
-        ua_code = [
-            34, 167, 211, 143, 231, 217, 33, 244,
-            208, 33, 142, 226, 219, 0, 182, 214,
-            50, 32, 197, 93, 75, 3, 223, 172,
-            226, 95, 80, 143, 61, 49, 216, 112
-        ]
-        # ua_code = [
-        #     70, 169, 192, 148, 108, 72, 7,
-        #     61, 100, 249, 178, 111, 172, 223,
-        #     214, 48, 161, 244, 177, 184, 84,
-        #     102, 206, 117, 172, 122, 199, 96,
-        #     79, 171, 26, 182
-        # ]
+        params_array = self.generate_params_code(url_params)
+        method_array = self.generate_method_code(method)
         return self.list_4(
             (end_time >> 24) & 255,
             params_array[21],
-            ua_code[23],
+            self.ua_code[23],
             (end_time >> 16) & 255,
             params_array[22],
-            ua_code[24],
+            self.ua_code[24],
             (end_time >> 8) & 255,
             (end_time >> 0) & 255,
             (start_time >> 24) & 255,
             (start_time >> 16) & 255,
             (start_time >> 8) & 255,
             (start_time >> 0) & 255,
+            method_array[21],
+            method_array[22],
+            int(end_time / 256 / 256 / 256 / 256) >> 0,
+            int(start_time / 256 / 256 / 256 / 256) >> 0,
+            self.browser_len,
         )
 
     @staticmethod
@@ -322,6 +269,11 @@ class ABogus:
             j: int,
             k: int,
             m: int,
+            n: int,
+            o: int,
+            p: int,
+            q: int,
+            r: int,
     ) -> list:
         return [
             44,
@@ -332,18 +284,18 @@ class ABogus:
             0,
             24,
             b,
-            58,
+            n,
             0,
             c,
             d,
             0,
-            24,
-            97,
+            0,
+            0,
             1,
             0,
             239,
             e,
-            51,
+            o,
             f,
             g,
             0,
@@ -360,11 +312,11 @@ class ABogus:
             k,
             m,
             3,
-            399,
+            p,
             1,
-            399,
+            q,
             1,
-            64,
+            r,
             0,
             0,
             0]
@@ -429,10 +381,10 @@ class ABogus:
         return [ord(char) for char in s]
 
     def write(self, e, ):
-        if isinstance(e, str):
-            e = self.decode_string(e + self.__end_string)
-            e = self.char_code_at(e)
         self.size = len(e)
+        if isinstance(e, str):
+            e = self.decode_string(e)
+            e = self.char_code_at(e)
         if len(e) <= 64:
             self.chunk = e
         else:
@@ -451,9 +403,7 @@ class ABogus:
         self.write(e)
         self.fill(length)
         self.compress(self.chunk)
-        a = self.reg_to_array(self.reg)
-        self.reset()
-        return a
+        return self.reg_to_array(self.reg)
 
     @classmethod
     def generate_result_unit(cls, n, s):
@@ -472,13 +422,40 @@ class ABogus:
         return r
 
     @classmethod
-    def generate_result(cls, s, n, e="s4"):
-        r = ""
-        for i in range(n):
-            b = ((ord(s[i * 3]) << 16) | (ord(s[i * 3 + 1]))
-                 << 8) | ord(s[i * 3 + 2])
-            r += cls.generate_result_unit(b, e)
-        return r
+    def generate_result(cls, s, e="s4"):
+        # r = ""
+        # for i in range(len(s)//4):
+        #     b = ((ord(s[i * 3]) << 16) | (ord(s[i * 3 + 1]))
+        #          << 8) | ord(s[i * 3 + 2])
+        #     r += cls.generate_result_unit(b, e)
+        # return r
+
+        r = []
+
+        for i in range(0, len(s), 3):
+            if i + 2 < len(s):
+                n = (
+                        (ord(s[i]) << 16)
+                        | (ord(s[i + 1]) << 8)
+                        | ord(s[i + 2])
+                )
+            elif i + 1 < len(s):
+                n = (ord(s[i]) << 16) | (
+                        ord(s[i + 1]) << 8
+                )
+            else:
+                n = ord(s[i]) << 16
+
+            for j, k in zip(range(18, -1, -6),
+                            (0xFC0000, 0x03F000, 0x0FC0, 0x3F)):
+                if j == 6 and i + 1 >= len(s):
+                    break
+                if j == 0 and i + 2 >= len(s):
+                    break
+                r.append(cls.__str[e][(n & k) >> j])
+
+        r.append("=" * ((4 - len(r) % 4) % 4))
+        return "".join(r)
 
     @classmethod
     def generate_args_code(cls):
@@ -493,12 +470,74 @@ class ABogus:
             a.append(cls.__arguments[2] >> j)
         return [int(i) & 255 for i in a]
 
+    def generate_method_code(self, method: str = "GET") -> list[int]:
+        return self.sm3_to_array(self.sm3_to_array(method + self.__end_string))
+        # return self.sum(self.sum(method + self.__end_string))
+
+    def generate_params_code(self, params: str) -> list[int]:
+        return self.sm3_to_array(self.sm3_to_array(params + self.__end_string))
+        # return self.sum(self.sum(params + self.__end_string))
+
+    @classmethod
+    def sm3_to_array(cls, data: str | list) -> list[int]:
+        """
+        代码参考: https://github.com/Johnserf-Seed/f2/blob/main/f2/utils/abogus.py
+
+        计算请求体的 SM3 哈希值，并将结果转换为整数数组
+        Calculate the SM3 hash value of the request body and convert the result to an array of integers
+
+        Args:
+            data (Union[str, List[int]]): 输入数据 (Input data).
+
+        Returns:
+            List[int]: 哈希值的整数数组 (Array of integers representing the hash value).
+        """
+
+        if isinstance(data, str):
+            b = data.encode("utf-8")
+        else:
+            b = bytes(data)  # 将 List[int] 转换为字节数组
+
+        # 将字节数组转换为适合 sm3.sm3_hash 函数处理的列表格式
+        h = sm3.sm3_hash(func.bytes_to_list(b))
+
+        # 将十六进制字符串结果转换为十进制整数列表
+        return [int(h[i: i + 2], 16) for i in range(0, len(h), 2)]
+
+    @classmethod
+    def generate_browser_info(cls, platform: str = "Win32") -> str:
+        inner_width = randint(1280, 1920)
+        inner_height = randint(720, 1080)
+        outer_width = randint(inner_width, 1920)
+        outer_height = randint(inner_height, 1080)
+        screen_x = 0
+        screen_y = choice((0, 30))
+        value_list = [
+            inner_width,
+            inner_height,
+            outer_width,
+            outer_height,
+            screen_x,
+            screen_y,
+            0,
+            0,
+            outer_width,
+            outer_height,
+            outer_width,
+            outer_height,
+            inner_width,
+            inner_height,
+            24,
+            24,
+            platform,
+        ]
+        return "|".join(str(i) for i in value_list)
+
     @staticmethod
     def rc4_encrypt(plaintext, key):
         s = list(range(256))
         j = 0
 
-        # Key Scheduling Algorithm (KSA)
         for i in range(256):
             j = (j + s[i] + ord(key[i % len(key)])) % 256
             s[i], s[j] = s[j], s[i]
@@ -507,7 +546,6 @@ class ABogus:
         j = 0
         cipher = []
 
-        # Pseudo-Random Generation Algorithm (PRGA)
         for k in range(len(plaintext)):
             i = (i + 1) % 256
             j = (j + s[i]) % 256
@@ -518,11 +556,10 @@ class ABogus:
         return ''.join(cipher)
 
     def get_value(self,
-                  url_params: dict,
-                  user_agent: str = USERAGENT,
+                  url_params: dict | str,
+                  method="GET",
                   start_time=0,
                   end_time=0,
-                  length=40,
                   random_num_1=None,
                   random_num_2=None,
                   random_num_3=None,
@@ -532,12 +569,9 @@ class ABogus:
             random_num_2,
             random_num_3,
         )
-        string_2 = self.generate_string_2(
-            urlencode(url_params),
-            user_agent,
-            start_time,
-            end_time,
-        )
+        string_2 = self.generate_string_2(urlencode(url_params) if isinstance(
+            url_params, dict) else url_params, method, start_time, end_time, )
         string = string_1 + string_2
-        return self.generate_result(
-            string, length, "s4") + self.generate_result_end(string, "s4")
+        # return self.generate_result(
+        #     string, "s4") + self.generate_result_end(string, "s4")
+        return self.generate_result(string, "s4")

@@ -4,7 +4,6 @@ from typing import Coroutine
 from typing import TYPE_CHECKING
 from typing import Type
 from urllib.parse import quote
-from urllib.parse import urlencode
 
 from httpx import AsyncClient
 from rich.progress import (
@@ -20,6 +19,8 @@ from src.custom import wait
 from src.tools import PrivateRetry
 from src.tools import TikTokDownloaderError
 from src.tools import capture_error_request
+
+# from urllib.parse import urlencode
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -58,7 +59,7 @@ class API:
         "effective_type": "4g",
         "round_trip_time": "200",
         # "webid": "",
-        # "msToken": "",
+        "msToken": "",
     }
 
     def __init__(
@@ -154,13 +155,14 @@ class API:
                          *args,
                          **kwargs,
                          ):
-        if data := await self.request_data(self.api,
-                                           params=params() or self.generate_params(),
-                                           data=data() or self.generate_data(),
-                                           method=method,
-                                           headers=headers,
-                                           finished=True,
-                                           ):
+        if data := await self.request_data(
+                self.api,
+                params=params() or self.generate_params(),
+                data=data() or self.generate_data(),
+                method=method,
+                headers=headers,
+                finished=True,
+        ):
             self.check_response(
                 data,
                 data_key,
@@ -235,11 +237,12 @@ class API:
                            data: dict = None,
                            method="GET",
                            headers: dict = None,
-                           number=8,
+                           encryption="GET",
                            finished=False,
                            *args,
-                           **kwargs):
-        self.deal_url_params(params, number, )
+                           **kwargs,
+                           ):
+        self.deal_url_params(params, encryption, )
         match method:
             case "GET":
                 return await self.__request_data_get(url, params, headers or self.headers,
@@ -284,12 +287,18 @@ class API:
             return
         return response.json()
 
-    def deal_url_params(self, params: dict, number=8):
+    def deal_url_params(self, params: dict, method="GET", **kwargs, ):
         if params:
-            # params["a_bogus"] = quote(self.ab.get_value(
-            # params, self.headers.get("User-Agent", USERAGENT)), safe="", )
-            params["a_bogus"] = quote(self.ab.generate_abogus(
-                urlencode(params), "GET")[1], safe="", )
+            params["a_bogus"] = quote(
+                self.ab.get_value(
+                    params,
+                    method,
+                ),
+                safe="",
+            )
+            # params["a_bogus"] = quote(
+            #     self.ab.generate_abogus(
+            #         urlencode(params), method, )[1], safe="", )
 
     def summary_works(self, ) -> None:
         self.log.info(f"共获取到 {len(self.response)} 个{self.text}")
@@ -372,7 +381,30 @@ class APITikTok(API):
         self.client: AsyncClient = params.client_tiktok
         self.set_temp_cookie(cookie)
 
-    def deal_url_params(self, params: dict, number=8):
+    async def request_data(self,
+                           url: str,
+                           params: dict = None,
+                           data: dict = None,
+                           method="GET",
+                           headers: dict = None,
+                           encryption=8,
+                           finished=False,
+                           *args,
+                           **kwargs,
+                           ):
+        return await super().request_data(
+            url=url,
+            params=params,
+            data=data,
+            method=method,
+            headers=headers,
+            encryption=encryption,
+            finished=finished,
+            *args,
+            **kwargs,
+        )
+
+    def deal_url_params(self, params: dict, number=8, **kwargs, ):
         if params:
             params["X-Bogus"] = quote(self.xb.get_x_bogus(
                 params, number, self.headers.get(

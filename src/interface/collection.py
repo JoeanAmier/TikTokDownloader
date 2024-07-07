@@ -81,17 +81,18 @@ class Collection(API):
                            data: dict = None,
                            method="GET",
                            headers: dict = None,
-                           number=8,
+                           encryption="GET",
                            finished=False,
                            *args,
-                           **kwargs):
+                           **kwargs,
+                           ):
         return await super().request_data(
             url,
             params,
             data,
             method,
             headers,
-            number,
+            encryption,
             finished,
             *args,
             **kwargs,

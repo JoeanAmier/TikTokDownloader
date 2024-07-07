@@ -28,7 +28,7 @@ class LiveTikTok(APITikTok):
         return await self.request_data(
             self.live_api,
             self.params,
-            method="post",
+            method="POST",
             data=self.__generate_room_id_data(),
         )
 

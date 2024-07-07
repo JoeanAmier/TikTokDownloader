@@ -22,10 +22,10 @@ from src.custom import (
     DATA_HEADERS_TIKTOK,
     USERAGENT,
 )
+from src.encrypt import ABogus
 from src.encrypt import MsToken
 from src.encrypt import MsTokenTikTok
-# from src.encrypt import ABogus
-from src.encrypt import RABogus
+# from src.encrypt import RABogus
 from src.encrypt import TtWid
 from src.encrypt import TtWidTikTok
 from src.encrypt import XBogus
@@ -121,9 +121,9 @@ class Parameter:
         self.headers_qrcode = QRCODE_HEADERS
         self.logger = logger(PROJECT_ROOT, console)
         self.logger.run()
-        # self.ab = ABogus()
-        self.ab = RABogus(
-            fp="1365|785|1393|862|0|30|0|0|1511|932|1511|932|1365|785|24|24|Win32")
+        self.ab = ABogus()
+        # self.ab = RABogus(
+        #     fp="1365|785|1393|862|0|30|0|0|1511|932|1511|932|1365|785|24|24|Win32")
         self.xb = XBogus()
         self.console = console
         self.cookie, self.cookie_cache = self.__check_cookie(cookie)
