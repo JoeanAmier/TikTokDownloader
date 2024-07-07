@@ -138,7 +138,6 @@ class TikTok:
             ("批量下载账号作品(抖音)", self.account_acquisition_interactive,),
             ("批量下载链接作品(抖音)", self.detail_interactive,),
             ("获取直播推流地址(抖音)", self.live_interactive,),
-            # TODO: 该功能暂不开放，千万不要取消注释！
             # ("采集作品评论数据(抖音)", self.comment_interactive,),
             ("批量下载合集作品(抖音)", self.mix_interactive,),
             # ("采集账号详细数据(抖音)", self.disable_function,),
@@ -1345,11 +1344,11 @@ class TikTok:
                     "请选择采集功能",
                     [i for i, _ in self.__function],
                     self.console)
-            if select in {"Q", "q", ""}:
+            if select in {"Q", "q", }:
                 self.running = False
             try:
                 n = int(select) - 1
             except ValueError:
-                continue
+                break
             if n in range(len(self.__function)):
                 await self.__function[n][1](safe_pop(self.default_mode))

@@ -263,12 +263,9 @@ class API:
                                  **kwargs,
                                  ):
         # TODO: 临时代理未生效
+        self.__record_request_messages(url, params, None, headers, **kwargs, )
         response = await self.client.get(url, params=params, headers=headers, **kwargs)
-        await wait()
-        if response.status_code != 200:
-            self.log.error(f"请求 {url} 失败，响应码 {response.status_code}")
-            return
-        return response.json()
+        return await self.__return_response(response)
 
     @PrivateRetry.retry
     @capture_error_request
@@ -280,12 +277,34 @@ class API:
                                   finished=False,
                                   **kwargs):
         # TODO: 临时代理未生效
+        self.__record_request_messages(url, params, data, headers, **kwargs, )
         response = await self.client.post(url, params=params, data=data, headers=headers, **kwargs)
+        return await self.__return_response(response)
+
+    async def __return_response(self, response):
+        self.log.info(f"Response URL: {response.url}", False)
+        self.log.info(f"Response Code: {response.status_code}", False)
+        response.raise_for_status()
         await wait()
-        if response.status_code != 200:
-            self.log.error(f"请求 {url} 失败，响应码 {response.status_code}")
-            return
+        # if response.status_code != 200:
+        #     self.log.error(f"请求 {url} 失败，响应码 {response.status_code}")
+        #     return
+        self.log.info(f"Response Content: {response.content}", False)
         return response.json()
+
+    def __record_request_messages(
+            self,
+            url: str,
+            params: dict,
+            data: dict,
+            headers: dict,
+            **kwargs,
+    ):
+        self.log.info(f"URL: {url}", False)
+        self.log.info(f"Params: {params}", False)
+        self.log.info(f"Data: {data}", False)
+        self.log.info(f"Headers: {headers}", False)
+        self.log.info(f"Other: {kwargs}", False)
 
     def deal_url_params(self, params: dict, method="GET", **kwargs, ):
         if params:

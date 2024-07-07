@@ -168,6 +168,7 @@ class Parameter:
         self.client = create_client(timeout=self.timeout, **self.proxy, )
         self.client_tiktok = create_client(
             timeout=self.timeout, **self.proxy_tiktok, )
+        # TODO: 未更新代码
         self.check_rules = {
             "accounts_urls": self.__check_accounts_urls,
             "mix_urls": self.__check_mix_urls,
@@ -259,10 +260,12 @@ class Parameter:
         if isinstance(cookie, dict):
             for i in parameters:
                 if isinstance(i, dict):
+                    self.logger.info(f"参数: {i}", False, )
                     cookie |= i
         elif isinstance(cookie, str):
             for i in parameters:
                 if isinstance(i, dict):
+                    self.logger.info(f"参数: {i}", False, )
                     cookie += cookie_dict_to_str(i)
             return cookie
 
@@ -342,9 +345,9 @@ class Parameter:
                 url,
                 headers=self.HEADERS,
                 **kwarg, )
-            if response.status_code < 400:
-                self.logger.info(f"代理 {proxy} 测试成功")
-                return kwarg
+            response.raise_for_status()
+            self.logger.info(f"代理 {proxy} 测试成功")
+            return kwarg
         except TimeoutException:
             self.logger.warning(f"代理 {proxy} 测试超时")
         except RequestError as e:
@@ -482,8 +485,10 @@ class Parameter:
         )):
             # self.cookie |= d
             self.ms_token = d[MsToken.NAME]
+            self.logger.info(f"抖音 MsToken 请求值: {self.ms_token}", False, )
         else:
             self.ms_token = self.cookie.get("msToken", "")
+            self.logger.info(f"抖音 MsToken 本地值: {self.ms_token}", False, )
 
     async def __get_token_params_tiktok(self):
         if not self.update_cookie_tk:
@@ -499,14 +504,17 @@ class Parameter:
         )):
             # self.cookie_tiktok |= d
             self.ms_token_tiktok = d[MsTokenTikTok.NAME]
+            self.logger.info(f"TikTok MsToken 请求值: {self.ms_token}", False, )
         else:
             self.ms_token = self.cookie_tiktok.get("msToken", "")
+            self.logger.info(f"TikTok MsToken 本地值: {self.ms_token}", False, )
 
     @staticmethod
     def __generate_ffmpeg_object(ffmpeg_path: str) -> FFMPEG:
         return FFMPEG(ffmpeg_path)
 
     def get_settings_data(self) -> dict:
+        # TODO: 未更新代码
         return {
             "accounts_urls": [vars(i) for i in self.accounts_urls],
             "accounts_urls_tiktok": [vars(i) for i in self.accounts_urls_tiktok],
@@ -578,6 +586,7 @@ class Parameter:
         self.cache.mkdir(exist_ok=True)
 
     def __check_browser_info(self, info: dict, ):
+        self.logger.info(f"抖音浏览器信息: {info}", False)
         for i in ("Sec-Ch-Ua", "User-Agent", "Sec-Ch-Ua-Platform",):
             for j in (
                     self.headers,
@@ -599,6 +608,7 @@ class Parameter:
             API.params[i] = info.get(i, "")
 
     def __check_browser_info_tiktok(self, info: dict, ):
+        self.logger.info(f"TikTok 浏览器信息: {info}", False)
         for i in ("Sec-Ch-Ua", "User-Agent", "Sec-Ch-Ua-Platform",):
             for j in (
                     self.headers_tiktok,

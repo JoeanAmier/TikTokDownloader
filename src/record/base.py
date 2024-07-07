@@ -7,6 +7,7 @@ from src.custom import (
     WARNING,
     ERROR,
     INFO,
+    GENERAL,
 )
 from src.tools import Cleaner
 
@@ -84,5 +85,5 @@ class BaseLogger:
     def debug(self, text: str, **kwargs):
         pass
 
-    def print(self, text: str, **kwargs) -> None:
-        self.console.print(text, **kwargs)
+    def print(self, text: str, style=GENERAL, **kwargs) -> None:
+        self.console.print(text, style=style, **kwargs)

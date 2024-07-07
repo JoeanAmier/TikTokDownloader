@@ -410,6 +410,7 @@ class Downloader:
     ) -> bool:
         async with semaphore or self.semaphore:
             client = self.client_tiktok if tiktok else self.client
+            self.log.info(f"File URL: {url}", False, )
             try:
                 async with client.stream(
                         "GET",
@@ -422,11 +423,14 @@ class Downloader:
                                     0))) and not unknown_size:  # 响应内容大小判断
                         self.log.warning(f"{url} 响应内容为空")
                         return False
-                    if response.status_code >= 400:  # 响应码判断
-                        self.log.warning(
-                            f"{response.url} 响应码异常: {response.status_code}")
-                        return False
-                    elif all((self.max_size, content, content > self.max_size)):  # 文件下载跳过判断
+                    self.log.info(f"Response URL: {response.url}", False)
+                    self.log.info(f"Response Code: {response.status_code}", False)
+                    response.raise_for_status()
+                    # if response.status_code >= 400:  # 响应码判断
+                    #     self.log.warning(
+                    #         f"{response.url} 响应码异常: {response.status_code}")
+                    #     return False
+                    if all((self.max_size, content, content > self.max_size)):  # 文件下载跳过判断
                         self.log.info(f"{show} 文件大小超出限制，跳过下载")
                         return True
                     return await self.download_file(
@@ -537,3 +541,6 @@ class Downloader:
         self.log.info(f"跳过图集作品 {len(count.skipped_image)} 个")
         self.log.info(f"下载视频作品 {len(count.downloaded_video)} 个")
         self.log.info(f"下载图集作品 {len(count.downloaded_image)} 个")
+
+    def __format_item_name(self, name: str) -> str:
+        pass

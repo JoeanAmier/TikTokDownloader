@@ -35,7 +35,11 @@ class Requester:
     @PrivateRetry.retry
     @capture_error_request
     async def request_url(self, url: str, content="url", ):
+        self.log.info(f"URL: {url}", False)
         response = await self.client.get(url, )
+        self.log.info(f"Response URL: {response.url}", False)
+        self.log.info(f"Response Code: {response.status_code}", False)
+        response.raise_for_status()
         match content:
             case "text":
                 return response.text
