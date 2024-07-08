@@ -85,6 +85,7 @@ class Parameter:
             split: str,
             music: bool,
             folder_mode: bool,
+            truncate: int,
             storage_format: str,
             dynamic_cover: bool,
             original_cover: bool,
@@ -199,6 +200,7 @@ class Parameter:
         self.update_cookie_dy = self.__check_bool(update_cookie, True)
         self.update_cookie_tk = self.__check_bool(update_cookie_tiktok, True)
         self.twc_tiktok = twc_tiktok if isinstance(twc_tiktok, str) else ""
+        self.truncate = self.__check_truncate(truncate)
         self.ms_token = ""
         self.ms_token_tiktok = ""
         self.__check_browser_info(browser_info)
@@ -246,16 +248,32 @@ class Parameter:
     ) -> None | str:
         if tiktok:
             parameters = (
-                # await MsTokenTikTok.get_long_ms_token(self.logger, self.headers_params_tiktok, token,
-                #                                       **self.proxy_tiktok, ),
-                await TtWidTikTok.get_tt_wid(self.logger, self.headers_params_tiktok, self.twc_tiktok,
-                                             **self.proxy_tiktok, ),
+                # await MsTokenTikTok.get_long_ms_token(
+                #     self.logger,
+                #     self.headers_params_tiktok,
+                #     token,
+                #     **self.proxy_tiktok,
+                # ),
+                await TtWidTikTok.get_tt_wid(
+                    self.logger,
+                    self.headers_params_tiktok,
+                    self.twc_tiktok or f"{TtWidTikTok.NAME}={cookie.get(TtWidTikTok.NAME, "")}",
+                    **self.proxy_tiktok,
+                ),
             )
         else:
             parameters = (
-                # await MsToken.get_real_ms_token(self.logger,
-                # self.headers_params, token, **self.proxy, ),
-                await TtWid.get_tt_wid(self.logger, self.headers_params, **self.proxy, ),
+                # await MsToken.get_real_ms_token(
+                #     self.logger,
+                #     self.headers_params,
+                #     token,
+                #     **self.proxy,
+                # ),
+                await TtWid.get_tt_wid(
+                    self.logger,
+                    self.headers_params,
+                    **self.proxy,
+                ),
             )
         if isinstance(cookie, dict):
             for i in parameters:
@@ -364,15 +382,14 @@ class Parameter:
             self.logger.info(f"chunk 参数已设置为 {chunk}", False)
             return chunk
         self.logger.warning(
-            f"chunk 参数 {chunk} 设置错误，程序将使用默认值：{
-            1024 * 1024}", False)
+            f"chunk 参数 {chunk} 设置错误，程序将使用默认值：{1024 * 1024}", )
         return 1024 * 1024
 
     def __check_max_retry(self, max_retry: int) -> int:
         if isinstance(max_retry, int) and max_retry >= 0:
             self.logger.info(f"max_retry 参数已设置为 {max_retry}", False)
             return max_retry
-        self.logger.warning(f"max_retry 参数 {max_retry} 设置错误，程序将使用默认值：5", False)
+        self.logger.warning(f"max_retry 参数 {max_retry} 设置错误，程序将使用默认值：5", )
         return 5
 
     def __check_max_pages(self, max_pages: int) -> int:
@@ -381,7 +398,7 @@ class Parameter:
             return max_pages
         elif max_pages != 0:
             self.logger.warning(
-                f"max_pages 参数 {max_pages} 设置错误，程序将使用默认值：99999", False)
+                f"max_pages 参数 {max_pages} 设置错误，程序将使用默认值：99999", )
         return 99999
 
     def __check_timeout(self, timeout: int | float) -> int | float:
@@ -587,7 +604,11 @@ class Parameter:
 
     def __check_browser_info(self, info: dict, ):
         self.logger.info(f"抖音浏览器信息: {info}", False)
-        for i in ("Sec-Ch-Ua", "User-Agent", "Sec-Ch-Ua-Platform",):
+        for i in (
+                # "Sec-Ch-Ua",
+                "User-Agent",
+                # "Sec-Ch-Ua-Platform",
+        ):
             for j in (
                     self.headers,
                     self.headers_download,
@@ -609,7 +630,11 @@ class Parameter:
 
     def __check_browser_info_tiktok(self, info: dict, ):
         self.logger.info(f"TikTok 浏览器信息: {info}", False)
-        for i in ("Sec-Ch-Ua", "User-Agent", "Sec-Ch-Ua-Platform",):
+        for i in (
+                # "Sec-Ch-Ua",
+                "User-Agent",
+                # "Sec-Ch-Ua-Platform",
+        ):
             for j in (
                     self.headers_tiktok,
                     self.headers_download_tiktok,
@@ -636,3 +661,11 @@ class Parameter:
         if isinstance(proxy, str):
             return proxy
         return None
+
+    def __check_truncate(self, truncate: int) -> int:
+        if isinstance(truncate, int) and truncate >= 32:
+            self.logger.info(f"truncate 参数已设置为 {truncate}", False)
+            return truncate
+        self.logger.warning(
+            f"truncate 参数 {truncate} 设置错误，程序将使用默认值：64", )
+        return 64

@@ -49,6 +49,7 @@
 <li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品(抖音)</code> -> <code>手动输入待采集的作品链接</code></li>
 <li>输入抖音作品链接即可下载作品文件</li>
 </ol>
+<p><b>TikTok 平台功能需要额外设置 <code>browser_info_tiktok</code> 的 <code>device_id</code> 参数，否则功能可能无法正常使用！</b></p>
 <h1>获取 Cookie</h1>
 <p><a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">点击查看 Cookie 获取教程</a>，无效 / 过期的 Cookie 会导致程序获取数据失败或者无法下载高分辨率的视频文件；目前尚无主动判断 Cookie 无效 / 过期的方法，<a href="https://github.com/JoeanAmier/TikTokDownloader#%E5%85%B3%E4%BA%8E-cookie">更多 Cookie 说明</a>！</p>
 <h1>入门说明</h1>
@@ -72,7 +73,7 @@
 </tr>
 <tr>
 <td align="center"><code>https://vt.tiktok.com/分享码/</code></td>
-<td align="center">合辑</td>
+<td align="center">合辑、直播</td>
 </tr>
 <tr>
 <td align="center"><code>https://www.douyin.com/note/作品ID</code></td>
@@ -111,6 +112,10 @@
 <td align="center">账号</td>
 </tr>
 <tr>
+<td align="center"><code>https://www.tiktok.com/@TikTok号/playlist/合辑信息</code></td>
+<td align="center">合辑</td>
+</tr>
+<tr>
 <td align="center"><code>https://www.tiktok.com/@TikTok号/video/作品ID</code></td>
 <td align="center">账号、视频、图集</td>
 </tr>
@@ -126,7 +131,7 @@
 <ul>
 <li>完整链接：使用浏览器打开抖音或 TikTok 链接时，地址栏所显示的 URL 地址。</li>
 <li>分享链接：点击 APP 或网页版的分享按钮得到的 URL 地址，抖音平台以 <code>https://v.</code> 开头，掺杂中文和其他字符；TikTok
-平台以 <code>https://vm</code> 开头，不掺杂其他字符；使用时<b>不需要</b>手动去除中文和其他字符，程序会自动提取 URL 链接。</li>
+平台以 <code>https://vm.</code> 或 <code>https://vt.</code> 开头，不掺杂其他字符；使用时<b>不需要</b>手动去除中文和其他字符，程序会自动提取 URL 链接。</li>
 </ul>
 <h2>数据储存</h2>
 <ul>
@@ -199,7 +204,7 @@ https://www.douyin.com/note/123456789
 </tr>
 </tbody></table>
 <h2>自动更新 Cookie 参数</h2>
-<p>程序会周期性更新抖音与 TikTok Cookie 的部分参数，以保持 Cookie 的有效性。</p>
+<p>程序会周期性更新抖音与 TikTok Cookie 的部分参数，以保持 Cookie 的有效性（或许没有效果？）</p>
 <p>该功能无法防止 Cookie 失效，Cookie 失效后需要重新写入！</p>
 <p>使用者可自行启用或禁用该功能，如果您不需要使用该平台的功能，建议禁用该平台的自动更新功能！</p>
 <h1>配置文件</h1>
@@ -307,6 +312,11 @@ https://www.douyin.com/note/123456789
 <td align="center">是否下载作品音乐, 默认值: <code>false</code></td>
 </tr>
 <tr>
+<td align="center">truncate</td>
+<td align="center">int</td>
+<td align="center">文件下载进度条，描述字符串的最大长度，该参数用于调整显示效果；默认值: <code>64</code></td>
+</tr>
+<tr>
 <td align="center">storage_format</td>
 <td align="center">str</td>
 <td align="center">采集数据持久化储存格式, 设置为空字符串代表不保存<br>支持: <code>csv</code>、<code>xlsx</code>、<code>sql</code>(SQLite)</td>
@@ -344,7 +354,7 @@ https://www.douyin.com/note/123456789
 <tr>
 <td align="center">twc_tiktok</td>
 <td align="center">str</td>
-<td align="center">TikTok Cookie 的 ttwid 值，尚未使用</td>
+<td align="center">TikTok Cookie 的 ttwid 值，一般情况下无需修改！</td>
 </tr>
 <tr>
 <td align="center">download</td>
@@ -394,12 +404,12 @@ https://www.douyin.com/note/123456789
 <tr>
 <td align="center">browser_info</td>
 <td align="center">dict</td>
-<td align="center">抖音平台浏览器信息</td>
+<td align="center">抖音平台浏览器信息，无需修改！</td>
 </tr>
 <tr>
 <td align="center">browser_info_tiktok</td>
 <td align="center">dict</td>
-<td align="center">TikTok 平台浏览器信息</td>
+<td align="center">TikTok 平台浏览器信息，仅需修改 <code>device_id</code>！</td>
 </tr>
 </tbody></table>
 <h2>配置示例</h2>
@@ -446,6 +456,7 @@ https://www.douyin.com/note/123456789
   "split": " @ ",
   "folder_mode": false,
   "music": false,
+  "truncate": 32,
   "storage_format": "xlsx",
   "cookie": {
     "passport_csrf_token": "demo",
@@ -652,7 +663,7 @@ https://www.douyin.com/note/123456789
 <li>设置非法字符替换规则</li>
 <li>开启服务器模式局域网访问功能</li>
 <li>设置服务器模式主机及端口</li>
-<li><del>设置 Cookie 参数更新间隔</del></li>
+<li>设置 Cookie 参数更新间隔</li>
 <li>设置彩色交互提示颜色</li>
 <li>设置请求数据延时间隔</li>
 <li>设置获取数据失败时的处理策略</li>
@@ -668,7 +679,7 @@ https://www.douyin.com/note/123456789
 <p>自动读取本地浏览器的 Cookie 数据，并提取所需 Cookie 写入配置文件，需要完全关闭对应浏览器才能读取 Cookie 数据。</p>
 <h2>扫码登录获取 Cookie</h2>
 <p>程序自动获取抖音登录二维码，随后会在终端输出二维码，并使用系统默认图片浏览器打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片窗口，程序会自动检查登录结果并将登录后的 Cookie 写入配置文件。</p>
-<p><b>注意：</b>扫码登录可能会导致抖音账号被风控，未来可能禁用或移除该功能！</p>
+<p><b>注意：</b>扫码登录可能会导致抖音账号被风控，该功能仅限学习研究，未来可能禁用或移除该功能！</p>
 <h2>终端交互模式</h2>
 <p>功能最全面的模式，支持全部功能。</p>
 <h3>批量下载账号作品(抖音)</h3>
@@ -723,6 +734,7 @@ https://www.douyin.com/note/123456789
 <li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹</li>
 </ul>
 <h3>采集作品评论数据(抖音)</h3>
+<p><b><code>5.4</code> 版本将会暂时禁用该功能，后续版本可能重新开放！</b></p>
 <ol>
 <li>手动输入待采集的作品链接。</li>
 <li>输入文本文档路径，读取文件包含的作品链接。</li>
@@ -761,6 +773,7 @@ https://www.douyin.com/note/123456789
 <p>处理多个合集时，如果某个合集获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/custom/function.py</code> 文件修改功能）</p>
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
 <h3>采集账号详细数据(抖音)</h3>
+<p><b><code>5.4</code> 版本将会暂时移除该功能，后续版本可能重新开放！</b></p>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts_urls</code> 参数中的账号链接。</li>
 <li>手动输入待采集的账号链接。</li>
@@ -774,6 +787,7 @@ https://www.douyin.com/note/123456789
 </ul>
 <p>重复获取相同账号数据时会储存为新的数据行，不会覆盖原有数据；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <h3>采集搜索结果数据</h3>
+<p><b><code>5.4</code> 版本将会暂时移除该功能，后续版本可能重新开放！</b></p>
 <h4>搜索条件输入格式</h4>
 <p><strong>格式：</strong><code>关键词</code> <code>搜索类型</code> <code>页数</code> <code>排序规则</code> <code>时间筛选</code></p>
 <ul>
@@ -836,16 +850,48 @@ https://www.douyin.com/note/123456789
 </ol>
 <p>支持链接格式：</p>
 <ul>
+<li><code>https://vm.tiktok.com/分享码/</code></li>
 <li><code>https://www.tiktok.com/@TikTok号/video/作品ID</code></li>
 </ul>
 <p>作品会下载至 <code>root</code> 参数和 <code>folder_name</code> 参数拼接成的文件夹。</p>
 <h3>批量下载合集作品(TikTok)</h3>
-<p>尚未支持！</p>
-<h3>获取直播推流地址TikTok)</h3>
-<p>尚未支持！</p>
+<ol>
+<li>使用 <code>settings.json</code> 的 <code>mix_urls_tiktok</code> 参数中的合集链接或作品链接。</li>
+<li>输入合集链接，或者属于合集的任意一个作品链接。</li>
+<li>输入文本文档路径，读取文件包含的作品链接或合集链接；该选项暂不支持设置合集标识。</li>
+</ol>
+<p>支持链接格式：</p>
+<ul>
+<li><code>https://vt.tiktok.com/分享码/</code></li>
+<li><code>https://www.tiktok.com/@TikTok号/playlist/合辑信息</code></li>
+</ul>
+<p>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
+<p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会提示用户输入临时的合集标识，以便程序继续处理合集。</p>
+<p>处理多个合集时，如果某个合集获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/custom/function.py</code> 文件修改功能）</p>
+<p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
+<h3>获取直播推流地址(TikTok)</h3>
+<p>输入直播链接，不支持已结束的直播。</p>
+<p>支持链接格式：</p>
+<ul>
+<li><code>https://vt.tiktok.com/分享码/</code></li>
+<li><code>https://www.tiktok.com/@TikTok号/live</code></li>
+</ul>
+<p>TikTok 平台直播视频下载功能尚未开发完成，请自行使用第三方工具下载！</p>
+<del>
+<p>下载说明：</p>
+<ul>
+<li>程序会询问用户是否下载直播视频，支持同时下载多个直播视频。</li>
+<li>程序调用 <code>ffmpeg</code> 下载直播时，关闭 TikTokDownloader 不会影响直播下载。</li>
+<li>程序调用内置下载器下载直播时，需要保持 TikTokDownloader 运行直到直播结束。</li>
+<li>程序询问是否下载直播时，输入直播清晰度或者对应序号即可下载，例如：下载最高清晰度输入 <code>FULL_HD1</code> 或者 <code>1</code> 均可。</li>
+<li>程序调用内置下载器下载的直播文件，视频时长会显示为直播总时长，实际视频内容从下载时间开始，靠后部分的片段无法播放。</li>
+<li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹</li>
+</ul>
+</del>
 <h2>后台监测模式</h2>
 <p>敬请期待！</p>
 <h2>Web API 接口模式</h2>
+<p><b><code>5.4</code> 版本将会暂时移除该模式，后续开发完成重新开放！</b></p>
 <p>启动服务器，提供 API 调用功能；支持局域网远程访问，可以部署至私有服务器或者公开服务器，远程部署建议设置参数验证。</p>
 <p>默认禁用局域网访问，如需开启，请修改 <code>src/custom/static.py</code> 文件的 <code>SERVER_HOST</code> 变量。</p>
 <p>部分接口支持传入临时 <code>cookie</code> 参数，如果传入临时 <code>cookie</code> 参数，本次 API 请求会使用临时 <code>cookie</code> 向抖音服务器获取数据，如果没有传入 <code>cookie</code> 参数，程序会使用配置文件的 <code>cookie</code> 参数；需要注意临时 <code>cookie</code> 和配置文件 <code>cookie</code> 参数的有效性；程序不会储存临时 <code>cookie</code> 内容。</p>
@@ -1151,8 +1197,10 @@ print(response.json())
 ```
 
 <h2>Web UI 交互模式</h2>
+<p><b><code>5.4</code> 版本将会暂时移除该模式，后续开发完成重新开放！</b></p>
 <p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品</code> 和 <code>获取直播推流地址</code> 功能，支持局域网远程访问，可以部署至私有服务器，不可直接部署至公开服务器。</p>
 <h2>服务器部署模式</h2>
+<p><b><code>5.4</code> 版本将会暂时移除该模式，后续开发完成重新开放！</b></p>
 <p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品</code> 功能，默认启用局域网访问，用于部署至公开服务器，为网站访客提供作品下载服务，建议设置参数验证。</p>
 <p>支持远程修改 <code>settings.json</code> 配置文件，请参考 <code>配置文件修改接口</code></p>
 <h2>启用/禁用检查更新功能</h2>

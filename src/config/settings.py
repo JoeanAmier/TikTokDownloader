@@ -65,6 +65,7 @@ class Settings:
         "split": "-",
         "folder_mode": False,
         "music": False,
+        "truncate": 64,
         "storage_format": "",
         "cookie": "",
         "cookie_tiktok": "",

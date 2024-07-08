@@ -28,6 +28,8 @@ from src.custom import (
     WARNING,
 )
 from src.tools import PrivateRetry
+from src.tools import format_size
+from src.tools import trim_string
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -67,6 +69,7 @@ class Downloader:
         self.timeout = params.timeout
         self.ffmpeg = params.ffmpeg
         self.cache = params.cache
+        self.truncate = params.truncate
 
     def __general_progress_object(self):
         """文件下载进度条"""
@@ -297,11 +300,11 @@ class Downloader:
                 item["downloads"].split(" "), start=1):
             if await self.is_downloaded(id_):
                 count.skipped_image.add(id_)
-                self.log.info(f"图集 {id_} 存在下载记录，跳过下载")
+                self.log.info(f"【图集】{name} 存在下载记录，跳过下载")
                 count.skipped_image.add(id_)
                 break
             elif self.is_exists(p := actual_root.with_name(f"{name}_{index}.jpeg")):
-                self.log.info(f"图集 {id_}_{index} 文件已存在，跳过下载")
+                self.log.info(f"【图集】{name}_{index} 文件已存在，跳过下载")
                 self.log.info(f"文件路径: {p.resolve()}", False)
                 count.skipped_image.add(id_)
                 continue
@@ -310,7 +313,7 @@ class Downloader:
                 temp_root.with_name(
                     f"{name}_{index}.jpeg"),
                 p,
-                f"图集 {id_}_{index}",
+                f"【图集】{name}_{index}",
                 id_,
             ))
 
@@ -326,7 +329,7 @@ class Downloader:
         if await self.is_skip(
                 id_, p := actual_root.with_name(
                     f"{name}.mp4")):
-            self.log.info(f"视频 {id_} 存在下载记录或文件已存在，跳过下载")
+            self.log.info(f"【视频】{name} 存在下载记录或文件已存在，跳过下载")
             self.log.info(f"文件路径: {p.resolve()}", False)
             count.skipped_video.add(id_)
             return
@@ -334,7 +337,7 @@ class Downloader:
             item["downloads"],
             temp_root.with_name(f"{name}.mp4"),
             p,
-            f"视频 {id_}",
+            f"【视频】{name}",
             id_,
         ))
 
@@ -354,7 +357,7 @@ class Downloader:
                 url,
                 temp_root.with_name(f"{name}.mp3"),
                 p,
-                f"音乐 {id_}",
+                f"【音乐】{name}",
                 id_,
             ))
 
@@ -375,7 +378,7 @@ class Downloader:
                 url,
                 temp_root.with_name(f"{name}.jpeg"),
                 p,
-                f"封面 {id_}",
+                f"【封面】{name}",
                 id_,
             ))
         if all((self.dynamic,
@@ -386,7 +389,7 @@ class Downloader:
                 url,
                 temp_root.with_name(f"{name}.webp"),
                 p,
-                f"动图 {id_}",
+                f"【动图】{name}",
                 id_,
             ))
 
@@ -410,27 +413,36 @@ class Downloader:
     ) -> bool:
         async with semaphore or self.semaphore:
             client = self.client_tiktok if tiktok else self.client
-            self.log.info(f"File URL: {url}", False, )
+            headers = self.__adapter_headers(headers, tiktok, )
+            self.log.info(f"{show} URL: {url}", False, )
+            self.log.info(f"{show} Headers: {headers}", False, )
             try:
                 async with client.stream(
                         "GET",
                         url,
-                        headers=self.__adapter_headers(headers, tiktok, ), ) as response:
+                        headers=headers, ) as response:
+                    self.log.info(
+                        f"{show} Response URL: {response.url}", False)
+                    self.log.info(
+                        f"{show} Response Code: {response.status_code}", False)
+                    self.log.info(
+                        f"{show} Response Headers: {response.headers}", False)
                     if not (
                             content := int(
                                 response.headers.get(
                                     'content-length',
                                     0))) and not unknown_size:  # 响应内容大小判断
-                        self.log.warning(f"{url} 响应内容为空")
+                        self.log.warning(f"{show} 响应内容为空")
                         return False
-                    self.log.info(f"Response URL: {response.url}", False)
-                    self.log.info(f"Response Code: {response.status_code}", False)
                     response.raise_for_status()
                     # if response.status_code >= 400:  # 响应码判断
                     #     self.log.warning(
                     #         f"{response.url} 响应码异常: {response.status_code}")
                     #     return False
-                    if all((self.max_size, content, content > self.max_size)):  # 文件下载跳过判断
+                    self.log.info(
+                        f"{show} 文件大小 {format_size(content)}", False, )
+                    if all(
+                            (self.max_size, content, content > self.max_size)):  # 文件下载跳过判断
                         self.log.info(f"{show} 文件大小超出限制，跳过下载")
                         return True
                     return await self.download_file(
@@ -457,7 +469,7 @@ class Downloader:
             count: SimpleNamespace,
             progress: Progress) -> bool:
         task_id = progress.add_task(
-            show, total=content or None)
+            trim_string(show, self.truncate), total=content or None)
         try:
             with cache.open("wb") as f:
                 async for chunk in response.aiter_bytes(self.chunk):
@@ -489,9 +501,9 @@ class Downloader:
 
     @staticmethod
     def add_count(type_: str, id_: str, count: SimpleNamespace):
-        if type_.startswith("图集"):
+        if type_.startswith("【图集】"):
             count.downloaded_image.add(id_)
-        elif type_.startswith("视频"):
+        elif type_.startswith("【视频】"):
             count.downloaded_video.add(id_)
 
     def storage_folder(
@@ -534,7 +546,7 @@ class Downloader:
 
     def delete_file(self, path: Path):
         path.unlink()
-        self.log.info(f"文件 {path.name} 已删除")
+        self.log.info(f"{path.name} 文件已删除")
 
     def statistics_count(self, count: SimpleNamespace):
         self.log.info(f"跳过视频作品 {len(count.skipped_video)} 个")

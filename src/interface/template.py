@@ -295,15 +295,16 @@ class API:
     def __record_request_messages(
             self,
             url: str,
-            params: dict,
-            data: dict,
+            params: dict | None,
+            data: dict | None,
             headers: dict,
             **kwargs,
     ):
         self.log.info(f"URL: {url}", False)
         self.log.info(f"Params: {params}", False)
         self.log.info(f"Data: {data}", False)
-        self.log.info(f"Headers: {headers}", False)
+        desensitize = {k: v for k, v in headers.items() if k != "Cookie"}
+        self.log.info(f"Headers: {desensitize}", False)
         self.log.info(f"Other: {kwargs}", False)
 
     def deal_url_params(self, params: dict, method="GET", **kwargs, ):
