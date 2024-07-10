@@ -1,6 +1,3 @@
-__all__ = ["Logger"]
-
-
 class Logger:
     @staticmethod
     def info(*args, ):

@@ -5,12 +5,12 @@ from typing import Union
 
 from src.custom import PARAMS_HEADERS
 from src.custom import PARAMS_HEADERS_TIKTOK
-from src.testers import Logger
 from src.tools import request_params
 
 if TYPE_CHECKING:
     from src.record import BaseLogger
     from src.record import LoggerManager
+    from src.testers import Logger
 
 __all__ = ["TtWid", "TtWidTikTok"]
 
@@ -64,6 +64,7 @@ class TtWidTikTok(TtWid):
 
 
 async def demo():
+    from src.testers import Logger
     print("抖音", await TtWid.get_tt_wid(Logger(), PARAMS_HEADERS, proxies={"http://": None, "https://": None}))
     print("TikTok",
           await TtWidTikTok.get_tt_wid(Logger(), PARAMS_HEADERS_TIKTOK,

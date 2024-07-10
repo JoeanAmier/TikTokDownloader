@@ -3,12 +3,12 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from src.custom import PARAMS_HEADERS
-from src.testers import Logger
 from src.tools import request_params
 
 if TYPE_CHECKING:
     from src.record import BaseLogger
     from src.record import LoggerManager
+    from src.testers import Logger
 
 __all__ = ["WebId"]
 
@@ -37,6 +37,7 @@ class WebId:
 
 
 async def demo():
+    from src.testers import Logger
     print(await WebId.get_web_id(Logger(), PARAMS_HEADERS, proxies={"http://": None, "https://": None}))
 
 

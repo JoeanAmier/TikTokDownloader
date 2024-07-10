@@ -14,12 +14,12 @@ from src.custom import PARAMS_HEADERS_TIKTOK
 from src.custom import USERAGENT
 from src.encrypt.ttWid import TtWid
 from src.encrypt.xBogus import XBogusTikTok
-from src.testers import Logger
 from src.tools import request_params
 
 if TYPE_CHECKING:
     from src.record import BaseLogger
     from src.record import LoggerManager
+    from src.testers import Logger
 
 __all__ = ["MsToken", "MsTokenTikTok"]
 
@@ -189,6 +189,7 @@ class MsTokenTikTok(MsToken):
 
 
 async def demo():
+    from src.testers import Logger
     print("抖音",
           await MsToken.get_real_ms_token(Logger(), PARAMS_HEADERS, proxies={"http://": None, "https://": None}))
     print("抖音",

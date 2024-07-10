@@ -4,12 +4,12 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from src.custom import PARAMS_HEADERS_TIKTOK
-from src.testers import Logger
 from src.tools import request_params
 
 if TYPE_CHECKING:
     from src.record import BaseLogger
     from src.record import LoggerManager
+    from src.testers import Logger
 
 
 class DeviceId:
@@ -51,6 +51,7 @@ class DeviceId:
 
 
 async def demo():
+    from src.testers import Logger
     print(await DeviceId.get_device_id(Logger(), PARAMS_HEADERS_TIKTOK, proxy="http://127.0.0.1:10809"))
     print(await DeviceId.get_device_ids(Logger(), PARAMS_HEADERS_TIKTOK, 5, proxy="http://127.0.0.1:10809"))
 
