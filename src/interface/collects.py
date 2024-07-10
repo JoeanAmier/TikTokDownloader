@@ -1,23 +1,17 @@
 from typing import Callable
 from typing import TYPE_CHECKING
+from typing import Union
 
-from .template import API
+from src.interface.template import API
+from src.testers import Params
 
 if TYPE_CHECKING:
     from src.config import Parameter
 
-__all__ = [
-    "Collects",
-    "CollectsDetail",
-    "CollectsSeries",
-    "CollectsMix",
-    "CollectsMusic",
-]
-
 
 class Collects(API):
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str = None,
                  proxy: str = None,
                  cursor=0,
@@ -71,7 +65,7 @@ class Collects(API):
 
 class CollectsDetail(API):
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str = None,
                  proxy: str = None,
                  collects_id: str = "",
@@ -130,7 +124,7 @@ class CollectsDetail(API):
 
 class CollectsMix(API):
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str = None,
                  proxy: str = None,
                  cursor=0,
@@ -186,7 +180,7 @@ class CollectsMix(API):
 
 class CollectsSeries(CollectsMix):
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str = None,
                  proxy: str = None,
                  cursor=0,
@@ -232,7 +226,7 @@ class CollectsSeries(CollectsMix):
 
 class CollectsMusic(CollectsMix):
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str = None,
                  proxy: str = None,
                  cursor=0,

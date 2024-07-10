@@ -4,16 +4,16 @@ from typing import Callable
 from typing import Coroutine
 from typing import TYPE_CHECKING
 from typing import Type
+from typing import Union
 
 from src.extract import Extractor
+from src.interface.info import Info
+from src.interface.template import API
+from src.testers import Params
 from src.tools import timestamp
-from .info import Info
-from .template import API
 
 if TYPE_CHECKING:
     from src.config import Parameter
-
-__all__ = ["Account"]
 
 
 class Account(API):
@@ -21,10 +21,10 @@ class Account(API):
     favorite_api = f"{API.domain}aweme/v1/web/aweme/favorite/"
 
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str | dict = None,
                  proxy: str = None,
-                 sec_user_id: str = "",
+                 sec_user_id: str = ...,
                  tab="post",
                  earliest="",
                  latest="",

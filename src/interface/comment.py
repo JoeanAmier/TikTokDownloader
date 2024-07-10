@@ -1,22 +1,22 @@
 from typing import Callable
 from typing import Coroutine, Type
 from typing import TYPE_CHECKING
+from typing import Union
 
 from src.extract import Extractor
-from .template import API
+from src.interface.template import API
+from src.testers import Params
 
 if TYPE_CHECKING:
     from src.config import Parameter
 
-__all__ = ["Comment", "Reply", ]
-
 
 class Comment(API):
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str | dict = None,
                  proxy: str = None,
-                 item_id: str = "",
+                 item_id: str = ...,
                  pages: int = None,
                  cursor=0,
                  count=20,
@@ -187,11 +187,11 @@ class Comment(API):
 
 class Reply(Comment):
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str | dict = None,
                  proxy: str = None,
-                 item_id: str = "",
-                 comment_id: str = "",
+                 item_id: str = ...,
+                 comment_id: str = ...,
                  pages: int = None,
                  cursor=0,
                  count=3,

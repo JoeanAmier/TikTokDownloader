@@ -1,21 +1,21 @@
 from typing import Callable
 from typing import TYPE_CHECKING
+from typing import Union
 
-from .template import APITikTok
+from src.interface.template import APITikTok
+from src.testers import Params
 
 if TYPE_CHECKING:
     from src.config import Parameter
 
-__all__ = ["MixTikTok", "MixListTikTok", ]
-
 
 class MixTikTok(APITikTok):
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str = None,
                  proxy: str = None,
-                 mix_title: str = None,
-                 mix_id: str = None,
+                 mix_title: str = ...,
+                 mix_id: str = ...,
                  # detail_id: str = None,
                  cursor=0,
                  count=30,
@@ -70,7 +70,7 @@ class MixTikTok(APITikTok):
 
 class MixListTikTok(APITikTok):
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str = None,
                  proxy: str = None,
                  sec_user_id: str = "",

@@ -2,13 +2,13 @@ from datetime import datetime
 from types import SimpleNamespace
 from typing import Callable
 from typing import TYPE_CHECKING
+from typing import Union
 
-from .template import API
+from src.interface.template import API
+from src.testers import Params
 
 if TYPE_CHECKING:
     from src.config import Parameter
-
-__all__ = ["Hot"]
 
 
 class Hot(API):
@@ -36,7 +36,7 @@ class Hot(API):
     )
 
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str = None,
                  proxy: str = None,
                  *args,

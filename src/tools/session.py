@@ -15,6 +15,7 @@ from .retry import PrivateRetry
 if TYPE_CHECKING:
     from src.record import BaseLogger
     from src.record import LoggerManager
+    from src.testers import Logger
 
 __all__ = ["request_params", "create_client"]
 
@@ -39,7 +40,7 @@ def create_client(
 
 
 async def request_params(
-        logger: Union["BaseLogger", "LoggerManager"],
+        logger: Union["BaseLogger", "LoggerManager", "Logger",],
         url: str,
         method: str = "POST",
         params: dict | str = None,
@@ -78,7 +79,7 @@ async def request_params(
 
 @PrivateRetry.retry_lite
 @capture_error_params
-async def request(logger: Union["BaseLogger", "LoggerManager"],
+async def request(logger: Union["BaseLogger", "LoggerManager", "Logger",],
                   client: Client,
                   method: str,
                   url: str,
@@ -86,6 +87,7 @@ async def request(logger: Union["BaseLogger", "LoggerManager"],
                   **kwargs,
                   ):
     response = client.request(method, url, **kwargs)
+    response.raise_for_status()
     match resp:
         case "headers":
             return response.headers

@@ -3,6 +3,7 @@ from typing import Callable
 from typing import Coroutine
 from typing import TYPE_CHECKING
 from typing import Type
+from typing import Union
 from urllib.parse import quote
 
 from httpx import AsyncClient
@@ -24,6 +25,7 @@ from src.tools import capture_error_request
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from src.testers import Params
 
 __all__ = ["API", "APITikTok", ]
 
@@ -64,7 +66,7 @@ class API:
 
     def __init__(
             self,
-            params: "Parameter",
+            params: Union["Parameter", "Params"],
             cookie: str | dict = None,
             proxy: str = None,
             *args,
@@ -284,12 +286,13 @@ class API:
     async def __return_response(self, response):
         self.log.info(f"Response URL: {response.url}", False)
         self.log.info(f"Response Code: {response.status_code}", False)
+        self.log.info(f"Response Headers: {dict(response.headers)}", False)
+        self.log.info(f"Response Content: {response.content}", False)
         response.raise_for_status()
         await wait()
         # if response.status_code != 200:
         #     self.log.error(f"请求 {url} 失败，响应码 {response.status_code}")
         #     return
-        self.log.info(f"Response Content: {response.content}", False)
         return response.json()
 
     def __record_request_messages(
@@ -303,6 +306,7 @@ class API:
         self.log.info(f"URL: {url}", False)
         self.log.info(f"Params: {params}", False)
         self.log.info(f"Data: {data}", False)
+        # 请求头脱敏处理，不记录 Cookie
         desensitize = {k: v for k, v in headers.items() if k != "Cookie"}
         self.log.info(f"Headers: {desensitize}", False)
         self.log.info(f"Other: {kwargs}", False)
@@ -389,7 +393,7 @@ class APITikTok(API):
     }
 
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", "Params"],
                  cookie: str | dict = None,
                  proxy: str = None,
                  *args,

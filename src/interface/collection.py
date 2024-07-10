@@ -1,25 +1,27 @@
+from asyncio import run
 from typing import Callable
 from typing import TYPE_CHECKING
+from typing import Union
 
 from src.extract import Extractor
+from src.interface.info import Info
+from src.interface.template import API
+from src.testers import Params
 from src.tools import timestamp
-from .info import Info
-from .template import API
 
 if TYPE_CHECKING:
     from src.config import Parameter
 
-__all__ = ["Collection"]
-
 
 class Collection(API):
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str = None,
                  proxy: str = None,
                  sec_user_id: str = "",
                  count=10,
                  cursor=0,
+                 pages=99999,
                  *args,
                  **kwargs,
                  ):
@@ -28,6 +30,7 @@ class Collection(API):
         self.text = "账号收藏作品数据"
         self.count = count
         self.cursor = cursor
+        self.pages = pages
         self.sec_user_id = sec_user_id
         self.info = Info(params, cookie, proxy, sec_user_id, )
 
@@ -107,12 +110,23 @@ class Collection(API):
             self.response.append({"author": info})
         else:
             temp_data = timestamp()
-            self.log.warning(f"owner_url 参数未设置 或者 获取账号数据失败，本次运行将临时使用 {
-            temp_data} 作为账号昵称和 UID")
+            self.log.warning(
+                f"owner_url 参数未设置 或者 获取账号数据失败，本次运行将临时使用 {temp_data} 作为账号昵称和 UID")
             temp_dict = {
                 "author": {
                     "nickname": temp_data,
                     "uid": temp_data,
+                    "sec_uid": self.sec_user_id,
                 }
             }
             self.response.append(temp_dict)
+
+
+async def main():
+    async with Params() as params:
+        c = Collection(params, pages=2, )
+        print(await c.run())
+
+
+if __name__ == "__main__":
+    run(main())

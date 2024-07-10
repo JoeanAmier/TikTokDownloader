@@ -1,20 +1,20 @@
 from typing import Callable
 from typing import TYPE_CHECKING
+from typing import Union
 
-from .template import APITikTok
+from src.interface.template import APITikTok
+from src.testers import Params
 
 if TYPE_CHECKING:
     from src.config import Parameter
 
-__all__ = ["DetailTikTok"]
-
 
 class DetailTikTok(APITikTok):
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str = None,
                  proxy: str = None,
-                 detail_id: str = "",
+                 detail_id: str = ...,
                  ):
         super().__init__(params, cookie, proxy, )
         self.detail_id = detail_id

@@ -1,21 +1,20 @@
 from typing import TYPE_CHECKING
 from typing import Union
 
-from .template import API
+from src.interface.template import API
+from src.testers import Params
 
 if TYPE_CHECKING:
     from src.config import Parameter
-
-__all__ = ["Info"]
 
 
 class Info(API):
     def __init__(
             self,
-            params: "Parameter",
+            params: Union["Parameter", Params],
             cookie: str | dict = None,
             proxy: str = None,
-            sec_user_id: Union[str, list[str], tuple[str]] = "",
+            sec_user_id: Union[str, list[str], tuple[str]] = ...,
             *args,
             **kwargs,
     ):

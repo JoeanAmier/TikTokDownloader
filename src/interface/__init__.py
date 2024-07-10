@@ -1,55 +1,26 @@
-from .account import Account
-from .account_tiktok import AccountTikTok
-from .collection import Collection
-from .collects import (
+from src.interface.account import Account
+from src.interface.account_tiktok import AccountTikTok
+from src.interface.collection import Collection
+from src.interface.collects import (
     Collects,
     CollectsDetail,
     CollectsMix,
     CollectsMusic,
     CollectsSeries,
 )
-from .comment import Comment, Reply
-# from .comment_tiktok import CommentTikTok, ReplyTikTok
-from .detail import Detail
-from .detail_tiktok import DetailTikTok
-from .hashtag import HashTag
-from .hot import Hot
-from .info import Info
-from .live import Live
-from .live_tiktok import LiveTikTok
-from .mix import Mix
-from .mix_tiktok import MixListTikTok
-from .mix_tiktok import MixTikTok
-from .search import Search
-from .template import API
-from .template import APITikTok
-from .user import User
-
-__all__ = [
-    "Account",
-    "Info",
-    "Reply",
-    "Comment",
-    "Collects",
-    "CollectsDetail",
-    "Detail",
-    "Live",
-    "AccountTikTok",
-    "Collection",
-    "Mix",
-    "Hot",
-    "Search",
-    "User",
-    "HashTag",
-    "DetailTikTok",
-    "CollectsMusic",
-    "CollectsSeries",
-    "CollectsMix",
-    "APITikTok",
-    "LiveTikTok",
-    "MixTikTok",
-    "API",
-    # "CommentTikTok",
-    # "ReplyTikTok",
-    "MixListTikTok",
-]
+from src.interface.comment import Comment, Reply
+from src.interface.comment_tiktok import CommentTikTok, ReplyTikTok
+from src.interface.detail import Detail
+from src.interface.detail_tiktok import DetailTikTok
+from src.interface.hashtag import HashTag
+from src.interface.hot import Hot
+from src.interface.info import Info
+from src.interface.live import Live
+from src.interface.live_tiktok import LiveTikTok
+from src.interface.mix import Mix
+from src.interface.mix_tiktok import MixListTikTok
+from src.interface.mix_tiktok import MixTikTok
+from src.interface.search import Search
+from src.interface.template import API
+from src.interface.template import APITikTok
+from src.interface.user import User

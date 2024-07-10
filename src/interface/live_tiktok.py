@@ -1,21 +1,21 @@
 from typing import TYPE_CHECKING
+from typing import Union
 
-from .template import APITikTok
+from src.interface.template import APITikTok
+from src.testers import Params
 
 if TYPE_CHECKING:
     from src.config import Parameter
-
-__all__ = ["LiveTikTok"]
 
 
 class LiveTikTok(APITikTok):
     live_api = "https://webcast.us.tiktok.com/webcast/room/enter/"
 
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str = None,
                  proxy: str = None,
-                 room_id=None,
+                 room_id=...,
                  ):
         super().__init__(params, cookie, proxy, )
         self.black_headers = params.headers_download

@@ -39,6 +39,8 @@ class Requester:
         response = await self.client.get(url, )
         self.log.info(f"Response URL: {response.url}", False)
         self.log.info(f"Response Code: {response.status_code}", False)
+        self.log.info(f"Response Content: {response.content}", False)
+        self.log.info(f"Response Headers: {dict(response.headers)}", False)
         response.raise_for_status()
         match content:
             case "text":

@@ -2,16 +2,16 @@ from typing import Callable
 from typing import Coroutine
 from typing import TYPE_CHECKING
 from typing import Type
+from typing import Union
 
-from .account import Account
+from src.interface.account import Account
 # from src.extract import Extractor
 # from src.tools import timestamp
-from .template import APITikTok
+from src.interface.template import APITikTok
+from src.testers import Params
 
 if TYPE_CHECKING:
     from src.config import Parameter
-
-__all__ = ["AccountTikTok"]
 
 
 class AccountTikTok(Account, APITikTok, ):
@@ -19,10 +19,10 @@ class AccountTikTok(Account, APITikTok, ):
     favorite_api = f"{APITikTok.domain}api/favorite/item_list/"
 
     def __init__(self,
-                 params: "Parameter",
+                 params: Union["Parameter", Params],
                  cookie: str | dict = None,
                  proxy: str = None,
-                 sec_user_id: str = "",
+                 sec_user_id: str = ...,
                  tab="post",
                  earliest="",
                  latest="",

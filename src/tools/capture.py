@@ -2,6 +2,7 @@ from json.decoder import JSONDecodeError
 from typing import TYPE_CHECKING
 from typing import Union
 
+from httpx import HTTPStatusError
 from httpx import NetworkError
 from httpx import RequestError
 from httpx import TimeoutException
@@ -22,6 +23,8 @@ def capture_error_params(function):
                 UnicodeDecodeError,
         ):
             logger.error("响应内容不是有效的 JSON 数据")
+        except HTTPStatusError as e:
+            logger.error(f"响应码异常：{e}")
         except NetworkError as e:
             logger.error(f"网络异常：{e}")
         except TimeoutException as e:
@@ -37,10 +40,13 @@ def capture_error_request(function):
     async def inner(self, *args, **kwargs):
         try:
             return await function(self, *args, **kwargs)
-        except JSONDecodeError:
+        except (
+                JSONDecodeError,
+                UnicodeDecodeError
+        ):
             self.log.error("响应内容不是有效的 JSON 数据")
-        except UnicodeDecodeError as e:
-            self.log.error(f"响应异常：{e}")
+        except HTTPStatusError as e:
+            self.log.error(f"响应码异常：{e}")
         except NetworkError as e:
             self.log.error(f"网络异常：{e}")
         except TimeoutException as e:
