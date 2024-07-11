@@ -30,6 +30,10 @@ from src.interface import (
     LiveTikTok,
     MixTikTok,
     # CommentTikTok,
+    # Collects,
+    # CollectsSeries,
+    CollectsMusic,
+    # CollectsDetail,
 )
 from src.link import Extractor as LinkExtractor
 from src.link import ExtractorTikTok
@@ -145,7 +149,7 @@ class TikTok:
             ("采集抖音热榜数据(抖音)", self.hot_interactive,),
             # ("批量下载话题作品(抖音)", self.disable_function,),
             ("批量下载收藏作品(抖音)", self.collection_interactive,),
-            ("批量下载收藏音乐(抖音)", self.disable_function,),
+            ("批量下载收藏音乐(抖音)", self.collection_music_interactive,),
             # ("批量下载收藏短剧(抖音)", self.disable_function,),
             ("批量下载收藏夹作品(抖音)", self.disable_function,),
             ("批量下载账号作品(TikTok)", self.account_acquisition_interactive_tiktok,),
@@ -1289,6 +1293,33 @@ class TikTok:
             int(time_ %
                 60)} 秒")
         self.logger.info("已退出批量下载收藏作品(抖音)模式")
+
+    async def collection_music_interactive(self, *args, **kwargs, ):
+        start = time()
+        if data := await self.__handle_collection_music(*args, **kwargs):
+            data = await self.extractor.run(data, None, "music", )
+            await self.downloader.run_music(data, )
+        time_ = time() - start
+        self.logger.info(
+            f"程序运行耗时 {
+            int(time_ //
+                60)} 分钟 {
+            int(time_ %
+                60)} 秒")
+        self.logger.info("已退出批量下载收藏音乐(抖音)模式")
+
+    async def __handle_collection_music(self,
+                                        # api=False,
+                                        # source=False,
+                                        cookie: str = None,
+                                        proxy: str = None,
+                                        *args,
+                                        **kwargs,
+                                        ):
+        data = await CollectsMusic(self.parameter, cookie, proxy, *args, **kwargs).run()
+        if not any(data):
+            return None
+        return data
 
     async def _deal_collection_data(
             self,

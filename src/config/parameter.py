@@ -130,6 +130,8 @@ class Parameter:
         self.cookie, self.cookie_cache = self.__check_cookie(cookie)
         self.cookie_tiktok, self.cookie_tiktok_cache = self.__check_cookie_tiktok(
             cookie_tiktok)
+        self.cookie_state = None
+        self.cookie_tiktok_state = None
         self.root = self.__check_root(root)
         self.folder_name = self.__check_folder_name(folder_name)
         self.name_format = self.__check_name_format(name_format)

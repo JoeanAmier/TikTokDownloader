@@ -152,6 +152,29 @@ class Downloader:
         root = self.storage_folder()
         await self.batch_processing(data, root, tiktok=tiktok, )
 
+    async def run_music(self, data: list[dict], **kwargs, ):
+        root = self.root.joinpath("Music")
+        root.mkdir(exist_ok=True)
+        tasks = []
+        for i in data:
+            name = self.generate_music_name(i)
+            temp_root, actual_root = self.deal_folder_path(root, name)
+            self.download_music(
+                tasks,
+                name,
+                "",
+                i,
+                temp_root,
+                actual_root,
+                "download",
+                True,
+            )
+        await self.downloader_chart(
+            tasks,
+            SimpleNamespace(),
+            self.__general_progress_object(),
+            **kwargs)
+
     async def run_live(self, data: list[tuple], tiktok=False, ):
         if not data or not self.download:
             return
@@ -228,6 +251,7 @@ class Downloader:
         )
         tasks = []
         for item in data:
+            # TODO: 未来优化作品描述截取
             item["desc"] = item["desc"][:DESCRIPTION_LENGTH]
             name = self.generate_detail_name(item)
             temp_root, actual_root = self.deal_folder_path(root, name)
@@ -346,13 +370,16 @@ class Downloader:
             tasks: list,
             name: str,
             id_: str,
-            item: SimpleNamespace,
+            item: dict,
             temp_root: Path,
             actual_root: Path,
+            key: str = "music_url",
+            collection: bool = False,
             **kwargs, ) -> None:
         if self.check_deal_music(
-                url := item["music_url"],
-                p := actual_root.with_name(f"{name}.mp3"), ):
+                url := item[key],
+                p := actual_root.with_name(f"{name}.mp3"),
+                collection, ):
             tasks.append((
                 url,
                 temp_root.with_name(f"{name}.mp3"),
@@ -393,8 +420,13 @@ class Downloader:
                 id_,
             ))
 
-    def check_deal_music(self, url: str, path: Path) -> bool:
-        return all((self.music, url, not self.is_exists(path)))
+    def check_deal_music(
+            self,
+            url: str,
+            path: Path,
+            collection=False,
+    ) -> bool:
+        return all((collection or self.music, url, not self.is_exists(path)))
 
     @PrivateRetry.retry
     async def request_file(
@@ -530,6 +562,15 @@ class Downloader:
             self.split.join(
                 data[i] for i in self.name_format), inquire=False, default=str(
                 time())[:10])
+
+    def generate_music_name(self, data: dict) -> str:
+        """音乐文件名称格式"""
+        return self.cleaner.filter_name(
+            self.split.join(
+                data[i] for i in (
+                    "author", "title", "id",)), inquire=False, default=str(
+                time())[
+                                                                       :10])
 
     def create_detail_folder(
             self,

@@ -40,6 +40,7 @@ class Extractor:
             "user": self.__user,
             "search": self.__search,
             "hot": self.__hot,
+            "music": self.__music,
         }
 
     @staticmethod
@@ -998,3 +999,37 @@ class Extractor:
     @staticmethod
     def __clean_extract_data(data: list[dict], key: str) -> list[dict]:
         return [i for i in data if i.get(key)]
+
+    async def __music(self,
+                      data: list[dict],
+                      recorder,
+                      tiktok=False,
+                      ) -> list[dict]:
+        """暂不记录收藏音乐数据"""
+        container = SimpleNamespace(
+            all_data=[],
+            template={
+                "collection_time": datetime.now().strftime(self.date_format),
+            },
+            cache=None,
+            same=False,
+        )
+        [self.__extract_collection_music(
+            container, self.generate_data_object(item)) for item in data]
+        return container.all_data
+
+    def __extract_collection_music(self,
+                                   container: SimpleNamespace,
+                                   data: SimpleNamespace, ):
+        container.cache = container.template.copy()
+        container.cache["id"] = self.safe_extract(data, "id_str")
+        container.cache["title"] = self.safe_extract(data, "title")
+        container.cache["author"] = self.safe_extract(data, "author")
+        container.cache["album"] = self.safe_extract(data, "album")
+        container.cache["cover"] = self.safe_extract(
+            data, "cover_hd.url_list[0]")
+        container.cache["download"] = self.safe_extract(
+            data, "play_url.url_list[0]")
+        container.cache["duration"] = self.time_conversion(
+            self.safe_extract(data, "duration", 0))
+        container.all_data.append(container.cache)
