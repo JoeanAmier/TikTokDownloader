@@ -774,23 +774,18 @@ class TikTok:
         if n in range(len(function)):
             await function[n][1](root, params, logger)
 
-    async def __comment_inquire(self, root, params, logger):
+    async def __comment_inquire(self, root, params, logger, tiktok=False, ):
+        link = self.links_tiktok if tiktok else self.links
         while url := self._inquire_input("作品"):
-            ids = await self.links.run(url, )
+            ids = await link.run(url, )
             if not any(ids):
                 self.logger.warning(f"{url} 提取作品 ID 失败")
                 continue
             self.console.print(f"共提取到 {len(ids)} 个作品，开始处理！")
-            await self.__comment_handle(ids, root, params, logger)
+            await self.__comment_handle(ids, root, params, logger, tiktok=tiktok, )
 
     async def __comment_inquire_tiktok(self, root, params, logger):
-        while url := self._inquire_input("作品"):
-            ids = await self.links_tiktok.run(url, )
-            if not any(ids):
-                self.logger.warning(f"{url} 提取作品 ID 失败")
-                continue
-            self.console.print(f"共提取到 {len(ids)} 个作品，开始处理！")
-            await self.__comment_handle(ids, root, params, logger)
+        await self.__comment_inquire(root, params, logger, True, )
 
     async def __comment_txt(self, root, params, logger):
         if ids := await self.__read_detail_txt():
@@ -806,7 +801,7 @@ class TikTok:
             proxy: str = None,
             tiktok=False,
     ):
-        if tiktok:  # TODO: 未完成
+        if tiktok:  # TODO: 代码未完成
             pass
             # for i in ids:
             #     name = f"作品{i}_评论数据"

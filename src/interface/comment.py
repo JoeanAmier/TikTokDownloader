@@ -18,9 +18,10 @@ class Comment(API):
                  proxy: str = None,
                  item_id: str = ...,
                  pages: int = None,
-                 cursor=0,
-                 count=20,
-                 count_reply=3,
+                 cursor: int = 0,
+                 count: int = 20,
+                 count_reply: int = 3,
+                 reply: bool = False,
                  ):
         super().__init__(params, cookie, proxy, )
         self.params_object = params
@@ -36,6 +37,7 @@ class Comment(API):
         self.current_page = []
         self.progress = None
         self.task_id = None
+        self.reply = reply
 
     def generate_params(self, ) -> dict:
         return self.params | {
@@ -142,6 +144,8 @@ class Comment(API):
                 await callback()
 
     async def run_reply(self, ):
+        if not self.reply:
+            return
         reply_ids = Extractor.extract_reply_ids(self.current_page)
         for reply_id in reply_ids:
             reply = Reply(

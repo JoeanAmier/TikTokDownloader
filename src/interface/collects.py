@@ -1,3 +1,4 @@
+from asyncio import run
 from typing import Callable
 from typing import TYPE_CHECKING
 from typing import Union
@@ -68,7 +69,7 @@ class CollectsDetail(API):
                  params: Union["Parameter", Params],
                  cookie: str = None,
                  proxy: str = None,
-                 collects_id: str = "",
+                 collects_id: str = ...,
                  pages: int = None,
                  cursor=0,
                  count=10,
@@ -268,3 +269,21 @@ class CollectsMusic(CollectsMix):
             *args,
             **kwargs,
         )
+
+
+async def main():
+    async with Params() as params:
+        c = Collects(params, )
+        print(await c.run())
+        c = CollectsDetail(params, collects_id="7357880138505361191")
+        print(await c.run())
+        c = CollectsMix(params, )
+        print(await c.run())
+        c = CollectsMusic(params, )
+        print(await c.run())
+        c = CollectsSeries(params, )
+        print(await c.run())
+
+
+if __name__ == "__main__":
+    run(main())

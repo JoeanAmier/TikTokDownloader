@@ -21,7 +21,7 @@ class Collection(API):
                  sec_user_id: str = "",
                  count=10,
                  cursor=0,
-                 pages=99999,
+                 pages: int = None,
                  *args,
                  **kwargs,
                  ):
@@ -30,7 +30,7 @@ class Collection(API):
         self.text = "账号收藏作品数据"
         self.count = count
         self.cursor = cursor
-        self.pages = pages
+        self.pages = pages or params.max_pages
         self.sec_user_id = sec_user_id
         self.info = Info(params, cookie, proxy, sec_user_id, )
 
