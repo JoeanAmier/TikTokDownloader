@@ -21,5 +21,6 @@ from .session import (
 )
 from .temporary import timestamp
 from .timer import run_time
+from .truncate import beautify_string
 from .truncate import trim_string
 from .truncate import truncate_string

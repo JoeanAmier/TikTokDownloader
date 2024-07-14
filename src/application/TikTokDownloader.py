@@ -267,7 +267,6 @@ class TikTokDownloader:
             "%95%99%E7%A8%8B.md")
         if self.cookie.run(self.PLATFORM[index], index):
             await self.check_settings()
-            # await self.parameter.update_cookie()
 
     async def auto_cookie(self):
         self.console.print(

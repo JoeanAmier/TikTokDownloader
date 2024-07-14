@@ -62,7 +62,7 @@ class Collection(API):
             *args,
             **kwargs,
         )
-        await self.__get_owner_data()
+        await self.get_owner_data()
         return self.response
 
     def generate_params(self, ) -> dict:
@@ -101,7 +101,7 @@ class Collection(API):
             **kwargs,
         )
 
-    async def __get_owner_data(self):
+    async def get_owner_data(self):
         if not any(self.response):
             return
         if self.sec_user_id and (

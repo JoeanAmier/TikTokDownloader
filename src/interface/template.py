@@ -352,6 +352,7 @@ class API:
     ) -> None:
         for item in data[start:end]:
             self.response.append(item)
+        # self.response.extend(data[start:end])
 
 
 class APITikTok(API):

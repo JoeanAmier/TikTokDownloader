@@ -56,7 +56,7 @@ class Extractor:
 
     @staticmethod
     def generate_data_object(
-            data: dict) -> SimpleNamespace | list[SimpleNamespace]:
+            data: dict | list) -> SimpleNamespace | list[SimpleNamespace]:
         def depth_conversion(element):
             if isinstance(element, dict):
                 return SimpleNamespace(
@@ -514,7 +514,7 @@ class Extractor:
                            post=True,
                            mix=False,
                            tiktok=False,
-                           mix_title=None,
+                           title=None,
                            ) -> tuple:
         if tiktok:
             params = {
@@ -523,7 +523,7 @@ class Extractor:
                 "uid": "author.id",
                 "nickname": "author.nickname",
                 "mix_name": "playlistId",
-                "mix_title": mix_title,
+                "title": title,
             }
         else:
             params = {
@@ -532,7 +532,7 @@ class Extractor:
                 "uid": "author.uid",
                 "nickname": "author.nickname",
                 "mix_name": "mix_info.mix_name",
-                "mix_title": "",
+                "title": "",
             }
         return self.__preprocessing_data(
             data,
@@ -554,7 +554,7 @@ class Extractor:
                              uid="",
                              nickname="",
                              mix_name="",
-                             mix_title="",
+                             title="",
                              ) -> tuple:
         for item in data:
             item = self.generate_data_object(item)
@@ -569,7 +569,7 @@ class Extractor:
         name = self.cleaner.filter_name(self.safe_extract(
             item, nickname, f"账号_{str(time())[:10]}"),
             default="无效账号昵称")
-        title = self.cleaner.filter_name(mix_title or self.safe_extract(
+        title = self.cleaner.filter_name(title or self.safe_extract(
             item, mix_name, f"合集_{str(time())[:10]}"),
                                          inquire=mix,
                                          default="无效合集标题")
@@ -986,12 +986,23 @@ class Extractor:
             self.log.info(f"{i['type']} {i['id']} 数据提取成功", False)
 
     @classmethod
-    def extract_mix_collect_info(cls, data: dict) -> list[dict]:
+    def extract_mix_collect_info(cls, data: list[dict]) -> list[dict]:
         data = cls.generate_data_object(data)
         return [
             {
                 "title": Extractor.safe_extract(i, "mix_name"),
                 "id": Extractor.safe_extract(i, "mix_id"),
+            }
+            for i in data
+        ]
+
+    @classmethod
+    def extract_collects_info(cls, data: list[dict]) -> list[dict]:
+        data = cls.generate_data_object(data)
+        return [
+            {
+                "name": Extractor.safe_extract(i, "collects_name"),
+                "id": Extractor.safe_extract(i, "collects_id_str"),
             }
             for i in data
         ]

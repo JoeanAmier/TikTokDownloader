@@ -10,6 +10,7 @@ __all__ = ["Cookie"]
 
 
 class Cookie:
+    STATE_KEY = "sessionid_ss"
     PLATFORM = (
         "抖音",
         "TikTok",
@@ -37,7 +38,7 @@ class Cookie:
         return cookie_dict
 
     def __check_state(self, items: dict) -> None:
-        if items.get("sessionid_ss"):
+        if items.get(self.STATE_KEY):
             self.console.print("当前 Cookie 已登录")
         else:
             self.console.print("当前 Cookie 未登录")

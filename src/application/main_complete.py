@@ -30,10 +30,10 @@ from src.interface import (
     LiveTikTok,
     MixTikTok,
     # CommentTikTok,
-    # Collects,
+    Collects,
     # CollectsSeries,
     CollectsMusic,
-    # CollectsDetail,
+    CollectsDetail,
 )
 from src.link import Extractor as LinkExtractor
 from src.link import ExtractorTikTok
@@ -60,6 +60,26 @@ def check_storage_format(function):
             style=WARNING)
 
     return inner
+
+
+def check_cookie_state(tiktok=False):
+    def check_cookie(function):
+        async def inner(self, *args, **kwargs):
+            if tiktok:
+                params = self.parameter.cookie_tiktok_state
+                tip = "TikTok Cookie"
+            else:
+                params = self.parameter.cookie_state
+                tip = "抖音 Cookie"
+            if params:
+                return await function(self, *args, **kwargs)
+            self.console.print(
+                f"{tip} 未登录，无法使用该功能，详细说明请查阅项目文档！",
+                style=WARNING)
+
+        return inner
+
+    return check_cookie
 
 
 class TikTok:
@@ -142,7 +162,7 @@ class TikTok:
             ("批量下载账号作品(抖音)", self.account_acquisition_interactive,),
             ("批量下载链接作品(抖音)", self.detail_interactive,),
             ("获取直播推流地址(抖音)", self.live_interactive,),
-            # ("采集作品评论数据(抖音)", self.comment_interactive,),
+            ("采集作品评论数据(抖音)", self.comment_interactive,),
             ("批量下载合集作品(抖音)", self.mix_interactive,),
             # ("采集账号详细数据(抖音)", self.disable_function,),
             # ("采集搜索结果数据(抖音)", self.disable_function,),
@@ -151,7 +171,7 @@ class TikTok:
             ("批量下载收藏作品(抖音)", self.collection_interactive,),
             ("批量下载收藏音乐(抖音)", self.collection_music_interactive,),
             # ("批量下载收藏短剧(抖音)", self.disable_function,),
-            ("批量下载收藏夹作品(抖音)", self.disable_function,),
+            ("批量下载收藏夹作品(抖音)", self.collects_interactive,),
             ("批量下载账号作品(TikTok)", self.account_acquisition_interactive_tiktok,),
             ("批量下载链接作品(TikTok)", self.detail_interactive_tiktok,),
             ("批量下载合集作品(TikTok)", self.mix_interactive_tiktok,),
@@ -461,11 +481,11 @@ class TikTok:
                                     latest: date = None,
                                     addition: str = None,
                                     tiktok=False,
-                                    mix_title: str = None,
+                                    title: str = None,
                                     ):
         self.logger.info("开始提取作品数据")
         id_, name, mid, title, mark, data = self.extractor.preprocessing_data(
-            data, id_, mark, post, mix, tiktok, mix_title, )
+            data, id_, mark, post, mix, tiktok, title, )
         self.__display_extracted_information(
             mix, id_, name, mid, title, mark, )
         addition = addition or ("合集作品" if mix else "发布作品" if post else "喜欢作品")
@@ -869,6 +889,7 @@ class TikTok:
                 continue
             await self.__mix_handle(root, params, logger, True, ids, True, title, )
 
+    @check_cookie_state(tiktok=False)
     async def mix_collection(self, root, params, logger):
         if id_ := await self.mix_inquire_collection():
             await self.__mix_handle(root, params, logger, True, id_)
@@ -878,18 +899,27 @@ class TikTok:
         if not data:
             return []
         data = self.extractor.extract_mix_collect_info(data)
-        return self.input_mix_collect_index(data)
+        return self.input_download_index(data)
 
-    def input_mix_collect_index(self, data: list[dict]) -> list[str]:
+    def input_download_index(self, data: list[dict]) -> list[str]:
+        return self.__input_download_index(data)[-1]
+
+    def __input_download_index(self,
+                               data: list[dict],
+                               text="合集",
+                               key="title",
+                               ) -> [list[str],
+                                     list[str]]:
+        self.console.print(f"{text}列表：")
         for i, j in enumerate(data, start=1):
-            self.console.print(f"{i}. {j["title"]}")
-        index = self.console.input("请输入需要下载的合集序号(输入 ALL 下载全部合集)：")
+            self.console.print(f"{i}. {j[key]}")
+        index = self.console.input(f"请输入需要下载的{text}序号(输入 ALL 下载全部{text})：")
         try:
             if index.upper() == "ALL":
-                return [i["id"] for i in data]
+                return zip(*[(d[key], d["id"]) for d in data])
             if 0 <= (i := int(index) - 1) <= len(data):
-                return [data[i]["id"]]
-            self.console.print("合集序号错误！", style=WARNING)
+                return [data[i][key]], [data[i]["id"]]
+            self.console.print(f"{text}序号输入错误！", style=WARNING)
             raise ValueError
         except ValueError:
             return []
@@ -1048,7 +1078,7 @@ class TikTok:
                     mix=True,
                     api=api,
                     tiktok=tiktok,
-                    mix_title=mix_obj.mix_title,
+                    title=mix_obj.mix_title,
                 )
             )
         self.logger.warning("采集合集作品数据失败")
@@ -1275,25 +1305,67 @@ class TikTok:
         # print(time_, data, source)  # 调试代码
         return time_, data
 
+    @check_cookie_state(tiktok=False)
     async def collection_interactive(self, *args, **kwargs):
+        if isinstance(sec_user_id := await self.__check_owner_url(), str):
+            root, params, logger = self.record.run(self.parameter)
+            start = time()
+            await self._deal_collection_data(root, params, logger, sec_user_id)
+            time_ = time() - start
+            self.logger.info(
+                f"程序运行耗时 {
+                int(time_ //
+                    60)} 分钟 {
+                int(time_ %
+                    60)} 秒")
+        self.logger.info("已退出批量下载收藏作品(抖音)模式")
+
+    @check_cookie_state(tiktok=False)
+    async def collects_interactive(self, *args, **kwargs):
+        if sec_user_id := await self.__check_owner_url():
+            names, ids = await self.__get_collects_list()
+            root, params, logger = self.record.run(self.parameter)
+            start = time()
+            for i, j in zip(names, ids):
+                await self._deal_collects_data(root, params, logger, sec_user_id, i, j)
+            time_ = time() - start
+            self.logger.info(
+                f"程序运行耗时 {
+                int(time_ //
+                    60)} 分钟 {
+                int(time_ %
+                    60)} 秒")
+        else:
+            self.console.print("该模式必须设置 owner_url 参数才能使用", style=WARNING)
+        self.logger.info("已退出批量下载收藏夹作品(抖音)模式")
+
+    async def __get_collects_list(self,
+                                  cookie: str = None,
+                                  proxy: str | dict = None,
+                                  # api=False,
+                                  source=False,
+                                  *args,
+                                  **kwargs,
+                                  ):
+        collects = await Collects(self.parameter, cookie, proxy, ).run()
+        if not any(collects):
+            return None
+        if source:
+            return collects
+        data = self.extractor.extract_collects_info(collects)
+        return self.__input_download_index(data, "收藏夹", "name", )
+
+    async def __check_owner_url(self, tiktok=False, ):
         if not (sec_user_id := await self.check_sec_user_id(self.owner.url)):
             self.logger.warning(
                 f"配置文件 owner_url 的 url 参数 {self.owner.url} 无效")
             if self.console.input(
                     "程序无法获取账号信息，建议修改配置文件后重新运行，是否返回上一级菜单(YES/NO)").upper != "NO":
-                return
-        root, params, logger = self.record.run(self.parameter)
-        start = time()
-        await self._deal_collection_data(root, params, logger, sec_user_id)
-        time_ = time() - start
-        self.logger.info(
-            f"程序运行耗时 {
-            int(time_ //
-                60)} 分钟 {
-            int(time_ %
-                60)} 秒")
-        self.logger.info("已退出批量下载收藏作品(抖音)模式")
+                return None
+            return ""
+        return sec_user_id
 
+    @check_cookie_state(tiktok=False)
     async def collection_music_interactive(self, *args, **kwargs, ):
         start = time()
         if data := await self.__handle_collection_music(*args, **kwargs):
@@ -1351,6 +1423,40 @@ class TikTok:
             api=api,
             addition="收藏作品",
             tiktok=tiktok,
+        )
+
+    async def _deal_collects_data(
+            self,
+            root,
+            params,
+            logger,
+            sec_user_id: str,
+            name: str,
+            id_: str,
+            api=False,
+            source=False,
+            cookie: str = None,
+            proxy: str = None,
+            tiktok=False,
+    ):
+        self.logger.info("开始获取收藏夹数据")
+        data = await CollectsDetail(self.parameter, cookie, proxy, id_, sec_user_id, ).run()
+        if not any(data):
+            return None
+        if source:
+            return data
+        return await self._batch_process_detail(
+            root,
+            params,
+            logger,
+            data,
+            sec_user_id,
+            name,
+            post=False,
+            api=api,
+            addition="收藏夹作品",
+            tiktok=tiktok,
+            title=name,
         )
 
     async def hashtag_interactive(

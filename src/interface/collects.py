@@ -3,6 +3,7 @@ from typing import Callable
 from typing import TYPE_CHECKING
 from typing import Union
 
+from src.interface.collection import Collection
 from src.interface.template import API
 from src.testers import Params
 
@@ -64,19 +65,20 @@ class Collects(API):
         )
 
 
-class CollectsDetail(API):
+class CollectsDetail(Collection, API):
     def __init__(self,
                  params: Union["Parameter", Params],
                  cookie: str = None,
                  proxy: str = None,
                  collects_id: str = ...,
+                 sec_user_id: str = None,
                  pages: int = None,
                  cursor=0,
                  count=10,
                  *args,
                  **kwargs,
                  ):
-        super().__init__(params, cookie, proxy, *args, **kwargs, )
+        super().__init__(params, cookie, proxy, sec_user_id, *args, **kwargs, )
         self.collects_id = collects_id
         self.pages = pages or params.max_pages
         self.api = f"{self.domain}aweme/v1/web/collects/video/list/"
@@ -107,7 +109,7 @@ class CollectsDetail(API):
                   *args,
                   **kwargs,
                   ):
-        return await super().run(
+        await super(Collection, self).run(
             referer,
             single_page,
             data_key,
@@ -121,6 +123,9 @@ class CollectsDetail(API):
             *args,
             **kwargs,
         )
+        if self.sec_user_id:
+            await self.get_owner_data()
+        return self.response
 
 
 class CollectsMix(API):

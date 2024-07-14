@@ -130,8 +130,8 @@ class Parameter:
         self.cookie, self.cookie_cache = self.__check_cookie(cookie)
         self.cookie_tiktok, self.cookie_tiktok_cache = self.__check_cookie_tiktok(
             cookie_tiktok)
-        self.cookie_state = None
-        self.cookie_tiktok_state = None
+        self.cookie_state: bool = self.__check_cookie_state()
+        self.cookie_tiktok_state: bool = self.__check_cookie_state(True)
         self.root = self.__check_root(root)
         self.folder_name = self.__check_folder_name(folder_name)
         self.name_format = self.__check_name_format(name_format)
@@ -585,8 +585,6 @@ class Parameter:
                         False,
                         key=i))
         await self.update_params()
-        await self.set_token_params()
-        self.set_headers_cookie()
 
     def __check_accounts_urls(self, data: list[dict]) -> list[dict]:
         pass
@@ -671,3 +669,10 @@ class Parameter:
         self.logger.warning(
             f"truncate 参数 {truncate} 设置错误，程序将使用默认值：64", )
         return 64
+
+    def __check_cookie_state(self, tiktok=False) -> bool:
+        if tiktok:
+            return (self.cookie_object.STATE_KEY in self.cookie_tiktok) or (
+                    self.cookie_object.STATE_KEY in self.cookie_tiktok_cache)
+        return (self.cookie_object.STATE_KEY in self.cookie) or (
+                self.cookie_object.STATE_KEY in self.cookie_cache)

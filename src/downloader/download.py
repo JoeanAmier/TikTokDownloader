@@ -28,8 +28,8 @@ from src.custom import (
     WARNING,
 )
 from src.tools import PrivateRetry
+from src.tools import beautify_string
 from src.tools import format_size
-from src.tools import trim_string
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -501,7 +501,7 @@ class Downloader:
             count: SimpleNamespace,
             progress: Progress) -> bool:
         task_id = progress.add_task(
-            trim_string(show, self.truncate), total=content or None)
+            beautify_string(show, self.truncate), total=content or None)
         try:
             with cache.open("wb") as f:
                 async for chunk in response.aiter_bytes(self.chunk):
