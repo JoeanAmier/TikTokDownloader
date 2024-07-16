@@ -41,7 +41,7 @@ class Account(API):
         self.earliest, self.latest = self.check_date(earliest, latest)
         self.cursor = cursor
         self.count = count
-        self.text = "dữ liệu like của tài khoản" if self.favorite else "dữ liệu videos của tài khoản" # 账号喜欢作品数据; 账号发布作品数据
+        self.text = " dữ liệu like của tài khoản" if self.favorite else " dữ liệu videos của tài khoản" # 账号喜欢作品数据; 账号发布作品数据
         self.info = Info(params, cookie, proxy, sec_user_id, )
 
     async def run(self,

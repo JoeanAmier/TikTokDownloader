@@ -291,12 +291,12 @@ class Parameter:
         if not root:
             return self.ROOT
         if (r := Path(root)).is_dir():
-            self.logger.info(f"root 参数已设置为 {root}", False)
+            self.logger.info(f"root đã được thiết lập: {root}", False) #参数已设置为
             return r
         if r := self.__check_root_again(r):
-            self.logger.info(f"root 参数已设置为 {r}", False)
+            self.logger.info(f"root đã được thiết lập {r}", False) #参数已设置为
             return r
-        self.logger.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
+        self.logger.warning(f"tham số root: {root} không phải là đường dẫn thư mục hợp lệ, chương trình sẽ sử dụng đường dẫn gốc của dự án làm đường dẫn lưu trữ")  #不是有效的文件夹路径，程序将使用项目根路径作为储存路径
         return self.ROOT
 
     @staticmethod
@@ -308,16 +308,16 @@ class Parameter:
 
     def __check_folder_name(self, folder_name: str) -> str:
         if folder_name := self.CLEANER.filter_name(folder_name, False):
-            self.logger.info(f"folder_name 参数已设置为 {folder_name}", False)
+            self.logger.info(f"folder_name đã được thiết lập: {folder_name}", False) # 参数已设置为
             return folder_name
         self.logger.warning(
-            f"folder_name 参数 {folder_name} 不是有效的文件夹名称，程序将使用默认值：Download")
+            f"tham số folder_name: {folder_name} không phải là tên thư mục hợp lệ, chương trình sẽ sử dụng tên mặc định: Download") #không phải là tên thư mục hợp lệ, chương trình sẽ sử dụng tên mặc định:
         return "Download"
 
     def __check_name_format(self, name_format: str) -> list[str]:
         name_keys = name_format.strip().split(" ")
         if all(i in self.NAME_KEYS for i in name_keys):
-            self.logger.info(f"name_format 参数已设置为 {name_format}", False)
+            self.logger.info(f"name_format đã được thiết lập {name_format}", False) # 参数已设置为
             return name_keys
         else:
             self.logger.warning(
@@ -327,7 +327,7 @@ class Parameter:
     def __check_date_format(self, date_format: str) -> str:
         try:
             _ = strftime(date_format, localtime())
-            self.logger.info(f"date_format 参数已设置为 {date_format}", False)
+            self.logger.info(f"date_format đã được thiết lập {date_format}", False) # 参数已设置为
             return date_format
         except ValueError:
             self.logger.warning(
@@ -502,7 +502,7 @@ class Parameter:
         )):
             # self.cookie |= d
             self.ms_token = d[MsToken.NAME]
-            self.logger.info(f"抖音 MsToken 请求值: {self.ms_token}", False, )
+            self.logger.info(f"Yêu cầu Douyin MsToken: {self.ms_token}", False, ) #抖音 MsToken 请求值
         else:
             self.ms_token = self.cookie.get("msToken", "")
             self.logger.info(f"抖音 MsToken 本地值: {self.ms_token}", False, )
@@ -521,7 +521,7 @@ class Parameter:
         )):
             # self.cookie_tiktok |= d
             self.ms_token_tiktok = d[MsTokenTikTok.NAME]
-            self.logger.info(f"TikTok MsToken 请求值: {self.ms_token}", False, )
+            self.logger.info(f"Yêu cầu TikTok MsToken: {self.ms_token}", False, )
         else:
             self.ms_token = self.cookie_tiktok.get("msToken", "")
             self.logger.info(f"TikTok MsToken 本地值: {self.ms_token}", False, )

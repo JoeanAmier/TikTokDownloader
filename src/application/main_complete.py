@@ -52,7 +52,7 @@ def check_storage_format(function):
         if self.parameter.storage_format:
             return await function(self, *args, **kwargs)
         self.console.print(
-            "未设置 storage_format 参数，无法正常使用该功能，详细说明请查阅项目文档！",
+            "Nếu tham số storage_format không được đặt, chức năng này không thể được sử dụng bình thường. Vui lòng tham khảo tài liệu dự án để biết hướng dẫn chi tiết!", # 未设置 storage_format 参数，无法正常使用该功能，详细说明请查阅项目文档！
             style=WARNING)
 
     return inner
@@ -137,7 +137,7 @@ class TikTok:
         self.__function = (
             ("批量下载账号作品(抖音)", self.account_acquisition_interactive,),
             ("批量下载链接作品(抖音)", self.detail_interactive,),
-            ("获取直播推流地址(抖音)", self.live_interactive,),
+            ("Nhận địa chỉ livestream(DouYin)", self.live_interactive,), # 获取直播推流地址
             # ("采集作品评论数据(抖音)", self.comment_interactive,),
             ("批量下载合集作品(抖音)", self.mix_interactive,),
             # ("采集账号详细数据(抖音)", self.disable_function,),
@@ -149,9 +149,9 @@ class TikTok:
             # ("批量下载收藏短剧(抖音)", self.disable_function,),
             ("批量下载收藏夹作品(抖音)", self.disable_function,),
             ("Download toàn bộ videos trong tài khoản(TikTok)", self.account_acquisition_interactive_tiktok,), #批量下载账号作品
-            ("批量下载链接作品(TikTok)", self.detail_interactive_tiktok,),
-            ("批量下载合集作品(TikTok)", self.mix_interactive_tiktok,),
-            ("获取直播推流地址(TikTok)", self.live_interactive_tiktok,),
+            ("Download video link(TikTok)", self.detail_interactive_tiktok,), # 批量下载链接作品
+            ("Download Album(TikTok)", self.mix_interactive_tiktok,),
+            ("Nhận địa chỉ livestream(TikTok)", self.live_interactive_tiktok,), # 获取直播推流地址
             # ("采集作品评论数据(TikTok)", self.comment_interactive_tiktok,),
         )
         self.__function_account = (
@@ -181,20 +181,20 @@ class TikTok:
             ("从文本文档读取待采集的账号链接", self.user_txt),
         )
         self.__function_detail = (
-            ("手动输入待采集的作品链接", self.__detail_inquire),
-            ("从文本文档读取待采集的作品链接", self.__detail_txt),
+            ("Nhập thủ công link video", self.__detail_inquire), # 手动输入待采集的作品链接
+            ("Đọc video links từ file text", self.__detail_txt), # 从文本文档读取待采集的作品链接
         )
         self.__function_detail_tiktok = (
-            ("手动输入待采集的作品链接", self.__detail_inquire_tiktok),
-            ("从文本文档读取待采集的作品链接", self.__detail_txt_tiktok),
+            ("Nhập thủ công link video", self.__detail_inquire_tiktok), #  手动输入待采集的作品链接
+            ("Đọc video links từ file text", self.__detail_txt_tiktok), # 从文本文档读取待采集的作品链接
         )
         self.__function_comment = (
-            ("手动输入待采集的作品链接", self.__comment_inquire),
-            ("从文本文档读取待采集的作品链接", self.__comment_txt),
+            ("Nhập thủ công link video", self.__comment_inquire), #  手动输入待采集的作品链接
+            ("Đọc video links từ file text", self.__comment_txt), # 从文本文档读取待采集的作品链接
         )
         self.__function_comment_tiktok = (
-            ("手动输入待采集的作品链接", self.__comment_inquire_tiktok),
-            # ("从文本文档读取待采集的作品链接", self.__comment_txt_tiktok),
+            ("Nhập thủ công link video", self.__comment_inquire_tiktok), #  手动输入待采集的作品链接
+            # ("Đọc video links từ file text", self.__comment_txt_tiktok),
         )
 
     async def disable_function(self, *args, **kwargs, ):
@@ -464,7 +464,7 @@ class TikTok:
             data, id_, mark, post, mix, tiktok, mix_title, )
         self.__display_extracted_information(
             mix, id_, name, mid, title, mark, )
-        addition = addition or ("Bộ sưu tập videos" if mix else "Videos đã xuất bản" if post else "喜欢作品") #合集作品 ; 发布作品 ; 喜欢作品
+        addition = addition or ("Album videos" if mix else "Videos đã xuất bản" if post else "喜欢作品") #合集作品 ; 发布作品 ; 喜欢作品
         old_mark = f"{m["MARK"]}_{addition}" if (
             m := await self.cache.has_cache(
                 mid if mix else id_)) else None
@@ -503,7 +503,7 @@ class TikTok:
             title: str,
             mark: str,
     ) -> None:
-        self.logger.info(f"Tiêu đề bộ sưu tập: {title}; ID bộ sưu tập: {mark}; ID bộ sưu tập: {mid}", mix, ) # 合集标题：；合集标识：；合集 ID：
+        self.logger.info(f"Tiêu đề Album: {title}; ID Album: {mark}; ID Album: {mid}", mix, ) # 合集标题：；合集标识：；合集 ID：
         self.logger.info(f"Tên tài khoản: {name}; Tài khoản: {mark}; ID tài khoản:{id_}", not mix, ) #账号昵称 ; 账号标识：; ；账号 ID：
 
     async def download_account_detail(
@@ -531,19 +531,19 @@ class TikTok:
 
     async def detail_interactive(self, select="", *args, **kwargs):
         await self.__detail_secondary_menu(self.__function_detail, select)
-        self.logger.info("已退出批量下载链接作品(抖音)模式")
+        self.logger.info("Đã thoát khỏi chế độ tải link hàng loạt (Douyin)") # 已退出批量下载链接作品(抖音)模式
 
     async def detail_interactive_tiktok(self, select="", *args, **kwargs):
         await self.__detail_secondary_menu(self.__function_detail_tiktok, select)
-        self.logger.info("已退出批量下载链接作品(TikTok)模式")
+        self.logger.info("Đã thoát chế độ tải link hàng loạt (TikTok)") # 已退出批量下载链接作品(TikTok)模式
 
     async def __detail_secondary_menu(self, menu, select="", *args, **kwargs):
         root, params, logger = self.record.run(self.parameter)
         async with logger(root, console=self.console, **params) as record:
             if not select:
                 select = choose(
-                    "请选择作品链接来源", [
-                        i[0] for i in menu], self.console)
+                    "Vui lòng chọn nguồn link video", [
+                        i[0] for i in menu], self.console) #请选择作品链接来源
             if select.upper() == "Q":
                 self.running = False
             try:
@@ -554,12 +554,12 @@ class TikTok:
                 await menu[n][1](record)
 
     async def __detail_inquire(self, record, tiktok=False, ):
-        while url := self._inquire_input("作品"):
+        while url := self._inquire_input("video"): #作品
             ids = await self.links_tiktok.run(url) if tiktok else await self.links.run(url)
             if not any(ids):
-                self.logger.warning(f"{url} 提取作品 ID 失败")
+                self.logger.warning(f"{url} Không trích xuất được ID tiêu đề") #{url} 提取作品 ID 失败
                 continue
-            self.console.print(f"共提取到 {len(ids)} 个作品，开始处理！")
+            self.console.print(f"Tổng cộng {len(ids)} videos đã được trích xuất, bắt đầu xử lý!") #共提取到 {len(ids)} 个作品，开始处理！
             await self.input_links_acquisition(tiktok, ids, record)
 
     async def __detail_inquire_tiktok(self, record, tiktok=True, ):
@@ -1017,7 +1017,7 @@ class TikTok:
                                tiktok=False,
                                mix_title: str = "",
                                ):
-        self.logger.info(f"Bắt đầu xử lý {num} bộ sưu tập" if num else "Bắt đầu xử lý bộ sưu tập") #开始处理第 ; 个合集 ; 开始处理合集
+        self.logger.info(f"Bắt đầu xử lý {num} Album" if num else "Bắt đầu xử lý Album") #开始处理第 ; 个合集 ; 开始处理合集
         mix_params = self._generate_mix_params(mix_id, id_)
         if tiktok:
             mix_obj = MixTikTok(
@@ -1293,7 +1293,7 @@ class TikTok:
                 60)} phút {
             int(time_ %
                 60)} giây")
-        self.logger.info("Đã thoát khỏi chế độ tải xuống hàng loạt của bộ sưu tập (Douyin)") #已退出批量下载收藏作品(抖音)模式
+        self.logger.info("Đã thoát khỏi chế độ tải xuống hàng loạt của Album (Douyin)") #已退出批量下载收藏作品(抖音)模式
 
     async def _deal_collection_data(
             self,

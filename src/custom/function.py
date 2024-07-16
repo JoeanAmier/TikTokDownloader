@@ -33,7 +33,7 @@ async def wait() -> None:
 def failure_handling() -> bool:
     """批量下载账号作品模式 和 批量下载合集作品模式 获取数据失败时，是否继续执行"""
     # 询问用户
-    return bool(input("输入任意字符继续处理账号/合集，直接回车停止处理账号/合集: "))
+    return bool(input("Nhập bất kỳ ký tự nào để tiếp tục xử lý tài khoản/bộ sưu tập hoặc nhấn Enter để dừng xử lý tài khoản/bộ sưu tập:")) #输入任意字符继续处理账号/合集，直接回车停止处理账号/合集: 
     # 继续执行
     # return True
     # 结束执行
@@ -43,7 +43,7 @@ def failure_handling() -> bool:
 def illegal_nickname() -> str:
     """当 账号昵称/标识 或者 合集标题/标识 过滤非法字符后不是有效的文件夹名称时，如何处理异常"""
     # 询问用户
-    return input("当前 账号昵称/标识 或者 合集标题/标识 不是有效的文件夹名称，请输入临时的账号标识或者合集标识：")
+    return input("Biệt hiệu/danh tính tài khoản hiện tại hoặc tiêu đề/danh tính Album không phải là tên thư mục hợp lệ. Vui lòng nhập nhận dạng tài khoản tạm thời hoặc nhận dạng bộ sưu tập:") #当前 账号昵称/标识 或者 合集标题/标识 不是有效的文件夹名称，请输入临时的账号标识或者合集标识：
     # 使用当前时间戳作为账号昵称/标识或者合集标题/标识
     # 需要将第 5 行代码取消注释
     # return str(time())[:10]
@@ -72,9 +72,9 @@ async def suspend(count: int, console: "ColorfulConsole") -> None:
     if not count % batches:
         rest_time = 60 * 5  # 根据实际需求修改
         console.print(
-            f"程序已经处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，程序已经暂停运行，"
-            f"将在 {rest_time} 秒后继续处理数据！", style=GENERAL)
-        await sleep(rest_time)
+            f"Chương trình đã xử lý dữ liệu {batches} để ngăn tài khoản hoặc IP bị BAN do tần suất yêu cầu quá cao, chương trình đã bị tạm dừng."
+            f"Quá trình xử lý dữ liệu sẽ tiếp tục sau {rest_time} giây!", style=GENERAL) # 程序已经处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，程序已经暂停运行，
+        await sleep(rest_time) # 将在 {rest_time} 秒后继续处理数据！
     # 禁用该函数
     # pass
 

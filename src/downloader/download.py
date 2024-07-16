@@ -546,13 +546,13 @@ class Downloader:
 
     def delete_file(self, path: Path):
         path.unlink()
-        self.log.info(f"{path.name} 文件已删除")
+        self.log.info(f"{path.name} đã bị xóa") # 文件已删除
 
     def statistics_count(self, count: SimpleNamespace):
-        self.log.info(f"跳过视频作品 {len(count.skipped_video)} 个")
-        self.log.info(f"跳过图集作品 {len(count.skipped_image)} 个")
-        self.log.info(f"下载视频作品 {len(count.downloaded_video)} 个")
-        self.log.info(f"下载图集作品 {len(count.downloaded_image)} 个")
+        self.log.info(f"Bỏ qua video {len(count.skipped_video)} links") # 跳过视频作品
+        self.log.info(f"Bỏ qua thư viện {len(count.skipped_image)} links") # 跳过图集作品
+        self.log.info(f"Tải xuống video {len(count.downloaded_video)} links") # 下载视频作品
+        self.log.info(f"Tải xuống album {len(count.downloaded_image)} links") # 下载图集作品
 
     def __format_item_name(self, name: str) -> str:
         pass

@@ -29,8 +29,8 @@ from src.custom import (
     DISCLAIMER_TEXT,
     PROJECT_NAME,
 )
-# from src.custom import SERVER_HOST
-# from src.custom import SERVER_PORT
+from src.custom import SERVER_HOST
+from src.custom import SERVER_PORT
 from src.custom import TEXT_REPLACEMENT
 from src.manager import Database
 from src.manager import DownloadRecorder
@@ -110,17 +110,17 @@ class TikTokDownloader:
             ("从浏览器获取 Cookie (TikTok)", self.browser_cookie_tiktok),
             ("Chế độ dòng lệnh (terminal)", self.complete), #终端交互模式
             ("后台监测模式", self.disable_function),
-            ("Web API 模式", self.disable_function),
-            ("Web UI 模式", self.disable_function),
-            ("服务器部署模式", self.disable_function),
-            # ("Web API 模式", self.__api_object),
-            # ("Web UI 模式", self.__web_ui_object),
-            # ("服务器部署模式", self.__server_object),
+            # ("Web API 模式", self.disable_function),
+            # ("Web UI 模式", self.disable_function),
+            # ("Chế độ triển khai máy chủ", self.disable_function), #服务器部署模式
+            # ("Web API", self.__api_object),
+            # ("Web UI", self.__web_ui_object),
+            # ("Chế độ triển khai máy chủ", self.__server_object), #服务器部署模式
             (f"{self.FUNCTION_OPTIONS[self.config["Update"]]
             }自动检查更新", self.__modify_update),
             (f"{self.FUNCTION_OPTIONS[self.config["Record"]]
             }作品下载记录", self.__modify_record),
-            ("删除作品下载记录", self.delete_works_ids),
+            ("Xóa bản ghi thông tin download", self.delete_works_ids), # 删除作品下载记录
             (f"{self.FUNCTION_OPTIONS[self.config["Logger"]]
             }运行日志记录", self.__modify_logging),
         )
@@ -203,12 +203,12 @@ class TikTokDownloader:
             self.__update_menu()
             if not default_mode:
                 default_mode = choose(
-                    "请选择 TikTokDownloader 运行模式",
+                    "Vui lòng chọn chế độ hoạt động TikTokDownloader",
                     [i for i, _ in self.__function_menu],
                     self.console,
                     separate=(
                         4,
-                        9))
+                        9)) #请选择 TikTokDownloader 运行模式
             await self.compatible(default_mode)
             default_mode = None
 
@@ -297,10 +297,10 @@ class TikTokDownloader:
 
     async def delete_works_ids(self):
         if not self.config["Record"]:
-            self.console.print("作品下载记录功能已禁用！", style=WARNING)
+            self.console.print("Chức năng log download videos đã bị tắt!", style=WARNING) #作品下载记录功能已禁用！
             return
-        self.recorder.delete_ids(self.console.input("请输入需要删除的作品 ID："))
-        self.console.print("删除作品下载记录成功！", style=INFO)
+        self.recorder.delete_ids(self.console.input("Vui lòng nhập ID của video cần xóa:")) #请输入需要删除的作品 ID：
+        self.console.print("Xóa log download thành công!", style=INFO)  #删除作品下载记录成功！
 
     async def check_settings(self, restart=True):
         if restart:

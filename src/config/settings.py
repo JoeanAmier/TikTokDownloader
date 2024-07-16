@@ -23,21 +23,21 @@ class Settings:
     default = {
         "accounts_urls": [
             {
-                "mark": "账号标识，可以设置为空字符串",
-                "url": "账号主页链接",
-                "tab": "账号主页类型",
-                "earliest": "作品最早发布日期",
-                "latest": "作品最晚发布日期",
+                "mark": "ID tài khoản, có thể được đặt thành một chuỗi rỗng",
+                "url": "link tài khoản",
+                "tab": "loại tài khoản",
+                "earliest": "ngày phát hành video sớm nhất",
+                "latest": "ngày phát hành video mới nhất",
                 "enable": True,
             },
         ],
         "accounts_urls_tiktok": [
             {
-                "mark": "账号标识，可以设置为空字符串",
-                "url": "账号主页链接",
-                "tab": "账号主页类型",
-                "earliest": "作品最早发布日期",
-                "latest": "作品最晚发布日期",
+                "mark": "ID tài khoản, có thể được đặt thành một chuỗi rỗng",
+                "url": "link tài khoản",
+                "tab": "loại tài khoản",
+                "earliest": "ngày phát hành video sớm nhất",
+                "latest": "ngày phát hành video mới nhất",
                 "enable": True,
             },
         ],
@@ -55,12 +55,12 @@ class Settings:
                 "enable": True,
             },
         ],
-        "owner_url": {"mark": "账号标识，可以设置为空字符串",
-                      "url": "账号主页链接", },
+        "owner_url": {"mark": "ID tài khoản, có thể được đặt thành một chuỗi rỗng",
+                      "url": "link tài khoản", },
         "owner_url_tiktok": None,
         "root": "",
-        "folder_name": "Download",
-        "name_format": "create_time type nickname desc",
+        "folder_name": "Downloads",
+        "name_format": "create_time-type-nickname-desc",
         "date_format": "%Y-%m-%d %H:%M:%S",
         "split": "-",
         "folder_mode": False,
@@ -127,8 +127,7 @@ class Settings:
         with self.file.open("w", encoding=self.encode) as f:
             dump(self.default, f, indent=4, ensure_ascii=False)
         self.console.print(
-            "创建默认配置文件 settings.json 成功！\n请参考项目文档的快速入门部分，设置 Cookie 后重新运行程序！\n建议根据实际使用需求"
-            "修改配置文件 settings.json！\n")
+            "Tệp cấu hình mặc định settings.json đã được tạo thành công! \nVui lòng tham khảo phần bắt đầu nhanh của tài liệu dự án, đặt Cookie và sau đó chạy lại chương trình! \nĐược đề xuất dựa trên nhu cầu sử dụng thực tế \nSửa đổi tập tin cấu hình settings.json!\n") # 创建默认配置文件 settings.json 成功！\n请参考项目文档的快速入门部分，设置 Cookie 后重新运行程序！\n建议根据实际使用需求修改配置文件 settings.json！\n
         return self.default
 
     def read(self) -> dict:
@@ -140,8 +139,8 @@ class Settings:
             return self.__create()  # 生成的默认配置文件必须设置 cookie 才可以正常运行
         except JSONDecodeError:
             self.console.print(
-                "配置文件 settings.json 格式错误，请检查 JSON 格式！",
-                style=ERROR)
+                "Tệp cấu hình settings.json có định dạng không chính xác, vui lòng kiểm tra định dạng JSON!",
+                style=ERROR) # 配置文件 settings.json 格式错误，请检查 JSON 格式！
             return self.default  # 读取配置文件发生错误时返回空配置
 
     def __check(self, data: dict) -> dict:
@@ -150,10 +149,10 @@ class Settings:
         if not (miss := default_keys - data_keys):
             return data
         if self.console.input(
-                f"配置文件 settings.json 缺少 {"、".join(miss)} 参数，是否需要生成默认配置文件(YES/NO): ",
-                style=ERROR).upper() == "YES":
+                f"Tệp cấu hình settings.json thiếu tham số {", ".join(miss)}. Bạn có cần tạo tệp cấu hình mặc định không?(YES/NO): ",
+                style=ERROR).upper() == "YES": #配置文件 settings.json 缺少 {"、".join(miss)} 参数，是否需要生成默认配置文件
             self.__create()
-        self.console.print("本次运行将会使用各项参数默认值，程序功能可能无法正常使用！", style=WARNING)
+        self.console.print("Lần chạy này sẽ sử dụng các giá trị mặc định của các tham số khác nhau và các chức năng của chương trình có thể không hoạt động bình thường!", style=WARNING) #本次运行将会使用各项参数默认值，程序功能可能无法正常使用！
         return self.default
 
     def update(self, settings: dict | SimpleNamespace):
@@ -166,4 +165,4 @@ class Settings:
                 f,
                 indent=4,
                 ensure_ascii=False)
-        self.console.print("保存配置成功！", style=INFO)
+        self.console.print("Đã lưu cấu hình thành công", style=INFO) #保存配置成功
