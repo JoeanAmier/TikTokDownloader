@@ -1,3 +1,9 @@
+# 📝 Hướng dẫn sử dụng
+* Trên máy đã cài đặt python > 3.9
+* Trong command console: chạy lệnh `pip install -r requirements.txt`
+* Chạy lần đầu sẽ có mục hỏi "Bạn đã đọc kỹ tuyên bố từ chối trách nhiệm ở trên chưa?". Trả lời YES
+* Để download toàn bộ videos của 1 tài khoản, chọn mục `6 >> 9 >> 2` để nhập thủ công link tài khoản hoặc các options khác
+* Để download link video riêng lẻ, chọn mục `6 >> 10 >> 1` để nhập thủ công link tài khoản hoặc các options khác
 <div align="center">
 <img src="https://github.com/JoeanAmier/TikTokDownloader/blob/master/static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
 <h1>TikTokDownloader</h1>
