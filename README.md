@@ -1,6 +1,7 @@
 # 📝 Hướng dẫn sử dụng
 * Trên máy đã cài đặt python > 3.9
 * Trong command console: chạy lệnh `pip install -r requirements.txt`
+* Trong command console: chạy lệnh `python main.py` để khởi động app
 * Chạy lần đầu sẽ có mục hỏi "Bạn đã đọc kỹ tuyên bố từ chối trách nhiệm ở trên chưa?". Trả lời YES
 * Để download toàn bộ videos của 1 tài khoản, chọn mục `6 >> 9 >> 2` để nhập thủ công link tài khoản hoặc các options khác
 * Để download link video riêng lẻ, chọn mục `6 >> 10 >> 1` để nhập thủ công link video hoặc các options khác
