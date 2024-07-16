@@ -329,7 +329,7 @@ class Downloader:
         if await self.is_skip(
                 id_, p := actual_root.with_name(
                     f"{name}.mp4")):
-            self.log.info(f"【视频】{name} 存在下载记录或文件已存在，跳过下载")
+            self.log.info(f"【视频】{name} 存在下载记录或文件已存在，跳过下载") # 存在下载记录或文件已存在，跳过下载
             self.log.info(f"文件路径: {p.resolve()}", False)
             count.skipped_video.add(id_)
             return

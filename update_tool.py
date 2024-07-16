@@ -15,8 +15,8 @@ ENCODE = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
 
 
 def about():
-    print("本程序仅用于 5.3 更新至 5.4！")
-    print("请确保本程序放置于 main.py 或 main.exe 同级文件夹！")
+    print("Chương trình này chỉ dành cho việc cập nhật từ 5.3 lên 5.4!") #本程序仅用于 5.3 更新至 5.4！
+    print("Hãy đảm bảo rằng chương trình này được đặt trong cùng thư mục cấp độ với main.py hoặc main.exe!") #请确保本程序放置于 main.py 或 main.exe 同级文件夹！
 
 
 def update_params():
@@ -25,12 +25,12 @@ def update_params():
     with SETTING_ROOT.open("w", encoding=ENCODE) as f:
         new_data = Settings.default | old_data
         dump(new_data, f, indent=4, ensure_ascii=False)
-    print("已更新配置文件！")
+    print("Đã cập nhật tập tin cấu hình!")
 
 
 def main():
     about()
-    if not input("即将更新配置文件，直接回车继续执行，输入任意内容跳过执行："):
+    if not input("File cấu hình sắp được cập nhật. Chỉ cần nhấn Enter để tiếp tục thực hiện."): #即将更新配置文件，直接回车继续执行，输入任意内容跳过执行：
         update_params()
 
 

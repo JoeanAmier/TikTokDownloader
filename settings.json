@@ -1,0 +1,101 @@
+﻿{
+    "accounts_urls": [
+        {
+            "mark": "",
+            "url": "https://www.tiktok.com/@xom0070",
+            "tab": "",
+            "earliest": "",
+            "latest": "",
+            "enable": true
+        }
+    ],
+    "accounts_urls_tiktok": [
+        {
+            "mark": "",
+            "url": "https://www.tiktok.com/@xom0070",
+            "tab": "",
+            "earliest": "",
+            "latest": "",
+            "enable": true
+        }
+    ],
+    "mix_urls": [
+        {
+            "mark": "合集标识，可以设置为空字符串",
+            "url": "合集链接或者作品链接",
+            "enable": true
+        }
+    ],
+    "mix_urls_tiktok": [
+        {
+            "mark": "合集标识，可以设置为空字符串",
+            "url": "合集链接或者作品链接",
+            "enable": true
+        }
+    ],
+    "owner_url": {
+        "mark": "账号标识，可以设置为空字符串",
+        "url": "账号主页链接"
+    },
+    "owner_url_tiktok": null,
+    "root": "",
+    "folder_name": "Download",
+    "name_format": "create_time type nickname desc",
+    "date_format": "%Y-%m-%d %H:%M:%S",
+    "split": "-",
+    "folder_mode": false,
+    "music": false,
+    "truncate": 64,
+    "storage_format": "",
+    "cookie": "",
+    "cookie_tiktok": {
+        "tt_csrf_token": "D38hUtws-Gi0NG7s66bjuesap4F5RR0c7iTo",
+        "tt_chain_token": "+t0ghaH+CVQzaLhbzfA/aA==",
+        "msToken": "nZQZV1Ee-iMh8J2P8XgW7c2-36GIH-MPyIzzsbXT-_DUYpQuA3TBVjfkSmevFEhRUgraTCHH_yFV_zJxaRYA8AwNBvfqrDIkdinaDrbw5tBZA6Une_zRq_KNe_FZu1sj8Or88yzESVw=",
+        "ttwid": "1%7C5VPFLpG5w_NbpGlgsmWZjJb6MvcH0crRHcih7PQYVvE%7C1721102749%7Cef8b31c2b32de430efbcea706d7252d8bbccfbf88501ec6d3075dc39938dc94c"
+    },
+    "dynamic_cover": false,
+    "original_cover": false,
+    "proxy": {
+        "http://": null,
+        "https://": null
+    },
+    "proxy_tiktok": {
+        "http://": null,
+        "https://": null
+    },
+    "twc_tiktok": "",
+    "download": true,
+    "max_size": 0,
+    "chunk": 1048576,
+    "max_retry": 5,
+    "max_pages": 0,
+    "default_mode": "",
+    "ffmpeg": "",
+    "update_cookie": true,
+    "update_cookie_tiktok": true,
+    "browser_info": {
+        "Sec-Ch-Ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\", \"Google Chrome\";v=\"126\"",
+        "Sec-Ch-Ua-Platform": "\"Windows\"",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+        "browser_platform": "Win32",
+        "browser_name": "Chrome",
+        "browser_version": "126.0.0.0",
+        "engine_name": "Blink",
+        "engine_version": "126.0.0.0",
+        "os_name": "Windows",
+        "os_version": "10",
+        "webid": ""
+    },
+    "browser_info_tiktok": {
+        "Sec-Ch-Ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\", \"Google Chrome\";v=\"126\"",
+        "Sec-Ch-Ua-Platform": "\"Windows\"",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+        "browser_name": "Mozilla",
+        "browser_platform": "Win32",
+        "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+        "device_id": "",
+        "os": "windows",
+        "tz_name": "Asia/Shanghai"
+    }
+}

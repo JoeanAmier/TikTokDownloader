@@ -148,7 +148,7 @@ class TikTok:
             ("批量下载收藏音乐(抖音)", self.disable_function,),
             # ("批量下载收藏短剧(抖音)", self.disable_function,),
             ("批量下载收藏夹作品(抖音)", self.disable_function,),
-            ("批量下载账号作品(TikTok)", self.account_acquisition_interactive_tiktok,),
+            ("Download toàn bộ videos trong tài khoản(TikTok)", self.account_acquisition_interactive_tiktok,), #批量下载账号作品
             ("批量下载链接作品(TikTok)", self.detail_interactive_tiktok,),
             ("批量下载合集作品(TikTok)", self.mix_interactive_tiktok,),
             ("获取直播推流地址(TikTok)", self.live_interactive_tiktok,),
@@ -160,9 +160,9 @@ class TikTok:
             ("从文本文档读取待采集的账号链接", self.account_detail_txt),
         )
         self.__function_account_tiktok = (
-            ("使用 accounts_urls_tiktok 参数的账号链接(推荐)", self.account_detail_batch_tiktok),
-            ("手动输入待采集的账号链接", self.account_detail_inquire_tiktok),
-            ("从文本文档读取待采集的账号链接", self.account_detail_txt_tiktok),
+            ("Lấy link tài khoản trong field account_urls_tiktok (được khuyến nghị)", self.account_detail_batch_tiktok), #使用 accounts_urls_tiktok 参数的账号链接(推荐)
+            ("Nhập thủ công link tài khoản", self.account_detail_inquire_tiktok), #手动输入待采集的账号链接
+            ("Đọc link tài khoản từ file text", self.account_detail_txt_tiktok), #从文本文档读取待采集的账号链接
         )
         self.__function_mix = (
             ("使用 mix_urls 参数的合集链接(推荐)", self.mix_batch),
@@ -198,10 +198,10 @@ class TikTok:
         )
 
     async def disable_function(self, *args, **kwargs, ):
-        self.console.print("该功能暂不开放！", style=WARNING)
+        self.console.print("Chức năng này hiện chưa có!", style=WARNING) #该功能暂不开放！
 
     def _inquire_input(self, url: str = None, tip: str = None) -> str:
-        text = self.console.input(tip or f"请输入{url}链接: ")
+        text = self.console.input(tip or f"Vui lòng nhập {url}: ") #请输入{url}链接
         if not text:
             return ""
         elif text in ("Q", "q",):
@@ -218,20 +218,20 @@ class TikTok:
             logger,
             self.__function_account_tiktok,
             select)
-        self.logger.info("已退出批量下载账号作品(TikTok)模式")
+        self.logger.info("Đã thoát khỏi chế độ tải xuống hàng loạt videos của tài khoản (TikTok)") #已退出批量下载账号作品(TikTok)模式
 
-    def __summarize_results(self, count: SimpleNamespace, name="账号"):
+    def __summarize_results(self, count: SimpleNamespace, name="Tài khoản"): #账号, 程序共处理
         time_ = time() - count.time
         self.logger.info(
-            f"程序共处理 {
+            f"Tổng số link đã xử lý {
             count.success +
-            count.failed} 个{name}，成功 {
-            count.success} 个，失败 {
-            count.failed} 个，耗时 {
+            count.failed} links {name}, thành công {
+            count.success} links, thất bại {
+            count.failed} links, Tổng thời gian xử lý {
             int(time_ //
-                60)} 分钟 {
+                60)} phút {
             int(time_ %
-                60)} 秒")
+                60)} giây")
 
     async def account_acquisition_interactive(
             self, select="", *args, **kwargs):
@@ -242,7 +242,7 @@ class TikTok:
             logger,
             self.__function_account,
             select)
-        self.logger.info("已退出批量下载账号作品(抖音)模式")
+        self.logger.info("Đã thoát khỏi chế độ tải xuống hàng loạt videos của tài khoản") #已退出批量下载账号作品(抖音)模式
 
     async def __account_secondary_menu(
             self,
@@ -252,18 +252,18 @@ class TikTok:
             function,
             select):
         if not select:
-            select = choose("请选择账号链接来源",
-                            [i[0] for i in function], self.console)
+            select = choose("Vui lòng chọn nguồn lấy link tài khoản",
+                            [i[0] for i in function], self.console) #请选择账号链接来源
         await self.__multiple_choice(select, function, root, params, logger, )
 
     async def account_detail_batch(self, root, params, logger):
         count = SimpleNamespace(time=time(), success=0, failed=0)
-        self.logger.info(f"共有 {len(self.accounts)} 个账号的作品等待下载")
+        self.logger.info(f"Có tổng cộng {len(self.accounts)} videos của tài khoản đang chờ tải xuống.") #共有 {len(self.accounts)} 个账号的作品等待下载
         for index, data in enumerate(self.accounts, start=1):
             if not (sec_user_id := await self.check_sec_user_id(data.url)):
                 self.logger.warning(
-                    f"配置文件 accounts_urls 参数"
-                    f"第 {index} 条数据的 url {data.url} 错误，提取 sec_user_id 失败")
+                    f"Tham số account_urls của tệp cấu hình" #配置文件 accounts_urls 参数
+                    f"Url {data.url} của dữ liệu {index} không đúng và việc trích xuất sec_user_id không thành công.") #第 {index} 条数据的 url {data.url} 错误，提取 sec_user_id 失败
                 count.failed += 1
                 continue
             if not await self.deal_account_detail(
@@ -315,18 +315,18 @@ class TikTok:
         return sec_user_id[0] if len(sec_user_id) > 0 else ""
 
     async def account_detail_inquire(self, root, params, logger):
-        while url := self._inquire_input("账号主页"):
+        while url := self._inquire_input("Link tài khoản"):
             links = await self.links.run(url, "user")
             if not links:
-                self.logger.warning(f"{url} 提取账号 sec_user_id 失败")
+                self.logger.warning(f"{url} Không trích xuất được tài khoản sec_user_id")
                 continue
             await self.__account_detail_handle(root, params, logger, links)
 
     async def account_detail_inquire_tiktok(self, root, params, logger):
-        while url := self._inquire_input("账号主页"):
+        while url := self._inquire_input("Link tài khoản"): #账号主页
             links = await self.links_tiktok.run(url, "user")
             if not links:
-                self.logger.warning(f"{url} 提取账号 sec_user_id 失败")
+                self.logger.warning(f"{url} Không trích xuất được tài khoản sec_user_id") #提取账号 sec_user_id 失败
                 continue
             await self.__account_detail_handle(root, params, logger, links, True, )
 
@@ -335,7 +335,7 @@ class TikTok:
             return
         links = await self.links.run(url, "user", )
         if not links:
-            self.logger.warning("从文本文档提取账号 sec_user_id 失败")
+            self.logger.warning("Không thể trích xuất tài khoản sec_user_id từ file text") #从文本文档提取账号 sec_user_id 失败
             return
         await self.__account_detail_handle(root, params, logger, links)
 
@@ -395,7 +395,7 @@ class TikTok:
             *args,
             **kwargs,
     ):
-        self.logger.info(f"开始处理第 {num} 个账号" if num else "开始处理账号")
+        self.logger.info(f"Bắt đầu xử lý {num} tài khoản" if num else "Bắt đầu xử lý tài khoản") #开始处理第 ; 个账号 ; 开始处理账号
         if tiktok:
             acquirer = AccountTikTok(
                 self.parameter,
@@ -459,7 +459,7 @@ class TikTok:
                                     tiktok=False,
                                     mix_title: str = None,
                                     ):
-        self.logger.info("开始提取作品数据")
+        self.logger.info("Bắt đầu trích xuất dữ liệu") #开始提取作品数据
         id_, name, mid, title, mark, data = self.extractor.preprocessing_data(
             data, id_, mark, post, mix, tiktok, mix_title, )
         self.__display_extracted_information(
@@ -503,8 +503,8 @@ class TikTok:
             title: str,
             mark: str,
     ) -> None:
-        self.logger.info(f"合集标题：{title}；合集标识：{mark}；合集 ID：{mid}", mix, )
-        self.logger.info(f"账号昵称：{name}；账号标识：{mark}；账号 ID：{id_}", not mix, )
+        self.logger.info(f"Tiêu đề bộ sưu tập: {title}; ID bộ sưu tập: {mark}; ID bộ sưu tập: {mid}", mix, ) # 合集标题：；合集标识：；合集 ID：
+        self.logger.info(f"Tên tài khoản: {name}; Tài khoản: {mark}; ID tài khoản:{id_}", not mix, ) #账号昵称 ; 账号标识：; ；账号 ID：
 
     async def download_account_detail(
             self,
@@ -1017,7 +1017,7 @@ class TikTok:
                                tiktok=False,
                                mix_title: str = "",
                                ):
-        self.logger.info(f"开始处理第 {num} 个合集" if num else "开始处理合集")
+        self.logger.info(f"Bắt đầu xử lý {num} bộ sưu tập" if num else "Bắt đầu xử lý bộ sưu tập") #开始处理第 ; 个合集 ; 开始处理合集
         mix_params = self._generate_mix_params(mix_id, id_)
         if tiktok:
             mix_obj = MixTikTok(
@@ -1052,7 +1052,7 @@ class TikTok:
                     mix_title=mix_obj.mix_title,
                 )
             )
-        self.logger.warning("采集合集作品数据失败")
+        self.logger.warning("Không thể thu thập dữ liệu download") #采集合集作品数据失败
         return None
 
     async def _check_mix_id(self, url: str) -> tuple[bool, str]:
@@ -1279,21 +1279,21 @@ class TikTok:
     async def collection_interactive(self, *args, **kwargs):
         if not (sec_user_id := await self.check_sec_user_id(self.owner.url)):
             self.logger.warning(
-                f"配置文件 owner_url 的 url 参数 {self.owner.url} 无效")
+                f"Tham số url {self.owner.url} của tệp cấu hình owner_url không hợp lệ") #配置文件 owner_url 的 url 参数 {self.owner.url} 无效"
             if self.console.input(
-                    "程序无法获取账号信息，建议修改配置文件后重新运行，是否返回上一级菜单(YES/NO)").upper != "NO":
+                    "Chương trình không thể lấy được thông tin tài khoản. Bạn nên sửa đổi tệp cấu hình và chạy lại. Bạn có muốn quay lại menu trước đó không?(YES/NO)").upper != "NO": #程序无法获取账号信息，建议修改配置文件后重新运行，是否返回上一级菜单
                 return
         root, params, logger = self.record.run(self.parameter)
         start = time()
         await self._deal_collection_data(root, params, logger, sec_user_id)
-        time_ = time() - start
+        time_ = time() - start #程序运行耗时
         self.logger.info(
-            f"程序运行耗时 {
+            f"Thời gian chạy chương trình {
             int(time_ //
-                60)} 分钟 {
+                60)} phút {
             int(time_ %
-                60)} 秒")
-        self.logger.info("已退出批量下载收藏作品(抖音)模式")
+                60)} giây")
+        self.logger.info("Đã thoát khỏi chế độ tải xuống hàng loạt của bộ sưu tập (Douyin)") #已退出批量下载收藏作品(抖音)模式
 
     async def _deal_collection_data(
             self,
@@ -1341,9 +1341,9 @@ class TikTok:
         while self.running:
             if not (select := safe_pop(self.default_mode)):
                 select = choose(
-                    "请选择采集功能",
+                    "Vui lòng chọn chức năng download",
                     [i for i, _ in self.__function],
-                    self.console)
+                    self.console) #请选择采集功能
             if select in {"Q", "q", }:
                 self.running = False
             try:

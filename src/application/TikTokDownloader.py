@@ -108,7 +108,7 @@ class TikTokDownloader:
             ("扫码登录获取 Cookie (抖音)", self.auto_cookie),
             ("复制粘贴写入 Cookie (TikTok)", self.write_cookie_tiktok),
             ("从浏览器获取 Cookie (TikTok)", self.browser_cookie_tiktok),
-            ("终端交互模式", self.complete),
+            ("Chế độ dòng lệnh (terminal)", self.complete), #终端交互模式
             ("后台监测模式", self.disable_function),
             ("Web API 模式", self.disable_function),
             ("Web UI 模式", self.disable_function),
@@ -126,7 +126,7 @@ class TikTokDownloader:
         )
 
     async def disable_function(self, *args, **kwargs, ):
-        self.console.print("该功能暂不开放！", style=WARNING)
+        self.console.print("Chức năng này hiện chưa có!", style=WARNING) #该功能暂不开放！
 
     # def __api_object(self):
     #     self.server(APIServer, SERVER_HOST)
@@ -152,7 +152,7 @@ class TikTokDownloader:
                 "\n".join(DISCLAIMER_TEXT),
                 style=MASTER)
             if self.console.input(
-                    "是否已仔细阅读上述免责声明(YES/NO): ").upper() != "YES":
+                    "Bạn đã đọc kỹ tuyên bố từ chối trách nhiệm ở trên chưa?(YES/NO): ").upper() != "YES": #是否已仔细阅读上述免责声明
                 return False
             await self.database.update_config_data("Disclaimer", 1)
             self.console.print()
@@ -161,9 +161,9 @@ class TikTokDownloader:
     def project_info(self):
         self.console.print(f"{self.LINE}\n\n\n{self.NAME.center(
             self.WIDTH)}\n\n\n{self.LINE}\n", style=MASTER)
-        self.console.print(f"项目地址: {REPOSITORY}", style=MASTER)
-        self.console.print(f"项目文档: {DOCUMENTATION_URL}", style=MASTER)
-        self.console.print(f"开源许可: {LICENCE}\n", style=MASTER)
+        self.console.print(f"Link dự án: {REPOSITORY}", style=MASTER) #项目地址
+        self.console.print(f"Tài liệu dự án: {DOCUMENTATION_URL}", style=MASTER) #项目文档
+        self.console.print(f"Giấy phép mã nguồn mở: {LICENCE}\n", style=MASTER) #开源许可
 
     def check_config(self):
         self.recorder = DownloadRecorder(
