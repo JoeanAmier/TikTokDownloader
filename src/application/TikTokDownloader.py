@@ -181,20 +181,20 @@ class TikTokDownloader:
                 int, str(response.url).split("/")[-1].split(".", 1))
             if latest_major > VERSION_MAJOR or latest_minor > VERSION_MINOR:
                 self.console.print(
-                    f"检测到新版本: {latest_major}.{latest_minor}", style=WARNING)
+                    f"Đã phát hiện phiên bản mới: {latest_major}.{latest_minor}", style=WARNING) #检测到新版本
                 self.console.print(RELEASES)
             elif latest_minor == VERSION_MINOR and VERSION_BETA:
                 self.console.print(
-                    "当前版本为开发版, 可更新至正式版", style=WARNING)
+                    "Phiên bản hiện tại là phiên bản phát triển và có thể cập nhật lên phiên bản chính thức.", style=WARNING)  #当前版本为开发版, 可更新至正式版
                 self.console.print(RELEASES)
             elif VERSION_BETA:
-                self.console.print("当前已是最新开发版", style=WARNING)
+                self.console.print("Đây hiện là phiên bản phát triển mới nhất", style=WARNING) #当前已是最新开发版
             else:
-                self.console.print("当前已是最新正式版", style=INFO)
+                self.console.print("Hiện tại đây là phiên bản chính thức mới nhất", style=INFO) #当前已是最新正式版
         except (
                 RequestError,
         ):
-            self.console.print("检测新版本失败", style=ERROR)
+            self.console.print("Không phát hiện được phiên bản mới", style=ERROR) # 检测新版本失败
         self.console.print()
 
     async def main_menu(self, default_mode=""):
@@ -323,7 +323,7 @@ class TikTokDownloader:
         self.project_info()
         self.check_config()
         await self.check_settings(False, )
-        self.check_update()
+        # self.check_update()
         if await self.disclaimer():
             await self.main_menu(safe_pop(self.default_mode))
 
@@ -351,7 +351,7 @@ class TikTokDownloader:
     def close(self):
         self.event.set()
         self.delete_cache()
-        self.parameter.logger.info("正在关闭程序")
+        self.parameter.logger.info("Kết thúc chương trình") #正在关闭程序
 
     async def browser_cookie(self, ):
         if Browser(self.parameter, self.cookie).run():

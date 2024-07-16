@@ -26,7 +26,7 @@ class Info(API):
             "version_code": "170400",
             "version_name": "17.4.0",
         }
-        self.text = "账号简略信息"
+        self.text = "Thông tin tóm tắt tài khoản" #账号简略信息
 
     async def run(self, first=True, *args, **kwargs, ) -> dict | list[dict]:
         self.set_referer()
@@ -47,7 +47,7 @@ class Info(API):
         if d := data_dict.get("data"):
             self.append_response(d)
         else:
-            self.log.warning(f"获取{self.text}失败")
+            self.log.warning(f"Không lấy được {self.text}") #获取{self.text}失败
 
     def __generate_data(self, ) -> dict:
         if isinstance(self.sec_user_id, str):

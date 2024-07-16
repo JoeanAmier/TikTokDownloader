@@ -19,7 +19,7 @@ class Detail(API):
         super().__init__(params, cookie, proxy, )
         self.detail_id = detail_id
         self.api = f"{self.domain}aweme/v1/web/aweme/detail/"
-        self.text = "作品数据"
+        self.text = "Dữ liệu videos" #作品数据
 
     def generate_params(self, ) -> dict:
         return self.params | {
@@ -46,7 +46,7 @@ class Detail(API):
             referer,
             single_page,
             data_key,
-            error_text or f"作品 {self.detail_id} 获取数据失败",
+            error_text or f"Không lấy được dữ liệu videos {self.detail_id}", #作品 {self.detail_id} 获取数据失败
             cursor,
             has_more,
             params,
@@ -72,4 +72,4 @@ class Detail(API):
             else:
                 self.response = d
         except KeyError:
-            self.log.error(f"数据解析失败，请告知作者处理: {data_dict}")
+            self.log.error(f"Phân tích dữ liệu không thành công, vui lòng thông báo cho tác giả để xử lý: {data_dict}") #数据解析失败，请告知作者处理

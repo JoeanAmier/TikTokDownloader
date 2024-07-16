@@ -68,7 +68,7 @@ class AccountTikTok(Account, APITikTok, ):
             case True:
                 await self.run_single(
                     data_key,
-                    error_text=error_text or f"获取{self.text}失败",
+                    error_text=error_text or f"Không lấy được {self.text}", # 获取{self.text}失败
                     cursor=cursor,
                     has_more=has_more,
                     params=params,
@@ -82,7 +82,7 @@ class AccountTikTok(Account, APITikTok, ):
             case False:
                 await self.run_batch(
                     data_key,
-                    error_text=error_text or f"获取{self.text}失败",
+                    error_text=error_text or f"Không lấy được {self.text}", # 获取{self.text}失败
                     cursor=cursor,
                     has_more=has_more,
                     params=params,
@@ -110,7 +110,7 @@ class AccountTikTok(Account, APITikTok, ):
                         ):
         await super().run_batch(
             data_key=data_key,
-            error_text=error_text or f"获取{self.text}失败",
+            error_text=error_text or f"Không lấy được {self.text}", # 获取{self.text}失败
             cursor=cursor,
             has_more=has_more,
             params=params,

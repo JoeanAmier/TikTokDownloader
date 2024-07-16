@@ -119,7 +119,7 @@ class Downloader:
         if not self.download or not data:
             return
         if type_ == "batch":
-            self.log.info("开始下载作品文件")
+            self.log.info("Bắt đầu tải xuống các tập tin") #开始下载作品文件
             await self.run_batch(data, tiktok, **kwargs)
         elif type_ == "detail":
             await self.run_general(data, tiktok, )
@@ -133,12 +133,12 @@ class Downloader:
             id_: str,
             name: str,
             mark="",
-            addition="发布作品",
+            addition="xuất bản video", #发布作品
             mid: str = None,
             title: str = None,
     ):
         # assert addition in {"喜欢作品", "收藏作品", "发布作品", "合集作品"}, ValueError
-        mix = addition == "合集作品"
+        mix = addition == "Bộ sưu tập videos" #合集作品
         root = self.storage_folder(
             mid if mix else id_,
             title if mix else name,
@@ -329,8 +329,8 @@ class Downloader:
         if await self.is_skip(
                 id_, p := actual_root.with_name(
                     f"{name}.mp4")):
-            self.log.info(f"【视频】{name} 存在下载记录或文件已存在，跳过下载") # 存在下载记录或文件已存在，跳过下载
-            self.log.info(f"文件路径: {p.resolve()}", False)
+            self.log.info(f"【video】{name} đã được download hoặc file đã tồn tại, bỏ qua việc tải xuống") # 【视频】存在下载记录或文件已存在，跳过下载
+            self.log.info(f"đường dẫn tập tin: {p.resolve()}", False) #文件路径
             count.skipped_video.add(id_)
             return
         tasks.append((
@@ -432,7 +432,7 @@ class Downloader:
                                 response.headers.get(
                                     'content-length',
                                     0))) and not unknown_size:  # 响应内容大小判断
-                        self.log.warning(f"{show} 响应内容为空")
+                        self.log.warning(f"{show} Nội dung phản hồi rỗng") #响应内容为空
                         return False
                     response.raise_for_status()
                     # if response.status_code >= 400:  # 响应码判断
@@ -440,10 +440,10 @@ class Downloader:
                     #         f"{response.url} 响应码异常: {response.status_code}")
                     #     return False
                     self.log.info(
-                        f"{show} 文件大小 {format_size(content)}", False, )
+                        f"{show} Kích thước tập tin {format_size(content)}", False, ) #文件大小
                     if all(
                             (self.max_size, content, content > self.max_size)):  # 文件下载跳过判断
-                        self.log.info(f"{show} 文件大小超出限制，跳过下载")
+                        self.log.info(f"{show} Kích thước tập tin vượt quá giới hạn, download bị bỏ qua") #文件大小超出限制，跳过下载
                         return True
                     return await self.download_file(
                         temp,
@@ -480,13 +480,13 @@ class Downloader:
                 RequestError,
                 StreamError,
         ) as e:
-            self.log.warning(f"{show} 下载中断，错误信息：{e}")
+            self.log.warning(f"{show} download bị gián đoạn, thông báo lỗi:{e}") #下载中断，错误信息：
             self.delete_file(cache)
             await self.recorder.delete_id(id_)
             return False
         self.save_file(cache, actual)
-        self.log.info(f"{show} 文件下载成功")
-        self.log.info(f"文件路径 {actual.resolve()}", False)
+        self.log.info(f"{show} download file thành công") #文件下载成功
+        self.log.info(f"Đường dẫn tập tin {actual.resolve()}", False) #文件路径
         await self.recorder.update_id(id_)
         self.add_count(show, id_, count)
         return True

@@ -172,7 +172,7 @@ class API:
                 *args,
                 **kwargs)
         else:
-            self.log.warning(f"获取{self.text}失败")
+            self.log.warning(f"Không lấy được {self.text}") #获取{self.text}失败
 
     async def run_batch(self,
                         data_key: str,
@@ -188,7 +188,7 @@ class API:
                         **kwargs, ):
         with self.progress_object() as progress:
             task_id = progress.add_task(
-                f"正在获取{self.text}", total=None)
+                f"Đang xử lý{self.text}", total=None) #正在获取
             while not self.finished and self.pages > 0:
                 progress.update(task_id)
                 await self.run_single(
@@ -225,7 +225,7 @@ class API:
                 self.append_response(d)
                 self.finished = not data_dict[has_more]
         except KeyError:
-            self.log.error(f"数据解析失败，请告知作者处理: {data_dict}")
+            self.log.error(f"Phân tích dữ liệu không thành công, vui lòng thông báo cho tác giả để xử lý: {data_dict}") #数据解析失败，请告知作者处理
             self.finished = True
 
     def set_referer(self, url: str = None) -> None:
@@ -251,7 +251,7 @@ class API:
                 return await self.__request_data_post(url, params, data, headers or self.headers,
                                                       finished=finished, *args, **kwargs)
             case _:
-                raise TikTokDownloaderError(f"尚未支持的请求方法 {method}")
+                raise TikTokDownloaderError(f"Phương thức yêu cầu chưa được hỗ trợ {method}") #尚未支持的请求方法
 
     @PrivateRetry.retry
     @capture_error_request
@@ -321,7 +321,7 @@ class API:
             #         urlencode(params), method, )[1], safe="", )
 
     def summary_works(self, ) -> None:
-        self.log.info(f"共获取到 {len(self.response)} 个{self.text}")
+        self.log.info(f"Tổng số videos {len(self.response)} 个{self.text}") #共获取到
 
     def progress_object(self):
         return Progress(

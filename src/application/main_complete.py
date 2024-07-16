@@ -166,7 +166,7 @@ class TikTok:
         )
         self.__function_mix = (
             ("使用 mix_urls 参数的合集链接(推荐)", self.mix_batch),
-            ("获取当前账号收藏合集列表", self.mix_collection),
+            ("获取f账号收藏合集列表", self.mix_collection),
             ("手动输入待采集的合集/作品链接", self.mix_inquire),
             ("从文本文档读取待采集的合集/作品链接", self.mix_txt),
         )
@@ -464,7 +464,7 @@ class TikTok:
             data, id_, mark, post, mix, tiktok, mix_title, )
         self.__display_extracted_information(
             mix, id_, name, mid, title, mark, )
-        addition = addition or ("合集作品" if mix else "发布作品" if post else "喜欢作品")
+        addition = addition or ("Bộ sưu tập videos" if mix else "Videos đã xuất bản" if post else "喜欢作品") #合集作品 ; 发布作品 ; 喜欢作品
         old_mark = f"{m["MARK"]}_{addition}" if (
             m := await self.cache.has_cache(
                 mid if mix else id_)) else None

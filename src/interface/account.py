@@ -41,14 +41,14 @@ class Account(API):
         self.earliest, self.latest = self.check_date(earliest, latest)
         self.cursor = cursor
         self.count = count
-        self.text = "账号喜欢作品数据" if self.favorite else "账号发布作品数据"
+        self.text = "dữ liệu like của tài khoản" if self.favorite else "dữ liệu videos của tài khoản" # 账号喜欢作品数据; 账号发布作品数据
         self.info = Info(params, cookie, proxy, sec_user_id, )
 
     async def run(self,
                   referer: str = None,
                   single_page=False,
                   data_key: str = "aweme_list",
-                  error_text="该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号",
+                  error_text="Tài khoản này là tài khoản riêng tư và yêu cầu sử dụng cookie sau khi đăng nhập", #该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号
                   cursor="max_cursor",
                   has_more="has_more",
                   params: Callable = lambda: {},
@@ -95,7 +95,7 @@ class Account(API):
 
     async def run_single(self,
                          data_key: str = "aweme_list",
-                         error_text="该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号",
+                         error_text="Tài khoản này là tài khoản riêng tư và yêu cầu sử dụng cookie đã đăng nhập", #该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号
                          cursor="max_cursor",
                          has_more="has_more",
                          params: Callable = lambda: {},
@@ -120,7 +120,7 @@ class Account(API):
 
     async def run_batch(self,
                         data_key: str = "aweme_list",
-                        error_text="该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号",
+                        error_text="Tài khoản này là tài khoản riêng tư và yêu cầu sử dụng cookie đã đăng nhập", #该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号
                         cursor="max_cursor",
                         has_more="has_more",
                         params: Callable = lambda: {},
