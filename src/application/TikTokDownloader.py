@@ -106,7 +106,7 @@ class TikTokDownloader:
             ("复制粘贴写入 Cookie (抖音)", self.write_cookie),
             ("从浏览器获取 Cookie (抖音)", self.browser_cookie),
             ("扫码登录获取 Cookie (抖音)", self.auto_cookie),
-            ("复制粘贴写入 Cookie (TikTok)", self.write_cookie_tiktok),
+            ("Copy Cookie từ trình duyệt (TikTok)", self.write_cookie_tiktok), # 复制粘贴写入
             ("从浏览器获取 Cookie (TikTok)", self.browser_cookie_tiktok),
             ("Chế độ dòng lệnh (terminal)", self.complete), #终端交互模式
             ("后台监测模式", self.disable_function),
