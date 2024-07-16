@@ -517,9 +517,9 @@ class Downloader:
             mix=False,
             folder_name: str = None) -> Path:
         if batch and all((id_, name, addition)):
-            folder_name = f"{folder_name or self.folder_name}/{mark or name}/videos/"#f"UID{id_}_{mark or name}_{addition}"
+            folder_name = f"{folder_name or self.folder_name}/{mark or name}_{id_}/videos/"#f"UID{id_}_{mark or name}_{addition}"
         elif mix and all((id_, name, addition)):
-            folder_name = f"{folder_name or self.folder_name}/{mark or name}/mixes/"#f"MIX{id_}_{mark or name}_{addition}"
+            folder_name = f"{folder_name or self.folder_name}/{mark or name}_{id_}/mixes/"#f"MIX{id_}_{mark or name}_{addition}"
         else:
             folder_name = folder_name or self.folder_name
         folder = self.root.joinpath(folder_name)
