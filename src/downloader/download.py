@@ -512,6 +512,7 @@ class Downloader:
                 RequestError,
                 StreamError,
         ) as e:
+            progress.remove_task(task_id)
             self.log.warning(f"{show} 下载中断，错误信息：{e}")
             self.delete_file(cache)
             await self.recorder.delete_id(id_)
