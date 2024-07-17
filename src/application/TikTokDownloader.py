@@ -45,6 +45,16 @@ from src.tools import safe_pop
 # from .main_api_server import APIServer
 from .main_complete import TikTok
 
+from rich.progress import (
+    SpinnerColumn,
+    BarColumn,
+    Progress,
+    TextColumn,
+    TimeElapsedColumn,
+)
+
+from src.custom import PROGRESS
+
 # from typing import Type
 # from webbrowser import open
 # from flask import abort
@@ -106,10 +116,11 @@ class TikTokDownloader:
             ("复制粘贴写入 Cookie (抖音)", self.write_cookie),
             ("从浏览器获取 Cookie (抖音)", self.browser_cookie),
             ("扫码登录获取 Cookie (抖音)", self.auto_cookie),
-            ("Copy Cookie từ trình duyệt (TikTok)", self.write_cookie_tiktok), # 复制粘贴写入
-            ("从浏览器获取 Cookie (TikTok)", self.browser_cookie_tiktok),
+            ("Copy & Paste Cookie từ trình duyệt (TikTok)", self.write_cookie_tiktok), # 复制粘贴写入
+            ("Nhận Cookie từ trình duyệt (TikTok)", self.browser_cookie_tiktok), 
+            ("Cập nhật Cookie user nặc danh (TikTok)", self.write_anynomous_tiktok_cookie),# 从浏览器获取
             ("Chế độ dòng lệnh (terminal)", self.complete), #终端交互模式
-            ("后台监测模式", self.disable_function),
+            # ("Chế độ giám sát nền", self.disable_function), #后台监测模式
             # ("Web API 模式", self.disable_function),
             # ("Web UI 模式", self.disable_function),
             # ("Chế độ triển khai máy chủ", self.disable_function), #服务器部署模式
@@ -269,11 +280,44 @@ class TikTokDownloader:
             await self.check_settings()
             # await self.parameter.update_cookie()
 
+    def __check_progress_object(self):
+        return Progress(
+            TextColumn(
+                "[progress.description]{task.description}",
+                style=PROGRESS,
+                justify="left"),
+            SpinnerColumn(),
+            BarColumn(),
+            "•",
+            TimeElapsedColumn(),
+            console=self.console,
+            transient=True,
+            expand=True,
+        )
+    
+    async def write_anynomous_tiktok_cookie(self, default_url = "https://www.tiktok.com/@microsoft"):
+        with self.__check_progress_object() as progress:
+            task_id = progress.add_task( "Đang lấy cookies từ " + default_url, total=None)
+            # get a content of a  channel
+            res = get(default_url)
+            cookies_data = res.cookies
+            cookies = {}
+            if cookies_data!=None:
+                cookies['ttwid'] = cookies_data['ttwid']
+                cookies['tt_csrf_token'] = cookies_data['tt_csrf_token']
+                cookies['tt_chain_token'] = cookies_data['tt_chain_token']
+                cookies['msToken'] = cookies_data['msToken']
+                self.cookie.save_cookie(cookies, self.PLATFORM[1])
+                await self.check_settings()
+            else:
+                self.console.print("Không nhận được cookies!", highlight=True)
+            progress.update(task_id)
+
     async def auto_cookie(self):
         self.console.print(
-            "该功能为实验性功能，仅适用于学习和研究目的；目前仅支持抖音平台，建议使用其他方式获取 Cookie，未来可能会禁用或移除该功能！",
-            style=ERROR)
-        if self.console.input("是否返回上一级菜单(YES/NO)").upper() != "NO":
+            "Chức năng này mang tính thử nghiệm và chỉ phù hợp cho mục đích học tập và nghiên cứu; hiện tại nó chỉ hỗ trợ nền tảng Douyin. Bạn nên sử dụng các phương pháp khác để lấy cookie. Chức năng này có thể bị vô hiệu hóa hoặc bị xóa trong tương lai!",
+            style=ERROR) # 该功能为实验性功能，仅适用于学习和研究目的；目前仅支持抖音平台，建议使用其他方式获取 Cookie，未来可能会禁用或移除该功能！
+        if self.console.input("Có quay lại menu trước không(YES/NO)").upper() != "NO": #是否返回上一级菜单
             return
         if cookie := await Register(
                 self.parameter,
@@ -283,7 +327,7 @@ class TikTokDownloader:
             await self.check_settings()
             # await self.parameter.update_cookie()
         else:
-            self.console.print("扫码登录失败，未写入 Cookie！", style=WARNING)
+            self.console.print("Quét mã QR để đăng nhập không thành công, cookie không được ghi!", style=WARNING) # 扫码登录失败，未写入 Cookie！
 
     async def compatible(self, mode: str):
         if mode in {"Q", "q", ""}:

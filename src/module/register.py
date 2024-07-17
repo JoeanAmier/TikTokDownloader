@@ -109,7 +109,7 @@ class Register:
         img = qr_code.make_image()
         img.save(self.cache)
         self.console.print(
-            "请使用抖音 APP 扫描二维码登录，如果二维码无法识别，请尝试更换终端或者选择其他方式写入 Cookie！")
+            "Vui lòng sử dụng Ứng dụng Douyin để quét mã QR để đăng nhập. Nếu không thể nhận dạng được mã QR, vui lòng thử thay đổi thiết bị đầu cuối hoặc chọn các phương pháp khác để ghi cookie!") #请使用抖音 APP 扫描二维码登录，如果二维码无法识别，请尝试更换终端或者选择其他方式写入 Cookie！
         self._open_qrcode_image()
 
     def _open_qrcode_image(self):

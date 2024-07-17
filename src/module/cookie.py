@@ -23,7 +23,7 @@ class Cookie:
         """提取 Cookie 并写入配置文件"""
         if not (
                 cookie := self.console.input(
-                    f"请粘贴 {self.PLATFORM[tiktok]} Cookie 内容: ")):
+                    f"Vui lòng paste nội dung cookie {self.PLATFORM[tiktok]}:")): #请粘贴 {self.PLATFORM[tiktok]} Cookie 内容: 
             return False
         self.extract(cookie, key=key)
         return True
@@ -33,7 +33,7 @@ class Cookie:
         self.__check_state(cookie_dict)
         if write:
             self.save_cookie(cookie_dict, key)
-            self.console.print("写入 Cookie 成功！")
+            self.console.print("Ghi Cookie thành công!") # 写入 Cookie 成功！
         return cookie_dict
 
     def __check_state(self, items: dict) -> None:

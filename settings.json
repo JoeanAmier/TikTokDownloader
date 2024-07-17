@@ -39,7 +39,7 @@
     },
     "owner_url_tiktok": null,
     "root": "",
-    "folder_name": "Download",
+    "folder_name": "Downloads",
     "name_format": "create_time type nickname desc",
     "date_format": "%Y-%m-%d %H:%M:%S",
     "split": "-",
@@ -49,10 +49,10 @@
     "storage_format": "",
     "cookie": "",
     "cookie_tiktok": {
-        "tt_csrf_token": "D38hUtws-Gi0NG7s66bjuesap4F5RR0c7iTo",
-        "tt_chain_token": "+t0ghaH+CVQzaLhbzfA/aA==",
-        "msToken": "nZQZV1Ee-iMh8J2P8XgW7c2-36GIH-MPyIzzsbXT-_DUYpQuA3TBVjfkSmevFEhRUgraTCHH_yFV_zJxaRYA8AwNBvfqrDIkdinaDrbw5tBZA6Une_zRq_KNe_FZu1sj8Or88yzESVw=",
-        "ttwid": "1%7C5VPFLpG5w_NbpGlgsmWZjJb6MvcH0crRHcih7PQYVvE%7C1721102749%7Cef8b31c2b32de430efbcea706d7252d8bbccfbf88501ec6d3075dc39938dc94c"
+        "ttwid": "1%7CqBg88R2tjNYWaa_bBf0jZZxkstpnCqg0xEZ7vjUoOa4%7C1721183314%7C6034c91e0e5d365436f8a352ee8f582e35354c38307fa976f5bd4daba20b4268",
+        "tt_csrf_token": "M5rDzd4U-DcnJxbr7XhpBTtXeANe4OEpOCKg",
+        "tt_chain_token": "xVOj6TtWRnP/YnqatmAO3w==",
+        "msToken": "OLEDeFTuYgR2rHTJZ5GE2Zvh74YYKxqTU5VXEUQp5RF33gostWXnhIz3dJ88cDdZ55lQsJawZNu0W3guxpCAl8nJbrm1r9tONxx9"
     },
     "dynamic_cover": false,
     "original_cover": false,
