@@ -321,7 +321,7 @@ class API:
             #         urlencode(params), method, )[1], safe="", )
 
     def summary_works(self, ) -> None:
-        self.log.info(f"Tổng số videos {len(self.response)} 个{self.text}") #共获取到
+        self.log.info(f"Tổng số videos {len(self.response)} links {self.text}") #共获取到
 
     def progress_object(self):
         return Progress(

@@ -8,6 +8,8 @@ from time import time
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
+import copy
+
 from httpx import RequestError
 from httpx import StreamError
 from rich.progress import (
@@ -139,7 +141,7 @@ class Downloader:
             title: str = None,
     ):
         # assert addition in {"喜欢作品", "收藏作品", "发布作品", "合集作品"}, ValueError
-        mix = addition == "Bộ sưu tập videos" #合集作品
+        mix = addition == "Video album" #合集作品
         root = self.storage_folder(
             mid if mix else id_,
             title if mix else name,
@@ -338,7 +340,7 @@ class Downloader:
             item["downloads"],
             temp_root.with_name(f"{name}.mp4"),
             p,
-            f"【视频】{name}",
+            f"【video】{name}",
             id_,
         ))
 
@@ -504,7 +506,7 @@ class Downloader:
     def add_count(type_: str, id_: str, count: SimpleNamespace):
         if type_.startswith("【图集】"):
             count.downloaded_image.add(id_)
-        elif type_.startswith("【视频】"):
+        elif type_.startswith("【video】"):
             count.downloaded_video.add(id_)
 
     def storage_folder(
@@ -527,6 +529,9 @@ class Downloader:
         return folder
 
     def generate_detail_name(self, data: dict) -> str:
+        # shadow_data = copy.deepcopy(data)
+        # if 'desc' in shadow_data:
+        #     shadow_data['desc'] = shadow_data['desc'].split('#')[0].strip()
         return self.cleaner.filter_name(
             self.split.join(
                 data[i] for i in self.name_format), inquire=False, default=str(

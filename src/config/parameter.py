@@ -321,7 +321,7 @@ class Parameter:
             return name_keys
         else:
             self.logger.warning(
-                f"name_format 参数 {name_format} 设置错误，程序将使用默认值：创建时间 作品类型 账号昵称 作品描述")
+                f"Tham số name_format {name_format} được đặt không chính xác và chương trình sẽ sử dụng giá trị mặc định: thời gian tạo, loại công việc, biệt danh tài khoản, mô tả công việc") #name_format 参数 {name_format} 设置错误，程序将使用默认值：创建时间 作品类型 账号昵称 作品描述"
             return ["create_time", "type", "nickname", "desc"]
 
     def __check_date_format(self, date_format: str) -> str:
