@@ -3,7 +3,8 @@
 * Trong command console: chạy lệnh `pip install -r requirements.txt`
 * Trong command console: chạy lệnh `python main.py` để khởi động app
 * Chạy lần đầu sẽ có mục hỏi "Bạn đã đọc kỹ tuyên bố từ chối trách nhiệm ở trên chưa?". Trả lời YES
-* Chọn mục 4 để paste chuỗi cookie string từ webbrowser vào (sẽ dc fixed sớm)
+* Chọn mục 4 để copy & paste chuỗi cookie string từ webbrowser vào (đối với các videos trong chế độ private của tài khoản)
+* Với các public videos, chọn mục 6 để tự động lấy cookie từ tiktok trong 1 channel bất kỳ (mặc định là @microsoft)
 * Để download toàn bộ videos của 1 tài khoản, chọn mục `7 >> 9 >> 2` để nhập thủ công link tài khoản hoặc các options khác
 * Để download link video riêng lẻ, chọn mục `7 >> 10 >> 1` để nhập thủ công link video hoặc các options khác
 <div align="center">
