@@ -8,8 +8,6 @@ from time import time
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
-import copy
-
 from httpx import RequestError
 from httpx import StreamError
 from rich.progress import (
@@ -483,12 +481,12 @@ class Downloader:
                 RequestError,
                 StreamError,
         ) as e:
-            self.log.warning(f"{show} download bị gián đoạn, thông báo lỗi:{e}") #下载中断，错误信息：
+            self.log.warning(f"{show} >> download bị gián đoạn, chi tiết lỗi:{e}") #下载中断，错误信息：
             self.delete_file(cache)
             await self.recorder.delete_id(id_)
             return False
         self.save_file(cache, actual)
-        self.log.info(f"{show} download file thành công") #文件下载成功
+        self.log.info(f"{show} >> download thành công") #文件下载成功
         self.log.info(f"Đường dẫn tập tin {actual.resolve()}", False) #文件路径
         await self.recorder.update_id(id_)
         self.add_count(show, id_, count)
@@ -528,13 +526,15 @@ class Downloader:
         folder.mkdir(exist_ok=True, parents=True)
         return folder
 
+    def remove_hash_Tag(self, text):
+        if isinstance(text, str):
+            return text.split('#')[0].strip()
+        return text
+
     def generate_detail_name(self, data: dict) -> str:
-        # shadow_data = copy.deepcopy(data)
-        # if 'desc' in shadow_data:
-        #     shadow_data['desc'] = shadow_data['desc'].split('#')[0].strip()
         return self.cleaner.filter_name(
             self.split.join(
-                data[i] for i in self.name_format), inquire=False, default=str(
+                self.remove_hash_Tag(data[i]) for i in self.name_format), inquire=False, default=str(
                 time())[:10])
 
     def create_detail_folder(

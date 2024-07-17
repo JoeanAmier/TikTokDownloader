@@ -344,7 +344,7 @@ class TikTok:
             return
         links = await self.links_tiktok.run(url, "user")
         if not links:
-            self.logger.warning("从文本文档提取账号 sec_user_id 失败")
+            self.logger.warning("Không thể trích xuất tài khoản sec_user_id từ tài liệu văn bản") #"从文本文档提取账号 sec_user_id 失败"
             return
         await self.__account_detail_handle(root, params, logger, links, True, )
 
@@ -1080,9 +1080,9 @@ class TikTok:
             await self._deal_user_data(root, params, logger, [i for i in users if i])
 
     def txt_inquire(self) -> str:
-        path = self.console.input("请输入文本文档路径：")
+        path = self.console.input("Vui lòng nhập đường dẫn file text:") #请输入文本文档路径：
         if not (t := Path(path.replace("\"", ""))).is_file():
-            self.console.print(f"{path} 文件不存在！")
+            self.console.print(f"{path} không tồn tại!") #文件不存在！
             return ""
         with t.open("r", encoding=self.ENCODE) as f:
             return f.read()
@@ -1092,7 +1092,7 @@ class TikTok:
             return
         sec_user_ids = await self.links.run(url, type_="user")
         if not sec_user_ids:
-            self.logger.warning("从文本文档提取账号 sec_user_id 失败")
+            self.logger.warning("Không thể trích xuất sec_user_id từ tài liệu văn bản") #从文本文档提取账号 sec_user_id 失败
             return
         users = [await self._get_user_data(i) for i in sec_user_ids]
         await self._deal_user_data(root, params, logger, [i for i in users if i])
