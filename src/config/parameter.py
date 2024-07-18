@@ -4,7 +4,6 @@ from time import strftime
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 from typing import Type
-from urllib.parse import quote
 
 from httpx import RequestError
 from httpx import TimeoutException
@@ -644,15 +643,12 @@ class Parameter:
         for i in (
                 'browser_name',
                 'browser_platform',
+                'browser_version',
                 'device_id',
                 'os',
                 'tz_name',
         ):
             APITikTok.params[i] = info.get(i, "")
-        for i in (
-                'browser_version',
-        ):
-            APITikTok.params[i] = quote(info.get(i, ""))
 
     @staticmethod
     def extract_proxy(proxy: str | dict | None) -> str | None:

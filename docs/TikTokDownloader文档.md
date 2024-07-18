@@ -11,9 +11,8 @@
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=for-the-badge&color=52c41a">
 </div>
 <br>
-<p>🔥 <b>TikTok 主页/合辑/直播/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/<del>账号</del>/<del>搜索</del>/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号发布作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；<del>采集抖音账号详细数据</del>；<del>采集抖音用户 / 作品 / 直播搜索结果</del>；采集抖音热榜数据。</p>
-<p>⭐ <b>项目文档正在完善中，如有发现任何错误或描述模糊之处，请告知作者以便改进！</b></p>
-<p>🛠 <b>文档对应项目版本：5.4 Beta；文档尚未完成！</b></p>
+<p>🔥 <b>TikTok 主页/合辑/直播/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/<del>评论</del>/<del>账号</del>/<del>搜索</del>/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；<del>采集抖音作品评论数据</del>；批量下载抖音合集作品；批量下载 TikTok 合辑作品；<del>采集抖音账号详细数据</del>；<del>采集抖音用户 / 作品 / 直播搜索结果</del>；采集抖音热榜数据。</p>
+<p>⭐ <b>文档对应项目版本：<code>5.4 Beta</code>；文档内容正在完善中，如有发现任何错误或描述模糊之处，请告知作者以便改进！</b></p>
 <hr>
 <h1>快速入门</h1>
 <ol>
@@ -40,7 +39,7 @@
 <ol><b>从浏览器获取 Cookie（推荐）</b>
 <li>选择 <code>从浏览器获取 Cookie</code> 选项，按照提示选择浏览器类型</li>
 </ol>
-<ol><b>扫码登录获取 Cookie（停用）</b>
+<ol><b>扫码登录获取 Cookie（弃用）</b>
 <li>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</li>
 <li>使用抖音 APP 扫描二维码并登录账号</li>
 <li>按照提示操作，将 Cookie 写入配置文件</li>
@@ -49,7 +48,7 @@
 <li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品(抖音)</code> -> <code>手动输入待采集的作品链接</code></li>
 <li>输入抖音作品链接即可下载作品文件</li>
 </ol>
-<p><b>TikTok 平台功能需要额外设置 <code>browser_info_tiktok</code> 的 <code>device_id</code> 参数，否则功能可能无法正常使用！</b></p>
+<p><b>TikTok 平台功能需要额外设置 <code>browser_info_tiktok</code> 的 <code>device_id</code> 参数，否则平台功能可能无法正常使用！</b></p>
 <h1>获取 Cookie</h1>
 <p><a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">点击查看 Cookie 获取教程</a>，无效 / 过期的 Cookie 会导致程序获取数据失败或者无法下载高分辨率的视频文件；目前尚无主动判断 Cookie 无效 / 过期的方法，<a href="https://github.com/JoeanAmier/TikTokDownloader#%E5%85%B3%E4%BA%8E-cookie">更多 Cookie 说明</a>！</p>
 <h1>入门说明</h1>
@@ -209,7 +208,7 @@ https://www.douyin.com/note/123456789
 <p>使用者可自行启用或禁用该功能，如果您不需要使用该平台的功能，建议禁用该平台的自动更新功能！</p>
 <h1>配置文件</h1>
 <p>配置文件：项目根目录下的 <code>settings.json</code> 文件，可以自定义设置程序部分运行参数。</p>
-<p><b><code>cookie</code> 参数为必需参数，必须设置该参数才能正常使用程序</b>；其余参数可以根据实际需求进行修改！</p>
+<p><b><code>cookie</code>、<code>cookie_tiktok</code> 与 <code>device_id</code>参数为必需参数，必须设置该参数才能正常使用程序</b>；其余参数可以根据实际需求进行修改！</p>
 <p>如果您的计算机没有合适的程序编辑 JSON 文件，建议使用 <a href="https://try8.cn/tool/format/json">JSON 在线工具</a> 编辑配置文件内容。</p>
 <p>注意: 手动修改 <code>settings.json</code> 后需要重新运行程序才会生效！</p>
 <h2>参数含义</h2>
@@ -247,34 +246,39 @@ https://www.douyin.com/note/123456789
 <td align="center">作品最晚发布日期, 格式: <code>2023/1/1</code>, 设置为空字符串代表不限制, <strong>属于 accounts_urls 子参数</strong></td>
 </tr>
 <tr>
-<td align="center">accounts_urls[mark, url, tab, earliest, latest]</td>
-<td align="center">list[dict[str, str, str, str, str]]</td>
-<td align="center">抖音平台：账号标识, 账号链接, 批量下载类型, 最早发布日期, 最晚发布日期; 批量下载账号作品时使用, 支持多账号, 以字典格式包含五个参数</td>
+<td align="center">enable</td>
+<td align="center">bool</td>
+<td align="center">参数对象是否启用，设置为 <code>false</code> 表示该参数对象不生效<br><strong>属于 accounts_urls 和 mix_urls 子参数</strong></td>
 </tr>
 <tr>
-<td align="center">mix_urls[mark, url]</td>
-<td align="center">list[dict[str, str]]</td>
-<td align="center">抖音平台：合集标识, 合集链接或作品链接, 批量下载合集作品时使用<br>支持多合集, 以字典格式包含两个参数</td>
+<td align="center">accounts_urls[mark, url, tab, earliest, latest, enable]</td>
+<td align="center">list[dict[str, str, str, str, str, bool]]</td>
+<td align="center">抖音平台：账号标识, 账号链接, 批量下载类型, 最早发布日期, 最晚发布日期，是否启用; 批量下载账号作品时使用, 支持多账号, 以字典格式包含六个参数</td>
+</tr>
+<tr>
+<td align="center">mix_urls[mark, url, enable]</td>
+<td align="center">list[dict[str, str, bool]]</td>
+<td align="center">抖音平台：合集标识, 合集链接或作品链接，是否启用, 批量下载合集作品时使用<br>支持多合集, 以字典格式包含三个参数</td>
 </tr>
 <tr>
 <td align="center">owner_url[mark, url]</td>
 <td align="center">dict[str, str]</td>
-<td align="center">抖音平台：已登录 Cookie 的账号标识, 账号主页链接, 批量下载收藏作品时使用<br>用于获取账号昵称和 UID, 以字典格式包含两个参数</td>
+<td align="center">抖音平台：当前登录 Cookie 的账号标识, 账号主页链接, 批量下载收藏作品时使用<br>用于获取账号昵称和 UID, 以字典格式包含两个参数</td>
 </tr>
 <tr>
-<td align="center">accounts_urls_tiktok[mark, url, tab, earliest, latest]</td>
-<td align="center">list[dict[str, str, str, str, str]]</td>
-<td align="center">TikTok 平台：账号标识, 账号链接, 批量下载类型, 最早发布日期, 最晚发布日期; 批量下载账号作品时使用, 支持多账号, 以字典格式包含五个参数</td>
+<td align="center">accounts_urls_tiktok[mark, url, tab, earliest, latest, enable]</td>
+<td align="center">list[dict[str, str, str, str, str, bool]]</td>
+<td align="center">TikTok 平台：账号标识, 账号链接, 批量下载类型, 最早发布日期, 最晚发布日期，是否启用; 批量下载账号作品时使用, 支持多账号, 以字典格式包含六个参数</td>
 </tr>
 <tr>
-<td align="center">mix_urls_tiktok[mark, url]</td>
-<td align="center">list[dict[str, str]]</td>
-<td align="center">TikTok 平台：合集标识, 合集链接或作品链接, 批量下载合集作品时使用<br>支持多合集, 以字典格式包含两个参数</td>
+<td align="center">mix_urls_tiktok[mark, url, enable]</td>
+<td align="center">list[dict[str, str, bool]]</td>
+<td align="center">TikTok 平台：合集标识, 合集链接或作品链接，是否启用, 批量下载合集作品时使用<br>支持多合集, 以字典格式包含三个参数</td>
 </tr>
 <tr>
 <td align="center">owner_url_tiktok[mark, url](未生效)</td>
 <td align="center">dict[str, str]</td>
-<td align="center">TikTok 平台：已登录 Cookie 的账号标识, 账号主页链接, 批量下载收藏作品时使用<br>用于获取账号昵称和 UID, 以字典格式包含两个参数</td>
+<td align="center">TikTok 平台：当前登录 Cookie 的账号标识, 账号主页链接, 批量下载收藏作品时使用<br>用于获取账号昵称和 UID, 以字典格式包含两个参数</td>
 </tr>
 <tr>
 <td align="center">root</td>
@@ -314,7 +318,7 @@ https://www.douyin.com/note/123456789
 <tr>
 <td align="center">truncate</td>
 <td align="center">int</td>
-<td align="center">文件下载进度条，描述字符串的最大长度，该参数用于调整显示效果；默认值: <code>64</code></td>
+<td align="center">文件下载进度条中描述字符串的最大长度，该参数用于调整显示效果；默认值: <code>64</code></td>
 </tr>
 <tr>
 <td align="center">storage_format</td>
@@ -334,32 +338,32 @@ https://www.douyin.com/note/123456789
 <tr>
 <td align="center">dynamic_cover</td>
 <td align="center">bool</td>
-<td align="center">是否下载动态封面图, 默认值: <code>false</code></td>
+<td align="center">是否下载视频作品动态封面图, 默认值: <code>false</code></td>
 </tr>
 <tr>
 <td align="center">original_cover</td>
 <td align="center">bool</td>
-<td align="center">是否下载静态封面图, 默认值: <code>false</code></td>
+<td align="center">是否下载视频作品静态封面图, 默认值: <code>false</code></td>
 </tr>
 <tr>
 <td align="center">proxy</td>
-<td align="center">str|dict</td>
+<td align="center">str | dict</td>
 <td align="center">抖音请求代理地址, 设置为 null 代表不使用代理</td>
 </tr>
 <tr>
 <td align="center">proxy_tiktok</td>
-<td align="center">str|dict</td>
+<td align="center">str | dict</td>
 <td align="center">TikTok 请求代理地址, 设置为 null 代表不使用代理</td>
 </tr>
 <tr>
 <td align="center">twc_tiktok</td>
 <td align="center">str</td>
-<td align="center">TikTok Cookie 的 ttwid 值，一般情况下无需修改！</td>
+<td align="center">TikTok Cookie 的 ttwid 值，一般情况下无需设置</td>
 </tr>
 <tr>
 <td align="center">download</td>
 <td align="center">bool</td>
-<td align="center">是否打开下载功能, 如果关闭, 程序将不会下载任何文件; 默认值: <code>true</code></td>
+<td align="center">是否打开项目的下载功能, 如果关闭, 程序将不会下载任何文件; 默认值: <code>true</code></td>
 </tr>
 <tr>
 <td align="center">max_size</td>
@@ -369,7 +373,7 @@ https://www.douyin.com/note/123456789
 <tr>
 <td align="center">chunk</td>
 <td align="center">int</td>
-<td align="center">每次从服务器接收的数据块大小, 单位字节; 默认值：<code>1048576</code>(1 MB)</td>
+<td align="center">每次从服务器接收的数据块大小, 单位字节; 默认值：<code>2621440</code>(2.5 MB)</td>
 </tr>
 <tr>
 <td align="center">max_retry</td>
@@ -404,12 +408,12 @@ https://www.douyin.com/note/123456789
 <tr>
 <td align="center">browser_info</td>
 <td align="center">dict</td>
-<td align="center">抖音平台浏览器信息，无需修改！</td>
+<td align="center">抖音平台浏览器信息，无需修改</td>
 </tr>
 <tr>
 <td align="center">browser_info_tiktok</td>
 <td align="center">dict</td>
-<td align="center">TikTok 平台浏览器信息，仅需修改 <code>device_id</code>！</td>
+<td align="center">TikTok 平台浏览器信息，仅需修改 <code>device_id</code> 参数</td>
 </tr>
 </tbody></table>
 <h2>配置示例</h2>
@@ -421,26 +425,30 @@ https://www.douyin.com/note/123456789
       "mark": "账号标识-1",
       "url": "账号主页链接-1",
       "tab": "post",
-      "earliest": "2023/1/1",
-      "latest": "2023/6/1"
+      "earliest": "2024/3/1",
+      "latest": "2024/7/1",
+      "enable": true
     },
     {
       "mark": "",
       "url": "账号主页链接-2",
       "tab": "favorite",
-      "earliest": "2023/7/1",
-      "latest": ""
+      "earliest": "",
+      "latest": "",
+      "enable": false
     }
   ],
   "accounts_urls_tiktok": "参数规则与 accounts_urls 一致",
   "mix_urls": [
     {
       "mark": "",
-      "url": "合集链接或者作品链接"
+      "url": "合集链接或者作品链接",
+      "enable": true
     },
     {
       "mark": "合集标识-2",
-      "url": "合集链接或者作品链接"
+      "url": "合集链接或者作品链接",
+      "enable": false
     }
   ],
   "mix_urls_tiktok": "参数规则与 mix_urls 一致",
@@ -466,7 +474,10 @@ https://www.douyin.com/note/123456789
   "cookie_tiktok": "参数规则与 cookie 一致",
   "dynamic_cover": false,
   "original_cover": false,
-  "proxy": "http://127.0.0.1:9999",
+  "proxy": {
+    "http://": "http://127.0.0.1:9999",
+    "https://": "http://127.0.0.1:9999"
+  },
   "proxy_tiktok": "参数规则与 proxies 一致",
   "twc_tiktok": "",
   "download": true,
@@ -515,28 +526,31 @@ https://www.douyin.com/note/123456789
       "url": "账号主页链接-1",
       "tab": "favorite",
       "earliest": "",
-      "latest": ""
+      "latest": "",
+      "enable": true
     },
     {
       "mark": "",
       "url": "账号主页链接-2",
       "tab": "post",
       "earliest": "",
-      "latest": ""
+      "latest": "",
+      "enable": true
     },
     {
       "mark": "",
       "url": "账号主页链接-3",
       "tab": "favorite",
       "earliest": "",
-      "latest": ""
+      "latest": "",
+      "enable": false
     }
   ]
 }
 ```
 
-<p>将待下载的抖音账号信息写入配置文件，每个账号对应一个对象/字典，<code>tab</code> 参数设置为 <code>favorite</code> 代表批量下载喜欢作品，支持多账号；<code>accounts_urls_tiktok</code>参数规则一致。</p>
-<p><b>批量下载账号喜欢作品需要使用已登录的 Cookie，否则可能无法获取正确的账号信息！</b></p>
+<p>将待下载的账号信息写入配置文件，每个账号对应一个对象/字典，<code>tab</code> 参数设置为 <code>favorite</code> 代表批量下载喜欢作品，支持多账号；<code>accounts_urls_tiktok</code>参数规则一致。</p>
+<p><b>批量下载抖音平台的账号喜欢作品需要使用已登录的 Cookie，否则可能无法获取正确的账号信息！</b></p>
 <h3>发布日期限制</h3>
 
 ```json
@@ -547,7 +561,8 @@ https://www.douyin.com/note/123456789
       "url": "账号主页链接",
       "tab": "post",
       "earliest": "2023/12/1",
-      "latest": ""
+      "latest": "",
+      "enable": true
     }
   ]
 }
@@ -663,7 +678,7 @@ https://www.douyin.com/note/123456789
 <li>设置非法字符替换规则</li>
 <li>开启服务器模式局域网访问功能</li>
 <li>设置服务器模式主机及端口</li>
-<li>设置 Cookie 参数更新间隔</li>
+<li>设置平台参数更新间隔</li>
 <li>设置彩色交互提示颜色</li>
 <li>设置请求数据延时间隔</li>
 <li>设置获取数据失败时的处理策略</li>
@@ -695,6 +710,7 @@ https://www.douyin.com/note/123456789
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
 <p>如果需要大批量采集账号作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
+<p><b>批量下载账号喜欢作品时需要使用已登录的 Cookie，否则程序无法正常获取账号消息！</b></p>
 <p>如果当前账号昵称或账号标识不是有效的文件夹名称时，程序会提示用户输入临时的账号标识，以便程序继续处理账号。</p>
 <p>处理多个账号时，如果某个账号获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/custom/function.py</code> 文件修改功能）</p>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
@@ -731,10 +747,11 @@ https://www.douyin.com/note/123456789
 <li>程序调用内置下载器下载直播时，需要保持 TikTokDownloader 运行直到直播结束。</li>
 <li>程序询问是否下载直播时，输入直播清晰度或者对应序号即可下载，例如：下载最高清晰度输入 <code>FULL_HD1</code> 或者 <code>1</code> 均可。</li>
 <li>程序调用内置下载器下载的直播文件，视频时长会显示为直播总时长，实际视频内容从下载时间开始，靠后部分的片段无法播放。</li>
-<li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹</li>
+<li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹。</li>
+<li>经测试，强行终止程序或 <code>ffmpeg</code> 并不会导致已下载文件丢失或损坏，但无法继续下载。</li>
 </ul>
 <h3>采集作品评论数据(抖音)</h3>
-<p><b><code>5.4</code> 版本将会暂时禁用该功能，后续版本可能重新开放！</b></p>
+<p><b><code>5.4</code> 版本将会默认禁用该功能，后续版本可能重新开放！</b></p>
 <ol>
 <li>手动输入待采集的作品链接。</li>
 <li>输入文本文档路径，读取文件包含的作品链接。</li>
@@ -754,7 +771,8 @@ https://www.douyin.com/note/123456789
 <h3>批量下载合集作品(抖音)</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>mix_urls</code> 参数中的合集链接或作品链接。</li>
-<li>输入合集链接，或者属于合集的任意一个作品链接。</li>
+<li>获取当前登录 Cookie 的收藏合集信息，并由使用者选择需要下载的合集；该选项暂不支持设置合集标识。</li>
+<li>输入合集链接，或者属于合集的任意一个作品链接；该选项暂不支持设置合集标识。</li>
 <li>输入文本文档路径，读取文件包含的作品链接或合集链接；该选项暂不支持设置合集标识。</li>
 </ol>
 <p>支持链接格式：</p>
@@ -820,15 +838,15 @@ https://www.douyin.com/note/123456789
 <p>无需输入，采集 <code>抖音热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <p>储存名称格式：<code>热榜数据_采集时间_热榜名称</code></p>
 <h3>批量下载话题作品(抖音)</h3>
-<p>尚未支持！</p>
+<p>暂不开放！</p>
 <h3>批量下载收藏作品(抖音)</h3>
-<p>无需输入，需要在配置文件写入已登录的 Cookie，并在 <code>owner_url</code> 参数填入对应的账号主页链接和账号标识（可选）；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
-<p>如果未设置 <code>owner_url</code> 参数，程序会使用临时字符串作为账号昵称和 UID。</p>
+<p>无需输入命令；需要在配置文件写入已登录的 Cookie，并在 <code>owner_url</code> 参数填入对应的账号主页链接和账号标识（可选）；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
+<p>如果未设置 <code>owner_url</code> 参数，程序会使用临时字符串作为账号昵称和 UID（不建议）</p>
 <p>账号文件夹格式为 <code>UID123456789_mark_收藏作品</code> 或者 <code>UID123456789_账号昵称_收藏作品</code></p>
 <h3>批量下载收藏夹作品(抖音)</h3>
-<p>尚未支持！</p>
+<p>无需输入命令；需要在配置文件写入已登录的 Cookie，程序自动获取收藏夹消息并展示，输入收藏夹序号开始下载对应收藏夹作品，输入 <code>ALL</code> 下载全部收藏夹作品。</p>
+<p>账号文件夹格式为 <code>UID123456789_收藏夹名称_收藏作品</code></p>
 <h3>批量下载账号作品(TikTok)</h3>
-<p>目前仅支持下载账号发布作品，即将支持下载账号喜欢作品。</p>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts_urls_tiktok</code> 参数中的账号链接。</li>
 <li>手动输入待采集的账号链接；此选项仅支持批量下载账号发布页作品，暂不支持参数设置。</li>
@@ -857,7 +875,7 @@ https://www.douyin.com/note/123456789
 <h3>批量下载合集作品(TikTok)</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>mix_urls_tiktok</code> 参数中的合集链接或作品链接。</li>
-<li>输入合集链接，或者属于合集的任意一个作品链接。</li>
+<li>输入合集链接，或者属于合集的任意一个作品链接；该选项暂不支持设置合集标识。</li>
 <li>输入文本文档路径，读取文件包含的作品链接或合集链接；该选项暂不支持设置合集标识。</li>
 </ol>
 <p>支持链接格式：</p>
@@ -885,11 +903,12 @@ https://www.douyin.com/note/123456789
 <li>程序调用内置下载器下载直播时，需要保持 TikTokDownloader 运行直到直播结束。</li>
 <li>程序询问是否下载直播时，输入直播清晰度或者对应序号即可下载，例如：下载最高清晰度输入 <code>FULL_HD1</code> 或者 <code>1</code> 均可。</li>
 <li>程序调用内置下载器下载的直播文件，视频时长会显示为直播总时长，实际视频内容从下载时间开始，靠后部分的片段无法播放。</li>
-<li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹</li>
+<li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹。</li>
+<li>经测试，强行终止程序或 <code>ffmpeg</code> 并不会导致已下载文件丢失或损坏，但无法继续下载。</li>
 </ul>
 </del>
 <h2>后台监测模式</h2>
-<p>敬请期待！</p>
+<p>正在开发！</p>
 <h2>Web API 接口模式</h2>
 <p><b><code>5.4</code> 版本将会暂时移除该模式，后续开发完成重新开放！</b></p>
 <p>启动服务器，提供 API 调用功能；支持局域网远程访问，可以部署至私有服务器或者公开服务器，远程部署建议设置参数验证。</p>
@@ -1249,15 +1268,16 @@ print(response.json())
 <h3>合集标识说明</h3>
 <p>与账号标识作用一致。</p>
 <h3>如何修改标识</h3>
-<p><strong>修改账号标识:</strong> 修改 <code>accounts_urls</code> 的 <code>mark</code> 参数，再次运行 <code>批量下载账号作品</code> 模式，程序会自动应用新的账号标识。</p>
-<p><strong>修改合集标识:</strong> 修改 <code>mix_urls</code> 的 <code>mark</code> 参数，再次运行 <code>批量下载合集作品</code> 模式，程序会自动应用新的账号标识。</p>
+<p><strong>修改账号标识:</strong> 修改 <code>accounts_urls</code> 或 <code>accounts_urls_tiktok</code> 的 <code>mark</code> 参数，再次运行 <code>批量下载账号作品</code> 模式，程序会自动应用新的账号标识。</p>
+<p><strong>修改合集标识:</strong> 修改 <code>mix_urls</code> 或 <code>mix_urls_tiktok</code> 的 <code>mark</code> 参数，再次运行 <code>批量下载合集作品</code> 模式，程序会自动应用新的账号标识。</p>
 <h3>账户昵称修改</h3>
 <p>在 <code>批量下载账号作品</code> 和 <code>批量下载合集作品</code> 模式下，程序会判断账号昵称是否有修改，如果有修改，程序会自动识别已下载作品文件名称中的账户昵称，并修改至最新账户昵称。</p>
-<h3>AccountCache.json</h3>
-<p><strong>缓存文件</strong>
-用于记录账号 / 合集标识和账号昵称，当账号 / 合集标识或账号昵称发生变化时，程序会读取文件内容，并对相应的文件夹和文件进行重命名更新处理，如果该文件不存在或者删除该文件，程序首次运行不会判断账号 / 合集标识和账号昵称是否发生变化，程序运行结束后会生成新的缓存文件，之后程序才能监控账号 / 合集标识和账号昵称变化。</p>
-<p><strong>缓存文件仅供程序读取和写入，不建议手动编辑文件内容。</strong></p>
+<h3>映射缓存数据</h3>
+<p><strong>数据路径: <code>./TikTokDownloader.db</code> 的 <code>mapping_data</code> 数据表；</strong>
+用于记录账号 / 合集标识和账号昵称，当账号 / 合集标识或账号昵称发生变化时，程序会对相应的文件夹和文件进行重命名更新处理。</p>
+<p><strong>缓存数据仅供程序读取和修改，不建议手动编辑数据内容。</strong></p>
 <h1>服务器部署模式二次开发</h1>
+<p>该部分内容待更新！</p>
 <h2>API 文档</h2>
 <p>请求URL：<code>/single/</code></p>
 <p>请求类型：<code>POST</code></p>

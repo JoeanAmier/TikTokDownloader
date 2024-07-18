@@ -1,6 +1,7 @@
 from base64 import b64encode
 from hashlib import md5
 from time import time
+from urllib.parse import quote
 from urllib.parse import urlencode
 
 from src.custom import USERAGENT
@@ -223,7 +224,7 @@ class XBogus:
             user_agent=USERAGENT,
             test_time=None):
         timestamp = int(test_time or time())
-        query = self.process_url_path(urlencode(query))
+        query = self.process_url_path(urlencode(query, quote_via=quote))
         return self.generate_x_bogus(query, params, user_agent, timestamp)
 
 

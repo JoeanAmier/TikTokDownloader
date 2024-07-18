@@ -368,9 +368,8 @@ class APITikTok(API):
         "browser_name": "Mozilla",
         "browser_online": "true",
         "browser_platform": "Win32",
-        "browser_version": quote(
-            "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-        ),
+        "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 "
+                           "Safari/537.36",
         "channel": "tiktok_web",
         "cookie_enabled": "true",
         "device_id": "",

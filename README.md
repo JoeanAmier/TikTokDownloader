@@ -11,7 +11,7 @@
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=for-the-badge&color=52c41a">
 </div>
 <br>
-<p>🔥 <b>TikTok 主页/合辑/直播/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/<del>账号</del>/<del>搜索</del>/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号发布作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；<del>采集抖音账号详细数据</del>；<del>采集抖音用户 / 作品 / 直播搜索结果</del>；采集抖音热榜数据。</p>
+<p>🔥 <b>TikTok 主页/合辑/直播/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/<del>评论</del>/<del>账号</del>/<del>搜索</del>/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；<del>采集抖音作品评论数据</del>；批量下载抖音合集作品；批量下载 TikTok 合辑作品；<del>采集抖音账号详细数据</del>；<del>采集抖音用户 / 作品 / 直播搜索结果</del>；采集抖音热榜数据。</p>
 <p>⭐ Windows 10 及以上用户可前往 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 下载已编译的 exe 程序，开箱即用！</p>
 <hr>
 
@@ -20,7 +20,7 @@
 * ✅ 下载抖音无水印视频/图集
 * ✅ 下载 TikTok 无水印视频/图集
 * ✅ 批量下载抖音账号发布/喜欢/收藏作品
-* ✅ 批量下载 TikTok 账号发布/~~喜欢作品~~
+* ✅ 批量下载 TikTok 账号发布/喜欢作品
 * ✅ 采集抖音 / TikTok 详细数据
 * ✅ 批量下载链接作品
 * ✅ 多账号批量下载作品
@@ -118,14 +118,14 @@
 <ol><b>从浏览器获取 Cookie（推荐）</b>
 <li>选择 <code>从浏览器获取 Cookie</code> 选项，按照提示选择浏览器类型</li>
 </ol>
-<ol><b>扫码登录获取 Cookie（停用）</b>
+<ol><b>扫码登录获取 Cookie（弃用）</b>
 <li>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</li>
 <li>使用抖音 APP 扫描二维码并登录账号</li>
 <li>按照提示操作，将 Cookie 写入配置文件</li>
 </ol>
 </li>
 <li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品(通用)</code> -> <code>手动输入待采集的作品链接</code></li>
-<li>输入抖音作品链接即可下载作品文件（TikTok 平台需要更多步骤，详见文档）</li>
+<li>输入抖音作品链接即可下载作品文件（TikTok 平台需要更多初始设置，详见文档）</li>
 <li>更多详细说明请查看 <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">项目文档</a></b></li>
 </ol>
 <p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a>（Windows 11 自带默认终端）</p>
@@ -155,7 +155,7 @@
 
 > * Cookie 仅需在失效后重新写入配置文件，并非每次运行程序都要写入配置文件！
 >
-> * Cookie 会影响下载的视频文件分辨率，如果无法下载 1080P 视频文件，请尝试更新 Cookie！
+> * Cookie 会影响抖音平台下载的视频文件分辨率，如果无法下载 1080P 视频文件，请尝试更新 Cookie！
 >
 > * 程序获取数据失败时，可以尝试更新 Cookie 或者使用已登录的 Cookie！
 
@@ -170,7 +170,7 @@
 <li>批量下载账号作品或合集作品时，如果对应的昵称或标识发生变化，程序会自动更新已下载作品文件名称中的昵称和标识</li>
 <li>程序下载文件时会先将文件下载至临时文件夹，下载完成后再移动至储存文件夹；程序运行结束时会清空临时文件夹</li>
 <li><code>批量下载收藏作品模式</code> 目前仅支持下载当前已登录 Cookie 对应账号的收藏作品，暂不支持多账号</li>
-<li>如果想要程序使用代理，必须在 <code>settings.json</code> 设置 <code>proxies</code> 参数，否则程序不会使用代理</li>
+<li>如果想要程序使用代理，必须在 <code>settings.json</code> 设置 <code>proxy</code> 参数，否则程序不会使用代理</li>
 <li>退出程序时，请以正常方式结束运行或者按下 Ctrl + C 结束运行，不要直接点击终端窗口的关闭按钮结束运行，否则会导致数据丢失</li>
 <li>如果您的计算机没有合适的程序编辑 JSON 文件，建议使用 <a href="https://try8.cn/tool/format/json">JSON 在线工具</a> 编辑配置文件内容</li>
 <li>当程序请求用户输入内容或链接时，请注意避免输入的内容或链接包含换行符，这可能会导致预期之外的问题</li>

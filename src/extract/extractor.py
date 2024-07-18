@@ -55,6 +55,17 @@ class Extractor:
             return {}
 
     @staticmethod
+    def get_user_info_tiktok(data: dict) -> dict:
+        try:
+            return {
+                "nickname": data["user"]["nickname"],
+                "sec_uid": data["user"]["secUid"],
+                "uid": data["user"]["id"],
+            }
+        except (KeyError, TypeError):
+            return {}
+
+    @staticmethod
     def generate_data_object(
             data: dict | list) -> SimpleNamespace | list[SimpleNamespace]:
         def depth_conversion(element):
