@@ -4,7 +4,6 @@ from typing import Coroutine
 from typing import TYPE_CHECKING
 from typing import Type
 from typing import Union
-from urllib.parse import quote
 
 from httpx import AsyncClient
 from rich.progress import (
@@ -20,6 +19,8 @@ from src.custom import wait
 from src.tools import PrivateRetry
 from src.tools import TikTokDownloaderError
 from src.tools import capture_error_request
+
+# from urllib.parse import quote
 
 # from urllib.parse import urlencode
 
@@ -313,16 +314,9 @@ class API:
 
     def deal_url_params(self, params: dict, method="GET", **kwargs, ):
         if params:
-            params["a_bogus"] = quote(
-                self.ab.get_value(
-                    params,
-                    method,
-                ),
-                safe="",
-            )
-            # params["a_bogus"] = quote(
-            #     self.ab.generate_abogus(
-            #         urlencode(params), method, )[1], safe="", )
+            params["a_bogus"] = self.ab.get_value(params, method, )
+            # params["a_bogus"] = self.ab.generate_abogus(
+            #     urlencode(params), method, )[1]
 
     def summary_works(self, ) -> None:
         self.log.info(f"共获取到 {len(self.response)} 个{self.text}")
@@ -430,6 +424,6 @@ class APITikTok(API):
 
     def deal_url_params(self, params: dict, number=8, **kwargs, ):
         if params:
-            params["X-Bogus"] = quote(self.xb.get_x_bogus(
+            params["X-Bogus"] = self.xb.get_x_bogus(
                 params, number, self.headers.get(
-                    "User-Agent", USERAGENT)), safe="", )
+                    "User-Agent", USERAGENT))

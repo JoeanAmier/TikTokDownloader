@@ -136,16 +136,18 @@ class Downloader:
             addition="发布作品",
             mid: str = None,
             title: str = None,
+            collect=False,
     ):
         # assert addition in {"喜欢作品", "收藏作品", "发布作品", "合集作品"}, ValueError
         mix = addition == "合集作品"
         root = self.storage_folder(
-            mid if mix else id_,
+            mid if (mix or collect) else id_,
             title if mix else name,
             not mix,
             mark,
             addition,
-            mix)
+            mix,
+            collect=collect)
         await self.batch_processing(data, root, tiktok=tiktok, )
 
     async def run_general(self, data: list[dict], tiktok: bool):
@@ -547,11 +549,14 @@ class Downloader:
             mark: str = None,
             addition: str = None,
             mix=False,
-            folder_name: str = None) -> Path:
-        if batch and all((id_, name, addition)):
+            folder_name: str = None,
+            collect=False, ) -> Path:
+        if collect and all((id_, name, addition)):
+            folder_name = f"CID{id_}_{mark or name}_{addition}"
+        elif batch and all((id_, name, addition)):
             folder_name = f"UID{id_}_{mark or name}_{addition}"
         elif mix and all((id_, name, addition)):
-            folder_name = f"MIX{id_}_{mark or name}_{addition}"
+            folder_name = f"MID{id_}_{mark or name}_{addition}"
         else:
             folder_name = folder_name or self.folder_name
         folder = self.root.joinpath(folder_name)

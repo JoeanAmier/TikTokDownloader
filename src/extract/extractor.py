@@ -526,6 +526,7 @@ class Extractor:
                            mix=False,
                            tiktok=False,
                            title=None,
+                           collect_id=None,
                            ) -> tuple:
         if tiktok:
             params = {
@@ -552,6 +553,7 @@ class Extractor:
             post,
             mix,
             **params,
+            collect_id=collect_id,
         )
 
     def __preprocessing_data(self,
@@ -566,6 +568,7 @@ class Extractor:
                              nickname="",
                              mix_name="",
                              title="",
+                             collect_id=None
                              ) -> tuple:
         for item in data:
             item = self.generate_data_object(item)
@@ -586,7 +589,7 @@ class Extractor:
                                          default="无效合集标题")
         mark = self.cleaner.filter_name(
             mark, inquire=False, default=title if mix else name)
-        return id_, name.strip(), mid, title.strip(
+        return id_, name.strip(), collect_id or mid, title.strip(
         ), mark.strip(), data[:None if post else -1]
 
     def __platform_classify_detail(

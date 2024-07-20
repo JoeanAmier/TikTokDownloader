@@ -87,7 +87,8 @@ class Settings:
         "twc_tiktok": "",
         "download": True,
         "max_size": 0,
-        "chunk": 1024 * 1024,  # 每次从服务器接收的数据块大小
+        "chunk": int(1024 * 1024 * 2.5),  # 每次从服务器接收的数据块大小
+        "timeout": 10,
         "max_retry": 5,  # 重试最大次数
         "max_pages": 0,
         "default_mode": "",

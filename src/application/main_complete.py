@@ -162,7 +162,7 @@ class TikTok:
             ("批量下载账号作品(抖音)", self.account_acquisition_interactive,),
             ("批量下载链接作品(抖音)", self.detail_interactive,),
             ("获取直播推流地址(抖音)", self.live_interactive,),
-            ("采集作品评论数据(抖音)", self.comment_interactive,),
+            # ("采集作品评论数据(抖音)", self.comment_interactive,),
             ("批量下载合集作品(抖音)", self.mix_interactive,),
             # ("采集账号详细数据(抖音)", self.disable_function,),
             # ("采集搜索结果数据(抖音)", self.disable_function,),
@@ -486,17 +486,20 @@ class TikTok:
                                     addition: str = None,
                                     tiktok=False,
                                     title: str = None,
+                                    collect_id: str = None,
                                     ):
         self.logger.info("开始提取作品数据")
         id_, name, mid, title, mark, data = self.extractor.preprocessing_data(
-            data, id_, mark, post, mix, tiktok, title, )
+            data, id_, mark, post, mix, tiktok, title, collect_id=collect_id, )
         self.__display_extracted_information(
             mix, id_, name, mid, title, mark, )
         addition = addition or ("合集作品" if mix else "发布作品" if post else "喜欢作品")
         old_mark = f"{m["MARK"]}_{addition}" if (
             m := await self.cache.has_cache(
                 mid if mix else id_)) else None
-        async with logger(root, name=f"{'MID' if mix else 'UID'}{mid if mix else id_}_{mark}_{addition}", old=old_mark,
+        async with logger(root,
+                          name=f"{self._generate_prefix(mix=mix, collect=bool(collect_id))}{self._generate_id(id_, mid, mix=mix, collect=bool(collect_id))}_{mark}_{addition}",
+                          old=old_mark,
                           console=self.console, **params) as recorder:
             data = await self.extractor.run(
                 data,
@@ -512,15 +515,34 @@ class TikTok:
             return data
         await self.cache.update_cache(
             self.parameter.folder_mode,
-            "MID" if mix else "UID",
-            mid if mix else id_,
+            self._generate_prefix(mix=mix, collect=bool(collect_id)),
+            self._generate_id(id_, mid, mix=mix, collect=bool(collect_id)),
             mark,
             title if mix else name,
             addition,
         )
         await self.download_account_detail(
-            data, id_, name, mark, mid, title, addition, tiktok, )
+            data, id_, name, mark, self._generate_id(id_, mid, mix=mix, collect=bool(collect_id)), title, addition,
+            tiktok, collect=bool(collect_id), )
         return True
+
+    @staticmethod
+    def _generate_prefix(user=True, mix=False, collect=False):
+        if collect:
+            return "CID"
+        if mix:
+            return "MID"
+        if user:
+            return "UID"
+
+    @staticmethod
+    def _generate_id(id_, mid, user=True, mix=False, collect=False):
+        if collect:
+            return mid
+        if mix:
+            return mid
+        if user:
+            return id_
 
     def __display_extracted_information(
             self,
@@ -544,6 +566,7 @@ class TikTok:
             title: str = None,
             addition: str = None,
             tiktok: bool = False,
+            collect=False,
     ):
         await self.downloader.run(
             data,
@@ -555,6 +578,7 @@ class TikTok:
             addition=addition,
             mid=mid,
             title=title,
+            collect=collect,
         )
 
     async def detail_interactive(self, select="", *args, **kwargs):
@@ -906,7 +930,8 @@ class TikTok:
         return self.input_download_index(data)
 
     def input_download_index(self, data: list[dict]) -> list[str]:
-        return self.__input_download_index(data)[-1]
+        _, id_ = self.__input_download_index(data)
+        return id_
 
     def __input_download_index(self,
                                data: list[dict],
@@ -917,15 +942,14 @@ class TikTok:
         self.console.print(f"{text}列表：")
         for i, j in enumerate(data, start=1):
             self.console.print(f"{i}. {j[key]}")
-        index = self.console.input(f"请输入需要下载的{text}序号(输入 ALL 下载全部{text})：")
+        index = self.console.input(f"请输入需要下载的{text}序号(多个序号使用空格分隔，输入 ALL 下载全部{text})：")
         try:
             if index.upper() == "ALL":
                 return zip(*[(d[key], d["id"]) for d in data])
-            if 0 <= (i := int(index) - 1) <= len(data):
-                return [data[i][key]], [data[i]["id"]]
-            self.console.print(f"{text}序号输入错误！", style=WARNING)
-            raise ValueError
+            index = {int(i) for i in index.split()}
+            return zip(*[(d[key], d["id"]) for i, d in enumerate(data, start=1) if i in index])
         except ValueError:
+            self.console.print(f"{text}序号输入错误！", style=WARNING)
             return []
 
     async def mix_txt(self, root, params, logger):
@@ -1331,7 +1355,10 @@ class TikTok:
     @check_cookie_state(tiktok=False)
     async def collects_interactive(self, *args, **kwargs):
         if sec_user_id := await self.__check_owner_url():
-            names, ids = await self.__get_collects_list()
+            try:
+                names, ids = await self.__get_collects_list()
+            except ValueError:
+                names, ids = [], []
             root, params, logger = self.record.run(self.parameter)
             start = time()
             for i, j in zip(names, ids):
@@ -1465,6 +1492,7 @@ class TikTok:
             addition="收藏夹作品",
             tiktok=tiktok,
             title=name,
+            collect_id=id_,
         )
 
     async def hashtag_interactive(

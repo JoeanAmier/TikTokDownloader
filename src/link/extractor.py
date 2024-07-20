@@ -117,7 +117,7 @@ class Extractor:
 
 class ExtractorTikTok(Extractor):
     SEC_UID = compile(r'"secUid":"([a-zA-Z0-9_-]+)"')
-    ROOD_ID = compile(r'room_id=(\d+)"')
+    ROOD_ID = compile(r'"roomId":"(\d+)"')
     MIX_ID = compile(r'"playlistId":"(\d{19})"')
 
     account_link = compile(r"\S*?(https://www\.tiktok\.com/@[^\s/]+)\S*?")

@@ -154,11 +154,11 @@ class Account(API):
         if self.sec_user_id != (s := info.get("sec_uid")):
             self.log.error(
                 f"sec_user_id {self.sec_user_id} 与 {s} 不一致")
-            self.__generate_temp_data()
+            self._generate_temp_data()
         else:
             self.response.append({"author": info})
 
-    def __generate_temp_data(self, ):
+    def _generate_temp_data(self, ):
         temp_data = timestamp()
         self.log.warning(f"获取账号昵称失败，本次运行将临时使用 {temp_data} 作为账号昵称和 UID")
         temp_dict = {

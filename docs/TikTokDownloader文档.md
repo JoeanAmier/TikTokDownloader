@@ -376,6 +376,11 @@ https://www.douyin.com/note/123456789
 <td align="center">每次从服务器接收的数据块大小, 单位字节; 默认值：<code>2621440</code>(2.5 MB)</td>
 </tr>
 <tr>
+<td align="center">timeout</td>
+<td align="center">int</td>
+<td align="center">请求数据的超时限制, 单位秒; 默认值：<code>10</code></td>
+</tr>
+<tr>
 <td align="center">max_retry</td>
 <td align="center">int</td>
 <td align="center">发送请求获取数据发生异常时重试的最大次数<br>设置为 <code>0</code> 代表关闭重试, 默认值: <code>10</code></td>
@@ -483,6 +488,7 @@ https://www.douyin.com/note/123456789
   "download": true,
   "max_size": 104857600,
   "chunk": 10485760,
+  "timeout": 5,
   "max_retry": 10,
   "max_pages": 2,
   "default_mode": "6 2 1",

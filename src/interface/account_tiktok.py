@@ -128,7 +128,7 @@ class AccountTikTok(Account, APITikTok, ):
         if self.sec_user_id != (s := info.get("sec_uid")):
             self.log.error(
                 f"sec_user_id {self.sec_user_id} 与 {s} 不一致")
-            self.__generate_temp_data()
+            self._generate_temp_data()
         else:
             self.response.append({"author": info})
 
