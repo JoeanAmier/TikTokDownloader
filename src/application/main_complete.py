@@ -284,7 +284,7 @@ class TikTok:
         count = SimpleNamespace(time=time(), success=0, failed=0)
         self.logger.info(f"共有 {len(self.accounts)} 个账号的作品等待下载")
         for index, data in enumerate(self.accounts, start=1):
-            if not data.enable:
+            if hasattr(data, "enable") and not data.enable:
                 continue
             if not (sec_user_id := await self.check_sec_user_id(data.url)):
                 self.logger.warning(
@@ -312,7 +312,7 @@ class TikTok:
         count = SimpleNamespace(time=time(), success=0, failed=0)
         self.logger.info(f"共有 {len(self.accounts_tiktok)} 个账号的作品等待下载")
         for index, data in enumerate(self.accounts_tiktok, start=1):
-            if not data.enable:
+            if hasattr(data, "enable") and not data.enable:
                 continue
             if not (sec_user_id := await self.links_tiktok.run(data.url, "user")):
                 self.logger.warning(
@@ -1004,7 +1004,7 @@ class TikTok:
     async def mix_batch(self, root, params, logger):
         count = SimpleNamespace(time=time(), success=0, failed=0)
         for index, data in enumerate(self.mix, start=1):
-            if not data.enable:
+            if hasattr(data, "enable") and not data.enable:
                 continue
             mix_id, id_ = await self._check_mix_id(data.url)
             if not id_:
@@ -1033,7 +1033,7 @@ class TikTok:
     async def mix_batch_tiktok(self, root, params, logger):
         count = SimpleNamespace(time=time(), success=0, failed=0)
         for index, data in enumerate(self.mix_tiktok, start=1):
-            if not data.enable:
+            if hasattr(data, "enable") and not data.enable:
                 continue
             _, ids, title = await self.links_tiktok.run(data.url, type_="mix")
             if not ids:

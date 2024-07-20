@@ -3,7 +3,7 @@
 <h1>TikTokDownloader</h1>
 <img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ff7a45">
 <img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?style=for-the-badge&color=fa8c16">
-<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ff4d4f">
+<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ffee6f">
 <img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/JoeanAmier/TikTokDownloader?style=for-the-badge&color=13c2c2">
 <br>
 <img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader?style=for-the-badge&color=f759ab">
@@ -61,6 +61,8 @@
 ![终端模式截图](docs/终端交互模式截图1.png)
 *****
 ![终端模式截图](docs/终端交互模式截图2.png)
+*****
+![终端模式截图](docs/终端交互模式截图3.png)
 <br><br>
 **Web UI 交互模式：**
 <br><br>
@@ -76,11 +78,9 @@
 
 # 📽 运行演示\(Example\)
 
-## 批量下载账号发布作品
-
 <p><b>🎥 点击图片观看演示视频，建议通过配置文件管理账号，更多介绍请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">文档</a></b></p>
 
-[![演示视频](docs/程序运行演示.png)](https://www.bilibili.com/video/BV1KH4y177Ev/)
+[![演示视频](docs/程序运行演示.png)](https://www.bilibili.com/video/BV1yr421K7qj/)
 
 # 📈 项目状态\(Status\)
 
@@ -88,7 +88,6 @@
 * 🟡 TikTokDownloader 开发计划及进度可前往 [Projects](https://github.com/users/JoeanAmier/projects/2) 查阅
 * 🔴 请注意，最新源码可能存在一些不稳定的 Bug
 * 🔴 如果在使用过程中发现程序 Bug，请及时告知作者修复
-* 🔴 夜晚无法下载抖音高分辨率视频文件，疑似抖音服务端限制
 
 # 📋 项目说明\(Instructions\)
 
@@ -129,6 +128,20 @@
 <li>更多详细说明请查看 <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">项目文档</a></b></li>
 </ol>
 <p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a>（Windows 11 自带默认终端）</p>
+
+### Docker 容器
+
+<ol>
+<li>获取镜像</li>
+<ul>
+<li>方式一：使用 <code>Dockerfile</code> 文件构建镜像</li>
+<li>方式二：使用 <code>docker pull joeanamier/tiktokdownloader</code> 命令拉取镜像</li>
+</ul>
+<li>创建容器：<code>docker run -it joeanamier/tiktokdownloader</code></li>
+<li>重新启动容器：<code>docker start -i 容器名称</code></li>
+</ol>
+<p>Docker 容器无法直接访问宿主机的文件系统，部分功能不可用，例如：<code>从浏览器获取 Cookie</code>；其他功能如有异常请反馈！</p>
+
 <hr>
 
 ## 关于 Cookie

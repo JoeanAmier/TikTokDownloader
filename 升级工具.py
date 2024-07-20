@@ -21,30 +21,41 @@ def about():
 
 
 def update_params():
-    with SETTING_ROOT.open("r+", encoding=ENCODE) as f:
-        old_data = load(f)
-    with SETTING_ROOT.open("w", encoding=ENCODE) as f:
-        new_data = Settings.default | old_data
-        dump(new_data, f, indent=4, ensure_ascii=False)
-    print("已更新配置文件！")
+    if SETTING_ROOT.is_file():
+        with SETTING_ROOT.open("r+", encoding=ENCODE) as f:
+            old_data = load(f)
+        with SETTING_ROOT.open("w", encoding=ENCODE) as f:
+            new_data = Settings.default | old_data
+            dump(new_data, f, indent=4, ensure_ascii=False)
+        print("已更新配置文件！")
+    else:
+        print("未找到配置文件！")
 
 
 async def update_map(db):
-    with PROJECT_ROOT.joinpath("cache/AccountCache.json").open("r+", encoding="utf-8") as f:
-        data = load(f)
-    for i, j in data.items():
-        await db.update_mapping_data(i, j["name"], j["mark"])
-        print("写入映射", i, j["name"], j["mark"])
-    print("已更新映射数据！")
+    file = PROJECT_ROOT.joinpath("cache/AccountCache.json")
+    if file.is_file():
+        with file.open("r+", encoding="utf-8") as f:
+            data = load(f)
+        for i, j in data.items():
+            await db.update_mapping_data(i, j["name"], j["mark"])
+            print("写入映射", i, j["name"], j["mark"])
+        print("已更新映射数据！")
+    else:
+        print("未找到映射数据！")
 
 
 async def update_record(db):
-    with PROJECT_ROOT.joinpath("cache/IDRecorder.txt").open("r+", encoding="utf-8") as f:
-        data = {line.strip() for line in f}
-    for i in data:
-        await db.write_download_data(i)
-        print("写入记录", i)
-    print("已更新下载记录！")
+    file = PROJECT_ROOT.joinpath("cache/IDRecorder.txt")
+    if file.is_file():
+        with file.open("r+", encoding="utf-8") as f:
+            data = {line.strip() for line in f}
+        for i in data:
+            await db.write_download_data(i)
+            print("写入记录", i)
+        print("已更新下载记录！")
+    else:
+        print("未找到下载记录！")
 
 
 async def main():

@@ -3,7 +3,7 @@
 <h1>TikTokDownloader 文档</h1>
 <img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ff7a45">
 <img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?style=for-the-badge&color=fa8c16">
-<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ff4d4f">
+<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ffee6f">
 <img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/JoeanAmier/TikTokDownloader?style=for-the-badge&color=13c2c2">
 <br>
 <img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader?style=for-the-badge&color=f759ab">
@@ -48,7 +48,18 @@
 <li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品(抖音)</code> -> <code>手动输入待采集的作品链接</code></li>
 <li>输入抖音作品链接即可下载作品文件</li>
 </ol>
-<p><b>TikTok 平台功能需要额外设置 <code>browser_info_tiktok</code> 的 <code>device_id</code> 参数，否则平台功能可能无法正常使用！</b></p>
+<p><b>TikTok 平台功能需要额外设置 <code>browser_info_tiktok</code> 的 <code>device_id</code> 参数，否则平台功能可能无法正常使用！参数获取方式与 Cookie 类似，详见 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 获取教程</a></b></p>
+<h2>Docker 容器</h2>
+<ol>
+<li>获取镜像</li>
+<ul>
+<li>方式一：使用 <code>Dockerfile</code> 文件构建镜像</li>
+<li>方式二：使用 <code>docker pull joeanamier/tiktokdownloader</code> 命令拉取镜像</li>
+</ul>
+<li>创建容器：<code>docker run -it joeanamier/tiktokdownloader</code></li>
+<li>重新启动容器：<code>docker start -i 容器名称</code></li>
+</ol>
+<p>Docker 容器无法直接访问宿主机的文件系统，部分功能不可用，例如：<code>从浏览器获取 Cookie</code>；其他功能如有异常请反馈！</p>
 <h1>获取 Cookie</h1>
 <p><a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">点击查看 Cookie 获取教程</a>，无效 / 过期的 Cookie 会导致程序获取数据失败或者无法下载高分辨率的视频文件；目前尚无主动判断 Cookie 无效 / 过期的方法，<a href="https://github.com/JoeanAmier/TikTokDownloader#%E5%85%B3%E4%BA%8E-cookie">更多 Cookie 说明</a>！</p>
 <h1>入门说明</h1>
@@ -418,7 +429,7 @@ https://www.douyin.com/note/123456789
 <tr>
 <td align="center">browser_info_tiktok</td>
 <td align="center">dict</td>
-<td align="center">TikTok 平台浏览器信息，仅需修改 <code>device_id</code> 参数</td>
+<td align="center">TikTok 平台浏览器信息，仅需修改 <code>device_id</code> 参数，获取方式查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 获取教程</a></td>
 </tr>
 </tbody></table>
 <h2>配置示例</h2>
