@@ -6,6 +6,7 @@ from shutil import move
 from time import time
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
+from typing import Union
 
 from httpx import RequestError
 from httpx import StreamError
@@ -28,6 +29,7 @@ from src.custom import (
     WARNING,
 )
 from src.tools import PrivateRetry
+from src.tools import TikTokDownloaderError
 from src.tools import beautify_string
 from src.tools import format_size
 
@@ -112,59 +114,67 @@ class Downloader:
         )
 
     async def run(self,
-                  data: list[dict],
+                  data: Union[list[dict], list[tuple]],
                   type_: str,
                   tiktok=False,
                   **kwargs, ) -> None:
         if not self.download or not data:
             return
-        if type_ == "batch":
-            self.log.info("开始下载作品文件")
-            await self.run_batch(data, tiktok, **kwargs)
-        elif type_ == "detail":
-            await self.run_general(data, tiktok, )
-        else:
-            raise ValueError
+        self.log.info("开始下载作品文件")
+        match type_:
+            case "batch":
+                await self.run_batch(data, tiktok, **kwargs)
+            case "detail":
+                await self.run_general(data, tiktok, **kwargs)
+            case "music":
+                await self.run_music(data, **kwargs)
+            case "live":
+                await self.run_live(data, tiktok, **kwargs)
+            case _:
+                raise ValueError
 
     async def run_batch(
             self,
             data: list[dict],
             tiktok: bool,
-            id_: str,
-            name: str,
-            mark="",
-            addition="发布作品",
-            mid: str = None,
-            title: str = None,
-            collect=False,
+            mode: str = "",
+            mark: str = "",
+            user_id: str = "",
+            user_name: str = "",
+            mix_id: str = "",
+            mix_title: str = "",
+            collect_id: str = "",
+            collect_name: str = "",
     ):
-        # assert addition in {"喜欢作品", "收藏作品", "发布作品", "合集作品"}, ValueError
-        mix = addition == "合集作品"
         root = self.storage_folder(
-            mid if (mix or collect) else id_,
-            title if mix else name,
-            not mix,
-            mark,
-            addition,
-            mix,
-            collect=collect)
+            mode,
+            *self.data_classification(
+                mode,
+                mark,
+                user_id,
+                user_name,
+                mix_id,
+                mix_title,
+                collect_id,
+                collect_name,
+            ),
+        )
         await self.batch_processing(data, root, tiktok=tiktok, )
 
-    async def run_general(self, data: list[dict], tiktok: bool):
+    async def run_general(self, data: list[dict], tiktok: bool, **kwargs):
         root = self.storage_folder()
         await self.batch_processing(data, root, tiktok=tiktok, )
 
     async def run_music(self, data: list[dict], **kwargs, ):
         root = self.root.joinpath("Music")
-        root.mkdir(exist_ok=True)
         tasks = []
         for i in data:
             name = self.generate_music_name(i)
-            temp_root, actual_root = self.deal_folder_path(root, name)
+            temp_root, actual_root = self.deal_folder_path(root, name, False, )
             self.download_music(
                 tasks,
                 name,
-                "",
+                i["id"],
                 i,
                 temp_root,
                 actual_root,
@@ -177,7 +187,7 @@ class Downloader:
             self.__general_progress_object(),
             **kwargs)
 
-    async def run_live(self, data: list[tuple], tiktok=False, ):
+    async def run_live(self, data: list[tuple], tiktok=False, **kwargs, ):
         if not data or not self.download:
             return
         download_tasks = []
@@ -204,22 +214,19 @@ class Downloader:
                 tiktok=tiktok,
             )
 
-    def generate_live_tasks(
-            self, data: list[tuple], tasks: list, commands: list):
+    def generate_live_tasks(self,
+                            data: list[tuple],
+                            tasks: list,
+                            commands: list,
+                            ):
+        root = self.root.joinpath("Live")
         for i, f, m in data:
             name = self.cleaner.filter_name(
-                f'{
-                i["title"]}{
-                self.split}{
-                i["nickname"]}{
-                self.split}{
-                datetime.now():%Y-%m-%d %H.%M.%S}.flv',
+                f'{i["title"]}{self.split}{i["nickname"]}{self.split}{datetime.now():%Y-%m-%d %H.%M.%S}.flv',
                 inquire=False,
-                default=str(
-                    time())[
-                        :10])
-            temp_root, actual_root = self.deal_folder_path(
-                self.storage_folder(folder_name="Live"), name, True)
+                default=str(time())[:10],
+            )
+            temp_root, actual_root = self.deal_folder_path(root, name, False, )
             tasks.append((
                 f,
                 temp_root,
@@ -253,10 +260,9 @@ class Downloader:
         )
         tasks = []
         for item in data:
-            # TODO: 未来优化作品描述截取
-            item["desc"] = item["desc"][:DESCRIPTION_LENGTH]
+            item["desc"] = beautify_string(item["desc"], DESCRIPTION_LENGTH)
             name = self.generate_detail_name(item)
-            temp_root, actual_root = self.deal_folder_path(root, name)
+            temp_root, actual_root = self.deal_folder_path(root, name, self.folder_mode, )
             params = {
                 "tasks": tasks,
                 "name": name,
@@ -295,16 +301,20 @@ class Downloader:
                 semaphore=semaphore, ) for task in tasks]
             await gather(*tasks)
 
-    def deal_folder_path(self, root: Path, name: str,
-                         pass_=False) -> tuple[Path, Path]:
-        root = self.create_detail_folder(root, name, pass_)
+    def deal_folder_path(self,
+                         root: Path,
+                         name: str,
+                         folder_mode=False,
+                         ) -> tuple[Path, Path]:
+        """生成文件的临时路径和目标路径"""
+        root = self.create_detail_folder(root, name, folder_mode)
         root.mkdir(exist_ok=True)
         cache = self.cache.joinpath(name)
         actual = root.joinpath(name)
         return cache, actual
 
     async def is_downloaded(self, id_: str) -> bool:
-        return await self.recorder.has_ids(id_)
+        return await self.recorder.has_id(id_)
 
     @staticmethod
     def is_exists(path: Path) -> bool:
@@ -376,12 +386,12 @@ class Downloader:
             temp_root: Path,
             actual_root: Path,
             key: str = "music_url",
-            collection: bool = False,
+            switch: bool = False,
             **kwargs, ) -> None:
         if self.check_deal_music(
                 url := item[key],
                 p := actual_root.with_name(f"{name}.mp3"),
-                collection, ):
+                switch, ):
             tasks.append((
                 url,
                 temp_root.with_name(f"{name}.mp3"),
@@ -426,9 +436,10 @@ class Downloader:
             self,
             url: str,
             path: Path,
-            collection=False,
+            switch=False,
     ) -> bool:
-        return all((collection or self.music, url, not self.is_exists(path)))
+        """未传入 switch 参数则判断音乐下载开关设置"""
+        return all((switch or self.music, url, not self.is_exists(path)))
 
     @PrivateRetry.retry
     async def request_file(
@@ -541,51 +552,74 @@ class Downloader:
         elif type_.startswith("【视频】"):
             count.downloaded_video.add(id_)
 
+    @staticmethod
+    def data_classification(
+            mode: str = "",
+            mark: str = "",
+            user_id: str = "",
+            user_name: str = "",
+            mix_id: str = "",
+            mix_title: str = "",
+            collect_id: str = "",
+            collect_name: str = "",
+    ) -> [str, str]:
+        match mode:
+            case "post" | "favorite" | "collection":
+                return user_id, mark or user_name
+            case "mix":
+                return mix_id, mark or mix_title
+            case "collects":
+                return collect_id, mark or collect_name
+            case _:
+                raise TikTokDownloaderError
+
     def storage_folder(
             self,
-            id_: str = None,
-            name: str = None,
-            batch=False,
-            mark: str = None,
-            addition: str = None,
-            mix=False,
-            folder_name: str = None,
-            collect=False, ) -> Path:
-        if collect and all((id_, name, addition)):
-            folder_name = f"CID{id_}_{mark or name}_{addition}"
-        elif batch and all((id_, name, addition)):
-            folder_name = f"UID{id_}_{mark or name}_{addition}"
-        elif mix and all((id_, name, addition)):
-            folder_name = f"MID{id_}_{mark or name}_{addition}"
-        else:
-            folder_name = folder_name or self.folder_name
+            mode: str = "",
+            id_: str = "",
+            name: str = "",
+    ) -> Path:
+        match mode:
+            case "post":
+                folder_name = f"UID{id_}_{name}_发布作品"
+            case "favorite":
+                folder_name = f"UID{id_}_{name}_发布作品"
+            case "mix":
+                folder_name = f"CID{id_}_{name}_合集作品"
+            case "collection":
+                folder_name = f"UID{id_}_{name}_收藏作品"
+            case "collects":
+                folder_name = f"MID{id_}_{name}_收藏夹作品"
+            case "detail":
+                folder_name = self.folder_name
+            case _:
+                raise TikTokDownloaderError
         folder = self.root.joinpath(folder_name)
         folder.mkdir(exist_ok=True)
         return folder
 
     def generate_detail_name(self, data: dict) -> str:
+        """生成作品文件名称"""
         return self.cleaner.filter_name(
             self.split.join(
                 data[i] for i in self.name_format), inquire=False, default=str(
                 time())[:10])
 
     def generate_music_name(self, data: dict) -> str:
-        """音乐文件名称格式"""
+        """生成音乐文件名称"""
         return self.cleaner.filter_name(
             self.split.join(
                 data[i] for i in (
                     "author", "title", "id",)), inquire=False, default=str(
-                time())[
-                                                                       :10])
+                time())[:10])
 
+    @staticmethod
     def create_detail_folder(
-            self,
             root: Path,
             name: str,
-            pass_=False) -> Path:
-        if pass_:
-            return root
-        return root.joinpath(name) if self.folder_mode else root
+            folder_mode=False,
+    ) -> Path:
+        return root.joinpath(name) if folder_mode else root
 
     @staticmethod
     def save_file(cache: Path, actual: Path):

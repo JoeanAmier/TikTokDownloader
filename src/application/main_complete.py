@@ -39,6 +39,7 @@ from src.link import Extractor as LinkExtractor
 from src.link import ExtractorTikTok
 from src.manager import Cache
 from src.storage import RecordManager
+from src.tools import TikTokDownloaderError
 from src.tools import choose
 from src.tools import safe_pop
 
@@ -224,11 +225,11 @@ class TikTok:
     async def disable_function(self, *args, **kwargs, ):
         self.console.print("该功能暂不开放！", style=WARNING)
 
-    def _inquire_input(self, url: str = None, tip: str = None) -> str:
-        text = self.console.input(tip or f"请输入{url}链接: ")
+    def _inquire_input(self, tip: str = "", problem: str = "", ) -> str:
+        text = self.console.input(problem or f"请输入{tip}链接: ")
         if not text:
             return ""
-        elif text in ("Q", "q",):
+        elif text.upper() == "Q":
             self.running = False
             return ""
         return text
@@ -462,13 +463,13 @@ class TikTok:
             params,
             logger,
             account_data,
-            sec_user_id,
-            mark,
-            tab == "post",
+            user_id=sec_user_id,
+            mark=mark,
             api=api,
             earliest=earliest,
             latest=latest,
             tiktok=tiktok,
+            mode=tab,
         )
 
     async def _batch_process_detail(self,
@@ -476,31 +477,43 @@ class TikTok:
                                     params: dict,
                                     logger,
                                     data,
-                                    id_,
-                                    mark,
-                                    post=True,
-                                    mix=False,
                                     api=False,
                                     earliest: date = None,
                                     latest: date = None,
-                                    addition: str = None,
                                     tiktok=False,
-                                    title: str = None,
-                                    collect_id: str = None,
+                                    mode: str = "",
+                                    mark: str = "",
+                                    user_id: str = "",
+                                    user_name: str = "",
+                                    mix_id: str = "",
+                                    mix_title: str = "",
+                                    collect_id: str = "",
+                                    collect_name: str = "",
                                     ):
         self.logger.info("开始提取作品数据")
-        id_, name, mid, title, mark, data = self.extractor.preprocessing_data(
-            data, id_, mark, post, mix, tiktok, title, collect_id=collect_id, )
-        self.__display_extracted_information(
-            mix, id_, name, mid, title, mark, )
-        addition = addition or ("合集作品" if mix else "发布作品" if post else "喜欢作品")
-        old_mark = f"{m["MARK"]}_{addition}" if (
-            m := await self.cache.has_cache(
-                mid if mix else id_)) else None
+        id_, name, mark, data = self.extractor.preprocessing_data(
+            data,
+            tiktok,
+            mode if mode in {"post", "mix"} else "info",
+            mark,
+            user_id,
+            mix_id,
+            mix_title,
+            collect_id,
+            collect_name,
+        )
+        self.__display_extracted_information(id_, name, mark, )
+        prefix = self._generate_prefix(mode)
+        suffix = self._generate_suffix(mode)
+        old_mark = f"{m["MARK"]}_{suffix}" if (
+            m := await self.cache.has_cache(id_)
+        ) else None
         async with logger(root,
-                          name=f"{self._generate_prefix(mix=mix, collect=bool(collect_id))}{self._generate_id(id_, mid, mix=mix, collect=bool(collect_id))}_{mark}_{addition}",
+                          name=f"{prefix}{id_}_{mark}_{suffix}",
                           old=old_mark,
-                          console=self.console, **params) as recorder:
+                          console=self.console,
+                          **params
+                          ) as recorder:
             data = await self.extractor.run(
                 data,
                 recorder,
@@ -510,75 +523,94 @@ class TikTok:
                 mark=mark,
                 earliest=earliest or date(2016, 9, 20),
                 latest=latest or date.today(),
-                same=any((post, mix)))
+                same=mode in {},
+            )
         if api:
             return data
         await self.cache.update_cache(
             self.parameter.folder_mode,
-            self._generate_prefix(mix=mix, collect=bool(collect_id)),
-            self._generate_id(id_, mid, mix=mix, collect=bool(collect_id)),
+            prefix,
+            suffix,
+            id_,
+            name,
             mark,
-            title if mix else name,
-            addition,
         )
-        await self.download_account_detail(
-            data, id_, name, mark, self._generate_id(id_, mid, mix=mix, collect=bool(collect_id)), title, addition,
-            tiktok, collect=bool(collect_id), )
+        await self.download_detail_batch(
+            data,
+            tiktok=tiktok,
+            mode=mode,
+            mark=mark,
+            user_id=id_,
+            user_name=name,
+            mix_id=mix_id,
+            mix_title=mix_title,
+            collect_id=collect_id,
+            collect_name=collect_name,
+        )
         return True
 
     @staticmethod
-    def _generate_prefix(user=True, mix=False, collect=False):
-        if collect:
-            return "CID"
-        if mix:
-            return "MID"
-        if user:
-            return "UID"
+    def _generate_prefix(mode: str, ):
+        match mode:
+            case "post" | "favorite" | "collection":
+                return "UID"
+            case "mix":
+                return "MID"
+            case "collects":
+                return "CID"
+            case _:
+                raise TikTokDownloaderError
 
     @staticmethod
-    def _generate_id(id_, mid, user=True, mix=False, collect=False):
-        if collect:
-            return mid
-        if mix:
-            return mid
-        if user:
-            return id_
+    def _generate_suffix(mode: str, ):
+        match mode:
+            case "post":
+                return "发布作品"
+            case "favorite":
+                return "喜欢作品"
+            case "collection":
+                return "收藏作品"
+            case "mix":
+                return "合集作品"
+            case "collects":
+                return "收藏夹作品"
+            case _:
+                raise TikTokDownloaderError
 
     def __display_extracted_information(
             self,
-            mix: bool,
             id_: str,
             name: str,
-            mid: str,
-            title: str,
             mark: str,
     ) -> None:
-        self.logger.info(f"合集标题：{title}；合集标识：{mark}；合集 ID：{mid}", mix, )
-        self.logger.info(f"账号昵称：{name}；账号标识：{mark}；账号 ID：{id_}", not mix, )
+        self.logger.info(f"昵称/标题：{name}；标识：{mark}；ID：{id_}", )
 
-    async def download_account_detail(
+    async def download_detail_batch(
             self,
             data: list[dict],
-            id_: str,
-            name: str,
-            mark: str,
-            mid: str = None,
-            title: str = None,
-            addition: str = None,
+            type_: str = "batch",
             tiktok: bool = False,
-            collect=False,
+            mode: str = "",
+            mark: str = "",
+            user_id: str = "",
+            user_name: str = "",
+            mix_id: str = "",
+            mix_title: str = "",
+            collect_id: str = "",
+            collect_name: str = "",
     ):
         await self.downloader.run(
             data,
-            "batch",
+            type_,
             tiktok,
-            id_=id_,
-            name=name,
+            mode=mode,
             mark=mark,
-            addition=addition,
-            mid=mid,
-            title=title,
-            collect=collect,
+            user_id=user_id,
+            user_name=user_name,
+            mix_id=mix_id,
+            mix_title=mix_title,
+            collect_id=collect_id,
+            collect_name=collect_name,
         )
 
     async def detail_interactive(self, select="", *args, **kwargs):
@@ -710,7 +742,7 @@ class TikTok:
                 continue
             live_data = await self.extractor.run(live_data, None, "live")
             download_tasks = self.show_live_info(live_data)
-            await self.downloader.run_live(download_tasks)
+            await self.downloader.run(download_tasks, type_="live")
         self.logger.info("已退出获取直播推流地址(抖音)模式")
 
     async def live_interactive_tiktok(
@@ -730,7 +762,7 @@ class TikTok:
                 continue
             live_data = await self.extractor.run(live_data, None, "live", tiktok=True, )
             download_tasks = self.show_live_info_tiktok(live_data)
-            await self.downloader.run_live(download_tasks, tiktok=True)
+            await self.downloader.run(download_tasks, type_="live", tiktok=True)
         self.logger.info("已退出获取直播推流地址(TikTok)模式")
 
     def _generate_live_params(self, rid: bool, ids: list[list]) -> list[dict]:
@@ -1105,12 +1137,11 @@ class TikTok:
                     params,
                     logger,
                     mix_data,
-                    mix_obj.mix_id,
-                    mark,
-                    mix=True,
+                    mode="mix",
+                    mix_id=mix_obj.mix_id,
+                    mark=mark,
                     api=api,
                     tiktok=tiktok,
-                    title=mix_obj.mix_title,
                 )
             )
         self.logger.warning("采集合集作品数据失败")
@@ -1200,7 +1231,7 @@ class TikTok:
             self, text: str = None) -> None | tuple | bool:
         if not text:
             text = self._inquire_input(
-                tip="请输入搜索条件:\n(关键词 搜索类型 页数 排序规则 时间筛选)\n")
+                problem="请输入搜索条件:\n(关键词 搜索类型 页数 排序规则 时间筛选)\n")
         # 分割字符串
         text = text.split()
         # 如果列表长度小于指定长度，使用空字符串补齐
@@ -1405,7 +1436,7 @@ class TikTok:
         start = time()
         if data := await self.__handle_collection_music(*args, **kwargs):
             data = await self.extractor.run(data, None, "music", )
-            await self.downloader.run_music(data, )
+            await self.downloader.run(data, type_="music", )
         time_ = time() - start
         self.logger.info(
             f"程序运行耗时 {
@@ -1452,11 +1483,10 @@ class TikTok:
             params,
             logger,
             collection,
-            sec_user_id,
-            self.owner.mark,
-            False,
+            mode="collection",
+            user_id=sec_user_id,
+            mark=self.owner.mark,
             api=api,
-            addition="收藏作品",
             tiktok=tiktok,
         )
 
@@ -1485,14 +1515,11 @@ class TikTok:
             params,
             logger,
             data,
-            sec_user_id,
-            name,
-            post=False,
-            api=api,
-            addition="收藏夹作品",
-            tiktok=tiktok,
-            title=name,
+            mode="collects",
             collect_id=id_,
+            collect_name=name,
+            api=api,
+            tiktok=tiktok,
         )
 
     async def hashtag_interactive(

@@ -27,6 +27,20 @@ class Extractor:
     detail_necessary_keys = "id"
     comment_necessary_keys = "cid"
     user_necessary_keys = "sec_uid"
+    extract_params_tiktok = {
+        "sec_uid": "author.secUid",
+        "mix_id": "playlistId",
+        "uid": "author.id",
+        "nickname": "author.nickname",
+        "mix_title": "playlistId",  # TikTok 不返回合辑标题
+    }
+    extract_params = {
+        "sec_uid": "author.sec_uid",
+        "mix_id": "mix_info.mix_id",
+        "uid": "author.uid",
+        "nickname": "author.nickname",
+        "mix_title": "mix_info.mix_name",
+    }
 
     def __init__(self, params: "Parameter"):
         self.log = params.logger
@@ -520,77 +534,81 @@ class Extractor:
 
     def preprocessing_data(self,
                            data: list[dict],
-                           id_: str,
-                           mark="",
-                           post=True,
-                           mix=False,
-                           tiktok=False,
-                           title=None,
-                           collect_id=None,
+                           tiktok: bool = False,
+                           mode: str = "info",
+                           mark: str = "",
+                           user_id: str = "",
+                           mix_id: str = "",
+                           mix_title: str = "",
+                           collect_id: str = "",
+                           collect_name: str = "",
                            ) -> tuple:
-        if tiktok:
-            params = {
-                "sec_uid": "author.secUid",
-                "mix_id": "playlistId",
-                "uid": "author.id",
-                "nickname": "author.nickname",
-                "mix_name": "playlistId",
-                "title": title,
-            }
-        else:
-            params = {
-                "sec_uid": "author.sec_uid",
-                "mix_id": "mix_info.mix_id",
-                "uid": "author.uid",
-                "nickname": "author.nickname",
-                "mix_name": "mix_info.mix_name",
-                "title": "",
-            }
-        return self.__preprocessing_data(
-            data,
-            id_,
-            mark,
-            post,
-            mix,
-            **params,
-            collect_id=collect_id,
-        )
+        match mode:
+            case "post":
+                item = self.__select_item(
+                    data,
+                    user_id,
+                    (self.extract_params_tiktok if tiktok else self.extract_params)["sec_uid"],
+                )
+                id_, name, mark = self.__extract_pretreatment_data(
+                    item,
+                    (self.extract_params_tiktok if tiktok else self.extract_params)["uid"],
+                    (self.extract_params_tiktok if tiktok else self.extract_params)["nickname"],
+                    mark,
+                    "账号",
+                    "无效账号昵称",
+                )
+                return id_, name, mark, data
+            case "mix":
+                item = self.__select_item(
+                    data,
+                    mix_id,
+                    (self.extract_params_tiktok if tiktok else self.extract_params)["mix_id"],
+                )
+                id_, name, mark = self.__extract_pretreatment_data(
+                    item,
+                    (self.extract_params_tiktok if tiktok else self.extract_params)["mix_id"],
+                    (self.extract_params_tiktok if tiktok else self.extract_params)["mix_title"],
+                    mark,
+                    "合集",
+                    "无效合集标题",
+                    title=mix_title,
+                )
+                return id_, name, mark, data
+            case "info" | "favorite":
+                pass
+            case _:
+                raise TikTokDownloaderError
 
-    def __preprocessing_data(self,
-                             data: list[dict],
-                             id_: str,
-                             mark="",
-                             post=True,
-                             mix=False,
-                             sec_uid="",
-                             mix_id="",
-                             uid="",
-                             nickname="",
-                             mix_name="",
-                             title="",
-                             collect_id=None
-                             ) -> tuple:
+    def __select_item(self, data: list[dict], id_: str, key: str):
+        """从多个数据返回对象"""
         for item in data:
             item = self.generate_data_object(item)
-            if id_ in {
-                self.safe_extract(item, sec_uid),
-                mid := self.safe_extract(item, mix_id),
-            }:
-                break
-        else:
-            raise TikTokDownloaderError("提取账号信息或合集信息失败，请向作者反馈！")
-        id_ = self.safe_extract(item, uid)
-        name = self.cleaner.filter_name(self.safe_extract(
-            item, nickname, f"账号_{str(time())[:10]}"),
-            default="无效账号昵称")
-        title = self.cleaner.filter_name(title or self.safe_extract(
-            item, mix_name, f"合集_{str(time())[:10]}"),
-                                         inquire=mix,
-                                         default="无效合集标题")
+            if id_ == self.safe_extract(item, key):
+                return item
+        raise TikTokDownloaderError("提取账号信息或合集信息失败，请向作者反馈！")
+
+    def __extract_pretreatment_data(
+            self,
+            item: SimpleNamespace,
+            id_: str,
+            name: str,
+            mark: str,
+            tip_1: str,
+            tip_2: str,
+            title: str = None,  # TikTok 合辑需要直接传入标题
+    ):
+        id_ = self.safe_extract(item, id_)
+        name = self.cleaner.filter_name(
+            title or self.safe_extract(
+                item,
+                name,
+                f"{tip_1}_{str(time())[:10]}"),
+            default=tip_2,
+        )
         mark = self.cleaner.filter_name(
-            mark, inquire=False, default=title if mix else name)
-        return id_, name.strip(), collect_id or mid, title.strip(
-        ), mark.strip(), data[:None if post else -1]
+            mark, inquire=False, default=name)
+        return id_, name.strip(), mark.strip()
 
     def __platform_classify_detail(
             self,

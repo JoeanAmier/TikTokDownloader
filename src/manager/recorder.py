@@ -118,15 +118,15 @@ class DownloadRecorder:
         self.console = console
         self.database = database
 
-    async def has_ids(self, ids: str) -> bool:
-        return await self.database.has_download_data(ids) if self.switch else False
+    async def has_id(self, id_: str) -> bool:
+        return await self.database.has_download_data(id_) if self.switch and id_ else False
 
     async def update_id(self, id_: str):
-        if self.switch:
+        if self.switch and id_:
             await self.database.write_download_data(id_)
 
     async def delete_id(self, id_: str) -> None:
-        if self.switch:
+        if self.switch and id_:
             await self.database.delete_download_data(id_)
 
     async def delete_ids(self, ids: str) -> None:
