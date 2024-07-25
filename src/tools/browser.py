@@ -2,18 +2,9 @@ from http.cookiejar import CookieJar
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
-from browser_cookie3 import (
-    chrome,
-    chromium,
-    opera,
-    opera_gx,
-    brave,
+from rookiepy import (
     edge,
-    vivaldi,
-    firefox,
-    librewolf,
-    safari,
-    BrowserCookieError,
+    to_cookiejar
 )
 
 from src.custom import WARNING
@@ -29,16 +20,7 @@ __all__ = ["Browser"]
 class Browser:
     """代码参考：https://github.com/Johnserf-Seed/f2/blob/main/f2/apps/douyin/cli.py"""
     browser = (
-        chrome,
-        chromium,
-        opera,
-        opera_gx,
-        brave,
-        edge,
-        vivaldi,
-        firefox,
-        librewolf,
-        safari)
+        edge,)
     platform = {
         False: SimpleNamespace(
             name="抖音",
@@ -57,8 +39,7 @@ class Browser:
     def run(self, tiktok=False):
         browser = self.console.input(
             f"自动读取指定浏览器的 {self.platform[tiktok].name} Cookie 并写入配置文件\n"
-            "支持浏览器：1 Chrome, 2 Chromium, 3 Opera, 4 Opera GX, 5 Brave, 6 Edge, 7 Vivaldi, 8 Firefox, 9 LibreWolf, "
-            "10 Safari\n"
+            "支持浏览器：1 Edge, "
             "请关闭所有浏览器，然后输入浏览器序号：")
         try:
             cookie = self.__read_cookie(
@@ -72,7 +53,7 @@ class Browser:
             self.console.print(
                 "读取 Cookie 失败，浏览器未完全关闭！",
                 style=WARNING)
-        except BrowserCookieError:
+        except Exception:
             self.console.print(
                 "读取 Cookie 失败，未找到对应浏览器的 Cookie 数据！",
                 style=WARNING)
@@ -81,8 +62,8 @@ class Browser:
     def __read_cookie(self, browser, tiktok: bool):
         platform = self.platform[tiktok]
         cookie = CookieJar()
-        cookies = (browser(domain_name=i) for i in platform.domain)
-        [cookie.set_cookie(item) for domain in cookies for item in domain]
+        cookies = to_cookiejar(browser(domains=list(platform.domain)))
+        [cookie.set_cookie(item) for item in cookies]
         return cookie
 
     def __save_cookie(self, cookie: dict, tiktok: bool):
