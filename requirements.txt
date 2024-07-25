@@ -3,7 +3,7 @@ qrcode>=7.4.2
 emoji>=2.10.1
 rich>=13.7.1
 lxml>=5.1.0
-browser-cookie3>=0.19.1
 aiosqlite>=0.20.0
 httpx>=0.27.0
 gmssl>=3.2.2
+rookiepy==0.5.2
