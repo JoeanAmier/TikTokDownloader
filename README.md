@@ -245,6 +245,12 @@
 </table>
 <p>如果您愿意，可以考虑提供资助为 <b>TikTokDownloader</b> 提供额外的支持！</p>
 
+# 💰 项目赞助\(Sponsor\)
+
+![PyCharm logo](https://resources.jetbrains.com/storage/products/company/brand/logos/PyCharm.svg)
+
+**JetBrains** 支持全球开源社区认可的活跃项目，并为非商业开发提供免费许可证。
+
 # 💡 项目参考\(Refer\)
 
 * https://github.com/Johnserf-Seed/f2
@@ -255,7 +261,7 @@
 * https://github.com/encode/httpx/
 * https://github.com/Textualize/rich
 * https://github.com/omnilib/aiosqlite
-* https://github.com/borisbabic/browser_cookie3
+* https://github.com/thewh1teagle/rookie
 * https://github.com/pyinstaller/pyinstaller
 * https://ffmpeg.org/ffmpeg-all.html
 * https://html5up.net/hyperspace

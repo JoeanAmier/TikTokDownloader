@@ -162,7 +162,7 @@ class Downloader:
         await self.batch_processing(data, root, tiktok=tiktok, )
 
     async def run_general(self, data: list[dict], tiktok: bool, **kwargs):
-        root = self.storage_folder()
+        root = self.storage_folder(mode="detail")
         await self.batch_processing(data, root, tiktok=tiktok, )
 
     async def run_music(self, data: list[dict], **kwargs, ):

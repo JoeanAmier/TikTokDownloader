@@ -1,6 +1,6 @@
 FROM python:3.12.4-slim
 
-LABEL name="TikTokDownloader" version="5.4" authors="JoeanAmier"
+LABEL name="TikTokDownloader" version="5.5 Beta" authors="JoeanAmier"
 
 WORKDIR /TikTokDownloader
 
