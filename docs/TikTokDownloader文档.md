@@ -859,10 +859,10 @@ https://www.douyin.com/note/123456789
 <h3>批量下载收藏作品(抖音)</h3>
 <p>无需输入命令；需要在配置文件写入已登录的 Cookie，并在 <code>owner_url</code> 参数填入对应的账号主页链接和账号标识（可选）；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
 <p>如果未设置 <code>owner_url</code> 参数，程序会使用临时字符串作为账号昵称和 UID（不建议）</p>
-<p>账号文件夹格式为 <code>UID123456789_mark_收藏作品</code> 或者 <code>UID123456789_账号昵称_收藏作品</code></p>
+<p>文件夹格式为 <code>UID123456789_mark_收藏作品</code> 或者 <code>UID123456789_账号昵称_收藏作品</code></p>
 <h3>批量下载收藏夹作品(抖音)</h3>
 <p>无需输入命令；需要在配置文件写入已登录的 Cookie，程序自动获取收藏夹消息并展示，输入收藏夹序号开始下载对应收藏夹作品，输入 <code>ALL</code> 下载全部收藏夹作品。</p>
-<p>账号文件夹格式为 <code>UID123456789_收藏夹名称_收藏作品</code></p>
+<p>文件夹格式为 <code>CID123456789_收藏夹名称_收藏作品</code></p>
 <h3>批量下载账号作品(TikTok)</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts_urls_tiktok</code> 参数中的账号链接。</li>

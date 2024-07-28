@@ -41,6 +41,7 @@ from src.record import LoggerManager
 from src.tools import Browser
 from src.tools import ColorfulConsole
 from src.tools import choose
+from src.tools import remove_empty_directories
 from src.tools import safe_pop
 # from .main_api_server import APIServer
 from .main_complete import TikTok
@@ -350,6 +351,9 @@ class TikTokDownloader:
     def close(self):
         self.event.set()
         self.delete_cache()
+        if self.parameter.folder_mode:
+            remove_empty_directories(self.parameter.ROOT)
+            remove_empty_directories(self.parameter.root)
         self.parameter.logger.info("正在关闭程序")
 
     async def browser_cookie(self, ):

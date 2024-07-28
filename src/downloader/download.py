@@ -602,8 +602,10 @@ class Downloader:
         """生成作品文件名称"""
         return self.cleaner.filter_name(
             self.split.join(
-                data[i] for i in self.name_format), inquire=False, default=str(
-                time())[:10])
+                data[i] for i in self.name_format),
+            inquire=False,
+            default=data["id"],
+        )
 
     def generate_music_name(self, data: dict) -> str:
         """生成音乐文件名称"""
