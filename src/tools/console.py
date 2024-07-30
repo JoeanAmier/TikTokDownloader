@@ -14,5 +14,8 @@ class ColorfulConsole(Console):
         super().print(*args, style=style, highlight=highlight, **kwargs)
 
     def input(self, prompt="", style=PROMPT, *args, **kwargs):
-        return super().input(
-            Text(prompt, style=style), *args, **kwargs)
+        try:
+            return super().input(
+                Text(prompt, style=style), *args, **kwargs)
+        except EOFError as e:
+            raise KeyboardInterrupt from e

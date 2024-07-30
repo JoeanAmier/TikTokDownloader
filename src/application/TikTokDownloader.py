@@ -1,5 +1,4 @@
 from asyncio import run
-from contextlib import suppress
 from shutil import rmtree
 from threading import Event
 from threading import Thread
@@ -58,6 +57,9 @@ __all__ = ["TikTokDownloader"]
 
 
 class TikTokDownloader:
+    VERSION_MAJOR = VERSION_MAJOR
+    VERSION_MINOR = VERSION_MINOR
+    VERSION_BETA = VERSION_BETA
     PLATFORM = (
         "cookie",
         "cookie_tiktok",
@@ -180,15 +182,15 @@ class TikTokDownloader:
             response = get(RELEASES, timeout=5, follow_redirects=True, )
             latest_major, latest_minor = map(
                 int, str(response.url).split("/")[-1].split(".", 1))
-            if latest_major > VERSION_MAJOR or latest_minor > VERSION_MINOR:
+            if latest_major > self.VERSION_MAJOR or latest_minor > self.VERSION_MINOR:
                 self.console.print(
                     f"检测到新版本: {latest_major}.{latest_minor}", style=WARNING)
                 self.console.print(RELEASES)
-            elif latest_minor == VERSION_MINOR and VERSION_BETA:
+            elif latest_minor == self.VERSION_MINOR and self.VERSION_BETA:
                 self.console.print(
                     "当前版本为开发版, 可更新至正式版", style=WARNING)
                 self.console.print(RELEASES)
-            elif VERSION_BETA:
+            elif self.VERSION_BETA:
                 self.console.print("当前已是最新开发版", style=WARNING)
             else:
                 self.console.print("当前已是最新正式版", style=INFO)
@@ -332,17 +334,20 @@ class TikTokDownloader:
 
     def periodic_update_cookie(self):
         async def inner():
+            # print("子线程开始运行！")  # 调试代码
             while not self.event.is_set():
+                # print("子线程运行中！")  # 调试代码
                 await self.parameter.update_params()
                 self.event.wait(COOKIE_UPDATE_INTERVAL)
+            # print("子线程结束运行！")  # 调试代码
 
-        with suppress(RuntimeError):
-            run(inner())
+        run(inner(), debug=self.VERSION_BETA, )
 
     def restart_cycle_task(self, restart=True, ):
         if restart:
             self.event.set()
             while self.cookie_task.is_alive():
+                # print("等待子线程结束！")  # 调试代码
                 sleep(1)
         self.cookie_task = Thread(target=self.periodic_update_cookie)
         self.event.clear()

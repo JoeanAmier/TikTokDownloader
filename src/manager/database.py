@@ -1,3 +1,6 @@
+from asyncio import CancelledError
+from contextlib import suppress
+
 from aiosqlite import Row
 from aiosqlite import connect
 
@@ -87,7 +90,8 @@ class Database:
         return self
 
     async def close(self):
-        await self.cursor.close()
+        with suppress(CancelledError):
+            await self.cursor.close()
         await self.database.close()
 
     async def __aexit__(self, exc_type, exc_value, traceback):
