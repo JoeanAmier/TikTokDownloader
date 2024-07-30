@@ -288,7 +288,8 @@ class API:
         self.log.info(f"Response URL: {response.url}", False)
         self.log.info(f"Response Code: {response.status_code}", False)
         self.log.info(f"Response Headers: {dict(response.headers)}", False)
-        self.log.info(f"Response Content: {response.content}", False)
+        # 记录请求体数据会导致日志文件体积过大，仅在必要时记录
+        # self.log.info(f"Response Content: {response.content}", False)
         response.raise_for_status()
         await wait()
         # if response.status_code != 200:

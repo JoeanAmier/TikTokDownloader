@@ -8,6 +8,7 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING
 from typing import Union
 
+from httpx import HTTPStatusError
 from httpx import RequestError
 from httpx import StreamError
 from rich.progress import (
@@ -486,8 +487,11 @@ class Downloader:
                     #     return False
                     self.log.info(
                         f"{show} 文件大小 {format_size(content)}", False, )
-                    if all(
-                            (self.max_size, content, content > self.max_size)):  # 文件下载跳过判断
+                    if all((
+                            self.max_size,
+                            content,
+                            content > self.max_size,
+                    )):  # 文件下载跳过判断
                         self.log.info(f"{show} 文件大小超出限制，跳过下载")
                         return True
                     return await self.download_file(
@@ -498,9 +502,17 @@ class Downloader:
                         response,
                         content,
                         count,
-                        progress)
+                        progress,
+                    )
             except RequestError as e:
                 self.log.warning(f"网络异常: {e}")
+                return False
+            except HTTPStatusError as e:
+                self.log.warning(f"响应码异常: {e}")
+                self.console.print(
+                    "如果 TikTok 平台作品下载功能异常，请检查配置文件中 browser_info_tiktok 的 device_id 参数！",
+                    style=WARNING,
+                )
                 return False
 
     async def download_file(
