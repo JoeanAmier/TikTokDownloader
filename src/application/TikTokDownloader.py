@@ -116,13 +116,10 @@ class TikTokDownloader:
             # ("Web API 模式", self.__api_object),
             # ("Web UI 模式", self.__web_ui_object),
             # ("服务器部署模式", self.__server_object),
-            (f"{self.FUNCTION_OPTIONS[self.config["Update"]]
-            }自动检查更新", self.__modify_update),
-            (f"{self.FUNCTION_OPTIONS[self.config["Record"]]
-            }作品下载记录", self.__modify_record),
+            (f"{self.FUNCTION_OPTIONS[self.config['Update']]}自动检查更新", self.__modify_update),
+            (f"{self.FUNCTION_OPTIONS[self.config['Record']]}作品下载记录", self.__modify_record),
             ("删除作品下载记录", self.delete_works_ids),
-            (f"{self.FUNCTION_OPTIONS[self.config["Logger"]]
-            }运行日志记录", self.__modify_logging),
+            (f"{self.FUNCTION_OPTIONS[self.config['Logger']]}运行日志记录", self.__modify_logging),
         )
 
     async def disable_function(self, *args, **kwargs, ):
@@ -159,8 +156,7 @@ class TikTokDownloader:
         return True
 
     def project_info(self):
-        self.console.print(f"{self.LINE}\n\n\n{self.NAME.center(
-            self.WIDTH)}\n\n\n{self.LINE}\n", style=MASTER)
+        self.console.print(f"{self.LINE}\n\n\n{self.NAME.center(self.WIDTH)}\n\n\n{self.LINE}\n", style=MASTER)
         self.console.print(f"项目地址: {REPOSITORY}", style=MASTER)
         self.console.print(f"项目文档: {DOCUMENTATION_URL}", style=MASTER)
         self.console.print(f"开源许可: {LICENCE}\n", style=MASTER)
