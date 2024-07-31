@@ -155,9 +155,7 @@ class Settings:
         data_keys = set(data.keys())
         if not (miss := default_keys - data_keys):
             return data
-        if self.console.input(
-                f"配置文件 settings.json 缺少 {"、".join(miss)} 参数，是否需要生成默认配置文件(YES/NO): ",
-                style=ERROR).upper() == "YES":
+        if self.console.input(f"配置文件settings.json缺少{'、'.join(miss)}参数，是否需要生成默认配置文件(YES/NO): ", style=ERROR).upper() == "YES":
             self.__create()
         self.console.print("本次运行将会使用各项参数默认值，程序功能可能无法正常使用！", style=WARNING)
         return self.default

@@ -39,7 +39,7 @@ class Cache:
             self.__check_file(solo_mode, type_, id_, mark, name, addition, d, )
         data = (id_, name, mark)
         await self.database.update_mapping_data(*data)
-        self.log.info(f"更新缓存数据: {", ".join(data)}", False)
+        self.log.info(f"更新缓存数据: {', '.join(data)}", False)
 
     async def has_cache(self, id_: str) -> dict:
         return await self.database.read_mapping_data(id_)
@@ -56,8 +56,7 @@ class Cache:
     ):
         if not (
                 old_folder := self.root.joinpath(
-                    f"{type_}{id_}_{
-                    data["mark"] or data["name"]}_{addition}")).is_dir():
+                    f"{type_}{id_}_{data['mark'] or data['name']}_{addition}")).is_dir():
             self.log.info(f"{old_folder} 文件夹不存在，自动跳过", False)
             return
         if data["mark"] != mark:

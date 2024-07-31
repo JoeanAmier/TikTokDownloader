@@ -246,16 +246,7 @@ class TikTok:
 
     def __summarize_results(self, count: SimpleNamespace, name="账号"):
         time_ = time() - count.time
-        self.logger.info(
-            f"程序共处理 {
-            count.success +
-            count.failed} 个{name}，成功 {
-            count.success} 个，失败 {
-            count.failed} 个，耗时 {
-            int(time_ //
-                60)} 分钟 {
-            int(time_ %
-                60)} 秒")
+        self.logger.info(f"程序共处理{count.success + count.failed}个{name}，成功{count.success} 个，失败{count.failed}个，耗时{int(time_//60)} 分钟 {int(time_ %60)} 秒")
 
     async def account_acquisition_interactive(
             self, select="", *args, **kwargs):
@@ -494,7 +485,7 @@ class TikTok:
         self.__display_extracted_information(
             mix, id_, name, mid, title, mark, )
         addition = addition or ("合集作品" if mix else "发布作品" if post else "喜欢作品")
-        old_mark = f"{m["MARK"]}_{addition}" if (
+        old_mark = f"{m['MARK']}_{addition}" if (
             m := await self.cache.has_cache(
                 mid if mix else id_)) else None
         async with logger(root,
@@ -885,7 +876,7 @@ class TikTok:
             select = choose("请选择合集链接来源",
                             [i[0] for i in function], self.console)
         await self.__multiple_choice(select, function, root, params, logger, )
-        self.logger.info(f"已退出批量下载合集作品{"(TikTok)" if tiktok else "(抖音)"}模式")
+        self.logger.info(f"已退出批量下载合集作品{'(TikTok)' if tiktok else '(抖音)'}模式")
 
     async def __multiple_choice(self, select: str, function, *args, **kwargs, ):
         if select.upper() == "Q":
@@ -1008,9 +999,7 @@ class TikTok:
                 continue
             mix_id, id_ = await self._check_mix_id(data.url)
             if not id_:
-                self.logger.warning(
-                    f"配置文件 mix_urls 参数" f"第 {index} 条数据的 url {
-                    data.url} 错误，获取作品 ID 或合集 ID 失败")
+                self.logger.warning(f"配置文件mix_urls参数, 第{index}条数据的url{data.url}错误，获取作品ID或合集ID失败")
                 count.failed += 1
                 continue
             if not await self._deal_mix_detail(
@@ -1037,9 +1026,7 @@ class TikTok:
                 continue
             _, ids, title = await self.links_tiktok.run(data.url, type_="mix")
             if not ids:
-                self.logger.warning(
-                    f"配置文件 mix_urls_tiktok 参数" f"第 {index} 条数据的 url {
-                    data.url} 错误，获取合集 ID 失败")
+                self.logger.warning(f"配置文件mix_urls_tiktok参数, 第{index}条数据的url{data.url}错误，获取合集ID失败")
                 count.failed += 1
                 continue
             id_, title = ids[0], title[0]
@@ -1344,12 +1331,7 @@ class TikTok:
             start = time()
             await self._deal_collection_data(root, params, logger, sec_user_id)
             time_ = time() - start
-            self.logger.info(
-                f"程序运行耗时 {
-                int(time_ //
-                    60)} 分钟 {
-                int(time_ %
-                    60)} 秒")
+            self.logger.info(f"程序运行耗时 {int(time_ //60)} 分钟 {int(time_ %60)} 秒")
         self.logger.info("已退出批量下载收藏作品(抖音)模式")
 
     @check_cookie_state(tiktok=False)
@@ -1364,12 +1346,7 @@ class TikTok:
             for i, j in zip(names, ids):
                 await self._deal_collects_data(root, params, logger, sec_user_id, i, j)
             time_ = time() - start
-            self.logger.info(
-                f"程序运行耗时 {
-                int(time_ //
-                    60)} 分钟 {
-                int(time_ %
-                    60)} 秒")
+            self.logger.info(f"程序运行耗时 {int(time_ //60)} 分钟 {int(time_ %60)} 秒")
         else:
             self.console.print("该模式必须设置 owner_url 参数才能使用", style=WARNING)
         self.logger.info("已退出批量下载收藏夹作品(抖音)模式")
@@ -1407,12 +1384,7 @@ class TikTok:
             data = await self.extractor.run(data, None, "music", )
             await self.downloader.run_music(data, )
         time_ = time() - start
-        self.logger.info(
-            f"程序运行耗时 {
-            int(time_ //
-                60)} 分钟 {
-            int(time_ %
-                60)} 秒")
+        self.logger.info(f"程序运行耗时 {int(time_ //60)} 分钟 {int(time_ %60)} 秒")
         self.logger.info("已退出批量下载收藏音乐(抖音)模式")
 
     async def __handle_collection_music(self,

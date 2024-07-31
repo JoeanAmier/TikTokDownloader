@@ -39,9 +39,7 @@ class LoggerManager(BaseLogger):
             dir_.mkdir()
         file_handler = FileHandler(
             dir_.joinpath(
-                f"{filename}.log" if filename else f"{strftime(
-                    self._name,
-                    localtime())}.log"),
+                f"{filename}.log" if filename else f"{strftime(self._name,localtime())}.log"),
             encoding=self.encode)
         formatter = Formatter(format_, datefmt="%Y-%m-%d %H:%M:%S")
         file_handler.setFormatter(formatter)

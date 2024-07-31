@@ -809,8 +809,7 @@ class Extractor:
             data, "custom_verify", "无")
         container.cache["enterprise"] = self.safe_extract(
             data, "enterprise_verify_reason", "无")
-        container.cache["url"] = f"https: // www.douyin.com / user / {
-        container.cache["sec_uid"]}"
+        container.cache["url"] = f"https: // www.douyin.com / user / {container.cache['sec_uid']}"
         container.all_data.append(container.cache)
 
     async def __search(
