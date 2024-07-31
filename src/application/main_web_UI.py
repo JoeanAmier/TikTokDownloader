@@ -93,10 +93,10 @@ class WebUI(TikTok):
     @staticmethod
     def generate_live_data(data: dict) -> dict:
         return {
-            "text": "\n".join((f"直播标题: {data["title"]}",
-                               f"主播昵称: {data["nickname"]}",
-                               f"在线观众: {data["user_count_str"]}",
-                               f"观看次数: {data["total_user_str"]}",)),
+            "text": "\n".join((f"直播标题: {data['title']}",
+                               f"主播昵称: {data['nickname']}",
+                               f"在线观众: {data['user_count_str']}",
+                               f"观看次数: {data['total_user_str']}",)),
             "flv": data["flv_pull_url"],
             "m3u8": data["hls_pull_url_map"],
             "best": list(data["flv_pull_url"].values())[0],

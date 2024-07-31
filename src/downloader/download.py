@@ -208,12 +208,7 @@ class Downloader:
             self, data: list[tuple], tasks: list, commands: list):
         for i, f, m in data:
             name = self.cleaner.filter_name(
-                f'{
-                i["title"]}{
-                self.split}{
-                i["nickname"]}{
-                self.split}{
-                datetime.now():%Y-%m-%d %H.%M.%S}.flv',
+                f'{i["title"]}{self.split}{i["nickname"]}{self.split}{datetime.now():%Y-%m-%d %H.%M.%S}.flv',
                 inquire=False,
                 default=str(
                     time())[

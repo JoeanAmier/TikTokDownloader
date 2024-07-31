@@ -258,7 +258,7 @@ class Parameter:
                 await TtWidTikTok.get_tt_wid(
                     self.logger,
                     self.headers_params_tiktok,
-                    self.twc_tiktok or f"{TtWidTikTok.NAME}={cookie.get(TtWidTikTok.NAME, "")}",
+                    self.twc_tiktok or f"{TtWidTikTok.NAME}={cookie.get(TtWidTikTok.NAME, '')}",
                     **self.proxy_tiktok,
                 ),
             )
