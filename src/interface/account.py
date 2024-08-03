@@ -6,11 +6,8 @@ from typing import TYPE_CHECKING
 from typing import Type
 from typing import Union
 
-from src.extract import Extractor
-from src.interface.info import Info
 from src.interface.template import API
 from src.testers import Params
-from src.tools import timestamp
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -42,7 +39,6 @@ class Account(API):
         self.cursor = cursor
         self.count = count
         self.text = "账号喜欢作品数据" if self.favorite else "账号发布作品数据"
-        self.info = Info(params, cookie, proxy, sec_user_id, )
 
     async def run(self,
                   referer: str = None,
@@ -145,30 +141,30 @@ class Account(API):
             **kwargs,
         )
         self.summary_works()
-        await self.favorite_mode()
+        # await self.favorite_mode()
 
-    async def favorite_mode(self):
-        if not self.favorite:
-            return
-        info = Extractor.get_user_info(await self.info.run())
-        if self.sec_user_id != (s := info.get("sec_uid")):
-            self.log.error(
-                f"sec_user_id {self.sec_user_id} 与 {s} 不一致")
-            self._generate_temp_data()
-        else:
-            self.response.append({"author": info})
+    # async def favorite_mode(self):
+    #     if not self.favorite:
+    #         return
+    #     info = Extractor.get_user_info(await self.info.run())
+    #     if self.sec_user_id != (s := info.get("sec_uid")):
+    #         self.log.error(
+    #             f"sec_user_id {self.sec_user_id} 与 {s} 不一致")
+    #         self._generate_temp_data()
+    #     else:
+    #         self.response.append({"author": info})
 
-    def _generate_temp_data(self, ):
-        temp_data = timestamp()
-        self.log.warning(f"获取账号昵称失败，本次运行将临时使用 {temp_data} 作为账号昵称和 UID")
-        temp_dict = {
-            "author": {
-                "nickname": temp_data,
-                "uid": temp_data,
-                "sec_uid": self.sec_user_id,
-            }
-        }
-        self.response.append(temp_dict)
+    # def _generate_temp_data(self, ):
+    #     temp_data = timestamp()
+    #     self.log.warning(f"获取账号昵称失败，本次运行将临时使用 {temp_data} 作为账号昵称和 UID")
+    #     temp_dict = {
+    #         "author": {
+    #             "nickname": temp_data,
+    #             "uid": temp_data,
+    #             "sec_uid": self.sec_user_id,
+    #         }
+    #     }
+    #     self.response.append(temp_dict)
 
     async def early_stop(self):
         """如果获取数据的发布日期已经早于限制日期，就不需要再获取下一页的数据了"""

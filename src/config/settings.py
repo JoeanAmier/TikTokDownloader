@@ -70,7 +70,7 @@ class Settings:
         "split": "-",
         "folder_mode": False,
         "music": False,
-        "truncate": 64,
+        "truncate": 50,
         "storage_format": "",
         "cookie": "",
         "cookie_tiktok": "",

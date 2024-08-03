@@ -4,9 +4,7 @@ from typing import TYPE_CHECKING
 from typing import Type
 from typing import Union
 
-from src.extract import Extractor
 from src.interface.account import Account
-from src.interface.info_tiktok import InfoTikTok
 from src.interface.template import APITikTok
 from src.testers import Params
 
@@ -46,7 +44,6 @@ class AccountTikTok(Account, APITikTok, ):
             *args,
             **kwargs,
         )
-        self.info = InfoTikTok(params, cookie, proxy, sec_user_id=sec_user_id, )
 
     async def run(self,
                   referer: str = None,
@@ -121,16 +118,16 @@ class AccountTikTok(Account, APITikTok, ):
             **kwargs,
         )
 
-    async def favorite_mode(self):
-        if not self.favorite:
-            return
-        info = Extractor.get_user_info_tiktok(await self.info.run())
-        if self.sec_user_id != (s := info.get("sec_uid")):
-            self.log.error(
-                f"sec_user_id {self.sec_user_id} 与 {s} 不一致")
-            self._generate_temp_data()
-        else:
-            self.response.append({"author": info})
+    # async def favorite_mode(self):
+    #     if not self.favorite:
+    #         return
+    #     info = Extractor.get_user_info_tiktok(await self.info.run())
+    #     if self.sec_user_id != (s := info.get("sec_uid")):
+    #         self.log.error(
+    #             f"sec_user_id {self.sec_user_id} 与 {s} 不一致")
+    #         self._generate_temp_data()
+    #     else:
+    #         self.response.append({"author": info})
 
     def generate_favorite_params(self) -> dict:
         return self.generate_post_params()

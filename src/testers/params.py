@@ -44,6 +44,4 @@ class Params:
     def extract_proxy(proxy: str | dict | None) -> str | None:
         if isinstance(proxy, dict):
             return proxy.get("https://") or proxy.get("http://")
-        if isinstance(proxy, str):
-            return proxy
-        return None
+        return proxy if isinstance(proxy, str) else None

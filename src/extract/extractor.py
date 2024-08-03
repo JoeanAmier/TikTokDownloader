@@ -2,7 +2,6 @@ from datetime import datetime
 from json import dumps
 from time import localtime
 from time import strftime
-from time import time
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 from urllib.parse import urlparse
@@ -12,6 +11,7 @@ from src.tools import TikTokDownloaderError
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from datetime import date
 
 __all__ = ["Extractor"]
 
@@ -57,8 +57,7 @@ class Extractor:
             "music": self.__music,
         }
 
-    @staticmethod
-    def get_user_info(data: dict) -> dict:
+    def get_user_info(self, data: dict) -> dict:
         try:
             return {
                 "nickname": data["nickname"],
@@ -66,10 +65,10 @@ class Extractor:
                 "uid": data["uid"],
             }
         except (KeyError, TypeError):
+            self.log.error(f"提取账号信息失败: {data}")
             return {}
 
-    @staticmethod
-    def get_user_info_tiktok(data: dict) -> dict:
+    def get_user_info_tiktok(self, data: dict) -> dict:
         try:
             return {
                 "nickname": data["user"]["nickname"],
@@ -77,6 +76,7 @@ class Extractor:
                 "uid": data["user"]["id"],
             }
         except (KeyError, TypeError):
+            self.log.error(f"提取账号信息失败: {data}")
             return {}
 
     @staticmethod
@@ -555,8 +555,6 @@ class Extractor:
                     (self.extract_params_tiktok if tiktok else self.extract_params)["uid"],
                     (self.extract_params_tiktok if tiktok else self.extract_params)["nickname"],
                     mark,
-                    "账号",
-                    "无效账号昵称",
                 )
                 return id_, name, mark, data
             case "mix":
@@ -570,13 +568,41 @@ class Extractor:
                     (self.extract_params_tiktok if tiktok else self.extract_params)["mix_id"],
                     (self.extract_params_tiktok if tiktok else self.extract_params)["mix_title"],
                     mark,
-                    "合集",
-                    "无效合集标题",
-                    title=mix_title,
+                    mix_title,
                 )
                 return id_, name, mark, data
-            case "info" | "favorite":
-                pass
+            case "favorite" | "collection":
+                if tiktok:
+                    info = self.get_user_info_tiktok(data[-1])
+                else:
+                    info = self.get_user_info(data[-1])
+                if user_id != (s := info.get("sec_uid")):
+                    self.log.error(
+                        f"sec_user_id {user_id} 与 {s} 不一致")
+                    return ()
+                name = self.cleaner.filter_name(
+                    info["nickname"],
+                    inquire=False,
+                    default=info["uid"],
+                )
+                mark = self.cleaner.filter_name(
+                    mark,
+                    inquire=False,
+                    default=name,
+                )
+                return (
+                    info["uid"],
+                    name,
+                    mark,
+                    data[:-1],
+                )
+            case "collects":
+                collect_name = self.cleaner.filter_name(
+                    collect_name,
+                    inquire=False,
+                    default=collect_id,
+                )
+                return collect_id, collect_name, collect_name, data
             case _:
                 raise TikTokDownloaderError
 
@@ -594,8 +620,6 @@ class Extractor:
             id_: str,
             name: str,
             mark: str,
-            tip_1: str,
-            tip_2: str,
             title: str = None,  # TikTok 合辑需要直接传入标题
     ):
         id_ = self.safe_extract(item, id_)
@@ -603,8 +627,8 @@ class Extractor:
             title or self.safe_extract(
                 item,
                 name,
-                f"{tip_1}_{str(time())[:10]}"),
-            default=tip_2,
+                id_,
+            ),
         )
         mark = self.cleaner.filter_name(
             mark, inquire=False, default=name)
@@ -997,12 +1021,36 @@ class Extractor:
     def source_date_filter(
             self,
             data: list[dict],
-            earliest,
-            latest) -> list[dict]:
+            earliest: "date",
+            latest: "date",
+            tiktok=False,
+    ) -> list[dict]:
+        if tiktok:
+            return self.__source_date_filter(
+                data,
+                "createTime",
+                earliest=earliest,
+                latest=latest,
+            )
+        return self.__source_date_filter(
+            data,
+            earliest=earliest,
+            latest=latest,
+        )
+
+    def __source_date_filter(
+            self,
+            data: list[dict],
+            key: str = "create_time",
+            earliest: "date" = ...,
+            latest: "date" = ...,
+    ) -> list[dict]:
         result = []
         for item in data:
-            create_time = datetime.fromtimestamp(
-                item.get("create_time", 0)).date()
+            if not (create_time := item.get(key, 0)):
+                result.append(item)
+                continue
+            create_time = datetime.fromtimestamp(create_time).date()
             if earliest <= create_time <= latest:
                 result.append(item)
         self.__summary_detail(result)

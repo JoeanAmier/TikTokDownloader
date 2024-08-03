@@ -422,9 +422,7 @@ class Parameter:
 
     @staticmethod
     def __check_default_mode(default_mode: str) -> list:
-        if default_mode:
-            return default_mode.split()[::-1]
-        return []
+        return default_mode.split()[::-1] if default_mode else []
 
     async def update_params(self) -> None:
         await self.set_token_params()
@@ -654,17 +652,15 @@ class Parameter:
     def extract_proxy(proxy: str | dict | None) -> str | None:
         if isinstance(proxy, dict):
             return proxy.get("https://") or proxy.get("http://")
-        if isinstance(proxy, str):
-            return proxy
-        return None
+        return proxy if isinstance(proxy, str) else None
 
     def __check_truncate(self, truncate: int) -> int:
         if isinstance(truncate, int) and truncate >= 32:
             self.logger.info(f"truncate 参数已设置为 {truncate}", False)
             return truncate
         self.logger.warning(
-            f"truncate 参数 {truncate} 设置错误，程序将使用默认值：64", )
-        return 64
+            f"truncate 参数 {truncate} 设置错误，程序将使用默认值：50", )
+        return 50
 
     def __check_cookie_state(self, tiktok=False) -> bool:
         if tiktok:

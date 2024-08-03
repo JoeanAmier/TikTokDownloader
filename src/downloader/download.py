@@ -597,11 +597,11 @@ class Downloader:
             case "favorite":
                 folder_name = f"UID{id_}_{name}_发布作品"
             case "mix":
-                folder_name = f"CID{id_}_{name}_合集作品"
+                folder_name = f"MID{id_}_{name}_合集作品"
             case "collection":
                 folder_name = f"UID{id_}_{name}_收藏作品"
             case "collects":
-                folder_name = f"MID{id_}_{name}_收藏夹作品"
+                folder_name = f"CID{id_}_{name}_收藏夹作品"
             case "detail":
                 folder_name = self.folder_name
             case _:

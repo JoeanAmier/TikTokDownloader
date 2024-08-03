@@ -212,7 +212,8 @@ class RecordManager:
             parameter: "Parameter",
             folder="",
             type_="detail",
-            blank=False, ):
+            blank=False,
+    ):
         root = parameter.root.joinpath(
             parameter.CLEANER.filter_name(folder, False, "Data"))
         root.mkdir(exist_ok=True)

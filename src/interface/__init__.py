@@ -15,6 +15,7 @@ from src.interface.detail_tiktok import DetailTikTok
 from src.interface.hashtag import HashTag
 from src.interface.hot import Hot
 from src.interface.info import Info
+from src.interface.info_tiktok import InfoTikTok
 from src.interface.live import Live
 from src.interface.live_tiktok import LiveTikTok
 from src.interface.mix import Mix
