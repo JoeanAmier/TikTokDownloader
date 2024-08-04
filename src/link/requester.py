@@ -36,13 +36,15 @@ class Requester:
     @capture_error_request
     async def request_url(self, url: str, content="url", ):
         self.log.info(f"URL: {url}", False)
-        response = await self.client.get(url, )
+        if content in {"url", "headers"}:
+            response = await self.request_url_head(url)
+        else:
+            response = await self.request_url_get(url)
         self.log.info(f"Response URL: {response.url}", False)
         self.log.info(f"Response Code: {response.status_code}", False)
         # 记录请求体数据会导致日志文件体积过大，仅在必要时记录
         # self.log.info(f"Response Content: {response.content}", False)
         self.log.info(f"Response Headers: {dict(response.headers)}", False)
-        response.raise_for_status()
         match content:
             case "text":
                 return response.text
@@ -56,3 +58,11 @@ class Requester:
                 return str(response.url)
             case _:
                 raise TikTokDownloaderError
+
+    async def request_url_head(self, url: str, ):
+        return await self.client.head(url, )
+
+    async def request_url_get(self, url: str, ):
+        response = await self.client.get(url, )
+        response.raise_for_status()
+        return response

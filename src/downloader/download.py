@@ -42,6 +42,14 @@ __all__ = ["Downloader"]
 
 class Downloader:
     semaphore = Semaphore(MAX_WORKERS)
+    CONTENT_TYPE_MAP = {
+        "image/png": "png",
+        "image/jpeg": "jpg",
+        "image/webp": "webp",
+        "video/mp4": "mp4",
+        "video/quicktime": "mov",
+        "audio/mp4": "m4a"
+    }
 
     def __init__(self, params: "Parameter"):
         self.cleaner = params.CLEANER
@@ -649,5 +657,27 @@ class Downloader:
         self.log.info(f"下载视频作品 {len(count.downloaded_video)} 个")
         self.log.info(f"下载图集作品 {len(count.downloaded_image)} 个")
 
-    def __format_item_name(self, name: str) -> str:
-        pass
+    async def __hand_file(self, url: str, ):
+        async with self.client.head(url, headers=self.headers, ) as response:
+            response.raise_for_status()
+            suffix = self.__extract_type(
+                response.headers.get("Content-Type"))
+            length = response.headers.get(
+                "Content-Length", 0)
+            return length, suffix
+
+    @staticmethod
+    def __get_resume_byte_position(file: Path) -> int:
+        return file.stat().st_size if file.is_file() else 0
+
+    def __update_headers_range(self, file: Path) -> None:
+        self.headers["Range"] = f"bytes={self.__get_resume_byte_position(file)}-"
+
+    def __extract_type(self, content: str) -> str:
+        if not (s := self.CONTENT_TYPE_MAP.get(content)):
+            return self.__unknown_type(content)
+        return s
+
+    def __unknown_type(self, content: str) -> str:
+        self.log.warning(f"未收录的文件类型：{content}")
+        return ""
