@@ -8,6 +8,7 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING
 from typing import Union
 
+from aiofiles import open
 from httpx import HTTPStatusError
 from httpx import RequestError
 from httpx import StreamError
@@ -36,6 +37,7 @@ from src.tools import format_size
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from httpx import AsyncClient
 
 __all__ = ["Downloader"]
 
@@ -48,13 +50,13 @@ class Downloader:
         "image/webp": "webp",
         "video/mp4": "mp4",
         "video/quicktime": "mov",
-        "audio/mp4": "m4a"
+        "audio/mp4": "m4a",
     }
 
     def __init__(self, params: "Parameter"):
         self.cleaner = params.CLEANER
-        self.client = params.client
-        self.client_tiktok = params.client_tiktok
+        self.client: "AsyncClient" = params.client
+        self.client_tiktok: "AsyncClient" = params.client_tiktok
         self.headers = params.headers_download
         self.headers_tiktok = params.headers_download_tiktok
         self.log = params.logger
@@ -227,11 +229,12 @@ class Downloader:
                             data: list[tuple],
                             tasks: list,
                             commands: list,
+                            suffix: str = "flv",
                             ):
         root = self.root.joinpath("Live")
         for i, f, m in data:
             name = self.cleaner.filter_name(
-                f'{i["title"]}{self.split}{i["nickname"]}{self.split}{datetime.now():%Y-%m-%d %H.%M.%S}.flv',
+                f'{i["title"]}{self.split}{i["nickname"]}{self.split}{datetime.now():%Y-%m-%d %H.%M.%S}.{suffix}',
                 inquire=False,
                 default=str(time())[:10],
             )
@@ -242,6 +245,7 @@ class Downloader:
                 actual_root,
                 f'直播 {i["title"]}{self.split}{i["nickname"]}',
                 "0" * 19,
+                suffix,
             ))
             commands.append((
                 m,
@@ -340,15 +344,16 @@ class Downloader:
             item: SimpleNamespace,
             count: SimpleNamespace,
             temp_root: Path,
-            actual_root: Path) -> None:
+            actual_root: Path,
+            suffix: str = "jpeg",
+    ) -> None:
         for index, img in enumerate(
                 item["downloads"].split(" "), start=1):
             if await self.is_downloaded(id_):
                 count.skipped_image.add(id_)
                 self.log.info(f"【图集】{name} 存在下载记录，跳过下载")
-                count.skipped_image.add(id_)
                 break
-            elif self.is_exists(p := actual_root.with_name(f"{name}_{index}.jpeg")):
+            elif self.is_exists(p := actual_root.with_name(f"{name}_{index}.{suffix}")):
                 self.log.info(f"【图集】{name}_{index} 文件已存在，跳过下载")
                 self.log.info(f"文件路径: {p.resolve()}", False)
                 count.skipped_image.add(id_)
@@ -356,10 +361,11 @@ class Downloader:
             tasks.append((
                 img,
                 temp_root.with_name(
-                    f"{name}_{index}.jpeg"),
+                    f"{name}_{index}.{suffix}"),
                 p,
                 f"【图集】{name}_{index}",
                 id_,
+                suffix,
             ))
 
     async def download_video(
@@ -370,20 +376,23 @@ class Downloader:
             item: SimpleNamespace,
             count: SimpleNamespace,
             temp_root: Path,
-            actual_root: Path) -> None:
+            actual_root: Path,
+            suffix: str = "mp4",
+    ) -> None:
         if await self.is_skip(
                 id_, p := actual_root.with_name(
-                    f"{name}.mp4")):
+                    f"{name}.{suffix}")):
             self.log.info(f"【视频】{name} 存在下载记录或文件已存在，跳过下载")
             self.log.info(f"文件路径: {p.resolve()}", False)
             count.skipped_video.add(id_)
             return
         tasks.append((
             item["downloads"],
-            temp_root.with_name(f"{name}.mp4"),
+            temp_root.with_name(f"{name}.{suffix}"),
             p,
             f"【视频】{name}",
             id_,
+            suffix,
         ))
 
     def download_music(
@@ -396,17 +405,20 @@ class Downloader:
             actual_root: Path,
             key: str = "music_url",
             switch: bool = False,
-            **kwargs, ) -> None:
+            suffix: str = "m4a",
+            **kwargs,
+    ) -> None:
         if self.check_deal_music(
                 url := item[key],
-                p := actual_root.with_name(f"{name}.mp3"),
+                p := actual_root.with_name(f"{name}.{suffix}"),
                 switch, ):
             tasks.append((
                 url,
-                temp_root.with_name(f"{name}.mp3"),
+                temp_root.with_name(f"{name}.{suffix}"),
                 p,
                 f"【音乐】{name}",
                 id_,
+                suffix,
             ))
 
     def download_cover(
@@ -417,28 +429,33 @@ class Downloader:
             item: SimpleNamespace,
             temp_root: Path,
             actual_root: Path,
-            **kwargs, ) -> None:
+            original_suffix: str = "jpeg",
+            dynamic_suffix: str = "webp",
+            **kwargs,
+    ) -> None:
         if all((self.original,
                 url := item["origin_cover"],
-                not self.is_exists(p := actual_root.with_name(f"{name}.jpeg"))
+                not self.is_exists(p := actual_root.with_name(f"{name}.{original_suffix}"))
                 )):
             tasks.append((
                 url,
-                temp_root.with_name(f"{name}.jpeg"),
+                temp_root.with_name(f"{name}.{original_suffix}"),
                 p,
                 f"【封面】{name}",
                 id_,
+                original_suffix,
             ))
         if all((self.dynamic,
                 url := item["dynamic_cover"],
-                not self.is_exists(p := actual_root.with_name(f"{name}.webp"))
+                not self.is_exists(p := actual_root.with_name(f"{name}.{dynamic_suffix}"))
                 )):
             tasks.append((
                 url,
-                temp_root.with_name(f"{name}.webp"),
+                temp_root.with_name(f"{name}.{dynamic_suffix}"),
                 p,
                 f"【动图】{name}",
                 id_,
+                dynamic_suffix,
             ))
 
     def check_deal_music(
@@ -458,6 +475,7 @@ class Downloader:
             actual: Path,
             show: str,
             id_: str,
+            suffix: str,
             count: SimpleNamespace,
             progress: Progress,
             headers: dict = None,
@@ -471,47 +489,35 @@ class Downloader:
             self.log.info(f"{show} URL: {url}", False, )
             self.log.info(f"{show} Headers: {headers}", False, )
             try:
+                length, suffix = await self.__hand_file(client, url, headers, suffix, )
+                position = self.__update_headers_range(headers, temp, )
                 async with client.stream(
                         "GET",
                         url,
                         headers=headers, ) as response:
-                    self.log.info(
-                        f"{show} Response URL: {response.url}", False)
-                    self.log.info(
-                        f"{show} Response Code: {response.status_code}", False)
-                    self.log.info(
-                        f"{show} Response Headers: {response.headers}", False)
-                    if not (
-                            content := int(
-                                response.headers.get(
-                                    'content-length',
-                                    0))) and not unknown_size:  # 响应内容大小判断
-                        self.log.warning(f"{show} 响应内容为空")
-                        return False
+                    self._record_response(response, show, length, )
                     response.raise_for_status()
-                    # if response.status_code >= 400:  # 响应码判断
-                    #     self.log.warning(
-                    #         f"{response.url} 响应码异常: {response.status_code}")
-                    #     return False
-                    self.log.info(
-                        f"{show} 文件大小 {format_size(content)}", False, )
-                    if all((
-                            self.max_size,
-                            content,
-                            content > self.max_size,
-                    )):  # 文件下载跳过判断
-                        self.log.info(f"{show} 文件大小超出限制，跳过下载")
-                        return True
-                    return await self.download_file(
-                        temp,
-                        actual,
+                    match self._download_initial_check(
+                        length,
+                        unknown_size,
                         show,
-                        id_,
-                        response,
-                        content,
-                        count,
-                        progress,
-                    )
+                    ):
+                        case 1:
+                            return await self.download_file(
+                                temp,
+                                actual,
+                                show,
+                                id_,
+                                response,
+                                length,
+                                position,
+                                count,
+                                progress,
+                            )
+                        case 0:
+                            return True
+                        case -1:
+                            return False
             except RequestError as e:
                 self.log.warning(f"网络异常: {e}")
                 return False
@@ -531,14 +537,18 @@ class Downloader:
             id_: str,
             response,
             content: int,
+            position: int,
             count: SimpleNamespace,
             progress: Progress) -> bool:
         task_id = progress.add_task(
-            beautify_string(show, self.truncate), total=content or None)
+            beautify_string(show, self.truncate),
+            total=content or None,
+            completed=position,
+        )
         try:
-            with cache.open("wb") as f:
+            async with open(cache, "ab") as f:
                 async for chunk in response.aiter_bytes(self.chunk):
-                    f.write(chunk)
+                    await f.write(chunk)
                     progress.update(task_id, advance=len(chunk))
                 progress.remove_task(task_id)
         except (
@@ -547,7 +557,7 @@ class Downloader:
         ) as e:
             progress.remove_task(task_id)
             self.log.warning(f"{show} 下载中断，错误信息：{e}")
-            self.delete_file(cache)
+            # self.delete_file(cache)
             await self.recorder.delete_id(id_)
             return False
         self.save_file(cache, actual)
@@ -657,21 +667,37 @@ class Downloader:
         self.log.info(f"下载视频作品 {len(count.downloaded_video)} 个")
         self.log.info(f"下载图集作品 {len(count.downloaded_image)} 个")
 
-    async def __hand_file(self, url: str, ):
-        async with self.client.head(url, headers=self.headers, ) as response:
-            response.raise_for_status()
-            suffix = self.__extract_type(
-                response.headers.get("Content-Type"))
-            length = response.headers.get(
-                "Content-Length", 0)
-            return length, suffix
+    def _record_response(self, response, show: str, length: int, ):
+        self.log.info(
+            f"{show} Response URL: {response.url}", False)
+        self.log.info(
+            f"{show} Response Code: {response.status_code}", False)
+        self.log.info(
+            f"{show} Response Headers: {response.headers}", False)
+        self.log.info(
+            f"{show} 文件大小 {format_size(length)}", False, )
+
+    async def __hand_file(self,
+                          client: "AsyncClient",
+                          url: str,
+                          headers: dict,
+                          suffix: str,
+                          ) -> [int, str]:
+        response = await client.head(url, headers=headers, )
+        response.raise_for_status()
+        suffix = self.__extract_type(
+            response.headers.get("Content-Type")) or suffix
+        length = response.headers.get(
+            "Content-Length", 0)
+        return int(length), suffix
 
     @staticmethod
     def __get_resume_byte_position(file: Path) -> int:
         return file.stat().st_size if file.is_file() else 0
 
-    def __update_headers_range(self, file: Path) -> None:
-        self.headers["Range"] = f"bytes={self.__get_resume_byte_position(file)}-"
+    def __update_headers_range(self, headers: dict, file: Path) -> int:
+        headers["Range"] = f"bytes={(p := self.__get_resume_byte_position(file))}-"
+        return p
 
     def __extract_type(self, content: str) -> str:
         if not (s := self.CONTENT_TYPE_MAP.get(content)):
@@ -681,3 +707,21 @@ class Downloader:
     def __unknown_type(self, content: str) -> str:
         self.log.warning(f"未收录的文件类型：{content}")
         return ""
+
+    def _download_initial_check(
+            self,
+            length: int,
+            unknown_size: bool,
+            show: str,
+    ) -> int:
+        if not length and not unknown_size:  # 响应内容大小判断
+            self.log.warning(f"{show} 响应内容为空")
+            return -1  # 执行重试
+        if all((
+                self.max_size,
+                length,
+                length > self.max_size,
+        )):  # 文件下载跳过判断
+            self.log.info(f"{show} 文件大小超出限制，跳过下载")
+            return 0  # 跳过下载
+        return 1  # 继续下载

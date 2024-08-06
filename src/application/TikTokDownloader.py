@@ -355,7 +355,7 @@ class TikTokDownloader:
 
     def close(self):
         self.event.set()
-        self.delete_cache()
+        # self.delete_cache()
         if self.parameter.folder_mode:
             remove_empty_directories(self.parameter.ROOT)
             remove_empty_directories(self.parameter.root)

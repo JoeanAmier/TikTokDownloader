@@ -12,7 +12,7 @@
 </div>
 <br>
 <p>🔥 <b>TikTok 主页/合辑/直播/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/<del>评论</del>/<del>账号</del>/<del>搜索</del>/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；<del>采集抖音作品评论数据</del>；批量下载抖音合集作品；批量下载 TikTok 合辑作品；<del>采集抖音账号详细数据</del>；<del>采集抖音用户 / 作品 / 直播搜索结果</del>；采集抖音热榜数据。</p>
-<p>⭐ Windows 10 及以上用户可前往 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 下载已编译的 exe 程序，开箱即用！</p>
+<p>⭐ 本项目完全免费开源，无任何收费功能，请勿上当受骗！</p>
 <hr>
 
 # 📝 项目功能\(Function\)
@@ -47,12 +47,13 @@
 * ✅ 采集抖音搜索数据
 * ✅ 采集抖音热榜数据
 * ✅ 记录已下载作品 ID
-* ✅ 扫码登陆获取 Cookie
+* ☑️ 扫码登陆获取 Cookie
 * ✅ 从浏览器获取 Cookie
 * ✅ 支持 Web API 调用
 * ✅ 支持多线程下载作品
 * ✅ 文件完整性处理机制
 * ✅ 自定义规则筛选作品
+* ✅ 支持文件断点续传下载
 
 # 💻 程序界面\(Screenshot\)
 
@@ -261,6 +262,7 @@
 * https://github.com/encode/httpx/
 * https://github.com/Textualize/rich
 * https://github.com/omnilib/aiosqlite
+* https://github.com/Tinche/aiofiles
 * https://github.com/thewh1teagle/rookie
 * https://github.com/pyinstaller/pyinstaller
 * https://ffmpeg.org/ffmpeg-all.html
