@@ -683,7 +683,11 @@ class Downloader:
                           headers: dict,
                           suffix: str,
                           ) -> [int, str]:
-        response = await client.head(url, headers=headers, )
+        response = await client.head(
+            url,
+            headers=headers | {
+                "Range": "bytes=0-",
+            }, )
         response.raise_for_status()
         suffix = self.__extract_type(
             response.headers.get("Content-Type")) or suffix
