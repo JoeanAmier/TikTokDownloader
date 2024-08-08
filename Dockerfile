@@ -11,6 +11,6 @@ COPY license /TikTokDownloader/license
 COPY main.py /TikTokDownloader/main.py
 COPY requirements.txt /TikTokDownloader/requirements.txt
 
-RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 CMD ["python", "main.py"]

@@ -95,12 +95,12 @@
 ## 快速入门
 
 <ol>
-<li><b>下载 EXE 程序</b> 或者 <b>配置运行环境</b>
-<ol><b>下载程序运行</b>
-<li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的 EXE 程序压缩包或安装包</li>
-<li>解压或安装后打开程序文件夹，双击运行 <code>main.exe</code></li>
+<li><b>运行可执行文件</b> 或者 <b>配置环境运行</b>
+<ol><b>运行可执行文件</b>
+<li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的可执行文件压缩包</li>
+<li>解压后打开程序文件夹，双击运行 <code>main</code></li>
 </ol>
-<ol><b>通过源码运行</b>
+<ol><b>配置环境运行</b>
 <li>安装不低于 <code>3.12</code> 版本的 <a href="https://www.python.org/">Python</a> 解释器</li>
 <li>下载最新的源码或 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的源码至本地</li>
 <li>运行 <code>python -m venv venv</code> 命令创建虚拟环境（可选）</li>
@@ -217,7 +217,8 @@
 # ✉️ 联系作者\(Contact\)
 
 <ul>
-<li>微信: Downloader_Tools</li>
+<li>作者邮箱：yonglelolu@foxmail.com</li>
+<li>作者微信: Downloader_Tools</li>
 <li>微信公众号: Downloader Tools</li>
 <li><b>Discord 社区</b>: <a href="https://discord.com/invite/ZYtmgKud9Y">点击加入社区</a></li>
 <li>QQ 群聊(使用交流): <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">扫码加入群聊</a></li>

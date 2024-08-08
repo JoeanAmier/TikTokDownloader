@@ -16,12 +16,12 @@
 <hr>
 <h1>快速入门</h1>
 <ol>
-<li><b>下载 EXE 程序</b> 或者 <b>配置运行环境</b>
-<ol><b>下载程序运行</b>
-<li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的 EXE 程序压缩包</li>
-<li>解压后打开程序文件夹，双击运行 <code>main.exe</code></li>
+<li><b>运行可执行文件</b> 或者 <b>配置环境运行</b>
+<ol><b>运行可执行文件</b>
+<li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的可执行文件压缩包</li>
+<li>解压后打开程序文件夹，双击运行 <code>main</code></li>
 </ol>
-<ol><b>通过源码运行</b>
+<ol><b>配置环境运行</b>
 <li>安装不低于 <code>3.12</code> 版本的 <a href="https://www.python.org/">Python</a> 解释器</li>
 <li>下载最新的源码或 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的源码至本地</li>
 <li>运行 <code>python -m venv venv</code> 命令创建虚拟环境（可选）</li>
