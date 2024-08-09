@@ -489,12 +489,13 @@ class Downloader:
             self.log.info(f"{show} URL: {url}", False, )
             self.log.info(f"{show} Headers: {headers}", False, )
             try:
-                length, suffix = await self.__hand_file(client, url, headers, suffix, )
+                length, suffix = await self.__head_file(client, url, headers, suffix, )
                 position = self.__update_headers_range(headers, temp, )
                 async with client.stream(
                         "GET",
                         url,
-                        headers=headers, ) as response:
+                        headers=headers,
+                ) as response:
                     self._record_response(response, show, length, )
                     response.raise_for_status()
                     match self._download_initial_check(
@@ -573,7 +574,7 @@ class Downloader:
             tiktok: bool,
             *args,
             **kwargs, ) -> dict:
-        return headers or (self.headers_tiktok if tiktok else self.headers)
+        return headers.copy() or (self.headers_tiktok if tiktok else self.headers).copy()
 
     @staticmethod
     def add_count(type_: str, id_: str, count: SimpleNamespace):
@@ -677,7 +678,7 @@ class Downloader:
         self.log.info(
             f"{show} 文件大小 {format_size(length)}", False, )
 
-    async def __hand_file(self,
+    async def __head_file(self,
                           client: "AsyncClient",
                           url: str,
                           headers: dict,
@@ -685,9 +686,8 @@ class Downloader:
                           ) -> [int, str]:
         response = await client.head(
             url,
-            headers=headers | {
-                "Range": "bytes=0-",
-            }, )
+            headers=headers,
+        )
         response.raise_for_status()
         suffix = self.__extract_type(
             response.headers.get("Content-Type")) or suffix
