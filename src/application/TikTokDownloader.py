@@ -301,7 +301,7 @@ class TikTokDownloader:
         if not self.config["Record"]:
             self.console.print("作品下载记录功能已禁用！", style=WARNING)
             return
-        self.recorder.delete_ids(self.console.input("请输入需要删除的作品 ID："))
+        await self.recorder.delete_ids(self.console.input("请输入需要删除的作品 ID："))
         self.console.print("删除作品下载记录成功！", style=INFO)
 
     async def check_settings(self, restart=True):
