@@ -4,6 +4,7 @@ from pathlib import Path
 from platform import system
 from time import time
 from types import SimpleNamespace
+from typing import Callable
 from typing import TYPE_CHECKING
 from typing import Union
 
@@ -369,23 +370,39 @@ class TikTok:
                 continue
             await self.__account_detail_handle(links, True, *args, )
 
-    async def account_detail_txt(self, *args, ):
-        if not (url := self.txt_inquire()):
-            return
-        links = await self.links.run(url, "user", )
-        if not links:
-            self.logger.warning("从文本文档提取账号 sec_user_id 失败")
-            return
-        await self.__account_detail_handle(links, False, *args, )
+    async def account_detail_txt(self, ):
+        await self._read_from_txt(
+            tiktok=False,
+            type_="user",
+            error="从文本文档提取账号 sec_user_id 失败",
+            callback=self.__account_detail_handle,
+        )
 
-    async def account_detail_txt_tiktok(self, *args, ):
+    async def _read_from_txt(
+            self,
+            tiktok=False,
+            type_: str = ...,
+            error: str = ...,
+            callback: Callable = ...,
+            *args,
+            **kwargs,
+    ):
         if not (url := self.txt_inquire()):
             return
-        links = await self.links_tiktok.run(url, "user")
+        link_obj = self.links_tiktok if tiktok else self.links
+        links = await link_obj.run(url, type_, )
         if not links:
-            self.logger.warning("从文本文档提取账号 sec_user_id 失败")
+            self.logger.warning(error)
             return
-        await self.__account_detail_handle(links, True, *args, )
+        await callback(links, tiktok, *args, **kwargs, )
+
+    async def account_detail_txt_tiktok(self, ):
+        await self._read_from_txt(
+            tiktok=True,
+            type_="user",
+            error="从文本文档提取账号 sec_user_id 失败",
+            callback=self.__account_detail_handle,
+        )
 
     async def __account_detail_handle(
             self,
