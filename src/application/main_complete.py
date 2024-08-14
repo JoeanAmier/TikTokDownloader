@@ -167,7 +167,7 @@ class TikTok:
             ("批量下载账号作品(抖音)", self.account_acquisition_interactive,),
             ("批量下载链接作品(抖音)", self.detail_interactive,),
             ("获取直播推流地址(抖音)", self.live_interactive,),
-            # ("采集作品评论数据(抖音)", self.comment_interactive,),
+            ("采集作品评论数据(抖音)", self.comment_interactive,),
             ("批量下载合集作品(抖音)", self.mix_interactive,),
             # ("采集账号详细数据(抖音)", self.disable_function,),
             # ("采集搜索结果数据(抖音)", self.disable_function,),
@@ -672,7 +672,11 @@ class TikTok:
         )
 
     async def detail_interactive(self, select="", ):
-        await self.__detail_secondary_menu(self.__function_detail, select)
+        await self.__secondary_menu(
+            "请选择作品链接来源",
+            self.__function_detail,
+            select,
+        )
         self.logger.info("已退出批量下载链接作品(抖音)模式")
 
     async def detail_interactive_tiktok(self, select="", ):
@@ -695,24 +699,34 @@ class TikTok:
             if n in range(len(menu)):
                 await menu[n][1](record)
 
-    async def __detail_inquire(self, record, tiktok=False, ):
-        while url := self._inquire_input("作品"):
-            ids = await self.links_tiktok.run(url) if tiktok else await self.links.run(url)
-            if not any(ids):
-                self.logger.warning(f"{url} 提取作品 ID 失败")
-                continue
-            self.console.print(f"共提取到 {len(ids)} 个作品，开始处理！")
-            await self.input_links_acquisition(tiktok, ids, record)
+    async def __detail_inquire(self, tiktok=False, ):
+        root, params, logger = self.record.run(self.parameter)
+        link_obj = self.links_tiktok if tiktok else self.links
+        async with logger(root, console=self.console, **params) as record:
+            while url := self._inquire_input("作品"):
+                ids = await link_obj.run(url)
+                if not any(ids):
+                    self.logger.warning(f"{url} 提取作品 ID 失败")
+                    continue
+                self.console.print(f"共提取到 {len(ids)} 个作品，开始处理！")
+                await self._handle_detail(ids, tiktok, record, )
 
     async def __detail_inquire_tiktok(self, record, tiktok=True, ):
-        await self.__detail_inquire(record, tiktok)
+        await self.__detail_inquire(tiktok, )
 
-    async def __detail_txt(self, record, tiktok=False, ):
-        if ids := await self.__read_detail_txt():
-            await self.input_links_acquisition(tiktok, ids, record)
+    async def __detail_txt(self, tiktok=False, ):
+        root, params, logger = self.record.run(self.parameter)
+        async with logger(root, console=self.console, **params) as record:
+            await self._read_from_txt(
+                tiktok,
+                "detail",
+                "从文本文档提取作品 ID 失败",
+                self._handle_detail,
+                record=record,
+            )
 
-    async def __detail_txt_tiktok(self, record, tiktok=True, ):
-        await self.__detail_txt(record, tiktok)
+    async def __detail_txt_tiktok(self, tiktok=True, ):
+        await self.__detail_txt(tiktok=tiktok, )
 
     async def __read_detail_txt(self):
         if not (url := self.txt_inquire()):
@@ -724,33 +738,47 @@ class TikTok:
         self.console.print(f"共提取到 {len(ids)} 个作品，开始处理！")
         return ids
 
-    async def input_links_acquisition(
+    async def _handle_detail(
+            self,
+            ids: list[str],
+            tiktok: bool,
+            record,
+            api=False,
+            source=False,
+            cookie: str = None,
+            proxy: str = None,
+    ):
+        obj = DetailTikTok if tiktok else Detail
+        return await self.__handle_detail(
+            tiktok,
+            obj,
+            ids,
+            record,
+            api=api,
+            source=source,
+            cookie=cookie,
+            proxy=proxy,
+        )
+
+    async def __handle_detail(
             self,
             tiktok: bool,
+            request_obj: Callable,
             ids: list[str],
             record,
             api=False,
             source=False,
             cookie: str = None,
-            proxy: str = None, ):
-        if tiktok:
-            detail_data = [
-                await DetailTikTok(
-                    self.parameter,
-                    cookie,
-                    proxy,
-                    i,
-                ).run() for i in ids]
-        else:
-            detail_data = [
-                await Detail(
-                    self.parameter,
-                    cookie,
-                    proxy,
-                    i,
-                ).run() for i in ids]
+            proxy: str = None,
+    ):
+        detail_data = [
+            await request_obj(
+                self.parameter,
+                cookie,
+                proxy,
+                i,
+            ).run() for i in ids]
         if not any(detail_data):
-            # self.logger.warning("获取作品数据失败")
             return None
         if source:
             return detail_data
@@ -898,7 +926,11 @@ class TikTok:
 
     @check_storage_format
     async def comment_interactive(self, select="", ):
-        await self.__comment_interactive(self.__function_comment, select, )
+        await self.__secondary_menu(
+            "请选择作品链接来源",
+            self.__function_comment,
+            select,
+        )
         self.logger.info("已退出采集作品评论数据(抖音)模式")
 
     async def __comment_interactive(self, function: tuple | list = ..., select="", *args, **kwargs):
@@ -964,10 +996,20 @@ class TikTok:
                         self.logger.warning("采集评论数据失败")
 
     async def mix_interactive(self, select="", ):
-        await self.__mix_interactive(self.__function_mix, select, False, )
+        await self.__secondary_menu(
+            "请选择合集链接来源",
+            self.__function_mix,
+            select,
+        )
+        self.logger.info("已退出批量下载合集作品(抖音)模式")
 
     async def mix_interactive_tiktok(self, select="", ):
-        await self.__mix_interactive(self.__function_mix_tiktok, select, True, )
+        await self.__secondary_menu(
+            "请选择合集链接来源",
+            self.__function_mix,
+            select,
+        )
+        self.logger.info("已退出批量下载合集作品(TikTok)模式")
 
     async def __mix_interactive(self, function, select="", tiktok=False, *args, **kwargs):
         root, params, logger = self.record.run(self.parameter, type_="mix")
