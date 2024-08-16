@@ -28,7 +28,11 @@ class FFMPEG:
     def download(self, data: list[tuple], proxy, timeout, user_agent):
         for u, p in data:
             command = self.__generate_command(
-                u, p, proxy, timeout, user_agent)
+                u,
+                p,
+                proxy,
+                user_agent,
+            )
             Popen(command, shell=self.shell)
 
     def __generate_command(
@@ -36,27 +40,29 @@ class FFMPEG:
             url,
             file,
             proxy,
-            timeout,
             user_agent) -> str:
         command = self.command.copy()
         command.extend([
             self.path,
             "-hide_banner",
-            "-log_level", "error",
+            "-rw_timeout", f"{30 * 1000 * 1000}",
+            "-loglevel", "warning",
             "-protocol_whitelist", "rtmp,crypto,file,http,https,tcp,tls,udp,rtp",
+            "-analyzeduration", f"{10 * 1000 * 1000}",
+            "-probesize", f"{10 * 1000 * 1000}",
             "-fflags", "+discardcorrupt",
-            "-timeout", f"{timeout * 1000 * 1000}",
             "-user_agent", f'"{user_agent}"',
             "-i", f'"{url}"',
-            "-bufsize", "5120k",
+            "-bufsize", "10240k",
             "-map", "0",
             "-c:v", "copy",
             "-c:a", "copy",
             "-sn", "-dn",
-            "-reconnect_delay_max", "15",
+            "-reconnect_delay_max", "60",
             "-reconnect_streamed", "-reconnect_at_eof",
-            "-max_muxing_queue_size", "64",
+            "-max_muxing_queue_size", "128",
             "-correct_ts_overflow", "1",
+            "-f", "mp4",
         ])
         if proxy:
             for insert_index, item in enumerate(
