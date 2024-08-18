@@ -269,5 +269,8 @@
 * https://github.com/Tinche/aiofiles
 * https://github.com/thewh1teagle/rookie
 * https://github.com/pyinstaller/pyinstaller
+* https://foss.heptapod.net/openpyxl/openpyxl
+* https://github.com/carpedm20/emoji/
+* https://github.com/lxml/lxml
 * https://ffmpeg.org/ffmpeg-all.html
 * https://html5up.net/hyperspace
