@@ -167,7 +167,7 @@ class TikTok:
             ("批量下载账号作品(抖音)", self.account_acquisition_interactive,),
             ("批量下载链接作品(抖音)", self.detail_interactive,),
             ("获取直播推流地址(抖音)", self.live_interactive,),
-            ("采集作品评论数据(抖音)", self.comment_interactive,),
+            # ("采集作品评论数据(抖音)", self.comment_interactive,),
             ("批量下载合集作品(抖音)", self.mix_interactive,),
             # ("采集账号详细数据(抖音)", self.disable_function,),
             # ("采集搜索结果数据(抖音)", self.disable_function,),
@@ -251,15 +251,14 @@ class TikTok:
     def __summarize_results(self, count: SimpleNamespace, name="账号"):
         time_ = time() - count.time
         self.logger.info(
-            f"程序共处理 {
-            count.success +
-            count.failed} 个{name}，成功 {
-            count.success} 个，失败 {
-            count.failed} 个，耗时 {
-            int(time_ //
-                60)} 分钟 {
-            int(time_ %
-                60)} 秒")
+            "程序共处理 {0} 个{1}，成功 {2} 个，失败 {3} 个，耗时 {4} 分钟 {5} 秒".format(
+                count.success + count.failed,
+                name,
+                count.success,
+                count.failed,
+                int(time_ // 60),
+                int(time_ % 60),
+            ))
 
     async def account_acquisition_interactive(
             self,
@@ -447,29 +446,16 @@ class TikTok:
             **kwargs,
     ):
         self.logger.info(f"开始处理第 {num} 个账号" if num else "开始处理账号")
-        if tiktok:
-            acquirer = AccountTikTok(
-                self.parameter,
-                cookie,
-                proxy,
-                sec_user_id,
-                tab,
-                earliest,
-                latest,
-                pages,
-            )
-        else:
-            acquirer = Account(
-                self.parameter,
-                cookie,
-                proxy,
-                sec_user_id,
-                tab,
-                earliest,
-                latest,
-                pages,
-            )
-        account_data, earliest, latest = await acquirer.run()
+        acquirer = self._get_account_data_tiktok if tiktok else self._get_account_data
+        account_data, earliest, latest = await acquirer(
+            cookie=cookie,
+            proxy=proxy,
+            sec_user_id=sec_user_id,
+            tab=tab,
+            earliest=earliest,
+            latest=latest,
+            pages=pages,
+        )
         if not any(account_data):
             return None
         if source:
@@ -489,6 +475,7 @@ class TikTok:
                     proxy,
                     sec_user_id=sec_user_id,
             )):
+                self.logger.warning(f"{sec_user_id} 获取用户信息失败")
                 return
             account_data.append(info)
         return await self._batch_process_detail(
@@ -502,6 +489,52 @@ class TikTok:
             mode=tab,
         )
 
+    async def _get_account_data(
+            self,
+            cookie: str = None,
+            proxy: str = None,
+            sec_user_id: Union[str] = ...,
+            tab: str = "post",
+            earliest: str = "",
+            latest: str = "",
+            pages: int = None,
+            *args,
+            **kwargs,
+    ):
+        return await Account(
+            self.parameter,
+            cookie,
+            proxy,
+            sec_user_id,
+            tab,
+            earliest,
+            latest,
+            pages,
+        ).run()
+
+    async def _get_account_data_tiktok(
+            self,
+            cookie: str = None,
+            proxy: str = None,
+            sec_user_id: Union[str] = ...,
+            tab: str = "post",
+            earliest: str = "",
+            latest: str = "",
+            pages: int = None,
+            *args,
+            **kwargs,
+    ):
+        return await AccountTikTok(
+            self.parameter,
+            cookie,
+            proxy,
+            sec_user_id,
+            tab,
+            earliest,
+            latest,
+            pages,
+        ).run()
+
     async def get_user_info_data(
             self,
             tiktok=False,
@@ -509,29 +542,47 @@ class TikTok:
             proxy: str = None,
             unique_id: Union[str] = "",
             sec_user_id: Union[str] = "",
-            *args,
-            **kwargs,
     ):
         if tiktok:
-            info = InfoTikTok(
-                self.parameter,
+            return await self._get_info_data_tiktok(
                 cookie,
                 proxy,
                 unique_id,
                 sec_user_id,
-                *args,
-                **kwargs,
             )
-        else:
-            info = Info(
-                self.parameter,
-                cookie,
-                proxy,
-                sec_user_id,
-                *args,
-                **kwargs,
-            )
-        return await info.run()
+        return await self._get_info_data(
+            cookie,
+            proxy,
+            sec_user_id,
+        )
+
+    async def _get_info_data(
+            self,
+            cookie: str = None,
+            proxy: str = None,
+            sec_user_id: Union[str, list[str]] = ...,
+    ):
+        return await Info(
+            self.parameter,
+            cookie,
+            proxy,
+            sec_user_id,
+        ).run()
+
+    async def _get_info_data_tiktok(
+            self,
+            cookie: str = None,
+            proxy: str = None,
+            unique_id: Union[str] = "",
+            sec_user_id: Union[str] = "",
+    ):
+        return await InfoTikTok(
+            self.parameter,
+            cookie,
+            proxy,
+            unique_id,
+            sec_user_id,
+        ).run()
 
     async def _batch_process_detail(self,
                                     data,
@@ -1262,16 +1313,16 @@ class TikTok:
             await self._deal_user_data(root, params, logger, [i for i in users if i])
 
     def txt_inquire(self) -> str:
-        path = self.console.input("请输入文本文档路径：")
-        if not (t := Path(path.replace("\"", ""))).is_file():
-            self.console.print(f"{path} 文件不存在！")
-            return ""
-        try:
-            with t.open("r", encoding=self.ENCODE) as f:
-                return f.read()
-        except UnicodeEncodeError as e:
-            self.logger.warning(f"{path} 文件读取异常: {e}")
-            return ""
+        if path := self.console.input("请输入文本文档路径："):
+            if (t := Path(path.replace("\"", ""))).is_file():
+                try:
+                    with t.open("r", encoding=self.ENCODE) as f:
+                        return f.read()
+                except UnicodeEncodeError as e:
+                    self.logger.warning(f"{path} 文件读取异常: {e}")
+            else:
+                self.console.print(f"{path} 文件不存在！")
+        return ""
 
     async def user_txt(self, root, params, logger):
         if not (url := self.txt_inquire()):
