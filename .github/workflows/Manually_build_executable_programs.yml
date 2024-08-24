@@ -1,0 +1,44 @@
+name: Manually build executable programs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-latest, windows-latest, macos-13 ]
+
+    steps:
+      - name: 签出存储库
+        uses: actions/checkout@v3
+
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 安装依赖项
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
+
+      - name: 构建 Win 可执行文件
+        if: runner.os == 'Windows'
+        run: |
+          pyinstaller --icon=./static/images/TikTokDownloader.ico --add-data "static:static" --add-data "templates:templates" main.py
+        shell: pwsh
+
+      - name: 构建 Mac 可执行文件
+        if: runner.os == 'macOS'
+        run: |
+          pyinstaller --icon=./static/images/TikTokDownloader.icns --add-data "static:static" --add-data "templates:templates" main.py
+
+      - name: 上传文件
+        uses: actions/upload-artifact@v4
+        with:
+          name: TikTokDownloader_${{ runner.os }}_${{ runner.arch }}
+          path: dist/main/
