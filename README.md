@@ -97,6 +97,7 @@
 ## 快速入门
 
 <p>⭐ Mac OS、Windows 10 及以上用户可前往 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 下载已编译的程序，开箱即用！</p>
+<p><strong>注意：Mac OS 平台可执行文件 <code>main</code> 可能需要从终端命令行启动；受设备限制，Mac OS 平台可执行文件尚未经过测试，无法保证可用性！</strong></p>
 <hr>
 <ol>
 <li><b>运行可执行文件</b> 或者 <b>配置环境运行</b>
