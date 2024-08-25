@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING
 from typing import Type
 
+from httpx import HTTPStatusError
 from httpx import RequestError
 from httpx import TimeoutException
 from httpx import get
@@ -363,13 +364,17 @@ class Parameter:
             response = get(
                 url,
                 headers=self.HEADERS,
+                follow_redirects=True,
                 **kwarg, )
             response.raise_for_status()
             self.logger.info(f"代理 {proxy} 测试成功")
             return kwarg
         except TimeoutException:
             self.logger.warning(f"代理 {proxy} 测试超时")
-        except RequestError as e:
+        except (
+                RequestError,
+                HTTPStatusError,
+        ) as e:
             self.logger.warning(f"代理 {proxy} 测试失败：{e}")
         return {"proxies": self.NO_PROXY}
 

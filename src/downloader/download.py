@@ -573,8 +573,11 @@ class Downloader:
             headers: dict,
             tiktok: bool,
             *args,
-            **kwargs, ) -> dict:
-        return headers.copy() or (self.headers_tiktok if tiktok else self.headers).copy()
+            **kwargs,
+    ) -> dict:
+        return (
+            headers or self.headers_tiktok if tiktok else self.headers
+        ).copy()
 
     @staticmethod
     def add_count(type_: str, id_: str, count: SimpleNamespace):
