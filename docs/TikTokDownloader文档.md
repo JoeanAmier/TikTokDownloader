@@ -127,6 +127,10 @@
 <td align="center">合辑</td>
 </tr>
 <tr>
+<td align="center"><code>https://www.tiktok.com/@TikTok号/collection/合辑信息</code></td>
+<td align="center">合辑</td>
+</tr>
+<tr>
 <td align="center"><code>https://www.tiktok.com/@TikTok号/video/作品ID</code></td>
 <td align="center">账号、视频、图集</td>
 </tr>
@@ -900,6 +904,7 @@ https://www.douyin.com/note/123456789
 <ul>
 <li><code>https://vt.tiktok.com/分享码/</code></li>
 <li><code>https://www.tiktok.com/@TikTok号/playlist/合辑信息</code></li>
+<li><code>https://www.tiktok.com/@TikTok号/collection/合辑信息</code></li>
 </ul>
 <p>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
 <p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会提示用户输入临时的合集标识，以便程序继续处理合集。</p>

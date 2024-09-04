@@ -293,64 +293,59 @@ class TikTok:
         if n in range(len(function)):
             await function[n][1](*args, **kwargs, )
 
-    async def account_detail_batch(
+    async def account_detail_batch(self, *args, ):
+        await self.__account_detail_batch(
+            self.accounts,
+            "accounts_urls",
+            False,
+        )
+
+    async def account_detail_batch_tiktok(self, *args, ):
+        await self.__account_detail_batch(
+            self.accounts_tiktok,
+            "accounts_urls_tiktok",
+            True,
+        )
+
+    async def __account_detail_batch(
             self,
-            *args,
-    ):
+            accounts: list[SimpleNamespace],
+            params_name: str,
+            tiktok: bool,
+    ) -> None:
         count = SimpleNamespace(time=time(), success=0, failed=0)
-        self.logger.info(f"共有 {len(self.accounts)} 个账号的作品等待下载")
-        for index, data in enumerate(self.accounts, start=1):
+        self.logger.info(f"共有 {len(accounts)} 个账号的作品等待下载")
+        for index, data in enumerate(accounts, start=1):
             if hasattr(data, "enable") and not data.enable:
                 continue
-            if not (sec_user_id := await self.check_sec_user_id(data.url)):
+            if not (sec_user_id := await self.check_sec_user_id(
+                    data.url,
+                    tiktok,
+            )):
                 self.logger.warning(
-                    f"配置文件 accounts_urls 参数"
+                    f"配置文件 {params_name} 参数"
                     f"第 {index} 条数据的 url {data.url} 错误，提取 sec_user_id 失败")
                 count.failed += 1
                 continue
             if not await self.deal_account_detail(
                     index,
                     **vars(data) | {"sec_user_id": sec_user_id},
+                    tiktok=tiktok,
             ):
                 count.failed += 1
-                if index != len(self.accounts) and failure_handling():
-                    continue
-                break
+                continue
             # break  # 调试代码
             count.success += 1
-            if index != len(self.accounts):
+            if index != len(accounts):
                 await suspend(index, self.console)
         self.__summarize_results(count)
 
-    async def account_detail_batch_tiktok(self, *args, ):
-        count = SimpleNamespace(time=time(), success=0, failed=0)
-        self.logger.info(f"共有 {len(self.accounts_tiktok)} 个账号的作品等待下载")
-        for index, data in enumerate(self.accounts_tiktok, start=1):
-            if hasattr(data, "enable") and not data.enable:
-                continue
-            if not (sec_user_id := await self.links_tiktok.run(data.url, "user")):
-                self.logger.warning(
-                    f"配置文件 accounts_urls_tiktok 参数"
-                    f"第 {index} 条数据的 url {data.url} 错误，提取 sec_user_id 失败")
-                count.failed += 1
-                continue
-            if not await self.deal_account_detail(
-                    index,
-                    **vars(data) | {"sec_user_id": sec_user_id[0]},
-                    tiktok=True,
-            ):
-                count.failed += 1
-                if index != len(self.accounts_tiktok) and failure_handling():
-                    continue
-                break
-            # break  # 调试代码
-            count.success += 1
-            if index != len(self.accounts_tiktok):
-                await suspend(index, self.console)
-        self.__summarize_results(count)
-
-    async def check_sec_user_id(self, sec_user_id: str) -> str:
-        sec_user_id = await self.links.run(sec_user_id, "user")
+    async def check_sec_user_id(self, sec_user_id: str, tiktok=False, ) -> str:
+        match tiktok:
+            case True:
+                sec_user_id = await self.links_tiktok.run(sec_user_id, "user")
+            case False:
+                sec_user_id = await self.links.run(sec_user_id, "user")
         return sec_user_id[0] if len(sec_user_id) > 0 else ""
 
     async def account_detail_inquire(self, *args, ):
@@ -420,9 +415,7 @@ class TikTok:
                     **kwargs,
             ):
                 count.failed += 1
-                if index != len(links) and failure_handling():
-                    continue
-                break
+                continue
             count.success += 1
             if index != len(links):
                 await suspend(index, self.console)
@@ -731,7 +724,10 @@ class TikTok:
         self.logger.info("已退出批量下载链接作品(抖音)模式")
 
     async def detail_interactive_tiktok(self, select="", ):
-        await self.__detail_secondary_menu(self.__function_detail_tiktok, select)
+        await self.__detail_secondary_menu(
+            self.__function_detail_tiktok,
+            select,
+        )
         self.logger.info("已退出批量下载链接作品(TikTok)模式")
 
     async def __detail_secondary_menu(self, menu, select="", *args, **kwargs):
@@ -762,7 +758,7 @@ class TikTok:
                 self.console.print(f"共提取到 {len(ids)} 个作品，开始处理！")
                 await self._handle_detail(ids, tiktok, record, )
 
-    async def __detail_inquire_tiktok(self, record, tiktok=True, ):
+    async def __detail_inquire_tiktok(self, tiktok=True, ):
         await self.__detail_inquire(tiktok, )
 
     async def __detail_txt(self, tiktok=False, ):
@@ -1057,7 +1053,7 @@ class TikTok:
     async def mix_interactive_tiktok(self, select="", ):
         await self.__secondary_menu(
             "请选择合集链接来源",
-            self.__function_mix,
+            self.__function_mix_tiktok,
             select,
         )
         self.logger.info("已退出批量下载合集作品(TikTok)模式")
@@ -1074,26 +1070,26 @@ class TikTok:
     def _generate_mix_params(mix: bool, id_: str) -> dict:
         return {"mix_id": id_, } if mix else {"detail_id": id_, }
 
-    async def mix_inquire(self, root, params, logger):
+    async def mix_inquire(self, ):
         while url := self._inquire_input("合集或作品"):
             mix_id, ids = await self.links.run(url, type_="mix")
             if not ids:
                 self.logger.warning(f"{url} 获取作品 ID 或合集 ID 失败")
                 continue
-            await self.__mix_handle(root, params, logger, mix_id, ids)
+            await self.__mix_handle(mix_id, ids)
 
-    async def mix_inquire_tiktok(self, root, params, logger):
+    async def mix_inquire_tiktok(self, ):
         while url := self._inquire_input("合集或作品"):
             _, ids, title = await self.links_tiktok.run(url, type_="mix")
             if not ids:
                 self.logger.warning(f"{url} 获取合集 ID 失败")
                 continue
-            await self.__mix_handle(root, params, logger, True, ids, True, title, )
+            await self.__mix_handle(True, ids, True, title, )
 
     @check_cookie_state(tiktok=False)
-    async def mix_collection(self, root, params, logger):
+    async def mix_collection(self, ):
         if id_ := await self.mix_inquire_collection():
-            await self.__mix_handle(root, params, logger, True, id_)
+            await self.__mix_handle(True, id_)
 
     async def mix_inquire_collection(self) -> list[str]:
         data = await CollectsMix(self.parameter).run()
@@ -1125,29 +1121,26 @@ class TikTok:
             self.console.print(f"{text}序号输入错误！", style=WARNING)
             return []
 
-    async def mix_txt(self, root, params, logger):
+    async def mix_txt(self, ):
         if not (url := self.txt_inquire()):
             return
         mix_id, ids = await self.links.run(url, type_="mix")
         if not ids:
             self.logger.warning("从文本文档提取作品 ID 或合集 ID 失败")
             return
-        await self.__mix_handle(root, params, logger, mix_id, ids)
+        await self.__mix_handle(mix_id, ids)
 
-    async def mix_txt_tiktok(self, root, params, logger):
+    async def mix_txt_tiktok(self, ):
         if not (url := self.txt_inquire()):
             return
         _, ids, title = await self.links_tiktok.run(url, type_="mix")
         if not ids:
             self.logger.warning("从文本文档提取合集 ID 失败")
             return
-        await self.__mix_handle(root, params, logger, True, ids, True, title, )
+        await self.__mix_handle(True, ids, True, title, )
 
     async def __mix_handle(
             self,
-            root,
-            params,
-            logger,
             mix_id: bool,
             ids: list[str],
             tiktok=False,
@@ -1156,9 +1149,6 @@ class TikTok:
         count = SimpleNamespace(time=time(), success=0, failed=0)
         for index, i in enumerate(ids, start=1):
             if not await self._deal_mix_detail(
-                    root,
-                    params,
-                    logger,
                     mix_id,
                     i,
                     num=index,
@@ -1174,7 +1164,7 @@ class TikTok:
                 await suspend(index, self.console)
         self.__summarize_results(count, "合集")
 
-    async def mix_batch(self, root, params, logger):
+    async def mix_batch(self, ):
         count = SimpleNamespace(time=time(), success=0, failed=0)
         for index, data in enumerate(self.mix, start=1):
             if hasattr(data, "enable") and not data.enable:
@@ -1187,13 +1177,11 @@ class TikTok:
                 count.failed += 1
                 continue
             if not await self._deal_mix_detail(
-                    root,
-                    params,
-                    logger,
                     mix_id,
                     id_,
                     data.mark,
-                    index):
+                    index,
+            ):
                 count.failed += 1
                 if index != len(self.mix) and failure_handling():
                     continue
@@ -1203,7 +1191,7 @@ class TikTok:
                 await suspend(index, self.console)
         self.__summarize_results(count, "合集")
 
-    async def mix_batch_tiktok(self, root, params, logger):
+    async def mix_batch_tiktok(self, ):
         count = SimpleNamespace(time=time(), success=0, failed=0)
         for index, data in enumerate(self.mix_tiktok, start=1):
             if hasattr(data, "enable") and not data.enable:
@@ -1217,9 +1205,6 @@ class TikTok:
                 continue
             id_, title = ids[0], title[0]
             if not await self._deal_mix_detail(
-                    root,
-                    params,
-                    logger,
                     True,
                     id_,
                     data.mark,
@@ -1237,9 +1222,6 @@ class TikTok:
         self.__summarize_results(count, "合集")
 
     async def _deal_mix_detail(self,
-                               root,
-                               params,
-                               logger,
                                mix_id: bool = None,
                                id_: str = None,
                                mark="",
@@ -1274,9 +1256,6 @@ class TikTok:
                 mix_data
                 if source
                 else await self._batch_process_detail(
-                    root,
-                    params,
-                    logger,
                     mix_data,
                     mode="mix",
                     mix_id=mix_obj.mix_id,
