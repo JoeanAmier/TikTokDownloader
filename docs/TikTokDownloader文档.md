@@ -703,7 +703,6 @@ https://www.douyin.com/note/123456789
 <li>设置平台参数更新间隔</li>
 <li>设置彩色交互提示颜色</li>
 <li>设置请求数据延时间隔</li>
-<li>设置获取数据失败时的处理策略</li>
 <li>设置自定义作品筛选规则</li>
 <li>设置分批获取数据策略</li>
 <li>设置服务器模式参数验证</li>
@@ -734,7 +733,6 @@ https://www.douyin.com/note/123456789
 <p>如果需要大批量采集账号作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
 <p><b>批量下载账号喜欢作品时需要使用已登录的 Cookie，否则程序无法正常获取账号消息！</b></p>
 <p>如果当前账号昵称或账号标识不是有效的文件夹名称时，程序会提示用户输入临时的账号标识，以便程序继续处理账号。</p>
-<p>处理多个账号时，如果某个账号获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/custom/function.py</code> 文件修改功能）</p>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
 <h3>批量下载链接作品(抖音)</h3>
 <ol>
@@ -810,7 +808,6 @@ https://www.douyin.com/note/123456789
 </ul>
 <p>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
 <p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会提示用户输入临时的合集标识，以便程序继续处理合集。</p>
-<p>处理多个合集时，如果某个合集获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/custom/function.py</code> 文件修改功能）</p>
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
 <h3>采集账号详细数据(抖音)</h3>
 <p><b><code>5.4</code> 版本将会暂时移除该功能，后续版本可能重新开放！</b></p>
@@ -881,7 +878,6 @@ https://www.douyin.com/note/123456789
 </ul>
 <p>如果需要大批量采集账号作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
 <p>如果当前账号昵称或账号标识不是有效的文件夹名称时，程序会提示用户输入临时的账号标识，以便程序继续处理账号。</p>
-<p>处理多个账号时，如果某个账号获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/custom/function.py</code> 文件修改功能）</p>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
 <h3>批量下载链接作品(TikTok)</h3>
 <ol>
@@ -908,7 +904,6 @@ https://www.douyin.com/note/123456789
 </ul>
 <p>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
 <p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会提示用户输入临时的合集标识，以便程序继续处理合集。</p>
-<p>处理多个合集时，如果某个合集获取数据失败，程序会询问用户是否继续处理（可编辑 <code>src/custom/function.py</code> 文件修改功能）</p>
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
 <h3>获取直播推流地址(TikTok)</h3>
 <p>输入直播链接，不支持已结束的直播。</p>

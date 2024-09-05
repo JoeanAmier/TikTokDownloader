@@ -65,7 +65,7 @@ class Cleaner:
     def filter_name(
             self,
             text: str,
-            inquire=True,
+            inquire=False,
             default: str = "") -> str:
         """过滤文件夹名称中的非法字符"""
         text = text.replace(":", ".")
@@ -73,6 +73,8 @@ class Cleaner:
         text = self.filter(text)
 
         text = replace_emoji(text)
+
+        text = self.clear_spaces(text)
 
         text = text.strip().strip(".")
 

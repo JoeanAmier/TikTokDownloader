@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 
 from src.custom import condition_filter
 from src.tools import TikTokDownloaderError
+from src.tools import random_string
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -527,84 +528,80 @@ class Extractor:
                     data,
                     "nickname",
                     "已注销账号"),
-                inquire=False,
                 default="无效账号昵称", )
             container.cache["nickname"] = name
             container.cache["mark"] = name
 
     def preprocessing_data(self,
-                           data: list[dict],
+                           data: list[dict] | dict,
                            tiktok: bool = False,
-                           mode: str = "info",
+                           mode: str = ...,
                            mark: str = "",
                            user_id: str = "",
                            mix_id: str = "",
                            mix_title: str = "",
                            collect_id: str = "",
                            collect_name: str = "",
-                           ) -> tuple:
-        match mode:
-            case "post":
-                item = self.__select_item(
-                    data,
-                    user_id,
-                    (self.extract_params_tiktok if tiktok else self.extract_params)["sec_uid"],
-                )
-                id_, name, mark = self.__extract_pretreatment_data(
-                    item,
-                    (self.extract_params_tiktok if tiktok else self.extract_params)["uid"],
-                    (self.extract_params_tiktok if tiktok else self.extract_params)["nickname"],
-                    mark,
-                )
-                return id_, name, mark, data
-            case "mix":
-                item = self.__select_item(
-                    data,
-                    mix_id,
-                    (self.extract_params_tiktok if tiktok else self.extract_params)["mix_id"],
-                )
-                id_, name, mark = self.__extract_pretreatment_data(
-                    item,
-                    (self.extract_params_tiktok if tiktok else self.extract_params)["mix_id"],
-                    (self.extract_params_tiktok if tiktok else self.extract_params)["mix_title"],
-                    mark,
-                    mix_title,
-                )
-                return id_, name, mark, data
-            case "favorite" | "collection":
-                if tiktok:
-                    info = self.get_user_info_tiktok(data[-1])
-                else:
-                    info = self.get_user_info(data[-1])
-                if user_id != (s := info.get("sec_uid")):
-                    self.log.error(
-                        f"sec_user_id {user_id} 与 {s} 不一致")
-                    return ()
-                name = self.cleaner.filter_name(
-                    info["nickname"],
-                    inquire=False,
-                    default=info["uid"],
-                )
-                mark = self.cleaner.filter_name(
-                    mark,
-                    inquire=False,
-                    default=name,
-                )
-                return (
-                    info["uid"],
-                    name,
-                    mark,
-                    data[:-1],
-                )
-            case "collects":
-                collect_name = self.cleaner.filter_name(
-                    collect_name,
-                    inquire=False,
-                    default=collect_id,
-                )
-                return collect_id, collect_name, collect_name, data
-            case _:
-                raise TikTokDownloaderError
+                           ) -> tuple[str, str, str,]:
+        if isinstance(data, dict):
+            info = self.get_user_info_tiktok(data) if tiktok else self.get_user_info(data)
+            if user_id != (s := info.get("sec_uid")):
+                self.log.error(
+                    f"sec_user_id {user_id} 与 {s} 不一致")
+                return "", "", ""
+            name = self.cleaner.filter_name(
+                info["nickname"],
+                default=info["uid"],
+            )
+            mark = self.cleaner.filter_name(
+                mark,
+                default=name,
+            )
+            return (
+                info["uid"],
+                name,
+                mark,
+            )
+        elif isinstance(data, list):
+            match mode:
+                case "post":
+                    item = self.__select_item(
+                        data,
+                        user_id,
+                        (self.extract_params_tiktok if tiktok else self.extract_params)["sec_uid"],
+                    )
+                    id_, name, mark = self.__extract_pretreatment_data(
+                        item,
+                        (self.extract_params_tiktok if tiktok else self.extract_params)["uid"],
+                        (self.extract_params_tiktok if tiktok else self.extract_params)["nickname"],
+                        mark,
+                    )
+                    return id_, name, mark
+                case "mix":
+                    item = self.__select_item(
+                        data,
+                        mix_id,
+                        (self.extract_params_tiktok if tiktok else self.extract_params)["mix_id"],
+                    )
+                    id_, name, mark = self.__extract_pretreatment_data(
+                        item,
+                        (self.extract_params_tiktok if tiktok else self.extract_params)["mix_id"],
+                        (self.extract_params_tiktok if tiktok else self.extract_params)["mix_title"],
+                        mark,
+                        mix_title,
+                    )
+                    return id_, name, mark
+                case "favorite" | "collection":
+                    pass
+                case "collects":
+                    collect_name = self.cleaner.filter_name(
+                        collect_name,
+                        inquire=False,
+                        default=collect_id,
+                    )
+                    return collect_id, collect_name, collect_name
+        else:
+            raise TikTokDownloaderError
 
     def __select_item(self, data: list[dict], id_: str, key: str):
         """从多个数据返回对象"""
@@ -630,9 +627,12 @@ class Extractor:
                 id_,
             ),
         )
-        mark = self.cleaner.filter_name(
-            mark, inquire=False, default=name)
+        mark = self.cleaner.filter_name(mark, default=name or self.__generate_temp_str())
         return id_, name.strip(), mark.strip()
+
+    def __generate_temp_str(self) -> str:
+        self.log.warning("当前标识无效，已生成临时标识：{0}".format(s := random_string()))
+        return s
 
     def __platform_classify_detail(
             self,
