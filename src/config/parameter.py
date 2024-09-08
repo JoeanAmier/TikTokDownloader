@@ -345,12 +345,12 @@ class Parameter:
         return split
 
     def __check_proxy_tiktok(self, proxy: str | dict) -> dict:
-        return self.__check_proxy(proxy, "https://www.google.com/")
+        return self.__check_proxy(proxy, "https://www.tiktok.com/")
 
     def __check_proxy(
             self,
             proxy: str | dict,
-            url="https://www.baidu.com/") -> dict:
+            url="https://www.douyin.com/") -> dict:
         if not self.extract_proxy(proxy):
             return {"proxies": self.NO_PROXY}
         if isinstance(proxy, str):
