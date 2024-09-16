@@ -1,24 +1,11 @@
-__all__ = [
-    "MAX_WORKERS",
-    "DESCRIPTION_LENGTH",
-    "TEXT_REPLACEMENT",
-    "SERVER_HOST",
-    "SERVER_PORT",
-    "MASTER",
-    "PROMPT",
-    "WARNING",
-    "ERROR",
-    "INFO",
-    "GENERAL",
-    "PROGRESS",
-    "COOKIE_UPDATE_INTERVAL",
-]
-
 # 同时下载作品文件的最大任务数，对直播无效
 MAX_WORKERS = 4
 
 # 作品描述最大长度限制，仅对作品文件名称生效，不影响数据储存，设置时需要考虑系统文件名称最大长度限制
 DESCRIPTION_LENGTH = 64
+
+# 文件名称最大长度限制
+MAX_FILENAME_LENGTH = 128
 
 # 非法字符替换规则，key 为替换前的文本，value 为替换后的文本
 TEXT_REPLACEMENT = {

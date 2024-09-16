@@ -23,20 +23,21 @@ from rich.progress import (
     TransferSpeedColumn,
 )
 
-from src.custom import DESCRIPTION_LENGTH
-from src.custom import MAX_WORKERS
-from src.custom import (
+from ..custom import DESCRIPTION_LENGTH
+from ..custom import MAX_FILENAME_LENGTH
+from ..custom import MAX_WORKERS
+from ..custom import (
     PROGRESS,
     INFO,
     WARNING,
 )
-from src.tools import PrivateRetry
-from src.tools import TikTokDownloaderError
-from src.tools import beautify_string
-from src.tools import format_size
+from ..tools import PrivateRetry
+from ..tools import TikTokDownloaderError
+from ..tools import beautify_string
+from ..tools import format_size
 
 if TYPE_CHECKING:
-    from src.config import Parameter
+    from ..config import Parameter
     from httpx import AsyncClient
 
 __all__ = ["Downloader"]
@@ -634,20 +635,25 @@ class Downloader:
 
     def generate_detail_name(self, data: dict) -> str:
         """生成作品文件名称"""
-        return self.cleaner.filter_name(
-            self.split.join(
-                data[i] for i in self.name_format),
-            inquire=False,
-            default=data["id"],
+        return beautify_string(
+            self.cleaner.filter_name(
+                self.split.join(
+                    data[i] for i in self.name_format),
+                inquire=False,
+                default=data["id"],
+            ), length=MAX_FILENAME_LENGTH,
         )
 
     def generate_music_name(self, data: dict) -> str:
         """生成音乐文件名称"""
-        return self.cleaner.filter_name(
-            self.split.join(
-                data[i] for i in (
-                    "author", "title", "id",)), inquire=False, default=str(
-                time())[:10])
+        return beautify_string(
+            self.cleaner.filter_name(
+                self.split.join(
+                    data[i] for i in (
+                        "author", "title", "id",)), inquire=False, default=str(
+                    time())[:10]),
+            length=MAX_FILENAME_LENGTH,
+        )
 
     @staticmethod
     def create_detail_folder(

@@ -10,7 +10,22 @@ __all__ = ["VerifyFp", ]
 
 
 class VerifyFp:
-    """代码参考: https://github.com/Johnserf-Seed/f2/blob/main/f2/apps/douyin/utils.py"""
+    """
+    var xi = function() {
+        return Pi.get(Si) || (null === localStorage || void 0 === localStorage ? void 0 : localStorage.getItem(Si)) || function() {
+            var e = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".split("")
+              , t = e.length
+              , n = Date.now().toString(36)
+              , r = [];
+            r[8] = r[13] = r[18] = r[23] = "_",
+            r[14] = "4";
+            for (var o = 0, i = void 0; o < 36; o++)
+                r[o] || (i = 0 | Math.random() * t,
+                r[o] = e[19 == o ? 3 & i | 8 : i]);
+            return "verify_" + n + "_" + r.join("")
+        }()
+    }
+    """
 
     @staticmethod
     def get_verify_fp(timestamp: int = None):
@@ -41,7 +56,7 @@ class VerifyFp:
                 o[i] = base_str[n]
 
         # 组合最终字符串
-        return "verify_" + base36 + "_" + "".join(o)
+        return f"verify_{base36}_" + "".join(o)
 
 
 if __name__ == "__main__":
