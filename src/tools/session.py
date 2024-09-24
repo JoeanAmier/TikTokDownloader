@@ -5,17 +5,17 @@ from httpx import AsyncClient
 from httpx import Client
 from httpx import Limits
 
-from src.custom import MAX_WORKERS
-from src.custom import TIMEOUT
-from src.custom import USERAGENT
-from src.tools import TikTokDownloaderError
 from .capture import capture_error_params
 from .retry import PrivateRetry
+from ..custom import MAX_WORKERS
+from ..custom import TIMEOUT
+from ..custom import USERAGENT
+from ..tools import TikTokDownloaderError
 
 if TYPE_CHECKING:
-    from src.record import BaseLogger
-    from src.record import LoggerManager
-    from src.testers import Logger
+    from ..record import BaseLogger
+    from ..record import LoggerManager
+    from ..testers import Logger
 
 __all__ = ["request_params", "create_client"]
 

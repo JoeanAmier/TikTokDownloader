@@ -9,17 +9,17 @@ from typing import TYPE_CHECKING
 from typing import Union
 from urllib.parse import quote
 
-from src.custom import PARAMS_HEADERS
-from src.custom import PARAMS_HEADERS_TIKTOK
-from src.custom import USERAGENT
-from src.encrypt.ttWid import TtWid
-from src.encrypt.xBogus import XBogusTikTok
-from src.tools import request_params
+from ..custom import PARAMS_HEADERS
+from ..custom import PARAMS_HEADERS_TIKTOK
+from ..custom import USERAGENT
+from ..encrypt.ttWid import TtWid
+from ..encrypt.xBogus import XBogusTikTok
+from ..tools import request_params
 
 if TYPE_CHECKING:
-    from src.record import BaseLogger
-    from src.record import LoggerManager
-    from src.testers import Logger
+    from ..record import BaseLogger
+    from ..record import LoggerManager
+    from ..testers import Logger
 
 __all__ = ["MsToken", "MsTokenTikTok"]
 

@@ -10,8 +10,8 @@ from httpx import RequestError
 from httpx import TimeoutException
 from httpx import get
 
-from src.custom import BLANK_PREVIEW
-from src.custom import (
+from ..custom import BLANK_PREVIEW
+from ..custom import (
     DATA_HEADERS,
     DOWNLOAD_HEADERS,
     PROJECT_ROOT,
@@ -22,29 +22,29 @@ from src.custom import (
     DATA_HEADERS_TIKTOK,
     USERAGENT,
 )
-from src.encrypt import ABogus
-from src.encrypt import MsToken
-from src.encrypt import MsTokenTikTok
-# from src.encrypt import RABogus
-from src.encrypt import TtWid
-from src.encrypt import TtWidTikTok
-from src.encrypt import XBogus
-from src.extract import Extractor
-from src.interface import API
-from src.interface import APITikTok
-from src.module import FFMPEG
-from src.record import BaseLogger
-from src.record import LoggerManager
-from src.storage import RecordManager
-from src.tools import Cleaner
-from src.tools import cookie_dict_to_str
-from src.tools import create_client
+from ..encrypt import ABogus
+from ..encrypt import MsToken
+from ..encrypt import MsTokenTikTok
+# from ..encrypt import RABogus
+from ..encrypt import TtWid
+from ..encrypt import TtWidTikTok
+from ..encrypt import XBogus
+from ..extract import Extractor
+from ..interface import API
+from ..interface import APITikTok
+from ..module import FFMPEG
+from ..record import BaseLogger
+from ..record import LoggerManager
+from ..storage import RecordManager
+from ..tools import Cleaner
+from ..tools import cookie_dict_to_str
+from ..tools import create_client
 
 if TYPE_CHECKING:
-    from src.manager import DownloadRecorder
-    from src.tools import ColorfulConsole
+    from ..manager import DownloadRecorder
+    from ..tools import ColorfulConsole
     from .settings import Settings
-    from src.module import Cookie
+    from ..module import Cookie
 
 __all__ = ["Parameter"]
 

@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from .static import GENERAL
 
 if TYPE_CHECKING:
-    from src.tools import ColorfulConsole
+    from ..tools import ColorfulConsole
 
 __all__ = [
     "wait",

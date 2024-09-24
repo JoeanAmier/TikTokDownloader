@@ -3,14 +3,14 @@ from http import cookies
 from typing import TYPE_CHECKING
 from typing import Union
 
-from src.custom import PARAMS_HEADERS
-from src.custom import PARAMS_HEADERS_TIKTOK
-from src.tools import request_params
+from ..custom import PARAMS_HEADERS
+from ..custom import PARAMS_HEADERS_TIKTOK
+from ..tools import request_params
 
 if TYPE_CHECKING:
-    from src.record import BaseLogger
-    from src.record import LoggerManager
-    from src.testers import Logger
+    from ..record import BaseLogger
+    from ..record import LoggerManager
+    from ..testers import Logger
 
 __all__ = ["TtWid", "TtWidTikTok"]
 

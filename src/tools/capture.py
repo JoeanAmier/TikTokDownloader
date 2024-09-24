@@ -8,8 +8,8 @@ from httpx import RequestError
 from httpx import TimeoutException
 
 if TYPE_CHECKING:
-    from src.record import BaseLogger
-    from src.record import LoggerManager
+    from ..record import BaseLogger
+    from ..record import LoggerManager
 
 __all__ = ["capture_error_params", "capture_error_request", ]
 

@@ -16,12 +16,12 @@ from rookiepy import (
     vivaldi,
 )
 
-from src.custom import INFO
-from src.custom import WARNING
+from ..custom import INFO
+from ..custom import WARNING
 
 if TYPE_CHECKING:
-    from src.module import Cookie
-    from src.config import Parameter
+    from ..module import Cookie
+    from ..config import Parameter
 
 __all__ = ["Browser"]
 

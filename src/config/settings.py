@@ -5,14 +5,14 @@ from platform import system
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
-from src.custom import (
+from ..custom import (
     INFO,
     ERROR,
     WARNING,
 )
 
 if TYPE_CHECKING:
-    from src.tools import ColorfulConsole
+    from ..tools import ColorfulConsole
     from pathlib import Path
 
 __all__ = ["Settings"]

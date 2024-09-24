@@ -3,7 +3,7 @@ from string import whitespace
 
 from emoji import replace_emoji
 
-from src.custom import illegal_nickname
+from ..custom import illegal_nickname
 
 __all__ = ["Cleaner"]
 

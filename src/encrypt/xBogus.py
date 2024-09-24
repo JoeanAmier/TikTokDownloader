@@ -4,7 +4,7 @@ from time import time
 from urllib.parse import quote
 from urllib.parse import urlencode
 
-from src.custom import USERAGENT
+from ..custom import USERAGENT
 
 __all__ = ["XBogus", "XBogusTikTok"]
 

@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 
 from gmssl import sm3, func
 
-# from src.custom import USERAGENT
+# from ..custom import USERAGENT
 
 __all__ = ["ABogus", ]
 

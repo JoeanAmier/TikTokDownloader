@@ -1,5 +1,5 @@
-from src.custom import RETRY
-from src.custom import wait
+from ..custom import RETRY
+from ..custom import wait
 
 __all__ = ["PrivateRetry"]
 
