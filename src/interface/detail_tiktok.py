@@ -2,11 +2,11 @@ from typing import Callable
 from typing import TYPE_CHECKING
 from typing import Union
 
-from src.interface.template import APITikTok
-from src.testers import Params
+from ..interface.template import APITikTok
+from ..testers import Params
 
 if TYPE_CHECKING:
-    from src.config import Parameter
+    from ..config import Parameter
 
 
 class DetailTikTok(APITikTok):
@@ -19,7 +19,7 @@ class DetailTikTok(APITikTok):
         super().__init__(params, cookie, proxy, )
         self.detail_id = detail_id
         self.api = f"{self.domain}/api/item/detail/"
-        self.text = "作品数据"
+        self.text = "作品"
 
     def generate_params(self, ) -> dict:
         return self.params | {

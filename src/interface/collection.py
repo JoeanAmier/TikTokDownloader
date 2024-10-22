@@ -3,11 +3,11 @@ from typing import Callable
 from typing import TYPE_CHECKING
 from typing import Union
 
-from src.interface.template import API
-from src.testers import Params
+from ..interface.template import API
+from ..testers import Params
 
 if TYPE_CHECKING:
-    from src.config import Parameter
+    from ..config import Parameter
 
 
 class Collection(API):
@@ -24,7 +24,7 @@ class Collection(API):
                  ):
         super().__init__(params, cookie, proxy, *args, **kwargs, )
         self.api = f"{self.domain}aweme/v1/web/aweme/listcollection/"
-        self.text = "账号收藏作品数据"
+        self.text = "账号收藏作品"
         self.count = count
         self.cursor = cursor
         self.pages = pages or params.max_pages

@@ -3,12 +3,12 @@ from typing import Callable
 from typing import TYPE_CHECKING
 from typing import Union
 
-from src.interface.collection import Collection
-from src.interface.template import API
-from src.testers import Params
+from ..interface.collection import Collection
+from ..interface.template import API
+from ..testers import Params
 
 if TYPE_CHECKING:
-    from src.config import Parameter
+    from ..config import Parameter
 
 
 class Collects(API):
@@ -25,7 +25,7 @@ class Collects(API):
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/collects/list/"
-        self.text = "收藏夹数据"
+        self.text = "收藏夹"
 
     def generate_params(self, ) -> dict:
         return self.params | {
@@ -84,7 +84,7 @@ class CollectsDetail(Collection, API):
         self.api = f"{self.domain}aweme/v1/web/collects/video/list/"
         self.cursor = cursor
         self.count = count
-        self.text = "收藏夹作品数据"
+        self.text = "收藏夹作品"
 
     def generate_params(self, ) -> dict:
         return self.params | {
@@ -142,7 +142,7 @@ class CollectsMix(API):
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/mix/listcollection/"
-        self.text = "收藏合集数据"
+        self.text = "收藏合集"
 
     def generate_params(self, ) -> dict:
         return self.params | {
@@ -198,7 +198,7 @@ class CollectsSeries(CollectsMix):
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/series/collections/"
-        self.text = "收藏短剧数据"
+        self.text = "收藏短剧"
 
     async def run(self,
                   referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
@@ -244,7 +244,7 @@ class CollectsMusic(CollectsMix):
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/music/listcollection/"
-        self.text = "收藏音乐数据"
+        self.text = "收藏音乐"
 
     async def run(self,
                   referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",

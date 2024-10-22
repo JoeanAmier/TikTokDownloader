@@ -13,20 +13,20 @@ from rich.progress import (
     TimeElapsedColumn,
 )
 
-from src.custom import PROGRESS
-from src.custom import USERAGENT
-from src.custom import wait
-from src.tools import PrivateRetry
-from src.tools import TikTokDownloaderError
-from src.tools import capture_error_request
+from ..custom import PROGRESS
+from ..custom import USERAGENT
+from ..custom import wait
+from ..tools import PrivateRetry
+from ..tools import TikTokDownloaderError
+from ..tools import capture_error_request
 
 # from urllib.parse import quote
 
 # from urllib.parse import urlencode
 
 if TYPE_CHECKING:
-    from src.config import Parameter
-    from src.testers import Params
+    from ..config import Parameter
+    from ..testers import Params
 
 __all__ = ["API", "APITikTok", ]
 
@@ -175,7 +175,7 @@ class API:
                 *args,
                 **kwargs)
         else:
-            self.log.warning(f"获取{self.text}失败")
+            self.log.warning(f"获取{self.text}数据失败")
 
     async def run_batch(self,
                         data_key: str,
@@ -221,7 +221,7 @@ class API:
                        ):
         try:
             if not (d := data_dict[data_key]):
-                self.log.info(error_text)
+                self.log.warning(error_text)
                 self.finished = True
             else:
                 self.cursor = data_dict[cursor]

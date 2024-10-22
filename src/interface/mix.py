@@ -2,13 +2,13 @@ from typing import Callable
 from typing import TYPE_CHECKING
 from typing import Union
 
-from src.extract import Extractor
-from src.interface.detail import Detail
-from src.interface.template import API
-from src.testers import Params
+from ..extract import Extractor
+from ..interface.detail import Detail
+from ..interface.template import API
+from ..testers import Params
 
 if TYPE_CHECKING:
-    from src.config import Parameter
+    from ..config import Parameter
 
 
 class Mix(API):
@@ -30,7 +30,7 @@ class Mix(API):
         self.count = count
         self.cursor = cursor
         self.api = f"{self.domain}aweme/v1/web/mix/aweme/"
-        self.text = "合集作品数据"
+        self.text = "合集作品"
         self.detail = Detail(params, cookie, proxy, self.detail_id, )
 
     def generate_params(self, ) -> dict:

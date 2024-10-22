@@ -2,11 +2,11 @@ from asyncio import run
 from typing import TYPE_CHECKING
 from typing import Union
 
-from src.interface.template import APITikTok
-from src.testers import Params
+from ..interface.template import APITikTok
+from ..testers import Params
 
 if TYPE_CHECKING:
-    from src.config import Parameter
+    from ..config import Parameter
 
 
 class InfoTikTok(APITikTok):
@@ -24,7 +24,7 @@ class InfoTikTok(APITikTok):
         self.api = f"{self.domain}api/user/detail/"
         self.unique_id = unique_id
         self.sec_user_id = sec_user_id
-        self.text = "账号简略信息"
+        self.text = "账号简略"
 
     async def run(self, first=True, *args, **kwargs, ) -> dict | list[dict]:
         self.set_referer()

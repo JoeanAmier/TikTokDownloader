@@ -3,12 +3,12 @@ from typing import Coroutine, Type
 from typing import TYPE_CHECKING
 from typing import Union
 
-from src.extract import Extractor
-from src.interface.template import API
-from src.testers import Params
+from ..extract import Extractor
+from ..interface.template import API
+from ..testers import Params
 
 if TYPE_CHECKING:
-    from src.config import Parameter
+    from ..config import Parameter
 
 
 class Comment(API):
@@ -33,7 +33,7 @@ class Comment(API):
         self.count = count
         self.count_reply = count_reply
         self.api = f"{self.domain}aweme/v1/web/comment/list/"
-        self.text = "作品评论数据"
+        self.text = "作品评论"
         self.current_page = []
         self.progress = None
         self.task_id = None

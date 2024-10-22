@@ -6,11 +6,11 @@ from typing import TYPE_CHECKING
 from typing import Type
 from typing import Union
 
-from src.interface.template import API
-from src.testers import Params
+from ..interface.template import API
+from ..testers import Params
 
 if TYPE_CHECKING:
-    from src.config import Parameter
+    from ..config import Parameter
 
 
 class Account(API):
@@ -38,7 +38,7 @@ class Account(API):
         self.earliest, self.latest = self.check_date(earliest, latest)
         self.cursor = cursor
         self.count = count
-        self.text = "账号喜欢作品数据" if self.favorite else "账号发布作品数据"
+        self.text = "账号喜欢作品" if self.favorite else "账号发布作品"
 
     async def run(self,
                   referer: str = None,

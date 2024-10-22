@@ -2,12 +2,12 @@ from asyncio import run
 from typing import TYPE_CHECKING
 from typing import Union
 
-from src.interface.comment import Comment, Reply
-from src.interface.template import APITikTok
-from src.testers import Params
+from ..interface.comment import Comment, Reply
+from ..interface.template import APITikTok
+from ..testers import Params
 
 if TYPE_CHECKING:
-    from src.config import Parameter
+    from ..config import Parameter
 
 
 class CommentTikTok(Comment, APITikTok):
