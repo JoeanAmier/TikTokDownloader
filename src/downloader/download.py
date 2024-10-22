@@ -290,6 +290,10 @@ class Downloader:
                 await self.download_image(**params)
             elif t == "视频":
                 await self.download_video(**params)
+            elif t == "实况":
+                await self.download_videos(**params)
+            else:
+                raise ValueError(f"未知类型: {t}")
             self.download_music(**params)
             self.download_cover(**params)
         await self.downloader_chart(
@@ -349,7 +353,8 @@ class Downloader:
             suffix: str = "jpeg",
     ) -> None:
         for index, img in enumerate(
-                item["downloads"].split(" "), start=1):
+                item["downloads"], start=1,
+        ):
             if await self.is_downloaded(id_):
                 count.skipped_image.add(id_)
                 self.log.info(f"【图集】{name} 存在下载记录，跳过下载")
@@ -369,6 +374,40 @@ class Downloader:
                 suffix,
             ))
 
+    async def download_videos(
+            self,
+            tasks: list,
+            name: str,
+            id_: str,
+            item: SimpleNamespace,
+            count: SimpleNamespace,
+            temp_root: Path,
+            actual_root: Path,
+            suffix: str = "mp4",
+    ) -> None:
+        for index, video in enumerate(
+                item["downloads"],
+                start=1,
+        ):
+            if await self.is_downloaded(id_):
+                count.skipped_video.add(id_)
+                self.log.info(f"【实况】{name} 存在下载记录，跳过下载")
+                break
+            elif self.is_exists(p := actual_root.with_name(f"{name}_{index}.{suffix}")):
+                self.log.info(f"【实况】{name}_{index} 文件已存在，跳过下载")
+                self.log.info(f"文件路径: {p.resolve()}", False)
+                count.skipped_video.add(id_)
+                continue
+            tasks.append((
+                video,
+                temp_root.with_name(
+                    f"{name}_{index}.{suffix}"),
+                p,
+                f"【实况】{name}_{index}",
+                id_,
+                suffix,
+            ))
+
     async def download_video(
             self,
             tasks: list,
@@ -381,8 +420,11 @@ class Downloader:
             suffix: str = "mp4",
     ) -> None:
         if await self.is_skip(
-                id_, p := actual_root.with_name(
-                    f"{name}.{suffix}")):
+                id_,
+                p := actual_root.with_name(
+                    f"{name}.{suffix}",
+                ),
+        ):
             self.log.info(f"【视频】{name} 存在下载记录或文件已存在，跳过下载")
             self.log.info(f"文件路径: {p.resolve()}", False)
             count.skipped_video.add(id_)
@@ -584,7 +626,7 @@ class Downloader:
     def add_count(type_: str, id_: str, count: SimpleNamespace):
         if type_.startswith("【图集】"):
             count.downloaded_image.add(id_)
-        elif type_.startswith("【视频】"):
+        elif type_.startswith("【视频】") or type_.startswith("【实况】"):
             count.downloaded_video.add(id_)
 
     @staticmethod

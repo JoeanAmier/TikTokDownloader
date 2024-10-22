@@ -848,7 +848,7 @@ class TikTok:
             return data["downloads"][0]
         elif data["type"] == "视频":
             return data["origin_cover"]
-        raise ValueError
+        return ""
 
     def _choice_live_quality(
             self,
