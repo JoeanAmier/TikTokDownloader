@@ -48,7 +48,7 @@ class SQLLogger(BaseSQLLogger):
         await self.cursor.execute(create_sql)
         await self.db.commit()
 
-    async def save(self, data, *args, **kwargs):
+    async def _save(self, data, *args, **kwargs):
         insert_sql = f"""REPLACE INTO {self.name} ({", ".join(self.title_line)}) VALUES ({
         ", ".join(["?" for _ in self.title_line])});"""
         await self.cursor.execute(insert_sql, data)

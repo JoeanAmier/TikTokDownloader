@@ -1,8 +1,22 @@
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from src.tools import PrivateRetry
+from ..tools import PrivateRetry
 
-__all__ = ["BaseTextLogger"]
+if TYPE_CHECKING:
+    from typing import Iterable
+
+
+def convert_to_string(function):
+    async def _convert_to_string(self, data: "Iterable" | list, *args, **kwargs):
+        for index, value in enumerate(data):
+            if isinstance(value, (int, float)):  # 如果值是数字（整型或浮点型）
+                data[index] = str(value)  # 转换为字符串
+            elif isinstance(value, list):  # 如果值是列表
+                data[index] = " ".join(value)  # 将列表元素转换为字符串并连接
+        return await function(self, data, *args, **kwargs)
+
+    return _convert_to_string
 
 
 class BaseTextLogger:
@@ -15,7 +29,13 @@ class BaseTextLogger:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         pass
 
-    async def save(self, *args, **kwargs):
+    @convert_to_string
+    async def save(self, data: "Iterable", *args, **kwargs):
+        # 数据保存方法入口
+        return await self._save(data, *args, **kwargs)
+
+    async def _save(self, data: "Iterable", *args, **kwargs):
+        # 实际数据保存逻辑
         pass
 
     @classmethod

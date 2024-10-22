@@ -6,7 +6,7 @@ from .text import BaseTextLogger
 from .xlsx import XLSXLogger
 
 if TYPE_CHECKING:
-    from src.config import Parameter
+    from ..config import Parameter
 
 __all__ = ["RecordManager"]
 

@@ -7,7 +7,7 @@ from openpyxl import load_workbook
 from .text import BaseTextLogger
 
 if TYPE_CHECKING:
-    from src.tools import ColorfulConsole
+    from ..tools import ColorfulConsole
 
 __all__ = ["XLSXLogger"]
 
@@ -52,5 +52,5 @@ class XLSXLogger(BaseTextLogger):
             for col, value in enumerate(self.title_line, start=1):
                 self.sheet.cell(row=1, column=col, value=value)
 
-    async def save(self, data, *args, **kwargs):
+    async def _save(self, data, *args, **kwargs):
         self.sheet.append(data)

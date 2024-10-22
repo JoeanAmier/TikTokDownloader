@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from .text import BaseTextLogger
 
 if TYPE_CHECKING:
-    from src.tools import ColorfulConsole
+    from ..tools import ColorfulConsole
 
 __all__ = ["CSVLogger"]
 
@@ -53,5 +53,5 @@ class CSVLogger(BaseTextLogger):
             # 如果文件没有任何数据，则写入标题行
             await self.save(self.title_line)
 
-    async def save(self, data, *args, **kwargs):
+    async def _save(self, data, *args, **kwargs):
         self.writer.writerow(data)
