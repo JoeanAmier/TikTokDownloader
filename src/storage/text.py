@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import TYPE_CHECKING
+from typing import Union
 
 from ..tools import PrivateRetry
 
@@ -8,7 +9,7 @@ if TYPE_CHECKING:
 
 
 def convert_to_string(function):
-    async def _convert_to_string(self, data: "Iterable" | list, *args, **kwargs):
+    async def _convert_to_string(self, data: Union["Iterable", list], *args, **kwargs):
         for index, value in enumerate(data):
             if isinstance(value, (int, float)):  # 如果值是数字（整型或浮点型）
                 data[index] = str(value)  # 转换为字符串
