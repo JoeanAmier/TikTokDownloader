@@ -140,7 +140,7 @@
 </tr>
 <tr>
 <td align="center"><code>https://www.douyin.com/lvdetail/作品ID</code></td>
-<td align="center">视频（暂不支持）</td>
+<td align="center">视频（不会支持）</td>
 </tr>
 </tbody></table>
 <ul>

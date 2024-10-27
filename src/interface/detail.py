@@ -68,7 +68,7 @@ class Detail(API):
                        ):
         try:
             if not (d := data_dict[data_key]):
-                self.log.info(error_text)
+                self.log.warning(error_text)
             else:
                 self.response = d
         except KeyError:

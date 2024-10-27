@@ -6,6 +6,29 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
+from ..custom import (
+    VIDEO_INDEX,
+    IMAGE_INDEX,
+    IMAGE_TIKTOK_INDEX,
+    VIDEOS_INDEX,
+    DYNAMIC_COVER_INDEX,
+    ORIGIN_COVER_INDEX,
+    MUSIC_INDEX,
+    COMMENT_IMAGE_INDEX,
+    COMMENT_STICKER_INDEX,
+    LIVE_COVER_INDEX,
+    AUTHOR_COVER_INDEX,
+    HOT_WORD_COVER_INDEX,
+    COMMENT_IMAGE_LIST_INDEX,
+    BITRATE_INFO_TIKTOK_INDEX,
+    LIVE_DATA_INDEX,
+    AVATAR_LARGER_INDEX,
+    AUTHOR_COVER_URL_INDEX,
+    SEARCH_USER_INDEX,
+    SEARCH_AVATAR_INDEX,
+    MUSIC_COLLECTION_COVER_INDEX,
+    MUSIC_COLLECTION_DOWNLOAD_INDEX,
+)
 from ..custom import condition_filter
 from ..tools import TikTokDownloaderError
 from ..tools import random_string
@@ -89,7 +112,8 @@ class Extractor:
 
     @staticmethod
     def generate_data_object(
-            data: dict | list) -> SimpleNamespace | list[SimpleNamespace]:
+            data: dict | list,
+    ) -> SimpleNamespace | list[SimpleNamespace]:
         def depth_conversion(element):
             if isinstance(element, dict):
                 return SimpleNamespace(
@@ -105,7 +129,8 @@ class Extractor:
     def safe_extract(
             data: SimpleNamespace,
             attribute_chain: str,
-            default: str | int | list | dict | SimpleNamespace = ""):
+            default: str | int | list | dict | SimpleNamespace = "",
+    ):
         attributes = attribute_chain.split(".")
         for attribute in attributes:
             if "[" in attribute:
@@ -129,7 +154,8 @@ class Extractor:
             recorder,
             type_="detail",
             tiktok=False,
-            **kwargs) -> list[dict]:
+            **kwargs,
+    ) -> list[dict]:
         if type_ not in self.type.keys():
             raise ValueError
         return await self.type[type_](data, recorder, tiktok, **kwargs)
@@ -171,12 +197,12 @@ class Extractor:
         return container.all_data
 
     @staticmethod
-    def __condition_filter(container: SimpleNamespace):
+    def __condition_filter(container: SimpleNamespace, ):
         """自定义筛选作品"""
         result = [i for i in container.all_data if condition_filter(i)]
         container.all_data = result
 
-    def __summary_detail(self, data: list[dict]):
+    def __summary_detail(self, data: list[dict], ):
         """汇总作品数量"""
         self.log.info(f"筛选处理后作品数量: {len(data)}")
 
@@ -337,7 +363,7 @@ class Extractor:
             item["downloads"] = [
                 self.safe_extract(
                     i,
-                    'video.play_addr.url_list[-1]',
+                    f'video.play_addr.url_list[{VIDEOS_INDEX}]',
                 ) for i in images
             ]
         else:
@@ -345,7 +371,7 @@ class Extractor:
             item["downloads"] = [
                 self.safe_extract(
                     i,
-                    'url_list[-1]',
+                    f'url_list[{IMAGE_INDEX}]',
                 ) for i in images
             ]
 
@@ -358,7 +384,7 @@ class Extractor:
         item["downloads"] = [
             self.safe_extract(
                 i,
-                "imageURL.urlList[-1]",
+                f"imageURL.urlList[{IMAGE_TIKTOK_INDEX}]",
             ) for i in images
         ]
 
@@ -381,7 +407,7 @@ class Extractor:
     ) -> None:
         item["type"] = type_
         item["downloads"] = self.safe_extract(
-            data, "video.play_addr.url_list[-1]")
+            data, f"video.play_addr.url_list[{VIDEO_INDEX}]")
         item["duration"] = self.time_conversion(
             self.safe_extract(data, "video.duration", 0))
         item["uri"] = self.safe_extract(
@@ -398,9 +424,15 @@ class Extractor:
         item["downloads"] = self.safe_extract(
             data, "video.playAddr")
         item["duration"] = self.time_conversion_tiktok(
-            self.safe_extract(data, "video.duration", 0))
+            self.safe_extract(
+                data,
+                "video.duration",
+                0,
+            )
+        )
         item["uri"] = self.safe_extract(
-            data, "video.bitrateInfo[0].PlayAddr.Uri")
+            data, f"video.bitrateInfo[{BITRATE_INFO_TIKTOK_INDEX}].PlayAddr.Uri",
+        )
         self.__extract_cover_tiktok(item, data, True)
 
     @staticmethod
@@ -443,10 +475,10 @@ class Extractor:
         if has:
             # 动态封面图链接
             item["dynamic_cover"] = self.safe_extract(
-                data, "video.dynamic_cover.url_list[-1]")
+                data, f"video.dynamic_cover.url_list[{DYNAMIC_COVER_INDEX}]")
             # 静态封面图链接
             item["origin_cover"] = self.safe_extract(
-                data, "video.origin_cover.url_list[-1]")
+                data, f"video.origin_cover.url_list[{ORIGIN_COVER_INDEX}]")
         else:
             item["dynamic_cover"], item["origin_cover"] = "", ""
 
@@ -482,7 +514,8 @@ class Extractor:
                 author = self.safe_extract(music_data, "author")
                 title = self.safe_extract(music_data, "title")
                 url = self.safe_extract(
-                    music_data, "play_url.url_list[-1]")  # 部分作品的音乐无法下载
+                    music_data, f"play_url.url_list[{MUSIC_INDEX}]",
+                )  # 部分作品的音乐无法下载
 
         else:
             author, title, url = "", "", ""
@@ -730,9 +763,9 @@ class Extractor:
         container.cache["ip_label"] = self.safe_extract(data, "ip_label", "未知")
         container.cache["text"] = self.safe_extract(data, "text")
         container.cache["image"] = self.safe_extract(
-            data, "image_list[0].origin_url.url_list[-1]")
+            data, f"image_list[{COMMENT_IMAGE_LIST_INDEX}].origin_url.url_list[{COMMENT_IMAGE_INDEX}]")
         container.cache["sticker"] = self.safe_extract(
-            data, "sticker.static_url.url_list[-1]")
+            data, f"sticker.static_url.url_list[{COMMENT_STICKER_INDEX}]")
         container.cache["digg_count"] = self.safe_extract(data, "digg_count", -1)
         container.cache["reply_to_reply_id"] = self.safe_extract(
             data, "reply_to_reply_id")
@@ -786,17 +819,30 @@ class Extractor:
             container: SimpleNamespace,
             data: SimpleNamespace):
         data = self.safe_extract(
-            data, "data.data[0]") or self.safe_extract(
+            data, f"data.data[{LIVE_DATA_INDEX}]") or self.safe_extract(
             data, "data.room")
-        live_data = {"status": self.safe_extract(data, "status"),
-                     "nickname": self.safe_extract(data, "owner.nickname"),
-                     "title": self.safe_extract(data, "title"),
-                     "flv_pull_url": vars(self.safe_extract(data, "stream_url.flv_pull_url", SimpleNamespace())),
-                     "hls_pull_url_map": vars(
-                         self.safe_extract(data, "stream_url.hls_pull_url_map", SimpleNamespace())),
-                     "cover": self.safe_extract(data, "cover.url_list[-1]"),
-                     "total_user_str": self.safe_extract(data, "stats.total_user_str"),
-                     "user_count_str": self.safe_extract(data, "stats.user_count_str"), }
+        live_data = {
+            "status": self.safe_extract(data, "status"),
+            "nickname": self.safe_extract(data, "owner.nickname"),
+            "title": self.safe_extract(data, "title"),
+            "flv_pull_url": vars(
+                self.safe_extract(
+                    data,
+                    "stream_url.flv_pull_url",
+                    SimpleNamespace(),
+                )
+            ),
+            "hls_pull_url_map": vars(
+                self.safe_extract(
+                    data,
+                    "stream_url.hls_pull_url_map",
+                    SimpleNamespace(),
+                )
+            ),
+            "cover": self.safe_extract(data, f"cover.url_list[{LIVE_COVER_INDEX}]"),
+            "total_user_str": self.safe_extract(data, "stats.total_user_str"),
+            "user_count_str": self.safe_extract(data, "stats.user_count_str"),
+        }
         container.all_data.append(live_data)
 
     def __extract_live_data_tiktok(
@@ -842,10 +888,11 @@ class Extractor:
     def __extract_user_data(
             self,
             container: SimpleNamespace,
-            data: SimpleNamespace):
+            data: SimpleNamespace,
+    ):
         container.cache = container.template.copy()
         container.cache["avatar"] = self.safe_extract(
-            data, "avatar_larger.url_list[0]")
+            data, f"avatar_larger.url_list[{AVATAR_LARGER_INDEX}]")
         container.cache["city"] = self.safe_extract(data, "city")
         container.cache["country"] = self.safe_extract(data, "country")
         container.cache["district"] = self.safe_extract(data, "district")
@@ -868,15 +915,14 @@ class Extractor:
         container.cache["unique_id"] = self.safe_extract(data, "unique_id")
         container.cache["user_age"] = self.safe_extract(data, "user_age", -1)
         container.cache["cover"] = self.safe_extract(
-            data, "cover_url[0].url_list[-1]")
+            data, f"cover_url[{AUTHOR_COVER_URL_INDEX}].url_list[{AUTHOR_COVER_INDEX}]")
         container.cache["short_id"] = self.safe_extract(data, "short_id")
         container.cache["aweme_count"] = self.safe_extract(data, "aweme_count", -1)
         container.cache["verify"] = self.safe_extract(
             data, "custom_verify", "无")
         container.cache["enterprise"] = self.safe_extract(
             data, "enterprise_verify_reason", "无")
-        container.cache["url"] = f"https: // www.douyin.com / user / {
-        container.cache["sec_uid"]}"
+        container.cache["url"] = f"https://www.douyin.com/user/{container.cache["sec_uid"]}"
         container.all_data.append(container.cache)
 
     async def __search(
@@ -916,7 +962,7 @@ class Extractor:
             [self.__extract_batch(container, i) for i in d]
         elif d := self.safe_extract(data, "card_info.attached_info.aweme_list"):
             [self.__extract_batch(container, i) for i in d]
-        elif d := self.safe_extract(data, "user_list[0].items"):
+        elif d := self.safe_extract(data, f"user_list[{SEARCH_USER_INDEX}].items"):
             [self.__extract_batch(container, i) for i in d]
         # elif d := self.safe_extract(data, "user_list.user_info"):
         #     pass
@@ -949,7 +995,7 @@ class Extractor:
         if user:
             container.cache = container.template.copy()
         container.cache["avatar"] = self.safe_extract(
-            data, f"{'avatar_thumb' if user else 'avatar_larger'}.url_list[0]")
+            data, f"{'avatar_thumb' if user else 'avatar_larger'}.url_list[{SEARCH_AVATAR_INDEX}]")
         container.cache["nickname"] = self.safe_extract(data, "nickname")
         container.cache["sec_uid"] = self.safe_extract(data, "sec_uid")
         container.cache["signature"] = self.safe_extract(data, "signature")
@@ -1014,7 +1060,7 @@ class Extractor:
             "event_time": self.__format_date(self.safe_extract(data, "event_time")),
             "view_count": str(self.safe_extract(data, "view_count", -1)),
             "hot_value": str(self.safe_extract(data, "hot_value", -1)),
-            "cover": self.safe_extract(data, "word_cover.url_list[-1]"),
+            "cover": self.safe_extract(data, f"word_cover.url_list[{HOT_WORD_COVER_INDEX}]"),
         }
         container.append(cache)
 
@@ -1134,18 +1180,20 @@ class Extractor:
             container, self.generate_data_object(item)) for item in data]
         return container.all_data
 
-    def __extract_collection_music(self,
-                                   container: SimpleNamespace,
-                                   data: SimpleNamespace, ):
+    def __extract_collection_music(
+            self,
+            container: SimpleNamespace,
+            data: SimpleNamespace,
+    ):
         container.cache = container.template.copy()
         container.cache["id"] = self.safe_extract(data, "id_str")
         container.cache["title"] = self.safe_extract(data, "title")
         container.cache["author"] = self.safe_extract(data, "author")
         container.cache["album"] = self.safe_extract(data, "album")
         container.cache["cover"] = self.safe_extract(
-            data, "cover_hd.url_list[0]")
+            data, f"cover_hd.url_list[{MUSIC_COLLECTION_COVER_INDEX}]")
         container.cache["download"] = self.safe_extract(
-            data, "play_url.url_list[0]")
+            data, f"play_url.url_list[{MUSIC_COLLECTION_DOWNLOAD_INDEX}]")
         container.cache["duration"] = self.time_conversion(
             self.safe_extract(data, "duration", 0))
         container.all_data.append(container.cache)
