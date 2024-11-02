@@ -1,3 +1,4 @@
+from contextlib import suppress
 from pathlib import Path
 
 
@@ -18,4 +19,5 @@ def remove_empty_directories(path: Path) -> None:
         if any(i in str(dir_path) for i in exclude):
             continue
         if not dir_names and not file_names:
-            dir_path.rmdir()
+            with suppress(OSError):
+                dir_path.rmdir()
