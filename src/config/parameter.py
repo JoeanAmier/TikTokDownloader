@@ -430,6 +430,7 @@ class Parameter:
         return default_mode.split()[::-1] if default_mode else []
 
     async def update_params(self) -> None:
+        self._set_uif_id()
         await self.set_token_params()
         if self.update_cookie_dy:
             # self.console.print("正在更新抖音 Cookie 参数，请稍等...", style=INFO)
@@ -529,6 +530,17 @@ class Parameter:
         else:
             self.ms_token = self.cookie_tiktok.get("msToken", "")
             self.logger.info(f"TikTok MsToken 本地值: {self.ms_token}", False, )
+
+    def _set_uif_id(self, ) -> None:
+        self._deal_uif_id()
+        self._deal_uif_id_tiktok()
+
+    def _deal_uif_id(self, ) -> None:
+        API.params["uifid"] = self.cookie.get("UIFID", "")
+
+    def _deal_uif_id_tiktok(self, ) -> None:
+        # APITikTok.params["uifid"] = self.cookie_tiktok.get("UIFID", "")
+        pass
 
     @staticmethod
     def __generate_ffmpeg_object(ffmpeg_path: str) -> FFMPEG:
