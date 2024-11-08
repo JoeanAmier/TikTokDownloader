@@ -50,7 +50,7 @@
 * ✅ 采集抖音搜索数据
 * ✅ 采集抖音热榜数据
 * ✅ 记录已下载作品 ID
-* ☑️ 扫码登陆获取 Cookie
+* ☑️ ~~扫码登陆获取 Cookie~~
 * ✅ 从浏览器获取 Cookie
 * ✅ 支持 Web API 调用
 * ✅ 支持多线程下载作品
@@ -145,7 +145,12 @@
 <li>方式二：使用 <code>docker pull joeanamier/tiktokdownloader</code> 命令拉取镜像</li>
 </ul>
 <li>创建容器：<code>docker run -it joeanamier/tiktokdownloader</code></li>
-<li>重新启动容器：<code>docker start -i 容器名称</code></li>
+<li>运行容器
+<ul>
+<li>启动容器：<code>docker start -i 容器名称/容器 ID</code></li>
+<li>重启容器：<code>docker restart -i 容器名称/容器 ID</code></li>
+</ul>
+</li>
 </ol>
 <p>Docker 容器无法直接访问宿主机的文件系统，部分功能不可用，例如：<code>从浏览器获取 Cookie</code>；其他功能如有异常请反馈！</p>
 

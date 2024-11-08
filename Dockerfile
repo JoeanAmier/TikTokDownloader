@@ -1,4 +1,4 @@
-FROM python:3.12.4-slim
+FROM python:3.12-slim
 
 LABEL name="TikTokDownloader" authors="JoeanAmier" repository="https://github.com/JoeanAmier/TikTokDownloader"
 
@@ -11,6 +11,8 @@ COPY license /TikTokDownloader/license
 COPY main.py /TikTokDownloader/main.py
 COPY requirements.txt /TikTokDownloader/requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r /TikTokDownloader/requirements.txt
+
+VOLUME /TikTokDownloader
 
 CMD ["python", "main.py"]
