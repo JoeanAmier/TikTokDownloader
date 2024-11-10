@@ -1,6 +1,6 @@
 openpyxl>=3.1.5
 qrcode>=7.4.2
-emoji>=2.12.1
+emoji>=2.14.0
 rich>=13.7.1
 lxml>=5.3.0
 rookiepy>=0.5.6

@@ -1,4 +1,4 @@
-name: Release build executable program
+name: 发布构建可执行文件
 
 on:
   release:
@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    name: Build on ${{ matrix.os }}
+    name: 构建于 ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: 签出存储库
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 设置 Python
         uses: actions/setup-python@v5
@@ -34,13 +34,13 @@ jobs:
       - name: 构建 Win 可执行文件
         if: runner.os == 'Windows'
         run: |
-          pyinstaller --icon=./static/images/TikTokDownloader.ico --add-data "static:static" --add-data "templates:templates" main.py
+          pyinstaller --icon=./static/images/TikTokDownloader.ico --add-data "static:static" --add-data "templates:templates" --collect-all emoji main.py
         shell: pwsh
 
       - name: 构建 Mac 可执行文件
         if: runner.os == 'macOS'
         run: |
-          pyinstaller --icon=./static/images/TikTokDownloader.icns --add-data "static:static" --add-data "templates:templates" main.py
+          pyinstaller --icon=./static/images/TikTokDownloader.icns --add-data "static:static" --add-data "templates:templates" --collect-all emoji main.py
 
       - name: 创建压缩包
         run: |
