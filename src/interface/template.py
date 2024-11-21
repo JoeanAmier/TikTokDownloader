@@ -317,8 +317,6 @@ class API:
     def deal_url_params(self, params: dict, method="GET", **kwargs, ):
         if params:
             params["a_bogus"] = self.ab.get_value(params, method, )
-            # params["a_bogus"] = self.ab.generate_abogus(
-            #     urlencode(params), method, )[1]
 
     def summary_works(self, ) -> None:
         self.log.info(f"共获取到 {len(self.response)} 个{self.text}")

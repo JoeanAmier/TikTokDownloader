@@ -5,7 +5,6 @@ from src.custom import (
     DATA_HEADERS_TIKTOK,
 )
 from src.encrypt import ABogus
-# from src.encrypt import RABogus
 from src.encrypt import XBogus
 from src.testers.logger import Logger
 from src.tools import create_client
@@ -20,8 +19,6 @@ class Params:
             "Cookie": self.cookie_tiktok}
         self.logger = Logger()
         self.ab = ABogus()
-        # self.ab = RABogus(
-        #     fp="1365|785|1393|862|0|30|0|0|1511|932|1511|932|1365|785|24|24|Win32")
         self.xb = XBogus()
         self.console = Console()
         self.max_retry = 3

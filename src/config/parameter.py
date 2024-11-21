@@ -25,7 +25,6 @@ from ..custom import (
 from ..encrypt import ABogus
 from ..encrypt import MsToken
 from ..encrypt import MsTokenTikTok
-# from ..encrypt import RABogus
 from ..encrypt import TtWid
 from ..encrypt import TtWidTikTok
 from ..encrypt import XBogus
@@ -123,8 +122,6 @@ class Parameter:
         self.logger = logger(PROJECT_ROOT, console)
         self.logger.run()
         self.ab = ABogus()
-        # self.ab = RABogus(
-        #     fp="1365|785|1393|862|0|30|0|0|1511|932|1511|932|1365|785|24|24|Win32")
         self.xb = XBogus()
         self.console = console
         self.cookie, self.cookie_cache = self.__check_cookie(cookie)

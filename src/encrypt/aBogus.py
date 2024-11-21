@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 
 from gmssl import sm3, func
 
-# from ..custom import USERAGENT
+from src.custom import USERAGENT
 
 __all__ = ["ABogus", ]
 
@@ -39,18 +39,12 @@ class ABogus:
     }
 
     def __init__(self,
-                 # user_agent: str = USERAGENT,
+                 user_agent: str = USERAGENT,
                  platform: str = None, ):
         self.chunk = []
         self.size = 0
         self.reg = self.__reg[:]
-        # self.ua_code = self.generate_ua_code(user_agent)
-        self.ua_code = [
-            34, 167, 211, 143, 231, 217, 33, 244,
-            208, 33, 142, 226, 219, 0, 182, 214,
-            50, 32, 197, 93, 75, 3, 223, 172,
-            226, 95, 80, 143, 61, 49, 216, 112
-        ]
+        self.ua_code = self.generate_ua_code(user_agent)
         self.browser = self.generate_browser_info(
             platform) if platform else self.__browser
         self.browser_len = len(self.browser)
@@ -149,6 +143,11 @@ class ABogus:
         a.extend(self.browser_code)
         a.append(e)
         return self.rc4_encrypt(self.from_char_code(*a), "y")
+
+    def generate_ua_code(self, user_agent: str) -> list[int]:
+        u = self.rc4_encrypt(user_agent, self.__ua_key)
+        u = self.generate_result(u, "s3")
+        return self.sum(u)
 
     def generate_string_2_list(
             self,
