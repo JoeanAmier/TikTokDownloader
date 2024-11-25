@@ -1,5 +1,5 @@
 from datetime import date
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Callable
 from typing import Coroutine
 from typing import TYPE_CHECKING
@@ -223,9 +223,14 @@ class Account(API):
         if not date_:
             return date(2016, 9, 20)
         try:
-            earliest = datetime.strptime(
-                date_, "%Y/%m/%d")
-            self.log.info(f"作品最早发布日期: {date_}")
+            if isinstance(date_, int) or date_.isdigit():
+                date_before = datetime.strptime(
+                    datetime.now().strftime('%Y/%m/%d'), "%Y/%m/%d")
+                earliest = date_before - timedelta(days=abs(int(round(date_))))
+            else:
+                earliest = datetime.strptime(
+                    date_, "%Y/%m/%d")
+            self.log.info(f"作品最早发布日期: {earliest}")
             return earliest.date()
         except ValueError:
             self.log.warning(f"作品最早发布日期 {date_} 无效")
