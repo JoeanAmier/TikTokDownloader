@@ -258,8 +258,8 @@ https://www.douyin.com/note/123456789
 </tr>
 <tr>
 <td align="center">earliest</td>
-<td align="center">str</td>
-<td align="center">作品最早发布日期, 格式: <code>2023/1/1</code>, 设置为空字符串代表不限制, <strong>属于 accounts_urls 子参数</strong></td>
+<td align="center">str | float | int</td>
+<td align="center">作品最早发布日期, 格式: <code>2023/1/1</code>、<code>整数</code>、<code>浮点数</code>, 设置为空字符串代表不限制, 设置为数值代表基于 <code>latest</code>参数的前 XX 天, <strong>属于 accounts_urls 子参数</strong></td>
 </tr>
 <tr>
 <td align="center">latest</td>
@@ -462,6 +462,14 @@ https://www.douyin.com/note/123456789
       "earliest": "",
       "latest": "",
       "enable": false
+    },
+    {
+      "mark": "",
+      "url": "账号主页链接-3",
+      "tab": "post",
+      "earliest": 30,
+      "latest": "2024/11/1",
+      "enable": true
     }
   ],
   "accounts_urls_tiktok": "参数规则与 accounts_urls 一致",
@@ -584,19 +592,28 @@ https://www.douyin.com/note/123456789
 {
   "accounts_urls": [
     {
-      "mark": "账号标识",
+      "mark": "账号标识-1",
       "url": "账号主页链接",
       "tab": "post",
       "earliest": "2023/12/1",
       "latest": "",
+      "enable": true
+    },
+    {
+      "mark": "账号标识-2",
+      "url": "账号主页链接",
+      "tab": "post",
+      "earliest": 30,
+      "latest": "2024/12/1",
       "enable": true
     }
   ]
 }
 ```
 
-<p>如果已经采集某账号的全部发布作品，建议设置 <code>earliest</code> 和 <code>latest</code> 参数以减少后续采集请求次数。</p>
-<p>例如：将 <code>earliest</code> 参数设置为 <code>2023/12/1</code>，程序获取账号发布作品数据时，不会获取早于 <code>2023/12/1</code> 的作品数据，可减少请求次数提高运行效率；<code>accounts_urls_tiktok</code>参数规则一致。</p>
+<p>如果已经采集某账号的全部发布作品，建议设置 <code>earliest</code> 和 <code>latest</code> 参数以减少后续采集请求次数，提高程序运行效率；<code>accounts_urls_tiktok</code>参数规则一致。</p>
+<p>示例：将 <code>earliest</code> 参数设置为 <code>2023/12/1</code>，程序获取账号发布作品数据时，不会获取早于 <code>2023/12/1</code> 的作品数据。</p>
+<p>示例：将 <code>earliest</code> 参数设置为 <code>30</code>，<code>latest</code> 参数设置为 <code>2024/12/1</code>，程序获取账号发布作品数据时，仅获取 2024 年 12 月 1 日当天及之前 30 天内发布的作品数据。</p>
 <h3>文件储存路径</h3>
 
 ```json

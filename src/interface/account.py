@@ -1,5 +1,6 @@
 from datetime import date
 from datetime import datetime
+from datetime import timedelta
 from typing import Callable
 from typing import Coroutine
 from typing import TYPE_CHECKING
@@ -23,7 +24,7 @@ class Account(API):
                  proxy: str = None,
                  sec_user_id: str = ...,
                  tab="post",
-                 earliest="",
+                 earliest: str | float | int = "",
                  latest="",
                  pages: int = None,
                  cursor=0,
@@ -35,7 +36,8 @@ class Account(API):
         self.sec_user_id = sec_user_id
         self.api, self.favorite, self.pages = self.check_type(
             tab, pages or params.max_pages)
-        self.earliest, self.latest = self.check_date(earliest, latest)
+        self.latest: date = self.check_latest(latest)
+        self.earliest: date = self.check_earliest(earliest)
         self.cursor = cursor
         self.count = count
         self.text = "账号喜欢作品" if self.favorite else "账号发布作品"
@@ -216,28 +218,32 @@ class Account(API):
                 self.log.warning(f"tab 参数 {tab} 设置错误，程序将使用默认值: post")
         return self.post_api, False, 99999
 
-    def check_date(self, start: str, end: str) -> tuple[date, date]:
-        return self.check_earliest(start), self.check_latest(end)
-
-    def check_earliest(self, date_: str) -> date:
-        if not date_:
-            return date(2016, 9, 20)
-        try:
-            earliest = datetime.strptime(
-                date_, "%Y/%m/%d")
-            self.log.info(f"作品最早发布日期: {date_}")
-            return earliest.date()
-        except ValueError:
-            self.log.warning(f"作品最早发布日期 {date_} 无效")
-            return date(2016, 9, 20)
+    def check_earliest(self, date_: str | float | int) -> date:
+        default_date = date(2016, 9, 20)  # 默认日期
+        if not date_:  # 如果没有提供日期，返回默认日期
+            return default_date
+        if isinstance(date_, (int, float)):
+            earliest = self.latest - timedelta(days=date_)  # 计算最早日期
+            assert isinstance(earliest, date)
+        elif isinstance(date_, str):
+            try:
+                earliest = datetime.strptime(date_, "%Y/%m/%d").date()  # 解析日期
+            except ValueError:
+                self.log.warning(f"作品最早发布日期 {date_} 无效")
+                return default_date  # 无效日期返回默认日期
+        else:
+            raise ValueError(f"作品最早发布日期参数 {date_} 类型错误")
+        self.log.info(f"作品最早发布日期: {earliest}")
+        return earliest  # 返回 date 对象
 
     def check_latest(self, date_: str) -> date:
+        default_date = date.today()  # 默认日期
         if not date_:
-            return date.today()
+            return default_date
         try:
             latest = datetime.strptime(date_, "%Y/%m/%d").date()
-            self.log.info(f"作品最晚发布日期: {date_}")
+            self.log.info(f"作品最晚发布日期: {latest}")
             return latest
         except ValueError:
             self.log.warning(f"作品最晚发布日期无效 {date_}")
-            return date.today()
+            return default_date
