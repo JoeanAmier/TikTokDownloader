@@ -28,6 +28,7 @@ from ..custom import (
     SEARCH_AVATAR_INDEX,
     MUSIC_COLLECTION_COVER_INDEX,
     MUSIC_COLLECTION_DOWNLOAD_INDEX,
+    VIDEO_BIT_RATE_INDEX,
 )
 from ..custom import condition_filter
 from ..tools import TikTokDownloaderError
@@ -407,7 +408,7 @@ class Extractor:
     ) -> None:
         item["type"] = type_
         item["downloads"] = self.safe_extract(
-            data, f"video.play_addr.url_list[{VIDEO_INDEX}]")
+            data, f"video.bit_rate[{VIDEO_BIT_RATE_INDEX}].play_addr.url_list[{VIDEO_INDEX}]")
         item["duration"] = self.time_conversion(
             self.safe_extract(data, "video.duration", 0))
         item["uri"] = self.safe_extract(

@@ -52,6 +52,7 @@ class Downloader:
         "video/mp4": "mp4",
         "video/quicktime": "mov",
         "audio/mp4": "m4a",
+        "audio/mpeg": "mp3",
     }
 
     def __init__(self, params: "Parameter"):
