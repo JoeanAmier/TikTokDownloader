@@ -1,5 +1,4 @@
 from asyncio import run
-from shutil import rmtree
 from threading import Event
 from threading import Thread
 from time import sleep
@@ -101,8 +100,9 @@ class TikTokDownloader:
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.database.__aexit__(exc_type, exc_val, exc_tb)
-        await self.parameter.close_client()
-        self.close()
+        if self.parameter:
+            await self.parameter.close_client()
+            self.close()
 
     def __update_menu(self):
         self.__function_menu = (
@@ -333,9 +333,6 @@ class TikTokDownloader:
         if await self.disclaimer():
             await self.main_menu(safe_pop(self.default_mode))
 
-    def delete_cache(self):
-        rmtree(self.parameter.cache.resolve())
-
     def periodic_update_cookie(self):
         async def inner():
             # print("子线程开始运行！")  # 调试代码
@@ -359,7 +356,6 @@ class TikTokDownloader:
 
     def close(self):
         self.event.set()
-        # self.delete_cache()
         if self.parameter.folder_mode:
             remove_empty_directories(self.parameter.ROOT)
             remove_empty_directories(self.parameter.root)
