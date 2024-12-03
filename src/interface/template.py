@@ -79,7 +79,7 @@ class API:
         self.xb = params.xb
         self.console = params.console
         self.api = ""
-        self.proxy = params.extract_proxy(proxy)
+        self.proxy = proxy
         self.max_retry = params.max_retry
         self.timeout = params.timeout
         self.cookie = cookie or params.cookie

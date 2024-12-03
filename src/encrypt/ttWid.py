@@ -3,14 +3,14 @@ from http import cookies
 from typing import TYPE_CHECKING
 from typing import Union
 
-from ..custom import PARAMS_HEADERS
-from ..custom import PARAMS_HEADERS_TIKTOK
-from ..tools import request_params
+from src.custom import PARAMS_HEADERS
+from src.custom import PARAMS_HEADERS_TIKTOK
+from src.tools import request_params
 
 if TYPE_CHECKING:
-    from ..record import BaseLogger
-    from ..record import LoggerManager
-    from ..testers import Logger
+    from src.record import BaseLogger
+    from src.record import LoggerManager
+    from src.testers import Logger
 
 __all__ = ["TtWid", "TtWidTikTok"]
 
@@ -23,17 +23,28 @@ class TtWid:
         '"source":"node"},"cbUrlProtocol":"https","union":true}')
 
     @classmethod
-    async def get_tt_wid(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                         headers: dict,
-                         **kwargs, ) -> dict | None:
-        if response := await request_params(logger, cls.API, data=cls.DATA, headers=headers, **kwargs, ):
+    async def get_tt_wid(
+            cls,
+            logger: Union["BaseLogger", "LoggerManager", "Logger"],
+            headers: dict,
+            proxy: str = None,
+            **kwargs,
+    ) -> dict | None:
+        if response := await request_params(
+                logger,
+                cls.API,
+                data=cls.DATA,
+                headers=headers,
+                proxy=proxy,
+                **kwargs, ):
             return cls.extract(logger, response, cls.NAME)
         logger.error(f"获取 {cls.NAME} 参数失败！")
 
     @staticmethod
-    def extract(logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                headers,
-                key: str) -> dict | None:
+    def extract(
+            logger: Union["BaseLogger", "LoggerManager", "Logger"],
+            headers,
+            key: str) -> dict | None:
         if c := headers.get("Set-Cookie"):
             cookie_jar = cookies.SimpleCookie()
             cookie_jar.load(c)
@@ -53,23 +64,34 @@ class TtWidTikTok(TtWid):
                          logger: Union["BaseLogger", "LoggerManager", "Logger"],
                          headers: dict,
                          cookie: str = "",
+                         proxy: str = None,
                          **kwargs,
                          ) -> dict | None:
-        if response := await request_params(logger, cls.API, data=cls.DATA, headers=headers | {
-            "Cookie": cookie,
-            "Content-Type": "application/x-www-form-urlencoded",
-        }, **kwargs, ):
+        if response := await request_params(
+                logger,
+                cls.API,
+                data=cls.DATA,
+                headers=headers | {
+                    "Cookie": cookie,
+                    "Content-Type": "application/x-www-form-urlencoded",
+                },
+                proxy=proxy,
+                **kwargs,
+        ):
             return cls.extract(logger, response, cls.NAME)
         logger.error(f"获取 {cls.NAME} 参数失败！")
 
 
 async def demo():
     from src.testers import Logger
-    print("抖音", await TtWid.get_tt_wid(Logger(), PARAMS_HEADERS, proxies={"http://": None, "https://": None}))
+    print("抖音", await TtWid.get_tt_wid(Logger(), PARAMS_HEADERS, proxy=None))
     print("TikTok",
-          await TtWidTikTok.get_tt_wid(Logger(), PARAMS_HEADERS_TIKTOK,
-                                       cookie="需要填入 Cookie",
-                                       proxy="http://localhost:10809"))
+          await TtWidTikTok.get_tt_wid(
+              Logger(),
+              PARAMS_HEADERS_TIKTOK,
+              cookie="Cookie",
+              proxy="http://localhost:10809",
+          ))
 
 
 if __name__ == "__main__":

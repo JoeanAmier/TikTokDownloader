@@ -21,6 +21,7 @@ from ..custom import (
     PARAMS_HEADERS_TIKTOK,
     DATA_HEADERS_TIKTOK,
     USERAGENT,
+    TIMEOUT,
 )
 from ..encrypt import ABogus
 from ..encrypt import MsToken
@@ -140,10 +141,8 @@ class Parameter:
         self.dynamic_cover = self.__check_bool(dynamic_cover)
         self.original_cover = self.__check_bool(original_cover)
         self.timeout = self.__check_timeout(timeout)
-        self.proxy_str: str = self.extract_proxy(proxy)
-        self.proxy_str_tiktok: str = self.extract_proxy(proxy_tiktok)
-        self.proxy: dict = self.__check_proxy(proxy)
-        self.proxy_tiktok: dict = self.__check_proxy_tiktok(proxy_tiktok)
+        self.proxy: str | None = self.__check_proxy(proxy)
+        self.proxy_tiktok: str | None = self.__check_proxy_tiktok(proxy_tiktok)
         self.download = self.__check_bool(download)
         self.max_size = self.__check_max_size(max_size)
         self.chunk = self.__check_chunk(chunk)
@@ -165,9 +164,14 @@ class Parameter:
         self.default_mode = self.__check_default_mode(default_mode)
         self.preview = BLANK_PREVIEW
         self.ffmpeg = self.__generate_ffmpeg_object(ffmpeg)
-        self.client = create_client(timeout=self.timeout, **self.proxy, )
+        self.client = create_client(
+            timeout=self.timeout,
+            proxy=self.proxy,
+        )
         self.client_tiktok = create_client(
-            timeout=self.timeout, **self.proxy_tiktok, )
+            timeout=self.timeout,
+            proxy=self.proxy_tiktok,
+        )
         # TODO: 未更新代码
         self.check_rules = {
             "accounts_urls": self.__check_accounts_urls,
@@ -257,7 +261,7 @@ class Parameter:
                     self.logger,
                     self.headers_params_tiktok,
                     self.twc_tiktok or f"{TtWidTikTok.NAME}={cookie.get(TtWidTikTok.NAME, "")}",
-                    **self.proxy_tiktok,
+                    proxy=self.proxy_tiktok,
                 ),
             )
         else:
@@ -271,7 +275,7 @@ class Parameter:
                 await TtWid.get_tt_wid(
                     self.logger,
                     self.headers_params,
-                    **self.proxy,
+                    proxy=self.proxy,
                 ),
             )
         if isinstance(cookie, dict):
@@ -341,39 +345,34 @@ class Parameter:
         self.logger.info(f"split 参数已设置为 {split}", False)
         return split
 
-    def __check_proxy_tiktok(self, proxy: str | dict) -> dict:
-        return self.__check_proxy(proxy, "https://www.tiktok.com/")
+    def __check_proxy_tiktok(self, proxy: str | None, ) -> str | None:
+        return self.__check_proxy(proxy, "https://www.tiktok.com/", "TikTok", )
 
     def __check_proxy(
             self,
-            proxy: str | dict,
-            url="https://www.douyin.com/") -> dict:
-        if not self.extract_proxy(proxy):
-            return {"proxies": self.NO_PROXY}
-        if isinstance(proxy, str):
-            kwarg = {"proxy": proxy}
-        elif isinstance(proxy, dict):
-            kwarg = {"proxies": proxy}
-        else:
-            self.logger.warning(f"proxy 参数 {proxy} 设置错误，程序将不会使用代理", )
-            return {"proxies": self.NO_PROXY}
-        try:
-            response = get(
-                url,
-                headers=self.HEADERS,
-                follow_redirects=True,
-                **kwarg, )
-            response.raise_for_status()
-            self.logger.info(f"代理 {proxy} 测试成功")
-            return kwarg
-        except TimeoutException:
-            self.logger.warning(f"代理 {proxy} 测试超时")
-        except (
-                RequestError,
-                HTTPStatusError,
-        ) as e:
-            self.logger.warning(f"代理 {proxy} 测试失败：{e}")
-        return {"proxies": self.NO_PROXY}
+            proxy: str | None,
+            url="https://www.douyin.com/?recommend=1",
+            remark="抖音",
+    ) -> str | None:
+        if proxy:
+            try:
+                response = get(
+                    url,
+                    headers=self.HEADERS,
+                    follow_redirects=True,
+                    timeout=TIMEOUT,
+                    proxy=proxy,
+                )
+                response.raise_for_status()
+                self.logger.info(f"{remark}代理 {proxy} 测试成功")
+                return proxy
+            except TimeoutException:
+                self.logger.warning(f"{remark}代理 {proxy} 测试超时")
+            except (
+                    RequestError,
+                    HTTPStatusError,
+            ) as e:
+                self.logger.warning(f"{remark}代理 {proxy} 测试失败：{e}")
 
     def __check_max_size(self, max_size: int) -> int:
         max_size = max(max_size, 0)
@@ -493,6 +492,9 @@ class Parameter:
     async def __get_token_params(self):
         if not self.update_cookie_dy:
             return
+        if not any((self.cookie, self.cookie_cache,)):
+            self.logger.warning("抖音 cookie 参数未设置，相应功能可能无法正常使用")
+            return
         # if not (m := self.cookie.get("msToken")):
         #     self.logger.warning("抖音 cookie 缺少必需的键值对，请尝试重新写入 cookie")
         #     return
@@ -500,7 +502,7 @@ class Parameter:
                 self.logger,
                 self.headers_params,
                 # m,
-                **self.proxy,
+                proxy=self.proxy,
         )):
             # self.cookie |= d
             self.ms_token = d[MsToken.NAME]
@@ -512,6 +514,9 @@ class Parameter:
     async def __get_token_params_tiktok(self):
         if not self.update_cookie_tk:
             return
+        if not any((self.cookie_tiktok, self.cookie_tiktok_cache,)):
+            self.logger.warning("TikTok cookie 参数未设置，相应功能可能无法正常使用")
+            return
         # if not (m := self.cookie_tiktok.get("msToken")):
         #     self.logger.warning("TikTok cookie 缺少必需的键值对，请尝试重新写入 cookie")
         #     return
@@ -519,7 +524,7 @@ class Parameter:
                 self.logger,
                 self.headers_params_tiktok,
                 # m,
-                **self.proxy,
+                proxy=self.proxy_tiktok,
         )):
             # self.cookie_tiktok |= d
             self.ms_token_tiktok = d[MsTokenTikTok.NAME]
@@ -661,12 +666,6 @@ class Parameter:
                 'tz_name',
         ):
             APITikTok.params[i] = info.get(i, "")
-
-    @staticmethod
-    def extract_proxy(proxy: str | dict | None) -> str | None:
-        if isinstance(proxy, dict):
-            return proxy.get("https://") or proxy.get("http://")
-        return proxy if isinstance(proxy, str) else None
 
     def __check_truncate(self, truncate: int) -> int:
         if isinstance(truncate, int) and truncate >= 32:

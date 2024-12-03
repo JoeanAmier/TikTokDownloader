@@ -76,14 +76,8 @@ class Settings:
         "cookie_tiktok": "",
         "dynamic_cover": False,
         "original_cover": False,
-        "proxy": {
-            "http://": None,
-            "https://": None,
-        },
-        "proxy_tiktok": {
-            "http://": None,
-            "https://": None,
-        },
+        "proxy": None,
+        "proxy_tiktok": None,
         "twc_tiktok": "",
         "download": True,
         "max_size": 0,

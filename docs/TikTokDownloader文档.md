@@ -368,12 +368,12 @@ https://www.douyin.com/note/123456789
 </tr>
 <tr>
 <td align="center">proxy</td>
-<td align="center">str | dict</td>
+<td align="center">str</td>
 <td align="center">抖音请求代理地址, 设置为 null 代表不使用代理</td>
 </tr>
 <tr>
 <td align="center">proxy_tiktok</td>
-<td align="center">str | dict</td>
+<td align="center">str</td>
 <td align="center">TikTok 请求代理地址, 设置为 null 代表不使用代理</td>
 </tr>
 <tr>
@@ -508,10 +508,7 @@ https://www.douyin.com/note/123456789
   "cookie_tiktok": "参数规则与 cookie 一致",
   "dynamic_cover": false,
   "original_cover": false,
-  "proxy": {
-    "http://": "http://127.0.0.1:9999",
-    "https://": "http://127.0.0.1:9999"
-  },
+  "proxy": "http://127.0.0.1:9999",
   "proxy_tiktok": "参数规则与 proxies 一致",
   "twc_tiktok": "",
   "download": true,

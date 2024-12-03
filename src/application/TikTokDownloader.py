@@ -338,7 +338,9 @@ class TikTokDownloader:
             # print("子线程开始运行！")  # 调试代码
             while not self.event.is_set():
                 # print("子线程运行中！")  # 调试代码
+                self.console.info("正在更新 Cookie！", )
                 await self.parameter.update_params()
+                self.console.info("Cookie 更新结束！", )
                 self.event.wait(COOKIE_UPDATE_INTERVAL)
             # print("子线程结束运行！")  # 调试代码
 

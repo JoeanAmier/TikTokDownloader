@@ -74,8 +74,8 @@ class Downloader:
         self.original = params.original_cover
         # self.cookie = params.cookie
         # self.cookie_tiktok = params.cookie_tiktok
-        self.proxy = params.proxy_str
-        self.proxy_tiktok = params.proxy_str_tiktok
+        self.proxy = params.proxy
+        self.proxy_tiktok = params.proxy_tiktok
         self.download = params.download
         self.max_size = params.max_size
         self.chunk = params.chunk

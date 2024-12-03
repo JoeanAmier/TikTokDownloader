@@ -9,17 +9,17 @@ from typing import TYPE_CHECKING
 from typing import Union
 from urllib.parse import quote
 
-from ..custom import PARAMS_HEADERS
-from ..custom import PARAMS_HEADERS_TIKTOK
-from ..custom import USERAGENT
-from ..encrypt.ttWid import TtWid
-from ..encrypt.xBogus import XBogusTikTok
-from ..tools import request_params
+from src.custom import PARAMS_HEADERS
+from src.custom import PARAMS_HEADERS_TIKTOK
+from src.custom import USERAGENT
+from src.encrypt.ttWid import TtWid
+from src.encrypt.xBogus import XBogusTikTok
+from src.tools import request_params
 
 if TYPE_CHECKING:
-    from ..record import BaseLogger
-    from ..record import LoggerManager
-    from ..testers import Logger
+    from src.record import BaseLogger
+    from src.record import LoggerManager
+    from src.testers import Logger
 
 __all__ = ["MsToken", "MsTokenTikTok"]
 
@@ -92,28 +92,60 @@ class MsToken:
                              for _ in range(size))}
 
     @classmethod
-    async def _get_ms_token(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                            params: dict,
-                            headers: dict,
-                            **kwargs, ) -> dict | None:
-        if response := await request_params(logger, cls.API,
-                                            data=dumps(cls.DATA | {"tspFromClient": int(time() * 1000)}),
-                                            headers=headers, params=params, **kwargs, ):
+    async def _get_ms_token(
+            cls,
+            logger: Union["BaseLogger", "LoggerManager", "Logger"],
+            params: dict,
+            headers: dict,
+            proxy: str,
+            **kwargs,
+    ) -> dict | None:
+        if response := await request_params(
+                logger,
+                cls.API,
+                data=dumps(cls.DATA | {"tspFromClient": int(time() * 1000)}),
+                headers=headers,
+                params=params,
+                proxy=proxy,
+                **kwargs,
+        ):
             return TtWid.extract(logger, response, cls.NAME)
         logger.error(f"获取 {cls.NAME} 参数失败！")
 
     @classmethod
-    async def get_real_ms_token(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                                headers: dict,
-                                token="", **kwargs, ) -> dict | None:
+    async def get_real_ms_token(
+            cls,
+            logger: Union["BaseLogger", "LoggerManager", "Logger"],
+            headers: dict,
+            token="",
+            proxy: str = None,
+            **kwargs,
+    ) -> dict | None:
         params = {cls.NAME: token}
-        return await cls._get_ms_token(logger, params, headers, **kwargs)
+        return await cls._get_ms_token(
+            logger,
+            params,
+            headers,
+            proxy,
+            **kwargs,
+        )
 
     @classmethod
-    async def get_long_ms_token(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                                headers: dict,
-                                token="", **kwargs, ) -> dict | None:
-        return await cls.get_real_ms_token(logger, headers, token or cls.TOKEN, **kwargs, )
+    async def get_long_ms_token(
+            cls,
+            logger: Union["BaseLogger", "LoggerManager", "Logger"],
+            headers: dict,
+            token="",
+            proxy: str = None,
+            **kwargs,
+    ) -> dict | None:
+        return await cls.get_real_ms_token(
+            logger,
+            headers,
+            token or cls.TOKEN,
+            proxy,
+            **kwargs,
+        )
 
 
 class MsTokenTikTok(MsToken):
@@ -175,25 +207,36 @@ class MsTokenTikTok(MsToken):
         "ZtgbaTxz36EXh0eiNDKGzI1PEweGi6we6L7_z7gvKoIxRWKm")
 
     @classmethod
-    async def get_real_ms_token(cls, logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                                headers: dict,
-                                token="", **kwargs, ) -> dict | None:
+    async def get_real_ms_token(
+            cls,
+            logger: Union["BaseLogger", "LoggerManager", "Logger"],
+            headers: dict,
+            token="",
+            proxy: str = None,
+            **kwargs,
+    ) -> dict | None:
         params = {cls.NAME: token}
         if token:
-            headers = headers | {"Cookie": f"{cls.NAME}={token}"}
+            headers |= {"Cookie": f"{cls.NAME}={token}"}
             params["X-Bogus"] = quote(
                 XBogusTikTok().get_x_bogus(
                     params, user_agent=headers.get(
                         "User-Agent", USERAGENT)), safe="")
-        return await cls._get_ms_token(logger, params, headers, **kwargs)
+        return await cls._get_ms_token(
+            logger,
+            params,
+            headers,
+            proxy,
+            **kwargs,
+        )
 
 
 async def demo():
     from src.testers import Logger
     print("抖音",
-          await MsToken.get_real_ms_token(Logger(), PARAMS_HEADERS, proxies={"http://": None, "https://": None}))
+          await MsToken.get_real_ms_token(Logger(), PARAMS_HEADERS, proxy=None))
     print("抖音",
-          await MsToken.get_long_ms_token(Logger(), PARAMS_HEADERS, proxies={"http://": None, "https://": None}))
+          await MsToken.get_long_ms_token(Logger(), PARAMS_HEADERS, proxy=None, ))
     print("TikTok",
           await MsTokenTikTok.get_real_ms_token(Logger(), PARAMS_HEADERS_TIKTOK, proxy="http://127.0.0.1:10809"))
     print("TikTok",
