@@ -31,6 +31,7 @@ from ..custom import (
     INFO,
     WARNING,
 )
+from ..tools import CacheError
 from ..tools import PrivateRetry
 from ..tools import TikTokDownloaderError
 from ..tools import beautify_string
@@ -449,7 +450,7 @@ class Downloader:
             actual_root: Path,
             key: str = "music_url",
             switch: bool = False,
-            suffix: str = "m4a",
+            suffix: str = "mp3",
             **kwargs,
     ) -> None:
         if self.check_deal_music(
@@ -533,14 +534,20 @@ class Downloader:
             self.log.info(f"{show} URL: {url}", False, )
             self.log.info(f"{show} Headers: {headers}", False, )
             try:
+                # TODO: 简化代码逻辑
                 length, suffix = await self.__head_file(client, url, headers, suffix, )
-                position = self.__update_headers_range(headers, temp, )
+                position = self.__update_headers_range(headers, temp, length, )
                 async with client.stream(
                         "GET",
                         url,
                         headers=headers,
                 ) as response:
+                    if not length and not unknown_size:
+                        length, suffix = self._extract_content(response.headers, suffix)
+                        length += position
                     self._record_response(response, show, length, )
+                    if response.status_code == 416:
+                        raise CacheError("文件缓存异常，尝试重新下载")
                     response.raise_for_status()
                     match self._download_initial_check(
                         length,
@@ -572,6 +579,10 @@ class Downloader:
                     "如果 TikTok 平台作品下载功能异常，请检查配置文件中 browser_info_tiktok 的 device_id 参数！",
                     style=WARNING,
                 )
+                return False
+            except CacheError as e:
+                self.delete(temp)
+                self.log.error(str(e))
                 return False
 
     async def download_file(
@@ -707,6 +718,11 @@ class Downloader:
         return root.joinpath(name) if folder_mode else root
 
     @staticmethod
+    def delete(temp: "Path", ):
+        if temp.is_file():
+            temp.unlink()
+
+    @staticmethod
     def save_file(cache: Path, actual: Path):
         move(cache.resolve(), actual.resolve())
 
@@ -730,30 +746,48 @@ class Downloader:
         self.log.info(
             f"{show} 文件大小 {format_size(length)}", False, )
 
-    async def __head_file(self,
-                          client: "AsyncClient",
-                          url: str,
-                          headers: dict,
-                          suffix: str,
-                          ) -> [int, str]:
+    async def __head_file(
+            self,
+            client: "AsyncClient",
+            url: str,
+            headers: dict,
+            suffix: str,
+    ) -> [int, str]:
         response = await client.head(
             url,
             headers=headers,
         )
+        if response.status_code == 405:
+            return 0, suffix
         response.raise_for_status()
+        return self._extract_content(response.headers, suffix, )
+
+    def _extract_content(
+            self,
+            headers: dict,
+            suffix: str,
+    ) -> [int, str]:
         suffix = self.__extract_type(
-            response.headers.get("Content-Type")) or suffix
-        length = response.headers.get(
-            "Content-Length", 0)
+            headers.get("Content-Type"),
+        ) or suffix
+        length = headers.get(
+            "Content-Length",
+            0,
+        )
         return int(length), suffix
 
     @staticmethod
     def __get_resume_byte_position(file: Path) -> int:
         return file.stat().st_size if file.is_file() else 0
 
-    def __update_headers_range(self, headers: dict, file: Path) -> int:
-        headers["Range"] = f"bytes={(p := self.__get_resume_byte_position(file))}-"
-        return p
+    def __update_headers_range(
+            self, headers: dict, file: Path, length: int, ) -> int:
+        position = self.__get_resume_byte_position(file)
+        if length and position >= length:
+            self.delete(file)
+            position = 0
+        headers["Range"] = f"bytes={position}-"
+        return position
 
     def __extract_type(self, content: str) -> str:
         if not (s := self.CONTENT_TYPE_MAP.get(content)):

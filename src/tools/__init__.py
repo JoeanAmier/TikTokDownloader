@@ -4,6 +4,7 @@ from .capture import capture_error_request
 from .choose import choose
 from .cleaner import Cleaner
 from .console import ColorfulConsole
+from .error import CacheError
 from .error import TikTokDownloaderError
 from .file_folder import file_switch
 from .file_folder import remove_empty_directories

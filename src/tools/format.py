@@ -41,3 +41,7 @@ def format_size(size_in_bytes: int) -> str:
         size_in_bytes /= 1024
         index += 1
     return f"{size_in_bytes:.2f} {units[index]}"
+
+
+if __name__ == '__main__':
+    print(format_size(0))
