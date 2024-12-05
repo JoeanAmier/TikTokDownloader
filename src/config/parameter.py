@@ -636,7 +636,8 @@ class Parameter:
                     self.headers_params,
                     self.headers_qrcode,
             ):
-                j[i] = info.get(i, "")
+                if v := info.get(i, ):
+                    j[i] = v
         for i in (
                 'browser_platform',
                 'browser_name',
@@ -647,7 +648,8 @@ class Parameter:
                 'os_version',
                 # 'webid',
         ):
-            API.params[i] = info.get(i, "")
+            if v := info.get(i, ):
+                API.params[i] = v
 
     def __check_browser_info_tiktok(self, info: dict, ):
         self.logger.info(f"TikTok 浏览器信息: {info}", False)
@@ -661,16 +663,23 @@ class Parameter:
                     self.headers_download_tiktok,
                     self.headers_params_tiktok,
             ):
-                j[i] = info.get(i, "")
+                if v := info.get(i, ):
+                    j[i] = v
         for i in (
-                'browser_name',
-                'browser_platform',
-                'browser_version',
-                'device_id',
-                'os',
-                'tz_name',
+                "app_language",
+                "browser_language",
+                "browser_name",
+                "browser_platform",
+                "browser_version",
+                "language",
+                "os",
+                "priority_region",
+                "region",
+                "tz_name",
+                "webcast_language",
         ):
-            APITikTok.params[i] = info.get(i, "")
+            if v := info.get(i, ):
+                APITikTok.params[i] = v
 
     def __check_truncate(self, truncate: int) -> int:
         if isinstance(truncate, int) and truncate >= 32:

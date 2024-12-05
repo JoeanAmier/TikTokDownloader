@@ -21,12 +21,10 @@ class Params:
         self.ab = ABogus()
         self.xb = XBogus()
         self.console = Console()
-        self.max_retry = 3
+        self.max_retry = 0
         self.timeout = 5
         self.max_pages = 2
-        self.client = create_client(
-            timeout=self.timeout, proxies={
-                "http://": None, "https://": None}, )
+        self.client = create_client(timeout=self.timeout, )
         self.client_tiktok = create_client(
             timeout=self.timeout, proxy="http://127.0.0.1:10809", )
 
@@ -36,9 +34,3 @@ class Params:
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         await self.client.aclose()
         await self.client_tiktok.aclose()
-
-    @staticmethod
-    def extract_proxy(proxy: str | dict | None) -> str | None:
-        if isinstance(proxy, dict):
-            return proxy.get("https://") or proxy.get("http://")
-        return proxy if isinstance(proxy, str) else None

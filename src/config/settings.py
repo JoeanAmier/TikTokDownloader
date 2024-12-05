@@ -90,10 +90,10 @@ class Settings:
         "update_cookie": True,
         "update_cookie_tiktok": True,
         "browser_info": {
-            "Sec-Ch-Ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-            "Sec-Ch-Ua-Platform": '"Windows"',
+            # "Sec-Ch-Ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+            # "Sec-Ch-Ua-Platform": '"Windows"',
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                          "Chrome/126.0.0.0 Safari/537.36",
+                          "Chrome/131.0.0.0 Safari/537.36",
             "browser_platform": "Win32",
             "browser_name": "Chrome",
             "browser_version": "126.0.0.0",
@@ -104,17 +104,22 @@ class Settings:
             "webid": "",
         },
         "browser_info_tiktok": {
-            "Sec-Ch-Ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
-            "Sec-Ch-Ua-Platform": '"Windows"',
+            # "Sec-Ch-Ua": '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"',
+            # "Sec-Ch-Ua-Platform": '"Windows"',
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                          "Chrome/126.0.0.0 Safari/537.36",
+                          "Chrome/131.0.0.0 Safari/537.36",
+            "app_language": "en",
+            "browser_language": "zh-SG",
             "browser_name": "Mozilla",
             "browser_platform": "Win32",
             "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-                               "Chrome/126.0.0.0 Safari/537.36",
-            "device_id": "",
+                               "Chrome/131.0.0.0 Safari/537.36",
+            "language": "en",
             "os": "windows",
+            "priority_region": "CN",
+            "region": "JP",
             "tz_name": "Asia/Shanghai",
+            "webcast_language": "en",
         }
     }  # 默认配置
 

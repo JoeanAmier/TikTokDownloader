@@ -594,17 +594,18 @@ class Extractor:
             container.cache["nickname"] = name
             container.cache["mark"] = name
 
-    def preprocessing_data(self,
-                           data: list[dict] | dict,
-                           tiktok: bool = False,
-                           mode: str = ...,
-                           mark: str = "",
-                           user_id: str = "",
-                           mix_id: str = "",
-                           mix_title: str = "",
-                           collect_id: str = "",
-                           collect_name: str = "",
-                           ) -> tuple[str, str, str,]:
+    def preprocessing_data(
+            self,
+            data: list[dict] | dict,
+            tiktok: bool = False,
+            mode: str = ...,
+            mark: str = "",
+            user_id: str = "",
+            mix_id: str = "",
+            mix_title: str = "",
+            collect_id: str = "",
+            collect_name: str = "",
+    ) -> tuple[str, str, str,]:
         if isinstance(data, dict):
             info = self.get_user_info_tiktok(data) if tiktok else self.get_user_info(data)
             if user_id != (s := info.get("sec_uid")):

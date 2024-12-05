@@ -3,11 +3,11 @@ from typing import Callable
 from typing import TYPE_CHECKING
 from typing import Union
 
-from ..interface.template import API
-from ..testers import Params
+from src.interface.template import API
+from src.testers import Params
 
 if TYPE_CHECKING:
-    from ..config import Parameter
+    from src.config import Parameter
 
 
 class Collection(API):

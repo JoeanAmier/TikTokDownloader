@@ -29,6 +29,8 @@
 27. 修复其他已知问题
 28. 优化代码运行逻辑
 
+<p><strong>注意：<code>5.5</code> 版本的配置文件与旧版本配置文件不兼容；旧版本程序更新后，建议重命名旧版本配置文件，然后运行程序生成默认配置文件，手动迁移配置文件内容；不兼容的参数：<code>browser_info</code>、<code>browser_info_tiktok</code>，其余参数无需处理！</strong></p>
+
 <p><strong>Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie！</strong></p>
 
 <p><strong>注意：Mac OS 平台可执行文件 <code>main</code> 可能需要从终端命令行启动；受设备限制，Mac OS 平台可执行文件尚未经过测试，无法保证可用性！</strong></p>

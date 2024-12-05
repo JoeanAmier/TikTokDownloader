@@ -7,11 +7,13 @@ from typing import TYPE_CHECKING
 from typing import Type
 from typing import Union
 
-from ..interface.template import API
-from ..testers import Params
+from src.interface.template import API
+from src.testers import Params
+
+# from asyncio import run
 
 if TYPE_CHECKING:
-    from ..config import Parameter
+    from src.config import Parameter
 
 
 class Account(API):
@@ -247,3 +249,12 @@ class Account(API):
         except ValueError:
             self.log.warning(f"作品最晚发布日期无效 {date_}")
             return default_date
+
+# async def main():
+#     async with Params() as params:
+#         i = Account(params, )
+#         print(await i.run())
+#
+#
+# if __name__ == "__main__":
+#     run(main())

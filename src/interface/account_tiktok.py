@@ -4,12 +4,12 @@ from typing import TYPE_CHECKING
 from typing import Type
 from typing import Union
 
-from ..interface.account import Account
-from ..interface.template import APITikTok
-from ..testers import Params
+from src.interface.account import Account
+from src.interface.template import APITikTok
+from src.testers import Params
 
 if TYPE_CHECKING:
-    from ..config import Parameter
+    from src.config import Parameter
 
 
 class AccountTikTok(Account, APITikTok, ):

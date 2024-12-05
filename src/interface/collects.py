@@ -3,12 +3,12 @@ from typing import Callable
 from typing import TYPE_CHECKING
 from typing import Union
 
-from ..interface.collection import Collection
-from ..interface.template import API
-from ..testers import Params
+from src.interface.collection import Collection
+from src.interface.template import API
+from src.testers import Params
 
 if TYPE_CHECKING:
-    from ..config import Parameter
+    from src.config import Parameter
 
 
 class Collects(API):
@@ -280,7 +280,7 @@ async def main():
     async with Params() as params:
         c = Collects(params, )
         print(await c.run())
-        c = CollectsDetail(params, collects_id="7357880138505361191")
+        c = CollectsDetail(params, collects_id="")
         print(await c.run())
         c = CollectsMix(params, )
         print(await c.run())

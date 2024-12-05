@@ -2,11 +2,11 @@ from asyncio import run
 from typing import TYPE_CHECKING
 from typing import Union
 
-from ..interface.template import APITikTok
-from ..testers import Params
+from src.interface.template import APITikTok
+from src.testers import Params
 
 if TYPE_CHECKING:
-    from ..config import Parameter
+    from src.config import Parameter
 
 
 class InfoTikTok(APITikTok):
@@ -51,18 +51,20 @@ class InfoTikTok(APITikTok):
     def generate_params(self, ) -> dict:
         return self.params | {
             "abTestVersion": "[object Object]",
-            "appType": "m",
-            "data_collection_enabled": "true",
+            "appType": "t",
             "secUid": self.sec_user_id,
             "uniqueId": self.unique_id,
             "user": "[object Object]",
-            "user_is_login": "true",
         }
 
 
 async def main():
+    InfoTikTok.params["device_id"] = ""
     async with Params() as params:
-        i = InfoTikTok(params, )
+        i = InfoTikTok(
+            params,
+            unique_id="",
+        )
         print(await i.run())
 
 

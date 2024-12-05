@@ -580,21 +580,22 @@ class TikTok:
             sec_user_id,
         ).run()
 
-    async def _batch_process_detail(self,
-                                    data: list[dict],
-                                    api: bool = False,
-                                    earliest: date = None,
-                                    latest: date = None,
-                                    tiktok: bool = False,
-                                    info: dict = None,
-                                    mode: str = "",
-                                    mark: str = "",
-                                    user_id: str = "",
-                                    mix_id: str = "",
-                                    mix_title: str = "",
-                                    collect_id: str = "",
-                                    collect_name: str = "",
-                                    ):
+    async def _batch_process_detail(
+            self,
+            data: list[dict],
+            api: bool = False,
+            earliest: date = None,
+            latest: date = None,
+            tiktok: bool = False,
+            info: dict = None,
+            mode: str = "",
+            mark: str = "",
+            user_id: str = "",
+            mix_id: str = "",
+            mix_title: str = "",
+            collect_id: str = "",
+            collect_name: str = "",
+    ):
         self.logger.info("开始提取作品数据")
         id_, name, mark = self.extractor.preprocessing_data(
             info or data,

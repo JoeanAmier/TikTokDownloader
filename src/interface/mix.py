@@ -2,13 +2,13 @@ from typing import Callable
 from typing import TYPE_CHECKING
 from typing import Union
 
-from ..extract import Extractor
-from ..interface.detail import Detail
-from ..interface.template import API
-from ..testers import Params
+from src.extract import Extractor
+from src.interface.detail import Detail
+from src.interface.template import API
+from src.testers import Params
 
 if TYPE_CHECKING:
-    from ..config import Parameter
+    from src.config import Parameter
 
 
 class Mix(API):

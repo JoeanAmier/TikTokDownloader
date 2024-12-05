@@ -34,15 +34,14 @@ TIMEOUT = 10
 PHONE_HEADERS = {
     "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) "
                   "CriOS/125.0.6422.51 Mobile/15E148 Safari/604.1", }
-USERAGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 "
-    "Safari/537.36")
-SEC_CH_UA = '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"'
-SEC_CH_UA_PLATFORM = '"Windows"'
+USERAGENT = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 "
+             "Safari/537.36")
+# SEC_CH_UA = '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"'
+# SEC_CH_UA_PLATFORM = '"Windows"'
 PARAMS_HEADERS = {
     "Accept": "*/*",
     "Accept-Encoding": "*/*",
-    "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
+    # "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
     "Content-Type": "text/plain;charset=UTF-8",
     # "Dnt": "1",
     # "Origin": "https://www.douyin.com",
@@ -62,7 +61,7 @@ PARAMS_HEADERS_TIKTOK = PARAMS_HEADERS | {
 DATA_HEADERS = {
     "Accept": "*/*",
     "Accept-Encoding": "*/*",
-    "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
+    # "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
     # "Dnt": "1",
     "Referer": "https://www.douyin.com/?recommend=1",
     # "Sec-Ch-Ua": SEC_CH_UA,
@@ -78,7 +77,7 @@ DATA_HEADERS_TIKTOK = DATA_HEADERS | {
 }
 DOWNLOAD_HEADERS = {
     'Accept': '*/*',
-    'Accept-Language': 'zh-SG,zh-CN;q=0.9,zh;q=0.8',
+    # 'Accept-Language': 'zh-SG,zh-CN;q=0.9,zh;q=0.8',
     # 'Dnt': '1',
     # 'Origin': 'https://www.douyin.com',
     # 'Priority': 'i',
@@ -95,7 +94,7 @@ DOWNLOAD_HEADERS = {
 DOWNLOAD_HEADERS_TIKTOK = {
     "Accept": "*/*",
     # "Accept-Encoding": "identity;q=1, *;q=0",
-    "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
+    # "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
     "Connection": "keep-alive",
     # "Dnt": "1",
     # "Host": "v16-webapp-prime.us.tiktok.com",
@@ -112,7 +111,7 @@ DOWNLOAD_HEADERS_TIKTOK = {
 QRCODE_HEADERS = {
     "Accept": "*/*",
     "Accept-Encoding": "*/*",
-    "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
+    # "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
     # "Dnt": "1",
     # "Origin": "https://www.douyin.com",
     "Referer": "https://www.douyin.com/",

@@ -362,10 +362,11 @@ class APITikTok(API):
         "browser_name": "Mozilla",
         "browser_online": "true",
         "browser_platform": "Win32",
-        "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 "
+        "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 "
                            "Safari/537.36",
         "channel": "tiktok_web",
         "cookie_enabled": "true",
+        "data_collection_enabled": "true",
         "device_id": "",
         "device_platform": "web_pc",
         "focus_state": "true",
@@ -381,7 +382,7 @@ class APITikTok(API):
         "screen_height": "864",
         "screen_width": "1536",
         "tz_name": "Asia/Shanghai",
-        # "userId": "",
+        "user_is_login": "true",
         "webcast_language": "en",
         "msToken": "",
     }
