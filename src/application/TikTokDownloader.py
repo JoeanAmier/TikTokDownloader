@@ -129,7 +129,7 @@ class TikTokDownloader:
         )
 
     async def disable_function(self, *args, **kwargs, ):
-        self.console.print("该功能正在重构，未来开发完成重新开放！", style=WARNING)
+        self.console.print("该功能正在重构，预计 5.6 版本开发完成重新开放！", style=WARNING)
 
     # def __api_object(self):
     #     self.server(APIServer, SERVER_HOST)

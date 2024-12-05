@@ -89,8 +89,8 @@ class Parameter:
             storage_format: str,
             dynamic_cover: bool,
             original_cover: bool,
-            proxy: str | None,
-            proxy_tiktok: str | None,
+            proxy: str | None | dict,
+            proxy_tiktok: str | None | dict,
             twc_tiktok: str,
             download: bool,
             max_size: int,
@@ -345,16 +345,21 @@ class Parameter:
         self.logger.info(f"split 参数已设置为 {split}", False)
         return split
 
-    def __check_proxy_tiktok(self, proxy: str | None, ) -> str | None:
+    def __check_proxy_tiktok(self, proxy: str | None | dict, ) -> str | None:
         return self.__check_proxy(proxy, "https://www.tiktok.com/", "TikTok", )
 
     def __check_proxy(
             self,
-            proxy: str | None,
+            proxy: str | None | dict,
             url="https://www.douyin.com/?recommend=1",
             remark="抖音",
     ) -> str | None:
         if proxy:
+            # 暂时兼容旧版配置；未来将会移除
+            if isinstance(proxy, dict):
+                self.console.warning(f"{remark}代理参数应为字符串格式，未来不再支持字典格式")
+                if not (proxy := proxy.get("https://")):
+                    return
             try:
                 response = get(
                     url,

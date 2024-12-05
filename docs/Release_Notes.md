@@ -31,6 +31,4 @@
 
 <p><strong>Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie！</strong></p>
 
-<p><strong><code>5.5</code> 版本配置文件的 <code>proxy</code> 参数设置规则已变更，旧版本更新后请查阅文档修改该参数 或者 删除旧版配置文件后再运行程序！<br>修改示例：<code>"proxy": "",</code></strong></p>
-
 <p><strong>注意：Mac OS 平台可执行文件 <code>main</code> 可能需要从终端命令行启动；受设备限制，Mac OS 平台可执行文件尚未经过测试，无法保证可用性！</strong></p>
