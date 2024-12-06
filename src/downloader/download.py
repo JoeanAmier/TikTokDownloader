@@ -534,21 +534,19 @@ class Downloader:
             self.log.info(f"{show} URL: {url}", False, )
             self.log.info(f"{show} Headers: {headers}", False, )
             try:
-                # TODO: 简化代码逻辑
-                length, suffix = await self.__head_file(client, url, headers, suffix, )
-                position = self.__update_headers_range(headers, temp, length, )
+                # length, suffix = await self.__head_file(client, url, headers, suffix, )
+                position = self.__update_headers_range(headers, temp, )
                 async with client.stream(
                         "GET",
                         url,
                         headers=headers,
                 ) as response:
-                    if not length and not unknown_size:
-                        length, suffix = self._extract_content(response.headers, suffix)
-                        length += position
-                    self._record_response(response, show, length, )
                     if response.status_code == 416:
                         raise CacheError("文件缓存异常，尝试重新下载")
                     response.raise_for_status()
+                    length, suffix = self._extract_content(response.headers, suffix, )
+                    length += position
+                    self._record_response(response, show, length, )
                     match self._download_initial_check(
                         length,
                         unknown_size,
@@ -595,7 +593,8 @@ class Downloader:
             content: int,
             position: int,
             count: SimpleNamespace,
-            progress: Progress) -> bool:
+            progress: Progress,
+    ) -> bool:
         task_id = progress.add_task(
             beautify_string(show, self.truncate),
             total=content or None,
@@ -781,11 +780,15 @@ class Downloader:
         return file.stat().st_size if file.is_file() else 0
 
     def __update_headers_range(
-            self, headers: dict, file: Path, length: int, ) -> int:
+            self,
+            headers: dict,
+            file: Path,
+            length: int = 0,
+    ) -> int:
         position = self.__get_resume_byte_position(file)
-        if length and position >= length:
-            self.delete(file)
-            position = 0
+        # if length and position >= length:
+        #     self.delete(file)
+        #     position = 0
         headers["Range"] = f"bytes={position}-"
         return position
 
