@@ -28,7 +28,6 @@ from ..custom import MAX_FILENAME_LENGTH
 from ..custom import MAX_WORKERS
 from ..custom import (
     PROGRESS,
-    INFO,
     WARNING,
 )
 from ..tools import CacheError
@@ -204,62 +203,36 @@ class Downloader:
     async def run_live(self, data: list[tuple], tiktok=False, **kwargs, ):
         if not data or not self.download:
             return
-        download_tasks = []
         download_command = []
-        self.generate_live_tasks(data, download_tasks, download_command)
-        if self.ffmpeg.state:
-            self.console.print(
-                "检测到 ffmpeg，程序将会调用 ffmpeg 下载直播，关闭 TikTokDownloader 不会中断下载！",
-                style=INFO,
-            )
-            self.__download_live(download_command, tiktok)
-        else:
-            self.console.print(
-                "未检测到 ffmpeg，程序将会调用内置下载器下载直播，您需要保持 TikTokDownloader 运行直到直播结束！",
-                style=WARNING,
-            )
-            await self.downloader_chart(
-                download_tasks,
-                SimpleNamespace(),
-                self.__live_progress_object(),
-                semaphore=Semaphore(len(download_tasks)),
-                unknown_size=True,
-                headers=self.headers,
-                tiktok=tiktok,
-            )
+        self.generate_live_commands(data, download_command, )
+        self.console.info(
+            "程序将会调用 ffmpeg 下载直播，关闭 TikTokDownloader 不会中断下载！",
+        )
+        self.__download_live(download_command, tiktok)
 
-    def generate_live_tasks(self,
-                            data: list[tuple],
-                            tasks: list,
-                            commands: list,
-                            suffix: str = "flv",
-                            ):
+    def generate_live_commands(
+            self,
+            data: list[tuple],
+            commands: list,
+            suffix: str = "mp4",
+    ):
         root = self.root.joinpath("Live")
+        root.mkdir(exist_ok=True)
         for i, f, m in data:
             name = self.cleaner.filter_name(
                 f'{i["title"]}{self.split}{i["nickname"]}{self.split}{datetime.now():%Y-%m-%d %H.%M.%S}.{suffix}',
-                inquire=False,
-                default=str(time())[:10],
+                f'{int(time())}{self.split}{datetime.now():%Y-%m-%d %H.%M.%S}.{suffix}',
             )
-            temp_root, actual_root = self.deal_folder_path(root, name, False, )
-            tasks.append((
-                f,
-                temp_root,
-                actual_root,
-                f'直播 {i["title"]}{self.split}{i["nickname"]}',
-                "0" * 19,
-                suffix,
-            ))
+            path = root.joinpath(name)
             commands.append((
                 m,
-                str(actual_root.with_name(f"{actual_root.stem}.mp4").resolve()),
+                str(path.resolve()),
             ))
 
     def __download_live(self, commands: list, tiktok: bool, ):
         self.ffmpeg.download(
             commands,
             self.proxy_tiktok if tiktok else self.proxy,
-            self.timeout,
             self.headers["User-Agent"],
         )
 

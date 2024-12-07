@@ -3,7 +3,6 @@ from random import randint
 from typing import TYPE_CHECKING
 
 # from time import time
-from .static import GENERAL
 
 if TYPE_CHECKING:
     from ..tools import ColorfulConsole
@@ -76,7 +75,7 @@ async def suspend(count: int, console: "ColorfulConsole") -> None:
         rest_time = 60 * 5  # 根据实际需求修改
         console.print(
             f"程序已经处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，程序已经暂停运行，"
-            f"将在 {rest_time} 秒后继续处理数据！", style=GENERAL)
+            f"将在 {rest_time} 秒后继续处理数据！", )
         await sleep(rest_time)
     # 禁用该函数
     # pass

@@ -172,8 +172,13 @@ https://www.douyin.com/note/123456789
 ```
 
 <h2>直播下载</h2>
-<p><code>获取直播推流地址</code> 功能支持调用 <code>ffmpeg</code> 下载直播，程序会优先调用系统环境的 <code>ffmpeg</code>，其次调用 <code>ffmpeg</code> 参数指定的 <code>ffmpeg</code>，如果 <code>ffmpeg</code> 不可用，程序将会调用内置下载器下载直播。</p>
-<p>建议配置 <code>ffmpeg</code> 环境，<code>ffmpeg.exe</code> 可前往 <a href="https://ffmpeg.org/download.html">官方网站</a> 获取。</p>
+<p><code>获取直播推流地址</code> 功能需要调用 <code>ffmpeg</code> 下载直播文件；程序会优先调用系统环境的 <code>ffmpeg</code>，其次调用 <code>ffmpeg</code> 参数指定的 <code>ffmpeg</code>，如果 <code>ffmpeg</code> 不可用，程序将不支持直播下载！</p>
+<p>建议前往 <a href="https://ffmpeg.org/download.html">官方网站</a> 获取 <code>ffmpeg</code> 程序！</p>
+<p>项目开发时所用的 FFmpeg 版本信息如下，不同版本的 FFmpeg 可能会有差异；若功能异常，建议向作者反馈！</p>
+<pre>
+ffmpeg version N-116650-g7897b0beed-20240815 Copyright (c) 2000-2024 the FFmpeg developers
+built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
+</pre>
 <h2>功能简介</h2>
 <table>
 <thead>

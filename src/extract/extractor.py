@@ -32,7 +32,6 @@ from ..custom import (
 )
 from ..custom import condition_filter
 from ..tools import TikTokDownloaderError
-from ..tools import random_string
 
 if TYPE_CHECKING:
     from ..config import Parameter
@@ -158,7 +157,7 @@ class Extractor:
             **kwargs,
     ) -> list[dict]:
         if type_ not in self.type.keys():
-            raise ValueError
+            raise TikTokDownloaderError
         return await self.type[type_](data, recorder, tiktok, **kwargs)
 
     async def __batch(
@@ -614,11 +613,11 @@ class Extractor:
                 return "", "", ""
             name = self.cleaner.filter_name(
                 info["nickname"],
-                default=info["uid"],
+                info["uid"],
             )
             mark = self.cleaner.filter_name(
                 mark,
-                default=name,
+                name,
             )
             return (
                 info["uid"],
@@ -659,8 +658,7 @@ class Extractor:
                 case "collects":
                     collect_name = self.cleaner.filter_name(
                         collect_name,
-                        inquire=False,
-                        default=collect_id,
+                        collect_id,
                     )
                     return collect_id, collect_name, collect_name
         else:
@@ -690,12 +688,8 @@ class Extractor:
                 id_,
             ),
         )
-        mark = self.cleaner.filter_name(mark, default=name or self.__generate_temp_str())
+        mark = self.cleaner.filter_name(mark, name, )
         return id_, name.strip(), mark.strip()
-
-    def __generate_temp_str(self) -> str:
-        self.log.warning("当前标识无效，已生成临时标识：{0}".format(s := random_string()))
-        return s
 
     def __platform_classify_detail(
             self,
@@ -703,11 +697,20 @@ class Extractor:
             container: SimpleNamespace,
             tiktok: bool) -> None:
         if tiktok:
-            [self.__extract_batch_tiktok(
-                container, self.generate_data_object(item)) for item in data]
+            [
+                self.__extract_batch_tiktok(
+                    container,
+                    self.generate_data_object(item),
+                ) for item in data
+            ]
         else:
-            [self.__extract_batch(container, self.generate_data_object(item))
-             for item in data]
+            [
+                self.__extract_batch(
+                    container,
+                    self.generate_data_object(item),
+                )
+                for item in data
+            ]
 
     async def __detail(
             self,

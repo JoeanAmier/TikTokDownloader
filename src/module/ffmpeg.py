@@ -25,7 +25,7 @@ class FFMPEG:
         # return None  # 调试使用
         return self.__check_system_ffmpeg() or self.__check_system_ffmpeg(path)
 
-    def download(self, data: list[tuple], proxy, timeout, user_agent):
+    def download(self, data: list[tuple], proxy, user_agent):
         for u, p in data:
             command = self.__generate_command(
                 u,
@@ -40,13 +40,14 @@ class FFMPEG:
             url,
             file,
             proxy,
-            user_agent) -> str:
+            user_agent,
+    ) -> str:
         command = self.command.copy()
         command.extend([
             self.path,
             "-hide_banner",
             "-rw_timeout", f"{30 * 1000 * 1000}",
-            "-loglevel", "warning",
+            "-loglevel", "info",
             "-protocol_whitelist", "rtmp,crypto,file,http,https,tcp,tls,udp,rtp",
             "-analyzeduration", f"{10 * 1000 * 1000}",
             "-probesize", f"{10 * 1000 * 1000}",

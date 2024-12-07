@@ -65,7 +65,7 @@ class BaseLogger:
 
     @staticmethod
     def check_folder(folder: str) -> str:
-        return Cleaner().filter_name(folder, False, "Log")
+        return Cleaner().filter_name(folder, "Log")
 
     def run(self, *args, **kwargs):
         pass

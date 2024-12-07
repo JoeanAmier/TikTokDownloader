@@ -4,8 +4,6 @@ from string import whitespace
 
 from emoji import replace_emoji
 
-from src.custom import illegal_nickname
-
 __all__ = ["Cleaner"]
 
 
@@ -68,8 +66,8 @@ class Cleaner:
     def filter_name(
             self,
             text: str,
-            inquire=False,
-            default: str = "") -> str:
+            default: str = "",
+    ) -> str:
         """过滤文件夹名称中的非法字符"""
         text = text.replace(":", ".")
 
@@ -83,11 +81,7 @@ class Cleaner:
 
         text = text.strip().strip(".")
 
-        return (
-                text or self.filter_name(
-            illegal_nickname(),
-            False, default)) if inquire else (
-                text or default)
+        return text or default
 
     @staticmethod
     def clear_spaces(string: str):

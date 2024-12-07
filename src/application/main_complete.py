@@ -157,6 +157,7 @@ class TikTok:
         self.owner = parameter.owner_url
         self.owner_tiktok = parameter.owner_url_tiktok
         self.running = True
+        self.ffmpeg = parameter.ffmpeg.state
         self.cache = Cache(
             parameter,
             self.database,
@@ -169,13 +170,13 @@ class TikTok:
             ("获取直播推流地址(抖音)", self.live_interactive,),
             # ("采集作品评论数据(抖音)", self.comment_interactive,),
             ("批量下载合集作品(抖音)", self.mix_interactive,),
-            # ("采集账号详细数据(抖音)", self.disable_function,),
-            # ("采集搜索结果数据(抖音)", self.disable_function,),
+            # ("采集账号详细数据(抖音)",),
+            # ("采集搜索结果数据(抖音)",),
             ("采集抖音热榜数据(抖音)", self.hot_interactive,),
-            # ("批量下载话题作品(抖音)", self.disable_function,),
+            # ("批量下载话题作品(抖音)",),
             ("批量下载收藏作品(抖音)", self.collection_interactive,),
             ("批量下载收藏音乐(抖音)", self.collection_music_interactive,),
-            # ("批量下载收藏短剧(抖音)", self.disable_function,),
+            # ("批量下载收藏短剧(抖音)",),
             ("批量下载收藏夹作品(抖音)", self.collects_interactive,),
             ("批量下载账号作品(TikTok)", self.account_acquisition_interactive_tiktok,),
             ("批量下载链接作品(TikTok)", self.detail_interactive_tiktok,),
@@ -225,9 +226,6 @@ class TikTok:
             ("手动输入待采集的作品链接", self.__comment_inquire_tiktok),
             # ("从文本文档读取待采集的作品链接", self.__comment_txt_tiktok),
         )
-
-    async def disable_function(self, *args, **kwargs, ):
-        self.console.print("该功能暂不开放！", style=WARNING)
 
     def _inquire_input(self, tip: str = "", problem: str = "", ) -> str:
         text = self.console.input(problem or f"请输入{tip}链接: ")
@@ -615,12 +613,13 @@ class TikTok:
             m := await self.cache.has_cache(id_)
         ) else None
         root, params, logger = self.record.run(self.parameter)
-        async with logger(root,
-                          name=f"{prefix}{id_}_{mark}_{suffix}",
-                          old=old_mark,
-                          console=self.console,
-                          **params,
-                          ) as recorder:
+        async with logger(
+                root,
+                name=f"{prefix}{id_}_{mark}_{suffix}",
+                old=old_mark,
+                console=self.console,
+                **params,
+        ) as recorder:
             data = await self.extractor.run(
                 data,
                 recorder,
@@ -854,7 +853,11 @@ class TikTok:
     def _choice_live_quality(
             self,
             flv_items: dict,
-            m3u8_items: dict) -> tuple | None:
+            m3u8_items: dict,
+    ) -> tuple | None:
+        if not self.ffmpeg:
+            self.logger.warning("程序未检测到有效的 ffmpeg，不支持直播下载功能！")
+            return None
         try:
             choice_ = self.console.input(
                 "请选择下载清晰度(输入清晰度或者对应序号，直接回车代表不下载): ")
@@ -953,12 +956,15 @@ class TikTok:
             self.console.print(i, k, v)
         if self.parameter.download:
             tasks.append(
-                (item,
-                 *
-                 u) if (
+                (
+                    item,
+                    *u
+                ) if (
                     u := self._choice_live_quality(
                         item["flv_pull_url"],
-                        item["hls_pull_url_map"])) else u)
+                        item["hls_pull_url_map"],
+                    )) else u
+            )
 
     def show_live_stream_url_tiktok(self, item: dict, tasks: list):
         self.console.print("FLV 推流地址: ")
@@ -1589,9 +1595,7 @@ class TikTok:
                                         **kwargs,
                                         ):
         data = await CollectsMusic(self.parameter, cookie, proxy, *args, **kwargs).run()
-        if not any(data):
-            return None
-        return data
+        return data if any(data) else None
 
     async def _deal_collection_data(
             self,
