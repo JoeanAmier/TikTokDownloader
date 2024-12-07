@@ -365,9 +365,14 @@ class TikTokDownloader:
         self.parameter.logger.info("正在关闭程序")
 
     async def browser_cookie(self, ):
-        if Browser(self.parameter, self.cookie).run():
+        if Browser(self.parameter, self.cookie).run(
+                select=safe_pop(self.run_command),
+        ):
             await self.check_settings()
 
     async def browser_cookie_tiktok(self, ):
-        if Browser(self.parameter, self.cookie).run(True):
+        if Browser(self.parameter, self.cookie).run(
+                True,
+                select=safe_pop(self.run_command),
+        ):
             await self.check_settings()

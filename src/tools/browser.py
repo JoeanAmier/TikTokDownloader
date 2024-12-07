@@ -60,13 +60,18 @@ class Browser:
     def __init__(self, parameters: "Parameter", cookie_object: "Cookie"):
         self.console = parameters.console
         self.cookie_object = cookie_object
+        self.options = "\n".join(
+            (
+                f"{i}. {k}: {v[1]}" for i, (k, v) in enumerate(
+                self.SUPPORT_BROWSER.items(),
+                start=1,
+            )
+            )
+        )
 
-    def run(self, tiktok=False, ):
-        options = "\n".join(
-            f"{i}. {k}: {v[1]}" for i, (k, v) in enumerate(
-                self.SUPPORT_BROWSER.items(), start=1))
-        if browser := self.console.input(
-                f"读取指定浏览器的 {self.PLATFORM[tiktok].name} Cookie 并写入配置文件；注意：{self.TIP}\n{options}\n请输入浏览器名称或序号：",
+    def run(self, tiktok=False, select: str = None, ):
+        if browser := select or self.console.input(
+                f"读取指定浏览器的 {self.PLATFORM[tiktok].name} Cookie 并写入配置文件；注意：{self.TIP}\n{self.options}\n请输入浏览器名称或序号：",
         ):
             if cookie := self.get(browser, self.PLATFORM[tiktok].domain, ):
                 self.__save_cookie(cookie, tiktok, )

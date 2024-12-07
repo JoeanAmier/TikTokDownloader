@@ -701,7 +701,12 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 ```
 
 <p>上述命令表示运行程序自动依次执行 <code>终端交互模式</code> -> <code>批量下载账号作品(抖音)</code> -> <code>使用 accounts_urls 参数的账号链接(推荐)</code> -> <code>退出程序</code></p>
-<p>其他示例：<code>6 2</code> 代表依次执行 <code>终端交互模式</code> -> <code>批量下载账号作品(抖音)</code>；<code>8</code>代表执行<code>Web API 模式</code></p>
+<p>该参数可以实现设置默认启动模式、运行功能后自动退出、自动读取浏览器 Cookie 等高级自动化功能！</p>
+<ul>其他示例：
+<li><code>6 2</code>：代表依次执行 <code>终端交互模式</code> -> <code>批量下载账号作品(抖音)</code></li>
+<li><code>8</code>：代表执行<code>Web API 模式</code></li>
+<li><code>2 7</code>：代表依次执行<code>从浏览器获取 Cookie (抖音)</code> -> <code>Edge</code></li>
+</ul>
 <h3>程序代理设置</h3>
 
 ```json
