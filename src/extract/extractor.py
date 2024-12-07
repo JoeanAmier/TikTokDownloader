@@ -1181,8 +1181,12 @@ class Extractor:
             cache=None,
             same=False,
         )
-        [self.__extract_collection_music(
-            container, self.generate_data_object(item)) for item in data]
+        [
+            self.__extract_collection_music(
+                container,
+                self.generate_data_object(item),
+            ) for item in data
+        ]
         return container.all_data
 
     def __extract_collection_music(

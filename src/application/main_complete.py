@@ -60,9 +60,9 @@ def check_storage_format(function):
     async def inner(self, *args, **kwargs):
         if self.parameter.storage_format:
             return await function(self, *args, **kwargs)
-        self.console.print(
+        self.console.warning(
             "未设置 storage_format 参数，无法正常使用该功能，详细说明请查阅项目文档！",
-            style=WARNING)
+        )
 
     return inner
 
@@ -78,9 +78,9 @@ def check_cookie_state(tiktok=False):
                 tip = "抖音 Cookie"
             if params:
                 return await function(self, *args, **kwargs)
-            self.console.print(
+            self.console.warning(
                 f"{tip} 未登录，无法使用该功能，详细说明请查阅项目文档！",
-                style=WARNING)
+            )
 
         return inner
 
@@ -995,7 +995,7 @@ class TikTok:
         await self.__secondary_menu(
             "请选择作品链接来源",
             self.__function_comment,
-            select,
+            select or safe_pop(self.run_command),
         )
         self.logger.info("已退出采集作品评论数据(抖音)模式")
 
@@ -1014,7 +1014,13 @@ class TikTok:
         if n in range(len(function)):
             await function[n][1](root, params, logger)
 
-    async def __comment_inquire(self, root, params, logger, tiktok=False, ):
+    async def __comment_inquire(
+            self,
+            root,
+            params,
+            logger,
+            tiktok=False,
+    ):
         link = self.links_tiktok if tiktok else self.links
         while url := self._inquire_input("作品"):
             ids = await link.run(url, )
@@ -1022,7 +1028,13 @@ class TikTok:
                 self.logger.warning(f"{url} 提取作品 ID 失败")
                 continue
             self.console.print(f"共提取到 {len(ids)} 个作品，开始处理！")
-            await self.__comment_handle(ids, root, params, logger, tiktok=tiktok, )
+            await self.__comment_handle(
+                ids,
+                root,
+                params,
+                logger,
+                tiktok=tiktok,
+            )
 
     async def __comment_inquire_tiktok(self, root, params, logger):
         await self.__comment_inquire(root, params, logger, True, )
@@ -1042,20 +1054,17 @@ class TikTok:
             tiktok=False,
     ):
         if tiktok:  # TODO: 代码未完成
-            pass
-            # for i in ids:
-            #     name = f"作品{i}_评论数据"
-            #     async with logger(root, name=name, console=self.console, **params) as record:
-            #         if d := await CommentTikTok(self.parameter, cookie, proxy, item_id=i, ).run():
-            #             await self.extractor.run(d, record, type_="comment")
-            #             self.logger.info(f"作品评论数据已储存至 {name}")
-            #         else:
-            #             self.logger.warning("采集评论数据失败")
+            ...
         else:
             for i in ids:
                 name = f"作品{i}_评论数据"
                 async with logger(root, name=name, console=self.console, **params) as record:
-                    if d := await Comment(self.parameter, cookie, proxy, item_id=i, ).run():
+                    if d := await Comment(
+                            self.parameter,
+                            cookie,
+                            proxy,
+                            item_id=i,
+                    ).run():
                         await self.extractor.run(d, record, type_="comment")
                         self.logger.info(f"作品评论数据已储存至 {name}")
                     else:
@@ -1512,16 +1521,12 @@ class TikTok:
     @check_cookie_state(tiktok=False)
     async def collection_interactive(self, *args, ):
         if isinstance(sec_user_id := await self.__check_owner_url(), str):
-            root, params, logger = self.record.run(self.parameter)
             start = time()
-            await self._deal_collection_data(root, params, logger, sec_user_id)
+            await self._deal_collection_data(
+                sec_user_id,
+            )
             time_ = time() - start
-            self.logger.info(
-                f"程序运行耗时 {
-                int(time_ //
-                    60)} 分钟 {
-                int(time_ %
-                    60)} 秒")
+            self._time_statistics(start)
         self.logger.info("已退出批量下载收藏作品(抖音)模式")
 
     @check_cookie_state(tiktok=False)
@@ -1534,26 +1539,28 @@ class TikTok:
             root, params, logger = self.record.run(self.parameter)
             start = time()
             for i, j in zip(names, ids):
-                await self._deal_collects_data(root, params, logger, sec_user_id, i, j)
-            time_ = time() - start
-            self.logger.info(
-                f"程序运行耗时 {
-                int(time_ //
-                    60)} 分钟 {
-                int(time_ %
-                    60)} 秒")
+                await self._deal_collects_data(
+                    root,
+                    params,
+                    logger,
+                    sec_user_id,
+                    i,
+                    j,
+                )
+            self._time_statistics(start)
         else:
-            self.console.print("该模式必须设置 owner_url 参数才能使用", style=WARNING)
+            self.console.warning("该模式必须设置 owner_url 参数才能使用", )
         self.logger.info("已退出批量下载收藏夹作品(抖音)模式")
 
-    async def __get_collects_list(self,
-                                  cookie: str = None,
-                                  proxy: str | dict = None,
-                                  # api=False,
-                                  source=False,
-                                  *args,
-                                  **kwargs,
-                                  ):
+    async def __get_collects_list(
+            self,
+            cookie: str = None,
+            proxy: str | dict = None,
+            # api=False,
+            source=False,
+            *args,
+            **kwargs,
+    ):
         collects = await Collects(self.parameter, cookie, proxy, ).run()
         if not any(collects):
             return None
@@ -1578,6 +1585,10 @@ class TikTok:
         if data := await self.__handle_collection_music(*args, ):
             data = await self.extractor.run(data, None, "music", )
             await self.downloader.run(data, type_="music", )
+        self._time_statistics(start)
+        self.logger.info("已退出批量下载收藏音乐(抖音)模式")
+
+    def _time_statistics(self, start: float, ):
         time_ = time() - start
         self.logger.info(
             f"程序运行耗时 {
@@ -1585,24 +1596,25 @@ class TikTok:
                 60)} 分钟 {
             int(time_ %
                 60)} 秒")
-        self.logger.info("已退出批量下载收藏音乐(抖音)模式")
 
-    async def __handle_collection_music(self,
-                                        # api=False,
-                                        # source=False,
-                                        cookie: str = None,
-                                        proxy: str = None,
-                                        *args,
-                                        **kwargs,
-                                        ):
-        data = await CollectsMusic(self.parameter, cookie, proxy, *args, **kwargs).run()
+    async def __handle_collection_music(
+            self,
+            cookie: str = None,
+            proxy: str = None,
+            *args,
+            **kwargs,
+    ):
+        data = await CollectsMusic(
+            self.parameter,
+            cookie,
+            proxy,
+            *args,
+            **kwargs,
+        ).run()
         return data if any(data) else None
 
     async def _deal_collection_data(
             self,
-            root,
-            params,
-            logger,
             sec_user_id: str,
             api=False,
             source=False,
@@ -1611,22 +1623,23 @@ class TikTok:
             tiktok=False,
     ):
         self.logger.info("开始获取收藏数据")
-        collection = await Collection(self.parameter, cookie, proxy, sec_user_id, ).run()
+        collection = await Collection(
+            self.parameter,
+            cookie,
+            proxy,
+            sec_user_id,
+        ).run()
         if not any(collection):
-            # self.logger.warning("获取账号收藏数据失败")
             return None
         if source:
             return collection
         return await self._batch_process_detail(
-            root,
-            params,
-            logger,
             collection,
-            mode="collection",
-            user_id=sec_user_id,
-            mark=self.owner.mark,
-            api=api,
+            api,
             tiktok=tiktok,
+            mode="collection",
+            mark=self.owner.mark,
+            user_id=sec_user_id,
         )
 
     async def _deal_collects_data(
