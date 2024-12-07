@@ -97,7 +97,7 @@ class Parameter:
             chunk: int,
             max_retry: int,
             max_pages: int,
-            default_mode: str,
+            run_command: str,
             owner_url: dict,
             owner_url_tiktok: dict,
             ffmpeg: str,
@@ -161,7 +161,7 @@ class Parameter:
             owner_url)
         self.owner_url_tiktok: SimpleNamespace = Extractor.generate_data_object(
             owner_url_tiktok)
-        self.default_mode = self.__check_default_mode(default_mode)
+        self.run_command = self.__check_run_command(run_command)
         self.preview = BLANK_PREVIEW
         self.ffmpeg = self.__generate_ffmpeg_object(ffmpeg)
         self.client = create_client(
@@ -197,7 +197,7 @@ class Parameter:
             "chunk": self.__check_chunk,
             "max_retry": self.__check_max_retry,
             "max_pages": self.__check_max_pages,
-            "default_mode": self.__check_default_mode,
+            "run_command": self.__check_run_command,
             "ffmpeg": self.__generate_ffmpeg_object,
         }
         self.update_cookie_dy = self.__check_bool(update_cookie, True)
@@ -427,8 +427,8 @@ class Parameter:
         return ""
 
     @staticmethod
-    def __check_default_mode(default_mode: str) -> list:
-        return default_mode.split()[::-1] if default_mode else []
+    def __check_run_command(run_command: str) -> list:
+        return run_command.split()[::-1] if run_command else []
 
     async def update_params(self) -> None:
         self._set_uif_id()
@@ -580,7 +580,7 @@ class Parameter:
             "chunk": self.chunk,
             "max_retry": self.max_retry,
             "max_pages": self.max_pages,
-            "default_mode": " ".join(self.default_mode[::-1]),
+            "run_command": " ".join(self.run_command[::-1]),
             "ffmpeg": self.ffmpeg.path or "",
         }
 

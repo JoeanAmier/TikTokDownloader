@@ -394,7 +394,7 @@ https://www.douyin.com/note/123456789
 <tr>
 <td align="center">chunk</td>
 <td align="center">int</td>
-<td align="center">每次从服务器接收的数据块大小, 单位字节; 默认值：<code>2621440</code>(2.5 MB)</td>
+<td align="center">每次从服务器接收的数据块大小, 单位字节; 默认值：<code>2097152</code>(2 MB)</td>
 </tr>
 <tr>
 <td align="center">timeout</td>
@@ -412,9 +412,9 @@ https://www.douyin.com/note/123456789
 <td align="center">批量下载账号喜欢作品、收藏作品或者采集作品评论数据时<br>请求数据的最大次数（不包括异常重试），默认值: <code>0</code> 代表不限制</td>
 </tr>
 <tr>
-<td align="center">default_mode</td>
+<td align="center">run_command</td>
 <td align="center">str</td>
-<td align="center">设置程序启动的默认模式，相当于模拟用户输入序号（多个序号使用空格分隔）</td>
+<td align="center">设置程序启动执行的默认命令，相当于模拟用户输入序号或内容（多个序号或内容之间使用空格分隔）</td>
 </tr>
 <tr>
 <td align="center">ffmpeg</td>
@@ -517,14 +517,12 @@ https://www.douyin.com/note/123456789
   "timeout": 5,
   "max_retry": 10,
   "max_pages": 2,
-  "default_mode": "6 2 1",
+  "run_command": "6 2 1",
   "ffmpeg": "C:\\TikTokDownloader\\ffmpeg.exe",
   "update_cookie": true,
   "update_cookie_tiktok": true,
   "browser_info": {
-    "Sec-Ch-Ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\", \"Google Chrome\";v=\"126\"",
-    "Sec-Ch-Ua-Platform": "\"Windows\"",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
     "browser_platform": "Win32",
     "browser_name": "Chrome",
     "browser_version": "126.0.0.0",
@@ -535,14 +533,18 @@ https://www.douyin.com/note/123456789
     "webid": ""
   },
   "browser_info_tiktok": {
-    "Sec-Ch-Ua": "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\", \"Google Chrome\";v=\"126\"",
-    "Sec-Ch-Ua-Platform": "\"Windows\"",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-    "browser_name": " Mozilla",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "app_language": "en",
+    "browser_language": "zh-SG",
+    "browser_name": "Mozilla",
     "browser_platform": "Win32",
-    "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-    "device_id": "",
-    "os": "windows"
+    "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "language": "en",
+    "os": "windows",
+    "priority_region": "CN",
+    "region": "JP",
+    "tz_name": "Asia/Shanghai",
+    "webcast_language": "en"
   }
 }
 ```
@@ -685,16 +687,16 @@ https://www.douyin.com/note/123456789
 
 <p>批量下载账号喜欢作品、收藏作品或者采集作品评论数据时，仅获取前 <code>2</code> 页数据；用于解决批量下载账号喜欢作品、收藏作品需要获取全部数据的问题，以及作品评论数据数量过多的采集问题。</p>
 <p>不影响批量下载账号发布作品，如需控制账号发布作品数据获取次数，可使用 <code>earliest</code> 和 <code>latest</code> 参数实现。</p>
-<h3>默认启动模式</h3>
+<h3>默认执行命令</h3>
 
 ```json
 {
-  "default_mode": "6 1 1"
+  "run_command": "6 1 1 Q"
 }
 ```
 
-<p>运行程序自动依次进入 <code>终端交互模式</code> -> <code>批量下载账号作品(抖音)</code> -> <code>使用 accounts_urls 参数的账号链接(推荐)</code></p>
-<p>其他示例：<code>6 2</code> 代表依次进入 <code>终端交互模式</code> -> <code>批量下载账号作品(抖音)</code>；<code>8</code>代表进入<code>Web API 模式</code></p>
+<p>上述命令表示运行程序自动依次执行 <code>终端交互模式</code> -> <code>批量下载账号作品(抖音)</code> -> <code>使用 accounts_urls 参数的账号链接(推荐)</code> -> <code>退出程序</code></p>
+<p>其他示例：<code>6 2</code> 代表依次执行 <code>终端交互模式</code> -> <code>批量下载账号作品(抖音)</code>；<code>8</code>代表执行<code>Web API 模式</code></p>
 <h3>程序代理设置</h3>
 
 ```json
@@ -996,7 +998,7 @@ print(response.json())
   "chunk": "可选参数",
   "max_retry": "可选参数",
   "max_pages": "可选参数",
-  "default_mode": "可选参数",
+  "run_command": "可选参数",
   "ffmpeg": "可选参数",
   "token": "自定义参数"
 }

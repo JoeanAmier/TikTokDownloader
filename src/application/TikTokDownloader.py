@@ -81,7 +81,7 @@ class TikTokDownloader:
         self.cookie_task = None
         self.parameter = None
         self.running = True
-        self.default_mode = None
+        self.run_command = None
         self.database = Database()
         self.config = None
         self.__function_menu = None
@@ -200,27 +200,28 @@ class TikTokDownloader:
             self.console.print("检测新版本失败", style=ERROR)
         self.console.print()
 
-    async def main_menu(self, default_mode=""):
+    async def main_menu(self, mode=None, ):
         """选择运行模式"""
         while self.running:
             self.__update_menu()
-            if not default_mode:
-                default_mode = choose(
+            if not mode:
+                mode = choose(
                     "请选择 TikTokDownloader 运行模式",
                     [i for i, _ in self.__function_menu],
                     self.console,
                     separate=(
                         4,
-                        9))
-            await self.compatible(default_mode)
-            default_mode = None
+                        9,
+                    ))
+            await self.compatible(mode)
+            mode = None
 
     # @start_cookie_task
     async def complete(self):
         """终端交互模式"""
         example = TikTok(self.parameter, self.database, )
         try:
-            await example.run(self.default_mode)
+            await example.run(self.run_command)
             self.running = example.running
         except KeyboardInterrupt:
             self.running = False
@@ -318,7 +319,7 @@ class TikTokDownloader:
         self.parameter.set_headers_cookie()
         self.restart_cycle_task(restart, )
         if not restart:
-            self.default_mode = self.parameter.default_mode.copy()
+            self.run_command = self.parameter.run_command.copy()
         self.parameter.CLEANER.set_rule(TEXT_REPLACEMENT, True)
 
     async def run(self):
@@ -331,7 +332,7 @@ class TikTokDownloader:
         await self.check_settings(False, )
         self.check_update()
         if await self.disclaimer():
-            await self.main_menu(safe_pop(self.default_mode))
+            await self.main_menu(safe_pop(self.run_command))
 
     def periodic_update_cookie(self):
         async def inner():

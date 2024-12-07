@@ -138,7 +138,7 @@ class TikTok:
     ENCODE = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
 
     def __init__(self, parameter: "Parameter", database: "Database", ):
-        self.default_mode = None
+        self.run_command = None
         self.parameter = parameter
         self.database = database
         self.console = parameter.console
@@ -244,7 +244,7 @@ class TikTok:
     ):
         await self.__secondary_menu(
             function=self.__function_account_tiktok,
-            select=select,
+            select=select or safe_pop(self.run_command),
         )
         self.logger.info("已退出批量下载账号作品(TikTok)模式")
 
@@ -266,7 +266,7 @@ class TikTok:
     ):
         await self.__secondary_menu(
             function=self.__function_account,
-            select=select,
+            select=select or safe_pop(self.run_command),
         )
         self.logger.info("已退出批量下载账号作品(抖音)模式")
 
@@ -727,14 +727,14 @@ class TikTok:
         await self.__secondary_menu(
             "请选择作品链接来源",
             self.__function_detail,
-            select,
+            select or safe_pop(self.run_command),
         )
         self.logger.info("已退出批量下载链接作品(抖音)模式")
 
     async def detail_interactive_tiktok(self, select="", ):
         await self.__detail_secondary_menu(
             self.__function_detail_tiktok,
-            select,
+            select or safe_pop(self.run_command),
         )
         self.logger.info("已退出批量下载链接作品(TikTok)模式")
 
@@ -1059,7 +1059,7 @@ class TikTok:
         await self.__secondary_menu(
             "请选择合集链接来源",
             self.__function_mix,
-            select,
+            select or safe_pop(self.run_command),
         )
         self.logger.info("已退出批量下载合集作品(抖音)模式")
 
@@ -1067,7 +1067,7 @@ class TikTok:
         await self.__secondary_menu(
             "请选择合集链接来源",
             self.__function_mix_tiktok,
-            select,
+            select or safe_pop(self.run_command),
         )
         self.logger.info("已退出批量下载合集作品(TikTok)模式")
 
@@ -1665,10 +1665,10 @@ class TikTok:
     ):
         await HashTag(self.parameter, cookie, proxy, ).run()
 
-    async def run(self, default_mode: list):
-        self.default_mode = default_mode
+    async def run(self, run_command: list):
+        self.run_command = run_command
         while self.running:
-            if not (select := safe_pop(self.default_mode)):
+            if not (select := safe_pop(self.run_command)):
                 select = choose(
                     "请选择采集功能",
                     [i for i, _ in self.__function],
@@ -1680,4 +1680,4 @@ class TikTok:
             except ValueError:
                 break
             if n in range(len(self.__function)):
-                await self.__function[n][1](safe_pop(self.default_mode))
+                await self.__function[n][1](safe_pop(self.run_command))

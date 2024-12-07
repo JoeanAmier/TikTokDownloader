@@ -33,7 +33,7 @@ function get_parameters() {
         download: $("#download:checked").val(),
         folder_mode: $("#folder_mode:checked").val(),
         storage_format: $("#storage_format").val(),
-        default_mode: $("#default_mode").val(),
+        run_command: $("#run_command").val(),
         dynamic_cover: $("#dynamic_cover:checked").val(),
         original_cover: $("#original_cover:checked").val(),
         proxies: $("#proxies").val(),
