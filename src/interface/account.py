@@ -250,6 +250,30 @@ class Account(API):
             self.log.warning(f"作品最晚发布日期无效 {date_}")
             return default_date
 
+    def check_response(self,
+                       data_dict: dict,
+                       data_key: str,
+                       error_text="",
+                       cursor="cursor",
+                       has_more="has_more",
+                       *args,
+                       **kwargs,
+                       ):
+        try:
+            if not (d := data_dict[data_key]):
+                self.log.warning(error_text)
+                self.finished = True
+            else:
+                self.cursor = data_dict[cursor]
+                self.append_response(d)
+                self.finished = not data_dict[has_more]
+        except KeyError:
+            if data_dict.get("status_code") == 0:
+                self.log.warning("配置文件 cookie 参数未登录，数据获取已提前结束")
+            else:
+                self.log.error(f"数据解析失败，请告知作者处理: {data_dict}")
+            self.finished = True
+
 # async def main():
 #     async with Params() as params:
 #         i = Account(params, )

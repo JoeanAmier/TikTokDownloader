@@ -1232,18 +1232,19 @@ class TikTok:
                 await suspend(index, self.console)
         self.__summarize_results(count, "合集")
 
-    async def _deal_mix_detail(self,
-                               mix_id: bool = None,
-                               id_: str = None,
-                               mark="",
-                               num: int = 0,
-                               api=False,
-                               source=False,
-                               cookie: str = None,
-                               proxy: str = None,
-                               tiktok=False,
-                               mix_title: str = "",
-                               ):
+    async def _deal_mix_detail(
+            self,
+            mix_id: bool = None,
+            id_: str = None,
+            mark="",
+            num: int = 0,
+            api=False,
+            source=False,
+            cookie: str = None,
+            proxy: str = None,
+            tiktok=False,
+            mix_title: str = "",
+    ):
         self.logger.info(f"开始处理第 {num} 个合集" if num else "开始处理合集")
         mix_params = self._generate_mix_params(mix_id, id_)
         if tiktok:
@@ -1262,7 +1263,8 @@ class TikTok:
                 **mix_params,
             )
         if any(
-                mix_data := await mix_obj.run()):
+                mix_data := await mix_obj.run()
+        ):
             return (
                 mix_data
                 if source
@@ -1276,7 +1278,6 @@ class TikTok:
                 )
             )
         self.logger.warning("采集合集作品数据失败")
-        return None
 
     async def _check_mix_id(self, url: str, tiktok: bool, ) -> tuple[bool, str, str]:
         match tiktok:

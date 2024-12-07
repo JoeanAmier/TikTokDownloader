@@ -665,8 +665,7 @@ class Downloader:
             self.cleaner.filter_name(
                 self.split.join(
                     data[i] for i in self.name_format),
-                inquire=False,
-                default=data["id"],
+                data["id"],
             ), length=MAX_FILENAME_LENGTH,
         )
 
