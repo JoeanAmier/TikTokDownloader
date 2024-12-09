@@ -437,19 +437,19 @@ class TikTok:
             **kwargs,
     ):
         self.logger.info(f"开始处理第 {num} 个账号" if num else "开始处理账号")
+        info = None
         if tab in {
             "favorite",
             "collection",
-        } and not (info := await self.get_user_info_data(
-            tiktok,
-            cookie,
-            proxy,
-            sec_user_id=sec_user_id,
-        )):
-            self.logger.warning(f"{sec_user_id} 获取账号信息失败")
-            return
-        else:
-            info = None
+        }:
+            if not (info := await self.get_user_info_data(
+                    tiktok,
+                    cookie,
+                    proxy,
+                    sec_user_id=sec_user_id,
+            )):
+                self.logger.warning(f"{sec_user_id} 获取账号信息失败")
+                return
         acquirer = self._get_account_data_tiktok if tiktok else self._get_account_data
         account_data, earliest, latest = await acquirer(
             cookie=cookie,
@@ -535,20 +535,20 @@ class TikTok:
             unique_id: Union[str] = "",
             sec_user_id: Union[str] = "",
     ):
-        if tiktok:
-            info = await self._get_info_data_tiktok(
+        return (
+            await self._get_info_data_tiktok(
                 cookie,
                 proxy,
                 unique_id,
                 sec_user_id,
             )
-        else:
-            info = await self._get_info_data(
+            if tiktok
+            else await self._get_info_data(
                 cookie,
                 proxy,
                 sec_user_id,
             )
-        return info[0] if info else None
+        )
 
     async def _get_info_data(
             self,
@@ -1128,14 +1128,14 @@ class TikTok:
 
     def input_download_index(self, data: list[dict]) -> list[str] | None:
         if d := self.__input_download_index(data):
-            return d[1]
+            return [i["id"] for i in d]
 
     def __input_download_index(
             self,
             data: list[dict],
             text="收藏合集",
             key="title",
-    ) -> [list[str], list[str]]:
+    ) -> list[dict] | None:
         self.console.print(f"{text}列表：")
         for i, j in enumerate(data, start=1):
             self.console.print(f"{i}. {j[key]}")
@@ -1144,12 +1144,12 @@ class TikTok:
             if not index:
                 pass
             elif index.upper() == "ALL":
-                return zip(*[(d[key], d["id"]) for d in data])
+                return data
             elif index.upper() == "Q":
                 self.running = False
             else:
                 index = {int(i) for i in index.split()}
-                return zip(*[(d[key], d["id"]) for i, d in enumerate(data, start=1) if i in index])
+                return [j for i, j in enumerate(data, start=1) if i in index]
         except ValueError:
             self.console.print(f"{text}序号输入错误！", style=WARNING)
 
@@ -1529,32 +1529,21 @@ class TikTok:
             await self._deal_collection_data(
                 sec_user_id,
             )
-            time_ = time() - start
             self._time_statistics(start)
         self.logger.info("已退出批量下载收藏作品(抖音)模式")
 
     @check_cookie_state(tiktok=False)
-    async def collects_interactive(self, *args, ):
-        if sec_user_id := await self.__check_owner_url():
-            try:
-                names, ids = await self.__get_collects_list()
-            except ValueError:
-                names, ids = [], []
-            root, params, logger = self.record.run(self.parameter)
+    async def collects_interactive(self, *args, key: str = "name", ):
+        if c := await self.__get_collects_list(key=key, ):
             start = time()
-            for i, j in zip(names, ids):
+            for i in c:
                 await self._deal_collects_data(
-                    root,
-                    params,
-                    logger,
-                    sec_user_id,
-                    i,
-                    j,
+                    i[key],
+                    i["id"],
                 )
             self._time_statistics(start)
         else:
-            self.console.warning("该模式必须设置 owner_url 参数才能使用", )
-        self.logger.info("已退出批量下载收藏夹作品(抖音)模式")
+            self.logger.info("已退出批量下载收藏夹作品(抖音)模式")
 
     async def __get_collects_list(
             self,
@@ -1562,6 +1551,7 @@ class TikTok:
             proxy: str | dict = None,
             # api=False,
             source=False,
+            key: str = "name",
             *args,
             **kwargs,
     ):
@@ -1571,7 +1561,7 @@ class TikTok:
         if source:
             return collects
         data = self.extractor.extract_collects_info(collects)
-        return self.__input_download_index(data, "收藏夹", "name", )
+        return self.__input_download_index(data, "收藏夹", key, )
 
     async def __check_owner_url(self, tiktok=False, ):
         if not (sec_user_id := await self.check_sec_user_id(self.owner.url)):
@@ -1627,6 +1617,14 @@ class TikTok:
             tiktok=False,
     ):
         self.logger.info("开始获取收藏数据")
+        if not (info := await self.get_user_info_data(
+                tiktok,
+                cookie,
+                proxy,
+                sec_user_id=sec_user_id,
+        )):
+            self.logger.warning(f"{sec_user_id} 获取账号信息失败")
+            return
         collection = await Collection(
             self.parameter,
             cookie,
@@ -1644,14 +1642,11 @@ class TikTok:
             mode="collection",
             mark=self.owner.mark,
             user_id=sec_user_id,
+            info=info,
         )
 
     async def _deal_collects_data(
             self,
-            root,
-            params,
-            logger,
-            sec_user_id: str,
             name: str,
             id_: str,
             api=False,
@@ -1661,15 +1656,17 @@ class TikTok:
             tiktok=False,
     ):
         self.logger.info("开始获取收藏夹数据")
-        data = await CollectsDetail(self.parameter, cookie, proxy, id_, sec_user_id, ).run()
+        data = await CollectsDetail(
+            self.parameter,
+            cookie,
+            proxy,
+            id_,
+        ).run()
         if not any(data):
             return None
         if source:
             return data
         return await self._batch_process_detail(
-            root,
-            params,
-            logger,
             data,
             mode="collects",
             collect_id=id_,

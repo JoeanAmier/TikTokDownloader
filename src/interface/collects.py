@@ -71,14 +71,13 @@ class CollectsDetail(Collection, API):
                  cookie: str = None,
                  proxy: str = None,
                  collects_id: str = ...,
-                 sec_user_id: str = None,
                  pages: int = None,
                  cursor=0,
                  count=10,
                  *args,
                  **kwargs,
                  ):
-        super().__init__(params, cookie, proxy, sec_user_id, *args, **kwargs, )
+        super().__init__(params, cookie, proxy, None, *args, **kwargs, )
         self.collects_id = collects_id
         self.pages = pages or params.max_pages
         self.api = f"{self.domain}aweme/v1/web/collects/video/list/"
@@ -123,8 +122,6 @@ class CollectsDetail(Collection, API):
             *args,
             **kwargs,
         )
-        if self.sec_user_id:
-            await self.get_owner_data()
         return self.response
 
 
