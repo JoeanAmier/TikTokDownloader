@@ -3,20 +3,23 @@ from time import localtime
 from time import strftime
 from typing import TYPE_CHECKING
 
-from src.custom import (
+from ..custom import VERSION_BETA
+from ..custom import (
     WARNING,
     ERROR,
     INFO,
     GENERAL,
+    DEBUG,
 )
-from src.tools import Cleaner
+from ..tools import Cleaner
 
 if TYPE_CHECKING:
-    from src.tools import ColorfulConsole
+    from ..tools import ColorfulConsole
 
 
 class BaseLogger:
     """不记录日志，空白日志记录器"""
+    DEBUG = VERSION_BETA
 
     def __init__(
             self,
@@ -24,7 +27,8 @@ class BaseLogger:
             console: "ColorfulConsole",
             root="",
             folder="",
-            name=""):
+            name="",
+    ):
         self.log = None  # 记录器主体
         self.console = console
         self._root, self._folder, self._name = self.init_check(
@@ -39,7 +43,8 @@ class BaseLogger:
             main_path: Path,
             root=None,
             folder=None,
-            name=None) -> tuple:
+            name=None,
+    ) -> tuple:
         root = self.check_root(root, main_path)
         folder = self.check_folder(folder)
         name = self.check_name(name)
@@ -83,7 +88,8 @@ class BaseLogger:
             self.console.print(text, style=ERROR, **kwargs)
 
     def debug(self, text: str, **kwargs):
-        pass
+        if self.DEBUG:
+            self.console.print(text, style=DEBUG, **kwargs)
 
     def print(self, text: str, style=GENERAL, **kwargs) -> None:
         self.console.print(text, style=style, **kwargs)

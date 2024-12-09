@@ -528,6 +528,11 @@ class Downloader:
                 self.delete(temp)
                 self.log.error(str(e))
                 return False
+            except Exception as e:
+                self.log.error(f"下载文件时发生预期之外的错误，请向作者反馈，错误信息: {e}")
+                self.log.error(f"URL: {url}", False)
+                self.log.error(f"Headers: {headers}", False)
+                return False
 
     async def download_file(
             self,

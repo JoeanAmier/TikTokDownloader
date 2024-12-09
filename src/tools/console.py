@@ -7,6 +7,7 @@ from ..custom import (
     INFO,
     WARNING,
     ERROR,
+    DEBUG,
 )
 
 __all__ = ["ColorfulConsole"]
@@ -24,6 +25,9 @@ class ColorfulConsole(Console):
 
     def error(self, *args, highlight=False, **kwargs):
         self.print(*args, style=ERROR, highlight=highlight, **kwargs)
+
+    def debug(self, *args, highlight=False, **kwargs):
+        self.print(*args, style=DEBUG, highlight=highlight, **kwargs)
 
     def input(self, prompt="", style=PROMPT, *args, **kwargs):
         try:

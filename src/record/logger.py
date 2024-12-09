@@ -8,15 +8,16 @@ from time import localtime
 from time import strftime
 from typing import TYPE_CHECKING
 
-from src.custom import (
+from .base import BaseLogger
+from ..custom import (
     WARNING,
     ERROR,
     INFO,
+    DEBUG,
 )
-from .base import BaseLogger
 
 if TYPE_CHECKING:
-    from src.tools import ColorfulConsole
+    from ..tools import ColorfulConsole
 
 
 class LoggerManager(BaseLogger):
@@ -34,7 +35,9 @@ class LoggerManager(BaseLogger):
 
     def run(
             self,
-            format_="%(asctime)s[%(levelname)s]:  %(message)s", filename=None):
+            format_="%(asctime)s[%(levelname)s]:  %(message)s",
+            filename=None,
+    ):
         if not (dir_ := self._root.joinpath(self._folder)).exists():
             dir_.mkdir()
         file_handler = FileHandler(
@@ -65,4 +68,6 @@ class LoggerManager(BaseLogger):
         self.log.error(text.strip())
 
     def debug(self, text: str, **kwargs):
-        self.log.debug(text.strip())
+        if self.DEBUG:
+            self.console.print(text, style=DEBUG, **kwargs)
+            self.log.debug(text.strip())

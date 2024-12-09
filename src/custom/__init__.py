@@ -65,6 +65,7 @@ from .static import (
     INFO,
     GENERAL,
     PROGRESS,
+    DEBUG,
     COOKIE_UPDATE_INTERVAL,
     MAX_FILENAME_LENGTH,
     FILE_SIGNATURES,

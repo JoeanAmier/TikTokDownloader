@@ -1121,33 +1121,37 @@ class TikTok:
 
     async def mix_inquire_collection(self) -> list[str]:
         data = await CollectsMix(self.parameter).run()
-        if not data:
+        if not any(data):
             return []
         data = self.extractor.extract_mix_collect_info(data)
         return self.input_download_index(data)
 
-    def input_download_index(self, data: list[dict]) -> list[str]:
-        _, id_ = self.__input_download_index(data)
-        return id_
+    def input_download_index(self, data: list[dict]) -> list[str] | None:
+        if d := self.__input_download_index(data):
+            return d[1]
 
-    def __input_download_index(self,
-                               data: list[dict],
-                               text="合集",
-                               key="title",
-                               ) -> [list[str],
-                                     list[str]]:
+    def __input_download_index(
+            self,
+            data: list[dict],
+            text="收藏合集",
+            key="title",
+    ) -> [list[str], list[str]]:
         self.console.print(f"{text}列表：")
         for i, j in enumerate(data, start=1):
             self.console.print(f"{i}. {j[key]}")
         index = self.console.input(f"请输入需要下载的{text}序号(多个序号使用空格分隔，输入 ALL 下载全部{text})：")
         try:
-            if index.upper() == "ALL":
+            if not index:
+                pass
+            elif index.upper() == "ALL":
                 return zip(*[(d[key], d["id"]) for d in data])
-            index = {int(i) for i in index.split()}
-            return zip(*[(d[key], d["id"]) for i, d in enumerate(data, start=1) if i in index])
+            elif index.upper() == "Q":
+                self.running = False
+            else:
+                index = {int(i) for i in index.split()}
+                return zip(*[(d[key], d["id"]) for i, d in enumerate(data, start=1) if i in index])
         except ValueError:
             self.console.print(f"{text}序号输入错误！", style=WARNING)
-            return []
 
     async def mix_txt(self, ):
         if not (url := self.txt_inquire()):

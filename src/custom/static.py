@@ -29,6 +29,7 @@ PROGRESS = "b bright_magenta"
 ERROR = "b bright_red"
 WARNING = "b bright_yellow"
 INFO = "b bright_green"
+DEBUG = "b dark_orange"
 
 # 文件类型签名
 FILE_SIGNATURES: tuple[tuple[int, bytes, str,], ...] = (
