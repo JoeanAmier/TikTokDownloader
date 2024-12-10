@@ -209,7 +209,7 @@ class Parameter:
         self.__check_browser_info(browser_info)
         self.__check_browser_info_tiktok(browser_info_tiktok)
         self.__generate_folders()
-        self.__update_download_headers()
+        self._set_download_headers()
 
     @staticmethod
     def __check_bool(value: bool, default=False) -> bool:
@@ -479,7 +479,14 @@ class Parameter:
         elif self.cookie_tiktok_cache:
             self.headers_tiktok["Cookie"] = self.cookie_tiktok_cache
 
-    def __update_download_headers(self):
+    def _set_download_headers(self) -> None:
+        self.__update_download_headers()
+        self.__update_download_headers_tiktok()
+
+    def __update_download_headers(self) -> None:
+        self.headers_download["Cookie"] = "dy_swidth=1536; dy_sheight=864"
+
+    def __update_download_headers_tiktok(self) -> None:
         key = "tt_chain_token"
         if tk := self.cookie_tiktok.get(key, ):
             self.headers_download_tiktok["Cookie"] = f"{key}={tk}"
