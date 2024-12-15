@@ -1,0 +1,63 @@
+from gettext import translation
+from pathlib import Path
+
+from ..custom import PROJECT_ROOT
+
+
+class TranslationManager:
+    """管理gettext翻译的类"""
+
+    _instance = None  # 单例实例
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(TranslationManager, cls).__new__(cls)
+        return cls._instance
+
+    def __init__(self, domain="tk", localedir=None):
+        self.domain = domain
+        if not localedir:
+            localedir = PROJECT_ROOT.joinpath('locale')
+        self.localedir = Path(localedir)
+        self.current_translator = self.setup_translation()
+
+    def setup_translation(self, language: str = "zh_CN"):
+        """设置gettext翻译环境"""
+        try:
+            return translation(
+                self.domain,
+                localedir=self.localedir,
+                languages=[language],
+                fallback=True,
+            )
+        except FileNotFoundError as e:
+            print(f"Warning: Translation files for '{self.domain}' not found. Error: {e}")
+            return translation(self.domain, fallback=True)
+
+    def switch_language(self, language: str = "en_US"):
+        """切换当前使用的语言"""
+        self.current_translator = self.setup_translation(language)
+
+    def gettext(self, message):
+        """提供gettext方法"""
+        return self.current_translator.gettext(message)
+
+
+# 初始化TranslationManager单例实例
+translation_manager = TranslationManager()
+
+
+def _translate(message):
+    """辅助函数来简化翻译调用"""
+    return translation_manager.gettext(message)
+
+
+def switch_language(language: str = "en_US"):
+    """切换语言并刷新翻译函数"""
+    global _
+    translation_manager.switch_language(language)
+    _ = translation_manager.gettext
+
+
+# 设置默认翻译函数
+_ = _translate
