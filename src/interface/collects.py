@@ -273,7 +273,7 @@ class CollectsMusic(CollectsMix):
         )
 
 
-async def main():
+async def test():
     async with Params() as params:
         c = Collects(params, )
         print(await c.run())
@@ -288,4 +288,4 @@ async def main():
 
 
 if __name__ == "__main__":
-    run(main())
+    run(test())

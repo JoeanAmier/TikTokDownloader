@@ -1,4 +1,3 @@
-from asyncio import run
 from typing import TYPE_CHECKING
 from typing import Union
 
@@ -58,15 +57,17 @@ class InfoTikTok(APITikTok):
         }
 
 
-async def main():
-    InfoTikTok.params["device_id"] = ""
+async def test():
     async with Params() as params:
         i = InfoTikTok(
             params,
             unique_id="",
+            sec_user_id="",
         )
         print(await i.run())
 
 
 if __name__ == "__main__":
-    run(main())
+    from asyncio import run
+
+    run(test())

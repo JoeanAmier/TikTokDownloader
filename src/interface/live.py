@@ -1,11 +1,11 @@
 from typing import TYPE_CHECKING
 from typing import Union
 
-from ..interface.template import API
-from ..testers import Params
+from src.interface.template import API
+from src.testers import Params
 
 if TYPE_CHECKING:
-    from ..config import Parameter
+    from src.config import Parameter
 
 
 class Live(API):
@@ -77,3 +77,19 @@ class Live(API):
             params,
             headers=self.black_headers,
         )
+
+
+async def test():
+    async with Params() as params:
+        i = Live(
+            params,
+            web_rid="",
+            room_id="",
+        )
+        print(await i.run())
+
+
+if __name__ == "__main__":
+    from asyncio import run
+
+    run(test())

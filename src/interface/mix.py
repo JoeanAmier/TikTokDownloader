@@ -78,3 +78,19 @@ class Mix(API):
     async def __get_mix_id(self):
         if not self.mix_id:
             self.mix_id = Extractor.extract_mix_id(await self.detail.run())
+
+
+async def test():
+    async with Params() as params:
+        i = Mix(
+            params,
+            mix_id="",
+            detail_id="",
+        )
+        print(await i.run())
+
+
+if __name__ == "__main__":
+    from asyncio import run
+
+    run(test())

@@ -121,3 +121,18 @@ class MixListTikTok(APITikTok):
             *args,
             **kwargs,
         )
+
+
+async def test():
+    async with Params() as params:
+        i = MixTikTok(
+            params,
+            mix_id="",
+        )
+        print(await i.run())
+
+
+if __name__ == "__main__":
+    from asyncio import run
+
+    run(test())

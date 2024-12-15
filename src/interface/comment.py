@@ -3,12 +3,12 @@ from typing import Coroutine, Type
 from typing import TYPE_CHECKING
 from typing import Union
 
-from ..extract import Extractor
-from ..interface.template import API
-from ..testers import Params
+from src.extract import Extractor
+from src.interface.template import API
+from src.testers import Params
 
 if TYPE_CHECKING:
-    from ..config import Parameter
+    from src.config import Parameter
 
 
 class Comment(API):
@@ -310,3 +310,24 @@ class Reply(Comment):
             *args,
             **kwargs,
         )
+
+
+async def test():
+    async with Params() as params:
+        i = Comment(
+            params,
+            item_id="",
+        )
+        print(await i.run())
+        i = Reply(
+            params,
+            item_id="",
+            comment_id="",
+        )
+        print(await i.run())
+
+
+if __name__ == "__main__":
+    from asyncio import run
+
+    run(test())

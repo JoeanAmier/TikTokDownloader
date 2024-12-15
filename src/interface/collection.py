@@ -97,32 +97,12 @@ class Collection(API):
             **kwargs,
         )
 
-    # async def get_owner_data(self):
-    #     if not any(self.response):
-    #         return
-    #     if self.sec_user_id and (
-    #             info := Extractor.get_user_info(
-    #                 await self.info.run())):
-    #         self.response.append({"author": info})
-    #     else:
-    #         temp_data = timestamp()
-    #         self.log.warning(
-    #             f"owner_url 参数未设置 或者 获取账号数据失败，本次运行将临时使用 {temp_data} 作为账号昵称和 UID")
-    #         temp_dict = {
-    #             "author": {
-    #                 "nickname": temp_data,
-    #                 "uid": temp_data,
-    #                 "sec_uid": self.sec_user_id,
-    #             }
-    #         }
-    #         self.response.append(temp_dict)
 
-
-async def main():
+async def test():
     async with Params() as params:
-        c = Collection(params, pages=2, )
+        c = Collection(params, pages=1, )
         print(await c.run())
 
 
 if __name__ == "__main__":
-    run(main())
+    run(test())

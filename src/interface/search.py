@@ -2,11 +2,11 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING
 from typing import Union
 
-from ..interface.template import API
-from ..testers import Params
+from src.interface.template import API
+from src.testers import Params
 
 if TYPE_CHECKING:
-    from ..config import Parameter
+    from src.config import Parameter
 
 
 class Search(API):
@@ -51,3 +51,17 @@ class Search(API):
 
     async def run(self, *args, **kwargs):
         return self.response
+
+
+async def test():
+    async with Params() as params:
+        i = Search(
+            params,
+        )
+        print(await i.run())
+
+
+if __name__ == "__main__":
+    from asyncio import run
+
+    run(test())

@@ -2,11 +2,11 @@ from typing import Callable
 from typing import TYPE_CHECKING
 from typing import Union
 
-from ..interface.template import APITikTok
-from ..testers import Params
+from src.interface.template import APITikTok
+from src.testers import Params
 
 if TYPE_CHECKING:
-    from ..config import Parameter
+    from src.config import Parameter
 
 
 class DetailTikTok(APITikTok):
@@ -71,3 +71,18 @@ class DetailTikTok(APITikTok):
                 self.response = d
         except KeyError:
             self.log.error(f"数据解析失败，请告知作者处理: {data_dict}")
+
+
+async def test():
+    async with Params() as params:
+        i = DetailTikTok(
+            params,
+            detail_id="",
+        )
+        print(await i.run())
+
+
+if __name__ == "__main__":
+    from asyncio import run
+
+    run(test())

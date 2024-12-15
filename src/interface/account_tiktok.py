@@ -118,17 +118,6 @@ class AccountTikTok(Account, APITikTok, ):
             **kwargs,
         )
 
-    # async def favorite_mode(self):
-    #     if not self.favorite:
-    #         return
-    #     info = Extractor.get_user_info_tiktok(await self.info.run())
-    #     if self.sec_user_id != (s := info.get("sec_uid")):
-    #         self.log.error(
-    #             f"sec_user_id {self.sec_user_id} 与 {s} 不一致")
-    #         self._generate_temp_data()
-    #     else:
-    #         self.response.append({"author": info})
-
     def generate_favorite_params(self) -> dict:
         return self.generate_post_params()
 
@@ -140,3 +129,19 @@ class AccountTikTok(Account, APITikTok, ):
             "coverFormat": "2",
             "post_item_list_request_type": "0",
         }
+
+
+async def test():
+    async with Params() as params:
+        i = AccountTikTok(
+            params,
+            sec_user_id="",
+            earliest="2024/12/10",
+        )
+        print(await i.run())
+
+
+if __name__ == "__main__":
+    from asyncio import run
+
+    run(test())

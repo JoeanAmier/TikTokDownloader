@@ -20,3 +20,17 @@ class User(API):
 
     async def run(self, *args, **kwargs):
         pass
+
+
+async def test():
+    async with Params() as params:
+        i = User(
+            params,
+        )
+        print(await i.run())
+
+
+if __name__ == "__main__":
+    from asyncio import run
+
+    run(test())
