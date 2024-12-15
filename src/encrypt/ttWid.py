@@ -82,7 +82,7 @@ class TtWidTikTok(TtWid):
         logger.error(f"获取 {cls.NAME} 参数失败！")
 
 
-async def demo():
+async def test():
     from src.testers import Logger
     print("抖音", await TtWid.get_tt_wid(Logger(), PARAMS_HEADERS, proxy=None))
     print("TikTok",
@@ -95,4 +95,4 @@ async def demo():
 
 
 if __name__ == "__main__":
-    run(demo())
+    run(test())

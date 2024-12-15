@@ -48,10 +48,10 @@ class WebId:
         logger.error(f"获取 {cls.NAME} 参数失败！")
 
 
-async def demo():
+async def test():
     from src.testers import Logger
     print(await WebId.get_web_id(Logger(), PARAMS_HEADERS, proxy=None))
 
 
 if __name__ == "__main__":
-    run(demo())
+    run(test())

@@ -231,7 +231,7 @@ class MsTokenTikTok(MsToken):
         )
 
 
-async def demo():
+async def test():
     from src.testers import Logger
     print("抖音",
           await MsToken.get_real_ms_token(Logger(), PARAMS_HEADERS, proxy=None))
@@ -244,4 +244,4 @@ async def demo():
 
 
 if __name__ == "__main__":
-    run(demo())
+    run(test())
