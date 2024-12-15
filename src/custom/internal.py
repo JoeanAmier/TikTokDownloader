@@ -36,91 +36,40 @@ PHONE_HEADERS = {
                   "CriOS/125.0.6422.51 Mobile/15E148 Safari/604.1", }
 USERAGENT = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 "
              "Safari/537.36")
-# SEC_CH_UA = '"Not/A)Brand";v="8", "Chromium";v="126", "Google Chrome";v="126"'
-# SEC_CH_UA_PLATFORM = '"Windows"'
+REFERER = "https://www.douyin.com/?recommend=1"
+REFERER_TIKTOK = "https://www.tiktok.com/explore"
 PARAMS_HEADERS = {
     "Accept": "*/*",
     "Accept-Encoding": "*/*",
-    # "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
     "Content-Type": "text/plain;charset=UTF-8",
-    # "Dnt": "1",
-    # "Origin": "https://www.douyin.com",
-    "Referer": "https://www.douyin.com/",
-    # "Sec-Ch-Ua": SEC_CH_UA,
-    # "Sec-Ch-Ua-Mobile": "?0",
-    # "Sec-Ch-Ua-Platform": SEC_CH_UA_PLATFORM,
-    # "Sec-Fetch-Dest": "empty",
-    # "Sec-Fetch-Mode": "cors",
-    # "Sec-Fetch-Site": "cross-site",
+    "Referer": REFERER,
     "User-Agent": USERAGENT,
 }
 PARAMS_HEADERS_TIKTOK = PARAMS_HEADERS | {
-    # "Origin": "https://www.tiktok.com",
-    "Referer": "https://www.tiktok.com/",
+    "Referer": REFERER_TIKTOK,
 }
 DATA_HEADERS = {
     "Accept": "*/*",
     "Accept-Encoding": "*/*",
-    # "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
-    # "Dnt": "1",
-    "Referer": "https://www.douyin.com/?recommend=1",
-    # "Sec-Ch-Ua": SEC_CH_UA,
-    # "Sec-Ch-Ua-Mobile": "?0",
-    # "Sec-Ch-Ua-Platform": SEC_CH_UA_PLATFORM,
-    # "Sec-Fetch-Dest": "empty",
-    # "Sec-Fetch-Mode": "cors",
-    # "Sec-Fetch-Site": "same-origin",
+    "Referer": REFERER,
     "User-Agent": USERAGENT,
 }
 DATA_HEADERS_TIKTOK = DATA_HEADERS | {
-    "Referer": "https://www.tiktok.com/",
+    "Referer": REFERER_TIKTOK,
 }
 DOWNLOAD_HEADERS = {
     'Accept': '*/*',
-    # 'Accept-Language': 'zh-SG,zh-CN;q=0.9,zh;q=0.8',
-    # 'Dnt': '1',
-    # 'Origin': 'https://www.douyin.com',
-    # 'Priority': 'i',
     'Range': 'bytes=0-',
-    'Referer': 'https://www.douyin.com/',
-    # 'Sec-Ch-Ua': SEC_CH_UA,
-    # 'Sec-Ch-Ua-Mobile': '?0',
-    # 'Sec-Ch-Ua-Platform': SEC_CH_UA_PLATFORM,
-    # 'Sec-Fetch-Dest': 'video',
-    # 'Sec-Fetch-Mode': 'cors',
-    # 'Sec-Fetch-Site': 'cross-site',
+    'Referer': REFERER,
     'User-Agent': USERAGENT,
 }
-DOWNLOAD_HEADERS_TIKTOK = {
-    "Accept": "*/*",
-    # "Accept-Encoding": "identity;q=1, *;q=0",
-    # "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
-    "Connection": "keep-alive",
-    # "Dnt": "1",
-    # "Host": "v16-webapp-prime.us.tiktok.com",
-    "Range": "bytes=0-",
-    "Referer": "https://www.tiktok.com/",
-    # "Sec-Ch-Ua": SEC_CH_UA,
-    # "Sec-Ch-Ua-Mobile": "?0",
-    # "Sec-Ch-Ua-Platform": SEC_CH_UA_PLATFORM,
-    # "Sec-Fetch-Dest": "video",
-    # "Sec-Fetch-Mode": "no-cors",
-    # "Sec-Fetch-Site": "same-site",
-    "User-Agent": USERAGENT,
+DOWNLOAD_HEADERS_TIKTOK = DOWNLOAD_HEADERS | {
+    "Referer": REFERER_TIKTOK,
 }
 QRCODE_HEADERS = {
     "Accept": "*/*",
     "Accept-Encoding": "*/*",
-    # "Accept-Language": "zh-SG,zh-CN;q=0.9,zh;q=0.8",
-    # "Dnt": "1",
-    # "Origin": "https://www.douyin.com",
-    "Referer": "https://www.douyin.com/",
-    # "Sec-Ch-Ua": SEC_CH_UA,
-    # "Sec-Ch-Ua-Mobile": "?0",
-    # "Sec-Ch-Ua-Platform": SEC_CH_UA_PLATFORM,
-    # "Sec-Fetch-Dest": "empty",
-    # "Sec-Fetch-Mode": "cors",
-    # "Sec-Fetch-Site": "same-site",
+    "Referer": REFERER,
     "User-Agent": USERAGENT,
 }
 

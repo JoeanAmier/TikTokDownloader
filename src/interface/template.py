@@ -41,6 +41,7 @@ class API:
         "channel": "channel_pc_web",
         "update_version_code": "170400",
         "pc_client_type": "1",
+        "pc_libra_divert": "Windows",
         "version_code": "290100",
         "version_name": "29.1.0",
         "cookie_enabled": "true",
@@ -352,7 +353,7 @@ class API:
 class APITikTok(API):
     domain = "https://www.tiktok.com/"
     short_domain = ""
-    referer = domain
+    referer = f"{domain}explore"
     params = {
         "WebIdLastTime": int(time()),
         "aid": "1988",
@@ -377,7 +378,7 @@ class APITikTok(API):
         "language": "en",
         "os": "windows",
         "priority_region": "CN",
-        "referer": "",
+        "referer": "https://www.tiktok.com/explore",
         "region": "JP",
         "screen_height": "864",
         "screen_width": "1536",

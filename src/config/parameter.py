@@ -346,7 +346,7 @@ class Parameter:
         return split
 
     def __check_proxy_tiktok(self, proxy: str | None | dict, ) -> str | None:
-        return self.__check_proxy(proxy, "https://www.tiktok.com/", "TikTok", )
+        return self.__check_proxy(proxy, "https://www.tiktok.com/explore", "TikTok", )
 
     def __check_proxy(
             self,
@@ -632,20 +632,16 @@ class Parameter:
 
     def __check_browser_info(self, info: dict, ):
         self.logger.info(f"抖音浏览器信息: {info}", False)
-        for i in (
-                # "Sec-Ch-Ua",
-                "User-Agent",
-                # "Sec-Ch-Ua-Platform",
+        for j in (
+                self.headers,
+                self.headers_download,
+                self.headers_params,
+                self.headers_qrcode,
         ):
-            for j in (
-                    self.headers,
-                    self.headers_download,
-                    self.headers_params,
-                    self.headers_qrcode,
-            ):
-                if v := info.get(i, ):
-                    j[i] = v
+            if v := info.get("User-Agent", ):
+                j["User-Agent"] = v
         for i in (
+                'pc_libra_divert',
                 'browser_platform',
                 'browser_name',
                 'browser_version',
@@ -660,18 +656,13 @@ class Parameter:
 
     def __check_browser_info_tiktok(self, info: dict, ):
         self.logger.info(f"TikTok 浏览器信息: {info}", False)
-        for i in (
-                # "Sec-Ch-Ua",
-                "User-Agent",
-                # "Sec-Ch-Ua-Platform",
+        for j in (
+                self.headers_tiktok,
+                self.headers_download_tiktok,
+                self.headers_params_tiktok,
         ):
-            for j in (
-                    self.headers_tiktok,
-                    self.headers_download_tiktok,
-                    self.headers_params_tiktok,
-            ):
-                if v := info.get(i, ):
-                    j[i] = v
+            if v := info.get("User-Agent", ):
+                j["User-Agent"] = v
         for i in (
                 "app_language",
                 "browser_language",
@@ -684,6 +675,7 @@ class Parameter:
                 "region",
                 "tz_name",
                 "webcast_language",
+                "device_id",
         ):
             if v := info.get(i, ):
                 APITikTok.params[i] = v
