@@ -569,7 +569,7 @@ class ABogus:
             random_num_2,
             random_num_3,
         )
-        string_2 = self.generate_string_2(urlencode(url_params, quote_via=quote) if isinstance(
+        string_2 = self.generate_string_2(urlencode(url_params, quote_via=quote, ) if isinstance(
             url_params, dict) else url_params, method, start_time, end_time, )
         string = string_1 + string_2
         # return self.generate_result(
