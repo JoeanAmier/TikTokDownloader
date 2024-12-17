@@ -168,9 +168,9 @@ class TikTok:
             ("批量下载账号作品(抖音)", self.account_acquisition_interactive,),
             ("批量下载链接作品(抖音)", self.detail_interactive,),
             ("获取直播推流地址(抖音)", self.live_interactive,),
-            # ("采集作品评论数据(抖音)", self.comment_interactive,),
+            ("采集作品评论数据(抖音)", self.comment_interactive,),
             ("批量下载合集作品(抖音)", self.mix_interactive,),
-            # ("采集账号详细数据(抖音)",),
+            ("采集账号详细数据(抖音)", self.user_interactive,),
             # ("采集搜索结果数据(抖音)",),
             ("采集抖音热榜数据(抖音)", self.hot_interactive,),
             # ("批量下载话题作品(抖音)",),
@@ -1016,9 +1016,6 @@ class TikTok:
 
     async def __comment_inquire(
             self,
-            root,
-            params,
-            logger,
             tiktok=False,
     ):
         link = self.links_tiktok if tiktok else self.links
@@ -1030,40 +1027,40 @@ class TikTok:
             self.console.print(f"共提取到 {len(ids)} 个作品，开始处理！")
             await self.__comment_handle(
                 ids,
-                root,
-                params,
-                logger,
                 tiktok=tiktok,
             )
 
     async def __comment_inquire_tiktok(self, root, params, logger):
         await self.__comment_inquire(root, params, logger, True, )
 
-    async def __comment_txt(self, root, params, logger):
-        if ids := await self.__read_detail_txt():
-            await self.__comment_handle(ids, root, params, logger)
+    async def __comment_txt(self, tiktok=False, ):
+        await self._read_from_txt(
+            tiktok,
+            "detail",
+            "从文本文档提取作品 ID 失败",
+            self.__comment_handle,
+        )
 
     async def __comment_handle(
             self,
             ids: list,
-            root,
-            params,
-            logger,
+            tiktok=False,
             cookie: str = None,
             proxy: str = None,
-            tiktok=False,
     ):
         if tiktok:  # TODO: 代码未完成
             ...
         else:
             for i in ids:
                 name = f"作品{i}_评论数据"
+                root, params, logger = self.record.run(self.parameter, type_="comment")
                 async with logger(root, name=name, console=self.console, **params) as record:
                     if d := await Comment(
                             self.parameter,
                             cookie,
                             proxy,
                             item_id=i,
+                            reply=False,
                     ).run():
                         await self.extractor.run(d, record, type_="comment")
                         self.logger.info(f"作品评论数据已储存至 {name}")
@@ -1085,14 +1082,6 @@ class TikTok:
             select or safe_pop(self.run_command),
         )
         self.logger.info("已退出批量下载合集作品(TikTok)模式")
-
-    async def __mix_interactive(self, function, select="", tiktok=False, *args, **kwargs):
-        root, params, logger = self.record.run(self.parameter, type_="mix")
-        if not select:
-            select = choose("请选择合集链接来源",
-                            [i[0] for i in function], self.console)
-        await self.__multiple_choice(select, function, root, params, logger, )
-        self.logger.info(f"已退出批量下载合集作品{"(TikTok)" if tiktok else "(抖音)"}模式")
 
     @staticmethod
     def _generate_mix_params(mix: bool, id_: str) -> dict:
@@ -1301,7 +1290,7 @@ class TikTok:
                 mix_id, ids = await self.links.run(url, type_="mix")
                 return (mix_id, ids[0], "") if len(ids) > 0 else (mix_id, "", "")
 
-    async def user_batch(self, root, params, logger):
+    async def user_batch(self, *args, **kwargs, ):
         users = []
         for index, data in enumerate(self.accounts, start=1):
             if not (sec_user_id := await self.check_sec_user_id(data.url)):
@@ -1310,16 +1299,16 @@ class TikTok:
                     f"第 {index} 条数据的 url 无效")
                 continue
             users.append(await self._get_user_data(sec_user_id))
-        await self._deal_user_data(root, params, logger, [i for i in users if i])
+        await self._deal_user_data([i for i in users if i])
 
-    async def user_inquire(self, root, params, logger):
+    async def user_inquire(self, *args, **kwargs, ):
         while url := self._inquire_input("账号主页"):
             sec_user_ids = await self.links.run(url, type_="user")
             if not sec_user_ids:
                 self.logger.warning(f"{url} 提取账号 sec_user_id 失败")
                 continue
             users = [await self._get_user_data(i) for i in sec_user_ids]
-            await self._deal_user_data(root, params, logger, [i for i in users if i])
+            await self._deal_user_data([i for i in users if i])
 
     def txt_inquire(self) -> str:
         if path := self.console.input("请输入文本文档路径："):
@@ -1333,7 +1322,7 @@ class TikTok:
                 self.console.print(f"{path} 文件不存在！")
         return ""
 
-    async def user_txt(self, root, params, logger):
+    async def user_txt(self, *args, **kwargs, ):
         if not (url := self.txt_inquire()):
             return
         sec_user_ids = await self.links.run(url, type_="user")
@@ -1341,7 +1330,7 @@ class TikTok:
             self.logger.warning("从文本文档提取账号 sec_user_id 失败")
             return
         users = [await self._get_user_data(i) for i in sec_user_ids]
-        await self._deal_user_data(root, params, logger, [i for i in users if i])
+        await self._deal_user_data([i for i in users if i])
 
     async def _get_user_data(
             self,
@@ -1355,30 +1344,25 @@ class TikTok:
 
     async def _deal_user_data(
             self,
-            root,
-            params,
-            logger,
             data: list[dict],
-            source=False):
+            source=False,
+    ):
         if not any(data):
-            # self.logger.warning("采集账号数据失败")
             return None
         if source:
             return data
+        root, params, logger = self.record.run(self.parameter, type_="user", )
         async with logger(root, name="UserData", console=self.console, **params) as recorder:
-            data = self.extractor.run(data, recorder, type_="user")
+            data = await self.extractor.run(data, recorder, type_="user")
         self.logger.info("账号数据已保存至文件")
         return data
 
     @check_storage_format
     async def user_interactive(self, select="", *args, **kwargs):
-        root, params, logger = self.record.run(self.parameter, type_="user")
-        await self.__account_secondary_menu(
-            root,
-            params,
-            logger,
-            self.__function_user,
-            select)
+        await self.__secondary_menu(
+            function=self.__function_user,
+            select=select or safe_pop(self.run_command),
+        )
         self.logger.info("已退出采集账号详细数据模式")
 
     def _enter_search_criteria(

@@ -12,7 +12,7 @@
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=for-the-badge&color=52c41a">
 </div>
 <br>
-<p>🔥 <b>TikTok 主页/合辑/直播/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/<del>评论</del>/<del>账号</del>/<del>搜索</del>/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；<del>采集抖音作品评论数据</del>；批量下载抖音合集作品；批量下载 TikTok 合辑作品；<del>采集抖音账号详细数据</del>；<del>采集抖音用户 / 作品 / 直播搜索结果</del>；采集抖音热榜数据。</p>
+<p>🔥 <b>TikTok 主页/合辑/直播/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
 <p>⭐ <b>文档对应项目版本：<code>5.5 Beta</code>；文档内容正在完善中，如有发现任何错误或描述模糊之处，请告知作者以便改进！</b></p>
 <hr>
 <h1>快速入门</h1>
@@ -530,6 +530,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
   "update_cookie_tiktok": true,
   "browser_info": {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "pc_libra_divert": "Windows",
     "browser_platform": "Win32",
     "browser_name": "Chrome",
     "browser_version": "126.0.0.0",
@@ -541,17 +542,18 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
   },
   "browser_info_tiktok": {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-    "app_language": "en",
+    "app_language": "zh-Hans",
     "browser_language": "zh-SG",
     "browser_name": "Mozilla",
     "browser_platform": "Win32",
     "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-    "language": "en",
+    "language": "zh-Hans",
     "os": "windows",
     "priority_region": "CN",
-    "region": "JP",
+    "region": "US",
     "tz_name": "Asia/Shanghai",
-    "webcast_language": "en"
+    "webcast_language": "zh-Hans",
+    "device_id": ""
   }
 }
 ```
@@ -805,7 +807,6 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <li>经测试，强行终止程序或 <code>ffmpeg</code> 并不会导致已下载文件丢失或损坏，但无法继续下载。</li>
 </ul>
 <h3>采集作品评论数据(抖音)</h3>
-<p><b><code>5.4</code> 版本将会默认禁用该功能，后续版本可能重新开放！</b></p>
 <ol>
 <li>手动输入待采集的作品链接。</li>
 <li>输入文本文档路径，读取文件包含的作品链接。</li>
@@ -844,7 +845,6 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会提示用户输入临时的合集标识，以便程序继续处理合集。</p>
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
 <h3>采集账号详细数据(抖音)</h3>
-<p><b><code>5.4</code> 版本将会暂时移除该功能，后续版本可能重新开放！</b></p>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts_urls</code> 参数中的账号链接。</li>
 <li>手动输入待采集的账号链接。</li>

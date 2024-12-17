@@ -324,10 +324,6 @@ class TikTokDownloader:
 
     async def run(self):
         self.project_info()
-        self.console.print(
-            "本项目 5.5 Beta 正在重构代码，部分功能可能无法正常使用，建议暂时使用 5.4 版本！\n",
-            style=WARNING,
-        )
         self.check_config()
         await self.check_settings(False, )
         self.check_update()

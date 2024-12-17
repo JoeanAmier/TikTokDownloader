@@ -100,20 +100,21 @@ class API:
     def generate_data(self, *args, **kwargs) -> dict:
         return {}
 
-    async def run(self,
-                  referer: str = None,
-                  single_page=False,
-                  data_key: str = "",
-                  error_text="",
-                  cursor="cursor",
-                  has_more="has_more",
-                  params: Callable = lambda: {},
-                  data: Callable = lambda: {},
-                  method="GET",
-                  headers: dict = None,
-                  *args,
-                  **kwargs,
-                  ):
+    async def run(
+            self,
+            referer: str = None,
+            single_page=False,
+            data_key: str = "",
+            error_text="",
+            cursor="cursor",
+            has_more="has_more",
+            params: Callable = lambda: {},
+            data: Callable = lambda: {},
+            method="GET",
+            headers: dict = None,
+            *args,
+            **kwargs,
+    ):
         self.set_referer(referer)
         match single_page:
             case True:

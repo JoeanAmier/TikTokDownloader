@@ -5,6 +5,7 @@ LABEL name="TikTokDownloader" authors="JoeanAmier" repository="https://github.co
 WORKDIR /TikTokDownloader
 
 COPY src /TikTokDownloader/src
+COPY locale /TikTokDownloader/locale
 COPY static /TikTokDownloader/static
 COPY templates /TikTokDownloader/templates
 COPY license /TikTokDownloader/license
