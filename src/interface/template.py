@@ -72,7 +72,7 @@ class API:
             proxy: str = None,
             *args,
             **kwargs):
-        self.headers = params.headers
+        self.headers = params.headers.copy()
         self.log = params.logger
         self.ab = params.ab
         self.xb = params.xb
@@ -438,7 +438,7 @@ class APITikTok(API):
                  **kwargs,
                  ):
         super().__init__(params, cookie, proxy, *args, **kwargs, )
-        self.headers = params.headers_tiktok
+        self.headers = params.headers_tiktok.copy()
         self.cookie = cookie or params.cookie_tiktok
         self.client: AsyncClient = params.client_tiktok
         self.set_temp_cookie(cookie)
