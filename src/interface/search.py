@@ -17,7 +17,6 @@ class Search(API):
         SimpleNamespace(
             note="综合搜索",
             api=f"{API.domain}aweme/v1/web/general/search/single/",
-            count=10,
             channel="aweme_general",
             type="general",
             key="data",
@@ -25,7 +24,6 @@ class Search(API):
         SimpleNamespace(
             note="视频搜索",
             api=f"{API.domain}aweme/v1/web/search/item/",
-            count=10,
             channel="aweme_video_web",
             type="video",
             key="data",
@@ -33,7 +31,6 @@ class Search(API):
         SimpleNamespace(
             note="用户搜索",
             api=f"{API.domain}aweme/v1/web/discover/search/",
-            count=10,
             channel="aweme_user_web",
             type="user",
             key="user_list",
@@ -41,7 +38,6 @@ class Search(API):
         SimpleNamespace(
             note="直播搜索",
             api=f"{API.domain}aweme/v1/web/live/search/",
-            count=15,
             channel="aweme_live",
             type="live",
             key="data",
@@ -49,7 +45,6 @@ class Search(API):
         SimpleNamespace(
             note=None,
             api=None,
-            count=None,
             channel=None,
             type=None,
             key=None,
@@ -113,7 +108,7 @@ class Search(API):
             douyin_user_fans: int = 0,
             douyin_user_type: int = 0,
             cursor: int = 0,
-            count: int = None,
+            count: int = 10,
             *args,
             **kwargs,
     ):
@@ -128,7 +123,7 @@ class Search(API):
         self.douyin_user_fans = self.douyin_user_fans_map.get(douyin_user_fans, [""])
         self.douyin_user_type = self.douyin_user_type_map.get(douyin_user_type, [""])
         self.cursor = cursor
-        self.count = count or self.channel.count
+        self.count = count
         self.type = self.channel.type
         self.api = self.channel.api
         self.key = self.channel.key
@@ -140,6 +135,7 @@ class Search(API):
             0: self._generate_params_general,
             1: self._generate_params_video,
             2: self._generate_params_user,
+            3: self._generate_params_live,
         }.get(channel)
 
     async def run(self, single_page=False, *args, **kwargs):
@@ -256,6 +252,15 @@ class Search(API):
         return params
 
     def _generate_params_user(self, ) -> dict:
+        params = self._generate_params_live()
+        if self.search_filter_value:
+            params |= {
+                "search_filter_value": self.search_filter_value,
+                "is_filter_search": "1",
+            }
+        return params
+
+    def _generate_params_live(self, ) -> dict:
         params = self.params | {
             "search_channel": self.channel.channel,
             "keyword": self.key_word,
@@ -272,11 +277,6 @@ class Search(API):
         }
         if self.search_id:
             params |= {"search_id": self.search_id}
-        if self.search_filter_value:
-            params |= {
-                "search_filter_value": self.search_filter_value,
-                "is_filter_search": "1",
-            }
         return params
 
     def check_response(
@@ -300,7 +300,9 @@ class Search(API):
                     case "general" | "user":
                         self.append_response(d)
                     case "video":
-                        self.append_response_video(d)
+                        self.append_response_video(d, "aweme_info", )
+                    case "live":
+                        self.append_response_video(d, "lives", )
                     case _:
                         raise TikTokDownloaderError
                 self.finished = not data_dict[has_more]
@@ -308,8 +310,8 @@ class Search(API):
             self.log.error(f"数据解析失败，请告知作者处理: {data_dict}")
             self.finished = True
 
-    def append_response_video(self, data: list[dict]) -> None:
-        self.append_response([i["aweme_info"] for i in data])
+    def append_response_video(self, data: list[dict], key: str, ) -> None:
+        self.append_response([i[key] for i in data])
 
 
 async def test():
@@ -317,11 +319,12 @@ async def test():
         i = Search(
             params,
             key_word="玉足",
-            channel=2,
+            channel=3,
             sort_type=2,
             publish_time=7,
             duration=2,
             douyin_user_fans=5,
+            pages=1,
         )
         print(await i.run())
 
