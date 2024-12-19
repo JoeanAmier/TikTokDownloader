@@ -20,6 +20,7 @@ class Search(API):
             count=10,
             channel="aweme_general",
             type="general",
+            key="data",
         ),
         SimpleNamespace(
             note="视频搜索",
@@ -27,13 +28,15 @@ class Search(API):
             count=10,
             channel="aweme_video_web",
             type="video",
+            key="data",
         ),
         SimpleNamespace(
             note="用户搜索",
             api=f"{API.domain}aweme/v1/web/discover/search/",
-            count=12,
+            count=10,
             channel="aweme_user_web",
             type="user",
+            key="user_list",
         ),
         SimpleNamespace(
             note="直播搜索",
@@ -41,6 +44,7 @@ class Search(API):
             count=15,
             channel="aweme_live",
             type="live",
+            key="data",
         ),
         SimpleNamespace(
             note=None,
@@ -48,6 +52,7 @@ class Search(API):
             count=None,
             channel=None,
             type=None,
+            key=None,
         ),
     )
     channel_map = {
@@ -78,6 +83,20 @@ class Search(API):
         1,  # 视频
         2,  # 图文
     }
+    douyin_user_fans_map = {
+        0: [""],  # 不限
+        1: ["0_1k"],  # 1000以下
+        2: ["1k_1w"],  # 1000-1w
+        3: ["1w_10w"],  # 1w-10w
+        4: ["10w_100w"],  # 10w-100w
+        5: ["100w_"],  # 100w以上
+    }
+    douyin_user_type_map = {
+        0: [""],  # 不限
+        1: ["common_user"],  # 普通用户
+        2: ["enterprise_user"],  # 企业认证
+        3: ["personal_user"]  # 个人认证
+    }
 
     def __init__(
             self,
@@ -91,6 +110,8 @@ class Search(API):
             publish_time: int = 0,
             duration: int = 0,
             content_type: int = 0,
+            douyin_user_fans: int = 0,
+            douyin_user_type: int = 0,
             cursor: int = 0,
             count: int = None,
             *args,
@@ -104,33 +125,38 @@ class Search(API):
         self.publish_time = publish_time
         self.duration = self.duration_map.get(duration, "")
         self.content_type = content_type
+        self.douyin_user_fans = self.douyin_user_fans_map.get(douyin_user_fans, [""])
+        self.douyin_user_type = self.douyin_user_type_map.get(douyin_user_type, [""])
         self.cursor = cursor
         self.count = count or self.channel.count
         self.type = self.channel.type
         self.api = self.channel.api
+        self.key = self.channel.key
         self.text = f"{self.channel.note}"
         self.filter_selected = self.generate_filter_selected() if channel == 0 else None
+        self.search_filter_value = self.generate_search_filter_value() if channel == 2 else None
         self.search_id = None
         self.params_func = {
             0: self._generate_params_general,
             1: self._generate_params_video,
+            2: self._generate_params_user,
         }.get(channel)
 
     async def run(self, single_page=False, *args, **kwargs):
         if not self.api:
             raise TikTokDownloaderError
-        self.set_referer(f"{self.domain}search/{quote(self.key_word)}?type={self.type}")
+        self.set_referer(f"{self.domain}root/search/{quote(self.key_word)}?type={self.type}")
         match single_page:
             case True:
                 await self.run_single(
-                    "data",
+                    self.channel.key,
                     params=self.params_func,
                     *args,
                     **kwargs,
                 )
             case False:
                 await self.run_batch(
-                    "data",
+                    self.channel.key,
                     params=self.params_func,
                     *args,
                     **kwargs,
@@ -153,6 +179,19 @@ class Search(API):
                     "filter_duration": f"{self.duration}",
                     "content_type": f"{self.content_type}",
                 },
+                separators=(",", ":"),
+            )
+
+    def generate_search_filter_value(self, ) -> str | None:
+        if any((
+                self.douyin_user_fans,
+                self.douyin_user_type,
+        )):
+            return dumps(
+                {
+                    "douyin_user_fans": self.douyin_user_fans,
+                    "douyin_user_type": self.douyin_user_type, }
+                ,
                 separators=(",", ":"),
             )
 
@@ -216,6 +255,30 @@ class Search(API):
             }
         return params
 
+    def _generate_params_user(self, ) -> dict:
+        params = self.params | {
+            "search_channel": self.channel.channel,
+            "keyword": self.key_word,
+            "search_source": "tab_search",
+            "query_correct_type": "1",
+            "is_filter_search": "0",
+            "from_group_id": "",
+            "offset": self.cursor,
+            "count": self.count,
+            "need_filter_settings": "0",
+            "list_type": "single",
+            "version_code": "170400",
+            "version_name": "17.4.0",
+        }
+        if self.search_id:
+            params |= {"search_id": self.search_id}
+        if self.search_filter_value:
+            params |= {
+                "search_filter_value": self.search_filter_value,
+                "is_filter_search": "1",
+            }
+        return params
+
     def check_response(
             self,
             data_dict: dict,
@@ -234,7 +297,7 @@ class Search(API):
                 self.cursor = data_dict[cursor]
                 self.search_id = data_dict["log_pb"]["impr_id"]
                 match self.type:
-                    case "general":
+                    case "general" | "user":
                         self.append_response(d)
                     case "video":
                         self.append_response_video(d)
@@ -254,10 +317,11 @@ async def test():
         i = Search(
             params,
             key_word="玉足",
-            channel=1,
+            channel=2,
             sort_type=2,
             publish_time=7,
             duration=2,
+            douyin_user_fans=5,
         )
         print(await i.run())
 
