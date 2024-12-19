@@ -24,7 +24,7 @@ class Search(API):
         SimpleNamespace(
             note="视频搜索",
             api=f"{API.domain}aweme/v1/web/search/item/",
-            count=20,
+            count=10,
             channel="aweme_video_web",
             type="video",
         ),
@@ -109,16 +109,17 @@ class Search(API):
         self.type = self.channel.type
         self.api = self.channel.api
         self.text = f"{self.channel.note}"
-        self.filter_selected = self.generate_filter_selected()
+        self.filter_selected = self.generate_filter_selected() if channel == 0 else None
         self.search_id = None
         self.params_func = {
-            0: self.generate_params_general,
+            0: self._generate_params_general,
+            1: self._generate_params_video,
         }.get(channel)
 
     async def run(self, single_page=False, *args, **kwargs):
         if not self.api:
             raise TikTokDownloaderError
-        self.set_referer(f"https://www.douyin.com/root/search/{quote(self.key_word)}?type={self.type}")
+        self.set_referer(f"{self.domain}search/{quote(self.key_word)}?type={self.type}")
         match single_page:
             case True:
                 await self.run_single(
@@ -155,7 +156,7 @@ class Search(API):
                 separators=(",", ":"),
             )
 
-    def generate_params_general(self, ) -> dict:
+    def _generate_params_general(self, ) -> dict:
         params = self.params | {
             "search_channel": self.channel.channel,
             "enable_history": "1",
@@ -166,7 +167,7 @@ class Search(API):
             "from_group_id": "",
             "offset": self.cursor,
             "count": self.count,
-            "need_filter_settings": "1",
+            "need_filter_settings": "0",
             "list_type": "single",
             "version_code": "190600",
             "version_name": "19.6.0",
@@ -176,6 +177,41 @@ class Search(API):
         if self.filter_selected:
             params |= {
                 "filter_selected": self.filter_selected,
+                "is_filter_search": "1",
+            }
+        return params
+
+    def _generate_params_video(self, ) -> dict:
+        params = self.params | {
+            "search_channel": self.channel.channel,
+            "enable_history": "1",
+            "keyword": self.key_word,
+            "search_source": "tab_search",
+            "query_correct_type": "1",
+            "is_filter_search": "0",
+            "from_group_id": "",
+            "offset": self.cursor,
+            "count": self.count,
+            "need_filter_settings": "0",
+            "list_type": "single",
+            "version_code": "170400",
+            "version_name": "17.4.0",
+        }
+        if self.search_id:
+            params |= {"search_id": self.search_id}
+        if self.sort_type:
+            params |= {
+                "sort_type": f"{self.sort_type}",
+                "is_filter_search": "1",
+            }
+        if self.publish_time:
+            params |= {
+                "publish_time": f"{self.publish_time}",
+                "is_filter_search": "1",
+            }
+        if self.duration:
+            params |= {
+                "filter_duration": f"{self.duration}",
                 "is_filter_search": "1",
             }
         return params
@@ -197,11 +233,20 @@ class Search(API):
             else:
                 self.cursor = data_dict[cursor]
                 self.search_id = data_dict["log_pb"]["impr_id"]
-                self.append_response(d)
+                match self.type:
+                    case "general":
+                        self.append_response(d)
+                    case "video":
+                        self.append_response_video(d)
+                    case _:
+                        raise TikTokDownloaderError
                 self.finished = not data_dict[has_more]
         except KeyError:
             self.log.error(f"数据解析失败，请告知作者处理: {data_dict}")
             self.finished = True
+
+    def append_response_video(self, data: list[dict]) -> None:
+        self.append_response([i["aweme_info"] for i in data])
 
 
 async def test():
@@ -209,7 +254,10 @@ async def test():
         i = Search(
             params,
             key_word="玉足",
-            pages=2,
+            channel=1,
+            sort_type=2,
+            publish_time=7,
+            duration=2,
         )
         print(await i.run())
 
