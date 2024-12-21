@@ -9,6 +9,7 @@ from typing import Union
 
 from src.interface.template import API
 from src.testers import Params
+from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -40,13 +41,13 @@ class Account(API):
         self.earliest: date = self.check_earliest(earliest)
         self.cursor = cursor
         self.count = count
-        self.text = "账号喜欢作品" if self.favorite else "账号发布作品"
+        self.text = _("账号喜欢作品") if self.favorite else _("账号发布作品")
 
     async def run(self,
                   referer: str = None,
                   single_page=False,
                   data_key: str = "aweme_list",
-                  error_text="该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号",
+                  error_text="",
                   cursor="max_cursor",
                   has_more="has_more",
                   params: Callable = lambda: {},
@@ -64,7 +65,7 @@ class Account(API):
             case True:
                 await self.run_single(
                     data_key,
-                    error_text,
+                    error_text or _("该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号"),
                     cursor,
                     has_more,
                     params,
@@ -78,7 +79,7 @@ class Account(API):
             case False:
                 await self.run_batch(
                     data_key,
-                    error_text,
+                    error_text or _("该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号"),
                     cursor,
                     has_more,
                     params,
@@ -91,18 +92,19 @@ class Account(API):
                 return self.response, self.earliest, self.latest
         raise ValueError
 
-    async def run_single(self,
-                         data_key: str = "aweme_list",
-                         error_text="该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号",
-                         cursor="max_cursor",
-                         has_more="has_more",
-                         params: Callable = lambda: {},
-                         data: Callable = lambda: {},
-                         method="GET",
-                         headers: dict = None,
-                         *args,
-                         **kwargs,
-                         ):
+    async def run_single(
+            self,
+            data_key: str = "aweme_list",
+            error_text="",
+            cursor="max_cursor",
+            has_more="has_more",
+            params: Callable = lambda: {},
+            data: Callable = lambda: {},
+            method="GET",
+            headers: dict = None,
+            *args,
+            **kwargs,
+    ):
         await super().run_single(
             data_key,
             error_text,
@@ -118,7 +120,7 @@ class Account(API):
 
     async def run_batch(self,
                         data_key: str = "aweme_list",
-                        error_text="该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号",
+                        error_text="",
                         cursor="max_cursor",
                         has_more="has_more",
                         params: Callable = lambda: {},
@@ -191,7 +193,7 @@ class Account(API):
             case "post":
                 pass
             case _:
-                self.log.warning(f"tab 参数 {tab} 设置错误，程序将使用默认值: post")
+                self.log.warning(_("tab 参数 {tab} 设置错误，程序将使用默认值: post").format(tab=tab))
         return self.post_api, False, 99999
 
     def check_earliest(self, date_: str | float | int) -> date:
@@ -205,11 +207,11 @@ class Account(API):
             try:
                 earliest = datetime.strptime(date_, "%Y/%m/%d").date()  # 解析日期
             except ValueError:
-                self.log.warning(f"作品最早发布日期 {date_} 无效")
+                self.log.warning(_("作品最早发布日期 {date} 无效").format(date=date_))
                 return default_date  # 无效日期返回默认日期
         else:
-            raise ValueError(f"作品最早发布日期参数 {date_} 类型错误")
-        self.log.info(f"作品最早发布日期: {earliest}")
+            raise ValueError(_("作品最早发布日期参数 {date} 类型错误").format(date=date_))
+        self.log.info(_("作品最早发布日期: {earliest_date}").format(earliest_date=earliest))
         return earliest  # 返回 date 对象
 
     def check_latest(self, date_: str) -> date:
@@ -218,10 +220,10 @@ class Account(API):
             return default_date
         try:
             latest = datetime.strptime(date_, "%Y/%m/%d").date()
-            self.log.info(f"作品最晚发布日期: {latest}")
+            self.log.info(_("作品最晚发布日期: {latest_date}").format(latest_date=latest))
             return latest
         except ValueError:
-            self.log.warning(f"作品最晚发布日期无效 {date_}")
+            self.log.warning(_("作品最晚发布日期无效 {date}").format(date=date_))
             return default_date
 
     def check_response(self,
@@ -243,9 +245,9 @@ class Account(API):
                 self.finished = not data_dict[has_more]
         except KeyError:
             if data_dict.get("status_code") == 0:
-                self.log.warning("配置文件 cookie 参数未登录，数据获取已提前结束")
+                self.log.warning(_("配置文件 cookie 参数未登录，数据获取已提前结束"))
             else:
-                self.log.error(f"数据解析失败，请告知作者处理: {data_dict}")
+                self.log.error(_("数据解析失败，请告知作者处理: {data}").format(data=data_dict))
             self.finished = True
 
 

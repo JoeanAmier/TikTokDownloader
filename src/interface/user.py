@@ -3,6 +3,7 @@ from typing import Union
 
 from src.interface.template import API
 from src.testers import Params
+from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -21,7 +22,7 @@ class User(API):
         super().__init__(params, cookie, proxy, *args, **kwargs, )
         self.sec_user_id = sec_user_id
         self.api = f"{self.domain}aweme/v1/web/user/profile/other/"
-        self.text = "账号简略"
+        self.text = _("账号简略")
 
     async def run(self, *args, **kwargs):
         return await super().run(
@@ -58,7 +59,7 @@ class User(API):
             else:
                 self.response = d
         except KeyError:
-            self.log.error(f"数据解析失败，请告知作者处理: {data_dict}")
+            self.log.error(_("数据解析失败，请告知作者处理: {data}").format(data=data_dict))
             self.finished = True
 
     def generate_params(self, ) -> dict:

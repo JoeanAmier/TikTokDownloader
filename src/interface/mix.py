@@ -6,6 +6,7 @@ from src.extract import Extractor
 from src.interface.detail import Detail
 from src.interface.template import API
 from src.testers import Params
+from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -30,7 +31,7 @@ class Mix(API):
         self.count = count
         self.cursor = cursor
         self.api = f"{self.domain}aweme/v1/web/mix/aweme/"
-        self.text = "合集作品"
+        self.text = _("合集作品")
         self.detail = Detail(params, cookie, proxy, self.detail_id, )
 
     def generate_params(self, ) -> dict:
@@ -58,13 +59,13 @@ class Mix(API):
                   ):
         await self.__get_mix_id()
         if not self.mix_id:
-            self.log.warning("获取合集 ID 失败")
+            self.log.warning(_("获取合集 ID 失败"))
             return self.response
         return await super().run(
             referer,
             single_page,
             data_key,
-            error_text or f"获取{self.text}失败",
+            error_text,
             cursor,
             has_more,
             params,

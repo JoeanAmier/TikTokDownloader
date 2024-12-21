@@ -1,7 +1,7 @@
 from rich.console import Console
 from rich.text import Text
 
-from ..custom import (
+from src.custom import (
     PROMPT,
     GENERAL,
     INFO,

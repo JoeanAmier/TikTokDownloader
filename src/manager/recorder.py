@@ -3,14 +3,14 @@ from platform import system
 from re import compile
 from typing import TYPE_CHECKING
 
-from src.custom import (
+from ..custom import (
     ERROR,
     WARNING,
     INFO,
 )
 
 if TYPE_CHECKING:
-    from src.tools import ColorfulConsole
+    from ..tools import ColorfulConsole
     from .database import Database
 
 __all__ = ["DownloadRecorder", ]

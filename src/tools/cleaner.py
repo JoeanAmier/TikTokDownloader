@@ -4,6 +4,11 @@ from string import whitespace
 
 from emoji import replace_emoji
 
+try:
+    from ..translation import _
+except ImportError:
+    _ = lambda x: x
+
 __all__ = ["Cleaner"]
 
 
@@ -38,7 +43,7 @@ class Cleaner:
                 "\x00": "",
             }  # Linux 系统
         else:
-            print("不受支持的操作系统类型，可能无法正常去除非法字符！")
+            print(_("不受支持的操作系统类型，可能无法正常去除非法字符！"))
             rule = {}
         cache = {i: "" for i in whitespace[1:]}  # 补充换行符等非法字符
         return rule | cache

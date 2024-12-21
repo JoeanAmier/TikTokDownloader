@@ -24,8 +24,6 @@ from .session import (
 from .temporary import random_string
 from .temporary import timestamp
 from .timer import run_time
-from .translate import _
-from .translate import switch_language
 from .truncate import beautify_string
 from .truncate import trim_string
 from .truncate import truncate_string

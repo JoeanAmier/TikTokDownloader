@@ -1,7 +1,9 @@
 from typing import TYPE_CHECKING
+from typing import Union
 
 if TYPE_CHECKING:
-    from ..tools import ColorfulConsole
+    from src.tools import ColorfulConsole
+    from rich.console import Console
 
 __all__ = ["choose"]
 
@@ -9,7 +11,7 @@ __all__ = ["choose"]
 def choose(
         title: str,
         options: tuple | list,
-        console: "ColorfulConsole",
+        console: Union["ColorfulConsole", "Console"],
         separate=None) -> str:
     screen = f"{title}:\n"
     row = 0

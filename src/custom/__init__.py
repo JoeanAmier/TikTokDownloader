@@ -1,7 +1,6 @@
 from .function import (
     wait,
     failure_handling,
-    illegal_nickname,
     condition_filter,
     suspend,
     verify_token,
@@ -17,7 +16,6 @@ from .internal import (
     DOCUMENTATION_URL,
     USERAGENT,
     RETRY,
-    DISCLAIMER_TEXT,
     BLANK_PREVIEW,
     TIMEOUT,
     PROJECT_NAME,

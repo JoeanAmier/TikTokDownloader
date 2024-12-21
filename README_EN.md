@@ -116,7 +116,7 @@
 <li>Download the latest source code or the source code published on <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> to your local machine.</li>
 <li>Run the command <code>python -m venv venv</code> to create a virtual environment (optional).</li>
 <li>Run the command <code>.\venv\Scripts\activate.ps1</code> or <code>venv\Scripts\activate</code> to activate the virtual environment (optional).</li>
-<li>Run the command <code>pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt</code> to install the required modules for the program.</li>
+<li>Run the command <code>pip install -r requirements.txt</code> to install the required modules for the program.</li>
 <li>Run the command <code>python .\main.py</code> or <code>python main.py</code> to start TikTokDownloader.</li>
 </ol>
 </li>

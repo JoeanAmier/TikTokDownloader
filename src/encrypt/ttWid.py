@@ -6,6 +6,7 @@ from typing import Union
 from src.custom import PARAMS_HEADERS
 from src.custom import PARAMS_HEADERS_TIKTOK
 from src.tools import request_params
+from src.translation import _
 
 if TYPE_CHECKING:
     from src.record import BaseLogger
@@ -38,7 +39,7 @@ class TtWid:
                 proxy=proxy,
                 **kwargs, ):
             return cls.extract(logger, response, cls.NAME)
-        logger.error(f"获取 {cls.NAME} 参数失败！")
+        logger.error(_("获取 {name} 参数失败！").format(name=cls.NAME))
 
     @staticmethod
     def extract(
@@ -79,7 +80,7 @@ class TtWidTikTok(TtWid):
                 **kwargs,
         ):
             return cls.extract(logger, response, cls.NAME)
-        logger.error(f"获取 {cls.NAME} 参数失败！")
+        logger.error(_("获取 {name} 参数失败！").format(name=cls.NAME))
 
 
 async def test():

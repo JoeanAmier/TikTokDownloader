@@ -6,6 +6,7 @@ from typing import Union
 from src.extract import Extractor
 from src.interface.template import API
 from src.testers import Params
+from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -33,7 +34,7 @@ class Comment(API):
         self.count = count
         self.count_reply = count_reply
         self.api = f"{self.domain}aweme/v1/web/comment/list/"
-        self.text = "作品评论"
+        self.text = _("作品评论")
         self.current_page = []
         self.progress = None
         self.task_id = None
@@ -71,7 +72,7 @@ class Comment(API):
             referer,
             single_page,
             data_key,
-            error_text=error_text or f"作品 {self.item_id} 无评论",
+            error_text=error_text or _("作品 {item_id} 无评论").format(item_id=self.item_id),
             cursor=cursor,
             has_more=has_more,
             data=data,
@@ -97,7 +98,9 @@ class Comment(API):
                         **kwargs, ):
         with self.progress_object() as self.progress:
             self.task_id = self.progress.add_task(
-                f"正在获取{self.text}", total=None)
+                _("正在获取{text}数据").format(text=self.text),
+                total=None,
+            )
             await self.update_progress(
                 data_key,
                 error_text,
@@ -185,7 +188,7 @@ class Comment(API):
                 self.append_response(d)
                 self.finished = not data_dict[has_more]
         except KeyError:
-            self.log.error(f"数据解析失败，请告知作者处理: {data_dict}")
+            self.log.error(_("数据解析失败，请告知作者处理: {data}").format(data=data_dict))
             self.finished = True
 
 
@@ -209,7 +212,7 @@ class Reply(Comment):
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/comment/list/reply/"
-        self.text = "作品评论回复数据"
+        self.text = _("作品评论回复")
         self.progress = progress
         self.task_id = task_id
 
@@ -241,7 +244,7 @@ class Reply(Comment):
             referer,
             single_page=single_page,
             data_key=data_key,
-            error_text=error_text or f"评论 {self.comment_id} 无回复",
+            error_text=error_text or _("评论 {comment_id} 无回复").format(comment_id=self.comment_id),
             cursor=cursor,
             has_more=has_more,
             params=params,

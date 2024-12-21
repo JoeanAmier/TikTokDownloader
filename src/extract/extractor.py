@@ -32,6 +32,7 @@ from ..custom import (
 )
 from ..custom import condition_filter
 from ..tools import TikTokDownloaderError
+from ..translation import _
 
 if TYPE_CHECKING:
     from ..config import Parameter
@@ -96,7 +97,7 @@ class Extractor:
                 "uid": data["uid"],
             }
         except (KeyError, TypeError):
-            self.log.error(f"提取账号信息失败: {data}")
+            self.log.error(_("提取账号信息失败: {data}").format(data=data))
             return {}
 
     def get_user_info_tiktok(self, data: dict) -> dict:
@@ -107,7 +108,7 @@ class Extractor:
                 "uid": data["user"]["id"],
             }
         except (KeyError, TypeError):
-            self.log.error(f"提取账号信息失败: {data}")
+            self.log.error(_("提取账号信息失败: {data}").format(data=data))
             return {}
 
     @staticmethod
@@ -204,7 +205,7 @@ class Extractor:
 
     def __summary_detail(self, data: list[dict], ):
         """汇总作品数量"""
-        self.log.info(f"筛选处理后作品数量: {len(data)}")
+        self.log.info(_("筛选处理后作品数量: {count}").format(count=len(data)))
 
     def __extract_batch(
             self,
@@ -577,9 +578,11 @@ class Extractor:
         container.cache["user_age"] = -1
         self.__extract_nickname_info(container, data)
 
-    def __extract_nickname_info(self,
-                                container: SimpleNamespace,
-                                data: SimpleNamespace) -> None:
+    def __extract_nickname_info(
+            self,
+            container: SimpleNamespace,
+            data: SimpleNamespace,
+    ) -> None:
         if container.same:
             container.cache["nickname"] = container.name
             container.cache["mark"] = container.mark or container.name
@@ -588,8 +591,9 @@ class Extractor:
                 self.safe_extract(
                     data,
                     "nickname",
-                    "已注销账号"),
-                default="无效账号昵称", )
+                    _("已注销账号")),
+                default=_("无效账号昵称"),
+            )
             container.cache["nickname"] = name
             container.cache["mark"] = name
 
@@ -609,7 +613,8 @@ class Extractor:
             info = self.get_user_info_tiktok(data) if tiktok else self.get_user_info(data)
             if user_id != (s := info.get("sec_uid")):
                 self.log.error(
-                    f"sec_user_id {user_id} 与 {s} 不一致")
+                    _("sec_user_id {user_id} 与 {s} 不一致").format(user_id=user_id, s=s),
+                )
                 return "", "", ""
             name = self.cleaner.filter_name(
                 info["nickname"],
@@ -670,7 +675,7 @@ class Extractor:
             item = self.generate_data_object(item)
             if id_ == self.safe_extract(item, key):
                 return item
-        raise TikTokDownloaderError("提取账号信息或合集信息失败，请向作者反馈！")
+        raise TikTokDownloaderError(_("提取账号信息或合集信息失败，请向作者反馈！"))
 
     def __extract_pretreatment_data(
             self,
@@ -993,10 +998,12 @@ class Extractor:
         await self.__record_data(recorder, container.all_data)
         return container.all_data
 
-    def __deal_search_user_live(self,
-                                container: SimpleNamespace,
-                                data: SimpleNamespace,
-                                user=True):
+    def __deal_search_user_live(
+            self,
+            container: SimpleNamespace,
+            data: SimpleNamespace,
+            user=True,
+    ):
         if user:
             container.cache = container.template.copy()
         container.cache["avatar"] = self.safe_extract(
@@ -1167,11 +1174,12 @@ class Extractor:
         # 去除无效数据
         return [i for i in data if i.get(key)]
 
-    async def __music(self,
-                      data: list[dict],
-                      recorder,
-                      tiktok=False,
-                      ) -> list[dict]:
+    async def __music(
+            self,
+            data: list[dict],
+            recorder,
+            tiktok=False,
+    ) -> list[dict]:
         """暂不记录收藏音乐数据"""
         container = SimpleNamespace(
             all_data=[],

@@ -1,21 +1,21 @@
-# Chinese translations for TikTokDownloader package
-# Copyright (C) 2024 THE TikTokDownloader'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the TikTokDownloader package.
-# FIRST AUTHOR <yonglelolu@foxmail.com>, 2024.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <yonglelolu@foxmail.com>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: TikTokDownloader 5.5\n"
 "Report-Msgid-Bugs-To: <yonglelolu@foxmail.com>\n"
 "POT-Creation-Date: 2024-12-21 21:55+0800\n"
-"PO-Revision-Date: 2024-12-21 22:14+0800\n"
-"Last-Translator: <yonglelolu@foxmail.com>\n"
-"Language-Team: Chinese (simplified)\n"
-"Language: zh_CN\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: JoeanAmier <yonglelolu@foxmail.com>\n"
+"Language-Team: LANGUAGE <yonglelolu@foxmail.com>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: C:\Users\youyq\PycharmProjects\TikTokDownloader\src\application\main_complete.py:62
 msgid ""
@@ -601,17 +601,7 @@ msgstr ""
 #: C:\Users\youyq\PycharmProjects\TikTokDownloader\src\testers\translate.py:8
 #: C:\Users\youyq\PycharmProjects\TikTokDownloader\src\testers\translate.py:12
 msgid "免责声明\n"
-msgstr "关于 TikTokDownloader 的 免责声明：\n"
-"\n"
-"1.使用者对本项目的使用由使用者自行决定，并自行承担风险。作者对使用者使用本项目所产生的任何损失、责任、或风险概不负责。\n"
-"2.本项目的作者提供的代码和功能是基于现有知识和技术的开发成果。作者尽力确保代码的正确性和安全性，但不保证代码完全没有错误或缺陷。\n"
-"3.使用者在使用本项目时必须严格遵守 GNU General Public License v3.0 的要求，并在适当的地方注明使用了 GNU General Public License v3.0 的代码。\n"
-"4.使用者在任何情况下均不得将本项目的作者、贡献者或其他相关方与使用者的使用行为联系起来，或要求其对使用者使用本项目所产生的任何损失或损害负责。\n"
-"5.使用者在使用本项目的代码和功能时，必须自行研究相关法律法规，并确保其使用行为合法合规。任何因违反法律法规而导致的法律责任和风险，均由使用者自行承担。\n"
-"6.本项目的作者不会提供 TikTokDownloader 项目的付费版本，也不会提供与 TikTokDownloader 项目相关的任何商业服务。\n"
-"7.基于本项目进行的任何二次开发、修改或编译的程序与原创作者无关，原创作者不承担与二次开发行为或其结果相关的任何责任，使用者应自行对因二次开发可能带来的各种情况负全部责任。\n"
-"\n"
-"在使用本项目的代码和功能之前，请您认真考虑并接受以上免责声明。如果您对上述声明有任何疑问或不同意，请不要使用本项目的代码和功能。如果您使用了本项目的代码和功能，则视为您已完全理解并接受上述免责声明，并自愿承担使用本项目的一切风险和后果。\n"
+msgstr ""
 
 #: C:\Users\youyq\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:181
 msgid "是否已仔细阅读上述免责声明(YES/NO): "

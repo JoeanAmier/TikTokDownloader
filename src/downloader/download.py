@@ -28,13 +28,13 @@ from ..custom import MAX_FILENAME_LENGTH
 from ..custom import MAX_WORKERS
 from ..custom import (
     PROGRESS,
-    WARNING,
 )
 from ..tools import CacheError
 from ..tools import PrivateRetry
 from ..tools import TikTokDownloaderError
 from ..tools import beautify_string
 from ..tools import format_size
+from ..translation import _
 
 if TYPE_CHECKING:
     from ..config import Parameter
@@ -133,7 +133,7 @@ class Downloader:
                   **kwargs, ) -> None:
         if not self.download or not data:
             return
-        self.log.info("开始下载作品文件")
+        self.log.info(_("开始下载作品文件"))
         match type_:
             case "batch":
                 await self.run_batch(data, tiktok, **kwargs)
@@ -206,7 +206,7 @@ class Downloader:
         download_command = []
         self.generate_live_commands(data, download_command, )
         self.console.info(
-            "程序将会调用 ffmpeg 下载直播，关闭 TikTokDownloader 不会中断下载！",
+            _("程序将会调用 ffmpeg 下载直播，关闭 TikTokDownloader 不会中断下载！"),
         )
         self.__download_live(download_command, tiktok)
 
@@ -272,7 +272,7 @@ class Downloader:
                     **params,
                 )
             else:
-                raise ValueError(f"未知类型: {t}")
+                raise TikTokDownloaderError
             self.download_music(**params)
             self.download_cover(**params)
         await self.downloader_chart(
@@ -338,10 +338,11 @@ class Downloader:
         ):
             if await self.is_downloaded(id_):
                 count.skipped_image.add(id_)
-                self.log.info(f"【{type_}】{name} 存在下载记录，跳过下载")
+                self.log.info(_("【{type}】{name} 存在下载记录，跳过下载").format(type=type_, name=name))
                 break
             elif self.is_exists(p := actual_root.with_name(f"{name}_{index}.{suffix}")):
-                self.log.info(f"【{type_}】{name}_{index} 文件已存在，跳过下载")
+                self.log.info(
+                    _("【{type}】{name}_{index} 文件已存在，跳过下载").format(type=type_, name=name, index=index))
                 self.log.info(f"文件路径: {p.resolve()}", False)
                 count.skipped_image.add(id_)
                 continue
@@ -373,7 +374,7 @@ class Downloader:
                     f"{name}.{suffix}",
                 ),
         ):
-            self.log.info(f"【{type_}】{name} 存在下载记录或文件已存在，跳过下载")
+            self.log.info(_("【{type}】{name} 存在下载记录或文件已存在，跳过下载").format(type=type_, name=name))
             self.log.info(f"文件路径: {p.resolve()}", False)
             count.skipped_video.add(id_)
             return
@@ -488,7 +489,7 @@ class Downloader:
                         headers=headers,
                 ) as response:
                     if response.status_code == 416:
-                        raise CacheError("文件缓存异常，尝试重新下载")
+                        raise CacheError(_("文件缓存异常，尝试重新下载"))
                     response.raise_for_status()
                     length, suffix = self._extract_content(response.headers, suffix, )
                     length += position
@@ -515,13 +516,12 @@ class Downloader:
                         case -1:
                             return False
             except RequestError as e:
-                self.log.warning(f"网络异常: {e}")
+                self.log.warning(_("网络异常: {error_repr}").format(error_repr=repr(e)))
                 return False
             except HTTPStatusError as e:
-                self.log.warning(f"响应码异常: {e}")
-                self.console.print(
-                    "如果 TikTok 平台作品下载功能异常，请检查配置文件中 browser_info_tiktok 的 device_id 参数！",
-                    style=WARNING,
+                self.log.warning(_("响应码异常: {error_repr}").format(error_repr=repr(e)))
+                self.console.warning(
+                    _("如果 TikTok 平台作品下载功能异常，请检查配置文件中 browser_info_tiktok 的 device_id 参数！"),
                 )
                 return False
             except CacheError as e:
@@ -529,7 +529,9 @@ class Downloader:
                 self.log.error(str(e))
                 return False
             except Exception as e:
-                self.log.error(f"下载文件时发生预期之外的错误，请向作者反馈，错误信息: {e}")
+                self.log.error(
+                    _("下载文件时发生预期之外的错误，请向作者反馈，错误信息: {error}").format(error=repr(e)),
+                )
                 self.log.error(f"URL: {url}", False)
                 self.log.error(f"Headers: {headers}", False)
                 return False
@@ -562,12 +564,12 @@ class Downloader:
                 StreamError,
         ) as e:
             progress.remove_task(task_id)
-            self.log.warning(f"{show} 下载中断，错误信息：{e}")
+            self.log.warning(_("{show} 下载中断，错误信息：{error}").format(show=show, error=e))
             # self.delete_file(cache)
             await self.recorder.delete_id(id_)
             return False
         self.save_file(cache, actual)
-        self.log.info(f"{show} 文件下载成功")
+        self.log.info(_("{show} 文件下载成功").format(show=show))
         self.log.info(f"文件路径 {actual.resolve()}", False)
         await self.recorder.update_id(id_)
         self.add_count(show, id_, count)
@@ -620,15 +622,15 @@ class Downloader:
     ) -> Path:
         match mode:
             case "post":
-                folder_name = f"UID{id_}_{name}_发布作品"
+                folder_name = _("UID{id_}_{name}_发布作品").format(id_=id_, name=name)
             case "favorite":
-                folder_name = f"UID{id_}_{name}_发布作品"
+                folder_name = _("UID{id_}_{name}_喜欢作品").format(id_=id_, name=name)
             case "mix":
-                folder_name = f"MID{id_}_{name}_合集作品"
+                folder_name = _("MID{id_}_{name}_合集作品").format(id_=id_, name=name)
             case "collection":
-                folder_name = f"UID{id_}_{name}_收藏作品"
+                folder_name = _("UID{id_}_{name}_收藏作品").format(id_=id_, name=name)
             case "collects":
-                folder_name = f"CID{id_}_{name}_收藏夹作品"
+                folder_name = _("CID{id_}_{name}_收藏夹作品").format(id_=id_, name=name)
             case "detail":
                 folder_name = self.folder_name
             case _:
@@ -677,13 +679,17 @@ class Downloader:
 
     def delete_file(self, path: Path):
         path.unlink()
-        self.log.info(f"{path.name} 文件已删除")
+        self.log.info(_("{file_name} 文件已删除").format(file_name=path.name))
 
     def statistics_count(self, count: SimpleNamespace):
-        self.log.info(f"跳过视频作品 {len(count.skipped_video)} 个")
-        self.log.info(f"跳过图集作品 {len(count.skipped_image)} 个")
-        self.log.info(f"下载视频作品 {len(count.downloaded_video)} 个")
-        self.log.info(f"下载图集作品 {len(count.downloaded_image)} 个")
+        self.log.info(_("跳过视频作品 {skipped_count} 个").format(skipped_count=len(count.skipped_video)))
+        self.log.info(_("跳过图集作品 {skipped_count} 个").format(skipped_count=len(count.skipped_image)))
+        self.log.info(
+            _("下载视频作品 {downloaded_video_count} 个").format(downloaded_video_count=len(count.downloaded_video)),
+        )
+        self.log.info(
+            _("下载图集作品 {downloaded_image_count} 个").format(downloaded_image_count=len(count.downloaded_image)),
+        )
 
     def _record_response(self, response, show: str, length: int, ):
         self.log.info(
@@ -748,7 +754,7 @@ class Downloader:
         return s
 
     def __unknown_type(self, content: str) -> str:
-        self.log.warning(f"未收录的文件类型：{content}")
+        self.log.warning(_("未收录的文件类型：{content}").format(content=content))
         return ""
 
     def _download_initial_check(
@@ -758,13 +764,13 @@ class Downloader:
             show: str,
     ) -> int:
         if not length and not unknown_size:  # 响应内容大小判断
-            self.log.warning(f"{show} 响应内容为空")
+            self.log.warning(_("{show} 响应内容为空").format(show=show))
             return -1  # 执行重试
         if all((
                 self.max_size,
                 length,
                 length > self.max_size,
         )):  # 文件下载跳过判断
-            self.log.info(f"{show} 文件大小超出限制，跳过下载")
+            self.log.info(_("{show} 文件大小超出限制，跳过下载").format(show=show))
             return 0  # 跳过下载
         return 1  # 继续下载

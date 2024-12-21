@@ -3,6 +3,7 @@ from typing import Union
 
 from src.interface.template import API
 from src.testers import Params
+from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -25,7 +26,7 @@ class Info(API):
             "version_code": "170400",
             "version_name": "17.4.0",
         }
-        self.text = "账号简略"
+        self.text = _("账号简略")
 
     async def run(self, first=True, *args, **kwargs, ) -> dict | list[dict]:
         self.set_referer()
@@ -46,7 +47,7 @@ class Info(API):
         if d := data_dict.get("data"):
             self.append_response(d)
         else:
-            self.log.warning(f"获取{self.text}失败")
+            self.log.warning(_("获取{text}失败").format(text=self.text))
 
     def __generate_data(self, ) -> dict:
         if isinstance(self.sec_user_id, str):

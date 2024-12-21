@@ -14,18 +14,18 @@ from rich.progress import (
     TimeElapsedColumn,
 )
 
-from src.custom import ERROR
-from src.custom import PROGRESS
-from src.custom import QRCODE_HEADERS
-from src.custom import WARNING
-from src.encrypt import MsToken
-# from src.encrypt import VerifyFp
-from src.tools import PrivateRetry
-from src.tools import cookie_str_to_str
+from ..custom import ERROR
+from ..custom import PROGRESS
+from ..custom import QRCODE_HEADERS
+from ..custom import WARNING
+from ..encrypt import MsToken
+# from ..encrypt import VerifyFp
+from ..tools import PrivateRetry
+from ..tools import cookie_str_to_str
 
 if TYPE_CHECKING:
-    from src.config import Settings
-    from src.config import Parameter
+    from ..config import Settings
+    from ..config import Parameter
 
 __all__ = ["Register"]
 

@@ -16,8 +16,7 @@ from rookiepy import (
     vivaldi,
 )
 
-from ..custom import INFO
-from ..custom import WARNING
+from ..translation import _
 
 if TYPE_CHECKING:
     from ..module import Cookie
@@ -55,7 +54,6 @@ class Browser:
             key="cookie_tiktok",
         ),
     }
-    TIP = "Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie！"
 
     def __init__(self, parameters: "Parameter", cookie_object: "Cookie"):
         self.console = parameters.console
@@ -71,26 +69,29 @@ class Browser:
 
     def run(self, tiktok=False, select: str = None, ):
         if browser := select or self.console.input(
-                f"读取指定浏览器的 {self.PLATFORM[tiktok].name} Cookie 并写入配置文件；注意：{self.TIP}\n{self.options}\n请输入浏览器名称或序号：",
+                _("读取指定浏览器的 {platform_name} Cookie 并写入配置文件；\n"
+                  "注意：Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie！\n"
+                  "{options}\n"
+                  "请输入浏览器名称或序号：").format(platform_name=self.PLATFORM[tiktok].name, options=self.options),
         ):
             if cookie := self.get(browser, self.PLATFORM[tiktok].domain, ):
                 self.__save_cookie(cookie, tiktok, )
-                self.console.print("读取 Cookie 成功！", style=INFO, )
+                self.console.info(_("读取 Cookie 成功！"), )
         else:
-            self.console.print("未选择浏览器！")
+            self.console.print(_("未选择浏览器！"))
 
     def __save_cookie(self, cookie: dict, tiktok: bool):
         self.cookie_object.save_cookie(cookie, self.PLATFORM[tiktok].key)
 
     def get(self, browser: str | int, domains: list[str], ) -> dict[str, str]:
         if not (browser := self.__browser_object(browser)):
-            self.console.print("浏览器名称或序号输入错误！", style=WARNING, )
+            self.console.warning(_("浏览器名称或序号输入错误！"), )
             return {}
         try:
             cookies = browser(domains=domains)
             return {i["name"]: i["value"] for i in cookies}
         except RuntimeError:
-            self.console.print("读取 Cookie 失败，未找到 Cookie 数据！", style=WARNING, )
+            self.console.warning(_("读取 Cookie 失败，未找到 Cookie 数据！"), )
         return {}
 
     @classmethod
@@ -128,4 +129,4 @@ match platform:
     case "win32":
         pass
     case _:
-        print("从浏览器读取 Cookie 功能不支持当前平台！")
+        print(_("从浏览器读取 Cookie 功能不支持当前平台！"))

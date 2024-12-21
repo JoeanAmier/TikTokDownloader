@@ -5,6 +5,7 @@ from typing import Union
 
 from src.interface.template import API
 from src.testers import Params
+from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -24,7 +25,7 @@ class Collection(API):
                  ):
         super().__init__(params, cookie, proxy, *args, **kwargs, )
         self.api = f"{self.domain}aweme/v1/web/aweme/listcollection/"
-        self.text = "账号收藏作品"
+        self.text = _("账号收藏作品")
         self.count = count
         self.cursor = cursor
         self.pages = pages or params.max_pages
@@ -48,7 +49,7 @@ class Collection(API):
             referer or f"{self.domain}user/self?showTab=favorite_collection",
             single_page,
             data_key,
-            error_text or f"获取{self.text}失败",
+            error_text,
             cursor,
             has_more,
             params,

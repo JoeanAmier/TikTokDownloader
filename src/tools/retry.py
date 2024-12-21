@@ -1,5 +1,6 @@
 from ..custom import RETRY
 from ..custom import wait
+from ..translation import _
 
 __all__ = ["PrivateRetry"]
 
@@ -16,7 +17,7 @@ class PrivateRetry:
             for i in range(self.max_retry):
                 if result := await function(self, *args, **kwargs):
                     return result
-                self.log.warning(f"正在进行第 {i + 1} 次重试")
+                self.log.warning(_("正在进行第 {index} 次重试").format(index=i + 1))
                 await wait()
             if not (result := await function(self, *args, **kwargs)) and finished:
                 self.finished = True
@@ -44,7 +45,9 @@ class PrivateRetry:
                 if function(self, *args, **kwargs):
                     return
                 if self.console.input(
-                        "如需重新尝试处理该对象，请关闭所有正在访问该对象的窗口或程序，然后直接按下回车键！\n如需跳过处理该对象，请输入任意字符后按下回车键！"):
+                        _("如需重新尝试处理该对象，请关闭所有正在访问该对象的窗口或程序，然后直接按下回车键！\n"
+                          "如需跳过处理该对象，请输入任意字符后按下回车键！"),
+                ):
                     return
 
         return inner
@@ -55,6 +58,6 @@ class PrivateRetry:
             while True:
                 if function(self, *args, **kwargs):
                     return
-                self.console.input("请关闭所有正在访问该对象的窗口或程序，然后按下回车键继续处理！")
+                self.console.input(_("请关闭所有正在访问该对象的窗口或程序，然后按下回车键继续处理！"))
 
         return inner

@@ -7,6 +7,7 @@ from urllib.parse import quote
 from src.interface.template import API
 from src.testers import Params
 from src.tools import TikTokDownloaderError
+from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -307,7 +308,7 @@ class Search(API):
                         raise TikTokDownloaderError
                 self.finished = not data_dict[has_more]
         except KeyError:
-            self.log.error(f"数据解析失败，请告知作者处理: {data_dict}")
+            self.log.error(_("数据解析失败，请告知作者处理: {data}").format(data=data_dict))
             self.finished = True
 
     def append_response_video(self, data: list[dict], key: str, ) -> None:

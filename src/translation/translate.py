@@ -1,7 +1,7 @@
 from gettext import translation
 from pathlib import Path
 
-from ..custom import PROJECT_ROOT
+ROOT = Path(__file__).resolve().parent.parent.parent
 
 
 class TranslationManager:
@@ -17,7 +17,7 @@ class TranslationManager:
     def __init__(self, domain="tk", localedir=None):
         self.domain = domain
         if not localedir:
-            localedir = PROJECT_ROOT.joinpath('locale')
+            localedir = ROOT.joinpath('locale')
         self.localedir = Path(localedir)
         self.current_translator = self.setup_translation()
 

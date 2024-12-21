@@ -6,6 +6,7 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
 from ..custom import ERROR
+from ..translation import _
 
 if TYPE_CHECKING:
     from ..tools import ColorfulConsole
@@ -19,41 +20,41 @@ class Settings:
     default = {
         "accounts_urls": [
             {
-                "mark": "账号标识，可以设置为空字符串",
-                "url": "账号主页链接",
-                "tab": "账号主页类型",
-                "earliest": "作品最早发布日期",
-                "latest": "作品最晚发布日期",
+                "mark": "",
+                "url": "",
+                "tab": "",
+                "earliest": "",
+                "latest": "",
                 "enable": True,
             },
         ],
         "accounts_urls_tiktok": [
             {
-                "mark": "账号标识，可以设置为空字符串",
-                "url": "账号主页链接",
-                "tab": "账号主页类型",
-                "earliest": "作品最早发布日期",
-                "latest": "作品最晚发布日期",
+                "mark": "",
+                "url": "",
+                "tab": "",
+                "earliest": "",
+                "latest": "",
                 "enable": True,
             },
         ],
         "mix_urls": [
             {
-                "mark": "合集标识，可以设置为空字符串",
-                "url": "合集链接或者作品链接",
+                "mark": "",
+                "url": "",
                 "enable": True,
             },
         ],
         "mix_urls_tiktok": [
             {
-                "mark": "合集标识，可以设置为空字符串",
-                "url": "合集链接或者作品链接",
+                "mark": "",
+                "url": "",
                 "enable": True,
             },
         ],
         "owner_url": {
-            "mark": "账号标识，可以设置为空字符串",
-            "url": "账号主页链接",
+            "mark": "",
+            "url": "",
             "uid": "",
             "sec_uid": "",
             "nickname": "",
@@ -126,8 +127,10 @@ class Settings:
         with self.file.open("w", encoding=self.encode) as f:
             dump(self.default, f, indent=4, ensure_ascii=False)
         self.console.info(
-            "创建默认配置文件 settings.json 成功！\n请参考项目文档的快速入门部分，设置 Cookie 后重新运行程序！\n建议根据实际使用需求"
-            "修改配置文件 settings.json！\n")
+            _("创建默认配置文件 settings.json 成功！\n"
+              "请参考项目文档的快速入门部分，设置 Cookie 后重新运行程序！\n"
+              "建议根据实际使用需求修改配置文件 settings.json！\n"),
+        )
         return self.default
 
     def read(self) -> dict:
@@ -139,7 +142,7 @@ class Settings:
             return self.__create()  # 生成的默认配置文件必须设置 cookie 才可以正常运行
         except JSONDecodeError:
             self.console.error(
-                "配置文件 settings.json 格式错误，请检查 JSON 格式！",
+                _("配置文件 settings.json 格式错误，请检查 JSON 格式！"),
             )
             return self.default  # 读取配置文件发生错误时返回空配置
 
@@ -150,11 +153,13 @@ class Settings:
         if not (miss := default_keys - data_keys):
             return data
         if self.console.input(
-                f"配置文件 settings.json 缺少 {"、".join(miss)} 参数，是否需要生成默认配置文件(YES/NO): ",
+                _("配置文件 settings.json 缺少 {missing_params} 参数，是否需要生成默认配置文件(YES/NO): ").format(
+                    missing_params=', '.join(miss)
+                ),
                 style=ERROR,
         ).upper() == "YES":
             self.__create()
-        self.console.warning("本次运行将会使用各项参数默认值，程序功能可能无法正常使用！", )
+        self.console.warning(_("本次运行将会使用各项参数默认值，程序功能可能无法正常使用！"), )
         return self.default
 
     def update(self, settings: dict | SimpleNamespace):
@@ -167,7 +172,7 @@ class Settings:
                 f,
                 indent=4,
                 ensure_ascii=False)
-        self.console.info("保存配置成功！", )
+        self.console.info(_("保存配置成功！"), )
 
     def __compatible_with_old_settings(self, data: dict, ) -> dict:
         """兼容旧版本配置文件"""

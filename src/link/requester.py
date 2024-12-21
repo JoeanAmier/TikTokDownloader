@@ -1,14 +1,14 @@
 from re import compile
 from typing import TYPE_CHECKING
 
-# from src.custom import PHONE_HEADERS
-from src.custom import wait
-from src.tools import PrivateRetry
-from src.tools import TikTokDownloaderError
-from src.tools import capture_error_request
+# from ..custom import PHONE_HEADERS
+from ..custom import wait
+from ..tools import PrivateRetry
+from ..tools import TikTokDownloaderError
+from ..tools import capture_error_request
 
 if TYPE_CHECKING:
-    from src.config import Parameter
+    from ..config import Parameter
     from httpx import AsyncClient
 
 __all__ = ["Requester"]

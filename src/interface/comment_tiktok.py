@@ -4,6 +4,7 @@ from typing import Union
 from src.interface.comment import Comment, Reply
 from src.interface.template import APITikTok
 from src.testers import Params
+from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -22,6 +23,7 @@ class CommentTikTok(Comment, APITikTok):
                  ):
         super().__init__(params, cookie, proxy, item_id, pages, cursor, count, count_reply)
         self.api = f"{self.domain}api/comment/list/"
+        self.text = _("作品评论")
 
     def generate_params(self, ) -> dict:
         return self.params | {

@@ -2,19 +2,10 @@ from asyncio import sleep
 from random import randint
 from typing import TYPE_CHECKING
 
-# from time import time
+from ..translation import _
 
 if TYPE_CHECKING:
     from ..tools import ColorfulConsole
-
-__all__ = [
-    "wait",
-    "failure_handling",
-    "illegal_nickname",
-    "condition_filter",
-    "suspend",
-    "verify_token",
-]
 
 
 async def wait() -> None:
@@ -32,23 +23,11 @@ async def wait() -> None:
 def failure_handling() -> bool:
     """批量下载账号作品模式 和 批量下载合集作品模式 获取数据失败时，是否继续执行"""
     # 询问用户
-    return bool(input("输入任意字符继续处理账号/合集，直接回车停止处理账号/合集: "))
+    return bool(input(_("输入任意字符继续处理账号/合集，直接回车停止处理账号/合集: ")))
     # 继续执行
     # return True
     # 结束执行
     # return False
-
-
-def illegal_nickname() -> str:
-    """
-    当 昵称/标题/标识 过滤非法字符后不是有效的文件夹名称时，如何处理异常
-    正在逐步废弃该功能
-    """
-    # 询问用户
-    return input("当前 昵称/标题/标识 不是有效的文件夹名称，请输入临时的昵称/标题/标识：")
-    # 使用当前时间戳作为昵称/标题/标识
-    # 需要将第 5 行代码取消注释
-    # return str(time())[:10]
 
 
 def condition_filter(data: dict) -> bool:
@@ -74,8 +53,12 @@ async def suspend(count: int, console: "ColorfulConsole") -> None:
     if not count % batches:
         rest_time = 60 * 5  # 根据实际需求修改
         console.print(
-            f"程序已经处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，程序已经暂停运行，"
-            f"将在 {rest_time} 秒后继续处理数据！", )
+            _("程序连续处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，"
+              "程序已经暂停运行，将在 {rest_time} 秒后恢复运行！").format(
+                batches=batches,
+                rest_time=rest_time
+            ),
+        )
         await sleep(rest_time)
     # 禁用该函数
     # pass

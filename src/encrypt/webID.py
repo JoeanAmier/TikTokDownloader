@@ -4,6 +4,7 @@ from typing import Union
 
 from src.custom import PARAMS_HEADERS
 from src.tools import request_params
+from src.translation import _
 
 if TYPE_CHECKING:
     from src.record import BaseLogger
@@ -45,7 +46,7 @@ class WebId:
                 **kwargs,
         ):
             return response.get("web_id")
-        logger.error(f"获取 {cls.NAME} 参数失败！")
+        logger.error(_("获取 {name} 参数失败！").format(name=cls.NAME))
 
 
 async def test():

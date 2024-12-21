@@ -39,6 +39,7 @@ from ..storage import RecordManager
 from ..tools import Cleaner
 from ..tools import cookie_dict_to_str
 from ..tools import create_client
+from ..translation import _
 
 if TYPE_CHECKING:
     from ..manager import DownloadRecorder
@@ -228,7 +229,7 @@ class Parameter:
         elif isinstance(cookie, str):
             return {}, cookie
         else:
-            self.logger.warning(f"{name} 参数格式错误")
+            self.logger.warning(_("{name} 参数格式错误").format(name=name))
         return {}, ""
 
     def __get_cookie(self, cookie: dict, ) -> dict:
@@ -299,7 +300,9 @@ class Parameter:
         if r := self.__check_root_again(r):
             self.logger.info(f"root 参数已设置为 {r}", False)
             return r
-        self.logger.warning(f"root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径")
+        self.logger.warning(
+            _("root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径").format(root=root),
+        )
         return self.ROOT
 
     @staticmethod
@@ -310,11 +313,13 @@ class Parameter:
         return False
 
     def __check_folder_name(self, folder_name: str) -> str:
-        if folder_name := self.CLEANER.filter_name(folder_name, False):
+        if folder_name := self.CLEANER.filter_name(folder_name, ):
             self.logger.info(f"folder_name 参数已设置为 {folder_name}", False)
             return folder_name
         self.logger.warning(
-            f"folder_name 参数 {folder_name} 不是有效的文件夹名称，程序将使用默认值：Download")
+            _("folder_name 参数 {folder_name} 不是有效的文件夹名称，程序将使用默认值：Download").format(
+                folder_name=folder_name),
+        )
         return "Download"
 
     def __check_name_format(self, name_format: str) -> list[str]:
@@ -324,23 +329,27 @@ class Parameter:
             return name_keys
         else:
             self.logger.warning(
-                f"name_format 参数 {name_format} 设置错误，程序将使用默认值：创建时间 作品类型 账号昵称 作品描述")
+                _("name_format 参数 {name_format} 设置错误，程序将使用默认值：创建时间 作品类型 账号昵称 作品描述").format(
+                    name_format=name_format)
+            )
             return ["create_time", "type", "nickname", "desc"]
 
     def __check_date_format(self, date_format: str) -> str:
         try:
-            _ = strftime(date_format, localtime())
+            strftime(date_format, localtime())
             self.logger.info(f"date_format 参数已设置为 {date_format}", False)
             return date_format
         except ValueError:
             self.logger.warning(
-                f"date_format 参数 {date_format} 设置错误，程序将使用默认值：年-月-日 时:分:秒")
+                _("date_format 参数 {date_format} 设置错误，程序将使用默认值：年-月-日 时:分:秒").format(
+                    date_format=date_format),
+            )
             return "%Y-%m-%d %H:%M:%S"
 
     def __check_split(self, split: str) -> str:
         for i in split:
             if i in self.CLEANER.rule.keys():
-                self.logger.warning(f"split 参数 {split} 包含非法字符，程序将使用默认值：-")
+                self.logger.warning(_("split 参数 {split} 包含非法字符，程序将使用默认值：-").format(split=split))
                 return "-"
         self.logger.info(f"split 参数已设置为 {split}", False)
         return split
@@ -369,15 +378,17 @@ class Parameter:
                     proxy=proxy,
                 )
                 response.raise_for_status()
-                self.logger.info(f"{remark}代理 {proxy} 测试成功")
+                self.logger.info(_("{remark}代理 {proxy} 测试成功").format(remark=remark, proxy=proxy))
                 return proxy
             except TimeoutException:
-                self.logger.warning(f"{remark}代理 {proxy} 测试超时")
+                self.logger.warning(_("{remark}代理 {proxy} 测试超时").format(remark=remark, proxy=proxy))
             except (
                     RequestError,
                     HTTPStatusError,
             ) as e:
-                self.logger.warning(f"{remark}代理 {proxy} 测试失败：{e}")
+                self.logger.warning(
+                    _("{remark}代理 {proxy} 测试失败：{error}").format(remark=remark, proxy=proxy, error=e),
+                )
 
     def __check_max_size(self, max_size: int) -> int:
         max_size = max(max_size, 0)
@@ -389,14 +400,20 @@ class Parameter:
             self.logger.info(f"chunk 参数已设置为 {chunk}", False)
             return chunk
         self.logger.warning(
-            f"chunk 参数 {chunk} 设置错误，程序将使用默认值：{int(1024 * 1024 * 2.5)}", )
-        return int(1024 * 1024 * 2.5)
+            _("chunk 参数 {chunk} 设置错误，程序将使用默认值：{default_chunk}").format(
+                chunk=chunk,
+                default_chunk=1024 * 1024 * 2,
+            ),
+        )
+        return 1024 * 1024 * 2
 
     def __check_max_retry(self, max_retry: int) -> int:
         if isinstance(max_retry, int) and max_retry >= 0:
             self.logger.info(f"max_retry 参数已设置为 {max_retry}", False)
             return max_retry
-        self.logger.warning(f"max_retry 参数 {max_retry} 设置错误，程序将使用默认值：5", )
+        self.logger.warning(
+            _("max_retry 参数 {max_retry} 设置错误，程序将使用默认值：5").format(max_retry=max_retry),
+        )
         return 5
 
     def __check_max_pages(self, max_pages: int) -> int:
@@ -405,14 +422,15 @@ class Parameter:
             return max_pages
         elif max_pages != 0:
             self.logger.warning(
-                f"max_pages 参数 {max_pages} 设置错误，程序将使用默认值：99999", )
+                _("max_pages 参数 {max_pages} 设置错误，程序将使用默认值：99999").format(max_pages=max_pages),
+            )
         return 99999
 
     def __check_timeout(self, timeout: int | float) -> int | float:
         if isinstance(timeout, (int, float)) and timeout > 0:
             self.logger.info(f"timeout 参数已设置为 {timeout}", False)
             return timeout
-        self.logger.warning(f"timeout 参数 {timeout} 设置错误，程序将使用默认值：10")
+        self.logger.warning(_("timeout 参数 {timeout} 设置错误，程序将使用默认值：10").format(timeout=timeout))
         return 10
 
     def __check_storage_format(self, storage_format: str) -> str:
@@ -423,7 +441,9 @@ class Parameter:
             self.logger.info("storage_format 参数未设置，程序不会储存任何数据至文件", False)
         else:
             self.logger.warning(
-                f"storage_format 参数 {storage_format} 设置错误，程序默认不会储存任何数据至文件")
+                _("storage_format 参数 {storage_format} 设置错误，程序默认不会储存任何数据至文件").format(
+                    storage_format=storage_format),
+            )
         return ""
 
     @staticmethod
@@ -505,7 +525,7 @@ class Parameter:
         if not self.update_cookie_dy:
             return
         if not any((self.cookie, self.cookie_cache,)):
-            self.logger.warning("抖音 cookie 参数未设置，相应功能可能无法正常使用")
+            self.logger.warning(_("抖音 cookie 参数未设置，相应功能可能无法正常使用"))
             return
         # if not (m := self.cookie.get("msToken")):
         #     self.logger.warning("抖音 cookie 缺少必需的键值对，请尝试重新写入 cookie")
@@ -527,7 +547,7 @@ class Parameter:
         if not self.update_cookie_tk:
             return
         if not any((self.cookie_tiktok, self.cookie_tiktok_cache,)):
-            self.logger.warning("TikTok cookie 参数未设置，相应功能可能无法正常使用")
+            self.logger.warning(_("TikTok cookie 参数未设置，相应功能可能无法正常使用"))
             return
         # if not (m := self.cookie_tiktok.get("msToken")):
         #     self.logger.warning("TikTok cookie 缺少必需的键值对，请尝试重新写入 cookie")
@@ -685,7 +705,8 @@ class Parameter:
             self.logger.info(f"truncate 参数已设置为 {truncate}", False)
             return truncate
         self.logger.warning(
-            f"truncate 参数 {truncate} 设置错误，程序将使用默认值：50", )
+            _("truncate 参数 {truncate} 设置错误，程序将使用默认值：50").format(truncate=truncate),
+        )
         return 50
 
     def __check_cookie_state(self, tiktok=False) -> bool:

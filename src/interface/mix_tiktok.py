@@ -4,6 +4,7 @@ from typing import Union
 
 from src.interface.template import APITikTok
 from src.testers import Params
+from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -29,7 +30,7 @@ class MixTikTok(APITikTok):
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}api/mix/item_list/"
-        self.text = "合辑作品"
+        self.text = _("合辑作品")
 
     def generate_params(self, ) -> dict:
         return self.params | {
@@ -56,7 +57,7 @@ class MixTikTok(APITikTok):
             referer,
             single_page,
             data_key,
-            error_text or f"获取{self.text}失败",
+            error_text,
             cursor,
             has_more,
             params,
@@ -84,7 +85,7 @@ class MixListTikTok(APITikTok):
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}api/user/playlist/"
-        self.text = "账号合辑数据"
+        self.text = _("账号合辑数据")
 
     def generate_params(self, ) -> dict:
         return self.params | {
@@ -111,7 +112,7 @@ class MixListTikTok(APITikTok):
             referer,
             single_page,
             data_key,
-            error_text or f"获取{self.text}失败",
+            error_text,
             cursor,
             has_more,
             params,

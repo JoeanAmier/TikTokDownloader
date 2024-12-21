@@ -21,6 +21,7 @@ from ..custom import wait
 from ..tools import PrivateRetry
 from ..tools import TikTokDownloaderError
 from ..tools import capture_error_request
+from ..translation import _
 
 if TYPE_CHECKING:
     from ..config import Parameter
@@ -177,7 +178,7 @@ class API:
                 *args,
                 **kwargs)
         else:
-            self.log.warning(f"获取{self.text}数据失败")
+            self.log.warning(_("获取{self_text}数据失败").format(self_text=self.text))
 
     async def run_batch(
             self,
@@ -194,7 +195,9 @@ class API:
             **kwargs, ):
         with self.progress_object() as progress:
             task_id = progress.add_task(
-                f"正在获取{self.text}", total=None)
+                _("正在获取{text}数据").format(text=self.text),
+                total=None,
+            )
             while not self.finished and self.pages > 0:
                 progress.update(task_id)
                 await self.run_single(
@@ -232,7 +235,7 @@ class API:
                 self.append_response(d)
                 self.finished = not data_dict[has_more]
         except KeyError:
-            self.log.error(f"数据解析失败，请告知作者处理: {data_dict}")
+            self.log.error(_("数据解析失败，请告知作者处理: {data}").format(data=data_dict))
             self.finished = True
 
     def set_referer(self, url: str = None) -> None:
@@ -272,7 +275,7 @@ class API:
                     **kwargs,
                 )
             case _:
-                raise TikTokDownloaderError(f"尚未支持的请求方法 {method}")
+                raise TikTokDownloaderError
 
     @PrivateRetry.retry
     @capture_error_request
@@ -362,7 +365,7 @@ class API:
         return ""
 
     def summary_works(self, ) -> None:
-        self.log.info(f"共获取到 {len(self.response)} 个{self.text}")
+        self.log.info(_("共获取到 {count} 个{text}").format(count=len(self.response), text=self.text))
 
     def progress_object(self):
         return Progress(

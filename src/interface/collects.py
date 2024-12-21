@@ -6,6 +6,7 @@ from typing import Union
 from src.interface.collection import Collection
 from src.interface.template import API
 from src.testers import Params
+from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -25,7 +26,7 @@ class Collects(API):
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/collects/list/"
-        self.text = "收藏夹"
+        self.text = _("收藏夹")
 
     def generate_params(self, ) -> dict:
         return self.params | {
@@ -39,7 +40,7 @@ class Collects(API):
                   referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
                   single_page=False,
                   data_key: str = "collects_list",
-                  error_text="当前账号无收藏夹",
+                  error_text="",
                   cursor="cursor",
                   has_more="has_more",
                   params: Callable = lambda: {},
@@ -53,7 +54,7 @@ class Collects(API):
             referer,
             single_page,
             data_key,
-            error_text,
+            error_text or _("当前账号无收藏夹"),
             cursor,
             has_more,
             params,
@@ -83,7 +84,7 @@ class CollectsDetail(Collection, API):
         self.api = f"{self.domain}aweme/v1/web/collects/video/list/"
         self.cursor = cursor
         self.count = count
-        self.text = "收藏夹作品"
+        self.text = _("收藏夹作品")
 
     def generate_params(self, ) -> dict:
         return self.params | {
@@ -112,7 +113,7 @@ class CollectsDetail(Collection, API):
             referer,
             single_page,
             data_key,
-            error_text or f"收藏夹 {self.collects_id} 为空",
+            error_text or _("收藏夹 {collects_id} 为空").format(collects_id=self.collects_id),
             cursor,
             has_more,
             params,
@@ -139,7 +140,7 @@ class CollectsMix(API):
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/mix/listcollection/"
-        self.text = "收藏合集"
+        self.text = _("收藏合集")
 
     def generate_params(self, ) -> dict:
         return self.params | {
@@ -153,7 +154,7 @@ class CollectsMix(API):
                   referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
                   single_page=False,
                   data_key: str = "mix_infos",
-                  error_text="当前账号无收藏合集",
+                  error_text="",
                   cursor="cursor",
                   has_more="has_more",
                   params: Callable = lambda: {},
@@ -168,7 +169,7 @@ class CollectsMix(API):
             referer,
             single_page,
             data_key,
-            error_text,
+            error_text or _("当前账号无收藏合集"),
             cursor,
             has_more,
             params,
@@ -195,13 +196,13 @@ class CollectsSeries(CollectsMix):
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/series/collections/"
-        self.text = "收藏短剧"
+        self.text = _("收藏短剧")
 
     async def run(self,
                   referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
                   single_page=False,
                   data_key: str = "series_infos",
-                  error_text="当前账号无收藏短剧",
+                  error_text="",
                   cursor="cursor",
                   has_more="has_more",
                   params: Callable = lambda: {},
@@ -215,7 +216,7 @@ class CollectsSeries(CollectsMix):
             referer,
             single_page,
             data_key,
-            error_text,
+            error_text or _("当前账号无收藏短剧"),
             cursor,
             has_more,
             params,
@@ -241,13 +242,13 @@ class CollectsMusic(CollectsMix):
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/music/listcollection/"
-        self.text = "收藏音乐"
+        self.text = _("收藏音乐")
 
     async def run(self,
                   referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
                   single_page=False,
                   data_key: str = "mc_list",
-                  error_text="当前账号无收藏音乐",
+                  error_text="",
                   cursor="cursor",
                   has_more="has_more",
                   params: Callable = lambda: {},
@@ -261,7 +262,7 @@ class CollectsMusic(CollectsMix):
             referer,
             single_page,
             data_key,
-            error_text,
+            error_text or _("当前账号无收藏音乐"),
             cursor,
             has_more,
             params,

@@ -6,6 +6,7 @@ from typing import Union
 
 from src.interface.template import API
 from src.testers import Params
+from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -45,6 +46,7 @@ class Hot(API):
         super().__init__(params, cookie, proxy, *args, **kwargs, )
         self.headers = self.headers | {"Cookie": "", }
         self.api = f"{self.domain}aweme/v1/web/hot/search/list/"
+        self.text = _("热榜")
         self.index = None
         self.time = None
 
@@ -76,10 +78,10 @@ class Hot(API):
         self.set_referer(referer)
         for index, space in enumerate(self.board_params):
             self.index = index
-            self.text = f"{space.name}数据"
+            self.text = _("{space_name}数据").format(space_name=space.name)
             await self.run_single(
                 data_key,
-                f"获取{space.name}数据失败",
+                "",
                 cursor,
                 has_more,
                 params=self.generate_params,
@@ -108,7 +110,7 @@ class Hot(API):
             else:
                 self.response.append((index, d))
         except KeyError:
-            self.log.error(f"数据解析失败，请告知作者处理: {data_dict}")
+            self.log.error(_("数据解析失败，请告知作者处理: {data}").format(data=data_dict))
 
 
 async def test():
