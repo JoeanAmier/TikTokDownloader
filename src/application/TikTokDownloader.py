@@ -44,6 +44,8 @@ from src.tools import safe_pop
 # from .main_api_server import APIServer
 from .main_complete import TikTok
 
+# from src.tools import switch_language, _
+
 # from typing import Type
 # from webbrowser import open
 # from flask import abort
@@ -52,7 +54,7 @@ from .main_complete import TikTok
 # from .main_server import Server
 # from .main_web_UI import WebUI
 
-__all__ = ["TikTokDownloader"]
+__all__ = ["TikTokDownloader", "_"]
 
 
 class TikTokDownloader:
@@ -119,13 +121,12 @@ class TikTokDownloader:
             # ("Web API 模式", self.__api_object),
             # ("Web UI 模式", self.__web_ui_object),
             # ("服务器部署模式", self.__server_object),
-            (f"{self.FUNCTION_OPTIONS[self.config["Update"]]
-            }自动检查更新", self.__modify_update),
             (f"{self.FUNCTION_OPTIONS[self.config["Record"]]
             }作品下载记录", self.__modify_record),
             ("删除作品下载记录", self.delete_works_ids),
             (f"{self.FUNCTION_OPTIONS[self.config["Logger"]]
             }运行日志记录", self.__modify_logging),
+            ("检查程序版本更新", self.check_update),
         )
 
     async def disable_function(self, *args, **kwargs, ):
@@ -175,9 +176,7 @@ class TikTokDownloader:
             self.console, )
         self.logger = {1: LoggerManager, 0: BaseLogger}[self.config["Logger"]]
 
-    def check_update(self):
-        if not self.config["Update"]:
-            return
+    async def check_update(self):
         try:
             response = get(RELEASES, timeout=5, follow_redirects=True, )
             latest_major, latest_minor = map(
@@ -198,7 +197,6 @@ class TikTokDownloader:
                 RequestError,
         ):
             self.console.print("检测新版本失败", style=ERROR)
-        self.console.print()
 
     async def main_menu(self, mode=None, ):
         """选择运行模式"""
@@ -326,7 +324,6 @@ class TikTokDownloader:
         self.project_info()
         self.check_config()
         await self.check_settings(False, )
-        self.check_update()
         if await self.disclaimer():
             await self.main_menu(safe_pop(self.run_command))
 

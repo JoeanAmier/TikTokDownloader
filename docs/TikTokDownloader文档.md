@@ -1274,10 +1274,6 @@ print(response.json())
 <p><b><code>5.4</code> 版本将会暂时移除该模式，后续开发完成重新开放！</b></p>
 <p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品</code> 功能，默认启用局域网访问，用于部署至公开服务器，为网站访客提供作品下载服务，建议设置参数验证。</p>
 <p>支持远程修改 <code>settings.json</code> 配置文件，请参考 <code>配置文件修改接口</code></p>
-<h2>启用/禁用检查更新功能</h2>
-<p>启用检查更新功能后，运行程序时会向 <code>https://github.com/JoeanAmier/TikTokDownloader/releases/latest</code>
-发送请求获取最新 <code>Releases</code> 版本号，并提示是否存在新版本。</p>
-<p>如果检查新版本失败，可能是访问 GitHub 超时，并非功能异常；如果存在新版本会提示新版本的 <code>URL</code> 地址，不会自动下载更新。</p>
 <h2>启用/禁用作品下载记录</h2>
 <ul>
 <li>启用该功能：程序会记录下载成功的作品 ID，如果对作品文件进行移动、重命名或者删除操作，程序不会重复下载该作品，如果想要重新下载该作品，需要删除记录数据中对应的作品 ID。</li>
@@ -1289,6 +1285,10 @@ print(response.json())
 <h2>启用/禁用运行日志记录</h2>
 <p>是否将程序运行日志记录保存到文件，默认关闭，日志文件保存路径：<code>./Log</code></p>
 <p>如果在使用过程中发现程序 Bug，可以及时告知作者，并附上日志文件，日志记录有助于作者分析 Bug 原因和修复 Bug。</p>
+<h2>检查程序版本更新</h2>
+<p>程序会向 <code>https://github.com/JoeanAmier/TikTokDownloader/releases/latest</code>
+发送请求获取最新 <code>Releases</code> 版本号，并提示是否存在新版本。</p>
+<p>如果检查新版本失败，可能是访问 GitHub 超时，并非功能异常；如果存在新版本会提示新版本的 <code>URL</code> 地址，不会自动下载更新。</p>
 <h1>其他功能说明</h1>
 <h2>单次输入多个链接</h2>
 <p><code>批量下载账号作品</code>、<code>批量下载链接作品</code>、<code>获取直播推流地址</code>、<code>采集作品评论数据</code>、<code>批量下载合集作品</code>、<code>采集账号详细数据</code>
