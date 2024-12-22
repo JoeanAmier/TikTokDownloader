@@ -1,0 +1,15 @@
+TRANSLATE_MAP = {
+    "发布作品": "Posts",
+    "喜欢作品": "Liked",
+    "收藏作品": "Favorites",
+    "收藏夹": "Collections",
+    "收藏夹作品": "Collections Works",
+    "收藏音乐": "Collections Music",
+    "收藏合集": "Collections Mix",
+    "收藏短剧": "Collections Series",
+    "作品": "Works",
+    "合集": "Mix",
+    "合辑": "Mix",
+    "热榜": "HotBoard",
+    "实况": "LivePhoto",
+}

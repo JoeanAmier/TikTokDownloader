@@ -197,12 +197,12 @@ class TikTok:
         )
         self.logger.info(_("已退出批量下载账号作品(TikTok)模式"))
 
-    def __summarize_results(self, count: SimpleNamespace, name="账号"):
+    def __summarize_results(self, count: SimpleNamespace, name=_("账号")):
         time_ = time() - count.time
         self.logger.info(
             _("程序共处理 {0} 个{1}，成功 {2} 个，失败 {3} 个，耗时 {4} 分钟 {5} 秒").format(
                 count.success + count.failed,
-                _(name),
+                name,
                 count.success,
                 count.failed,
                 int(time_ // 60),
@@ -221,7 +221,7 @@ class TikTok:
 
     async def __secondary_menu(
             self,
-            problem="请选择账号链接来源",
+            problem=_("请选择账号链接来源"),
             function=...,
             select: str | int = ...,
             *args,
@@ -229,7 +229,7 @@ class TikTok:
     ):
         if not select:
             select = choose(
-                _(problem),
+                problem,
                 [i[0] for i in function],
                 self.console,
             )
@@ -684,7 +684,7 @@ class TikTok:
 
     async def detail_interactive(self, select="", ):
         await self.__secondary_menu(
-            "请选择作品链接来源",
+            _("请选择作品链接来源"),
             self.__function_detail,
             select or safe_pop(self.run_command),
         )
@@ -955,7 +955,7 @@ class TikTok:
     @check_storage_format
     async def comment_interactive(self, select="", ):
         await self.__secondary_menu(
-            "请选择作品链接来源",
+            _("请选择作品链接来源"),
             self.__function_comment,
             select or safe_pop(self.run_command),
         )
@@ -1016,7 +1016,7 @@ class TikTok:
 
     async def mix_interactive(self, select="", ):
         await self.__secondary_menu(
-            "请选择合集链接来源",
+            _("请选择合集链接来源"),
             self.__function_mix,
             select or safe_pop(self.run_command),
         )
@@ -1024,7 +1024,7 @@ class TikTok:
 
     async def mix_interactive_tiktok(self, select="", ):
         await self.__secondary_menu(
-            "请选择合集链接来源",
+            _("请选择合集链接来源"),
             self.__function_mix_tiktok,
             select or safe_pop(self.run_command),
         )
@@ -1069,7 +1069,7 @@ class TikTok:
     def __input_download_index(
             self,
             data: list[dict],
-            text="收藏合集",
+            text=_("收藏合集"),
             key="title",
     ) -> list[dict] | None:
         self.console.print(_("{text}列表：").format(text=_(text)))
@@ -1137,7 +1137,7 @@ class TikTok:
             count.success += 1
             if index != len(ids):
                 await suspend(index, self.console)
-        self.__summarize_results(count, "合集")
+        self.__summarize_results(count, _("合集"))
 
     async def mix_batch(self, ):
         await self.__mix_batch(
@@ -1186,7 +1186,7 @@ class TikTok:
             count.success += 1
             if index != len(mix):
                 await suspend(index, self.console)
-        self.__summarize_results(count, "合集")
+        self.__summarize_results(count, _("合集"))
 
     async def _deal_mix_detail(
             self,
@@ -1504,7 +1504,7 @@ class TikTok:
         if source:
             return collects
         data = self.extractor.extract_collects_info(collects)
-        return self.__input_download_index(data, "收藏夹", key, )
+        return self.__input_download_index(data, _("收藏夹"), key, )
 
     async def __check_owner_url(self, tiktok=False, ):
         if not (sec_user_id := await self.check_sec_user_id(self.owner.url)):

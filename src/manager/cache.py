@@ -104,7 +104,7 @@ class Cache:
             mark: str,
     ):
         new_folder = self.root.joinpath(f"{prefix}{id_}_{mark}_{suffix}")
-        self.__rename(old_folder, new_folder, "文件夹")
+        self.__rename(old_folder, new_folder, _("文件夹"))
         self.log.info(f"文件夹 {old_folder} 已重命名为 {new_folder}", False)
 
     def __rename_works_folder(self,
@@ -117,7 +117,7 @@ class Cache:
         if (s := data[key]) in old_.name:
             new_ = old_.parent / old_.name.replace(
                 s, {"name": name, "mark": mark}[key], 1)
-            self.__rename(old_, new_, "文件夹")
+            self.__rename(old_, new_, _("文件夹"))
             self.log.info(f"文件夹 {old_} 重命名为 {new_}", False)
             return new_
         return old_
@@ -174,7 +174,7 @@ class Cache:
         return True
 
     @PrivateRetry.retry_limited
-    def __rename(self, old_: Path, new_: Path, type_="文件") -> bool:
+    def __rename(self, old_: Path, new_: Path, type_=_("文件")) -> bool:
         try:
             old_.rename(new_)
             return True

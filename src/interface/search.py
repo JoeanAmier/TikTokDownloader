@@ -16,28 +16,28 @@ if TYPE_CHECKING:
 class Search(API):
     search_params = (
         SimpleNamespace(
-            note="综合搜索",
+            note=_("综合搜索"),
             api=f"{API.domain}aweme/v1/web/general/search/single/",
             channel="aweme_general",
             type="general",
             key="data",
         ),
         SimpleNamespace(
-            note="视频搜索",
+            note=_("视频搜索"),
             api=f"{API.domain}aweme/v1/web/search/item/",
             channel="aweme_video_web",
             type="video",
             key="data",
         ),
         SimpleNamespace(
-            note="用户搜索",
+            note=_("用户搜索"),
             api=f"{API.domain}aweme/v1/web/discover/search/",
             channel="aweme_user_web",
             type="user",
             key="user_list",
         ),
         SimpleNamespace(
-            note="直播搜索",
+            note=_("直播搜索"),
             api=f"{API.domain}aweme/v1/web/live/search/",
             channel="aweme_live",
             type="live",

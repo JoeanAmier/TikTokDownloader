@@ -40,7 +40,7 @@ class Browser:
     }
     PLATFORM = {
         False: SimpleNamespace(
-            name="抖音",
+            name=_("抖音"),
             domain=[
                 "douyin.com",
             ],

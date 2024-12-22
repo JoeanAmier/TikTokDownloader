@@ -32,6 +32,7 @@ from src.record import BaseLogger
 from src.record import LoggerManager
 from src.tools import Browser
 from src.tools import ColorfulConsole
+from src.tools import TikTokDownloaderError
 from src.tools import choose
 from src.tools import remove_empty_directories
 from src.tools import safe_pop
@@ -58,10 +59,6 @@ class TikTokDownloader:
         "cookie",
         "cookie_tiktok",
     )
-    FUNCTION_OPTIONS = {
-        1: "禁用",
-        0: "启用",
-    }
     NAME = PROJECT_NAME
     WIDTH = 50
     LINE = ">" * WIDTH
@@ -107,6 +104,10 @@ class TikTokDownloader:
             self.close()
 
     def __update_menu(self):
+        options = {
+            1: _("禁用"),
+            0: _("启用"),
+        }
         self.__function_menu = (
             (_("复制粘贴写入 Cookie (抖音)"), self.write_cookie),
             (_("从浏览器获取 Cookie (抖音)"), self.browser_cookie),
@@ -122,11 +123,11 @@ class TikTokDownloader:
             # (_("Web UI 模式"), self.__web_ui_object),
             # (_("服务器部署模式"), self.__server_object),
             (_("{}作品下载记录").format(
-                self.FUNCTION_OPTIONS[self.config["Record"]]
+                options[self.config["Record"]]
             ), self.__modify_record),
             (_("删除作品下载记录"), self.delete_works_ids),
             (_("{}运行日志记录").format(
-                self.FUNCTION_OPTIONS[self.config["Logger"]]
+                options[self.config["Logger"]]
             ), self.__modify_logging),
             (_("检查程序版本更新"), self.check_update),
             (_("切换语言"), self._switch_language),
@@ -151,29 +152,22 @@ class TikTokDownloader:
         await self.change_config("Logger")
 
     async def _switch_language(self, ):
-        def create_language_toggler():
-            languages = ["zh_CN", "en_US"]
-            index = 0
+        if self.option["Language"] == "zh_CN":
+            language = "en_US"
+        elif self.option["Language"] == "en_US":
+            language = "zh_CN"
+        else:
+            raise TikTokDownloaderError
+        await self._update_language(language)
 
-            def toggle():
-                nonlocal index
-                language = languages[index]
-                index = 1 - index  # 切换索引：0 -> 1, 1 -> 0
-                return language
-
-            return toggle
-
-        # 创建语言切换器
-        toggle_language = create_language_toggler()
-
-        current_language = toggle_language()
-
-        self.option["Language"] = current_language
-        await self.database.update_option_data("Language", current_language)
-        self.set_language(current_language)
+    async def _update_language(self, language: str) -> None:
+        self.option["Language"] = language
+        await self.database.update_option_data("Language", language)
+        self.set_language(language)
 
     async def disclaimer(self):
         if not self.config["Disclaimer"]:
+            await self.__init_language()
             self.console.print(
                 _("免责声明\n"),
                 style=MASTER)
@@ -183,6 +177,22 @@ class TikTokDownloader:
             await self.database.update_config_data("Disclaimer", 1)
             self.console.print()
         return True
+
+    async def __init_language(self):
+        languages = (
+            ("简体中文", "zh_CN",),
+            ("English", "en_US",),
+        )
+        language = choose(
+            "请选择语言(Please Select Language)",
+            [i[0] for i in languages],
+            self.console,
+        )
+        try:
+            language = languages[int(language) - 1][1]
+            await self._update_language(language)
+        except ValueError:
+            await self.__init_language()
 
     def project_info(self):
         self.console.print(f"{self.LINE}\n\n\n{self.NAME.center(

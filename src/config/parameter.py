@@ -361,12 +361,12 @@ class Parameter:
             self,
             proxy: str | None | dict,
             url="https://www.douyin.com/?recommend=1",
-            remark="抖音",
+            remark=_("抖音"),
     ) -> str | None:
         if proxy:
             # 暂时兼容旧版配置；未来将会移除
             if isinstance(proxy, dict):
-                self.console.warning(f"{remark}代理参数应为字符串格式，未来不再支持字典格式")
+                self.console.warning(_("{remark}代理参数应为字符串格式，未来不再支持字典格式").format(remark=remark))
                 if not (proxy := proxy.get("https://")):
                     return
             try:

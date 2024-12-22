@@ -360,7 +360,7 @@ class Extractor:
             images: list[SimpleNamespace],
     ) -> None:
         if self.safe_extract(images[-1], "video"):
-            self.__set_blank_data(item, data, "实况", )
+            self.__set_blank_data(item, data, _("实况"), )
             item["downloads"] = [
                 self.safe_extract(
                     i,
@@ -393,7 +393,7 @@ class Extractor:
             self,
             item: dict,
             data: SimpleNamespace,
-            type_="图集",
+            type_=_("图集"),
     ):
         item["type"] = type_
         item["duration"] = "00:00:00"
@@ -419,7 +419,7 @@ class Extractor:
             self,
             item: dict,
             data: SimpleNamespace,
-            type_="视频",
+            type_=_("视频"),
     ) -> None:
         item["type"] = type_
         item["downloads"] = self.safe_extract(

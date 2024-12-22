@@ -261,14 +261,14 @@ class Downloader:
                 "temp_root": temp_root,
                 "actual_root": actual_root
             }
-            if (t := item["type"]) == "图集":
+            if (t := item["type"]) == _("图集"):
                 await self.download_image(**params)
-            elif t == "视频":
+            elif t == _("视频"):
                 await self.download_video(**params)
-            elif t == "实况":
+            elif t == _("实况"):
                 await self.download_image(
                     suffix="mp4",
-                    type_="实况",
+                    type_=_("实况"),
                     **params,
                 )
             else:
@@ -330,7 +330,7 @@ class Downloader:
             temp_root: Path,
             actual_root: Path,
             suffix: str = "jpeg",
-            type_: str = "图集",
+            type_: str = _("图集"),
     ) -> None:
         for index, img in enumerate(
                 item["downloads"],
@@ -366,7 +366,7 @@ class Downloader:
             temp_root: Path,
             actual_root: Path,
             suffix: str = "mp4",
-            type_: str = "视频",
+            type_: str = _("视频"),
     ) -> None:
         if await self.is_skip(
                 id_,

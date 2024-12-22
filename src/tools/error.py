@@ -1,5 +1,8 @@
+from ..translation import _
+
+
 class TikTokDownloaderError(Exception):
-    def __init__(self, message="项目代码错误"):
+    def __init__(self, message=_("项目代码错误")):
         self.message = message
         super().__init__(self.message)
 

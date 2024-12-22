@@ -15,22 +15,22 @@ if TYPE_CHECKING:
 class Hot(API):
     board_params = (
         SimpleNamespace(
-            name="抖音热榜",
+            name=_("抖音热榜"),
             type=0,
             sub_type="",
         ),
         SimpleNamespace(
-            name="娱乐榜",
+            name=_("娱乐榜"),
             type=2,
             sub_type=2,
         ),
         SimpleNamespace(
-            name="社会榜",
+            name=_("社会榜"),
             type=2,
             sub_type=4,
         ),
         SimpleNamespace(
-            name="挑战榜",
+            name=_("挑战榜"),
             type=2,
             sub_type="hotspot_challenge",
         ),
