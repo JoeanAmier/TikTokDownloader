@@ -192,6 +192,7 @@ class TikTok:
             select="",
     ):
         await self.__secondary_menu(
+            _("请选择账号链接来源"),
             function=self.__function_account_tiktok,
             select=select or safe_pop(self.run_command),
         )
@@ -214,6 +215,7 @@ class TikTok:
             select="",
     ):
         await self.__secondary_menu(
+            _("请选择账号链接来源"),
             function=self.__function_account,
             select=select or safe_pop(self.run_command),
         )
@@ -290,7 +292,7 @@ class TikTok:
             count.success += 1
             if index != len(accounts):
                 await suspend(index, self.console)
-        self.__summarize_results(count)
+        self.__summarize_results(count, _("账号"), )
 
     async def check_sec_user_id(self, sec_user_id: str, tiktok=False, ) -> str:
         match tiktok:
@@ -373,7 +375,7 @@ class TikTok:
             count.success += 1
             if index != len(links):
                 await suspend(index, self.console)
-        self.__summarize_results(count)
+        self.__summarize_results(count, _("账号"), )
 
     async def deal_account_detail(
             self,
@@ -702,8 +704,10 @@ class TikTok:
         async with logger(root, console=self.console, **params) as record:
             if not select:
                 select = choose(
-                    _("请选择作品链接来源"), [
-                        i[0] for i in menu], self.console)
+                    _("请选择作品链接来源"),
+                    [i[0] for i in menu],
+                    self.console,
+                )
             if select.upper() == "Q":
                 self.running = False
             try:
@@ -1063,7 +1067,7 @@ class TikTok:
         return self.input_download_index(data)
 
     def input_download_index(self, data: list[dict]) -> list[str] | None:
-        if d := self.__input_download_index(data):
+        if d := self.__input_download_index(data, _("收藏合集"), ):
             return [i["id"] for i in d]
 
     def __input_download_index(
@@ -1137,7 +1141,7 @@ class TikTok:
             count.success += 1
             if index != len(ids):
                 await suspend(index, self.console)
-        self.__summarize_results(count, _("合集"))
+        self.__summarize_results(count, _("合集"), )
 
     async def mix_batch(self, ):
         await self.__mix_batch(
@@ -1186,7 +1190,7 @@ class TikTok:
             count.success += 1
             if index != len(mix):
                 await suspend(index, self.console)
-        self.__summarize_results(count, _("合集"))
+        self.__summarize_results(count, _("合集"), )
 
     async def _deal_mix_detail(
             self,
@@ -1314,6 +1318,7 @@ class TikTok:
     @check_storage_format
     async def user_interactive(self, select="", *args, **kwargs):
         await self.__secondary_menu(
+            _("请选择账号链接来源"),
             function=self.__function_user,
             select=select or safe_pop(self.run_command),
         )
@@ -1632,7 +1637,9 @@ class TikTok:
                 select = choose(
                     _("请选择采集功能"),
                     [i for i, __ in self.__function],
-                    self.console)
+                    self.console,
+                    (10,),
+                )
             if select in {"Q", "q", }:
                 self.running = False
             try:

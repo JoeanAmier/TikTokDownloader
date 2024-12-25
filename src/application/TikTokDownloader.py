@@ -238,8 +238,8 @@ class TikTokDownloader:
                     [i for i, __ in self.__function_menu],
                     self.console,
                     separate=(
-                        4,
-                        9,
+                        5,
+                        10,
                     ))
             await self.compatible(mode)
             mode = None

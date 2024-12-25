@@ -14,10 +14,8 @@ def choose(
         console: Union["ColorfulConsole", "Console"],
         separate=None) -> str:
     screen = f"{title}:\n"
-    row = 0
     for i, j in enumerate(options, start=1):
         screen += f"{i: >2d}. {j}\n"
-        if separate and row in separate:
+        if separate and i in separate:
             screen += f"{'=' * 25}\n"
-        row += 1
     return console.input(screen)

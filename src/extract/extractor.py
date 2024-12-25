@@ -10,7 +10,6 @@ from ..custom import (
     VIDEO_INDEX,
     IMAGE_INDEX,
     IMAGE_TIKTOK_INDEX,
-    VIDEOS_INDEX,
     DYNAMIC_COVER_INDEX,
     ORIGIN_COVER_INDEX,
     MUSIC_INDEX,
@@ -28,7 +27,6 @@ from ..custom import (
     SEARCH_AVATAR_INDEX,
     MUSIC_COLLECTION_COVER_INDEX,
     MUSIC_COLLECTION_DOWNLOAD_INDEX,
-    VIDEO_BIT_RATE_INDEX,
 )
 from ..custom import condition_filter
 from ..tools import TikTokDownloaderError
@@ -128,7 +126,7 @@ class Extractor:
 
     @staticmethod
     def safe_extract(
-            data: SimpleNamespace,
+            data: SimpleNamespace | list[SimpleNamespace],
             attribute_chain: str,
             default: str | int | list | dict | SimpleNamespace = "",
     ):
@@ -306,7 +304,7 @@ class Extractor:
         if images := self.safe_extract(data, "images"):
             self.__extract_image_info(item, data, images)
         else:
-            self.__extract_video_info(item, data)
+            self.__extract_video_info(item, data, _("视频"), )
 
     def __classifying_detail_tiktok(
             self,
@@ -315,7 +313,7 @@ class Extractor:
         if images := self.safe_extract(data, "imagePost.images"):
             self.__extract_image_info_tiktok(item, data, images)
         else:
-            self.__extract_video_info_tiktok(item, data)
+            self.__extract_video_info_tiktok(item, data, _("视频"), )
 
     def __extract_additional_info(
             self,
@@ -362,13 +360,10 @@ class Extractor:
         if self.safe_extract(images[-1], "video"):
             self.__set_blank_data(item, data, _("实况"), )
             item["downloads"] = [
-                self.safe_extract(
-                    i,
-                    f'video.play_addr.url_list[{VIDEOS_INDEX}]',
-                ) for i in images
+                self.__extract_video_download(i, ) for i in images
             ]
         else:
-            self.__set_blank_data(item, data)
+            self.__set_blank_data(item, data, _("图集"), )
             item["downloads"] = [
                 self.safe_extract(
                     i,
@@ -381,7 +376,7 @@ class Extractor:
             item: dict,
             data: SimpleNamespace,
             images: list) -> None:
-        self.__set_blank_data(item, data)
+        self.__set_blank_data(item, data, _("图集"), )
         item["downloads"] = [
             self.safe_extract(
                 i,
@@ -404,16 +399,33 @@ class Extractor:
             self,
             item: dict,
             data: SimpleNamespace,
-            type_="视频",
+            type_=_("视频"),
     ) -> None:
         item["type"] = type_
-        item["downloads"] = self.safe_extract(
-            data, f"video.bit_rate[{VIDEO_BIT_RATE_INDEX}].play_addr.url_list[{VIDEO_INDEX}]")
+        item["downloads"] = self.__extract_video_download(data, )
         item["duration"] = self.time_conversion(
             self.safe_extract(data, "video.duration", 0))
         item["uri"] = self.safe_extract(
             data, "video.play_addr.uri")
         self.__extract_cover(item, data, True)
+
+    def __extract_video_download(self, data: SimpleNamespace, ) -> str:
+        bit_rate: list[SimpleNamespace] = self.safe_extract(
+            data,
+            "video.bit_rate",
+            [],
+        )
+        bit_rate: list[tuple[int, int, str, list[SimpleNamespace]]] = [(
+            i.FPS,
+            i.bit_rate,
+            i.gear_name,
+            i.play_addr
+        ) for i in bit_rate]
+        bit_rate.sort(key=lambda x: (int(x[2].split("_")[-2]), x[1], x[0],), )
+        return self.safe_extract(
+            bit_rate[-1][-1],
+            f"url_list[{VIDEO_INDEX}]",
+        )
 
     def __extract_video_info_tiktok(
             self,
@@ -472,7 +484,8 @@ class Extractor:
             self,
             item: dict,
             data: SimpleNamespace,
-            has=False) -> None:
+            has=False,
+    ) -> None:
         if has:
             # 动态封面图链接
             item["dynamic_cover"] = self.safe_extract(

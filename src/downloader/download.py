@@ -262,9 +262,9 @@ class Downloader:
                 "actual_root": actual_root
             }
             if (t := item["type"]) == _("图集"):
-                await self.download_image(**params)
+                await self.download_image(**params, type_=_("图集"), )
             elif t == _("视频"):
-                await self.download_video(**params)
+                await self.download_video(**params, type_=_("视频"), )
             elif t == _("实况"):
                 await self.download_image(
                     suffix="mp4",

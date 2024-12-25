@@ -142,7 +142,7 @@ class Parameter:
         self.dynamic_cover = self.__check_bool(dynamic_cover)
         self.original_cover = self.__check_bool(original_cover)
         self.timeout = self.__check_timeout(timeout)
-        self.proxy: str | None = self.__check_proxy(proxy)
+        self.proxy: str | None = self.__check_proxy(proxy, remark=_("抖音"), )
         self.proxy_tiktok: str | None = self.__check_proxy_tiktok(proxy_tiktok)
         self.download = self.__check_bool(download)
         self.max_size = self.__check_max_size(max_size)
