@@ -47,7 +47,7 @@ class Downloader:
     semaphore = Semaphore(MAX_WORKERS)
     CONTENT_TYPE_MAP = {
         "image/png": "png",
-        "image/jpeg": "jpg",
+        "image/jpeg": "jpeg",
         "image/webp": "webp",
         "video/mp4": "mp4",
         "video/quicktime": "mov",
@@ -290,12 +290,15 @@ class Downloader:
             semaphore: Semaphore = None,
             **kwargs):
         with progress:
-            tasks = [self.request_file(
-                *task,
-                count=count,
-                **kwargs,
-                progress=progress,
-                semaphore=semaphore, ) for task in tasks]
+            tasks = [
+                self.request_file(
+                    *task,
+                    count=count,
+                    **kwargs,
+                    progress=progress,
+                    semaphore=semaphore,
+                ) for task in tasks
+            ]
             await gather(*tasks)
 
     def deal_folder_path(self,
@@ -502,7 +505,7 @@ class Downloader:
                         case 1:
                             return await self.download_file(
                                 temp,
-                                actual,
+                                actual.with_suffix(f".{suffix}", ),
                                 show,
                                 id_,
                                 response,
@@ -644,7 +647,8 @@ class Downloader:
         return beautify_string(
             self.cleaner.filter_name(
                 self.split.join(
-                    data[i] for i in self.name_format),
+                    data[i] for i in self.name_format
+                ),
                 data["id"],
             ), length=MAX_FILENAME_LENGTH,
         )

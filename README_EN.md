@@ -13,30 +13,30 @@
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=for-the-badge&color=52c41a">
 </div>
 <br>
-<p>🔥 <b>TikTok Account Works/Collections/Live Streams/Videos/Albums/Music; Douyin Account Works/Videos/Albums/Favorites/Live Streams/Music/Collections/Comments/Account Data/Search Data/Popular List Data Acquisition Tools:</b> Fully open-source, free tools implemented based on the HTTPX module; batch download of Douyin account published works, liked works, and favorited works; batch download of TikTok account published works and liked works; download of Douyin linked or TikTok linked works; obtain Douyin live stream push addresses; download Douyin live stream videos; obtain TikTok live stream push addresses; download TikTok live stream videos; collect Douyin works comment data; batch download of Douyin Collections works; batch download of TikTok Collections works; collect detailed data of Douyin accounts; collect Douyin user/work/live stream search results; collect Douyin popular list data.</p>
+<p>🔥 <b>TikTok Account Works/Mix/Live/Video/Image/Music; Douyin Account Works/Video/Image/LivePhoto/Favorites/Live/Music/Collections/Comments/Account Data/Search Data/Hot Board Data Acquisition Tools:</b> Fully open-source, free tools implemented based on the HTTPX module; batch download of Douyin account posts works, liked works, and collections works; batch download of TikTok account posts works and liked works; download of Douyin linked or TikTok linked works; obtain Douyin live stream addresses; download Douyin live stream video; obtain TikTok live stream addresses; download TikTok live stream video; collect Douyin works comment data; batch download of Douyin Mix works; batch download of TikTok Mix works; collect detailed data of Douyin accounts; collect Douyin user/works/live search results; collect Douyin Hot Board data.</p>
 <p>⭐ This project is completely free and open-source, with no paid features. Please do not be deceived!</p>
 <p>⭐ Due to the author's limited energy, I was unable to update the English document in a timely manner, and the content may have become outdated, partial translation is machine translation, the translation result may be incorrect, Suggest referring to Chinese documentation. If you want to contribute to translation, we warmly welcome you.</p>
 <hr>
 
 # 📝 Project Features
 
-* ✅ Download Douyin videos/albums without watermarks
-* ✅ Download TikTok videos/albums without watermarks
-* ✅ Batch download of Douyin account published/liked/favorited works
-* ✅ Batch download of TikTok account published/liked works
+* ✅ Download Douyin video/image without watermarks
+* ✅ Download TikTok video/image without watermarks
+* ✅ Batch download of Douyin account posts/liked/favorites works
+* ✅ Batch download of TikTok account posts/liked works
 * ✅ Collect detailed data from Douyin/TikTok
 * ✅ Batch download of linked works
 * ✅ Batch download of works from multiple accounts
 * ✅ Automatically skip already downloaded files
 * ✅ Persistently save collected data
 * ✅ Download dynamic/static cover images
-* ✅ Obtain Douyin live stream push addresses
-* ✅ Obtain TikTok live stream push addresses
-* ✅ Use ffmpeg to download live streams
+* ✅ Obtain Douyin live stream addresses
+* ✅ Obtain TikTok live stream addresses
+* ✅ Use ffmpeg to download live video
 * ✅ Web UI interaction interface
 * ✅ Collect comment data from Douyin works
-* ✅ Batch download of Douyin Collections works
-* ✅ Batch download of TikTok Collections works
+* ✅ Batch download of Douyin Mix works
+* ✅ Batch download of TikTok Mix works
 * ✅ Record statistics such as likes and favorites
 * ✅ Filter works based on publication time
 * ✅ Support incremental downloading of account works
@@ -48,7 +48,7 @@
 * ✅ Deploy to private servers
 * ✅ Deploy to public servers
 * ✅ Collect Douyin search data
-* ✅ Collect Douyin hot list data
+* ✅ Collect Douyin hot board data
 * ✅ Record IDs of already downloaded works
 * ☑️ ~~Scan QR code to log in and obtain Cookies~~
 * ✅ Obtain Cookies from browsers
@@ -165,23 +165,23 @@
 
 [Click to view Cookie tutorial](https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md)
 
-|         Program Function          |     Login Required     |
-|:---------------------------------:|:----------------------:|
-| Download Account Published Works  | ⭕ Recommended to Login |
-|   Download Account Liked Works    | ⭕ Recommended to Login |
-|       Download Linked Works       | ⭕ Recommended to Login |
-|  Obtain Live Stream Push Address  |  ❌ No Login Required   |
-|    Download Live Stream Videos    |  ❌ No Login Required   |
-|     Obtain Work Comment Data      | ⭕ Recommended to Login |
-|    Download Collections Works     | ⭕ Recommended to Login |
-|        Obtain Account Data        | ⭕ Recommended to Login |
-|      Collect Search Results       | ⭕ Recommended to Login |
-|       Collect Hot List Data       |  ❌ No Login Required   |
-|     Download Favorited Works      |   ✔️ Login Required    |
-|  Download Favorites Folder Works  |   ✔️ Login Required    |
-| Obtain Favorites Collections Data |   ✔️ Login Required    |
-|    Obtain Favorites Music Data    |   ✔️ Login Required    |
-| Obtain Favorites Short Drama Data |   ✔️ Login Required    |
+|       Program Function       |     Login Required     |
+|:----------------------------:|:----------------------:|
+| Download Account Posts Works | ⭕ Recommended to Login |
+| Download Account Liked Works | ⭕ Recommended to Login |
+|    Download Linked Works     | ⭕ Recommended to Login |
+|  Obtain Live Stream Address  |  ❌ No Login Required   |
+|     Download Live Video      |  ❌ No Login Required   |
+|  Obtain Works Comment Data   | ⭕ Recommended to Login |
+|      Download Mix Works      | ⭕ Recommended to Login |
+|     Obtain Account Data      | ⭕ Recommended to Login |
+|    Collect Search Results    | ⭕ Recommended to Login |
+|    Collect Hot Board Data    |  ❌ No Login Required   |
+|   Download Favorites Works   |   ✔️ Login Required    |
+|  Download Collections Works  |   ✔️ Login Required    |
+|    Obtain Collections Mix    |   ✔️ Login Required    |
+|   Obtain Collections Music   |   ✔️ Login Required    |
+|  Obtain Collections Series   |   ✔️ Login Required    |
 
 > * Cookie only needs to be re-written to the configuration file after it expires, and not every time the program is
     run.
@@ -197,11 +197,11 @@
 
 <ul>
 <li>When the program prompts the user for input, pressing Enter directly will return to the previous menu, and inputting <code>Q</code> or <code>q</code> will end the program's execution.</li>
-<li>Since fetching data for liked and favorited works of an account only returns the publication dates of those works, not the dates of the actions (liking or favoriting), the program needs to retrieve all liked and favorited works data before performing date filtering. If there are a large number of works, this may take a considerable amount of time. The number of requests can be controlled via the <code>max_pages</code> parameter.</li>
+<li>Since fetching data for liked and favorites works of an account only returns the publication dates of those works, not the dates of the actions (liking or favouring), the program needs to retrieve all liked and favorites works data before performing date filtering. If there are a large number of works, this may take a considerable amount of time. The number of requests can be controlled via the <code>max_pages</code> parameter.</li>
 <li>To obtain data for posts made by a private account, a logged-in Cookie is required, and the logged-in account must follow the private account.</li>
-<li>When batch downloading works or Collections works of an account, if the corresponding nickname or identifier changes, the program will automatically update the nickname and identifier in the file names of the downloaded works.</li>
+<li>When batch downloading account posts works or mix works, if the corresponding nickname or mark parameter changes, the program will automatically update the nickname and mark parameter in the file names of the downloaded works.</li>
 <li>When downloading files, the program first downloads them to a temporary folder and then moves them to the storage folder upon completion. The temporary folder will be emptied when the program ends.</li>
-<li>The <code>Batch Download Favorited Works Mode</code> currently only supports downloading favorited works for the account corresponding to the currently logged-in Cookie and does not support multiple accounts.</li>
+<li>The <code>Batch Download Favorites Works Mode</code> currently only supports downloading favorited works for the account corresponding to the currently logged-in Cookie and does not support multiple accounts.</li>
 <li>If you want the program to use a proxy to request data, you must set the <code>proxy</code> parameter in <code>settings.json</code>; otherwise, the program will not use a proxy.</li>
 <li>To exit the program, please end it in a normal way or by pressing Ctrl + C. Do not directly close the terminal window, as this may result in data loss.</li>
 <li>If your computer does not have a suitable program for editing JSON files, we recommend using the <a href="https://try8.cn/tool/format/json">JSON Online Tool</a> to edit the configuration file content.</li>

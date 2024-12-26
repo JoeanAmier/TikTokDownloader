@@ -360,7 +360,7 @@ class Extractor:
         if self.safe_extract(images[-1], "video"):
             self.__set_blank_data(item, data, _("实况"), )
             item["downloads"] = [
-                self.__extract_video_download(i, ) for i in images
+                self.__classify_slides_item(i, ) for i in images
             ]
         else:
             self.__set_blank_data(item, data, _("图集"), )
@@ -409,6 +409,11 @@ class Extractor:
             data, "video.play_addr.uri")
         self.__extract_cover(item, data, True)
 
+    def __classify_slides_item(self, item: SimpleNamespace, ) -> str:
+        if self.safe_extract(item, "video"):
+            return self.__extract_video_download(item, )
+        return self.safe_extract(item, f'url_list[{IMAGE_INDEX}]')
+
     def __extract_video_download(self, data: SimpleNamespace, ) -> str:
         bit_rate: list[SimpleNamespace] = self.safe_extract(
             data,
@@ -425,7 +430,7 @@ class Extractor:
         return self.safe_extract(
             bit_rate[-1][-1],
             f"url_list[{VIDEO_INDEX}]",
-        )
+        ) if bit_rate else ""
 
     def __extract_video_info_tiktok(
             self,
