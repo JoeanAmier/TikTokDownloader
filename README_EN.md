@@ -284,15 +284,14 @@
 <img src="docs/赞助商_TikHub_Logo.png" alt="TikHub">
 <p><a href="https://tikhub.io/">TikHub</a> is a leading data interface service provider, specializing in offering high-quality data interfaces for multiple popular platforms, including Douyin, TikTok, Xiaohongshu, Instagram, Twitter, and Kuaishou.</p>
 <p>TikHub also provides customized services such as live streaming room monitoring, post monitoring, and influencer monitoring to meet the needs of different business scenarios.</p>
-<p>Through daily sign-ins, users can obtain a certain quota of usage for free. You can use my <strong>referral link</strong>：<a href="https://beta-web.tikhub.io/users/signup?referral_code=X084IATy">https://beta-web.tikhub.io/users/signup?referral_code=X084IATy</a> or <strong>Referral Code</strong>：<code>X084IATy</code>，Register and recharge to receive <code>$2</code> limit！</p>
+<p>Through daily sign-ins, users can obtain a certain quota of usage for free. You can use my <strong>referral link</strong>：<a href="https://user.tikhub.io/users/signup?referral_code=ZrdH8McC">https://user.tikhub.io/users/signup?referral_code=ZrdH8McC</a> or <strong>Referral Code</strong>：<code>ZrdH8McC</code>，Register and recharge to receive <code>$2</code> limit！</p>
 <p><a href="https://tikhub.io/">TikHub</a> Provide the following services:</p>
 <ul>
 <li>Rich data interfaces</li>
 <li>Free daily check-in to obtain credit limit</li>
 <li>High quality API services</li>
 <li>Official website:<a href="https://tikhub.io/">https://tikhub.io/</a></li>
-<li>Project Address:<a href="https://github.com/TikHubIO/">https://github.com/TikHubIO/</a></li>
-<li>User login address:<a href="https://beta-web.tikhub.io/">https://beta-web.tikhub.io/</a></li>
+<li>User login address:<a href="https://user.tikhub.io/">https://user.tikhub.io/</a></li>
 </ul>
 
 # 💡 Project References
