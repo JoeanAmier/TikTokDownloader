@@ -1,5 +1,5 @@
 from datetime import date
-# from datetime import datetime
+from datetime import datetime
 from pathlib import Path
 from platform import system
 from time import time
@@ -7,6 +7,8 @@ from types import SimpleNamespace
 from typing import Callable
 from typing import TYPE_CHECKING
 from typing import Union
+
+from pydantic import ValidationError
 
 from ..custom import failure_handling
 from ..custom import suspend
@@ -21,7 +23,7 @@ from ..interface import (
     Collection,
     Mix,
     Hot,
-    # Search,
+    Search,
     User,
     HashTag,
     DetailTikTok,
@@ -39,6 +41,12 @@ from ..interface import (
 from ..link import Extractor as LinkExtractor
 from ..link import ExtractorTikTok
 from ..manager import Cache
+from ..module import (
+    GeneralSearch,
+    VideoSearch,
+    UserSearch,
+    LiveSearch,
+)
 from ..storage import RecordManager
 from ..tools import TikTokDownloaderError
 from ..tools import choose
@@ -48,6 +56,7 @@ from ..translation import _
 if TYPE_CHECKING:
     from ..config import Parameter
     from ..manager import Database
+    from pydantic import BaseModel
 
 __all__ = [
     "TikTok",
@@ -122,7 +131,7 @@ class TikTok:
             (_("采集作品评论数据(抖音)"), self.comment_interactive,),
             (_("批量下载合集作品(抖音)"), self.mix_interactive,),
             (_("采集账号详细数据(抖音)"), self.user_interactive,),
-            # (_("采集搜索结果数据(抖音)"),),
+            (_("采集搜索结果数据(抖音)"), self.search_interactive,),
             (_("采集抖音热榜数据(抖音)"), self.hot_interactive,),
             # (_("批量下载话题作品(抖音)"),),
             (_("批量下载收藏作品(抖音)"), self.collection_interactive,),
@@ -176,6 +185,12 @@ class TikTok:
         self.__function_comment_tiktok = (
             (_("手动输入待采集的作品链接"), self.__comment_inquire_tiktok),
             # (_("从文本文档读取待采集的作品链接"), self.__comment_txt_tiktok),
+        )
+        self.__function_search = (
+            (_("综合搜索数据采集"), self._search_interactive_general,),
+            (_("视频搜索数据采集"), self._search_interactive_video,),
+            (_("用户搜索数据采集"), self._search_interactive_user,),
+            (_("直播搜索数据采集"), self._search_interactive_live,),
         )
 
     def _inquire_input(self, tip: str = "", problem: str = "", ) -> str:
@@ -1324,124 +1339,170 @@ class TikTok:
         )
         self.logger.info(_("已退出采集账号详细数据模式"))
 
-    # def _enter_search_criteria(
-    #         self,
-    #         text: str = None,
-    # ) -> None | tuple | bool:
-    #     if not text:
-    #         text = self._inquire_input(
-    #             problem="请输入搜索条件:\n(关键词 搜索类型 页数 排序规则 时间筛选)\n")
-    #     # 分割字符串
-    #     text = text.split()
-    #     # 如果列表长度小于指定长度，使用空字符串补齐
-    #     while 0 < len(text) < 5:
-    #         text.append("0")
-    #     return self._verify_search_criteria(*text)
-    #
-    # def _verify_search_criteria(
-    #         self,
-    #         keyword: str = None,
-    #         type_: str = None,
-    #         pages: str = None,
-    #         sort: str = None,
-    #         publish: str = None,
-    #         *args,
-    # ) -> tuple | bool:
-    #     if not keyword:
-    #         return False
-    #     if args:
-    #         return True
-    #     type_ = self.SEARCH["type"].get(type_, 0)
-    #     type_text = self.SEARCH["type_text"][type_]
-    #     pages = self._extract_integer(pages)
-    #     sort = self.SEARCH["sort"].get(sort, 0)
-    #     sort_text = self.SEARCH["sort_text"][sort]
-    #     publish = int(publish) if publish in {"0", "1", "7", "182"} else 0
-    #     publish_text = self.SEARCH["publish_text"][publish]
-    #     return keyword, (type_, type_text), pages, (sort,
-    #                                                 sort_text), (publish, publish_text)
-    #
-    # @staticmethod
-    # def _extract_integer(page: str) -> int:
-    #     try:
-    #         # 尝试将字符串转换为整数，如果转换成功，则返回比较大的数
-    #         return max(int(page), 1)
-    #     except ValueError:
-    #         # 如果转换失败，则返回1
-    #         return 1
-    #
-    # @check_storage_format
-    # async def search_interactive(self, *args, **kwargs):
-    #     while True:
-    #         if isinstance(c := self._enter_search_criteria(), tuple):
-    #             await self._deal_search_data(*c)
-    #         elif c:
-    #             self.console.print("搜索条件输入格式错误，详细说明请查阅文档！", style=WARNING)
-    #             continue
-    #         else:
-    #             break
-    #     self.logger.info("已退出采集搜索结果数据模式")
-    #
-    # @staticmethod
-    # def _generate_search_name(
-    #         keyword: str,
-    #         type_: str,
-    #         sort: str = None,
-    #         publish: str = None) -> str:
-    #     format_ = (
-    #         _("搜索数据"),
-    #         f"{datetime.now():%Y_%m_%d_%H_%M_%S}",
-    #         type_,
-    #         keyword.strip(),
-    #         sort,
-    #         publish,
-    #     )
-    #     if all(format_):
-    #         return "_".join(format_)
-    #     elif all(format_[:3]):
-    #         return "_".join(format_[:3])
-    #     raise ValueError
+    def _enter_search_criteria(
+            self,
+            field: str,
+    ) -> list[str]:
+        criteria = self.console.input(
+            _("请输入搜索参数；参数之间使用两个空格分隔({field})：\n").format(field=field),
+        )
+        if criteria.upper() == "Q":
+            self.running = False
+            return []
+        return criteria.split("  ") if criteria else []
 
-    # async def _deal_search_data(
-    #         self,
-    #         keyword: str,
-    #         type_: tuple,
-    #         pages: int,
-    #         sort: tuple,
-    #         publish: tuple,
-    #         source=False,
-    #         cookie: str = None,
-    #         proxy: str = None,
-    # ):
-    #     search_data = await Search(
-    #         self.parameter,
-    #         cookie,
-    #         proxy,
-    #         keyword,
-    #         type_[0],
-    #         pages,
-    #         sort[0],
-    #         publish[0],
-    #     ).run()
-    #     if not any(search_data):
-    #         # self.logger.warning("采集搜索数据失败")
-    #         return None
-    #     # print(search_data)  # 调试代码
-    #     if source:
-    #         return search_data
-    #     name = self._generate_search_name(
-    #         keyword, type_[1], sort[1], publish[1])
-    #     root, params, logger = self.record.run(self.parameter,
-    #                                            type_=self.DATA_TYPE[type_[0]])
-    #     async with logger(root, name=name, console=self.console, **params) as logger:
-    #         search_data = await self.extractor.run(
-    #             search_data,
-    #             logger,
-    #             type_="search",
-    #             tab=type_[0])
-    #         self.logger.info(f"搜索数据已保存至 {name}")
-    #     # print(search_data)  # 调试代码
-    #     return search_data
+    @staticmethod
+    def fill_search_criteria(
+            criteria: list[str]
+    ) -> list[str]:
+        if len(criteria) == 1:
+            criteria.append("1")
+        while len(criteria) < 9:
+            criteria.append("0")
+        return criteria
+
+    @check_storage_format
+    async def search_interactive(self, select="", ):
+        await self.__secondary_menu(
+            _("请选择搜索模式"),
+            function=self.__function_search,
+            select=select or safe_pop(self.run_command),
+        )
+        self.logger.info("已退出采集搜索结果数据模式")
+
+    @staticmethod
+    def generate_model(
+            channel: int,
+            key_word: str,
+            pages: int = 1,
+            sort_type: int = 0,
+            publish_time: int = 0,
+            duration: int = 0,
+            search_range: int = 0,
+            content_type: int = 0,
+            douyin_user_fans: int = 0,
+            douyin_user_type: int = 0,
+    ) -> Union["BaseModel", str]:
+        try:
+            match channel:
+                case 0:
+                    return GeneralSearch(
+                        key_word=key_word,
+                        pages=pages,
+                        sort_type=sort_type,
+                        publish_time=publish_time,
+                        duration=duration,
+                        search_range=search_range,
+                        content_type=content_type,
+                    )
+                case 1:
+                    return VideoSearch(
+                        key_word=key_word,
+                        pages=pages,
+                        sort_type=sort_type,
+                        publish_time=publish_time,
+                        duration=duration,
+                        search_range=search_range,
+                    )
+                case 2:
+                    return UserSearch(
+                        key_word=key_word,
+                        pages=pages,
+                        douyin_user_fans=douyin_user_fans,
+                        douyin_user_type=douyin_user_type,
+                    )
+                case 3:
+                    return LiveSearch(
+                        key_word=key_word,
+                        pages=pages,
+                    )
+        except ValidationError as e:
+            return repr(e)
+
+    async def _search_interactive_general(self, index=0, ):
+        while criteria := self._enter_search_criteria(Search.search_criteria[index]):
+            criteria = self.fill_search_criteria(criteria)
+            if isinstance(model := self.generate_model(index, *criteria, ), str):
+                self.logger.warning(model)
+                continue
+            self.logger.info(f"搜索参数: {model.model_dump()}", False)
+            await self._deal_search_data(model, )
+
+    async def _search_interactive_video(self):
+        await self._search_interactive_general(1, )
+
+    async def _search_interactive_user(self):
+        await self._search_interactive_general(2, )
+
+    async def _search_interactive_live(self):
+        await self._search_interactive_general(3, )
+
+    @staticmethod
+    def _generate_search_name(model: "BaseModel", ) -> str:
+        name = [
+            _("搜索数据"),
+            f"{datetime.now():%Y_%m_%d_%H_%M_%S}",
+            Search.search_params[model.channel].note,
+        ]
+        match model.channel:
+            case 0:
+                name.extend([
+                    model.key_word,
+                    Search.sort_type_help[model.sort_type],
+                    Search.publish_time_help[model.publish_time],
+                    Search.duration_help[model.duration],
+                    Search.search_range_help[model.search_range],
+                    Search.content_type_help[model.content_type],
+                ])
+            case 1:
+                name.extend([
+                    model.key_word,
+                    Search.sort_type_help[model.sort_type],
+                    Search.publish_time_help[model.publish_time],
+                    Search.duration_help[model.duration],
+                    Search.search_range_help[model.search_range],
+                ])
+            case 2:
+                name.extend([
+                    model.key_word,
+                    Search.douyin_user_fans_help[model.douyin_user_fans],
+                    Search.douyin_user_type_help[model.douyin_user_type],
+                ])
+            case 3:
+                name.append(model.key_word, )
+        return "_".join(name)
+
+    async def _deal_search_data(
+            self,
+            model: "BaseModel",
+            cookie: str = None,
+            proxy: str = None,
+            source=False,
+    ):
+        data = await Search(
+            self.parameter,
+            cookie,
+            proxy,
+            **model.model_dump(),
+        ).run()
+        if not any(data):
+            return None
+        if source:
+            return data
+        root, params, logger = self.record.run(
+            self.parameter,
+            type_=Search.search_data_field[model.channel],
+        )
+        name = self._generate_search_name(model, )
+        async with logger(root, name=name, console=self.console, **params) as logger:
+            search_data = await self.extractor.run(
+                data,
+                logger,
+                type_="search",
+                tab=model.channel,
+            )
+            self.logger.info(_("搜索数据已保存至 {name}").format(name=name))
+        return search_data
 
     @check_storage_format
     async def hot_interactive(self, *args, ):

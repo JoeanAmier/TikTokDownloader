@@ -51,47 +51,85 @@ class Search(API):
             key=None,
         ),
     )
+    search_data_field = {
+        0: "search_general",
+        1: "search_general",
+        2: "search_user",
+        3: "search_live"
+    }
+    search_criteria = {
+        0: _("关键词  总页数  排序依据  发布时间  视频时长  搜索范围  内容形式"),
+        1: _("关键词  总页数  排序依据  发布时间  视频时长  搜索范围"),
+        2: _("关键词  总页数  粉丝数量  用户类型"),
+        3: _("关键词  总页数"),
+    }
     channel_map = {
         0: search_params[0],
         1: search_params[1],
         2: search_params[2],
         3: search_params[3],
     }
-    sort_type_map = {
-        0,  # 综合排序
-        1,  # 最多点赞
-        2,  # 最新发布
+    sort_type_help = {
+        0: _("综合排序"),
+        1: _("最多点赞"),
+        2: _("最新发布"),
     }
-    publish_time_map = {
-        0,  # 不限
-        1,  # 一天内
-        7,  # 一周内
-        180,  # 半年内
+    publish_time_help = {
+        0: _("不限"),
+        1: _("一天内"),
+        7: _("一周内"),
+        180: _("半年内"),
     }
     duration_map = {
-        0: "",  # 不限
-        1: "0-1",  # 一分钟以内
-        2: "1-5",  # 一到五分钟
-        3: "5-10000",  # 五分钟以上
+        0: "",
+        1: "0-1",
+        2: "1-5",
+        3: "5-10000",
     }
-    content_type_map = {
-        0,  # 不限
-        1,  # 视频
-        2,  # 图文
+    duration_help = {
+        0: _("不限"),
+        1: _("一分钟以内"),
+        2: _("一到五分钟"),
+        3: _("五分钟以上"),
+    }
+    search_range_help = {
+        0: _("不限"),
+        1: _("最近看过"),
+        2: _("还未看过"),
+        3: _("关注的人"),
+    }
+    content_type_help = {
+        0: _("不限"),
+        1: _("视频"),
+        2: _("图文"),
     }
     douyin_user_fans_map = {
-        0: [""],  # 不限
-        1: ["0_1k"],  # 1000以下
-        2: ["1k_1w"],  # 1000-1w
-        3: ["1w_10w"],  # 1w-10w
-        4: ["10w_100w"],  # 10w-100w
-        5: ["100w_"],  # 100w以上
+        0: [""],
+        1: ["0_1k"],
+        2: ["1k_1w"],
+        3: ["1w_10w"],
+        4: ["10w_100w"],
+        5: ["100w_"],
+    }
+    douyin_user_fans_help = {
+        0: _("不限"),
+        1: _("1000以下"),
+        2: "1000-1w",
+        3: "1w-10w",
+        4: "10w-100w",
+        5: _("100w以上"),
     }
     douyin_user_type_map = {
-        0: [""],  # 不限
-        1: ["common_user"],  # 普通用户
-        2: ["enterprise_user"],  # 企业认证
-        3: ["personal_user"]  # 个人认证
+        0: [""],
+        1: ["common_user"],
+        2: ["enterprise_user"],
+        3: ["personal_user"],
+    }
+    douyin_user_type_help = {
+        0: _("不限"),
+        1: _("普通用户"),
+        2: _("企业认证"),
+        3: _("个人认证"),
     }
 
     def __init__(
@@ -105,6 +143,7 @@ class Search(API):
             sort_type: int = 0,
             publish_time: int = 0,
             duration: int = 0,
+            search_range: int = 0,
             content_type: int = 0,
             douyin_user_fans: int = 0,
             douyin_user_type: int = 0,
@@ -121,6 +160,7 @@ class Search(API):
         self.publish_time = publish_time
         self.duration = self.duration_map.get(duration, "")
         self.content_type = content_type
+        self.search_range = search_range
         self.douyin_user_fans = self.douyin_user_fans_map.get(douyin_user_fans, [""])
         self.douyin_user_type = self.douyin_user_type_map.get(douyin_user_type, [""])
         self.cursor = cursor
@@ -167,6 +207,7 @@ class Search(API):
                 self.sort_type,
                 self.publish_time,
                 self.duration,
+                self.search_range,
                 self.content_type,
         )):
             return dumps(
@@ -174,6 +215,7 @@ class Search(API):
                     "sort_type": f"{self.sort_type}",
                     "publish_time": f"{self.publish_time}",
                     "filter_duration": f"{self.duration}",
+                    "search_range": f"{self.search_range}",
                     "content_type": f"{self.content_type}",
                 },
                 separators=(",", ":"),
@@ -250,6 +292,11 @@ class Search(API):
                 "filter_duration": f"{self.duration}",
                 "is_filter_search": "1",
             }
+        if self.search_range:
+            params |= {
+                "search_range": f"{self.search_range}",
+                "is_filter_search": "1",
+            }
         return params
 
     def _generate_params_user(self, ) -> dict:
@@ -298,10 +345,8 @@ class Search(API):
                 self.cursor = data_dict[cursor]
                 self.search_id = data_dict["log_pb"]["impr_id"]
                 match self.type:
-                    case "general" | "user":
+                    case "general" | "video" | "user":
                         self.append_response(d)
-                    case "video":
-                        self.append_response_video(d, "aweme_info", )
                     case "live":
                         self.append_response_video(d, "lives", )
                     case _:

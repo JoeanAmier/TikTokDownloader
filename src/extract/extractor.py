@@ -998,7 +998,8 @@ class Extractor:
         #     pass
         # elif d := self.safe_extract(data, "common_aladdin"):
         #     pass
-        self.log.error(f"Unreported search results: {data}", False)
+        else:
+            self.log.error(f"Unreported search results: {data}", False)
 
     async def __search_user(
             self,
@@ -1055,13 +1056,14 @@ class Extractor:
             },
         )
         [self.__deal_search_live(
-            container, self.generate_data_object(i["lives"])) for i in data]
+            container, self.generate_data_object(i)) for i in data]
         await self.__record_data(recorder, container.all_data)
         return container.all_data
 
-    def __deal_search_live(self,
-                           container: SimpleNamespace,
-                           data: SimpleNamespace):
+    def __deal_search_live(
+            self,
+            container: SimpleNamespace,
+            data: SimpleNamespace):
         container.cache = container.template.copy()
         self.__deal_search_user_live(
             container, self.safe_extract(

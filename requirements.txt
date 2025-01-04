@@ -8,3 +8,4 @@ aiosqlite>=0.20.0
 httpx>=0.28.0
 gmssl>=3.2.2
 aiofiles>=24.1.0
+pydantic>= 2.10.4
