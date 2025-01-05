@@ -60,6 +60,7 @@ QRCODE_HEADERS = {
 BLANK_PREVIEW = "static/images/blank.png"
 
 VIDEO_INDEX: int = -1
+VIDEO_TIKTOK_INDEX: int = 0
 IMAGE_INDEX: int = -1
 IMAGE_TIKTOK_INDEX: int = -1
 VIDEOS_INDEX: int = -1

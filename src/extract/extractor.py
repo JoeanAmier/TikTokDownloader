@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 
 from ..custom import (
     VIDEO_INDEX,
+    VIDEO_TIKTOK_INDEX,
     IMAGE_INDEX,
     IMAGE_TIKTOK_INDEX,
     DYNAMIC_COVER_INDEX,
@@ -469,8 +470,11 @@ class Extractor:
             type_=_("视频"),
     ) -> None:
         item["type"] = type_
-        item["downloads"] = self.safe_extract(
-            data, "video.playAddr")
+        # item["downloads"] = self.safe_extract(
+        #     data,
+        #     "video.playAddr",
+        # )  # 视频文件大小优先
+        item["downloads"] = self.__extract_video_download_tiktok(data, )  # 视频分辨率优先
         item["duration"] = self.time_conversion_tiktok(
             self.safe_extract(
                 data,
@@ -482,6 +486,21 @@ class Extractor:
             data, f"video.bitrateInfo[{BITRATE_INFO_TIKTOK_INDEX}].PlayAddr.Uri",
         )
         self.__extract_cover_tiktok(item, data, True)
+
+    def __extract_video_download_tiktok(self, data: SimpleNamespace, ) -> str:
+        bitrateInfo: list[SimpleNamespace] = self.safe_extract(
+            data,
+            "video.bitrateInfo",
+            [],
+        )
+        bitrateInfo: list[tuple[int, str, int, list[str]]] = [(
+            i.Bitrate,
+            i.GearName,
+            i.PlayAddr.DataSize,
+            i.PlayAddr.UrlList,
+        ) for i in bitrateInfo]
+        bitrateInfo.sort(key=lambda x: (int(x[1].split("_")[-2]), x[0], x[2],), )
+        return bitrateInfo[-1][-1][VIDEO_TIKTOK_INDEX] if bitrateInfo else ""
 
     @staticmethod
     def time_conversion(time_: int) -> str:
