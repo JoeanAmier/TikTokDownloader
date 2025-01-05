@@ -163,12 +163,12 @@ class Cache:
             self,
             root: Path,
             old_file: Path,
-            key_words: str,
+            keywords: str,
             mark: str,
             name: str,
             field: str):
         new_file = root.joinpath(old_file.name.replace(
-            key_words, {"name": name, "mark": mark}[field], 1))
+            keywords, {"name": name, "mark": mark}[field], 1))
         self.__rename(old_file, new_file, _("文件"), )
         self.log.info(f"文件 {old_file} 重命名为 {new_file}", False)
         return True

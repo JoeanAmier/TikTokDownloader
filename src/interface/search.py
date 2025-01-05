@@ -137,7 +137,7 @@ class Search(API):
             params: Union["Parameter", Params],
             cookie: str = None,
             proxy: str = None,
-            key_word: str = ...,
+            keyword: str = ...,
             channel: int = 0,
             pages: int = 99999,
             sort_type: int = 0,
@@ -153,7 +153,7 @@ class Search(API):
             **kwargs,
     ):
         super().__init__(params, cookie, proxy, *args, **kwargs, )
-        self.key_word = key_word
+        self.keyword = keyword
         self.channel = self.channel_map.get(channel, self.search_params[-1])
         self.pages = pages
         self.sort_type = sort_type
@@ -182,7 +182,7 @@ class Search(API):
     async def run(self, single_page=False, *args, **kwargs):
         if not self.api:
             raise TikTokDownloaderError
-        self.set_referer(f"{self.domain}root/search/{quote(self.key_word)}?type={self.type}")
+        self.set_referer(f"{self.domain}root/search/{quote(self.keyword)}?type={self.type}")
         match single_page:
             case True:
                 await self.run_single(
@@ -238,7 +238,7 @@ class Search(API):
         params = self.params | {
             "search_channel": self.channel.channel,
             "enable_history": "1",
-            "keyword": self.key_word,
+            "keyword": quote(self.keyword),
             "search_source": "tab_search",
             "query_correct_type": "1",
             "is_filter_search": "0",
@@ -263,7 +263,7 @@ class Search(API):
         params = self.params | {
             "search_channel": self.channel.channel,
             "enable_history": "1",
-            "keyword": self.key_word,
+            "keyword": quote(self.keyword),
             "search_source": "tab_search",
             "query_correct_type": "1",
             "is_filter_search": "0",
@@ -311,7 +311,7 @@ class Search(API):
     def _generate_params_live(self, ) -> dict:
         params = self.params | {
             "search_channel": self.channel.channel,
-            "keyword": self.key_word,
+            "keyword": quote(self.keyword),
             "search_source": "tab_search",
             "query_correct_type": "1",
             "is_filter_search": "0",
@@ -364,7 +364,7 @@ async def test():
     async with Params() as params:
         i = Search(
             params,
-            key_word="玉足",
+            keyword="玉足",
             channel=3,
             sort_type=2,
             publish_time=7,

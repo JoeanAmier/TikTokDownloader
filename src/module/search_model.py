@@ -11,14 +11,14 @@ except ImportError:
 
 
 class BaseSearch(BaseModel):
-    key_word: str
+    keyword: str
     pages: int = Field(99999, gt=0, )
 
-    @field_validator("key_word")
+    @field_validator("keyword")
     @classmethod
-    def key_word_validator(cls, v):
+    def keyword_validator(cls, v):
         if not v:
-            raise ValueError(_("key_word 参数无效"))
+            raise ValueError(_("keyword 参数无效"))
         return v
 
 
@@ -68,8 +68,8 @@ if __name__ == '__main__':
     from pydantic import ValidationError
 
     try:
-        search = BaseSearch(key_word="test", )
+        search = BaseSearch(keyword="test", )
         print(search.model_dump())
     except ValidationError as e:
         print(repr(e))
-    print(GeneralSearch(key_word="test", sort_type="2").model_dump())
+    print(GeneralSearch(keyword="test", sort_type="2").model_dump())

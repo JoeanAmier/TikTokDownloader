@@ -1373,7 +1373,7 @@ class TikTok:
     @staticmethod
     def generate_model(
             channel: int,
-            key_word: str,
+            keyword: str,
             pages: int = 1,
             sort_type: int = 0,
             publish_time: int = 0,
@@ -1387,7 +1387,7 @@ class TikTok:
             match channel:
                 case 0:
                     return GeneralSearch(
-                        key_word=key_word,
+                        keyword=keyword,
                         pages=pages,
                         sort_type=sort_type,
                         publish_time=publish_time,
@@ -1397,7 +1397,7 @@ class TikTok:
                     )
                 case 1:
                     return VideoSearch(
-                        key_word=key_word,
+                        keyword=keyword,
                         pages=pages,
                         sort_type=sort_type,
                         publish_time=publish_time,
@@ -1406,14 +1406,14 @@ class TikTok:
                     )
                 case 2:
                     return UserSearch(
-                        key_word=key_word,
+                        keyword=keyword,
                         pages=pages,
                         douyin_user_fans=douyin_user_fans,
                         douyin_user_type=douyin_user_type,
                     )
                 case 3:
                     return LiveSearch(
-                        key_word=key_word,
+                        keyword=keyword,
                         pages=pages,
                     )
         except ValidationError as e:
@@ -1447,7 +1447,7 @@ class TikTok:
         match model.channel:
             case 0:
                 name.extend([
-                    model.key_word,
+                    model.keyword,
                     Search.sort_type_help[model.sort_type],
                     Search.publish_time_help[model.publish_time],
                     Search.duration_help[model.duration],
@@ -1456,7 +1456,7 @@ class TikTok:
                 ])
             case 1:
                 name.extend([
-                    model.key_word,
+                    model.keyword,
                     Search.sort_type_help[model.sort_type],
                     Search.publish_time_help[model.publish_time],
                     Search.duration_help[model.duration],
@@ -1464,12 +1464,12 @@ class TikTok:
                 ])
             case 2:
                 name.extend([
-                    model.key_word,
+                    model.keyword,
                     Search.douyin_user_fans_help[model.douyin_user_fans],
                     Search.douyin_user_type_help[model.douyin_user_type],
                 ])
             case 3:
-                name.append(model.key_word, )
+                name.append(model.keyword, )
         return "_".join(name)
 
     async def _deal_search_data(
