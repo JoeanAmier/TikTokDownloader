@@ -1699,7 +1699,7 @@ class TikTok:
                     _("请选择采集功能"),
                     [i for i, __ in self.__function],
                     self.console,
-                    (10,),
+                    (11,),
                 )
             if select in {"Q", "q", }:
                 self.running = False

@@ -1,7 +1,9 @@
 <div align="center">
-<img src="https://github.com/JoeanAmier/TikTokDownloader/blob/master/static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
+<img src="./static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
 <h1>TikTokDownloader</h1>
 <p>简体中文 | <a href="README_EN.md">English</a></p>
+<a href="https://trendshift.io/repositories/6222" target="_blank"><img src="https://trendshift.io/api/badge/repositories/6222" alt="JoeanAmier%2FTikTokDownloader | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+<br>
 <img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ff6348">
 <img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ffa502">
 <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ffee6f">
@@ -13,29 +15,32 @@
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=for-the-badge&color=52c41a">
 </div>
 <br>
-<p>🔥 <b>TikTok 主页/合辑/直播/视频/图集/原声；抖音主页/视频/图集/收藏/直播/原声/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费工具；批量下载抖音账号发布、喜欢、收藏作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
+<p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
 <p>⭐ 本项目完全免费开源，无任何收费功能，请勿上当受骗！</p>
 <hr>
 
 # 📝 项目功能\(Function\)
 
 * ✅ 下载抖音无水印视频/图集
+* ✅ 下载抖音无水印实况/动图
+* ✅ 下载最高画质视频文件
 * ✅ 下载 TikTok 无水印视频/图集
-* ✅ 批量下载抖音账号发布/喜欢/收藏作品
-* ✅ 批量下载 TikTok 账号发布/喜欢作品
+* ✅ 下载抖音账号发布/喜欢/收藏/收藏夹作品
+* ✅ 下载 TikTok 账号发布/喜欢作品
 * ✅ 采集抖音 / TikTok 详细数据
 * ✅ 批量下载链接作品
 * ✅ 多账号批量下载作品
 * ✅ 自动跳过已下载的文件
 * ✅ 持久化保存采集数据
+* ✅ 支持 CSV/XLSX/SQLite 格式保存数据
 * ✅ 下载动态/静态封面图
 * ✅ 获取抖音直播推流地址
 * ✅ 获取 TikTok 直播推流地址
 * ✅ 调用 ffmpeg 下载直播
 * ✅ Web UI 交互界面
 * ✅ 采集抖音作品评论数据
-* ✅ 批量下载抖音合集作品
-* ✅ 批量下载 TikTok 合辑作品
+* ✅ 下载抖音合集作品
+* ✅ 下载 TikTok 合辑作品
 * ✅ 记录点赞收藏等统计数据
 * ✅ 筛选作品发布时间
 * ✅ 支持账号作品增量下载
@@ -43,7 +48,8 @@
 * ✅ 支持局域网远程访问
 * ✅ 采集抖音账号详细数据
 * ✅ 作品统计数据更新
-* ✅ 自动更新账号昵称
+* ✅ 支持自定义账号/合集标识
+* ✅ 自动更新账号昵称/标识
 * ✅ 部署至私有服务器
 * ✅ 部署至公开服务器
 * ✅ 采集抖音搜索数据
@@ -57,15 +63,17 @@
 * ✅ 自定义规则筛选作品
 * ✅ 支持文件断点续传下载
 
-# 💻 程序界面\(Screenshot\)
+# 💻 程序截图\(Screenshot\)
 
 **终端交互模式：**
-<br><br>
-![终端模式截图](docs/终端交互模式截图1.png)
+
+<p><b>🎥 点击图片观看演示视频，建议通过配置文件管理账号，更多介绍请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">文档</a></b></p>
+
+[![终端模式截图](docs/终端交互模式截图1.png)](https://www.bilibili.com/video/BV1yr421K7qj/)
 *****
-![终端模式截图](docs/终端交互模式截图2.png)
+[![终端模式截图](docs/终端交互模式截图2.png)](https://www.bilibili.com/video/BV1yr421K7qj/)
 *****
-![终端模式截图](docs/终端交互模式截图3.png)
+[![终端模式截图](docs/终端交互模式截图3.png)](https://www.bilibili.com/video/BV1yr421K7qj/)
 <br><br>
 **Web UI 交互模式：**
 <br><br>
@@ -78,12 +86,6 @@
 **Web API 接口模式：**
 <br><br>
 ![WebAPI模式截图](docs/WebAPI模式截图.png)
-
-# 📽 运行演示\(Example\)
-
-<p><b>🎥 点击图片观看演示视频，建议通过配置文件管理账号，更多介绍请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">文档</a></b></p>
-
-[![演示视频](docs/程序运行演示.png)](https://www.bilibili.com/video/BV1yr421K7qj/)
 
 # 📈 项目状态\(Status\)
 
@@ -165,13 +167,13 @@
 |:--------:|:------:|
 | 下载账号发布作品 | ⭕建议登录  |
 | 下载账号喜欢作品 | ⭕建议登录  |
-|  下载链接作品  | ⭕建议登录  |
+|  下载链接作品  | ❌无需登录  |
 | 获取直播推流地址 | ❌无需登录  |
 |  下载直播视频  | ❌无需登录  |
-| 获取作品评论数据 | ⭕建议登录  |
-|  下载合集作品  | ⭕建议登录  |
-|  获取账号数据  | ⭕建议登录  |
-|  采集搜索结果  | ⭕建议登录  |
+| 获取作品评论数据 | ❌无需登录  |
+|  下载合集作品  | ❌无需登录  |
+|  获取账号数据  | ❌无需登录  |
+|  采集搜索结果  | ❌无需登录  |
 |  采集热榜数据  | ❌无需登录  |
 |  下载收藏作品  | ✔️需要登录 |
 | 下载收藏夹作品  | ✔️需要登录 |

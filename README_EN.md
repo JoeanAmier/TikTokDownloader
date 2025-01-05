@@ -1,7 +1,9 @@
 <div align="center">
-<img src="https://github.com/JoeanAmier/TikTokDownloader/blob/master/static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
+<img src="./static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
 <h1>TikTokDownloader</h1>
 <p><a href="README.md">简体中文</a> | English</p>
+<a href="https://trendshift.io/repositories/6222" target="_blank"><img src="https://trendshift.io/api/badge/repositories/6222" alt="JoeanAmier%2FTikTokDownloader | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+<br>
 <img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ff6348">
 <img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ffa502">
 <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ffee6f">
@@ -13,42 +15,46 @@
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=for-the-badge&color=52c41a">
 </div>
 <br>
-<p>🔥 <b>TikTok Account Works/Mix/Live/Video/Image/Music; Douyin Account Works/Video/Image/LivePhoto/Favorites/Live/Music/Collections/Comments/Account Data/Search Data/Hot Board Data Acquisition Tools:</b> Fully open-source, free tools implemented based on the HTTPX module; batch download of Douyin account posts works, liked works, and collections works; batch download of TikTok account posts works and liked works; download of Douyin linked or TikTok linked works; obtain Douyin live stream addresses; download Douyin live stream video; obtain TikTok live stream addresses; download TikTok live stream video; collect Douyin works comment data; batch download of Douyin Mix works; batch download of TikTok Mix works; collect detailed data of Douyin accounts; collect Douyin user/works/live search results; collect Douyin Hot Board data.</p>
+<p>🔥 <b>TikTok Posts/Liked/Mix/Live/Video/Image/Music; DouYin Posts/Liked/Favorites/Collections/Video/Image/LivePhoto/Live/Music/Mix/Comments/Account/Search/Hot Board Data Acquisition Tools:</b> Fully open-source, free data collection and file download tool based on HTTPX module implementation; batch download of DouYin account posts works, liked works, favorites works and collections works; batch download of TikTok account posts works and liked works; download of DouYin linked or TikTok linked works; obtain DouYin live stream addresses; download DouYin live stream video; obtain TikTok live stream addresses; download TikTok live stream video; collect DouYin works comments data; batch download of DouYin Mix works; batch download of TikTok Mix works; collect detailed data of DouYin accounts; collect DouYin user/works/live search results; collect DouYin Hot Board data.</p>
 <p>⭐ This project is completely free and open-source, with no paid features. Please do not be deceived!</p>
 <p>⭐ Due to the author's limited energy, I was unable to update the English document in a timely manner, and the content may have become outdated, partial translation is machine translation, the translation result may be incorrect, Suggest referring to Chinese documentation. If you want to contribute to translation, we warmly welcome you.</p>
 <hr>
 
 # 📝 Project Features
 
-* ✅ Download Douyin video/image without watermarks
+* ✅ Download DouYin video/image without watermarks
+* ✅ Download DouYin live photo without watermarks
+* ✅ Download the highest quality video file
 * ✅ Download TikTok video/image without watermarks
-* ✅ Batch download of Douyin account posts/liked/favorites works
-* ✅ Batch download of TikTok account posts/liked works
-* ✅ Collect detailed data from Douyin/TikTok
+* ✅ Download of DouYin account posts/liked/favorites works
+* ✅ Download of TikTok account posts/liked works
+* ✅ Collect detailed data from DouYin/TikTok
 * ✅ Batch download of linked works
 * ✅ Batch download of works from multiple accounts
 * ✅ Automatically skip already downloaded files
 * ✅ Persistently save collected data
+* ✅ Support CSV/XLSX/SQLite format for saving data
 * ✅ Download dynamic/static cover images
-* ✅ Obtain Douyin live stream addresses
+* ✅ Obtain DouYin live stream addresses
 * ✅ Obtain TikTok live stream addresses
 * ✅ Use ffmpeg to download live video
 * ✅ Web UI interaction interface
-* ✅ Collect comment data from Douyin works
-* ✅ Batch download of Douyin Mix works
+* ✅ Collect comments data from DouYin works
+* ✅ Batch download of DouYin Mix works
 * ✅ Batch download of TikTok Mix works
 * ✅ Record statistics such as likes and favorites
 * ✅ Filter works based on publication time
 * ✅ Support incremental downloading of account works
 * ✅ Support data Collections using proxies
 * ✅ Support remote access via LAN
-* ✅ Collect detailed data from Douyin accounts
+* ✅ Collect detailed data from DouYin accounts
 * ✅ Update statistics of works
-* ✅ Automatically update account nicknames
+* ✅ Support custom account/mix mark
+* ✅ Automatically update account nickname/mark
 * ✅ Deploy to private servers
 * ✅ Deploy to public servers
-* ✅ Collect Douyin search data
-* ✅ Collect Douyin hot board data
+* ✅ Collect DouYin search data
+* ✅ Collect DouYin hot board data
 * ✅ Record IDs of already downloaded works
 * ☑️ ~~Scan QR code to log in and obtain Cookies~~
 * ✅ Obtain Cookies from browsers
@@ -61,12 +67,14 @@
 # 💻 Program Screenshot
 
 **Terminal interaction mode：**
-<br><br>
-![终端模式截图](docs/终端交互模式截图1.png)
+
+<p><b>🎥 Click on the image to watch the demonstration video. It is recommended to manage accounts through configuration files. For more information, please refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">documentation</a></b></p>
+
+[![终端模式截图](docs/终端交互模式截图1.png)](https://www.bilibili.com/video/BV1yr421K7qj/)
 *****
-![终端模式截图](docs/终端交互模式截图2.png)
+[![终端模式截图](docs/终端交互模式截图2.png)](https://www.bilibili.com/video/BV1yr421K7qj/)
 *****
-![终端模式截图](docs/终端交互模式截图3.png)
+[![终端模式截图](docs/终端交互模式截图3.png)](https://www.bilibili.com/video/BV1yr421K7qj/)
 <br><br>
 **Web UI interaction mode：**
 <br><br>
@@ -79,12 +87,6 @@
 **Web API mode：**
 <br><br>
 ![WebAPI模式截图](docs/WebAPI模式截图.png)
-
-# 📽 Operation Demonstration
-
-<p><b>🎥 Click the image to watch the demo video, it is recommended to manage the account through the configuration file. For more information, please refer to <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">the documentation</a>.</b></p>
-
-[![演示视频](docs/程序运行演示.png)](https://www.bilibili.com/video/BV1yr421K7qj/)
 
 # 📈 Project Status
 
@@ -131,12 +133,12 @@
 </ol>
 <ol><b>Scan code login to get Cookie (deprecated)</b>
 <li>Select the option <code>Scan code login to get Cookie</code>, and the program will display a login QR code image and open the image with the default application.</li>
-<li>Use the Douyin APP to scan the QR code and log into your account.</li>
+<li>Use the DouYin APP to scan the QR code and log into your account.</li>
 <li>Follow the prompts to write the Cookie into the configuration file.</li>
 </ol>
 </li>
 <li>Return to the program interface, sequentially select <code>Terminal interactive mode</code> -> <code>Batch download link works (general)</code> -> <code>Manually enter the link of the works to be collected</code>.</li>
-<li>Input the Douyin works link to download the works file (the TikTok platform requires more initial setup, please refer to the documentation for details).</li>
+<li>Input the DouYin works link to download the works file (the TikTok platform requires more initial setup, please refer to the documentation for details).</li>
 <li>For more detailed instructions, please see <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">Project Documentation</a></b>.</li>
 </ol>
 <p>⭐ It is recommended to use <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows Terminal</a> (the default terminal that comes with Windows 11).</p>
@@ -169,13 +171,13 @@
 |:----------------------------:|:----------------------:|
 | Download Account Posts Works | ⭕ Recommended to Login |
 | Download Account Liked Works | ⭕ Recommended to Login |
-|    Download Linked Works     | ⭕ Recommended to Login |
+|    Download Linked Works     |  ❌ No Login Required   |
 |  Obtain Live Stream Address  |  ❌ No Login Required   |
 |     Download Live Video      |  ❌ No Login Required   |
-|  Obtain Works Comment Data   | ⭕ Recommended to Login |
-|      Download Mix Works      | ⭕ Recommended to Login |
-|     Obtain Account Data      | ⭕ Recommended to Login |
-|    Collect Search Results    | ⭕ Recommended to Login |
+|  Obtain Works Comment Data   |  ❌ No Login Required   |
+|      Download Mix Works      |  ❌ No Login Required   |
+|     Obtain Account Data      |  ❌ No Login Required   |
+|    Collect Search Results    |  ❌ No Login Required   |
 |    Collect Hot Board Data    |  ❌ No Login Required   |
 |   Download Favorites Works   |   ✔️ Login Required    |
 |  Download Collections Works  |   ✔️ Login Required    |
@@ -186,7 +188,7 @@
 > * Cookie only needs to be re-written to the configuration file after it expires, and not every time the program is
     run.
 >
-> * The Cookie can affect the resolution of the video files downloaded from the Douyin platform. If you are unable to
+> * The Cookie can affect the resolution of the video files downloaded from the DouYin platform. If you are unable to
     download high-resolution video files, please try updating the Cookie!
 >
 > * When the program fails to obtain data, you can try updating the Cookie or using a Cookie that is already logged in!
@@ -282,7 +284,7 @@
 ## TikHub
 
 <img src="docs/赞助商_TikHub_Logo.png" alt="TikHub">
-<p><a href="https://tikhub.io/">TikHub</a> is a leading data interface service provider, specializing in offering high-quality data interfaces for multiple popular platforms, including Douyin, TikTok, Xiaohongshu, Instagram, Twitter, and Kuaishou.</p>
+<p><a href="https://tikhub.io/">TikHub</a> is a leading data interface service provider, specializing in offering high-quality data interfaces for multiple popular platforms, including DouYin, TikTok, Xiaohongshu, Instagram, Twitter, and Kuaishou.</p>
 <p>TikHub also provides customized services such as live streaming room monitoring, post monitoring, and influencer monitoring to meet the needs of different business scenarios.</p>
 <p>Through daily sign-ins, users can obtain a certain quota of usage for free. You can use my <strong>referral link</strong>：<a href="https://user.tikhub.io/users/signup?referral_code=ZrdH8McC">https://user.tikhub.io/users/signup?referral_code=ZrdH8McC</a> or <strong>Referral Code</strong>：<code>ZrdH8McC</code>，Register and recharge to receive <code>$2</code> limit！</p>
 <p><a href="https://tikhub.io/">TikHub</a> Provide the following services:</p>

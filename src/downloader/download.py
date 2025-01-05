@@ -301,11 +301,12 @@ class Downloader:
             ]
             await gather(*tasks)
 
-    def deal_folder_path(self,
-                         root: Path,
-                         name: str,
-                         folder_mode=False,
-                         ) -> tuple[Path, Path]:
+    def deal_folder_path(
+            self,
+            root: Path,
+            name: str,
+            folder_mode=False,
+    ) -> tuple[Path, Path]:
         """生成文件的临时路径和目标路径"""
         root = self.create_detail_folder(root, name, folder_mode)
         root.mkdir(exist_ok=True)
