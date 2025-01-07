@@ -94,6 +94,32 @@ class RecordManager:
         ("following_count", "关注数量", "INTEGER",),
         ("max_follower_count", "粉丝最大值", "INTEGER",),
     )
+    user_tiktok = (
+        ("collection_time", "采集时间", "TEXT",),
+        ("nickname", "昵称昵称", "TEXT",),
+        ("url", "账号链接", "TEXT",),
+        ("signature", "账号签名", "TEXT",),
+        ("uniqueId", "抖音号", "TEXT",),
+        ("avatarThumb", "缩略头像链接", "TEXT",),
+        ("avatarMedium", "中图头像链接", "TEXT",),
+        ("avatarLarger", "大图头像链接", "TEXT",),
+        ("secUid", "SEC_UID", "TEXT",),
+        ("link", "用户设置链接", "TEXT",),
+        ("risk", "链接风险", "INTEGER",),
+        ("videoCount", "作品数量", "INTEGER",),
+        ("heartCount", "获赞数量", "INTEGER",),
+        ("followerCount", "粉丝数量", "INTEGER",),
+        ("followingCount", "关注数量", "INTEGER",),
+        ("stitchSetting", "拼接设置", "INTEGER",),
+        ("privateAccount", "是否允许嵌入", "INTEGER",),
+        ("isEmbedBanned", "账号是否被禁止使用嵌入功能", "BOOL",),
+        ("isADVirtual", "是否为广告虚拟号", "BOOL",),
+        ("openFavorite", "是否开放喜欢列表", "BOOL",),
+        ("privateAccount", "是否为私有账户", "BOOL",),
+        ("canExpPlaylist", "是否允许导出播放列表", "BOOL",),
+        ("verified", "标签", "BOOL",),
+        ("ttSeller", "认证商家", "BOOL",),
+    )
     search_user = (
         ("collection_time", "采集时间", "TEXT",),
         ("uid", "UID", "TEXT",),
@@ -140,6 +166,9 @@ class RecordManager:
     user_keys = [i[0] for i in user]
     user_name = [i[1] for i in user]
     user_type = [i[2] for i in user]
+    user_tiktok_keys = [i[0] for i in user_tiktok]
+    user_tiktok_name = [i[1] for i in user_tiktok]
+    user_tiktok_type = [i[2] for i in user_tiktok]
     search_user_keys = [i[0] for i in search_user]
     search_user_name = [i[1] for i in search_user]
     search_user_type = [i[2] for i in search_user]
@@ -168,6 +197,12 @@ class RecordManager:
             "title_line": user_name,
             "title_type": user_type,
             "field_keys": user_keys,
+        },
+        "user_tiktok":{
+            "db_name": "UserTikTokData.db",
+            "title_line": user_tiktok_name,
+            "title_type": user_tiktok_type,
+            "field_keys": user_tiktok_keys,
         },
         "mix": {
             "db_name": "MixData.db",

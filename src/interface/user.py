@@ -16,6 +16,7 @@ class User(API):
             cookie: str = None,
             proxy: str = None,
             sec_user_id: str = ...,
+            data_key: str = "user",
             *args,
             **kwargs,
     ):
@@ -23,11 +24,11 @@ class User(API):
         self.sec_user_id = sec_user_id
         self.api = f"{self.domain}aweme/v1/web/user/profile/other/"
         self.text = _("账号简略")
-
+        self.data_key = data_key
     async def run(self, *args, **kwargs):
         return await super().run(
             single_page=True,
-            data_key="user",
+            data_key=self.data_key,
         )
 
     async def run_batch(
