@@ -1294,13 +1294,7 @@ class TikTok:
             await self._deal_user_data([i for i in users if i])
 
     async def user_inquire_tiktok(self, *args, **kwargs, ):
-        while url := self._inquire_input(_("账号主页")):
-            sec_user_ids = await self.links_tiktok.run(url, type_="user")
-            if not sec_user_ids:
-                self.logger.warning(_("{url} 提取账号 sec_user_id 失败").format(url=url))
-                continue
-            users = [await self._get_user_data(i) for i in sec_user_ids]
-            await self._deal_user_data([i for i in users if i])
+        pass
 
     def txt_inquire(self) -> str:
         if path := self.console.input(_("请输入文本文档路径：")):
@@ -1325,14 +1319,7 @@ class TikTok:
         await self._deal_user_data([i for i in users if i])
 
     async def user_txt_tiktok(self, *args, **kwargs, ):
-        if not (url := self.txt_inquire()):
-            return
-        sec_user_ids = await self.links_tiktok.run(url, type_="user")
-        if not sec_user_ids:
-            self.logger.warning(_("从文本文档提取账号 sec_user_id 失败"))
-            return
-        users = [await self._get_user_data(i) for i in sec_user_ids]
-        await self._deal_user_data([i for i in users if i])
+        pass
 
     async def _get_user_data(
             self,
