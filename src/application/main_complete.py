@@ -1528,12 +1528,11 @@ class TikTok:
                 data.append(
                     {Hot.board_params[i].name: await self.extractor.run(j, record, type_="hot")})
         self.logger.info(_("热榜数据已储存至: 热榜数据_{time} + 榜单类型").format(time=time_))
-        # print(time_, data, source)  # 调试代码
         return time_, data
 
     @check_cookie_state(tiktok=False)
     async def collection_interactive(self, *args, ):
-        if isinstance(sec_user_id := await self.__check_owner_url(), str):
+        if sec_user_id := await self.__check_owner_url():
             start = time()
             await self._deal_collection_data(
                 sec_user_id,
@@ -1577,10 +1576,10 @@ class TikTok:
             self.logger.warning(
                 _("配置文件 owner_url 的 url 参数 {url} 无效").format(url=self.owner.url),
             )
-            if self.console.input(
-                    _("程序无法获取账号信息，建议修改配置文件后重新运行，是否返回上一级菜单(YES/NO)")
-            ).upper != "NO":
-                return None
+            # if self.console.input(
+            #         _("程序无法获取账号信息，建议修改配置文件后重新运行，是否返回上一级菜单(YES/NO)")
+            # ).upper != "NO":
+            #     return None
             return ""
         return sec_user_id
 

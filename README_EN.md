@@ -62,6 +62,7 @@
 * ✅ Support multithreaded downloading of works
 * ✅ File integrity processing mechanism
 * ✅ Custom rules for filtering works
+* ✅ Archive and save works files by folder
 * ✅ Support resume downloading of files from breakpoints
 
 # 💻 Program Screenshot

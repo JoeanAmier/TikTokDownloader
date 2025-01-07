@@ -488,19 +488,19 @@ class Extractor:
         self.__extract_cover_tiktok(item, data, True)
 
     def __extract_video_download_tiktok(self, data: SimpleNamespace, ) -> str:
-        bitrateInfo: list[SimpleNamespace] = self.safe_extract(
+        bitrate_info: list[SimpleNamespace] = self.safe_extract(
             data,
             "video.bitrateInfo",
             [],
         )
-        bitrateInfo: list[tuple[int, str, int, list[str]]] = [(
+        bitrate_info: list[tuple[int, str, int, list[str]]] = [(
             i.Bitrate,
             i.GearName,
             i.PlayAddr.DataSize,
             i.PlayAddr.UrlList,
-        ) for i in bitrateInfo]
-        bitrateInfo.sort(key=lambda x: (int(x[1].split("_")[-2]), x[0], x[2],), )
-        return bitrateInfo[-1][-1][VIDEO_TIKTOK_INDEX] if bitrateInfo else ""
+        ) for i in bitrate_info]
+        bitrate_info.sort(key=lambda x: (int(x[1].split("_")[-2]), x[0], x[2],), )
+        return bitrate_info[-1][-1][VIDEO_TIKTOK_INDEX] if bitrate_info else ""
 
     @staticmethod
     def time_conversion(time_: int) -> str:
