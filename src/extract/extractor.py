@@ -906,10 +906,12 @@ class Extractor:
                 "collection_time": datetime.now().strftime(self.date_format),
             },
         )
-        [self.__extract_user_data(container,
-                                  self.generate_data_object(i)) for i in data]
-        container.all_data = self.__clean_extract_data(
-            container.all_data, self.user_necessary_keys)
+        extract = self.__extract_tiktok_user_data if tiktok else self.__extract_user_data
+
+        [extract(container,self.generate_data_object(i)) for i in data]
+        if not tiktok:
+            container.all_data = self.__clean_extract_data(
+                container.all_data, self.user_necessary_keys)
         await self.__record_data(recorder, container.all_data)
         return container.all_data
 
@@ -953,6 +955,46 @@ class Extractor:
         container.cache["url"] = f"https://www.douyin.com/user/{container.cache["sec_uid"]}"
         container.all_data.append(container.cache)
 
+    def __extract_tiktok_user_data(
+            self,
+            container: SimpleNamespace,
+            data: SimpleNamespace,
+    ):
+        container.cache = container.template.copy()
+        # Basic user info
+        container.cache["collection_time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        container.cache["nickname"] = self.safe_extract(data, "nickname")
+        container.cache["signature"] = self.safe_extract(data, "signature")
+        container.cache["uniqueId"] = self.safe_extract(data, "uniqueId")
+        container.cache["url"] = f"https://www.tiktok.com/{container.cache['uniqueId']}"
+
+        # Avatar URLs
+        container.cache["avatarThumb"] = self.safe_extract(data, "avatarThumb")
+        container.cache["avatarMedium"] = self.safe_extract(data, "avatarMedium")
+        container.cache["avatarLarger"] = self.safe_extract(data, "avatarLarger")
+
+        # User identifiers
+        container.cache["secUid"] = self.safe_extract(data, "secUid")
+
+        # Numeric metrics
+        container.cache["link"] = self.safe_extract(data, "link", -1)
+        container.cache["risk"] = self.safe_extract(data, "risk", -1)
+        container.cache["videoCount"] = self.safe_extract(data, "videoCount", -1)
+        container.cache["heartCount"] = self.safe_extract(data, "heartCount", -1)
+        container.cache["followerCount"] = self.safe_extract(data, "followerCount", -1)
+        container.cache["followingCount"] = self.safe_extract(data, "followingCount", -1)
+        container.cache["stitchSetting"] = self.safe_extract(data, "stitchSetting", 0)
+
+        # Boolean flags
+        container.cache["isEmbedBanned"] = self.safe_extract(data, "isEmbedBanned", False)
+        container.cache["isADVirtual"] = self.safe_extract(data, "isADVirtual", False)
+        container.cache["openFavorite"] = self.safe_extract(data, "openFavorite", False)
+        container.cache["privateAccount"] = self.safe_extract(data, "privateAccount", False)
+        container.cache["canExpPlaylist"] = self.safe_extract(data, "canExpPlaylist", False)
+        container.cache["verified"] = self.safe_extract(data, "verified", False)
+        container.cache["ttSeller"] = self.safe_extract(data, "ttSeller", False)
+
+        container.all_data.append(container.cache)
     async def __search(
             self,
             data: list[dict],
@@ -1101,7 +1143,7 @@ class Extractor:
 
     @staticmethod
     def __extract_values(record, data: dict) -> list:
-        return [data[key] for key in record.field_keys]
+        return [str(value).replace('\n', ' ') for key in record.field_keys for value in (data[key],)]
 
     @staticmethod
     def __date_filter(container: SimpleNamespace):

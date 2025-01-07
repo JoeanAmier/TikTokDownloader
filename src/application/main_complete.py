@@ -1,3 +1,4 @@
+import re
 from datetime import date
 # from datetime import datetime
 from pathlib import Path
@@ -36,6 +37,7 @@ from ..interface import (
     Info,
     InfoTikTok,
 )
+from ..interface.user_tiktok import UserTikTok
 from ..link import Extractor as LinkExtractor
 from ..link import ExtractorTikTok
 from ..manager import Cache
@@ -131,9 +133,10 @@ class TikTok:
             (_("批量下载收藏夹作品(抖音)"), self.collects_interactive,),
             (_("批量下载账号作品(TikTok)"), self.account_acquisition_interactive_tiktok,),
             (_("批量下载链接作品(TikTok)"), self.detail_interactive_tiktok,),
-            (_("批量下载合集作品(TikTok)"), self.mix_interactive_tiktok,),
             (_("获取直播推流地址(TikTok)"), self.live_interactive_tiktok,),
             # (_("采集作品评论数据(TikTok)"), self.comment_interactive_tiktok,),
+            (_("批量下载合集作品(TikTok)"), self.mix_interactive_tiktok,),
+            (_("采集账号详细数据(TikTok)"), self.user_interactive_tiktok,),
         )
         self.__function_account = (
             (_("使用 accounts_urls 参数的账号链接(推荐)"), self.account_detail_batch),
@@ -160,6 +163,11 @@ class TikTok:
             (_("使用 accounts_urls 参数的账号链接"), self.user_batch),
             (_("手动输入待采集的账号链接"), self.user_inquire),
             (_("从文本文档读取待采集的账号链接"), self.user_txt),
+        )
+        self.__function_user_tiktok = (
+            (_("使用 accounts_urls_tiktok 参数的账号链接"), self.user_batch_tiktok),
+            (_("手动输入待采集的账号链接"), self.user_inquire_tiktok),
+            (_("从文本文档读取待采集的账号链接"), self.user_txt_tiktok),
         )
         self.__function_detail = (
             (_("手动输入待采集的作品链接"), self.__detail_inquire),
@@ -1256,12 +1264,38 @@ class TikTok:
                     _("配置文件 accounts_urls 参数第 {index} 条数据的 url 无效").format(index=index),
                 )
                 continue
-            users.append(await self._get_user_data(sec_user_id))
+            users.append(await self._get_user_data(sec_user_id=sec_user_id))
         await self._deal_user_data([i for i in users if i])
+    async def get_uniqueId(self, url):
+        # 使用正则表达式匹配用户名
+        match = re.search(r'https://www\.tiktok\.com/@([^/]+)', url)
+        if match:
+            return match.group(1)
+        else:
+            raise ValueError("Invalid TikTok URL format")
+    async def user_batch_tiktok(self, *args, **kwargs, ):
+        users = []
+        for index, data in enumerate(self.accounts_tiktok, start=1):
+            if not (uniqueId := await self.get_uniqueId(data.url)):
+                self.logger.warning(
+                    _("配置文件 accounts_urls_tiktok 参数第 {index} 条数据的 url 无效").format(index=index),
+                )
+                continue
+            users.append(await self._get_user_data(uniqueId=uniqueId, tiktok=True))
+        await self._deal_user_data([i for i in users if i], type="user_tiktok", tiktok=True)
 
     async def user_inquire(self, *args, **kwargs, ):
         while url := self._inquire_input(_("账号主页")):
             sec_user_ids = await self.links.run(url, type_="user")
+            if not sec_user_ids:
+                self.logger.warning(_("{url} 提取账号 sec_user_id 失败").format(url=url))
+                continue
+            users = [await self._get_user_data(i) for i in sec_user_ids]
+            await self._deal_user_data([i for i in users if i])
+
+    async def user_inquire_tiktok(self, *args, **kwargs, ):
+        while url := self._inquire_input(_("账号主页")):
+            sec_user_ids = await self.links_tiktok.run(url, type_="user")
             if not sec_user_ids:
                 self.logger.warning(_("{url} 提取账号 sec_user_id 失败").format(url=url))
                 continue
@@ -1290,28 +1324,52 @@ class TikTok:
         users = [await self._get_user_data(i) for i in sec_user_ids]
         await self._deal_user_data([i for i in users if i])
 
+    async def user_txt_tiktok(self, *args, **kwargs, ):
+        if not (url := self.txt_inquire()):
+            return
+        sec_user_ids = await self.links_tiktok.run(url, type_="user")
+        if not sec_user_ids:
+            self.logger.warning(_("从文本文档提取账号 sec_user_id 失败"))
+            return
+        users = [await self._get_user_data(i) for i in sec_user_ids]
+        await self._deal_user_data([i for i in users if i])
+
     async def _get_user_data(
             self,
-            sec_user_id: str,
+            sec_user_id: str = None,
+            uniqueId: str = None,
             cookie: str = None,
             proxy: str = None,
+            tiktok: bool = False,
+
     ):
-        self.logger.info(_("正在获取账号 {sec_user_id} 的数据").format(sec_user_id=sec_user_id))
-        data = await User(self.parameter, cookie, proxy, sec_user_id, ).run()
+        account_id = sec_user_id if sec_user_id else uniqueId
+        self.logger.info(_("正在获取账号 {account_id} 的数据").format(account_id=account_id))
+        if tiktok:
+            data = await UserTikTok(self.parameter, cookie, proxy, sec_user_id, "userInfo", uniqueId).run()
+        else:
+            data = await User(self.parameter, cookie, proxy, sec_user_id, "user" ).run()
         return data or {}
 
     async def _deal_user_data(
             self,
             data: list[dict],
             source=False,
+            type: str = "user",
+            tiktok: bool = False,
     ):
         if not any(data):
             return None
         if source:
             return data
-        root, params, logger = self.record.run(self.parameter, type_="user", )
-        async with logger(root, name="UserData", console=self.console, **params) as recorder:
-            data = await self.extractor.run(data, recorder, type_="user")
+        root, params, logger = self.record.run(self.parameter, type_=type, )
+        # TODO
+        if type == "user":
+            data_name = "UserData"
+        else:
+            data_name = "UserTikTokData"
+        async with logger(root, name=data_name, console=self.console, **params) as recorder:
+            data = await self.extractor.run(data, recorder, type_="user", tiktok=tiktok)
         self.logger.info(_("账号数据已保存至文件"))
         return data
 
@@ -1320,6 +1378,13 @@ class TikTok:
         await self.__secondary_menu(
             _("请选择账号链接来源"),
             function=self.__function_user,
+            select=select or safe_pop(self.run_command),
+        )
+        self.logger.info(_("已退出采集账号详细数据模式"))
+    async def user_interactive_tiktok(self, select="", *args, **kwargs):
+        await self.__secondary_menu(
+            _("请选择账号链接来源"),
+            function=self.__function_user_tiktok,
             select=select or safe_pop(self.run_command),
         )
         self.logger.info(_("已退出采集账号详细数据模式"))
