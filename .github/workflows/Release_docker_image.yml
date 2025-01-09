@@ -3,7 +3,6 @@ name: 自动构建并发布 Docker 镜像
 on:
   release:
     types: [ published ]
-  workflow_dispatch:
 
 jobs:
   publish-docker:
@@ -33,4 +32,6 @@ jobs:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tiktokdownloader:${{ github.event.release.tag_name }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/tiktok-downloader:${{ github.event.release.tag_name }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/tiktok-downloader:latest

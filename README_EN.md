@@ -150,9 +150,9 @@
 <li>Get the image</li>
 <ul>
 <li>Method 1: Build the image using the <code>Dockerfile</code>.</li>
-<li>Method 2: Pull the image using the command <code>docker pull joeanamier/tiktokdownloader</code>.</li>
+<li>Method 2: Pull the image using the command <code>docker pull joeanamier/tiktok-downloader</code>.</li>
 </ul>
-<li>Create the container: <code>docker run -it joeanamier/tiktokdownloader</code>.</li>
+<li>Create the container: <code>docker run -it joeanamier/tiktok-downloader</code>.</li>
 <li>Run the container
 <ul>
 <li>Start the container: <code>docker start -i container name/container ID</code>.</li>
