@@ -19,7 +19,7 @@
 <p>⭐ 本项目完全免费开源，无任何收费功能，请勿上当受骗！</p>
 <hr>
 
-# 📝 项目功能\(Function\)
+# 📝 项目功能
 
 * ✅ 下载抖音无水印视频/图集
 * ✅ 下载抖音无水印实况/动图
@@ -64,7 +64,7 @@
 * ✅ 按文件夹归档保存作品文件
 * ✅ 支持文件断点续传下载
 
-# 💻 程序截图\(Screenshot\)
+# 💻 程序截图
 
 **终端交互模式：**
 
@@ -88,14 +88,14 @@
 <br><br>
 ![WebAPI模式截图](docs/WebAPI模式截图.png)
 
-# 📈 项目状态\(Status\)
+# 📈 项目状态
 
 * 🟢 经过测试，[Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已经验证所有功能正常可用
 * 🟡 TikTokDownloader 开发计划及进度可前往 [Projects](https://github.com/users/JoeanAmier/projects/2) 查阅
 * 🔴 请注意，最新源码\(Beta 版本\)可能存在一些不稳定的 Bug
 * 🔴 如果在使用过程中发现程序 Bug，请及时告知作者修复
 
-# 📋 项目说明\(Instructions\)
+# 📋 项目说明
 
 ## 快速入门
 
@@ -215,7 +215,7 @@
 
 > **方案二：** 下载并解压文件（不要运行程序），复制全部文件，直接覆盖旧版本文件。
 
-# ⚠️ 免责声明\(Disclaimers\)
+# ⚠️ 免责声明
 
 <ul>
 <li>使用者对本项目的使用由使用者自行决定，并自行承担风险。作者对使用者使用本项目所产生的任何损失、责任、或风险概不负责。</li>
@@ -231,8 +231,25 @@
 <li>基于本项目进行的任何二次开发、修改或编译的程序与原创作者无关，原创作者不承担与二次开发行为或其结果相关的任何责任，使用者应自行对因二次开发可能带来的各种情况负全部责任。</li>
 </ul>
 <b>在使用本项目的代码和功能之前，请您认真考虑并接受以上免责声明。如果您对上述声明有任何疑问或不同意，请不要使用本项目的代码和功能。如果您使用了本项目的代码和功能，则视为您已完全理解并接受上述免责声明，并自愿承担使用本项目的一切风险和后果。</b>
+<h1>🌟 贡献指南</h1>
+<p><strong>欢迎对本项目做出贡献！为了保持代码库的整洁、高效和易于维护，请仔细阅读以下指南，以确保您的贡献能够顺利被接受和整合。</strong></p>
+<ul>
+<li>在开始开发前，请从 <code>develop</code> 分支拉取最新的代码，以此为基础进行修改；这有助于避免合并冲突并保证您的改动基于最新的项目状态。</li>
+<li>如果您的更改涉及多个不相关的功能或问题，请将它们分成多个独立的提交或拉取请求。</li>
+<li>每个拉取请求应尽可能专注于单一功能或修复，以便于代码审查和测试。</li>
+<li>遵循现有的代码风格；请确保您的代码与项目中已有的代码风格保持一致。</li>
+<li>编写可读性强的代码；添加适当的注释帮助他人理解您的意图。</li>
+<li>每个提交都应该包含一个清晰、简洁的提交信息，以描述所做的更改。提交信息应遵循以下格式：<code>&lt;类型&gt;: &lt;简短描述&gt;</code></li>
+<li>当您准备提交拉取请求时，请优先将它们提交到 <code>develop</code> 分支；这是为了给维护者一个缓冲区，在最终合并到 <code>master</code>
+分支之前进行额外的测试和审查。</li>
+</ul>
+<p><strong>参考资料：</strong></p>
+<ul>
+<li><a href="https://www.contributor-covenant.org/zh-cn/version/2/1/code_of_conduct/">贡献者公约</a></li>
+<li><a href="https://opensource.guide/zh-hans/how-to-contribute/">如何为开源做贡献</a></li>
+</ul>
 
-# ✉️ 联系作者\(Contact\)
+# ✉️ 联系作者
 
 <ul>
 <li>作者邮箱：yonglelolu@foxmail.com</li>
@@ -247,7 +264,7 @@
 <li><b>KS-Downloader（快手）</b>：<a href="https://github.com/JoeanAmier/KS-Downloader">https://github.com/JoeanAmier/KS-Downloader</a></li>
 </ul>
 
-# ♥️ 支持项目\(Support\)
+# ♥️ 支持项目
 
 <p>如果 <b>TikTokDownloader</b> 对您有帮助，请考虑为它点个 <b>Star</b> ⭐，感谢您的支持！</p>
 <table>
@@ -265,7 +282,7 @@
 </table>
 <p>如果您愿意，可以考虑提供资助为 <b>TikTokDownloader</b> 提供额外的支持！</p>
 
-# 💰 项目赞助\(Sponsor\)
+# 💰 项目赞助
 
 ## JetBrains 工具
 
@@ -290,7 +307,7 @@
 <li>用户登陆地址：<a href="https://user.tikhub.io/">https://user.tikhub.io/</a></li>
 </ul>
 
-# 💡 项目参考\(Refer\)
+# 💡 项目参考
 
 * https://github.com/Johnserf-Seed/f2
 * https://github.com/Johnserf-Seed/TikTokDownload

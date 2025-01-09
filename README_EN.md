@@ -239,6 +239,22 @@
 <li>Any secondary development, modification, or Collections of the program based on this project is unrelated to the original author. The original author is not responsible for any consequences related to secondary development or its results. Users should take full responsibility for any situations that may arise from secondary development on their own.</li>
 </ul>
 <b>Before using the code and functionalities of this project, please carefully consider and accept the above disclaimer. If you have any questions or disagree with the statement, please do not use the code and functionalities of this project. If you use the code and functionalities of this project, it is considered that you fully understand and accept the above disclaimer, and willingly assume all risks and consequences associated with the use of this project.</b>
+<h1>🌟 Contribution Guidelines</h1>
+<p><strong>Welcome to contributing to this project! To keep the codebase clean, efficient, and easy to maintain, please read the following guidelines carefully to ensure that your contributions can be accepted and integrated smoothly.</strong></p>
+<ul>
+<li>Before starting development, please pull the latest code from the <code>develop</code> branch as the basis for your modifications; this helps avoid merge conflicts and ensures your changes are based on the latest state of the project.</li>
+<li>If your changes involve multiple unrelated features or issues, please split them into several independent commits or pull requests.</li>
+<li>Each pull request should focus on a single feature or fix as much as possible, to facilitate code review and testing.</li>
+<li>Follow the existing coding style; make sure your code is consistent with the style already present in the project.</li>
+<li>Write code that is easy to read; add appropriate annotation to help others understand your intentions.</li>
+<li>Each commit should include a clear and concise commit message describing the changes made. The commit message should follow this format: <code>&lt;type&gt;: &lt;short description&gt;</code></li>
+<li>When you are ready to submit a pull request, please prioritize submitting them to the <code>develop</code> branch; this provides maintainers with a buffer zone for additional testing and review before final merging into the <code>master</code> branch.</li>
+</ul>
+<p><strong>Reference materials:</strong></p>
+<ul>
+<li><a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/">Contributor Covenant</a></li>
+<li><a href="https://opensource.guide/how-to-contribute/">How to Contribute to Open Source</a></li>
+</ul>
 
 # ✉️ Contact the Author
 
