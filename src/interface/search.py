@@ -254,7 +254,7 @@ class Search(API):
             params |= {"search_id": self.search_id}
         if self.filter_selected:
             params |= {
-                "filter_selected": self.filter_selected,
+                "filter_selected": quote(self.filter_selected),
                 "is_filter_search": "1",
             }
         return params
@@ -303,7 +303,7 @@ class Search(API):
         params = self._generate_params_live()
         if self.search_filter_value:
             params |= {
-                "search_filter_value": self.search_filter_value,
+                "search_filter_value": quote(self.search_filter_value),
                 "is_filter_search": "1",
             }
         return params

@@ -1426,7 +1426,8 @@ class TikTok:
                 self.logger.warning(model)
                 continue
             self.logger.info(f"搜索参数: {model.model_dump()}", False)
-            await self._deal_search_data(model, )
+            if not await self._deal_search_data(model, ):
+                self.logger.warning(_("搜索结果为空"))
 
     async def _search_interactive_video(self):
         await self._search_interactive_general(1, )
