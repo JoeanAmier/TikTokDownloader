@@ -75,8 +75,10 @@ class Browser:
                   "请输入浏览器名称或序号：").format(platform_name=self.PLATFORM[tiktok].name, options=self.options),
         ):
             if cookie := self.get(browser, self.PLATFORM[tiktok].domain, ):
-                self.__save_cookie(cookie, tiktok, )
                 self.console.info(_("读取 Cookie 成功！"), )
+            else:
+                self.console.warning(_("Cookie 数据为空！"), )
+            self.__save_cookie(cookie, tiktok, )
         else:
             self.console.print(_("未选择浏览器！"))
 
