@@ -1019,19 +1019,19 @@ class TikTok:
         else:
             for i in ids:
                 name = _("作品{id}_评论数据").format(id=i)
-                root, params, logger = self.record.run(self.parameter, type_="comment")
-                async with logger(root, name=name, console=self.console, **params) as record:
-                    if d := await Comment(
-                            self.parameter,
-                            cookie,
-                            proxy,
-                            item_id=i,
-                            reply=False,
-                    ).run():
+                if d := await Comment(
+                        self.parameter,
+                        cookie,
+                        proxy,
+                        item_id=i,
+                        reply=False,
+                ).run():
+                    root, params, logger = self.record.run(self.parameter, type_="comment")
+                    async with logger(root, name=name, console=self.console, **params) as record:
                         await self.extractor.run(d, record, type_="comment")
-                        self.logger.info(_("作品评论数据已储存至 {filename}").format(filename=name))
-                    else:
-                        self.logger.warning(_("采集评论数据失败"))
+                    self.logger.info(_("作品评论数据已储存至 {filename}").format(filename=name))
+                else:
+                    self.logger.warning(_("采集评论数据失败"))
 
     async def mix_interactive(self, select="", ):
         await self.__secondary_menu(

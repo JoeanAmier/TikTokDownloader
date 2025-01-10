@@ -378,7 +378,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <tr>
 <td align="center">storage_format</td>
 <td align="center">str</td>
-<td align="center">采集数据持久化储存格式，支持：<code>csv</code>、<code>xlsx</code>、<code>sql</code>(SQLite)</td>
+<td align="center"><a href="#nonessential"><sup>3</sup></a>采集数据持久化储存格式，支持：<code>csv</code>、<code>xlsx</code>、<code>sql</code>(SQLite)</td>
 <td align="center">不保存</td>
 </tr>
 <tr>
@@ -851,6 +851,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <li>经测试，强行终止程序或 <code>ffmpeg</code> 并不会导致已下载文件丢失或损坏，但无法继续下载。</li>
 </ul>
 <h3>采集作品评论数据(抖音)</h3>
+<p><strong>评论回复采集功能暂不开放！</strong></p>
 <ol>
 <li>手动输入待采集的作品链接。</li>
 <li>输入文本文档路径，读取文件包含的作品链接。</li>
@@ -865,7 +866,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <li><code>https://www.douyin.com/search/关键词?modal_id=作品ID</code></li>
 <li><code>https://www.douyin.com/channel/分区ID?modal_id=作品ID</code></li>
 </ul>
-<p>支持采集评论回复、评论表情、评论图片；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
+<p>支持采集<del>评论回复</del>、评论表情、评论图片；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <p>储存名称格式：<code>作品123456789_评论数据</code></p>
 <h3>批量下载合集作品(抖音)</h3>
 <ol>
@@ -1073,7 +1074,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <p>无需输入任何内容；采集 <code>抖音热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <p>储存名称格式：<code>热榜数据_采集时间_热榜名称</code></p>
 <h3>批量下载话题作品(抖音)</h3>
-<p>尚未实现！</p>
+<p>敬请期待！</p>
 <h3>批量下载收藏作品(抖音)</h3>
 <p>无需输入任何内容；需要在配置文件写入已登录的 Cookie，并在 <code>owner_url</code> 参数填入对应的账号主页链接和账号标识（可选参数）；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
 <p>文件夹格式为 <code>UID123456789_mark_收藏作品</code> 或者 <code>UID123456789_账号昵称_收藏作品</code></p>
@@ -1081,7 +1082,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <p>无需输入任何内容；需要在配置文件写入已登录的 Cookie，程序会自动获取当前 Cookie 账号的收藏夹数据并展示，根据程序提示输入收藏夹序号下载对应收藏夹作品文件，输入 <code>ALL</code> 下载全部收藏夹作品。</p>
 <p>文件夹格式为 <code>CID123456789_收藏夹名称_收藏作品</code></p>
 <h3>批量下载短剧作品(抖音)</h3>
-<p>尚未实现！</p>
+<p>敬请期待！</p>
 <h3>批量下载账号作品(TikTok)</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts_urls_tiktok</code> 参数中的账号链接。</li>
@@ -1131,9 +1132,9 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 </ul>
 <p>TikTok 平台直播视频下载功能尚未开发完成，请自行使用第三方工具下载！</p>
 <h2>后台监测模式</h2>
-<p>尚未实现！</p>
+<p>敬请期待！</p>
 <h2>Web API 接口模式</h2>
-<p><b><code>5.4</code> 版本将会暂时移除该模式，后续开发完成重新开放！</b></p>
+<p><b>项目代码已重构，该模式代码尚未更新，未来开发完成重新开放！</b></p>
 <p>启动服务器，提供 API 调用功能；支持局域网远程访问，可以部署至私有服务器或者公开服务器，远程部署建议设置参数验证。</p>
 <p>默认禁用局域网访问，如需开启，请修改 <code>src/custom/static.py</code> 文件的 <code>SERVER_HOST</code> 变量。</p>
 <p>部分接口支持传入临时 <code>cookie</code> 参数，如果传入临时 <code>cookie</code> 参数，本次 API 请求会使用临时 <code>cookie</code> 向抖音服务器获取数据，如果没有传入 <code>cookie</code> 参数，程序会使用配置文件的 <code>cookie</code> 参数；需要注意临时 <code>cookie</code> 和配置文件 <code>cookie</code> 参数的有效性；程序不会储存临时 <code>cookie</code> 内容。</p>
@@ -1439,10 +1440,10 @@ print(response.json())
 ```
 
 <h2>Web UI 交互模式</h2>
-<p><b><code>5.4</code> 版本将会暂时移除该模式，后续开发完成重新开放！</b></p>
+<p><b>项目代码已重构，该模式代码尚未更新，未来开发完成重新开放！</b></p>
 <p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品</code> 和 <code>获取直播推流地址</code> 功能，支持局域网远程访问，可以部署至私有服务器，不可直接部署至公开服务器。</p>
 <h2>服务器部署模式</h2>
-<p><b><code>5.4</code> 版本将会暂时移除该模式，后续开发完成重新开放！</b></p>
+<p><b>项目代码已重构，该模式代码尚未更新，未来开发完成重新开放！</b></p>
 <p>提供浏览器可视化交互界面，支持 <code>批量下载链接作品</code> 功能，默认启用局域网访问，用于部署至公开服务器，为网站访客提供作品下载服务，建议设置参数验证。</p>
 <p>支持远程修改 <code>settings.json</code> 配置文件，请参考 <code>配置文件修改接口</code></p>
 <h2>启用/禁用作品下载记录</h2>
@@ -1463,10 +1464,8 @@ print(response.json())
 <h1>其他功能说明</h1>
 <h2>单次输入多个链接</h2>
 <p><code>批量下载账号作品</code>、<code>批量下载链接作品</code>、<code>获取直播推流地址</code>、<code>采集作品评论数据</code>、<code>批量下载合集作品</code>、<code>采集账号详细数据</code>
-功能支持单次输入多个链接，实现批量下载 / 提取功能；单次输入多个链接时，链接类型需要保持一致，支持完整链接与分享链接混合输入。</p>
-<h3>输入示例</h3>
-<p>输入多个链接时，需要使用空格分隔；无需对复制的链接进行额外处理，程序会自动提取输入文本中的有效链接。</p>
-<h2 id="mark">账号/合集标识</h2>
+功能支持单次输入多个链接，实现批量下载 / 提取功能；支持完整链接与分享链接混合输入；输入多个链接时，需要使用空格分隔；无需对复制的链接进行额外处理，程序会自动提取输入文本中的有效链接。</p>
+<h2 id="mark">账号/合集标识说明</h2>
 <h3>标识设置规则</h3>
 <ul>
 <li><code>name_format</code> 参数中没有使用 <code>nickname</code> 时，<code>mark</code> 设置没有限制。</li>
@@ -1493,14 +1492,15 @@ print(response.json())
 <h3>如何修改标识</h3>
 <p><strong>修改账号标识:</strong> 修改 <code>accounts_urls</code> 或 <code>accounts_urls_tiktok</code> 的 <code>mark</code> 参数，再次运行 <code>批量下载账号作品</code> 模式，程序会自动应用新的账号标识。</p>
 <p><strong>修改合集标识:</strong> 修改 <code>mix_urls</code> 或 <code>mix_urls_tiktok</code> 的 <code>mark</code> 参数，再次运行 <code>批量下载合集作品</code> 模式，程序会自动应用新的账号标识。</p>
-<h3>账户昵称修改</h3>
-<p>在 <code>批量下载账号作品</code> 和 <code>批量下载合集作品</code> 模式下，程序会判断账号昵称是否有修改，如果有修改，程序会自动识别已下载作品文件名称中的账户昵称，并修改至最新账户昵称。</p>
+<h2>账号昵称/合集标题自动更新</h2>
+<p>在 <code>批量下载账号作品</code> 和 <code>批量下载合集作品</code> 模式下，程序会自动判断账号昵称/合集标题是否发生变化，如果发生变化，程序会自动识别已下载作品文件名称中的账号昵称/合集标题，并修改至最新账号昵称/合集标题。</p>
+<p>程序会优先使用账号标识/合集标识进行更新处理，如果账号标识/合集标识为空字符串，程序会自动使用账号昵称/合集标题进行更新处理。</p>
 <h3>映射缓存数据</h3>
 <p><strong>数据路径: <code>./TikTokDownloader.db</code> 的 <code>mapping_data</code> 数据表；</strong>
 用于记录账号 / 合集标识和账号昵称，当账号 / 合集标识或账号昵称发生变化时，程序会对相应的文件夹和文件进行重命名更新处理。</p>
 <p><strong>缓存数据仅供程序读取和修改，不建议手动编辑数据内容。</strong></p>
 <h1>服务器部署模式二次开发</h1>
-<p>该部分内容待更新！</p>
+<p><b>该模式代码尚未更新，未来开发完成将会更新文档！</b></p>
 <h2>API 文档</h2>
 <p>请求URL：<code>/single/</code></p>
 <p>请求类型：<code>POST</code></p>

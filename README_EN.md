@@ -71,11 +71,11 @@
 
 <p><b>🎥 Click on the image to watch the demonstration video. It is recommended to manage accounts through configuration files. For more information, please refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">documentation</a></b></p>
 
-[![终端模式截图](docs/终端交互模式截图1.png)](https://www.bilibili.com/video/BV1yr421K7qj/)
+[![终端模式截图](docs/终端交互模式截图1.png)](https://www.bilibili.com/video/BV1RAcHe5EpF/)
 *****
-[![终端模式截图](docs/终端交互模式截图2.png)](https://www.bilibili.com/video/BV1yr421K7qj/)
+[![终端模式截图](docs/终端交互模式截图2.png)](https://www.bilibili.com/video/BV1RAcHe5EpF/)
 *****
-[![终端模式截图](docs/终端交互模式截图3.png)](https://www.bilibili.com/video/BV1yr421K7qj/)
+[![终端模式截图](docs/终端交互模式截图3.png)](https://www.bilibili.com/video/BV1RAcHe5EpF/)
 <br><br>
 **Web UI interaction mode：**
 <br><br>
