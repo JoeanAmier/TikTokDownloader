@@ -1,5 +1,6 @@
 from asyncio import run
 from http import cookies
+from json import dumps
 from typing import TYPE_CHECKING
 from typing import Union
 
@@ -56,18 +57,28 @@ class TtWid:
 
 class TtWidTikTok(TtWid):
     API = "https://www.tiktok.com/ttwid/check/"
-    DATA = (
-        '{"aid":1988,"service":"www.tiktok.com","union":false,"unionHost":"","needFid":false,"fid":"",'
-        '"migrate_priority":0}')
+    DATA = dumps(
+        {
+            "aid": 1988,
+            "service": "www.tiktok.com",
+            "union": False,
+            "unionHost": "",
+            "needFid": False,
+            "fid": "",
+            "migrate_priority": 0
+        },
+        separators=(',', ':'),
+    )
 
     @classmethod
-    async def get_tt_wid(cls,
-                         logger: Union["BaseLogger", "LoggerManager", "Logger"],
-                         headers: dict,
-                         cookie: str = "",
-                         proxy: str = None,
-                         **kwargs,
-                         ) -> dict | None:
+    async def get_tt_wid(
+            cls,
+            logger: Union["BaseLogger", "LoggerManager", "Logger"],
+            headers: dict,
+            cookie: str = "",
+            proxy: str = None,
+            **kwargs,
+    ) -> dict | None:
         if response := await request_params(
                 logger,
                 cls.API,
@@ -90,7 +101,7 @@ async def test():
           await TtWidTikTok.get_tt_wid(
               Logger(),
               PARAMS_HEADERS_TIKTOK,
-              cookie="Cookie",
+              cookie="ttwid=",
               proxy="http://localhost:10809",
           ))
 

@@ -46,7 +46,7 @@ def capture_error_request(function):
                 JSONDecodeError,
                 UnicodeDecodeError
         ):
-            self.log.error(_("响应内容不是有效的 JSON 数据"))
+            self.log.error(_("响应内容不是有效的 JSON 数据，请尝试更新 Cookie！"))
         except HTTPStatusError as e:
             self.log.error(_("响应码异常：{error}").format(error=e))
         except NetworkError as e:

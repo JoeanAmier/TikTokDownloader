@@ -106,8 +106,8 @@ class Parameter:
             browser_info: dict,
             browser_info_tiktok: dict,
             timeout=10,
-            update_cookie=True,
-            update_cookie_tiktok=True,
+            douyin_platform=True,
+            tiktok_platform=True,
             **kwargs,
     ):
         self.settings = settings
@@ -126,9 +126,12 @@ class Parameter:
         self.ab = ABogus()
         self.xb = XBogus()
         self.console = console
+        self.douyin_platform = self.__check_bool(douyin_platform, True)
+        self.tiktok_platform = self.__check_bool(tiktok_platform, True)
         self.cookie, self.cookie_cache = self.__check_cookie(cookie)
         self.cookie_tiktok, self.cookie_tiktok_cache = self.__check_cookie_tiktok(
-            cookie_tiktok)
+            cookie_tiktok,
+        )
         self.cookie_state: bool = self.__check_cookie_state()
         self.cookie_tiktok_state: bool = self.__check_cookie_state(True)
         self.root = self.__check_root(root)
@@ -142,7 +145,7 @@ class Parameter:
         self.dynamic_cover = self.__check_bool(dynamic_cover)
         self.original_cover = self.__check_bool(original_cover)
         self.timeout = self.__check_timeout(timeout)
-        self.proxy: str | None = self.__check_proxy(proxy, remark=_("抖音"), )
+        self.proxy: str | None = self.__check_proxy(proxy, remark=_("抖音"), enable=self.douyin_platform, )
         self.proxy_tiktok: str | None = self.__check_proxy_tiktok(proxy_tiktok)
         self.download = self.__check_bool(download)
         self.max_size = self.__check_max_size(max_size)
@@ -201,8 +204,6 @@ class Parameter:
             "run_command": self.__check_run_command,
             "ffmpeg": self.__generate_ffmpeg_object,
         }
-        self.update_cookie_dy = self.__check_bool(update_cookie, True)
-        self.update_cookie_tk = self.__check_bool(update_cookie_tiktok, True)
         self.twc_tiktok = twc_tiktok if isinstance(twc_tiktok, str) else ""
         self.truncate = self.__check_truncate(truncate)
         self.ms_token = ""
@@ -355,15 +356,21 @@ class Parameter:
         return split
 
     def __check_proxy_tiktok(self, proxy: str | None | dict, ) -> str | None:
-        return self.__check_proxy(proxy, "https://www.tiktok.com/explore", "TikTok", )
+        return self.__check_proxy(
+            proxy,
+            "https://www.tiktok.com/explore",
+            "TikTok",
+            self.tiktok_platform,
+        )
 
     def __check_proxy(
             self,
             proxy: str | None | dict,
             url="https://www.douyin.com/?recommend=1",
             remark=_("抖音"),
+            enable=True,
     ) -> str | None:
-        if proxy:
+        if enable and proxy:
             # 暂时兼容旧版配置；未来将会移除
             if isinstance(proxy, dict):
                 self.console.warning(_("{remark}代理参数应为字符串格式，未来不再支持字典格式").format(remark=remark))
@@ -453,7 +460,7 @@ class Parameter:
     async def update_params(self) -> None:
         self._set_uif_id()
         await self.set_token_params()
-        if self.update_cookie_dy:
+        if self.douyin_platform:
             # self.console.print("正在更新抖音 Cookie 参数，请稍等...", style=INFO)
             await self.__update_cookie(
                 self.headers,
@@ -463,7 +470,7 @@ class Parameter:
             # if self.cookie:
             #     API.params["msToken"] = self.cookie.get("msToken", "")
             # self.console.print("抖音 Cookie 参数更新完毕！", style=INFO)
-        if self.update_cookie_tk:
+        if self.tiktok_platform:
             # self.console.print("正在更新 TikTok Cookie 参数，请稍等...", style=INFO)
             await self.__update_cookie(
                 self.headers_tiktok,
@@ -481,7 +488,8 @@ class Parameter:
             headers: dict,
             cookie: dict,
             cache: str,
-            tiktok=False) -> None:
+            tiktok=False,
+    ) -> None:
         if cookie:
             await self.__add_cookie(cookie, tiktok, cookie.get("msToken"))
             headers["Cookie"] = cookie_dict_to_str(cookie)
@@ -522,7 +530,7 @@ class Parameter:
         APITikTok.params["msToken"] = self.ms_token_tiktok
 
     async def __get_token_params(self):
-        if not self.update_cookie_dy:
+        if not self.douyin_platform:
             return
         if not any((self.cookie, self.cookie_cache,)):
             self.logger.warning(_("抖音 cookie 参数未设置，相应功能可能无法正常使用"))
@@ -544,7 +552,7 @@ class Parameter:
             self.logger.info(f"抖音 MsToken 本地值: {self.ms_token}", False, )
 
     async def __get_token_params_tiktok(self):
-        if not self.update_cookie_tk:
+        if not self.tiktok_platform:
             return
         if not any((self.cookie_tiktok, self.cookie_tiktok_cache,)):
             self.logger.warning(_("TikTok cookie 参数未设置，相应功能可能无法正常使用"))

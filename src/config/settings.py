@@ -84,8 +84,8 @@ class Settings:
         "max_pages": 0,
         "run_command": "",
         "ffmpeg": "",
-        "update_cookie": True,
-        "update_cookie_tiktok": True,
+        "douyin_platform": True,
+        "tiktok_platform": True,
         "browser_info": {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
                           "Chrome/131.0.0.0 Safari/537.36",
@@ -177,12 +177,30 @@ class Settings:
     def __compatible_with_old_settings(self, data: dict, ) -> dict:
         """兼容旧版本配置文件"""
         if "default_mode" in data:
-            self.console.info("配置文件 default_mode 参数已变更为 run_command 参数，请及时修改配置文件！")
+            self.console.info("配置文件 default_mode 参数已变更为 run_command 参数，请注意修改配置文件！")
             data["run_command"] = data.get(
                 "run_command",
                 data.get(
                     "default_mode",
                     "",
+                ),
+            )  # TODO: 暂时兼容旧版本配置文件，未来将会移除
+        if "update_cookie" in data:
+            self.console.info("配置文件 update_cookie 参数已变更为 douyin_platform 参数，请注意修改配置文件！")
+            data["douyin_platform"] = data.get(
+                "douyin_platform",
+                data.get(
+                    "update_cookie",
+                    True,
+                ),
+            )  # TODO: 暂时兼容旧版本配置文件，未来将会移除
+        if "update_cookie_tiktok" in data:
+            self.console.info("配置文件 update_cookie_tiktok 参数已变更为 tiktok_platform 参数，请注意修改配置文件！")
+            data["tiktok_platform"] = data.get(
+                "tiktok_platform",
+                data.get(
+                    "update_cookie_tiktok",
+                    True,
                 ),
             )  # TODO: 暂时兼容旧版本配置文件，未来将会移除
         return data

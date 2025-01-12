@@ -15,7 +15,7 @@
 </div>
 <br>
 <p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
-<p>⭐ <b>文档对应项目版本：<code>5.5 Beta</code>；文档内容正在完善中，如有发现任何错误或描述模糊之处，请告知作者以便改进！</b></p>
+<p>⭐ <b>文档对应项目版本：<code>5.5</code>；文档内容正在完善中，如有发现任何错误或描述模糊之处，请告知作者以便改进！</b></p>
 <hr>
 <h1>快速入门</h1>
 <ol>
@@ -70,7 +70,7 @@
 </li>
 </ol>
 <p>Docker 容器无法直接访问宿主机的文件系统，部分功能不可用，例如：<code>从浏览器获取 Cookie</code>；其他功能如有异常请反馈！</p>
-<h1>获取 Cookie</h1>
+<h1>Cookie 说明</h1>
 <p><a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">点击查看 Cookie 获取教程</a>；无效或失效的 Cookie 会导致程序获取数据失败或者无法下载最高分辨率的视频文件！</p>
 <table>
 <thead>
@@ -236,10 +236,9 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <td align="center">文件下载，数据采集</td>
 </tr>
 </tbody></table>
-<h2>自动更新 Cookie 参数</h2>
-<p>程序会周期性更新抖音与 TikTok Cookie 的部分参数，以保持 Cookie 的有效性（或许没有效果？）</p>
-<p>该功能无法防止 Cookie 失效，Cookie 失效后需要重新写入！</p>
-<p>使用者可自行启用或禁用该功能，如果您不需要使用该平台的功能，可以禁用该平台的自动更新功能！</p>
+<h2>关闭平台功能</h2>
+<p>本项目支持抖音平台和 TikTok 平台的数据采集和文件下载功能，平台功能默认开启，如果不需要使用平台的任何功能，可以编辑配置文件关闭平台功能。</p>
+<p>本项目内置 Cookie 更新机制，程序会周期性更新抖音与 TikTok Cookie 的部分参数，以保持 Cookie 的有效性（或许没有效果？），该功能无法防止 Cookie 失效，Cookie 失效后需要重新写入；关闭平台功能后，对应平台的 Cookie 更新功能将会禁用！</p>
 <h1>配置文件</h1>
 <p>配置文件：项目根目录下的 <code>settings.json</code> 文件，可以自定义设置程序部分运行参数。</p>
 <p><b><code>cookie</code>、<code>cookie_tiktok</code> 与 <code>device_id</code>参数为必需参数，必须设置该参数才能正常使用程序</b>；其余参数可以根据实际需求进行修改！</p>
@@ -418,7 +417,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <td align="center">不使用代理</td>
 </tr>
 <tr>
-<td align="center">twc_tiktok</td>
+<td align="center"><a href="#twc">twc_tiktok</a></td>
 <td align="center">str</td>
 <td align="center">TikTok Cookie 的 ttwid 值，一般情况下无需设置</td>
 <td align="center">无</td>
@@ -472,15 +471,15 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <td align="center">无</td>
 </tr>
 <tr>
-<td align="center">update_cookie</td>
+<td align="center">douyin_platform</td>
 <td align="center">bool</td>
-<td align="center"><a href="#update"><sup>5</sup></a>是否启用自动更新抖音 Cookie 参数功能</td>
+<td align="center"><a href="#update"><sup>5</sup></a>是否启用抖音平台功能</td>
 <td align="center">true</td>
 </tr>
 <tr>
-<td align="center">update_cookie_tiktok</td>
+<td align="center">tiktok_platform</td>
 <td align="center">bool</td>
-<td align="center"><a href="#update"><sup>5</sup></a>是否启用自动更新 TikTok Cookie 参数功能</td>
+<td align="center"><a href="#update"><sup>5</sup></a>是否启用 TikTok 平台功能</td>
 <td align="center">true</td>
 </tr>
 <tr>
@@ -499,8 +498,8 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 </table>
 <ol>补充说明：
 <li><a href="#mark">详见标识参数说明</a></li>
-<li id="nonessential">该参数仅在部分模式和功能中生效，如果不需要使用相应的模式和功能，无需设置该参数</li>
 <li id="tab">设置为 <code>favorite</code> 时，需要确保账号喜欢作品公开可见，或者配置对应账号的登录 Cookie</li>
+<li id="nonessential">该参数仅在部分模式和功能中生效，如果不需要使用相应的模式和功能，无需设置该参数</li>
 <li id="cookie">必须设置平台的 Cookie 才能使用该平台的数据采集和文件下载功能</li>
 <li id="update">如果不需要使用该平台的任何功能，可以将该参数设置为 <code>false</code></li>
 </ol>
@@ -573,8 +572,8 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
   "max_pages": 2,
   "run_command": "6 2 1",
   "ffmpeg": "C:\\TikTokDownloader\\ffmpeg.exe",
-  "update_cookie": true,
-  "update_cookie_tiktok": true,
+  "douyin_platform": true,
+  "tiktok_platform": true,
   "browser_info": {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
     "browser_platform": "Win32",
@@ -792,10 +791,12 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <h2>复制粘贴写入 Cookie</h2>
 <p>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，手动从浏览器复制所需 Cookie 至剪贴板，按照程序提示输入 Cookie 后回车确认，程序会自动处理 Cookie 并写入配置文件。</p>
 <p>如果粘贴 Cookie 至终端后无响应，可能是 Cookie 文本长度超出终端最大文本长度限制，请考虑更换终端或者其他写入方式。</p>
+<p>成功写入配置文件后，程序会提示当前 Cookie 登录状态！</p>
 <h2>从浏览器获取 Cookie</h2>
 <p>自动读取本地浏览器的 Cookie 数据，并提取所需 Cookie 写入配置文件。</p>
+<p>成功写入配置文件后，程序会提示当前 Cookie 登录状态！</p>
 <p>Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie！</p>
-<h2>扫码登录获取 Cookie</h2>
+<h2><del>扫码登录获取 Cookie</del></h2>
 <p>程序自动获取抖音登录二维码，随后会在终端输出二维码，并使用系统默认图片浏览器打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片窗口，程序会自动检查登录结果并将登录后的 Cookie 写入配置文件。</p>
 <p><b>注意：</b>扫码登录可能会导致抖音账号被风控，该功能仅限学习研究，未来可能禁用或移除该功能！</p>
 <h2>终端交互模式</h2>
@@ -1540,6 +1541,24 @@ print(response.json())
 }
 ```
 
+<h1>常见问题与解决方案</h1>
+<h2>响应内容不是有效的 JSON 数据</h2>
+<p>可能是 Cookie 无效或者接口失效；请尝试清除 DNS 缓存，更新 Cookie，如果仍然无法解决，可能是接口失效，请考虑向作者反馈！</p>
+<h2 id="twc">获取 ttwid 参数失败</h2>
+<p>TikTok 平台的 Cookie ttwid 值无效；可能是当前账号被风控，请考虑更换账号，或者尝试设置 <code>twc_tiktok</code> 参数。</p>
+<p><code>twc_tiktok</code> 参数设置教程：</p>
+<ul>
+<li>以无痕模式打开浏览器</li>
+<li>按 <code>F12</code> 打开开发人员工具</li>
+<li>选择 <code>网络</code> 选项卡</li>
+<li>访问 <code>https://www.tiktok.com/</code></li>
+<li>在 <code>筛选器</code> 输入框输入 <code>ttwid</code></li>
+<li>在开发人员工具窗口选择任意一个数据包(如果无数据包，刷新网页)</li>
+<li>检查 <code>响应标头</code> -> <code>Set-Cookie</code></li>
+<li>复制 <code>ttwid=XXX</code> 内容</li>
+<li>粘贴至配置文件的 <code>twc_tiktok</code> 参数</li>
+</ul>
+<p><code>Set-Cookie</code> 的内容格式为：<code>ttwid=XXX; Path=/; Domain=tiktok.com; Max-Age=31536000; HttpOnly; Secure; SameSite=None</code>，复制时只需要复制 <code>ttwid=XXX</code> 部分，而不是复制全部内容！</p>
 <h1>免责声明</h1>
 <ul>
 <li>使用者对本项目的使用由使用者自行决定，并自行承担风险。作者对使用者使用本项目所产生的任何损失、责任、或风险概不负责。</li>

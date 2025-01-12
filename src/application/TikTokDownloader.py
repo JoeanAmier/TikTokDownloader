@@ -310,7 +310,6 @@ class TikTokDownloader:
         ).run():
             self.cookie.extract(cookie)
             await self.check_settings()
-            # await self.parameter.update_cookie()
         else:
             self.console.warning(_("扫码登录失败，未写入 Cookie！"), )
 
@@ -357,14 +356,11 @@ class TikTokDownloader:
 
     def periodic_update_cookie(self):
         async def inner():
-            # print("子线程开始运行！")  # 调试代码
             while not self.event.is_set():
-                # print("子线程运行中！")  # 调试代码
                 self.console.info(_("正在更新 Cookie！"), )
                 await self.parameter.update_params()
                 self.console.info(_("Cookie 更新结束！"), )
                 self.event.wait(COOKIE_UPDATE_INTERVAL)
-            # print("子线程结束运行！")  # 调试代码
 
         run(inner(), debug=self.VERSION_BETA, )
 

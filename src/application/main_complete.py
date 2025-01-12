@@ -10,7 +10,7 @@ from typing import Union
 
 from pydantic import ValidationError
 
-from ..custom import failure_handling
+# from ..custom import failure_handling
 from ..custom import suspend
 from ..downloader import Downloader
 from ..extract import Extractor
@@ -1150,9 +1150,7 @@ class TikTok:
                     mix_title=mix_title_map[index - 1] if mix_title_map else None,
             ):
                 count.failed += 1
-                if index != len(ids) and failure_handling():
-                    continue
-                break
+                continue
             count.success += 1
             if index != len(ids):
                 await suspend(index, self.console)
