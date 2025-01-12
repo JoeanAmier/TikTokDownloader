@@ -451,17 +451,23 @@ class Extractor:
             "video.bit_rate",
             [],
         )
-        bit_rate: list[tuple[int, int, str, list[SimpleNamespace]]] = [(
+        bit_rate: list[tuple[int, int, int, int, int, list[str]]] = [(
             i.FPS,
             i.bit_rate,
-            i.gear_name,
-            i.play_addr
+            i.play_addr.data_size,
+            i.play_addr.height,
+            i.play_addr.width,
+            i.play_addr.url_list,
         ) for i in bit_rate]
-        bit_rate.sort(key=lambda x: (int(x[2].split("_")[-2]), x[1], x[0],), )
-        return self.safe_extract(
-            bit_rate[-1][-1],
-            f"url_list[{VIDEO_INDEX}]",
-        ) if bit_rate else ""
+        bit_rate.sort(
+            key=lambda x: (
+                max(x[3], x[4], ),
+                x[0],
+                x[1],
+                x[2],
+            ),
+        )
+        return bit_rate[-1][-1][VIDEO_INDEX] if bit_rate else ""
 
     def __extract_video_info_tiktok(
             self,
@@ -493,13 +499,20 @@ class Extractor:
             "video.bitrateInfo",
             [],
         )
-        bitrate_info: list[tuple[int, str, int, list[str]]] = [(
+        bitrate_info: list[tuple[int, str, int, int, list[str]]] = [(
             i.Bitrate,
-            i.GearName,
             i.PlayAddr.DataSize,
+            i.PlayAddr.Height,
+            i.PlayAddr.Width,
             i.PlayAddr.UrlList,
         ) for i in bitrate_info]
-        bitrate_info.sort(key=lambda x: (int(x[1].split("_")[-2]), x[0], x[2],), )
+        bitrate_info.sort(
+            key=lambda x: (
+                max(x[2], x[3], ),
+                x[0],
+                x[1],
+            ),
+        )
         return bitrate_info[-1][-1][VIDEO_TIKTOK_INDEX] if bitrate_info else ""
 
     @staticmethod
