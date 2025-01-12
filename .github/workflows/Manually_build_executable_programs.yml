@@ -29,13 +29,13 @@ jobs:
       - name: 构建 Win 可执行文件
         if: runner.os == 'Windows'
         run: |
-          pyinstaller --icon=./static/images/TikTokDownloader.ico --add-data "static:static" --add-data "templates:templates" --collect-all emoji main.py
+          pyinstaller --icon=./static/images/TikTokDownloader.ico --add-data "static:static" --add-data "locale:locale" --add-data "templates:templates" --collect-all emoji main.py
         shell: pwsh
 
       - name: 构建 Mac 可执行文件
         if: runner.os == 'macOS'
         run: |
-          pyinstaller --icon=./static/images/TikTokDownloader.icns --add-data "static:static" --add-data "templates:templates" --collect-all emoji main.py
+          pyinstaller --icon=./static/images/TikTokDownloader.icns --add-data "static:static" --add-data "locale:locale" --add-data "templates:templates" --collect-all emoji main.py
 
       - name: 上传文件
         uses: actions/upload-artifact@v4
