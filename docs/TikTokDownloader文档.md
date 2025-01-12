@@ -241,6 +241,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <p>本项目内置 Cookie 更新机制，程序会周期性更新抖音与 TikTok Cookie 的部分参数，以保持 Cookie 的有效性（或许没有效果？），该功能无法防止 Cookie 失效，Cookie 失效后需要重新写入；关闭平台功能后，对应平台的 Cookie 更新功能将会禁用！</p>
 <h1>配置文件</h1>
 <p>配置文件：项目根目录下的 <code>settings.json</code> 文件，可以自定义设置程序部分运行参数。</p>
+<p>若无特殊需求，大部分配置参数无需修改，直接使用默认值即可。</p>
 <p><b><code>cookie</code>、<code>cookie_tiktok</code> 与 <code>device_id</code>参数为必需参数，必须设置该参数才能正常使用程序</b>；其余参数可以根据实际需求进行修改！</p>
 <p>如果您的计算机没有合适的程序编辑 JSON 文件，建议使用 <a href="https://try8.cn/tool/format/json">JSON 在线工具</a> 编辑配置文件内容。</p>
 <p>注意: 手动修改 <code>settings.json</code> 后需要重新运行程序才会生效！</p>
@@ -270,7 +271,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <tr>
 <td align="center"><i>tab</i></td>
 <td align="center">str</td>
-<td align="center"><a href="#tab"><sup>2</sup></a>主页标签，<code>post</code> 代表发布作品、<code>favorite</code> 代表喜欢作品；<strong>属于 accounts_urls 子参数</strong></td>
+<td align="center"><a href="#supplement"><sup>2</sup></a>主页标签，<code>post</code> 代表发布作品、<code>favorite</code> 代表喜欢作品；<strong>属于 accounts_urls 子参数</strong></td>
 <td align="center">发布作品</td>
 </tr>
 <tr>
@@ -294,36 +295,36 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <tr>
 <td align="center">accounts_urls[mark, url, tab, earliest, latest, enable]</td>
 <td align="center">list[dict[str, str, str, Any, str, bool]]</td>
-<td align="center"><a href="#nonessential"><sup>3</sup></a>抖音平台：账号标识，账号链接，主页标签，最早发布日期，最晚发布日期，是否启用；作为 <code>批量下载账号作品</code> 模式选项，支持多账号，以字典格式包含六个参数</td>
+<td align="center"><a href="#supplement"><sup>3</sup></a>抖音平台：账号标识，账号链接，主页标签，最早发布日期，最晚发布日期，是否启用；作为 <code>批量下载账号作品</code> 模式选项，支持多账号，以字典格式包含六个参数</td>
 <td align="center">无</td>
 <tr>
 <td align="center">mix_urls[mark, url, enable]</td>
 <td align="center">list[dict[str, str, bool]]</td>
-<td align="center"><a href="#nonessential"><sup>3</sup></a>抖音平台：合集标识，合集链接或作品链接，是否启用；作为 <code>批量下载合集作品</code> 模式选项，支持多合集，以字典格式包含三个参数</td>
+<td align="center"><a href="#supplement"><sup>3</sup></a>抖音平台：合集标识，合集链接或作品链接，是否启用；作为 <code>批量下载合集作品</code> 模式选项，支持多合集，以字典格式包含三个参数</td>
 <td align="center">无</td>
 </tr>
 <tr>
 <td align="center">owner_url[mark, url]</td>
 <td align="center">dict[str, str]</td>
-<td align="center"><a href="#nonessential"><sup>3</sup></a>抖音平台：当前登录 Cookie 的账号标识，账号主页链接；<code>批量下载收藏作品</code> 模式下用于获取账号信息，以字典格式包含两个参数</td>
+<td align="center"><a href="#supplement"><sup>3</sup></a>抖音平台：当前登录 Cookie 的账号标识，账号主页链接；<code>批量下载收藏作品</code> 模式下用于获取账号信息，以字典格式包含两个参数</td>
 <td align="center">无</td>
 </tr>
 <tr>
 <td align="center">accounts_urls_tiktok[mark, url, tab, earliest, latest, enable]</td>
 <td align="center">list[dict[str, str, str, Any, str, bool]]</td>
-<td align="center"><a href="#nonessential"><sup>3</sup></a>TikTok 平台；参数规则与 <code>accounts_urls</code> 一致</td>
+<td align="center"><a href="#supplement"><sup>3</sup></a>TikTok 平台；参数规则与 <code>accounts_urls</code> 一致</td>
 <td align="center">无</td>
 </tr>
 <tr>
 <td align="center">mix_urls_tiktok[mark, url, enable]</td>
 <td align="center">list[dict[str, str, bool]]</td>
-<td align="center"><a href="#nonessential"><sup>3</sup></a>TikTok 平台；参数规则与 <code>mix_urls</code> 一致</td>
+<td align="center"><a href="#supplement"><sup>3</sup></a>TikTok 平台；参数规则与 <code>mix_urls</code> 一致</td>
 <td align="center">无</td>
 </tr>
 <tr>
 <td align="center">owner_url_tiktok[mark, url](未生效)</td>
 <td align="center">dict[str, str]</td>
-<td align="center"><a href="#nonessential"><sup>3</sup></a>TikTok 平台；参数规则与 <code>owner_url</code> 一致</td>
+<td align="center"><a href="#supplement"><sup>3</sup></a>TikTok 平台；参数规则与 <code>owner_url</code> 一致</td>
 <td align="center">无</td>
 </tr>
 <tr>
@@ -377,19 +378,19 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <tr>
 <td align="center">storage_format</td>
 <td align="center">str</td>
-<td align="center"><a href="#nonessential"><sup>3</sup></a>采集数据持久化储存格式，支持：<code>csv</code>、<code>xlsx</code>、<code>sql</code>(SQLite)</td>
+<td align="center"><a href="#supplement"><sup>3</sup></a>采集数据持久化储存格式，支持：<code>csv</code>、<code>xlsx</code>、<code>sql</code>(SQLite)</td>
 <td align="center">不保存</td>
 </tr>
 <tr>
 <td align="center">cookie</td>
 <td align="center">dict | str</td>
-<td align="center"><a href="#cookie"><sup>4</sup></a>抖音网页版 Cookie, 必需参数; 建议通过程序写入配置文件，亦可手动编辑</td>
+<td align="center"><a href="#supplement"><sup>4</sup></a>抖音网页版 Cookie, 必需参数; 建议通过程序写入配置文件，亦可手动编辑</td>
 <td align="center">无</td>
 </tr>
 <tr>
 <td align="center">cookie_tiktok</td>
 <td align="center">dict | str</td>
-<td align="center"><a href="#cookie"><sup>4</sup></a>TikTok 网页版 Cookie, 必需参数; 建议通过程序写入配置文件，亦可手动编辑</td>
+<td align="center"><a href="#supplement"><sup>4</sup></a>TikTok 网页版 Cookie, 必需参数; 建议通过程序写入配置文件，亦可手动编辑</td>
 <td align="center">无</td>
 </tr>
 <tr>
@@ -467,19 +468,19 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <tr>
 <td align="center">ffmpeg</td>
 <td align="center">str</td>
-<td align="center"><a href="#nonessential"><sup>3</sup></a><code>ffmpeg.exe</code> 路径，下载直播时使用，如果系统环境存在 <code>ffmpeg</code> 或者不想使用 <code>ffmpeg</code>，无需设置该参数</td>
+<td align="center"><a href="#supplement"><sup>3</sup></a><code>ffmpeg.exe</code> 路径，下载直播时使用，如果系统环境存在 <code>ffmpeg</code> 或者不想使用 <code>ffmpeg</code>，无需设置该参数</td>
 <td align="center">无</td>
 </tr>
 <tr>
 <td align="center">douyin_platform</td>
 <td align="center">bool</td>
-<td align="center"><a href="#update"><sup>5</sup></a>是否启用抖音平台功能</td>
+<td align="center"><a href="#supplement"><sup>5</sup></a>是否启用抖音平台功能</td>
 <td align="center">true</td>
 </tr>
 <tr>
 <td align="center">tiktok_platform</td>
 <td align="center">bool</td>
-<td align="center"><a href="#update"><sup>5</sup></a>是否启用 TikTok 平台功能</td>
+<td align="center"><a href="#supplement"><sup>5</sup></a>是否启用 TikTok 平台功能</td>
 <td align="center">true</td>
 </tr>
 <tr>
@@ -496,13 +497,16 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 </tr>
 </tbody>
 </table>
-<ol>补充说明：
+<div id="supplement">
+<p><strong>补充说明：</strong></p>
+<ol>
 <li><a href="#mark">详见标识参数说明</a></li>
-<li id="tab">设置为 <code>favorite</code> 时，需要确保账号喜欢作品公开可见，或者配置对应账号的登录 Cookie</li>
-<li id="nonessential">该参数仅在部分模式和功能中生效，如果不需要使用相应的模式和功能，无需设置该参数</li>
-<li id="cookie">必须设置平台的 Cookie 才能使用该平台的数据采集和文件下载功能</li>
-<li id="update">如果不需要使用该平台的任何功能，可以将该参数设置为 <code>false</code></li>
+<li>设置为 <code>favorite</code> 时，需要确保账号喜欢作品公开可见，或者配置对应账号的登录 Cookie</li>
+<li>该参数仅在部分模式和功能中生效，如果不需要使用相应的模式和功能，无需设置该参数</li>
+<li>必须设置平台的 Cookie 才能使用该平台的数据采集和文件下载功能</li>
+<li>如果不需要使用该平台的任何功能，可以将该参数设置为 <code>false</code></li>
 </ol>
+</div>
 <h2>配置示例</h2>
 
 ```json
