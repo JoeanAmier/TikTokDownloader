@@ -101,12 +101,13 @@
 ## 快速入门
 
 <p>⭐ Mac OS、Windows 10 及以上用户可前往 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 下载已编译的程序，开箱即用！</p>
+<p>⭐ 本项目包含手动构建可执行文件的 GitHub Actions，使用者可以随时使用 GitHub Actions 将最新源码构建为可执行文件！</p>
 <p><strong>注意：Mac OS 平台可执行文件 <code>main</code> 可能需要从终端命令行启动；受设备限制，Mac OS 平台可执行文件尚未经过测试，无法保证可用性！</strong></p>
 <hr>
 <ol>
 <li><b>运行可执行文件</b> 或者 <b>配置环境运行</b>
 <ol><b>运行可执行文件</b>
-<li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 发布的可执行文件压缩包</li>
+<li>下载 <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> 或者 Actions 构建的可执行文件压缩包</li>
 <li>解压后打开程序文件夹，双击运行 <code>main</code></li>
 </ol>
 <ol><b>配置环境运行</b>
@@ -215,6 +216,88 @@
 > **方案一：** 下载并解压文件，将旧版本的 `TikTokDownloader.db` 文件和 `settings.json` 文件复制到 `_internal` 文件夹。
 
 > **方案二：** 下载并解压文件（不要运行程序），复制全部文件，直接覆盖旧版本文件。
+
+## 手动构建可执行文件指南
+
+本指南将引导您通过 Fork 本仓库并执行 GitHub Actions 自动完成基于最新源码的程序构建和打包！
+
+---
+
+### 使用步骤
+
+#### 1. Fork 本仓库
+
+1. 点击项目仓库右上角的 **Fork** 按钮，将本仓库 Fork 到您的个人 GitHub 账户中
+2. 您的 Fork 仓库地址将类似于：`https://github.com/your-username/this-repo`
+
+---
+
+#### 2. 启用 GitHub Actions
+
+1. 前往您 Fork 的仓库页面
+2. 点击顶部的 **Settings** 选项卡
+3. 点击右侧的 **Actions** 选项卡
+4. 点击 **General** 选项
+5. 在 **Actions permissions** 下，选择 **Allow all actions and reusable workflows** 选项，点击 **Save** 按钮
+
+---
+
+#### 3. 手动触发打包流程
+
+1. 在您 Fork 的仓库中，点击顶部的 **Actions** 选项卡
+2. 找到名为 **手动构建可执行文件** 的工作流
+3. 点击右侧的 **Run workflow** 按钮：
+    - 选择 **master** 或者 **develop** 分支
+    - 点击 **Run workflow**
+
+---
+
+#### 4. 查看打包进度
+
+1. 在 **Actions** 页面中，您可以看到触发的工作流运行记录
+2. 点击运行记录，查看详细的日志以了解打包进度和状态
+
+---
+
+#### 5. 下载打包结果
+
+1. 打包完成后，进入对应的运行记录页面
+2. 在页面底部的 **Artifacts** 部分，您将看到打包的结果文件
+3. 点击下载并保存到本地，即可获得打包好的程序
+
+---
+
+### 注意事项
+
+1. **资源使用**：
+    - Actions 的运行环境由 GitHub 免费提供，普通用户每月有一定的免费使用额度（2000 分钟）
+
+2. **代码修改**：
+    - 您可以自由修改 Fork 仓库中的代码以定制程序打包流程
+    - 修改后重新触发打包流程，您将得到自定义的构建版本
+
+3. **与主仓库保持同步**：
+    - 如果主仓库更新了代码或工作流，建议您定期同步 Fork 仓库以获取最新功能和修复
+
+---
+
+### Actions 常见问题
+
+#### Q1: 为什么我无法触发工作流？
+
+A: 请确认您已按照步骤 **启用 Actions**，否则 GitHub 会禁止运行工作流
+
+#### Q2: 打包流程失败怎么办？
+
+A:
+
+- 检查运行日志，了解失败原因
+- 确保代码没有语法错误或依赖问题
+- 如果问题仍未解决，可以在本仓库的 [Issues 页面](https://github.com/JoeanAmier/TikTokDownloader/issues) 提出问题
+
+#### Q3: 我可以直接使用主仓库的 Actions 吗？
+
+A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fork 仓库的方式执行打包流程
 
 # ⚠️ 免责声明
 

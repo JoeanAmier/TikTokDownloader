@@ -105,12 +105,13 @@
 ## Quick Start
 
 <p>⭐ Mac OS and Windows 10 and above users can go to <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> to download the compiled program, ready to use!</p>
+<p>⭐ This project includes GitHub Actions for manually building executable files. Users can use GitHub Actions to build the latest source code into executable files at any time!</p>
 <p><strong>Note: The executable file <code>main</code> on Mac OS may need to be started from the terminal command line. Due to device limitations, the executable file on the Mac OS platform has not been tested, and its usability cannot be guaranteed!</strong></p>
 <hr>
 <ol>
 <li><b>Run the executable file</b> or <b>configure the environment to run</b>
 <ol><b>Run the executable file</b>
-<li>Download the compressed package of the executable file published on <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a>.</li>
+<li>Download the executable file compressed file built by <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> or Actions.</li>
 <li>After extracting, open the program folder and double-click to run <code>main</code>.</li>
 </ol>
 <ol><b>Configure the environment to run</b>
@@ -223,6 +224,94 @@
 
 > **Option 2:** Download and unzip the files \(without running the program), then copy all the files and directly
 > overwrite the old version files.
+
+## Manual Build of Executable File Guide
+
+This guide will walk you through forking this repository and executing GitHub Actions to automatically build and package
+the program based on the latest source code!
+
+---
+
+### Steps to Use
+
+#### 1. Fork the Repository
+
+1. Click the **Fork** button at the top right of the project repository to fork it to your personal GitHub account
+2. Your forked repository address will look like this: `https://github.com/your-username/this-repo`
+
+---
+
+#### 2. Enable GitHub Actions
+
+1. Go to the page of your forked repository
+2. Click the **Settings** tab at the top
+3. Click the **Actions** tab on the right
+4. Click the **General** option
+5. Under **Actions permissions**, select **Allow all actions and reusable workflows** and click the **Save** button
+
+---
+
+#### 3. Manually Trigger the Build Process
+
+1. In your forked repository, click the **Actions** tab at the top
+2. Find the workflow named **Manual Build of Executable File**
+3. Click the **Run workflow** button on the right:
+    - Select the **master** or **develop** branch
+    - Click **Run workflow**
+
+---
+
+#### 4. Check the Build Progress
+
+1. On the **Actions** page, you can see the execution records of the triggered workflow
+2. Click on the run record to view detailed logs to check the build progress and status
+
+---
+
+#### 5. Download the Build Result
+
+1. Once the build is complete, go to the corresponding run record page
+2. In the **Artifacts** section at the bottom of the page, you will see the built result file
+3. Click to download and save it to your local machine to get the built program
+
+---
+
+### Notes
+
+1. **Resource Usage**:
+    - GitHub provides free build environments for Actions, with a monthly usage limit (2000 minutes) for free-tier
+      users
+
+2. **Code Modifications**:
+    - You are free to modify the code in your forked repository to customize the build process
+    - After making changes, you can trigger the build process again to get your customized version
+
+3. **Stay in Sync with the Main Repository**:
+    - If the main repository is updated with new code or workflows, it is recommended that you periodically sync your
+      forked repository to get the latest features and fixes
+
+---
+
+### Frequently Asked Questions
+
+#### Q1: Why can't I trigger the workflow?
+
+A: Please ensure that you have followed the steps to **Enable Actions**. Otherwise, GitHub will prevent the workflow
+from running
+
+#### Q2: What should I do if the build process fails?
+
+A:
+
+- Check the run logs to understand the cause of the failure
+- Ensure there are no syntax errors or dependency issues in the code
+- If the problem persists, please open an issue on
+  the [Issues page](https://github.com/JoeanAmier/TikTokDownloader/issues)
+
+#### Q3: Can I directly use the Actions from the main repository?
+
+A: Due to permission restrictions, you cannot directly trigger Actions from the main repository. Please use the forked
+repository to execute the build process
 
 # ⚠️ Disclaimer
 
