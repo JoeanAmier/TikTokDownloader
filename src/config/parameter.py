@@ -25,7 +25,7 @@ from ..custom import (
 )
 from ..encrypt import ABogus
 from ..encrypt import MsToken
-from ..encrypt import MsTokenTikTok
+# from ..encrypt import MsTokenTikTok
 from ..encrypt import TtWid
 from ..encrypt import TtWidTikTok
 from ..encrypt import XBogus
@@ -557,21 +557,22 @@ class Parameter:
         if not any((self.cookie_tiktok, self.cookie_tiktok_cache,)):
             self.logger.warning(_("TikTok cookie 参数未设置，相应功能可能无法正常使用"))
             return
-        # if not (m := self.cookie_tiktok.get("msToken")):
-        #     self.logger.warning("TikTok cookie 缺少必需的键值对，请尝试重新写入 cookie")
-        #     return
-        if (d := await MsTokenTikTok.get_long_ms_token(
-                self.logger,
-                self.headers_params_tiktok,
-                # m,
-                proxy=self.proxy_tiktok,
-        )):
-            # self.cookie_tiktok |= d
-            self.ms_token_tiktok = d[MsTokenTikTok.NAME]
-            self.logger.info(f"TikTok MsToken 请求值: {self.ms_token}", False, )
-        else:
-            self.ms_token = self.cookie_tiktok.get("msToken", "")
-            self.logger.info(f"TikTok MsToken 本地值: {self.ms_token}", False, )
+        if not (m := self.cookie_tiktok.get("msToken")):
+            self.logger.warning("TikTok cookie 缺少必需的键值对，请尝试重新写入 cookie")
+            return
+        self.ms_token = self.cookie_tiktok.get("msToken", "")
+        # if (d := await MsTokenTikTok.get_long_ms_token(
+        #         self.logger,
+        #         self.headers_params_tiktok,
+        #         # m,
+        #         proxy=self.proxy_tiktok,
+        # )):
+        #     # self.cookie_tiktok |= d
+        #     self.ms_token_tiktok = d[MsTokenTikTok.NAME]
+        #     self.logger.info(f"TikTok MsToken 请求值: {self.ms_token}", False, )
+        # else:
+        #     self.ms_token = self.cookie_tiktok.get("msToken", "")
+        #     self.logger.info(f"TikTok MsToken 本地值: {self.ms_token}", False, )
 
     def _set_uif_id(self, ) -> None:
         self._deal_uif_id()
