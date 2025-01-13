@@ -451,14 +451,18 @@ class Extractor:
             "video.bit_rate",
             [],
         )
-        bit_rate: list[tuple[int, int, int, int, int, list[str]]] = [(
-            i.FPS,
-            i.bit_rate,
-            i.play_addr.data_size,
-            i.play_addr.height,
-            i.play_addr.width,
-            i.play_addr.url_list,
-        ) for i in bit_rate]
+        try:
+            bit_rate: list[tuple[int, int, int, int, int, list[str]]] = [(
+                i.FPS,
+                i.bit_rate,
+                i.play_addr.data_size,
+                i.play_addr.height,
+                i.play_addr.width,
+                i.play_addr.url_list,
+            ) for i in bit_rate]
+        except AttributeError:
+            self.log.error(f"提取视频下载地址失败: {data}", False, )
+            return ""
         bit_rate.sort(
             key=lambda x: (
                 max(x[3], x[4], ),
@@ -499,13 +503,17 @@ class Extractor:
             "video.bitrateInfo",
             [],
         )
-        bitrate_info: list[tuple[int, str, int, int, list[str]]] = [(
-            i.Bitrate,
-            i.PlayAddr.DataSize,
-            i.PlayAddr.Height,
-            i.PlayAddr.Width,
-            i.PlayAddr.UrlList,
-        ) for i in bitrate_info]
+        try:
+            bitrate_info: list[tuple[int, str, int, int, list[str]]] = [(
+                i.Bitrate,
+                i.PlayAddr.DataSize,
+                i.PlayAddr.Height,
+                i.PlayAddr.Width,
+                i.PlayAddr.UrlList,
+            ) for i in bitrate_info]
+        except AttributeError:
+            self.log.error(f"提取视频下载地址失败: {data}", False, )
+            return ""
         bitrate_info.sort(
             key=lambda x: (
                 max(x[2], x[3], ),
