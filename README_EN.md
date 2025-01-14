@@ -225,7 +225,7 @@
 > **Option 2:** Download and unzip the files \(without running the program), then copy all the files and directly
 > overwrite the old version files.
 
-## Manual Build of Executable File Guide
+## Build of Executable File Guide
 
 This guide will walk you through forking this repository and executing GitHub Actions to automatically build and package
 the program based on the latest source code!

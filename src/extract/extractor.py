@@ -387,7 +387,12 @@ class Extractor:
             data: SimpleNamespace,
             images: list[SimpleNamespace],
     ) -> None:
-        if self.safe_extract(images[-1], "video"):
+        if any(
+                self.safe_extract(
+                    i,
+                    "video",
+                ) for i in images
+        ):
             self.__set_blank_data(item, data, _("实况"), )
             item["downloads"] = [
                 self.__classify_slides_item(i, ) for i in images
