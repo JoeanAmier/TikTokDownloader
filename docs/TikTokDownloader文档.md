@@ -94,8 +94,12 @@
 <td align="center">❌无需登录</td>
 </tr>
 <tr>
-<td align="center">获取直播推流地址</td>
+<td align="center">获取直播推流地址 (抖音)</td>
 <td align="center">❌无需登录</td>
+</tr>
+<tr>
+<td align="center">获取直播推流地址 (TikTok)</td>
+<td align="center">✔️需要登录</td>
 </tr>
 <tr>
 <td align="center">下载直播视频</td>

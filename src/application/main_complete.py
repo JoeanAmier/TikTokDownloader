@@ -877,13 +877,13 @@ class TikTok:
             *args,
     ):
         while url := self._inquire_input(_("直播")):
-            _, ids = await self.links_tiktok.run(url, type_="live")
+            __, ids = await self.links_tiktok.run(url, type_="live")
             if not ids:
                 self.logger.warning(_("{} 提取直播 ID 失败").format(url=url))
                 continue
             live_data = [await LiveTikTok(self.parameter, cookie, proxy, i).run() for i in ids]
             if not [i for i in live_data if i]:
-                self.logger.warning_(_("获取直播数据失败"))
+                self.logger.warning(_("获取直播数据失败"))
                 continue
             live_data = await self.extractor.run(live_data, None, "live", tiktok=True, )
             download_tasks = self.show_live_info_tiktok(live_data)

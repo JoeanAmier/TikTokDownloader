@@ -136,7 +136,7 @@ async def test():
         i = AccountTikTok(
             params,
             sec_user_id="",
-            earliest="2024/12/10",
+            earliest=15,
         )
         print(await i.run())
 

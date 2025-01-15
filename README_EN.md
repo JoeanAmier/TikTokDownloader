@@ -170,23 +170,24 @@
 
 [Click to view Cookie tutorial](https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md)
 
-|       Program Function       |     Login Required     |
-|:----------------------------:|:----------------------:|
-| Download Account Posts Works | ⭕ Recommended to Login |
-| Download Account Liked Works | ⭕ Recommended to Login |
-|    Download Linked Works     |  ❌ No Login Required   |
-|  Obtain Live Stream Address  |  ❌ No Login Required   |
-|     Download Live Video      |  ❌ No Login Required   |
-|  Obtain Works Comment Data   |  ❌ No Login Required   |
-|      Download Mix Works      |  ❌ No Login Required   |
-|     Obtain Account Data      |  ❌ No Login Required   |
-|    Collect Search Results    |  ❌ No Login Required   |
-|    Collect Hot Board Data    |  ❌ No Login Required   |
-|   Download Favorites Works   |   ✔️ Login Required    |
-|  Download Collections Works  |   ✔️ Login Required    |
-|    Obtain Collections Mix    |   ✔️ Login Required    |
-|   Obtain Collections Music   |   ✔️ Login Required    |
-|  Obtain Collections Series   |   ✔️ Login Required    |
+|           Program Function            |     Login Required     |
+|:-------------------------------------:|:----------------------:|
+|     Download Account Posts Works      | ⭕ Recommended to Login |
+|     Download Account Liked Works      | ⭕ Recommended to Login |
+|         Download Linked Works         |  ❌ No Login Required   |
+| Obtain Live Stream Address \(DouYin\) |  ❌ No Login Required   |
+| Obtain Live Stream Address \(TikTok\) |   ✔️ Login Required    |
+|          Download Live Video          |  ❌ No Login Required   |
+|       Obtain Works Comment Data       |  ❌ No Login Required   |
+|          Download Mix Works           |  ❌ No Login Required   |
+|          Obtain Account Data          |  ❌ No Login Required   |
+|        Collect Search Results         |  ❌ No Login Required   |
+|        Collect Hot Board Data         |  ❌ No Login Required   |
+|       Download Favorites Works        |   ✔️ Login Required    |
+|      Download Collections Works       |   ✔️ Login Required    |
+|        Obtain Collections Mix         |   ✔️ Login Required    |
+|       Obtain Collections Music        |   ✔️ Login Required    |
+|       Obtain Collections Series       |   ✔️ Login Required    |
 
 > * Cookie only needs to be re-written to the configuration file after it expires, and not every time the program is
     run.
