@@ -70,7 +70,7 @@ class TikTokDownloader:
         self.settings = Settings(PROJECT_ROOT, self.console)
         self.event = Event()
         self.cookie = Cookie(self.settings, self.console)
-        self.cookie_task = None
+        self.params_task = None
         self.parameter = None
         self.running = True
         self.run_command = None
@@ -354,12 +354,10 @@ class TikTokDownloader:
         if await self.disclaimer():
             await self.main_menu(safe_pop(self.run_command))
 
-    def periodic_update_cookie(self):
+    def periodic_update_params(self):
         async def inner():
             while not self.event.is_set():
-                self.console.info(_("正在更新 Cookie！"), )
                 await self.parameter.update_params()
-                self.console.info(_("Cookie 更新结束！"), )
                 self.event.wait(COOKIE_UPDATE_INTERVAL)
 
         run(inner(), debug=self.VERSION_BETA, )
@@ -367,12 +365,12 @@ class TikTokDownloader:
     def restart_cycle_task(self, restart=True, ):
         if restart:
             self.event.set()
-            while self.cookie_task.is_alive():
+            while self.params_task.is_alive():
                 # print("等待子线程结束！")  # 调试代码
                 sleep(1)
-        self.cookie_task = Thread(target=self.periodic_update_cookie)
+        self.params_task = Thread(target=self.periodic_update_params)
         self.event.clear()
-        self.cookie_task.start()
+        self.params_task.start()
 
     def close(self):
         self.event.set()
