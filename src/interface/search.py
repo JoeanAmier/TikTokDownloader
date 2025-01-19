@@ -238,7 +238,7 @@ class Search(API):
         params = self.params | {
             "search_channel": self.channel.channel,
             "enable_history": "1",
-            "keyword": quote(self.keyword),
+            "keyword": self.keyword,
             "search_source": "tab_search",
             "query_correct_type": "1",
             "is_filter_search": "0",
@@ -263,7 +263,7 @@ class Search(API):
         params = self.params | {
             "search_channel": self.channel.channel,
             "enable_history": "1",
-            "keyword": quote(self.keyword),
+            "keyword": self.keyword,
             "search_source": "tab_search",
             "query_correct_type": "1",
             "is_filter_search": "0",
@@ -311,7 +311,7 @@ class Search(API):
     def _generate_params_live(self, ) -> dict:
         params = self.params | {
             "search_channel": self.channel.channel,
-            "keyword": quote(self.keyword),
+            "keyword": self.keyword,
             "search_source": "tab_search",
             "query_correct_type": "1",
             "is_filter_search": "0",
