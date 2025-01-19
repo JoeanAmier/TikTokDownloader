@@ -24,7 +24,7 @@ class RecordManager:
         ("desc", "作品描述", "TEXT",),
         ("text_extra", "作品话题", "TEXT",),
         ("duration", "视频时长", "TEXT",),
-        ("ratio", "视频分辨率", "TEXT",),
+        # ("ratio", "视频分辨率", "TEXT",),
         ("height", "视频高度", "INTEGER",),
         ("width", "视频宽度", "INTEGER",),
         ("share_url", "作品链接", "TEXT",),

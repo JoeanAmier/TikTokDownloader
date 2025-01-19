@@ -347,9 +347,7 @@ class Extractor:
             data: SimpleNamespace,
             tiktok=False,
     ):
-        item["height"] = self.safe_extract(data, "video.height", -1)
-        item["width"] = self.safe_extract(data, "video.width", -1)
-        item["ratio"] = self.safe_extract(data, "video.ratio")
+        # item["ratio"] = self.safe_extract(data, "video.ratio")
         item["share_url"] = self.__generate_link(
             item["type"],
             item["id"],
@@ -429,6 +427,8 @@ class Extractor:
         item["type"] = type_
         item["duration"] = "00:00:00"
         item["uri"] = ""
+        item["height"] = -1
+        item["width"] = -1
         self.__extract_cover(item, data)
 
     def __extract_video_info(
@@ -438,7 +438,7 @@ class Extractor:
             type_=_("视频"),
     ) -> None:
         item["type"] = type_
-        item["downloads"] = self.__extract_video_download(data, )
+        item["height"], item["width"], item["downloads"] = self.__extract_video_download(data, )
         item["duration"] = self.time_conversion(
             self.safe_extract(data, "video.duration", 0))
         item["uri"] = self.safe_extract(
@@ -447,10 +447,10 @@ class Extractor:
 
     def __classify_slides_item(self, item: SimpleNamespace, ) -> str:
         if self.safe_extract(item, "video"):
-            return self.__extract_video_download(item, )
+            return self.__extract_video_download(item, )[-1]
         return self.safe_extract(item, f'url_list[{IMAGE_INDEX}]')
 
-    def __extract_video_download(self, data: SimpleNamespace, ) -> str:
+    def __extract_video_download(self, data: SimpleNamespace, ) -> tuple[int, int, str]:
         bit_rate: list[SimpleNamespace] = self.safe_extract(
             data,
             "video.bit_rate",
@@ -467,7 +467,7 @@ class Extractor:
             ) for i in bit_rate]
         except AttributeError:
             self.log.error(f"提取视频下载地址失败: {data}", False, )
-            return ""
+            return -1, -1, ""
         bit_rate.sort(
             key=lambda x: (
                 max(x[3], x[4], ),
@@ -476,7 +476,11 @@ class Extractor:
                 x[2],
             ),
         )
-        return bit_rate[-1][-1][VIDEO_INDEX] if bit_rate else ""
+        return (
+            bit_rate[-1][-3],
+            bit_rate[-1][-2],
+            bit_rate[-1][-1][VIDEO_INDEX],
+        ) if bit_rate else (-1, -1, "")
 
     def __extract_video_info_tiktok(
             self,
@@ -489,7 +493,7 @@ class Extractor:
         #     data,
         #     "video.playAddr",
         # )  # 视频文件大小优先
-        item["downloads"] = self.__extract_video_download_tiktok(data, )  # 视频分辨率优先
+        item["height"], item["width"], item["downloads"] = self.__extract_video_download_tiktok(data, )  # 视频分辨率优先
         item["duration"] = self.time_conversion_tiktok(
             self.safe_extract(
                 data,
@@ -502,7 +506,7 @@ class Extractor:
         )
         self.__extract_cover_tiktok(item, data, True)
 
-    def __extract_video_download_tiktok(self, data: SimpleNamespace, ) -> str:
+    def __extract_video_download_tiktok(self, data: SimpleNamespace, ) -> tuple[int, int, str]:
         bitrate_info: list[SimpleNamespace] = self.safe_extract(
             data,
             "video.bitrateInfo",
@@ -518,7 +522,7 @@ class Extractor:
             ) for i in bitrate_info]
         except AttributeError:
             self.log.error(f"提取视频下载地址失败: {data}", False, )
-            return ""
+            return -1, -1, ""
         bitrate_info.sort(
             key=lambda x: (
                 max(x[2], x[3], ),
@@ -526,7 +530,11 @@ class Extractor:
                 x[1],
             ),
         )
-        return bitrate_info[-1][-1][VIDEO_TIKTOK_INDEX] if bitrate_info else ""
+        return (
+            bitrate_info[-1][-3],
+            bitrate_info[-1][-2],
+            bitrate_info[-1][-1][VIDEO_TIKTOK_INDEX],
+        ) if bitrate_info else (-1, -1, "")
 
     @staticmethod
     def time_conversion(time_: int) -> str:
