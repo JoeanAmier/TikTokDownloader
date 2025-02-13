@@ -126,11 +126,13 @@ class Downloader:
             expand=True,
         )
 
-    async def run(self,
-                  data: Union[list[dict], list[tuple]],
-                  type_: str,
-                  tiktok=False,
-                  **kwargs, ) -> None:
+    async def run(
+            self,
+            data: Union[list[dict], list[tuple]],
+            type_: str,
+            tiktok=False,
+            **kwargs,
+    ) -> None:
         if not self.download or not data:
             return
         self.log.info(_("开始下载作品文件"))
@@ -193,6 +195,7 @@ class Downloader:
                 actual_root,
                 "download",
                 True,
+                type_=_("音乐"),
             )
         await self.downloader_chart(
             tasks,
@@ -245,35 +248,49 @@ class Downloader:
             downloaded_image=set(),
             skipped_image=set(),
             downloaded_video=set(),
-            skipped_video=set()
+            skipped_video=set(),
+            downloaded_live=set(),
+            skipped_live=set(),
         )
         tasks = []
         for item in data:
             item["desc"] = beautify_string(item["desc"], DESCRIPTION_LENGTH)
             name = self.generate_detail_name(item)
-            temp_root, actual_root = self.deal_folder_path(root, name, self.folder_mode, )
+            temp_root, actual_root = self.deal_folder_path(
+                root,
+                name,
+                self.folder_mode,
+            )
             params = {
                 "tasks": tasks,
                 "name": name,
                 "id_": item["id"],
                 "item": item,
-                "count": count,
                 "temp_root": temp_root,
                 "actual_root": actual_root
             }
             if (t := item["type"]) == _("图集"):
-                await self.download_image(**params, type_=_("图集"), )
+                await self.download_image(
+                    **params,
+                    type_=_("图集"),
+                    skipped=count.skipped_image,
+                )
             elif t == _("视频"):
-                await self.download_video(**params, type_=_("视频"), )
+                await self.download_video(
+                    **params,
+                    type_=_("视频"),
+                    skipped=count.skipped_video,
+                )
             elif t == _("实况"):
                 await self.download_image(
                     suffix="mp4",
                     type_=_("实况"),
                     **params,
+                    skipped=count.skipped_live,
                 )
             else:
                 raise TikTokDownloaderError
-            self.download_music(**params)
+            self.download_music(**params, type=_("音乐"), )
             self.download_cover(**params)
         await self.downloader_chart(
             tasks,
@@ -330,7 +347,7 @@ class Downloader:
             name: str,
             id_: str,
             item: SimpleNamespace,
-            count: SimpleNamespace,
+            skipped: set,
             temp_root: Path,
             actual_root: Path,
             suffix: str = "jpeg",
@@ -344,14 +361,14 @@ class Downloader:
                 start=1,
         ):
             if await self.is_downloaded(id_):
-                count.skipped_image.add(id_)
+                skipped.add(id_)
                 self.log.info(_("【{type}】{name} 存在下载记录，跳过下载").format(type=type_, name=name))
                 break
             elif self.is_exists(p := actual_root.with_name(f"{name}_{index}.{suffix}")):
                 self.log.info(
                     _("【{type}】{name}_{index} 文件已存在，跳过下载").format(type=type_, name=name, index=index))
                 self.log.info(f"文件路径: {p.resolve()}", False)
-                count.skipped_image.add(id_)
+                skipped.add(id_)
                 continue
             tasks.append((
                 img,
@@ -369,7 +386,7 @@ class Downloader:
             name: str,
             id_: str,
             item: SimpleNamespace,
-            count: SimpleNamespace,
+            skipped: set,
             temp_root: Path,
             actual_root: Path,
             suffix: str = "mp4",
@@ -386,7 +403,7 @@ class Downloader:
         ):
             self.log.info(_("【{type}】{name} 存在下载记录或文件已存在，跳过下载").format(type=type_, name=name))
             self.log.info(f"文件路径: {p.resolve()}", False)
-            count.skipped_video.add(id_)
+            skipped.add(id_)
             return
         tasks.append((
             item["downloads"],
@@ -408,17 +425,19 @@ class Downloader:
             key: str = "music_url",
             switch: bool = False,
             suffix: str = "mp3",
+            type_: str = _("音乐"),
             **kwargs,
     ) -> None:
         if self.check_deal_music(
                 url := item[key],
                 p := actual_root.with_name(f"{name}.{suffix}"),
-                switch, ):
+                switch,
+        ):
             tasks.append((
                 url,
                 temp_root.with_name(f"{name}.{suffix}"),
                 p,
-                f"【音乐】{name}",
+                _("【{type}】{name}").format(type=type_, name=name, ),
                 id_,
                 suffix,
             ))
@@ -484,7 +503,7 @@ class Downloader:
             tiktok=False,
             unknown_size=False,
             semaphore: Semaphore = None,
-    ) -> bool:
+    ) -> bool | None:
         async with semaphore or self.semaphore:
             client = self.client_tiktok if tiktok else self.client
             headers = self.__adapter_headers(headers, tiktok, )
@@ -597,11 +616,13 @@ class Downloader:
         ).copy()
 
     @staticmethod
-    def add_count(type_: str, id_: str, count: SimpleNamespace):
-        if type_.startswith("【图集】"):
+    def add_count(show: str, id_: str, count: SimpleNamespace):
+        if show.startswith(f"【{_("图集")}】"):
             count.downloaded_image.add(id_)
-        elif type_.startswith("【视频】") or type_.startswith("【实况】"):
+        elif show.startswith(f"【{_("视频")}】"):
             count.downloaded_video.add(id_)
+        elif show.startswith(f"【{_("实况")}】"):
+            count.downloaded_live.add(id_)
 
     @staticmethod
     def data_classification(
@@ -666,8 +687,11 @@ class Downloader:
             self.cleaner.filter_name(
                 self.split.join(
                     data[i] for i in (
-                        "author", "title", "id",)), default=str(
-                    time())[:10]),
+                        "author", "title", "id",
+                    )
+                ),
+                default=str(time())[:10],
+            ),
             length=MAX_FILENAME_LENGTH,
         )
 
@@ -693,14 +717,18 @@ class Downloader:
         self.log.info(_("{file_name} 文件已删除").format(file_name=path.name))
 
     def statistics_count(self, count: SimpleNamespace):
-        self.log.info(_("跳过视频作品 {skipped_count} 个").format(skipped_count=len(count.skipped_video)))
-        self.log.info(_("跳过图集作品 {skipped_count} 个").format(skipped_count=len(count.skipped_image)))
         self.log.info(
             _("下载视频作品 {downloaded_video_count} 个").format(downloaded_video_count=len(count.downloaded_video)),
         )
+        self.log.info(_("跳过视频作品 {skipped_count} 个").format(skipped_count=len(count.skipped_video)))
         self.log.info(
             _("下载图集作品 {downloaded_image_count} 个").format(downloaded_image_count=len(count.downloaded_image)),
         )
+        self.log.info(_("跳过图集作品 {skipped_count} 个").format(skipped_count=len(count.skipped_image)))
+        self.log.info(
+            _("下载实况作品 {downloaded_image_count} 个").format(downloaded_image_count=len(count.downloaded_live)),
+        )
+        self.log.info(_("跳过实况作品 {skipped_count} 个").format(skipped_count=len(count.skipped_live)))
 
     def _record_response(self, response, show: str, length: int, ):
         self.log.info(
