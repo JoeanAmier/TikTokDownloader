@@ -4,6 +4,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 VERSION_MAJOR = 5
 VERSION_MINOR = 6
 VERSION_BETA = True
+__version__ = f"{VERSION_MAJOR}.{VERSION_MINOR}.{"beta" if VERSION_BETA else "stable"}"
 PROJECT_NAME = f"TikTokDownloader V{VERSION_MAJOR}.{
 VERSION_MINOR}{" Beta" if VERSION_BETA else ""}"
 
@@ -81,3 +82,6 @@ SEARCH_USER_INDEX: int = 0
 SEARCH_AVATAR_INDEX: int = 0
 MUSIC_COLLECTION_COVER_INDEX: int = 0
 MUSIC_COLLECTION_DOWNLOAD_INDEX: int = 0
+
+if __name__ == "__main__":
+    print(__version__)
