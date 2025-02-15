@@ -21,7 +21,11 @@ class Cookie:
         self.settings = settings
         self.console = console
 
-    def run(self, key="cookie", tiktok=0, ):
+    def run(
+            self,
+            key="cookie",
+            tiktok=0,
+    ):
         """提取 Cookie 并写入配置文件"""
         if not (
                 cookie := self.console.input(
@@ -34,7 +38,12 @@ class Cookie:
         self.extract(cookie, key=key)
         return True
 
-    def extract(self, cookie: str, write=True, key="cookie", ) -> dict:
+    def extract(
+            self,
+            cookie: str,
+            write=True,
+            key="cookie",
+    ) -> dict:
         cookie_dict = cookie_str_to_dict(cookie)
         self.__check_state(cookie_dict)
         if write:

@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 
 class BaseLogger:
     """不记录日志，空白日志记录器"""
+
     DEBUG = VERSION_BETA
 
     def __init__(
@@ -55,7 +56,9 @@ class BaseLogger:
             return default
         if (r := Path(root)).is_dir():
             return r
-        self.console.print(f"日志储存路径 {root} 无效，程序将使用项目根路径作为储存路径")
+        self.console.print(
+            f"日志储存路径 {root} 无效，程序将使用项目根路径作为储存路径"
+        )
         return default
 
     def check_name(self, name: str) -> str:
@@ -65,7 +68,9 @@ class BaseLogger:
             _ = strftime(name, localtime())
             return name
         except ValueError:
-            self.console.print(f"日志名称格式 {name} 无效，程序将使用默认时间格式：年-月-日 时.分.秒")
+            self.console.print(
+                f"日志名称格式 {name} 无效，程序将使用默认时间格式：年-月-日 时.分.秒"
+            )
             return "%Y-%m-%d %H.%M.%S"
 
     @staticmethod

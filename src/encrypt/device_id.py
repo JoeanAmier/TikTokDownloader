@@ -35,7 +35,8 @@ class DeviceId:
         response.raise_for_status()
         device_id = d.group(1) if (d := cls.DEVICE_ID.search(response.text)) else ""
         cookie = "; ".join(
-            [f"{key}={value}" for key, value in response.cookies.items()])
+            [f"{key}={value}" for key, value in response.cookies.items()]
+        )
         return device_id, cookie
 
     @classmethod
@@ -51,17 +52,21 @@ class DeviceId:
                 logger,
                 headers,
                 **kwargs,
-            ) for _ in range(number)
+            )
+            for _ in range(number)
         ]
 
 
 async def test():
     from src.testers import Logger
-    print(await DeviceId.get_device_id(
-        Logger(),
-        PARAMS_HEADERS_TIKTOK,
-        proxy="http://127.0.0.1:10809",
-    ))
+
+    print(
+        await DeviceId.get_device_id(
+            Logger(),
+            PARAMS_HEADERS_TIKTOK,
+            proxy="http://127.0.0.1:10809",
+        )
+    )
     # print(await DeviceId.get_device_ids(
     #     Logger(),
     #     PARAMS_HEADERS_TIKTOK,

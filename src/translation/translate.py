@@ -18,7 +18,7 @@ class TranslationManager:
     def __init__(self, domain="tk", localedir=None):
         self.domain = domain
         if not localedir:
-            localedir = ROOT.joinpath('locale')
+            localedir = ROOT.joinpath("locale")
         self.localedir = Path(localedir)
         self.current_translator = self.setup_translation(
             self.get_language_code(),
@@ -41,7 +41,8 @@ class TranslationManager:
             )
         except FileNotFoundError as e:
             print(
-                f"Warning: Translation files for '{self.domain}' not found. Error: {e}")
+                f"Warning: Translation files for '{self.domain}' not found. Error: {e}"
+            )
             return translation(self.domain, fallback=True)
 
     def switch_language(self, language: str = "en_US"):

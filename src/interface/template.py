@@ -27,7 +27,10 @@ if TYPE_CHECKING:
     from ..config import Parameter
     from ..testers import Params
 
-__all__ = ["API", "APITikTok", ]
+__all__ = [
+    "API",
+    "APITikTok",
+]
 
 
 class API:
@@ -72,7 +75,8 @@ class API:
             cookie: str | dict = None,
             proxy: str = None,
             *args,
-            **kwargs):
+            **kwargs,
+    ):
         self.headers = params.headers.copy()
         self.log = params.logger
         self.ab = params.ab
@@ -95,7 +99,9 @@ class API:
         if cookie:
             self.headers["Cookie"] = cookie
 
-    def generate_params(self, ) -> dict:
+    def generate_params(
+            self,
+    ) -> dict:
         return self.params
 
     def generate_data(self, *args, **kwargs) -> dict:
@@ -170,13 +176,8 @@ class API:
                 finished=True,
         ):
             self.check_response(
-                data,
-                data_key,
-                error_text,
-                cursor,
-                has_more,
-                *args,
-                **kwargs)
+                data, data_key, error_text, cursor, has_more, *args, **kwargs
+            )
         else:
             self.log.warning(_("获取{self_text}数据失败").format(self_text=self.text))
 
@@ -192,7 +193,8 @@ class API:
             headers: dict = None,
             callback: Type[Coroutine] = None,
             *args,
-            **kwargs, ):
+            **kwargs,
+    ):
         with self.progress_object() as progress:
             task_id = progress.add_task(
                 _("正在获取{text}数据").format(text=self.text),
@@ -235,7 +237,9 @@ class API:
                 self.append_response(d)
                 self.finished = not data_dict[has_more]
         except KeyError:
-            self.log.error(_("数据解析失败，请告知作者处理: {data}").format(data=data_dict))
+            self.log.error(
+                _("数据解析失败，请告知作者处理: {data}").format(data=data_dict)
+            )
             self.finished = True
 
     def set_referer(self, url: str = None) -> None:
@@ -253,7 +257,10 @@ class API:
             *args,
             **kwargs,
     ):
-        params = self.deal_url_params(params, encryption, )
+        params = self.deal_url_params(
+            params,
+            encryption,
+        )
         match method:
             case "GET":
                 return await self.__request_data_get(
@@ -305,13 +312,8 @@ class API:
     @PrivateRetry.retry
     @capture_error_request
     async def __request_data_post(
-            self,
-            url: str,
-            params: str,
-            data: dict,
-            headers: dict,
-            finished=False,
-            **kwargs):
+            self, url: str, params: str, data: dict, headers: dict, finished=False, **kwargs
+    ):
         # TODO: 临时代理未生效
         self.__record_request_messages(
             url,
@@ -357,22 +359,37 @@ class API:
         self.log.info(f"Headers: {desensitize}", False)
         self.log.info(f"Other: {kwargs}", False)
 
-    def deal_url_params(self, params: dict, method="GET", **kwargs, ) -> str:
+    def deal_url_params(
+            self,
+            params: dict,
+            method="GET",
+            **kwargs,
+    ) -> str:
         if params:
-            params = urlencode(params, quote_via=quote, )
-            params += f"&a_bogus={self.ab.get_value(params, method, )}"
+            params = urlencode(
+                params,
+                quote_via=quote,
+            )
+            params += f"&a_bogus={self.ab.get_value(params, method)}"
             return params
         return ""
 
-    def summary_works(self, ) -> None:
-        self.log.info(_("共获取到 {count} 个{text}").format(count=len(self.response), text=self.text))
+    def summary_works(
+            self,
+    ) -> None:
+        self.log.info(
+            _("共获取到 {count} 个{text}").format(
+                count=len(self.response), text=self.text
+            )
+        )
 
     def progress_object(self):
         return Progress(
             TextColumn(
                 "[progress.description]{task.description}",
                 style=PROGRESS,
-                justify="left"),
+                justify="left",
+            ),
             "•",
             BarColumn(),
             "•",
@@ -433,14 +450,21 @@ class APITikTok(API):
         "msToken": "",
     }
 
-    def __init__(self,
-                 params: Union["Parameter", "Params"],
-                 cookie: str | dict = None,
-                 proxy: str = None,
-                 *args,
-                 **kwargs,
-                 ):
-        super().__init__(params, cookie, proxy, *args, **kwargs, )
+    def __init__(
+            self,
+            params: Union["Parameter", "Params"],
+            cookie: str | dict = None,
+            proxy: str = None,
+            *args,
+            **kwargs,
+    ):
+        super().__init__(
+            params,
+            cookie,
+            proxy,
+            *args,
+            **kwargs,
+        )
         self.headers = params.headers_tiktok.copy()
         self.cookie = cookie or params.cookie_tiktok
         self.client: AsyncClient = params.client_tiktok
@@ -470,11 +494,21 @@ class APITikTok(API):
             **kwargs,
         )
 
-    def deal_url_params(self, params: dict, number=8, **kwargs, ) -> str:
+    def deal_url_params(
+            self,
+            params: dict,
+            number=8,
+            **kwargs,
+    ) -> str:
         if params:
-            params = urlencode(params, quote_via=quote, )
-            params += f"&X-Bogus={self.xb.get_x_bogus(
-                params, number, self.headers.get(
-                    "User-Agent", USERAGENT))}"
+            params = urlencode(
+                params,
+                quote_via=quote,
+            )
+            params += f"&X-Bogus={
+            self.xb.get_x_bogus(
+                params, number, self.headers.get('User-Agent', USERAGENT)
+            )
+            }"
             return params
         return ""

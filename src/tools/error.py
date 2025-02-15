@@ -2,7 +2,10 @@ from ..translation import _
 
 
 class TikTokDownloaderError(Exception):
-    def __init__(self, message: str = "", ):
+    def __init__(
+            self,
+            message: str = "",
+    ):
         self.message = message or _("项目代码错误")
         super().__init__(self.message)
 

@@ -78,8 +78,10 @@ class MsToken:
         "tspFromClient": 0,
         "ulr": 0,
     }
-    TOKEN = ("9cguMjz4GIfQV50B_D49quM-cEyIvWMwWi0gj1bf"
-             "-4YprIjt29ZrAxmDb5oIhmzEhwvcmcC4BR_kEZGmXdS1q7Ad3V94izdpXwtxgPPpozVUzQVm7KDrc5H9nfN3pLw=")
+    TOKEN = (
+        "9cguMjz4GIfQV50B_D49quM-cEyIvWMwWi0gj1bf"
+        "-4YprIjt29ZrAxmDb5oIhmzEhwvcmcC4BR_kEZGmXdS1q7Ad3V94izdpXwtxgPPpozVUzQVm7KDrc5H9nfN3pLw="
+    )
 
     @staticmethod
     def get_fake_ms_token(key="msToken", size=156) -> dict:
@@ -88,8 +90,7 @@ class MsToken:
         """
         base_str = digits + ascii_uppercase + ascii_lowercase
         length = len(base_str) - 1
-        return {key: "".join(base_str[randint(0, length)]
-                             for _ in range(size))}
+        return {key: "".join(base_str[randint(0, length)] for _ in range(size))}
 
     @classmethod
     async def _get_ms_token(
@@ -206,8 +207,10 @@ class MsTokenTikTok(MsToken):
                    "K4NCGUQ3EOMnkxi1E3Ae52ZboKci/rZtqhaOZuwxD+fFXT4hXWA5OxK3++LxsKu0tnVRoufxjvDEIW4MfWqfsOOdnUreBJlB5uq"
                    "xqtYoGlBfgCntLU/F80FDgAfVDUqWr49fuRdOjsuZm",
     }
-    TOKEN = ("DFrAJZtLAY2Lrd8Tvmh5cqHYng42N9aIQxG0Rhos9kNznkm4oSeGUOmPptqIveuXzrQARNP"
-             "-F08uUkIaCQo_kaYSN6d7X5pQIM8pOFckqCgBLbTMqTZC9rEheMlW88EOKPMVBJ7t-CGQDTTfx0k8tEyx")
+    TOKEN = (
+        "DFrAJZtLAY2Lrd8Tvmh5cqHYng42N9aIQxG0Rhos9kNznkm4oSeGUOmPptqIveuXzrQARNP"
+        "-F08uUkIaCQo_kaYSN6d7X5pQIM8pOFckqCgBLbTMqTZC9rEheMlW88EOKPMVBJ7t-CGQDTTfx0k8tEyx"
+    )
 
     @classmethod
     async def get_real_ms_token(
@@ -223,8 +226,10 @@ class MsTokenTikTok(MsToken):
             headers |= {"Cookie": f"{cls.NAME}={token}"}
             params["X-Bogus"] = quote(
                 XBogusTikTok().get_x_bogus(
-                    params, user_agent=headers.get(
-                        "User-Agent", USERAGENT)), safe="")
+                    params, user_agent=headers.get("User-Agent", USERAGENT)
+                ),
+                safe="",
+            )
         return await cls._get_ms_token(
             logger,
             params,
@@ -236,14 +241,28 @@ class MsTokenTikTok(MsToken):
 
 async def test():
     from src.testers import Logger
-    print("抖音",
-          await MsToken.get_real_ms_token(Logger(), PARAMS_HEADERS, proxy=None))
-    print("抖音",
-          await MsToken.get_long_ms_token(Logger(), PARAMS_HEADERS, proxy=None, ))
-    print("TikTok",
-          await MsTokenTikTok.get_real_ms_token(Logger(), PARAMS_HEADERS_TIKTOK, proxy="http://127.0.0.1:10809"))
-    print("TikTok",
-          await MsTokenTikTok.get_long_ms_token(Logger(), PARAMS_HEADERS_TIKTOK, proxy="http://127.0.0.1:10809"))
+
+    print("抖音", await MsToken.get_real_ms_token(Logger(), PARAMS_HEADERS, proxy=None))
+    print(
+        "抖音",
+        await MsToken.get_long_ms_token(
+            Logger(),
+            PARAMS_HEADERS,
+            proxy=None,
+        ),
+    )
+    print(
+        "TikTok",
+        await MsTokenTikTok.get_real_ms_token(
+            Logger(), PARAMS_HEADERS_TIKTOK, proxy="http://127.0.0.1:10809"
+        ),
+    )
+    print(
+        "TikTok",
+        await MsTokenTikTok.get_long_ms_token(
+            Logger(), PARAMS_HEADERS_TIKTOK, proxy="http://127.0.0.1:10809"
+        ),
+    )
 
 
 if __name__ == "__main__":

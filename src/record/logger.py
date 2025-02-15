@@ -22,15 +22,12 @@ if TYPE_CHECKING:
 
 class LoggerManager(BaseLogger):
     """日志记录"""
+
     encode = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
 
     def __init__(
-            self,
-            main_path: Path,
-            console: "ColorfulConsole",
-            root="",
-            folder="",
-            name=""):
+            self, main_path: Path, console: "ColorfulConsole", root="", folder="", name=""
+    ):
         super().__init__(main_path, console, root, folder, name)
 
     def run(
@@ -42,10 +39,12 @@ class LoggerManager(BaseLogger):
             dir_.mkdir()
         file_handler = FileHandler(
             dir_.joinpath(
-                f"{filename}.log" if filename else f"{strftime(
-                    self._name,
-                    localtime())}.log"),
-            encoding=self.encode)
+                f"{filename}.log"
+                if filename
+                else f"{strftime(self._name, localtime())}.log"
+            ),
+            encoding=self.encode,
+        )
         formatter = Formatter(format_, datefmt="%Y-%m-%d %H:%M:%S")
         file_handler.setFormatter(formatter)
         self.log = getLogger(__name__)

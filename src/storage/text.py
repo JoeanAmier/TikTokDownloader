@@ -45,7 +45,7 @@ class BaseTextLogger:
         if not old or mark[-1] == old:
             return new_
         mark[-1] = old
-        old_file = root.joinpath(f'{"_".join(mark)}.{type_}')
+        old_file = root.joinpath(f"{'_'.join(mark)}.{type_}")
         cls.__rename_file(old_file, root.joinpath(f"{new_}.{type_}"))
         return new_
 

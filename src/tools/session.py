@@ -32,7 +32,10 @@ def create_client(
         **kwargs,
 ) -> AsyncClient:
     return AsyncClient(
-        headers=headers or {"User-Agent": user_agent, },
+        headers=headers
+                or {
+                    "User-Agent": user_agent,
+                },
         timeout=timeout,
         follow_redirects=True,
         verify=False,
@@ -47,7 +50,11 @@ def create_client(
 
 
 async def request_params(
-        logger: Union["BaseLogger", "LoggerManager", "Logger",],
+        logger: Union[
+            "BaseLogger",
+            "LoggerManager",
+            "Logger",
+        ],
         url: str,
         method: str = "POST",
         params: dict | str = None,
@@ -60,11 +67,12 @@ async def request_params(
         **kwargs,
 ):
     with Client(
-            headers=headers or {
-                "User-Agent": useragent,
-                "Content-Type": "application/json; charset=utf-8",
-                # "Referer": "https://www.douyin.com/"
-            },
+            headers=headers
+                    or {
+                        "User-Agent": useragent,
+                        "Content-Type": "application/json; charset=utf-8",
+                        # "Referer": "https://www.douyin.com/"
+                    },
             follow_redirects=True,
             timeout=timeout,
             verify=False,
@@ -87,13 +95,18 @@ async def request_params(
 
 @PrivateRetry.retry_lite
 @capture_error_params
-async def request(logger: Union["BaseLogger", "LoggerManager", "Logger",],
-                  client: Client,
-                  method: str,
-                  url: str,
-                  resp="json",
-                  **kwargs,
-                  ):
+async def request(
+        logger: Union[
+            "BaseLogger",
+            "LoggerManager",
+            "Logger",
+        ],
+        client: Client,
+        method: str,
+        url: str,
+        resp="json",
+        **kwargs,
+):
     response = client.request(method, url, **kwargs)
     response.raise_for_status()
     match resp:

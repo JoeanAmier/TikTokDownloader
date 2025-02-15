@@ -17,11 +17,7 @@ __all__ = ["WebId"]
 class WebId:
     NAME = "webid"
     API = "https://mcs.zijieapi.com/webid"
-    PARAMS = {
-        "aid": "6383",
-        "sdk_version": "5.1.18_zip",
-        "device_platform": "web"
-    }
+    PARAMS = {"aid": "6383", "sdk_version": "5.1.18_zip", "device_platform": "web"}
 
     @classmethod
     async def get_web_id(
@@ -34,7 +30,8 @@ class WebId:
         user_agent = headers.get("User-Agent")
         data = (
             f'{{"app_id":6383,"url":"https://www.douyin.com/","user_agent":"{user_agent}","referer":"https://www'
-            f'.douyin.com/","user_unique_id":""}}')
+            f'.douyin.com/","user_unique_id":""}}'
+        )
         if response := await request_params(
                 logger,
                 cls.API,
@@ -51,6 +48,7 @@ class WebId:
 
 async def test():
     from src.testers import Logger
+
     print(await WebId.get_web_id(Logger(), PARAMS_HEADERS, proxy=None))
 
 

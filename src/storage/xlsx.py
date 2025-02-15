@@ -14,6 +14,7 @@ __all__ = ["XLSXLogger"]
 
 class XLSXLogger(BaseTextLogger):
     """XLSX 格式保存数据"""
+
     __type = "xlsx"
 
     def __init__(
@@ -25,7 +26,8 @@ class XLSXLogger(BaseTextLogger):
             old=None,
             name="Solo_Download",
             *args,
-            **kwargs):
+            **kwargs,
+    ):
         super().__init__(*args, **kwargs)
         self.console = console
         self.book = None  # XLSX数据簿
@@ -36,8 +38,7 @@ class XLSXLogger(BaseTextLogger):
         self.field_keys = field_keys
 
     async def __aenter__(self):
-        self.book = load_workbook(
-            self.path) if self.path.exists() else Workbook()
+        self.book = load_workbook(self.path) if self.path.exists() else Workbook()
         self.sheet = self.book.active
         self.title()
         return self

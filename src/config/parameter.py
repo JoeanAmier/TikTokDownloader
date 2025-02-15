@@ -145,7 +145,11 @@ class Parameter:
         self.dynamic_cover = self.__check_bool(dynamic_cover)
         self.original_cover = self.__check_bool(original_cover)
         self.timeout = self.__check_timeout(timeout)
-        self.proxy: str | None = self.__check_proxy(proxy, remark=_("抖音"), enable=self.douyin_platform, )
+        self.proxy: str | None = self.__check_proxy(
+            proxy,
+            remark=_("抖音"),
+            enable=self.douyin_platform,
+        )
         self.proxy_tiktok: str | None = self.__check_proxy_tiktok(proxy_tiktok)
         self.download = self.__check_bool(download)
         self.max_size = self.__check_max_size(max_size)
@@ -154,17 +158,19 @@ class Parameter:
         self.max_pages = self.__check_max_pages(max_pages)
         self.recorder = recorder
         self.accounts_urls: list[SimpleNamespace] = Extractor.generate_data_object(
-            accounts_urls)
-        self.accounts_urls_tiktok: list[SimpleNamespace] = Extractor.generate_data_object(
-            accounts_urls_tiktok)
-        self.mix_urls: list[SimpleNamespace] = Extractor.generate_data_object(
-            mix_urls)
+            accounts_urls
+        )
+        self.accounts_urls_tiktok: list[SimpleNamespace] = (
+            Extractor.generate_data_object(accounts_urls_tiktok)
+        )
+        self.mix_urls: list[SimpleNamespace] = Extractor.generate_data_object(mix_urls)
         self.mix_urls_tiktok: list[SimpleNamespace] = Extractor.generate_data_object(
-            mix_urls_tiktok)
-        self.owner_url: SimpleNamespace = Extractor.generate_data_object(
-            owner_url)
+            mix_urls_tiktok
+        )
+        self.owner_url: SimpleNamespace = Extractor.generate_data_object(owner_url)
         self.owner_url_tiktok: SimpleNamespace = Extractor.generate_data_object(
-            owner_url_tiktok)
+            owner_url_tiktok
+        )
         self.run_command = self.__check_run_command(run_command)
         self.preview = BLANK_PREVIEW
         self.ffmpeg = self.__generate_ffmpeg_object(ffmpeg)
@@ -217,7 +223,10 @@ class Parameter:
     def __check_bool(value: bool, default=False) -> bool:
         return value if isinstance(value, bool) else default
 
-    def __check_cookie_tiktok(self, cookie: dict | str, ) -> [dict, str]:
+    def __check_cookie_tiktok(
+            self,
+            cookie: dict | str,
+    ) -> [dict, str]:
         # if isinstance(cookie, str):
         #     self.console.print(
         #         "参数 cookie_tiktok 应为字典格式！请修改配置文件后重新运行程序！",
@@ -233,16 +242,28 @@ class Parameter:
             self.logger.warning(_("{name} 参数格式错误").format(name=name))
         return {}, ""
 
-    def __get_cookie(self, cookie: dict, ) -> dict:
+    def __get_cookie(
+            self,
+            cookie: dict,
+    ) -> dict:
         return self.__check_cookie(cookie)[0]
 
-    def __get_cookie_cache(self, cookie: str, ) -> str:
+    def __get_cookie_cache(
+            self,
+            cookie: str,
+    ) -> str:
         return self.__check_cookie(cookie)[1]
 
-    def __get_cookie_tiktok(self, cookie: dict, ) -> dict:
+    def __get_cookie_tiktok(
+            self,
+            cookie: dict,
+    ) -> dict:
         return self.__check_cookie_tiktok(cookie)[0]
 
-    def __get_cookie_tiktok_cache(self, cookie: str, ) -> str:
+    def __get_cookie_tiktok_cache(
+            self,
+            cookie: str,
+    ) -> str:
         return self.__check_cookie_tiktok(cookie)[1]
 
     async def __add_cookie(
@@ -259,11 +280,14 @@ class Parameter:
                 #     token,
                 #     **self.proxy_tiktok,
                 # ),
-                {"msToken": self.ms_token_tiktok, },
+                {
+                    "msToken": self.ms_token_tiktok,
+                },
                 await TtWidTikTok.get_tt_wid(
                     self.logger,
                     self.headers_params_tiktok,
-                    self.twc_tiktok or f"{TtWidTikTok.NAME}={cookie.get(TtWidTikTok.NAME, "")}",
+                    self.twc_tiktok
+                    or f"{TtWidTikTok.NAME}={cookie.get(TtWidTikTok.NAME, '')}",
                     proxy=self.proxy_tiktok,
                 ),
             )
@@ -275,7 +299,9 @@ class Parameter:
                 #     token,
                 #     **self.proxy,
                 # ),
-                {"msToken": self.ms_token, },
+                {
+                    "msToken": self.ms_token,
+                },
                 await TtWid.get_tt_wid(
                     self.logger,
                     self.headers_params,
@@ -285,12 +311,18 @@ class Parameter:
         if isinstance(cookie, dict):
             for i in parameters:
                 if isinstance(i, dict):
-                    self.logger.info(f"参数: {i}", False, )
+                    self.logger.info(
+                        f"参数: {i}",
+                        False,
+                    )
                     cookie |= i
         elif isinstance(cookie, str):
             for i in parameters:
                 if isinstance(i, dict):
-                    self.logger.info(f"参数: {i}", False, )
+                    self.logger.info(
+                        f"参数: {i}",
+                        False,
+                    )
                     cookie += cookie_dict_to_str(i)
             return cookie
 
@@ -304,7 +336,9 @@ class Parameter:
             self.logger.info(f"root 参数已设置为 {r}", False)
             return r
         self.logger.warning(
-            _("root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径").format(root=root),
+            _(
+                "root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径"
+            ).format(root=root),
         )
         return self.ROOT
 
@@ -316,12 +350,15 @@ class Parameter:
         return False
 
     def __check_folder_name(self, folder_name: str) -> str:
-        if folder_name := self.CLEANER.filter_name(folder_name, ):
+        if folder_name := self.CLEANER.filter_name(
+                folder_name,
+        ):
             self.logger.info(f"folder_name 参数已设置为 {folder_name}", False)
             return folder_name
         self.logger.warning(
-            _("folder_name 参数 {folder_name} 不是有效的文件夹名称，程序将使用默认值：Download").format(
-                folder_name=folder_name),
+            _(
+                "folder_name 参数 {folder_name} 不是有效的文件夹名称，程序将使用默认值：Download"
+            ).format(folder_name=folder_name),
         )
         return "Download"
 
@@ -332,8 +369,9 @@ class Parameter:
             return name_keys
         else:
             self.logger.warning(
-                _("name_format 参数 {name_format} 设置错误，程序将使用默认值：创建时间 作品类型 账号昵称 作品描述").format(
-                    name_format=name_format)
+                _(
+                    "name_format 参数 {name_format} 设置错误，程序将使用默认值：创建时间 作品类型 账号昵称 作品描述"
+                ).format(name_format=name_format)
             )
             return ["create_time", "type", "nickname", "desc"]
 
@@ -344,20 +382,28 @@ class Parameter:
             return date_format
         except ValueError:
             self.logger.warning(
-                _("date_format 参数 {date_format} 设置错误，程序将使用默认值：年-月-日 时:分:秒").format(
-                    date_format=date_format),
+                _(
+                    "date_format 参数 {date_format} 设置错误，程序将使用默认值：年-月-日 时:分:秒"
+                ).format(date_format=date_format),
             )
             return "%Y-%m-%d %H:%M:%S"
 
     def __check_split(self, split: str) -> str:
         for i in split:
             if i in self.CLEANER.rule.keys():
-                self.logger.warning(_("split 参数 {split} 包含非法字符，程序将使用默认值：-").format(split=split))
+                self.logger.warning(
+                    _("split 参数 {split} 包含非法字符，程序将使用默认值：-").format(
+                        split=split
+                    )
+                )
                 return "-"
         self.logger.info(f"split 参数已设置为 {split}", False)
         return split
 
-    def __check_proxy_tiktok(self, proxy: str | None | dict, ) -> str | None:
+    def __check_proxy_tiktok(
+            self,
+            proxy: str | None | dict,
+    ) -> str | None:
         return self.__check_proxy(
             proxy,
             "https://www.tiktok.com/explore",
@@ -375,7 +421,11 @@ class Parameter:
         if enable and proxy:
             # 暂时兼容旧版配置；未来将会移除
             if isinstance(proxy, dict):
-                self.console.warning(_("{remark}代理参数应为字符串格式，未来不再支持字典格式").format(remark=remark))
+                self.console.warning(
+                    _("{remark}代理参数应为字符串格式，未来不再支持字典格式").format(
+                        remark=remark
+                    )
+                )
                 if not (proxy := proxy.get("https://")):
                     return
             try:
@@ -387,16 +437,26 @@ class Parameter:
                     proxy=proxy,
                 )
                 response.raise_for_status()
-                self.logger.info(_("{remark}代理 {proxy} 测试成功").format(remark=remark, proxy=proxy))
+                self.logger.info(
+                    _("{remark}代理 {proxy} 测试成功").format(
+                        remark=remark, proxy=proxy
+                    )
+                )
                 return proxy
             except TimeoutException:
-                self.logger.warning(_("{remark}代理 {proxy} 测试超时").format(remark=remark, proxy=proxy))
+                self.logger.warning(
+                    _("{remark}代理 {proxy} 测试超时").format(
+                        remark=remark, proxy=proxy
+                    )
+                )
             except (
                     RequestError,
                     HTTPStatusError,
             ) as e:
                 self.logger.warning(
-                    _("{remark}代理 {proxy} 测试失败：{error}").format(remark=remark, proxy=proxy, error=e),
+                    _("{remark}代理 {proxy} 测试失败：{error}").format(
+                        remark=remark, proxy=proxy, error=e
+                    ),
                 )
 
     def __check_max_size(self, max_size: int) -> int:
@@ -421,7 +481,9 @@ class Parameter:
             self.logger.info(f"max_retry 参数已设置为 {max_retry}", False)
             return max_retry
         self.logger.warning(
-            _("max_retry 参数 {max_retry} 设置错误，程序将使用默认值：5").format(max_retry=max_retry),
+            _("max_retry 参数 {max_retry} 设置错误，程序将使用默认值：5").format(
+                max_retry=max_retry
+            ),
         )
         return 5
 
@@ -431,7 +493,9 @@ class Parameter:
             return max_pages
         elif max_pages != 0:
             self.logger.warning(
-                _("max_pages 参数 {max_pages} 设置错误，程序将使用默认值：99999").format(max_pages=max_pages),
+                _(
+                    "max_pages 参数 {max_pages} 设置错误，程序将使用默认值：99999"
+                ).format(max_pages=max_pages),
             )
         return 99999
 
@@ -439,7 +503,11 @@ class Parameter:
         if isinstance(timeout, (int, float)) and timeout > 0:
             self.logger.info(f"timeout 参数已设置为 {timeout}", False)
             return timeout
-        self.logger.warning(_("timeout 参数 {timeout} 设置错误，程序将使用默认值：10").format(timeout=timeout))
+        self.logger.warning(
+            _("timeout 参数 {timeout} 设置错误，程序将使用默认值：10").format(
+                timeout=timeout
+            )
+        )
         return 10
 
     def __check_storage_format(self, storage_format: str) -> str:
@@ -447,11 +515,14 @@ class Parameter:
             self.logger.info(f"storage_format 参数已设置为 {storage_format}", False)
             return storage_format
         if not storage_format:
-            self.logger.info("storage_format 参数未设置，程序不会储存任何数据至文件", False)
+            self.logger.info(
+                "storage_format 参数未设置，程序不会储存任何数据至文件", False
+            )
         else:
             self.logger.warning(
-                _("storage_format 参数 {storage_format} 设置错误，程序默认不会储存任何数据至文件").format(
-                    storage_format=storage_format),
+                _(
+                    "storage_format 参数 {storage_format} 设置错误，程序默认不会储存任何数据至文件"
+                ).format(storage_format=storage_format),
             )
         return ""
 
@@ -462,25 +533,32 @@ class Parameter:
     async def update_params(self) -> None:
         self.set_uif_id()
         if self.douyin_platform:
-            self.console.info(_("正在更新抖音参数，请稍等..."), )
+            self.console.info(
+                _("正在更新抖音参数，请稍等..."),
+            )
             await self.__get_token_params()
             API.params["msToken"] = self.ms_token
             await self.__update_cookie(
-                self.headers,
-                self.cookie,
-                self.cookie_cache,
-                False)
-            self.console.info(_("抖音参数更新完毕！"), )
+                self.headers, self.cookie, self.cookie_cache, False
+            )
+            self.console.info(
+                _("抖音参数更新完毕！"),
+            )
         if self.tiktok_platform:
-            self.console.info("正在更新 TikTok 参数，请稍等...", )
+            self.console.info(
+                "正在更新 TikTok 参数，请稍等...",
+            )
             await self.__get_token_params_tiktok()
             APITikTok.params["msToken"] = self.ms_token_tiktok
             await self.__update_cookie(
                 self.headers_tiktok,
                 self.cookie_tiktok,
                 self.cookie_tiktok_cache,
-                True, )
-            self.console.info(_("TikTok 参数更新完毕！"), )
+                True,
+            )
+            self.console.info(
+                _("TikTok 参数更新完毕！"),
+            )
 
     async def __update_cookie(
             self,
@@ -493,16 +571,20 @@ class Parameter:
             await self.__add_cookie(cookie, tiktok, cookie.get("msToken"))
             headers["Cookie"] = cookie_dict_to_str(cookie)
         elif cache:
-            headers["Cookie"] = await self.__add_cookie(cache, tiktok, )
+            headers["Cookie"] = await self.__add_cookie(
+                cache,
+                tiktok,
+            )
 
-    def set_headers_cookie(self, ) -> None:
+    def set_headers_cookie(
+            self,
+    ) -> None:
         if self.cookie:
             self.headers["Cookie"] = cookie_dict_to_str(self.cookie)
         elif self.cookie_cache:
             self.headers["Cookie"] = self.cookie_cache
         if self.cookie_tiktok:
-            self.headers_tiktok["Cookie"] = cookie_dict_to_str(
-                self.cookie_tiktok)
+            self.headers_tiktok["Cookie"] = cookie_dict_to_str(self.cookie_tiktok)
         elif self.cookie_tiktok_cache:
             self.headers_tiktok["Cookie"] = self.cookie_tiktok_cache
 
@@ -515,7 +597,9 @@ class Parameter:
 
     def __update_download_headers_tiktok(self) -> None:
         key = "tt_chain_token"
-        if tk := self.cookie_tiktok.get(key, ):
+        if tk := self.cookie_tiktok.get(
+                key,
+        ):
             self.headers_download_tiktok["Cookie"] = f"{key}={tk}"
         else:
             self.headers_download_tiktok["Cookie"] = self.cookie_tiktok_cache
@@ -531,55 +615,85 @@ class Parameter:
     async def __get_token_params(self):
         if not self.douyin_platform:
             return
-        if not any((self.cookie, self.cookie_cache,)):
+        if not any(
+                (
+                        self.cookie,
+                        self.cookie_cache,
+                )
+        ):
             self.logger.warning(_("抖音 cookie 参数未设置，相应功能可能无法正常使用"))
             return
         # if not (m := self.cookie.get("msToken")):
         #     self.logger.warning("抖音 cookie 缺少必需的键值对，请尝试重新写入 cookie")
         #     return
-        if (d := await MsToken.get_real_ms_token(
+        if d := await MsToken.get_real_ms_token(
                 self.logger,
                 self.headers_params,
                 # m,
                 proxy=self.proxy,
-        )):
+        ):
             # self.cookie |= d
             self.ms_token = d[MsToken.NAME]
-            self.logger.info(f"抖音 MsToken 请求值: {self.ms_token}", False, )
+            self.logger.info(
+                f"抖音 MsToken 请求值: {self.ms_token}",
+                False,
+            )
         else:
             self.ms_token = self.cookie.get("msToken", "")
-            self.logger.info(f"抖音 MsToken 本地值: {self.ms_token}", False, )
+            self.logger.info(
+                f"抖音 MsToken 本地值: {self.ms_token}",
+                False,
+            )
 
     async def __get_token_params_tiktok(self):
         if not self.tiktok_platform:
             return
-        if not any((self.cookie_tiktok, self.cookie_tiktok_cache,)):
+        if not any(
+                (
+                        self.cookie_tiktok,
+                        self.cookie_tiktok_cache,
+                )
+        ):
             self.logger.warning(_("TikTok cookie 参数未设置，相应功能可能无法正常使用"))
             return
         if not (m := self.cookie_tiktok.get("msToken")):
-            self.logger.warning(_("TikTok cookie 缺少必需的键值对，请尝试重新写入 cookie"))
+            self.logger.warning(
+                _("TikTok cookie 缺少必需的键值对，请尝试重新写入 cookie")
+            )
             return
-        if (d := await MsTokenTikTok.get_long_ms_token(
+        if d := await MsTokenTikTok.get_long_ms_token(
                 self.logger,
                 self.headers_params_tiktok,
                 m,
                 proxy=self.proxy_tiktok,
-        )):
+        ):
             # self.cookie_tiktok |= d
             self.ms_token_tiktok = d[MsTokenTikTok.NAME]
-            self.logger.info(f"TikTok MsToken 请求值: {self.ms_token}", False, )
+            self.logger.info(
+                f"TikTok MsToken 请求值: {self.ms_token}",
+                False,
+            )
         else:
             self.ms_token = self.cookie_tiktok.get("msToken", "")
-            self.logger.info(f"TikTok MsToken 本地值: {self.ms_token}", False, )
+            self.logger.info(
+                f"TikTok MsToken 本地值: {self.ms_token}",
+                False,
+            )
 
-    def set_uif_id(self, ) -> None:
+    def set_uif_id(
+            self,
+    ) -> None:
         self.deal_uif_id()
         self.deal_uif_id_tiktok()
 
-    def deal_uif_id(self, ) -> None:
+    def deal_uif_id(
+            self,
+    ) -> None:
         API.params["uifid"] = self.cookie.get("UIFID", "")
 
-    def deal_uif_id_tiktok(self, ) -> None:
+    def deal_uif_id_tiktok(
+            self,
+    ) -> None:
         # APITikTok.params["uifid"] = self.cookie_tiktok.get("UIFID", "")
         pass
 
@@ -618,7 +732,10 @@ class Parameter:
             "ffmpeg": self.ffmpeg.path or "",
         }
 
-    async def update_settings_data(self, data: dict, ) -> dict:
+    async def update_settings_data(
+            self,
+            data: dict,
+    ) -> dict:
         keys = list(self.check_rules.keys())[6:]
         for key, value in data.items():
             if key in keys:
@@ -632,13 +749,7 @@ class Parameter:
     async def __update_cookie_data(self, data: dict) -> None:
         for i in ("cookie", "cookie_tiktok"):
             if c := data.get(i):
-                setattr(
-                    self,
-                    i,
-                    self.cookie_object.extract(
-                        c,
-                        False,
-                        key=i))
+                setattr(self, i, self.cookie_object.extract(c, False, key=i))
         await self.update_params()
 
     def __check_accounts_urls(self, data: list[dict]) -> list[dict]:
@@ -657,7 +768,10 @@ class Parameter:
     def __generate_folders(self):
         self.cache.mkdir(exist_ok=True)
 
-    def __check_browser_info(self, info: dict, ):
+    def __check_browser_info(
+            self,
+            info: dict,
+    ):
         self.logger.info(f"抖音浏览器信息: {info}", False)
         for j in (
                 self.headers,
@@ -665,30 +779,39 @@ class Parameter:
                 self.headers_params,
                 self.headers_qrcode,
         ):
-            if v := info.get("User-Agent", ):
+            if v := info.get(
+                    "User-Agent",
+            ):
                 j["User-Agent"] = v
         for i in (
-                'pc_libra_divert',
-                'browser_platform',
-                'browser_name',
-                'browser_version',
-                'engine_name',
-                'engine_version',
-                'os_name',
-                'os_version',
+                "pc_libra_divert",
+                "browser_platform",
+                "browser_name",
+                "browser_version",
+                "engine_name",
+                "engine_version",
+                "os_name",
+                "os_version",
                 # 'webid',
         ):
-            if v := info.get(i, ):
+            if v := info.get(
+                    i,
+            ):
                 API.params[i] = v
 
-    def __check_browser_info_tiktok(self, info: dict, ):
+    def __check_browser_info_tiktok(
+            self,
+            info: dict,
+    ):
         self.logger.info(f"TikTok 浏览器信息: {info}", False)
         for j in (
                 self.headers_tiktok,
                 self.headers_download_tiktok,
                 self.headers_params_tiktok,
         ):
-            if v := info.get("User-Agent", ):
+            if v := info.get(
+                    "User-Agent",
+            ):
                 j["User-Agent"] = v
         for i in (
                 "app_language",
@@ -704,7 +827,9 @@ class Parameter:
                 "webcast_language",
                 "device_id",
         ):
-            if v := info.get(i, ):
+            if v := info.get(
+                    i,
+            ):
                 APITikTok.params[i] = v
 
     def __check_truncate(self, truncate: int) -> int:
@@ -712,13 +837,17 @@ class Parameter:
             self.logger.info(f"truncate 参数已设置为 {truncate}", False)
             return truncate
         self.logger.warning(
-            _("truncate 参数 {truncate} 设置错误，程序将使用默认值：50").format(truncate=truncate),
+            _("truncate 参数 {truncate} 设置错误，程序将使用默认值：50").format(
+                truncate=truncate
+            ),
         )
         return 50
 
     def __check_cookie_state(self, tiktok=False) -> bool:
         if tiktok:
             return (self.cookie_object.STATE_KEY in self.cookie_tiktok) or (
-                    self.cookie_object.STATE_KEY in self.cookie_tiktok_cache)
+                    self.cookie_object.STATE_KEY in self.cookie_tiktok_cache
+            )
         return (self.cookie_object.STATE_KEY in self.cookie) or (
-                self.cookie_object.STATE_KEY in self.cookie_cache)
+                self.cookie_object.STATE_KEY in self.cookie_cache
+        )

@@ -1,8 +1,8 @@
 from flask import render_template
 from flask import request
 from flask import url_for
-
 from src.DataAcquirer import Live
+
 from .main_complete import TikTok
 
 __all__ = ["WebUI"]
@@ -21,13 +21,15 @@ class WebUI(TikTok):
             "music": False,
             "origin": False,
             "dynamic": False,
-            "preview": self.preview}
+            "preview": self.preview,
+        }
         self.error_live = {
             "text": "提取直播数据失败！",
             "flv": {},
             "m3u8": {},
             "best": "",
-            "preview": self.preview}
+            "preview": self.preview,
+        }
 
     @staticmethod
     def _convert_bool(data: dict):
@@ -36,12 +38,15 @@ class WebUI(TikTok):
                 "music",
                 "dynamic_cover",
                 "original_cover",
-                "download"):
+                "download",
+        ):
             data[i] = {"on": True, None: False}[data.get(i)]
-        for i, j in (("max_size", 0),
-                     ("chunk", 1024 * 1024),
-                     ("max_retry", 5),
-                     ("max_pages", 0),):
+        for i, j in (
+                ("max_size", 0),
+                ("chunk", 1024 * 1024),
+                ("max_retry", 5),
+                ("max_pages", 0),
+        ):
             try:
                 data[i] = int(data[i])
             except ValueError:
@@ -60,8 +65,15 @@ class WebUI(TikTok):
             return {}
         root, params, logger = self.record.run(self.parameter)
         with logger(root, console=self.console, **params) as record:
-            return self.generate_works_data(d) if (d := self.input_links_acquisition(
-                tiktok, ids[:1], record, not download)) else {}
+            return (
+                self.generate_works_data(d)
+                if (
+                    d := self.input_links_acquisition(
+                        tiktok, ids[:1], record, not download
+                    )
+                )
+                else {}
+            )
 
     def generate_works_data(self, data: list[dict] | str) -> dict:
         if isinstance(data, str):
@@ -71,18 +83,22 @@ class WebUI(TikTok):
             "text": "获取作品数据成功！",
             "author": data["nickname"],
             "describe": data["desc"],
-            "download": data["downloads"] if data["type"] == "视频" else (
-                d := data["downloads"].split()),
+            "download": data["downloads"]
+            if data["type"] == "视频"
+            else (d := data["downloads"].split()),
             "music": data["music_url"],
             "origin": data["origin_cover"],
             "dynamic": data["dynamic_cover"],
-            "preview": data["origin_cover"] or d[0]}
+            "preview": data["origin_cover"] or d[0],
+        }
 
     def deal_live_data(self, url: str) -> dict:
         params = self._generate_live_params(*self.links.live(url))
         if not params:
             return {}
-        live_data = [Live(self.parameter, **params[0]).run(), ]
+        live_data = [
+            Live(self.parameter, **params[0]).run(),
+        ]
         live_data = self.extractor.run(live_data, None, "live")[0]
         if not all(live_data):
             return {}
@@ -93,31 +109,34 @@ class WebUI(TikTok):
     @staticmethod
     def generate_live_data(data: dict) -> dict:
         return {
-            "text": "\n".join((f"直播标题: {data["title"]}",
-                               f"主播昵称: {data["nickname"]}",
-                               f"在线观众: {data["user_count_str"]}",
-                               f"观看次数: {data["total_user_str"]}",)),
+            "text": "\n".join(
+                (
+                    f"直播标题: {data['title']}",
+                    f"主播昵称: {data['nickname']}",
+                    f"在线观众: {data['user_count_str']}",
+                    f"观看次数: {data['total_user_str']}",
+                )
+            ),
             "flv": data["flv_pull_url"],
             "m3u8": data["hls_pull_url_map"],
             "best": list(data["flv_pull_url"].values())[0],
-            "preview": data["cover"]}
+            "preview": data["cover"],
+        }
 
     def run_server(self, app):
-
         @app.route("/", methods=["GET"])
         def index():
             return render_template(
-                'index.html',
-                **self.parameter.get_settings_data(),
-                preview=self.preview)
+                "index.html", **self.parameter.get_settings_data(), preview=self.preview
+            )
 
-        @app.route('/settings/', methods=['POST'])
+        @app.route("/settings/", methods=["POST"])
         def settings():
             """保存配置并重新加载首页"""
             self.update_settings(request.json, False)
             return url_for("index")
 
-        @app.route('/single/', methods=['POST'])
+        @app.route("/single/", methods=["POST"])
         def single():
             url = request.json.get("url")
             download = request.json.get("download", False)
@@ -125,7 +144,7 @@ class WebUI(TikTok):
                 return self.error_works
             return self.deal_single_works(url, download) or self.error_works
 
-        @app.route('/live/', methods=['POST'])
+        @app.route("/live/", methods=["POST"])
         def live():
             url = request.json.get("url")
             if not url:

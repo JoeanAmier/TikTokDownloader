@@ -4,9 +4,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 VERSION_MAJOR = 5
 VERSION_MINOR = 6
 VERSION_BETA = True
-__version__ = f"{VERSION_MAJOR}.{VERSION_MINOR}.{"beta" if VERSION_BETA else "stable"}"
-PROJECT_NAME = f"TikTokDownloader V{VERSION_MAJOR}.{
-VERSION_MINOR}{" Beta" if VERSION_BETA else ""}"
+__version__ = f"{VERSION_MAJOR}.{VERSION_MINOR}.{'beta' if VERSION_BETA else 'stable'}"
+PROJECT_NAME = f"TikTokDownloader V{VERSION_MAJOR}.{VERSION_MINOR} {
+'Beta' if VERSION_BETA else 'Stable'
+}"
 
 REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
 LICENCE = "GNU General Public License v3.0"
@@ -18,9 +19,12 @@ TIMEOUT = 10
 
 PHONE_HEADERS = {
     "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) "
-                  "CriOS/125.0.6422.51 Mobile/15E148 Safari/604.1", }
-USERAGENT = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 "
-             "Safari/537.36")
+                  "CriOS/125.0.6422.51 Mobile/15E148 Safari/604.1",
+}
+USERAGENT = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 "
+    "Safari/537.36"
+)
 REFERER = "https://www.douyin.com/?recommend=1"
 REFERER_TIKTOK = "https://www.tiktok.com/explore"
 PARAMS_HEADERS = {
@@ -43,10 +47,10 @@ DATA_HEADERS_TIKTOK = DATA_HEADERS | {
     "Referer": REFERER_TIKTOK,
 }
 DOWNLOAD_HEADERS = {
-    'Accept': '*/*',
-    'Range': 'bytes=0-',
-    'Referer': REFERER,
-    'User-Agent': USERAGENT,
+    "Accept": "*/*",
+    "Range": "bytes=0-",
+    "Referer": REFERER,
+    "User-Agent": USERAGENT,
 }
 DOWNLOAD_HEADERS_TIKTOK = DOWNLOAD_HEADERS | {
     "Referer": REFERER_TIKTOK,

@@ -6,9 +6,7 @@ ROOT = Path(__file__).resolve().parent
 
 def scan_directory():
     return [
-        item.joinpath("LC_MESSAGES/tk.po")
-        for item in ROOT.iterdir()
-        if item.is_dir()
+        item.joinpath("LC_MESSAGES/tk.po") for item in ROOT.iterdir() if item.is_dir()
     ]
 
 
@@ -18,7 +16,7 @@ def generate_map(files: list[Path]):
 
 def generate_mo(maps: list[tuple[Path, Path]]):
     for i, j in maps:
-        command = f"msgfmt --check -o \"{j}\" \"{i}\""
+        command = f'msgfmt --check -o "{j}" "{i}"'
         print(run(command, shell=True, text=True))
 
 

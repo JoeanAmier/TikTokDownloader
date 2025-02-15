@@ -53,11 +53,10 @@ async def suspend(count: int, console: "ColorfulConsole") -> None:
     if not count % batches:
         rest_time = 60 * 5  # 根据实际需求修改
         console.print(
-            _("程序连续处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，"
-              "程序已经暂停运行，将在 {rest_time} 秒后恢复运行！").format(
-                batches=batches,
-                rest_time=rest_time
-            ),
+            _(
+                "程序连续处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，"
+                "程序已经暂停运行，将在 {rest_time} 秒后恢复运行！"
+            ).format(batches=batches, rest_time=rest_time),
         )
         await sleep(rest_time)
     # 禁用该函数

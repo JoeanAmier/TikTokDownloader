@@ -117,7 +117,8 @@ class Extractor:
         def depth_conversion(element):
             if isinstance(element, dict):
                 return SimpleNamespace(
-                    **{k: depth_conversion(v) for k, v in element.items()})
+                    **{k: depth_conversion(v) for k, v in element.items()}
+                )
             elif isinstance(element, list):
                 return [depth_conversion(item) for item in element]
             else:
@@ -184,7 +185,11 @@ class Extractor:
             earliest=earliest,
             latest=latest,
         )
-        self.__platform_classify_detail(data, container, tiktok, )
+        self.__platform_classify_detail(
+            data,
+            container,
+            tiktok,
+        )
         container.all_data = self.__clean_extract_data(
             container.all_data,
             self.detail_necessary_keys,
@@ -197,12 +202,17 @@ class Extractor:
         return container.all_data
 
     @staticmethod
-    def __condition_filter(container: SimpleNamespace, ):
+    def __condition_filter(
+            container: SimpleNamespace,
+    ):
         """自定义筛选作品"""
         result = [i for i in container.all_data if condition_filter(i)]
         container.all_data = result
 
-    def __summary_detail(self, data: list[dict], ):
+    def __summary_detail(
+            self,
+            data: list[dict],
+    ):
         """汇总作品数量"""
         self.log.info(_("筛选处理后作品数量: {count}").format(count=len(data)))
 
@@ -244,11 +254,7 @@ class Extractor:
             data: SimpleNamespace,
     ):
         if e := self.safe_extract(data, "anchor_info"):
-            extra = dumps(
-                e,
-                ensure_ascii=False,
-                indent=2,
-                default=lambda x: vars(x))
+            extra = dumps(e, ensure_ascii=False, indent=2, default=lambda x: vars(x))
         else:
             extra = ""
         item["extra"] = extra
@@ -287,7 +293,10 @@ class Extractor:
     def __clean_description(self, desc: str) -> str:
         return self.cleaner.clear_spaces(self.cleaner.filter(desc))
 
-    def __format_date(self, data: int, ) -> str:
+    def __format_date(
+            self,
+            data: int,
+    ) -> str:
         return strftime(
             self.date_format,
             localtime(data or None),
@@ -299,9 +308,12 @@ class Extractor:
             data: SimpleNamespace,
     ) -> None:
         item["id"] = self.safe_extract(data, "aweme_id")
-        item["desc"] = self.__clean_description(
-            self.__extract_description(data),
-        ) or item["id"]
+        item["desc"] = (
+                self.__clean_description(
+                    self.__extract_description(data),
+                )
+                or item["id"]
+        )
         item["create_timestamp"] = self.safe_extract(data, "create_time")
         item["create_time"] = self.__format_date(item["create_timestamp"])
         self.__extract_text_extra(item, data)
@@ -313,9 +325,13 @@ class Extractor:
             data: SimpleNamespace,
     ) -> None:
         item["id"] = self.safe_extract(data, "id")
-        item["desc"] = self.__clean_description(
-            self.__extract_description(data)) or item["id"]
-        item["create_timestamp"] = self.safe_extract(data, "createTime", )
+        item["desc"] = (
+                self.__clean_description(self.__extract_description(data)) or item["id"]
+        )
+        item["create_timestamp"] = self.safe_extract(
+            data,
+            "createTime",
+        )
         item["create_time"] = self.__format_date(item["create_timestamp"])
         self.__extract_text_extra_tiktok(item, data)
         self.__classifying_detail_tiktok(item, data)
@@ -329,7 +345,11 @@ class Extractor:
         if images := self.safe_extract(data, "images"):
             self.__extract_image_info(item, data, images)
         else:
-            self.__extract_video_info(item, data, _("视频"), )
+            self.__extract_video_info(
+                item,
+                data,
+                _("视频"),
+            )
 
     def __classifying_detail_tiktok(
             self,
@@ -339,7 +359,11 @@ class Extractor:
         if images := self.safe_extract(data, "imagePost.images"):
             self.__extract_image_info_tiktok(item, data, images)
         else:
-            self.__extract_video_info_tiktok(item, data, _("视频"), )
+            self.__extract_video_info_tiktok(
+                item,
+                data,
+                _("视频"),
+            )
 
     def __extract_additional_info(
             self,
@@ -389,19 +413,32 @@ class Extractor:
                 self.safe_extract(
                     i,
                     "video",
-                ) for i in images
+                )
+                for i in images
         ):
-            self.__set_blank_data(item, data, _("实况"), )
+            self.__set_blank_data(
+                item,
+                data,
+                _("实况"),
+            )
             item["downloads"] = [
-                self.__classify_slides_item(i, ) for i in images
+                self.__classify_slides_item(
+                    i,
+                )
+                for i in images
             ]
         else:
-            self.__set_blank_data(item, data, _("图集"), )
+            self.__set_blank_data(
+                item,
+                data,
+                _("图集"),
+            )
             item["downloads"] = [
                 self.safe_extract(
                     i,
-                    f'url_list[{IMAGE_INDEX}]',
-                ) for i in images
+                    f"url_list[{IMAGE_INDEX}]",
+                )
+                for i in images
             ]
 
     def __extract_image_info_tiktok(
@@ -410,12 +447,17 @@ class Extractor:
             data: SimpleNamespace,
             images: list,
     ) -> None:
-        self.__set_blank_data(item, data, _("图集"), )
+        self.__set_blank_data(
+            item,
+            data,
+            _("图集"),
+        )
         item["downloads"] = [
             self.safe_extract(
                 i,
                 f"imageURL.urlList[{IMAGE_TIKTOK_INDEX}]",
-            ) for i in images
+            )
+            for i in images
         ]
 
     def __set_blank_data(
@@ -438,19 +480,31 @@ class Extractor:
             type_=_("视频"),
     ) -> None:
         item["type"] = type_
-        item["height"], item["width"], item["downloads"] = self.__extract_video_download(data, )
+        item["height"], item["width"], item["downloads"] = (
+            self.__extract_video_download(
+                data,
+            )
+        )
         item["duration"] = self.time_conversion(
-            self.safe_extract(data, "video.duration", 0))
-        item["uri"] = self.safe_extract(
-            data, "video.play_addr.uri")
+            self.safe_extract(data, "video.duration", 0)
+        )
+        item["uri"] = self.safe_extract(data, "video.play_addr.uri")
         self.__extract_cover(item, data, True)
 
-    def __classify_slides_item(self, item: SimpleNamespace, ) -> str:
+    def __classify_slides_item(
+            self,
+            item: SimpleNamespace,
+    ) -> str:
         if self.safe_extract(item, "video"):
-            return self.__extract_video_download(item, )[-1]
-        return self.safe_extract(item, f'url_list[{IMAGE_INDEX}]')
+            return self.__extract_video_download(
+                item,
+            )[-1]
+        return self.safe_extract(item, f"url_list[{IMAGE_INDEX}]")
 
-    def __extract_video_download(self, data: SimpleNamespace, ) -> tuple[int, int, str]:
+    def __extract_video_download(
+            self,
+            data: SimpleNamespace,
+    ) -> tuple[int, int, str]:
         bit_rate: list[SimpleNamespace] = self.safe_extract(
             data,
             "video.bit_rate",
@@ -520,7 +574,11 @@ class Extractor:
         #     data,
         #     "video.playAddr",
         # )  # 视频文件大小优先
-        item["height"], item["width"], item["downloads"] = self.__extract_video_download_tiktok(data, )  # 视频分辨率优先
+        item["height"], item["width"], item["downloads"] = (
+            self.__extract_video_download_tiktok(
+                data,
+            )
+        )  # 视频分辨率优先
         item["duration"] = self.time_conversion_tiktok(
             self.safe_extract(
                 data,
@@ -529,11 +587,15 @@ class Extractor:
             )
         )
         item["uri"] = self.safe_extract(
-            data, f"video.bitrateInfo[{BITRATE_INFO_TIKTOK_INDEX}].PlayAddr.Uri",
+            data,
+            f"video.bitrateInfo[{BITRATE_INFO_TIKTOK_INDEX}].PlayAddr.Uri",
         )
         self.__extract_cover_tiktok(item, data, True)
 
-    def __extract_video_download_tiktok(self, data: SimpleNamespace, ) -> tuple[int, int, str]:
+    def __extract_video_download_tiktok(
+            self,
+            data: SimpleNamespace,
+    ) -> tuple[int, int, str]:
         bitrate_info: list[SimpleNamespace] = self.safe_extract(
             data,
             "video.bitrateInfo",
@@ -599,8 +661,7 @@ class Extractor:
     def time_conversion_tiktok(seconds: int) -> str:
         minutes, seconds = divmod(seconds, 60)
         hours, minutes = divmod(minutes, 60)
-        return '{:02d}:{:02d}:{:02d}'.format(
-            int(hours), int(minutes), int(seconds))
+        return "{:02d}:{:02d}:{:02d}".format(int(hours), int(minutes), int(seconds))
 
     def __extract_text_extra(
             self,
@@ -610,9 +671,7 @@ class Extractor:
         """作品标签"""
         text = [
             self.safe_extract(i, "hashtag_name")
-            for i in self.safe_extract(
-                data, "text_extra", []
-            )
+            for i in self.safe_extract(data, "text_extra", [])
         ]
         item["text_extra"] = [i for i in text if i]
 
@@ -624,9 +683,7 @@ class Extractor:
         """作品标签"""
         text = [
             self.safe_extract(i, "hashtagName")
-            for i in self.safe_extract(
-                data, "textExtra", []
-            )
+            for i in self.safe_extract(data, "textExtra", [])
         ]
         item["text_extra"] = [i for i in text if i]
 
@@ -639,10 +696,12 @@ class Extractor:
         if has:
             # 动态封面图链接
             item["dynamic_cover"] = self.safe_extract(
-                data, f"video.dynamic_cover.url_list[{DYNAMIC_COVER_INDEX}]")
+                data, f"video.dynamic_cover.url_list[{DYNAMIC_COVER_INDEX}]"
+            )
             # 静态封面图链接
             item["origin_cover"] = self.safe_extract(
-                data, f"video.origin_cover.url_list[{ORIGIN_COVER_INDEX}]")
+                data, f"video.origin_cover.url_list[{ORIGIN_COVER_INDEX}]"
+            )
         else:
             item["dynamic_cover"], item["origin_cover"] = "", ""
 
@@ -654,11 +713,9 @@ class Extractor:
     ) -> None:
         if has:
             # 动态封面图链接
-            item["dynamic_cover"] = self.safe_extract(
-                data, "video.dynamicCover")
+            item["dynamic_cover"] = self.safe_extract(data, "video.dynamicCover")
             # 静态封面图链接
-            item["origin_cover"] = self.safe_extract(
-                data, "video.originCover")
+            item["origin_cover"] = self.safe_extract(data, "video.originCover")
         else:
             item["dynamic_cover"], item["origin_cover"] = "", ""
 
@@ -672,13 +729,13 @@ class Extractor:
             if tiktok:
                 author = self.safe_extract(music_data, "authorName")
                 title = self.safe_extract(music_data, "title")
-                url = self.safe_extract(
-                    music_data, "playUrl")
+                url = self.safe_extract(music_data, "playUrl")
             else:
                 author = self.safe_extract(music_data, "author")
                 title = self.safe_extract(music_data, "title")
                 url = self.safe_extract(
-                    music_data, f"play_url.url_list[{MUSIC_INDEX}]",
+                    music_data,
+                    f"play_url.url_list[{MUSIC_INDEX}]",
                 )  # 部分作品的音乐无法下载
 
         else:
@@ -690,7 +747,11 @@ class Extractor:
     def __extract_statistics(self, item: dict, data: SimpleNamespace) -> None:
         data = self.safe_extract(data, "statistics")
         for i in self.statistics_keys:
-            item[i] = self.safe_extract(data, i, -1, )
+            item[i] = self.safe_extract(
+                data,
+                i,
+                -1,
+            )
 
     def __extract_statistics_tiktok(
             self,
@@ -699,7 +760,11 @@ class Extractor:
     ) -> None:
         data = self.safe_extract(data, "stats")
         for i, j in enumerate(self.statistics_keys_tiktok):
-            item[self.statistics_keys[i]] = self.safe_extract(data, j, -1, )
+            item[self.statistics_keys[i]] = self.safe_extract(
+                data,
+                j,
+                -1,
+            )
 
     def __extract_tags(
             self,
@@ -731,7 +796,10 @@ class Extractor:
         container.cache["uid"] = self.safe_extract(data, "uid")
         container.cache["sec_uid"] = self.safe_extract(data, "sec_uid")
         # container.cache["short_id"] = self.safe_extract(data, "short_id")
-        container.cache["unique_id"] = self.safe_extract(data, "unique_id", )
+        container.cache["unique_id"] = self.safe_extract(
+            data,
+            "unique_id",
+        )
         container.cache["signature"] = self.safe_extract(data, "signature")
         container.cache["user_age"] = self.safe_extract(data, "user_age", -1)
         self.__extract_nickname_info(container, data)
@@ -760,10 +828,7 @@ class Extractor:
             container.cache["mark"] = container.mark or container.name
         else:
             name = self.cleaner.filter_name(
-                self.safe_extract(
-                    data,
-                    "nickname",
-                    _("已注销账号")),
+                self.safe_extract(data, "nickname", _("已注销账号")),
                 default=_("无效账号昵称"),
             )
             container.cache["nickname"] = name
@@ -780,12 +845,20 @@ class Extractor:
             mix_title: str = "",
             collect_id: str = "",
             collect_name: str = "",
-    ) -> tuple[str, str, str,]:
+    ) -> tuple[
+        str,
+        str,
+        str,
+    ]:
         if isinstance(data, dict):
-            info = self.get_user_info_tiktok(data) if tiktok else self.get_user_info(data)
+            info = (
+                self.get_user_info_tiktok(data) if tiktok else self.get_user_info(data)
+            )
             if user_id != (s := info.get("sec_uid")):
                 self.log.error(
-                    _("sec_user_id {user_id} 与 {s} 不一致").format(user_id=user_id, s=s),
+                    _("sec_user_id {user_id} 与 {s} 不一致").format(
+                        user_id=user_id, s=s
+                    ),
                 )
                 return "", "", ""
             name = self.cleaner.filter_name(
@@ -807,12 +880,18 @@ class Extractor:
                     item = self.__select_item(
                         data,
                         user_id,
-                        (self.extract_params_tiktok if tiktok else self.extract_params)["sec_uid"],
+                        (self.extract_params_tiktok if tiktok else self.extract_params)[
+                            "sec_uid"
+                        ],
                     )
                     id_, name, mark = self.__extract_pretreatment_data(
                         item,
-                        (self.extract_params_tiktok if tiktok else self.extract_params)["uid"],
-                        (self.extract_params_tiktok if tiktok else self.extract_params)["nickname"],
+                        (self.extract_params_tiktok if tiktok else self.extract_params)[
+                            "uid"
+                        ],
+                        (self.extract_params_tiktok if tiktok else self.extract_params)[
+                            "nickname"
+                        ],
                         mark,
                     )
                     return id_, name, mark
@@ -820,12 +899,18 @@ class Extractor:
                     item = self.__select_item(
                         data,
                         mix_id,
-                        (self.extract_params_tiktok if tiktok else self.extract_params)["mix_id"],
+                        (self.extract_params_tiktok if tiktok else self.extract_params)[
+                            "mix_id"
+                        ],
                     )
                     id_, name, mark = self.__extract_pretreatment_data(
                         item,
-                        (self.extract_params_tiktok if tiktok else self.extract_params)["mix_id"],
-                        (self.extract_params_tiktok if tiktok else self.extract_params)["mix_title"],
+                        (self.extract_params_tiktok if tiktok else self.extract_params)[
+                            "mix_id"
+                        ],
+                        (self.extract_params_tiktok if tiktok else self.extract_params)[
+                            "mix_title"
+                        ],
                         mark,
                         mix_title,
                     )
@@ -864,13 +949,17 @@ class Extractor:
     ):
         id_ = self.safe_extract(item, id_)
         name = self.cleaner.filter_name(
-            title or self.safe_extract(
+            title
+            or self.safe_extract(
                 item,
                 name,
                 id_,
             ),
         )
-        mark = self.cleaner.filter_name(mark, name, )
+        mark = self.cleaner.filter_name(
+            mark,
+            name,
+        )
         return id_, name.strip(), mark.strip()
 
     def __platform_classify_detail(
@@ -884,7 +973,8 @@ class Extractor:
                 self.__extract_batch_tiktok(
                     container,
                     self.generate_data_object(item),
-                ) for item in data
+                )
+                for item in data
             ]
         else:
             [
@@ -909,9 +999,14 @@ class Extractor:
             cache=None,
             same=False,
         )
-        self.__platform_classify_detail(data, container, tiktok, )
+        self.__platform_classify_detail(
+            data,
+            container,
+            tiktok,
+        )
         container.all_data = self.__clean_extract_data(
-            container.all_data, self.detail_necessary_keys)
+            container.all_data, self.detail_necessary_keys
+        )
         self.__extract_item_records(container.all_data)
         await self.__record_data(recorder, container.all_data)
         self.__condition_filter(container)
@@ -937,10 +1032,13 @@ class Extractor:
         if source:
             container.all_data = data
         else:
-            [self.__extract_comments_data(
-                container, self.generate_data_object(i)) for i in data]
+            [
+                self.__extract_comments_data(container, self.generate_data_object(i))
+                for i in data
+            ]
             container.all_data = self.__clean_extract_data(
-                container.all_data, self.comment_necessary_keys)
+                container.all_data, self.comment_necessary_keys
+            )
             await self.__record_data(recorder, container.all_data)
         return container.all_data
 
@@ -950,20 +1048,26 @@ class Extractor:
             data: SimpleNamespace,
     ):
         container.cache = container.template.copy()
-        container.cache["create_timestamp"] = self.safe_extract(
-            data, "create_time")
+        container.cache["create_timestamp"] = self.safe_extract(data, "create_time")
         container.cache["create_time"] = self.__format_date(
-            container.cache["create_timestamp"])
+            container.cache["create_timestamp"]
+        )
         container.cache["ip_label"] = self.safe_extract(data, "ip_label", "未知")
         container.cache["text"] = self.safe_extract(data, "text")
         container.cache["image"] = self.safe_extract(
-            data, f"image_list[{COMMENT_IMAGE_LIST_INDEX}].origin_url.url_list[{COMMENT_IMAGE_INDEX}]")
+            data,
+            f"image_list[{COMMENT_IMAGE_LIST_INDEX}].origin_url.url_list[{COMMENT_IMAGE_INDEX}]",
+        )
         container.cache["sticker"] = self.safe_extract(
-            data, f"sticker.static_url.url_list[{COMMENT_STICKER_INDEX}]")
+            data, f"sticker.static_url.url_list[{COMMENT_STICKER_INDEX}]"
+        )
         container.cache["digg_count"] = self.safe_extract(data, "digg_count", -1)
         container.cache["reply_to_reply_id"] = self.safe_extract(
-            data, "reply_to_reply_id")
-        container.cache["reply_comment_total"] = self.safe_extract(data, "reply_comment_total", 0)
+            data, "reply_to_reply_id"
+        )
+        container.cache["reply_comment_total"] = self.safe_extract(
+            data, "reply_comment_total", 0
+        )
         container.cache["reply_id"] = self.safe_extract(data, "reply_id")
         container.cache["cid"] = self.safe_extract(data, "cid")
         self.__extract_account_info(container, data, "user")
@@ -1002,11 +1106,15 @@ class Extractor:
     ) -> list[dict]:
         container = SimpleNamespace(all_data=[])
         if tiktok:
-            [self.__extract_live_data_tiktok(
-                container, self.generate_data_object(i)) for i in data]
+            [
+                self.__extract_live_data_tiktok(container, self.generate_data_object(i))
+                for i in data
+            ]
         else:
-            [self.__extract_live_data(
-                container, self.generate_data_object(i)) for i in data]
+            [
+                self.__extract_live_data(container, self.generate_data_object(i))
+                for i in data
+            ]
         return container.all_data
 
     def __extract_live_data(
@@ -1015,8 +1123,8 @@ class Extractor:
             data: SimpleNamespace,
     ):
         data = self.safe_extract(
-            data, f"data.data[{LIVE_DATA_INDEX}]") or self.safe_extract(
-            data, "data.room")
+            data, f"data.data[{LIVE_DATA_INDEX}]"
+        ) or self.safe_extract(data, "data.room")
         live_data = {
             "status": self.safe_extract(data, "status"),
             "nickname": self.safe_extract(data, "owner.nickname"),
@@ -1048,8 +1156,9 @@ class Extractor:
     ):
         data = self.safe_extract(data, "data")
         live_data = {
-            "create_time": datetime.fromtimestamp(t) if (
-                t := self.safe_extract(data, "create_time")) else "未知",
+            "create_time": datetime.fromtimestamp(t)
+            if (t := self.safe_extract(data, "create_time"))
+            else "未知",
             "id_str": self.safe_extract(data, "id_str"),
             "like_count": self.safe_extract(data, "like_count"),
             "nickname": self.safe_extract(data, "owner.nickname"),
@@ -1075,10 +1184,13 @@ class Extractor:
                 "collection_time": datetime.now().strftime(self.date_format),
             },
         )
-        [self.__extract_user_data(container,
-                                  self.generate_data_object(i)) for i in data]
+        [
+            self.__extract_user_data(container, self.generate_data_object(i))
+            for i in data
+        ]
         container.all_data = self.__clean_extract_data(
-            container.all_data, self.user_necessary_keys)
+            container.all_data, self.user_necessary_keys
+        )
         await self.__record_data(recorder, container.all_data)
         return container.all_data
 
@@ -1089,15 +1201,26 @@ class Extractor:
     ):
         container.cache = container.template.copy()
         container.cache["avatar"] = self.safe_extract(
-            data, f"avatar_larger.url_list[{AVATAR_LARGER_INDEX}]")
+            data, f"avatar_larger.url_list[{AVATAR_LARGER_INDEX}]"
+        )
         container.cache["city"] = self.safe_extract(data, "city")
         container.cache["country"] = self.safe_extract(data, "country")
         container.cache["district"] = self.safe_extract(data, "district")
-        container.cache["favoriting_count"] = self.safe_extract(data, "favoriting_count", -1)
-        container.cache["follower_count"] = self.safe_extract(data, "follower_count", -1)
-        container.cache["max_follower_count"] = self.safe_extract(data, "max_follower_count", -1)
-        container.cache["following_count"] = self.safe_extract(data, "following_count", -1)
-        container.cache["total_favorited"] = self.safe_extract(data, "total_favorited", -1)
+        container.cache["favoriting_count"] = self.safe_extract(
+            data, "favoriting_count", -1
+        )
+        container.cache["follower_count"] = self.safe_extract(
+            data, "follower_count", -1
+        )
+        container.cache["max_follower_count"] = self.safe_extract(
+            data, "max_follower_count", -1
+        )
+        container.cache["following_count"] = self.safe_extract(
+            data, "following_count", -1
+        )
+        container.cache["total_favorited"] = self.safe_extract(
+            data, "total_favorited", -1
+        )
         container.cache["gender"] = {1: "男", 2: "女"}.get(
             self.safe_extract(data, "gender"),
             "未知",
@@ -1112,14 +1235,17 @@ class Extractor:
         container.cache["unique_id"] = self.safe_extract(data, "unique_id")
         container.cache["user_age"] = self.safe_extract(data, "user_age", -1)
         container.cache["cover"] = self.safe_extract(
-            data, f"cover_url[{AUTHOR_COVER_URL_INDEX}].url_list[{AUTHOR_COVER_INDEX}]")
+            data, f"cover_url[{AUTHOR_COVER_URL_INDEX}].url_list[{AUTHOR_COVER_INDEX}]"
+        )
         container.cache["short_id"] = self.safe_extract(data, "short_id")
         container.cache["aweme_count"] = self.safe_extract(data, "aweme_count", -1)
-        container.cache["verify"] = self.safe_extract(
-            data, "custom_verify", "无")
+        container.cache["verify"] = self.safe_extract(data, "custom_verify", "无")
         container.cache["enterprise"] = self.safe_extract(
-            data, "enterprise_verify_reason", "无")
-        container.cache["url"] = f"https://www.douyin.com/user/{container.cache["sec_uid"]}"
+            data, "enterprise_verify_reason", "无"
+        )
+        container.cache["url"] = (
+            f"https://www.douyin.com/user/{container.cache['sec_uid']}"
+        )
         container.all_data.append(container.cache)
 
     async def __search(
@@ -1136,7 +1262,11 @@ class Extractor:
         elif tab == 3:
             return await self.__search_live(data, recorder)
 
-    async def __search_general(self, data: list[dict], recorder, ) -> list[dict]:
+    async def __search_general(
+            self,
+            data: list[dict],
+            recorder,
+    ) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
             cache=None,
@@ -1145,8 +1275,10 @@ class Extractor:
             },
             same=False,
         )
-        [self.__search_result_classify(
-            container, self.generate_data_object(i)) for i in data]
+        [
+            self.__search_result_classify(container, self.generate_data_object(i))
+            for i in data
+        ]
         await self.__record_data(recorder, container.all_data)
         return container.all_data
 
@@ -1184,8 +1316,12 @@ class Extractor:
                 "collection_time": datetime.now().strftime(self.date_format),
             },
         )
-        [self.__deal_search_user_live(container, self.generate_data_object(
-            i["user_info"])) for i in data]
+        [
+            self.__deal_search_user_live(
+                container, self.generate_data_object(i["user_info"])
+            )
+            for i in data
+        ]
         await self.__record_data(recorder, container.all_data)
         return container.all_data
 
@@ -1198,19 +1334,25 @@ class Extractor:
         if user:
             container.cache = container.template.copy()
         container.cache["avatar"] = self.safe_extract(
-            data, f"{'avatar_thumb' if user else 'avatar_larger'}.url_list[{SEARCH_AVATAR_INDEX}]")
+            data,
+            f"{'avatar_thumb' if user else 'avatar_larger'}.url_list[{SEARCH_AVATAR_INDEX}]",
+        )
         container.cache["nickname"] = self.safe_extract(data, "nickname")
         container.cache["sec_uid"] = self.safe_extract(data, "sec_uid")
         container.cache["signature"] = self.safe_extract(data, "signature")
         container.cache["uid"] = self.safe_extract(data, "uid")
         container.cache["short_id"] = self.safe_extract(data, "short_id")
-        container.cache["verify"] = self.safe_extract(
-            data, "custom_verify", "无")
+        container.cache["verify"] = self.safe_extract(data, "custom_verify", "无")
         container.cache["enterprise"] = self.safe_extract(
-            data, "enterprise_verify_reason", "无")
+            data, "enterprise_verify_reason", "无"
+        )
         if user:
-            container.cache["follower_count"] = self.safe_extract(data, "follower_count", -1)
-            container.cache["total_favorited"] = self.safe_extract(data, "total_favorited", -1)
+            container.cache["follower_count"] = self.safe_extract(
+                data, "follower_count", -1
+            )
+            container.cache["total_favorited"] = self.safe_extract(
+                data, "total_favorited", -1
+            )
             container.cache["unique_id"] = self.safe_extract(data, "unique_id")
             container.all_data.append(container.cache)
         # else:
@@ -1228,8 +1370,7 @@ class Extractor:
                 "collection_time": datetime.now().strftime(self.date_format),
             },
         )
-        [self.__deal_search_live(
-            container, self.generate_data_object(i)) for i in data]
+        [self.__deal_search_live(container, self.generate_data_object(i)) for i in data]
         await self.__record_data(recorder, container.all_data)
         return container.all_data
 
@@ -1240,8 +1381,8 @@ class Extractor:
     ):
         container.cache = container.template.copy()
         self.__deal_search_user_live(
-            container, self.safe_extract(
-                data, "author"), False)
+            container, self.safe_extract(data, "author"), False
+        )
         container.cache["room_id"] = self.safe_extract(data, "aweme_id")
         container.all_data.append(container.cache)
 
@@ -1252,8 +1393,7 @@ class Extractor:
             tiktok: bool,
     ) -> list[dict]:
         all_data = []
-        [self.__deal_hot_data(all_data, self.generate_data_object(i))
-         for i in data]
+        [self.__deal_hot_data(all_data, self.generate_data_object(i)) for i in data]
         await self.__record_data(recorder, all_data)
         return all_data
 
@@ -1266,7 +1406,9 @@ class Extractor:
             "event_time": self.__format_date(self.safe_extract(data, "event_time")),
             "view_count": str(self.safe_extract(data, "view_count", -1)),
             "hot_value": str(self.safe_extract(data, "hot_value", -1)),
-            "cover": self.safe_extract(data, f"word_cover.url_list[{HOT_WORD_COVER_INDEX}]"),
+            "cover": self.safe_extract(
+                data, f"word_cover.url_list[{HOT_WORD_COVER_INDEX}]"
+            ),
         }
         container.append(cache)
 
@@ -1284,8 +1426,7 @@ class Extractor:
         # print("前", len(container.all_data))  # 调试代码
         result = []
         for item in container.all_data:
-            create_time = datetime.fromtimestamp(
-                item["create_timestamp"]).date()
+            create_time = datetime.fromtimestamp(item["create_timestamp"]).date()
             if container.earliest <= create_time <= container.latest:
                 result.append(item)
             # else:
@@ -1387,7 +1528,8 @@ class Extractor:
             self.__extract_collection_music(
                 container,
                 self.generate_data_object(item),
-            ) for item in data
+            )
+            for item in data
         ]
         return container.all_data
 
@@ -1402,9 +1544,12 @@ class Extractor:
         container.cache["author"] = self.safe_extract(data, "author")
         container.cache["album"] = self.safe_extract(data, "album")
         container.cache["cover"] = self.safe_extract(
-            data, f"cover_hd.url_list[{MUSIC_COLLECTION_COVER_INDEX}]")
+            data, f"cover_hd.url_list[{MUSIC_COLLECTION_COVER_INDEX}]"
+        )
         container.cache["download"] = self.safe_extract(
-            data, f"play_url.url_list[{MUSIC_COLLECTION_DOWNLOAD_INDEX}]")
+            data, f"play_url.url_list[{MUSIC_COLLECTION_DOWNLOAD_INDEX}]"
+        )
         container.cache["duration"] = self.time_conversion(
-            self.safe_extract(data, "duration", 0))
+            self.safe_extract(data, "duration", 0)
+        )
         container.all_data.append(container.cache)

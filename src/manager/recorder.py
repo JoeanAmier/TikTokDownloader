@@ -13,7 +13,9 @@ if TYPE_CHECKING:
     from ..tools import ColorfulConsole
     from .database import Database
 
-__all__ = ["DownloadRecorder", ]
+__all__ = [
+    "DownloadRecorder",
+]
 
 
 class __DownloadRecorder:
@@ -21,11 +23,8 @@ class __DownloadRecorder:
     works_id = compile(r"\d{19}")
 
     def __init__(
-            self,
-            switch: bool,
-            folder: Path,
-            state: bool,
-            console: "ColorfulConsole"):
+            self, switch: bool, folder: Path, state: bool, console: "ColorfulConsole"
+    ):
         self.switch = switch
         self.state = state
         self.backup = folder.joinpath("IDRecorder_backup.txt")
@@ -86,40 +85,48 @@ class __DownloadRecorder:
             return ids
         self.console.print(
             f"程序检测到上次运行可能没有正常结束，您的作品下载记录数据可能已经丢失！\n数据文件路径：{
-            self.path.resolve()}", style=ERROR)
+            self.path.resolve()
+            }",
+            style=ERROR,
+        )
         if self.backup.exists():
-            if self.console.input(
+            if (
+                    self.console.input(
                     "检测到 IDRecorder 备份文件，是否恢复最后一次备份的数据(YES/NO): ",
-                    style=WARNING).upper() == "YES":
-                self.path.write_text(
-                    self.backup.read_text(
-                        encoding=self.encode))
+                        style=WARNING,
+                    ).upper()
+                    == "YES"
+            ):
+                self.path.write_text(self.backup.read_text(encoding=self.encode))
                 self.console.print(
-                    "IDRecorder 已恢复最后一次备份的数据，请重新运行程序！", style=INFO)
+                    "IDRecorder 已恢复最后一次备份的数据，请重新运行程序！", style=INFO
+                )
                 return set(self.backup.read_text(encoding=self.encode).split())
             else:
                 self.console.print(
-                    "IDRecorder 数据未恢复，下载任意作品之后，备份数据会被覆盖导致无法恢复！", style=ERROR)
+                    "IDRecorder 数据未恢复，下载任意作品之后，备份数据会被覆盖导致无法恢复！",
+                    style=ERROR,
+                )
         else:
             self.console.print(
                 "未检测到 IDRecorder 备份文件，您的作品下载记录数据无法恢复！",
-                style=ERROR)
+                style=ERROR,
+            )
         return set()
 
 
 class DownloadRecorder:
     detail = compile(r"\d{19}")
 
-    def __init__(self,
-                 database: "Database",
-                 switch: bool,
-                 console: "ColorfulConsole"):
+    def __init__(self, database: "Database", switch: bool, console: "ColorfulConsole"):
         self.switch = switch
         self.console = console
         self.database = database
 
     async def has_id(self, id_: str) -> bool:
-        return await self.database.has_download_data(id_) if self.switch and id_ else False
+        return (
+            await self.database.has_download_data(id_) if self.switch and id_ else False
+        )
 
     async def update_id(self, id_: str):
         if self.switch and id_:

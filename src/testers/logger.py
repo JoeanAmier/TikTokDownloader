@@ -1,12 +1,24 @@
 class Logger:
     @staticmethod
-    def info(*args, ):
-        print(*args, )
+    def info(
+            *args,
+    ):
+        print(
+            *args,
+        )
 
     @staticmethod
-    def warning(*args, ):
-        print(*args, )
+    def warning(
+            *args,
+    ):
+        print(
+            *args,
+        )
 
     @staticmethod
-    def error(*args, ):
-        print(*args, )
+    def error(
+            *args,
+    ):
+        print(
+            *args,
+        )

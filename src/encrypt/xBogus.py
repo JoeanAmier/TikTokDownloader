@@ -11,14 +11,16 @@ __all__ = ["XBogus", "XBogusTikTok"]
 
 class XBogus:
     __string = "Dkdpgh4ZKsQB80/Mfvw36XI1R25-WUAlEi7NLboqYTOPuzmFjJnryx9HVGcaStCe="
-    __array = [None for _ in range(
-        48)] + list(range(10)) + [None for _ in range(39)] + list(range(10, 16))
+    __array = (
+            [None for _ in range(48)]
+            + list(range(10))
+            + [None for _ in range(39)]
+            + list(range(10, 16))
+    )
     __canvas = 3873194319
 
     @staticmethod
-    def disturb_array(
-            a, b, e, d, c, f, t, n, o, i, r, _, x, u, s, l, v, h, g
-    ):
+    def disturb_array(a, b, e, d, c, f, t, n, o, i, r, _, x, u, s, l, v, h, g):
         array = [0] * 19
         array[0] = a
         array[10] = b
@@ -42,26 +44,7 @@ class XBogus:
         return array
 
     @staticmethod
-    def generate_garbled_1(
-            a,
-            b,
-            e,
-            d,
-            c,
-            f,
-            t,
-            n,
-            o,
-            i,
-            r,
-            _,
-            x,
-            u,
-            s,
-            l,
-            v,
-            h,
-            g):
+    def generate_garbled_1(a, b, e, d, c, f, t, n, o, i, r, _, x, u, s, l, v, h, g):
         array = [0] * 19
         array[0] = a
         array[1] = r
@@ -172,17 +155,14 @@ class XBogus:
         return result
 
     def generate_ua_array(self, user_agent: str, params: int) -> list:
-        ua_key = ['\u0000', '\u0001', chr(params)]
+        ua_key = ["\u0000", "\u0001", chr(params)]
         value = self.handle_ua(ua_key, user_agent.encode("utf-8"))
         value = b64encode(value)
         return list(md5(value).digest())
 
     def generate_x_bogus(
-            self,
-            query: list,
-            params: int,
-            user_agent: str,
-            timestamp: int):
+            self, query: list, params: int, user_agent: str, timestamp: int
+    ):
         ua_array = self.generate_ua_array(user_agent, params)
         array = [
             64,
@@ -212,19 +192,16 @@ class XBogus:
             zero ^= i
         array[-1] = zero
         garbled = self.generate_garbled_1(*self.disturb_array(*array))
-        garbled = self.generate_garbled_2(
-            2, 255, self.generate_garbled_3("ÿ", garbled))
-        return "".join(self.generate_str(i)
-                       for i in self.generate_num(garbled))
+        garbled = self.generate_garbled_2(2, 255, self.generate_garbled_3("ÿ", garbled))
+        return "".join(self.generate_str(i) for i in self.generate_num(garbled))
 
     def get_x_bogus(
-            self,
-            query: dict | str,
-            params=8,
-            user_agent=USERAGENT,
-            test_time=None):
+            self, query: dict | str, params=8, user_agent=USERAGENT, test_time=None
+    ):
         timestamp = int(test_time or time())
-        query = self.process_url_path(urlencode(query, quote_via=quote) if isinstance(query, dict) else query)
+        query = self.process_url_path(
+            urlencode(query, quote_via=quote) if isinstance(query, dict) else query
+        )
         return self.generate_x_bogus(query, params, user_agent, timestamp)
 
 

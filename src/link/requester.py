@@ -17,24 +17,40 @@ __all__ = ["Requester"]
 class Requester:
     URL = compile(r"(https?://\S+)")
 
-    def __init__(self, params: "Parameter", client: "AsyncClient", ):
+    def __init__(
+            self,
+            params: "Parameter",
+            client: "AsyncClient",
+    ):
         self.client = client
         self.log = params.logger
         self.max_retry = params.max_retry
 
-    async def run(self, text: str, ) -> str:
+    async def run(
+            self,
+            text: str,
+    ) -> str:
         urls = self.URL.finditer(text)
         if not urls:
             return ""
         result = []
         for i in urls:
-            result.append(await self.request_url(u := i.group(), ) or u)
+            result.append(
+                await self.request_url(
+                    u := i.group(),
+                )
+                or u
+            )
             await wait()
         return " ".join(i for i in result if i)
 
     @PrivateRetry.retry
     @capture_error_request
-    async def request_url(self, url: str, content="url", ):
+    async def request_url(
+            self,
+            url: str,
+            content="url",
+    ):
         self.log.info(f"URL: {url}", False)
         if content in {"url", "headers"}:
             response = await self.request_url_head(url)
@@ -59,10 +75,20 @@ class Requester:
             case _:
                 raise TikTokDownloaderError
 
-    async def request_url_head(self, url: str, ):
-        return await self.client.head(url, )
+    async def request_url_head(
+            self,
+            url: str,
+    ):
+        return await self.client.head(
+            url,
+        )
 
-    async def request_url_get(self, url: str, ):
-        response = await self.client.get(url, )
+    async def request_url_get(
+            self,
+            url: str,
+    ):
+        response = await self.client.get(
+            url,
+        )
         response.raise_for_status()
         return response

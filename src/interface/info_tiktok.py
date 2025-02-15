@@ -20,21 +20,43 @@ class InfoTikTok(APITikTok):
             *args,
             **kwargs,
     ):
-        super().__init__(params, cookie, proxy, *args, **kwargs, )
+        super().__init__(
+            params,
+            cookie,
+            proxy,
+            *args,
+            **kwargs,
+        )
         self.api = f"{self.domain}api/user/detail/"
         self.unique_id = unique_id
         self.sec_user_id = sec_user_id
         self.text = _("账号简略")
 
-    async def run(self, first=True, *args, **kwargs, ) -> dict | list[dict]:
+    async def run(
+            self,
+            first=True,
+            *args,
+            **kwargs,
+    ) -> dict | list[dict]:
         self.set_referer()
         await self.run_single()
         return self.response
 
-    async def run_single(self, *args, **kwargs, ):
-        await super().run_single("", )
+    async def run_single(
+            self,
+            *args,
+            **kwargs,
+    ):
+        await super().run_single(
+            "",
+        )
 
-    def check_response(self, data_dict: dict, *args, **kwargs, ):
+    def check_response(
+            self,
+            data_dict: dict,
+            *args,
+            **kwargs,
+    ):
         if d := data_dict.get("userInfo"):
             self.append_response(d)
         else:
@@ -48,7 +70,9 @@ class InfoTikTok(APITikTok):
     ) -> None:
         self.response.append(data)
 
-    def generate_params(self, ) -> dict:
+    def generate_params(
+            self,
+    ) -> dict:
         return self.params | {
             "abTestVersion": "[object Object]",
             "appType": "t",

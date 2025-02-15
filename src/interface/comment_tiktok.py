@@ -11,21 +11,26 @@ if TYPE_CHECKING:
 
 
 class CommentTikTok(Comment, APITikTok):
-    def __init__(self,
-                 params: Union["Parameter", Params],
-                 cookie: str | dict = None,
-                 proxy: str = None,
-                 item_id: str = ...,
-                 pages: int = None,
-                 cursor=0,
-                 count=20,
-                 count_reply=3,
-                 ):
-        super().__init__(params, cookie, proxy, item_id, pages, cursor, count, count_reply)
+    def __init__(
+            self,
+            params: Union["Parameter", Params],
+            cookie: str | dict = None,
+            proxy: str = None,
+            item_id: str = ...,
+            pages: int = None,
+            cursor=0,
+            count=20,
+            count_reply=3,
+    ):
+        super().__init__(
+            params, cookie, proxy, item_id, pages, cursor, count, count_reply
+        )
         self.api = f"{self.domain}api/comment/list/"
         self.text = _("作品评论")
 
-    def generate_params(self, ) -> dict:
+    def generate_params(
+            self,
+    ) -> dict:
         return self.params | {
             "aweme_id": self.item_id,
             "count": self.count,
@@ -38,18 +43,19 @@ class CommentTikTok(Comment, APITikTok):
 
 
 class ReplyTikTok(Reply, CommentTikTok, APITikTok):
-    def __init__(self,
-                 params: Union["Parameter", Params],
-                 cookie: str | dict = None,
-                 proxy: str = None,
-                 item_id: str = "",
-                 comment_id: str = "",
-                 pages: int = None,
-                 cursor=0,
-                 count=3,
-                 progress=None,
-                 task_id=None,
-                 ):
+    def __init__(
+            self,
+            params: Union["Parameter", Params],
+            cookie: str | dict = None,
+            proxy: str = None,
+            item_id: str = "",
+            comment_id: str = "",
+            pages: int = None,
+            cursor=0,
+            count=3,
+            progress=None,
+            task_id=None,
+    ):
         super().__init__(
             params,
             cookie,
@@ -60,10 +66,13 @@ class ReplyTikTok(Reply, CommentTikTok, APITikTok):
             cursor,
             count,
             progress,
-            task_id)
+            task_id,
+        )
         self.api = f"{self.domain}api/comment/list/reply/"
 
-    def generate_params(self, ) -> dict:
+    def generate_params(
+            self,
+    ) -> dict:
         return self.params | {
             "comment_id": self.comment_id,
             "count": self.count,

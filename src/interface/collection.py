@@ -12,18 +12,25 @@ if TYPE_CHECKING:
 
 
 class Collection(API):
-    def __init__(self,
-                 params: Union["Parameter", Params],
-                 cookie: str = None,
-                 proxy: str = None,
-                 sec_user_id: str = "",
-                 count=10,
-                 cursor=0,
-                 pages: int = None,
-                 *args,
-                 **kwargs,
-                 ):
-        super().__init__(params, cookie, proxy, *args, **kwargs, )
+    def __init__(
+            self,
+            params: Union["Parameter", Params],
+            cookie: str = None,
+            proxy: str = None,
+            sec_user_id: str = "",
+            count=10,
+            cursor=0,
+            pages: int = None,
+            *args,
+            **kwargs,
+    ):
+        super().__init__(
+            params,
+            cookie,
+            proxy,
+            *args,
+            **kwargs,
+        )
         self.api = f"{self.domain}aweme/v1/web/aweme/listcollection/"
         self.text = _("账号收藏作品")
         self.count = count
@@ -31,20 +38,21 @@ class Collection(API):
         self.pages = pages or params.max_pages
         self.sec_user_id = sec_user_id
 
-    async def run(self,
-                  referer: str = "",
-                  single_page=False,
-                  data_key: str = "aweme_list",
-                  error_text="",
-                  cursor="cursor",
-                  has_more="has_more",
-                  params: Callable = lambda: {},
-                  data: Callable = lambda: {},
-                  method="POST",
-                  headers: dict = None,
-                  *args,
-                  **kwargs,
-                  ):
+    async def run(
+            self,
+            referer: str = "",
+            single_page=False,
+            data_key: str = "aweme_list",
+            error_text="",
+            cursor="cursor",
+            has_more="has_more",
+            params: Callable = lambda: {},
+            data: Callable = lambda: {},
+            method="POST",
+            headers: dict = None,
+            *args,
+            **kwargs,
+    ):
         await super().run(
             referer or f"{self.domain}user/self?showTab=favorite_collection",
             single_page,
@@ -62,30 +70,35 @@ class Collection(API):
         # await self.get_owner_data()
         return self.response
 
-    def generate_params(self, ) -> dict:
+    def generate_params(
+            self,
+    ) -> dict:
         return self.params | {
             "publish_video_strategy_type": "2",
             "version_code": "170400",
             "version_name": "17.4.0",
         }
 
-    def generate_data(self, ) -> dict:
+    def generate_data(
+            self,
+    ) -> dict:
         return {
             "count": self.count,
             "cursor": self.cursor,
         }
 
-    async def request_data(self,
-                           url: str,
-                           params: dict = None,
-                           data: dict = None,
-                           method="GET",
-                           headers: dict = None,
-                           encryption="GET",
-                           finished=False,
-                           *args,
-                           **kwargs,
-                           ):
+    async def request_data(
+            self,
+            url: str,
+            params: dict = None,
+            data: dict = None,
+            method="GET",
+            headers: dict = None,
+            encryption="GET",
+            finished=False,
+            *args,
+            **kwargs,
+    ):
         return await super().request_data(
             url,
             params,
@@ -101,7 +114,10 @@ class Collection(API):
 
 async def test():
     async with Params() as params:
-        c = Collection(params, pages=1, )
+        c = Collection(
+            params,
+            pages=1,
+        )
         print(await c.run())
 
 

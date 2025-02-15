@@ -55,7 +55,7 @@ class Search(API):
         0: "search_general",
         1: "search_general",
         2: "search_user",
-        3: "search_live"
+        3: "search_live",
     }
     search_criteria = {
         0: _("关键词  总页数  排序依据  发布时间  视频时长  搜索范围  内容形式"),
@@ -152,7 +152,13 @@ class Search(API):
             *args,
             **kwargs,
     ):
-        super().__init__(params, cookie, proxy, *args, **kwargs, )
+        super().__init__(
+            params,
+            cookie,
+            proxy,
+            *args,
+            **kwargs,
+        )
         self.keyword = keyword
         self.channel = self.channel_map.get(channel, self.search_params[-1])
         self.pages = pages
@@ -170,7 +176,9 @@ class Search(API):
         self.key = self.channel.key
         self.text = f"{self.channel.note}"
         self.filter_selected = self.generate_filter_selected() if channel == 0 else None
-        self.search_filter_value = self.generate_search_filter_value() if channel == 2 else None
+        self.search_filter_value = (
+            self.generate_search_filter_value() if channel == 2 else None
+        )
         self.search_id = None
         self.params_func = {
             0: self._generate_params_general,
@@ -182,7 +190,9 @@ class Search(API):
     async def run(self, single_page=False, *args, **kwargs):
         if not self.api:
             raise TikTokDownloaderError
-        self.set_referer(f"{self.domain}root/search/{quote(self.keyword)}?type={self.type}")
+        self.set_referer(
+            f"{self.domain}root/search/{quote(self.keyword)}?type={self.type}"
+        )
         match single_page:
             case True:
                 await self.run_single(
@@ -202,14 +212,18 @@ class Search(API):
                 raise TikTokDownloaderError
         return self.response
 
-    def generate_filter_selected(self, ) -> str | None:
-        if any((
+    def generate_filter_selected(
+            self,
+    ) -> str | None:
+        if any(
+                (
                 self.sort_type,
                 self.publish_time,
                 self.duration,
                 self.search_range,
                 self.content_type,
-        )):
+                )
+        ):
             return dumps(
                 {
                     "sort_type": f"{self.sort_type}",
@@ -221,20 +235,26 @@ class Search(API):
                 separators=(",", ":"),
             )
 
-    def generate_search_filter_value(self, ) -> str | None:
-        if any((
+    def generate_search_filter_value(
+            self,
+    ) -> str | None:
+        if any(
+                (
                 self.douyin_user_fans,
                 self.douyin_user_type,
-        )):
+                )
+        ):
             return dumps(
                 {
                     "douyin_user_fans": self.douyin_user_fans,
-                    "douyin_user_type": self.douyin_user_type, }
-                ,
+                    "douyin_user_type": self.douyin_user_type,
+                },
                 separators=(",", ":"),
             )
 
-    def _generate_params_general(self, ) -> dict:
+    def _generate_params_general(
+            self,
+    ) -> dict:
         params = self.params | {
             "search_channel": self.channel.channel,
             "enable_history": "1",
@@ -259,7 +279,9 @@ class Search(API):
             }
         return params
 
-    def _generate_params_video(self, ) -> dict:
+    def _generate_params_video(
+            self,
+    ) -> dict:
         params = self.params | {
             "search_channel": self.channel.channel,
             "enable_history": "1",
@@ -299,7 +321,9 @@ class Search(API):
             }
         return params
 
-    def _generate_params_user(self, ) -> dict:
+    def _generate_params_user(
+            self,
+    ) -> dict:
         params = self._generate_params_live()
         if self.search_filter_value:
             params |= {
@@ -308,7 +332,9 @@ class Search(API):
             }
         return params
 
-    def _generate_params_live(self, ) -> dict:
+    def _generate_params_live(
+            self,
+    ) -> dict:
         params = self.params | {
             "search_channel": self.channel.channel,
             "keyword": self.keyword,
@@ -348,15 +374,24 @@ class Search(API):
                     case "general" | "video" | "user":
                         self.append_response(d)
                     case "live":
-                        self.append_response_video(d, "lives", )
+                        self.append_response_video(
+                            d,
+                            "lives",
+                        )
                     case _:
                         raise TikTokDownloaderError
                 self.finished = not data_dict[has_more]
         except KeyError:
-            self.log.error(_("数据解析失败，请告知作者处理: {data}").format(data=data_dict))
+            self.log.error(
+                _("数据解析失败，请告知作者处理: {data}").format(data=data_dict)
+            )
             self.finished = True
 
-    def append_response_video(self, data: list[dict], key: str, ) -> None:
+    def append_response_video(
+            self,
+            data: list[dict],
+            key: str,
+    ) -> None:
         self.append_response([i[key] for i in data])
 
 

@@ -9,15 +9,18 @@ __all__ = []
 
 
 class __TikTokAccount:
-    urls = "//*[@id=\"main-content-others_homepage\"]/div/div[2]/div[last()]/div/div/div/div/div/a/@href"
-    uid = "//*[@id=\"main-content-others_homepage\"]/div/div[1]/div[1]/div[2]/div/div[2]/a/@href"
+    urls = '//*[@id="main-content-others_homepage"]/div/div[2]/div[last()]/div/div/div/div/div/a/@href'
+    uid = '//*[@id="main-content-others_homepage"]/div/div[1]/div[1]/div[2]/div/div[2]/a/@href'
     uid_re = compile(r".*?u=(\d+).*?")
-    nickname = "//*[@id=\"main-content-others_homepage\"]/div/div[1]/div[1]/div[2]/h2/text()"
+    nickname = (
+        '//*[@id="main-content-others_homepage"]/div/div[1]/div[1]/div[2]/h2/text()'
+    )
     works_link_tiktok = compile(
-        r"\S*?https://www\.tiktok\.com/@\S+?/video/(\d{19})\S*?")
+        r"\S*?https://www\.tiktok\.com/@\S+?/video/(\d{19})\S*?"
+    )
 
     def __init__(self, path: str):
-        self.path = Path(path.replace("\"", ""))
+        self.path = Path(path.replace('"', ""))
 
     def run(self) -> list:
         if self.path.is_file() and self.path.suffix == ".html":
@@ -43,12 +46,9 @@ class __TikTokAccount:
 
     def __extract_uid(self, text: list):
         if len(text) == 1:
-            return u.group(1) if (
-                u := self.uid_re.search(
-                    text[0])) else timestamp()
+            return u.group(1) if (u := self.uid_re.search(text[0])) else timestamp()
         return timestamp()
 
     @staticmethod
     def __extract_nickname(text: list):
-        return text[0].strip() or timestamp() if len(
-            text) == 1 else timestamp()
+        return text[0].strip() or timestamp() if len(text) == 1 else timestamp()

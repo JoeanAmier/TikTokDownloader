@@ -21,7 +21,8 @@ class SQLLogger(BaseSQLLogger):
             old=None,
             name="Solo_Download",
             *args,
-            **kwargs, ):
+            **kwargs,
+    ):
         super().__init__(*args, **kwargs)
         self.db = None  # 数据库
         self.cursor = None  # 游标对象
@@ -43,14 +44,16 @@ class SQLLogger(BaseSQLLogger):
         await self.db.close()
 
     async def create(self):
-        create_sql = f"""CREATE TABLE IF NOT EXISTS {self.name} ({", ".join(
-            [f"{i} {j}" for i, j in zip(self.title_line, self.title_type)])});"""
+        create_sql = f"""CREATE TABLE IF NOT EXISTS {self.name} ({
+        ", ".join([f"{i} {j}" for i, j in zip(self.title_line, self.title_type)])
+        });"""
         await self.cursor.execute(create_sql)
         await self.db.commit()
 
     async def _save(self, data, *args, **kwargs):
-        insert_sql = f"""REPLACE INTO {self.name} ({", ".join(self.title_line)}) VALUES ({
-        ", ".join(["?" for _ in self.title_line])});"""
+        insert_sql = f"""REPLACE INTO {self.name} ({
+        ", ".join(self.title_line)
+        }) VALUES ({", ".join(["?" for _ in self.title_line])});"""
         await self.cursor.execute(insert_sql, data)
         await self.db.commit()
 
@@ -73,9 +76,7 @@ class SQLLogger(BaseSQLLogger):
         return exists[0] > 0
 
     def __clean_sheet_name(self, name: tuple) -> tuple:
-        return self.__clean_characters(
-            name[0]), self.__clean_characters(
-            name[1])
+        return self.__clean_characters(name[0]), self.__clean_characters(name[1])
 
     def __clean_characters(self, text: str | None) -> str | None:
         if isinstance(text, str):

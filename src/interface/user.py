@@ -19,7 +19,13 @@ class User(API):
             *args,
             **kwargs,
     ):
-        super().__init__(params, cookie, proxy, *args, **kwargs, )
+        super().__init__(
+            params,
+            cookie,
+            proxy,
+            *args,
+            **kwargs,
+        )
         self.sec_user_id = sec_user_id
         self.api = f"{self.domain}aweme/v1/web/user/profile/other/"
         self.text = _("账号简略")
@@ -42,7 +48,8 @@ class User(API):
             headers: dict = None,
             callback: Type[Coroutine] = None,
             *args,
-            **kwargs, ):
+            **kwargs,
+    ):
         pass
 
     def check_response(
@@ -59,10 +66,14 @@ class User(API):
             else:
                 self.response = d
         except KeyError:
-            self.log.error(_("数据解析失败，请告知作者处理: {data}").format(data=data_dict))
+            self.log.error(
+                _("数据解析失败，请告知作者处理: {data}").format(data=data_dict)
+            )
             self.finished = True
 
-    def generate_params(self, ) -> dict:
+    def generate_params(
+            self,
+    ) -> dict:
         return self.params | {
             "publish_video_strategy_type": "2",
             "sec_user_id": self.sec_user_id,

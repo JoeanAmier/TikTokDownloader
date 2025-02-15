@@ -27,9 +27,13 @@ class Params:
         self.max_retry = 0
         self.timeout = 5
         self.max_pages = 2
-        self.client = create_client(timeout=self.timeout, )
+        self.client = create_client(
+            timeout=self.timeout,
+        )
         self.client_tiktok = create_client(
-            timeout=self.timeout, proxy="http://127.0.0.1:10809", )
+            timeout=self.timeout,
+            proxy="http://127.0.0.1:10809",
+        )
 
     async def __aenter__(self):
         return self

@@ -60,40 +60,65 @@ class Browser:
         self.cookie_object = cookie_object
         self.options = "\n".join(
             (
-                f"{i}. {k}: {v[1]}" for i, (k, v) in enumerate(
+                f"{i}. {k}: {v[1]}"
+                for i, (k, v) in enumerate(
                 self.SUPPORT_BROWSER.items(),
                 start=1,
             )
             )
         )
 
-    def run(self, tiktok=False, select: str = None, ):
+    def run(
+            self,
+            tiktok=False,
+            select: str = None,
+    ):
         if browser := select or self.console.input(
-                _("读取指定浏览器的 {platform_name} Cookie 并写入配置文件；\n"
-                  "注意：Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie！\n"
-                  "{options}\n"
-                  "请输入浏览器名称或序号：").format(platform_name=self.PLATFORM[tiktok].name, options=self.options),
+                _(
+                    "读取指定浏览器的 {platform_name} Cookie 并写入配置文件；\n"
+                    "注意：Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie！\n"
+                    "{options}\n"
+                    "请输入浏览器名称或序号："
+                ).format(platform_name=self.PLATFORM[tiktok].name, options=self.options),
         ):
-            if cookie := self.get(browser, self.PLATFORM[tiktok].domain, ):
-                self.console.info(_("读取 Cookie 成功！"), )
+            if cookie := self.get(
+                    browser,
+                    self.PLATFORM[tiktok].domain,
+            ):
+                self.console.info(
+                    _("读取 Cookie 成功！"),
+                )
             else:
-                self.console.warning(_("Cookie 数据为空！"), )
-            self.__save_cookie(cookie, tiktok, )
+                self.console.warning(
+                    _("Cookie 数据为空！"),
+                )
+            self.__save_cookie(
+                cookie,
+                tiktok,
+            )
         else:
             self.console.print(_("未选择浏览器！"))
 
     def __save_cookie(self, cookie: dict, tiktok: bool):
         self.cookie_object.save_cookie(cookie, self.PLATFORM[tiktok].key)
 
-    def get(self, browser: str | int, domains: list[str], ) -> dict[str, str]:
+    def get(
+            self,
+            browser: str | int,
+            domains: list[str],
+    ) -> dict[str, str]:
         if not (browser := self.__browser_object(browser)):
-            self.console.warning(_("浏览器名称或序号输入错误！"), )
+            self.console.warning(
+                _("浏览器名称或序号输入错误！"),
+            )
             return {}
         try:
             cookies = browser(domains=domains)
             return {i["name"]: i["value"] for i in cookies}
         except RuntimeError:
-            self.console.warning(_("读取 Cookie 失败，未找到 Cookie 数据！"), )
+            self.console.warning(
+                _("读取 Cookie 失败，未找到 Cookie 数据！"),
+            )
         return {}
 
     @classmethod

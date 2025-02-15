@@ -6,7 +6,9 @@ from time import time
 
 from rich import print
 
-__all__ = ["VerifyFp", ]
+__all__ = [
+    "VerifyFp",
+]
 
 
 class VerifyFp:

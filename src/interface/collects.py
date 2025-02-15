@@ -13,22 +13,31 @@ if TYPE_CHECKING:
 
 
 class Collects(API):
-    def __init__(self,
-                 params: Union["Parameter", Params],
-                 cookie: str = None,
-                 proxy: str = None,
-                 cursor=0,
-                 count=10,
-                 *args,
-                 **kwargs,
-                 ):
-        super().__init__(params, cookie, proxy, *args, **kwargs, )
+    def __init__(
+            self,
+            params: Union["Parameter", Params],
+            cookie: str = None,
+            proxy: str = None,
+            cursor=0,
+            count=10,
+            *args,
+            **kwargs,
+    ):
+        super().__init__(
+            params,
+            cookie,
+            proxy,
+            *args,
+            **kwargs,
+        )
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/collects/list/"
         self.text = _("收藏夹")
 
-    def generate_params(self, ) -> dict:
+    def generate_params(
+            self,
+    ) -> dict:
         return self.params | {
             "cursor": self.cursor,
             "count": self.count,
@@ -36,20 +45,21 @@ class Collects(API):
             "version_name": "17.4.0",
         }
 
-    async def run(self,
-                  referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
-                  single_page=False,
-                  data_key: str = "collects_list",
-                  error_text="",
-                  cursor="cursor",
-                  has_more="has_more",
-                  params: Callable = lambda: {},
-                  data: Callable = lambda: {},
-                  method="GET",
-                  headers: dict = None,
-                  *args,
-                  **kwargs,
-                  ):
+    async def run(
+            self,
+            referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
+            single_page=False,
+            data_key: str = "collects_list",
+            error_text="",
+            cursor="cursor",
+            has_more="has_more",
+            params: Callable = lambda: {},
+            data: Callable = lambda: {},
+            method="GET",
+            headers: dict = None,
+            *args,
+            **kwargs,
+    ):
         return await super().run(
             referer,
             single_page,
@@ -67,18 +77,26 @@ class Collects(API):
 
 
 class CollectsDetail(Collection, API):
-    def __init__(self,
-                 params: Union["Parameter", Params],
-                 cookie: str = None,
-                 proxy: str = None,
-                 collects_id: str = ...,
-                 pages: int = None,
-                 cursor=0,
-                 count=10,
-                 *args,
-                 **kwargs,
-                 ):
-        super().__init__(params, cookie, proxy, None, *args, **kwargs, )
+    def __init__(
+            self,
+            params: Union["Parameter", Params],
+            cookie: str = None,
+            proxy: str = None,
+            collects_id: str = ...,
+            pages: int = None,
+            cursor=0,
+            count=10,
+            *args,
+            **kwargs,
+    ):
+        super().__init__(
+            params,
+            cookie,
+            proxy,
+            None,
+            *args,
+            **kwargs,
+        )
         self.collects_id = collects_id
         self.pages = pages or params.max_pages
         self.api = f"{self.domain}aweme/v1/web/collects/video/list/"
@@ -86,7 +104,9 @@ class CollectsDetail(Collection, API):
         self.count = count
         self.text = _("收藏夹作品")
 
-    def generate_params(self, ) -> dict:
+    def generate_params(
+            self,
+    ) -> dict:
         return self.params | {
             "collects_id": self.collects_id,
             "cursor": self.cursor,
@@ -95,25 +115,27 @@ class CollectsDetail(Collection, API):
             "version_name": "17.4.0",
         }
 
-    async def run(self,
-                  referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
-                  single_page=False,
-                  data_key: str = "aweme_list",
-                  error_text="",
-                  cursor="cursor",
-                  has_more="has_more",
-                  params: Callable = lambda: {},
-                  data: Callable = lambda: {},
-                  method="GET",
-                  headers: dict = None,
-                  *args,
-                  **kwargs,
-                  ):
+    async def run(
+            self,
+            referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
+            single_page=False,
+            data_key: str = "aweme_list",
+            error_text="",
+            cursor="cursor",
+            has_more="has_more",
+            params: Callable = lambda: {},
+            data: Callable = lambda: {},
+            method="GET",
+            headers: dict = None,
+            *args,
+            **kwargs,
+    ):
         await super(Collection, self).run(
             referer,
             single_page,
             data_key,
-            error_text or _("收藏夹 {collects_id} 为空").format(collects_id=self.collects_id),
+            error_text
+            or _("收藏夹 {collects_id} 为空").format(collects_id=self.collects_id),
             cursor,
             has_more,
             params,
@@ -127,22 +149,31 @@ class CollectsDetail(Collection, API):
 
 
 class CollectsMix(API):
-    def __init__(self,
-                 params: Union["Parameter", Params],
-                 cookie: str = None,
-                 proxy: str = None,
-                 cursor=0,
-                 count=12,
-                 *args,
-                 **kwargs,
-                 ):
-        super().__init__(params, cookie, proxy, *args, **kwargs, )
+    def __init__(
+            self,
+            params: Union["Parameter", Params],
+            cookie: str = None,
+            proxy: str = None,
+            cursor=0,
+            count=12,
+            *args,
+            **kwargs,
+    ):
+        super().__init__(
+            params,
+            cookie,
+            proxy,
+            *args,
+            **kwargs,
+        )
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/mix/listcollection/"
         self.text = _("收藏合集")
 
-    def generate_params(self, ) -> dict:
+    def generate_params(
+            self,
+    ) -> dict:
         return self.params | {
             "cursor": self.cursor,
             "count": self.count,
@@ -150,21 +181,22 @@ class CollectsMix(API):
             "version_name": "17.4.0",
         }
 
-    async def run(self,
-                  referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
-                  single_page=False,
-                  data_key: str = "mix_infos",
-                  error_text="",
-                  cursor="cursor",
-                  has_more="has_more",
-                  params: Callable = lambda: {},
-                  data: Callable = lambda: {},
-                  method="GET",
-                  headers: dict = None,
-                  proxy: str = None,
-                  *args,
-                  **kwargs,
-                  ):
+    async def run(
+            self,
+            referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
+            single_page=False,
+            data_key: str = "mix_infos",
+            error_text="",
+            cursor="cursor",
+            has_more="has_more",
+            params: Callable = lambda: {},
+            data: Callable = lambda: {},
+            method="GET",
+            headers: dict = None,
+            proxy: str = None,
+            *args,
+            **kwargs,
+    ):
         return await super().run(
             referer,
             single_page,
@@ -183,35 +215,43 @@ class CollectsMix(API):
 
 
 class CollectsSeries(CollectsMix):
-    def __init__(self,
-                 params: Union["Parameter", Params],
-                 cookie: str = None,
-                 proxy: str = None,
-                 cursor=0,
-                 count=12,
-                 *args,
-                 **kwargs,
-                 ):
-        super().__init__(params, cookie, proxy, *args, **kwargs, )
+    def __init__(
+            self,
+            params: Union["Parameter", Params],
+            cookie: str = None,
+            proxy: str = None,
+            cursor=0,
+            count=12,
+            *args,
+            **kwargs,
+    ):
+        super().__init__(
+            params,
+            cookie,
+            proxy,
+            *args,
+            **kwargs,
+        )
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/series/collections/"
         self.text = _("收藏短剧")
 
-    async def run(self,
-                  referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
-                  single_page=False,
-                  data_key: str = "series_infos",
-                  error_text="",
-                  cursor="cursor",
-                  has_more="has_more",
-                  params: Callable = lambda: {},
-                  data: Callable = lambda: {},
-                  method="GET",
-                  headers: dict = None,
-                  *args,
-                  **kwargs,
-                  ):
+    async def run(
+            self,
+            referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
+            single_page=False,
+            data_key: str = "series_infos",
+            error_text="",
+            cursor="cursor",
+            has_more="has_more",
+            params: Callable = lambda: {},
+            data: Callable = lambda: {},
+            method="GET",
+            headers: dict = None,
+            *args,
+            **kwargs,
+    ):
         return await super().run(
             referer,
             single_page,
@@ -229,35 +269,43 @@ class CollectsSeries(CollectsMix):
 
 
 class CollectsMusic(CollectsMix):
-    def __init__(self,
-                 params: Union["Parameter", Params],
-                 cookie: str = None,
-                 proxy: str = None,
-                 cursor=0,
-                 count=20,
-                 *args,
-                 **kwargs,
-                 ):
-        super().__init__(params, cookie, proxy, *args, **kwargs, )
+    def __init__(
+            self,
+            params: Union["Parameter", Params],
+            cookie: str = None,
+            proxy: str = None,
+            cursor=0,
+            count=20,
+            *args,
+            **kwargs,
+    ):
+        super().__init__(
+            params,
+            cookie,
+            proxy,
+            *args,
+            **kwargs,
+        )
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/music/listcollection/"
         self.text = _("收藏音乐")
 
-    async def run(self,
-                  referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
-                  single_page=False,
-                  data_key: str = "mc_list",
-                  error_text="",
-                  cursor="cursor",
-                  has_more="has_more",
-                  params: Callable = lambda: {},
-                  data: Callable = lambda: {},
-                  method="GET",
-                  headers: dict = None,
-                  *args,
-                  **kwargs,
-                  ):
+    async def run(
+            self,
+            referer: str = "https://www.douyin.com/user/self?showTab=favorite_collection",
+            single_page=False,
+            data_key: str = "mc_list",
+            error_text="",
+            cursor="cursor",
+            has_more="has_more",
+            params: Callable = lambda: {},
+            data: Callable = lambda: {},
+            method="GET",
+            headers: dict = None,
+            *args,
+            **kwargs,
+    ):
         return await super().run(
             referer,
             single_page,
@@ -276,15 +324,23 @@ class CollectsMusic(CollectsMix):
 
 async def test():
     async with Params() as params:
-        c = Collects(params, )
+        c = Collects(
+            params,
+        )
         print(await c.run())
         c = CollectsDetail(params, collects_id="")
         print(await c.run())
-        c = CollectsMix(params, )
+        c = CollectsMix(
+            params,
+        )
         print(await c.run())
-        c = CollectsMusic(params, )
+        c = CollectsMusic(
+            params,
+        )
         print(await c.run())
-        c = CollectsSeries(params, )
+        c = CollectsSeries(
+            params,
+        )
         print(await c.run())
 
 

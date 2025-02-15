@@ -115,7 +115,7 @@ class Settings:
             "tz_name": "Asia/Shanghai",
             "webcast_language": "zh-Hans",
             "device_id": "",
-        }
+        },
     }  # 默认配置
 
     def __init__(self, root: "Path", console: "ColorfulConsole"):
@@ -127,9 +127,11 @@ class Settings:
         with self.file.open("w", encoding=self.encode) as f:
             dump(self.default, f, indent=4, ensure_ascii=False)
         self.console.info(
-            _("创建默认配置文件 settings.json 成功！\n"
-              "请参考项目文档的快速入门部分，设置 Cookie 后重新运行程序！\n"
-              "建议根据实际使用需求修改配置文件 settings.json！\n"),
+            _(
+                "创建默认配置文件 settings.json 成功！\n"
+                "请参考项目文档的快速入门部分，设置 Cookie 后重新运行程序！\n"
+                "建议根据实际使用需求修改配置文件 settings.json！\n"
+            ),
         )
         return self.default
 
@@ -152,32 +154,43 @@ class Settings:
         data_keys = set(data.keys())
         if not (miss := default_keys - data_keys):
             return data
-        if self.console.input(
-                _("配置文件 settings.json 缺少 {missing_params} 参数，是否需要生成默认配置文件(YES/NO): ").format(
-                    missing_params=', '.join(miss)
-                ),
+        if (
+                self.console.input(
+                    _(
+                        "配置文件 settings.json 缺少 {missing_params} 参数，是否需要生成默认配置文件(YES/NO): "
+                    ).format(missing_params=", ".join(miss)),
                 style=ERROR,
-        ).upper() == "YES":
+                ).upper()
+                == "YES"
+        ):
             self.__create()
-        self.console.warning(_("本次运行将会使用各项参数默认值，程序功能可能无法正常使用！"), )
+        self.console.warning(
+            _("本次运行将会使用各项参数默认值，程序功能可能无法正常使用！"),
+        )
         return self.default
 
     def update(self, settings: dict | SimpleNamespace):
         """更新配置文件"""
         with self.file.open("w", encoding=self.encode) as f:
             dump(
-                settings if isinstance(
-                    settings,
-                    dict) else vars(settings),
+                settings if isinstance(settings, dict) else vars(settings),
                 f,
                 indent=4,
-                ensure_ascii=False)
-        self.console.info(_("保存配置成功！"), )
+                ensure_ascii=False,
+            )
+        self.console.info(
+            _("保存配置成功！"),
+        )
 
-    def __compatible_with_old_settings(self, data: dict, ) -> dict:
+    def __compatible_with_old_settings(
+            self,
+            data: dict,
+    ) -> dict:
         """兼容旧版本配置文件"""
         if "default_mode" in data:
-            self.console.info("配置文件 default_mode 参数已变更为 run_command 参数，请注意修改配置文件！")
+            self.console.info(
+                "配置文件 default_mode 参数已变更为 run_command 参数，请注意修改配置文件！"
+            )
             data["run_command"] = data.get(
                 "run_command",
                 data.get(
@@ -186,7 +199,9 @@ class Settings:
                 ),
             )  # TODO: 暂时兼容旧版本配置文件，未来将会移除
         if "update_cookie" in data:
-            self.console.info("配置文件 update_cookie 参数已变更为 douyin_platform 参数，请注意修改配置文件！")
+            self.console.info(
+                "配置文件 update_cookie 参数已变更为 douyin_platform 参数，请注意修改配置文件！"
+            )
             data["douyin_platform"] = data.get(
                 "douyin_platform",
                 data.get(
@@ -195,7 +210,9 @@ class Settings:
                 ),
             )  # TODO: 暂时兼容旧版本配置文件，未来将会移除
         if "update_cookie_tiktok" in data:
-            self.console.info("配置文件 update_cookie_tiktok 参数已变更为 tiktok_platform 参数，请注意修改配置文件！")
+            self.console.info(
+                "配置文件 update_cookie_tiktok 参数已变更为 tiktok_platform 参数，请注意修改配置文件！"
+            )
             data["tiktok_platform"] = data.get(
                 "tiktok_platform",
                 data.get(

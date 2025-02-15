@@ -13,7 +13,10 @@ if TYPE_CHECKING:
     from ..record import BaseLogger
     from ..record import LoggerManager
 
-__all__ = ["capture_error_params", "capture_error_request", ]
+__all__ = [
+    "capture_error_params",
+    "capture_error_request",
+]
 
 
 def capture_error_params(function):
@@ -42,10 +45,7 @@ def capture_error_request(function):
     async def inner(self, *args, **kwargs):
         try:
             return await function(self, *args, **kwargs)
-        except (
-                JSONDecodeError,
-                UnicodeDecodeError
-        ):
+        except (JSONDecodeError, UnicodeDecodeError):
             self.log.error(_("响应内容不是有效的 JSON 数据，请尝试更新 Cookie！"))
         except HTTPStatusError as e:
             self.log.error(_("响应码异常：{error}").format(error=e))

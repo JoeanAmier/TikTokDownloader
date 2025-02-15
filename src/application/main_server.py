@@ -13,13 +13,13 @@ class Server(WebUI):
     def run_server(self, app):
         @app.route("/", methods=["GET"])
         def index():
-            return render_template('server.html', preview=self.preview)
+            return render_template("server.html", preview=self.preview)
 
-        @app.route('/settings/', methods=['POST'])
+        @app.route("/settings/", methods=["POST"])
         def settings():
             return self.update_settings(request.json)
 
-        @app.route('/single/', methods=['POST'])
+        @app.route("/single/", methods=["POST"])
         def single():
             url = request.json.get("url")
             if not url:

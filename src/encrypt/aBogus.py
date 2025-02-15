@@ -10,11 +10,13 @@ from gmssl import sm3, func
 
 from src.custom import USERAGENT
 
-__all__ = ["ABogus", ]
+__all__ = [
+    "ABogus",
+]
 
 
 class ABogus:
-    __filter = compile(r'%([0-9A-F]{2})')
+    __filter = compile(r"%([0-9A-F]{2})")
     __arguments = [0, 1, 14]
     __ua_key = "\u0000\u0001\u000e"
     __end_string = "cus"
@@ -38,20 +40,29 @@ class ABogus:
         "s4": "Dkdpgh2ZmsQB80/MfvV36XI1R45-WUAlEixNLwoqYTOPuzKFjJnry79HbGcaStCe",
     }
 
-    def __init__(self,
-                 user_agent: str = USERAGENT,
-                 platform: str = None, ):
+    def __init__(
+            self,
+            user_agent: str = USERAGENT,
+            platform: str = None,
+    ):
         self.chunk = []
         self.size = 0
         self.reg = self.__reg[:]
         self.ua_code = self.generate_ua_code(user_agent)
-        self.browser = self.generate_browser_info(
-            platform) if platform else self.__browser
+        self.browser = (
+            self.generate_browser_info(platform) if platform else self.__browser
+        )
         self.browser_len = len(self.browser)
         self.browser_code = self.char_code_at(self.browser)
 
     @classmethod
-    def list_1(cls, random_num=None, a=170, b=85, c=45, ) -> list:
+    def list_1(
+            cls,
+            random_num=None,
+            a=170,
+            b=85,
+            c=45,
+    ) -> list:
         return cls.random_list(
             random_num,
             a,
@@ -63,7 +74,12 @@ class ABogus:
         )
 
     @classmethod
-    def list_2(cls, random_num=None, a=170, b=85, ) -> list:
+    def list_2(
+            cls,
+            random_num=None,
+            a=170,
+            b=85,
+    ) -> list:
         return cls.random_list(
             random_num,
             a,
@@ -75,7 +91,12 @@ class ABogus:
         )
 
     @classmethod
-    def list_3(cls, random_num=None, a=170, b=85, ) -> list:
+    def list_3(
+            cls,
+            random_num=None,
+            a=170,
+            b=85,
+    ) -> list:
         return cls.random_list(
             random_num,
             a,
@@ -123,8 +144,11 @@ class ABogus:
             random_num_2=None,
             random_num_3=None,
     ):
-        return cls.from_char_code(*cls.list_1(random_num_1)) + cls.from_char_code(
-            *cls.list_2(random_num_2)) + cls.from_char_code(*cls.list_3(random_num_3))
+        return (
+                cls.from_char_code(*cls.list_1(random_num_1))
+                + cls.from_char_code(*cls.list_2(random_num_2))
+                + cls.from_char_code(*cls.list_3(random_num_3))
+        )
 
     def generate_string_2(
             self,
@@ -185,13 +209,13 @@ class ABogus:
         o = [0] * 32
         for i in range(8):
             c = a[i]
-            o[4 * i + 3] = (255 & c)
+            o[4 * i + 3] = 255 & c
             c >>= 8
-            o[4 * i + 2] = (255 & c)
+            o[4 * i + 2] = 255 & c
             c >>= 8
-            o[4 * i + 1] = (255 & c)
+            o[4 * i + 1] = 255 & c
             c >>= 8
-            o[4 * i] = (255 & c)
+            o[4 * i] = 255 & c
 
         return o
 
@@ -200,7 +224,7 @@ class ABogus:
         i = self.reg[:]
         for o in range(64):
             c = self.de(i[0], 12) + i[4] + self.de(self.pe(o), o)
-            c = (c & 0xFFFFFFFF)
+            c = c & 0xFFFFFFFF
             c = self.de(c, 7)
             s = (c ^ self.de(i[0], 12)) & 0xFFFFFFFF
 
@@ -228,8 +252,12 @@ class ABogus:
         r = [0] * 132
 
         for t in range(16):
-            r[t] = (e[4 * t] << 24) | (e[4 * t + 1] <<
-                                       16) | (e[4 * t + 2] << 8) | e[4 * t + 3]
+            r[t] = (
+                    (e[4 * t] << 24)
+                    | (e[4 * t + 1] << 16)
+                    | (e[4 * t + 2] << 8)
+                    | e[4 * t + 3]
+            )
             r[t] &= 0xFFFFFFFF
 
         for n in range(16, 68):
@@ -319,7 +347,8 @@ class ABogus:
             r,
             0,
             0,
-            0]
+            0,
+        ]
 
     @staticmethod
     def end_check_num(a: list):
@@ -329,7 +358,10 @@ class ABogus:
         return r
 
     @classmethod
-    def decode_string(cls, url_string, ):
+    def decode_string(
+            cls,
+            url_string,
+    ):
         decoded = cls.__filter.sub(cls.replace_func, url_string)
         return decoded
 
@@ -373,14 +405,17 @@ class ABogus:
     def split_array(arr, chunk_size=64):
         result = []
         for i in range(0, len(arr), chunk_size):
-            result.append(arr[i:i + chunk_size])
+            result.append(arr[i: i + chunk_size])
         return result
 
     @staticmethod
     def char_code_at(s):
         return [ord(char) for char in s]
 
-    def write(self, e, ):
+    def write(
+            self,
+            e,
+    ):
         self.size = len(e)
         if isinstance(e, str):
             e = self.decode_string(e)
@@ -393,7 +428,9 @@ class ABogus:
                 self.compress(i)
             self.chunk = chunks[-1]
 
-    def reset(self, ):
+    def reset(
+            self,
+    ):
         self.chunk = []
         self.size = 0
         self.reg = self.__reg[:]
@@ -434,20 +471,13 @@ class ABogus:
 
         for i in range(0, len(s), 3):
             if i + 2 < len(s):
-                n = (
-                        (ord(s[i]) << 16)
-                        | (ord(s[i + 1]) << 8)
-                        | ord(s[i + 2])
-                )
+                n = (ord(s[i]) << 16) | (ord(s[i + 1]) << 8) | ord(s[i + 2])
             elif i + 1 < len(s):
-                n = (ord(s[i]) << 16) | (
-                        ord(s[i + 1]) << 8
-                )
+                n = (ord(s[i]) << 16) | (ord(s[i + 1]) << 8)
             else:
                 n = ord(s[i]) << 16
 
-            for j, k in zip(range(18, -1, -6),
-                            (0xFC0000, 0x03F000, 0x0FC0, 0x3F)):
+            for j, k in zip(range(18, -1, -6), (0xFC0000, 0x03F000, 0x0FC0, 0x3F)):
                 if j == 6 and i + 1 >= len(s):
                     break
                 if j == 0 and i + 2 >= len(s):
@@ -553,24 +583,34 @@ class ABogus:
             t = (s[i] + s[j]) % 256
             cipher.append(chr(s[t] ^ ord(plaintext[k])))
 
-        return ''.join(cipher)
+        return "".join(cipher)
 
-    def get_value(self,
-                  url_params: dict | str,
-                  method="GET",
-                  start_time=0,
-                  end_time=0,
-                  random_num_1=None,
-                  random_num_2=None,
-                  random_num_3=None,
-                  ) -> str:
+    def get_value(
+            self,
+            url_params: dict | str,
+            method="GET",
+            start_time=0,
+            end_time=0,
+            random_num_1=None,
+            random_num_2=None,
+            random_num_3=None,
+    ) -> str:
         string_1 = self.generate_string_1(
             random_num_1,
             random_num_2,
             random_num_3,
         )
-        string_2 = self.generate_string_2(urlencode(url_params, quote_via=quote, ) if isinstance(
-            url_params, dict) else url_params, method, start_time, end_time, )
+        string_2 = self.generate_string_2(
+            urlencode(
+                url_params,
+                quote_via=quote,
+            )
+            if isinstance(url_params, dict)
+            else url_params,
+            method,
+            start_time,
+            end_time,
+        )
         string = string_1 + string_2
         # return self.generate_result(
         #     string, "s4") + self.generate_result_end(string, "s4")

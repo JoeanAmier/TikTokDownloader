@@ -19,53 +19,65 @@ class Account(API):
     post_api = f"{API.domain}aweme/v1/web/aweme/post/"
     favorite_api = f"{API.domain}aweme/v1/web/aweme/favorite/"
 
-    def __init__(self,
-                 params: Union["Parameter", Params],
-                 cookie: str | dict = None,
-                 proxy: str = None,
-                 sec_user_id: str = ...,
-                 tab="post",
-                 earliest: str | float | int = "",
-                 latest="",
-                 pages: int = None,
-                 cursor=0,
-                 count=18,
-                 *args,
-                 **kwargs,
-                 ):
-        super().__init__(params, cookie, proxy, *args, **kwargs, )
+    def __init__(
+            self,
+            params: Union["Parameter", Params],
+            cookie: str | dict = None,
+            proxy: str = None,
+            sec_user_id: str = ...,
+            tab="post",
+            earliest: str | float | int = "",
+            latest="",
+            pages: int = None,
+            cursor=0,
+            count=18,
+            *args,
+            **kwargs,
+    ):
+        super().__init__(
+            params,
+            cookie,
+            proxy,
+            *args,
+            **kwargs,
+        )
         self.sec_user_id = sec_user_id
         self.api, self.favorite, self.pages = self.check_type(
-            tab, pages or params.max_pages)
+            tab, pages or params.max_pages
+        )
         self.latest: date = self.check_latest(latest)
         self.earliest: date = self.check_earliest(earliest)
         self.cursor = cursor
         self.count = count
         self.text = _("账号喜欢作品") if self.favorite else _("账号发布作品")
 
-    async def run(self,
-                  referer: str = None,
-                  single_page=False,
-                  data_key: str = "aweme_list",
-                  error_text="",
-                  cursor="max_cursor",
-                  has_more="has_more",
-                  params: Callable = lambda: {},
-                  data: Callable = lambda: {},
-                  method="GET",
-                  headers: dict = None,
-                  *args,
-                  **kwargs, ):
+    async def run(
+            self,
+            referer: str = None,
+            single_page=False,
+            data_key: str = "aweme_list",
+            error_text="",
+            cursor="max_cursor",
+            has_more="has_more",
+            params: Callable = lambda: {},
+            data: Callable = lambda: {},
+            method="GET",
+            headers: dict = None,
+            *args,
+            **kwargs,
+    ):
         if self.favorite:
-            self.set_referer(
-                f"{self.domain}user/{self.sec_user_id}?showTab=like")
+            self.set_referer(f"{self.domain}user/{self.sec_user_id}?showTab=like")
         else:
             self.set_referer(f"{self.domain}user/{self.sec_user_id}")
         match single_page:
             case True:
                 await self.run_single(
                     data_key,
-                    error_text or _("该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号"),
+                    error_text
+                    or _(
+                        "该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号"
+                    ),
                     cursor,
                     has_more,
                     params,
@@ -79,7 +91,10 @@ class Account(API):
             case False:
                 await self.run_batch(
                     data_key,
-                    error_text or _("该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号"),
+                    error_text
+                    or _(
+                        "该账号为私密账号，需要使用登录后的 Cookie，且登录的账号需要关注该私密账号"
+                    ),
                     cursor,
                     has_more,
                     params,
@@ -118,19 +133,20 @@ class Account(API):
             **kwargs,
         )
 
-    async def run_batch(self,
-                        data_key: str = "aweme_list",
-                        error_text="",
-                        cursor="max_cursor",
-                        has_more="has_more",
-                        params: Callable = lambda: {},
-                        data: Callable = lambda: {},
-                        method="GET",
-                        headers: dict = None,
-                        callback: Type[Coroutine] = None,
-                        *args,
-                        **kwargs,
-                        ):
+    async def run_batch(
+            self,
+            data_key: str = "aweme_list",
+            error_text="",
+            cursor="max_cursor",
+            has_more="has_more",
+            params: Callable = lambda: {},
+            data: Callable = lambda: {},
+            method="GET",
+            headers: dict = None,
+            callback: Type[Coroutine] = None,
+            *args,
+            **kwargs,
+    ):
         await super().run_batch(
             data_key,
             error_text,
@@ -148,11 +164,16 @@ class Account(API):
 
     async def early_stop(self):
         """如果获取数据的发布日期已经早于限制日期，就不需要再获取下一页的数据了"""
-        if not self.favorite and self.earliest > datetime.fromtimestamp(
-                max(int(self.cursor) / 1000, 0)).date():
+        if (
+                not self.favorite
+                and self.earliest
+                > datetime.fromtimestamp(max(int(self.cursor) / 1000, 0)).date()
+        ):
             self.finished = True
 
-    def generate_params(self, ) -> dict:
+    def generate_params(
+            self,
+    ) -> dict:
         match self.favorite:
             case True:
                 return self.generate_favorite_params()
@@ -193,7 +214,9 @@ class Account(API):
             case "post":
                 pass
             case _:
-                self.log.warning(_("tab 参数 {tab} 设置错误，程序将使用默认值: post").format(tab=tab))
+                self.log.warning(
+                    _("tab 参数 {tab} 设置错误，程序将使用默认值: post").format(tab=tab)
+                )
         return self.post_api, False, 99999
 
     def check_earliest(self, date_: str | float | int) -> date:
@@ -210,8 +233,12 @@ class Account(API):
                 self.log.warning(_("作品最早发布日期 {date} 无效").format(date=date_))
                 return default_date  # 无效日期返回默认日期
         else:
-            raise ValueError(_("作品最早发布日期参数 {date} 类型错误").format(date=date_))
-        self.log.info(_("作品最早发布日期: {earliest_date}").format(earliest_date=earliest))
+            raise ValueError(
+                _("作品最早发布日期参数 {date} 类型错误").format(date=date_)
+            )
+        self.log.info(
+            _("作品最早发布日期: {earliest_date}").format(earliest_date=earliest)
+        )
         return earliest  # 返回 date 对象
 
     def check_latest(self, date_: str) -> date:
@@ -220,21 +247,24 @@ class Account(API):
             return default_date
         try:
             latest = datetime.strptime(date_, "%Y/%m/%d").date()
-            self.log.info(_("作品最晚发布日期: {latest_date}").format(latest_date=latest))
+            self.log.info(
+                _("作品最晚发布日期: {latest_date}").format(latest_date=latest)
+            )
             return latest
         except ValueError:
             self.log.warning(_("作品最晚发布日期无效 {date}").format(date=date_))
             return default_date
 
-    def check_response(self,
-                       data_dict: dict,
-                       data_key: str,
-                       error_text="",
-                       cursor="cursor",
-                       has_more="has_more",
-                       *args,
-                       **kwargs,
-                       ):
+    def check_response(
+            self,
+            data_dict: dict,
+            data_key: str,
+            error_text="",
+            cursor="cursor",
+            has_more="has_more",
+            *args,
+            **kwargs,
+    ):
         try:
             if not (d := data_dict[data_key]):
                 self.log.warning(error_text)
@@ -247,7 +277,9 @@ class Account(API):
             if data_dict.get("status_code") == 0:
                 self.log.warning(_("配置文件 cookie 参数未登录，数据获取已提前结束"))
             else:
-                self.log.error(_("数据解析失败，请告知作者处理: {data}").format(data=data_dict))
+                self.log.error(
+                    _("数据解析失败，请告知作者处理: {data}").format(data=data_dict)
+                )
             self.finished = True
 
 

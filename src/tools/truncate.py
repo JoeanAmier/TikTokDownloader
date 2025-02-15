@@ -2,7 +2,7 @@ from unicodedata import name
 
 
 def is_chinese_char(char: str) -> bool:
-    return 'CJK' in name(char, "")
+    return "CJK" in name(char, "")
 
 
 def truncate_string(s: str, length: int = 64) -> str:

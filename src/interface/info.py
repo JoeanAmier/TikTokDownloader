@@ -19,7 +19,13 @@ class Info(API):
             *args,
             **kwargs,
     ):
-        super().__init__(params, cookie, proxy, *args, **kwargs, )
+        super().__init__(
+            params,
+            cookie,
+            proxy,
+            *args,
+            **kwargs,
+        )
         self.api = f"{self.domain}aweme/v1/web/im/user/info/"
         self.sec_user_id = sec_user_id
         self.static_params = self.params | {
@@ -28,14 +34,23 @@ class Info(API):
         }
         self.text = _("账号简略")
 
-    async def run(self, first=True, *args, **kwargs, ) -> dict | list[dict]:
+    async def run(
+            self,
+            first=True,
+            *args,
+            **kwargs,
+    ) -> dict | list[dict]:
         self.set_referer()
         await self.run_single()
         if first:
             return self.response[0] if self.response else {}
         return self.response
 
-    async def run_single(self, *args, **kwargs, ):
+    async def run_single(
+            self,
+            *args,
+            **kwargs,
+    ):
         await super().run_single(
             "",
             params=lambda: self.static_params,
@@ -43,17 +58,26 @@ class Info(API):
             method="POST",
         )
 
-    def check_response(self, data_dict: dict, *args, **kwargs, ):
+    def check_response(
+            self,
+            data_dict: dict,
+            *args,
+            **kwargs,
+    ):
         if d := data_dict.get("data"):
             self.append_response(d)
         else:
             self.log.warning(_("获取{text}失败").format(text=self.text))
 
-    def __generate_data(self, ) -> dict:
+    def __generate_data(
+            self,
+    ) -> dict:
         if isinstance(self.sec_user_id, str):
             self.sec_user_id = [self.sec_user_id]
-        value = f"[{",".join(f'"{i}"' for i in self.sec_user_id)}]"
-        return {"sec_user_ids": value, }
+        value = f"[{','.join(f'"{i}"' for i in self.sec_user_id)}]"
+        return {
+            "sec_user_ids": value,
+        }
 
 
 async def test():
