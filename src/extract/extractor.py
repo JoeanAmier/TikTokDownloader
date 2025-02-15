@@ -457,30 +457,57 @@ class Extractor:
             [],
         )
         try:
-            bit_rate: list[tuple[int, int, int, int, int, list[str]]] = [(
-                i.FPS,
-                i.bit_rate,
-                i.play_addr.data_size,
-                i.play_addr.height,
-                i.play_addr.width,
-                i.play_addr.url_list,
-            ) for i in bit_rate]
+            bit_rate: list[tuple[int, int, int, int, int, list[str]]] = [
+                (
+                    i.FPS,
+                    i.bit_rate,
+                    i.play_addr.data_size,
+                    i.play_addr.height,
+                    i.play_addr.width,
+                    i.play_addr.url_list,
+                )
+                for i in bit_rate
+            ]
+            bit_rate.sort(
+                key=lambda x: (
+                    max(
+                        x[3],
+                        x[4],
+                    ),
+                    x[0],
+                    x[1],
+                    x[2],
+                ),
+            )
+            return (
+                (
+                    bit_rate[-1][-3],
+                    bit_rate[-1][-2],
+                    bit_rate[-1][-1][VIDEO_INDEX],
+                )
+                if bit_rate
+                else (-1, -1, "")
+            )
         except AttributeError:
-            self.log.error(f"提取视频下载地址失败: {data}", False, )
-            return -1, -1, ""
-        bit_rate.sort(
-            key=lambda x: (
-                max(x[3], x[4], ),
-                x[0],
-                x[1],
-                x[2],
-            ),
-        )
-        return (
-            bit_rate[-1][-3],
-            bit_rate[-1][-2],
-            bit_rate[-1][-1][VIDEO_INDEX],
-        ) if bit_rate else (-1, -1, "")
+            self.log.error(
+                f"视频下载地址解析失败: {data}",
+                False,
+            )
+            height = self.safe_extract(
+                bit_rate[0],
+                "play_addr.height",
+                -1,
+            )
+            width = self.safe_extract(
+                bit_rate[0],
+                "play_addr.width",
+                -1,
+            )
+            url = self.safe_extract(
+                bit_rate[0],
+                f"play_addr.url_list[{VIDEO_INDEX}]",
+            )
+            return height, width, url
 
     def __extract_video_info_tiktok(
             self,
@@ -513,28 +540,55 @@ class Extractor:
             [],
         )
         try:
-            bitrate_info: list[tuple[int, str, int, int, list[str]]] = [(
-                i.Bitrate,
-                i.PlayAddr.DataSize,
-                i.PlayAddr.Height,
-                i.PlayAddr.Width,
-                i.PlayAddr.UrlList,
-            ) for i in bitrate_info]
+            bitrate_info: list[tuple[int, str, int, int, list[str]]] = [
+                (
+                    i.Bitrate,
+                    i.PlayAddr.DataSize,
+                    i.PlayAddr.Height,
+                    i.PlayAddr.Width,
+                    i.PlayAddr.UrlList,
+                )
+                for i in bitrate_info
+            ]
+            bitrate_info.sort(
+                key=lambda x: (
+                    max(
+                        x[2],
+                        x[3],
+                    ),
+                    x[0],
+                    x[1],
+                ),
+            )
+            return (
+                (
+                    bitrate_info[-1][-3],
+                    bitrate_info[-1][-2],
+                    bitrate_info[-1][-1][VIDEO_TIKTOK_INDEX],
+                )
+                if bitrate_info
+                else (-1, -1, "")
+            )
         except AttributeError:
-            self.log.error(f"提取视频下载地址失败: {data}", False, )
-            return -1, -1, ""
-        bitrate_info.sort(
-            key=lambda x: (
-                max(x[2], x[3], ),
-                x[0],
-                x[1],
-            ),
-        )
-        return (
-            bitrate_info[-1][-3],
-            bitrate_info[-1][-2],
-            bitrate_info[-1][-1][VIDEO_TIKTOK_INDEX],
-        ) if bitrate_info else (-1, -1, "")
+            self.log.error(
+                f"视频下载地址解析失败: {data}",
+                False,
+            )
+            height = self.safe_extract(
+                bitrate_info[0],
+                "PlayAddr.Height",
+                -1,
+            )
+            width = self.safe_extract(
+                bitrate_info[0],
+                "PlayAddr.Width",
+                -1,
+            )
+            url = self.safe_extract(
+                bitrate_info[0],
+                f"PlayAddr.UrlList[{VIDEO_TIKTOK_INDEX}]",
+            )
+            return height, width, url
 
     @staticmethod
     def time_conversion(time_: int) -> str:
