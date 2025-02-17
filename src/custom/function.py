@@ -63,6 +63,6 @@ async def suspend(count: int, console: "ColorfulConsole") -> None:
     # pass
 
 
-def verify_token(token: str) -> bool:
+def is_valid_token(token: str) -> bool:
     """Web API 接口模式 和 服务器部署模式 设置 token 参数验证"""
     return True

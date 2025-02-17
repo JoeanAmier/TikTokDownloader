@@ -16,7 +16,7 @@ except ImportError:
 class BaseSearch(APIModel):
     keyword: str
     pages: int = Field(
-        99999,
+        1,
         gt=0,
     )
 

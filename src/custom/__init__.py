@@ -3,7 +3,7 @@ from .function import (
     failure_handling,
     condition_filter,
     suspend,
-    verify_token,
+    is_valid_token,
 )
 from .internal import (
     PROJECT_ROOT,

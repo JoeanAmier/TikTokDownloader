@@ -51,6 +51,14 @@ from .main_complete import TikTok
 __all__ = ["TikTokDownloader"]
 
 
+def server_tip(function):
+    async def inner(self, *args, **kwargs):
+        self.console.print(_("正在启动服务器，如需关闭服务器，请按下 Ctrl + C"))
+        return await function(self, *args, **kwargs)
+
+    return inner
+
+
 class TikTokDownloader:
     VERSION_MAJOR = VERSION_MAJOR
     VERSION_MINOR = VERSION_MINOR
@@ -146,6 +154,7 @@ class TikTokDownloader:
             "该功能正在重构，预计 5.6 版本开发完成重新开放！",
         )
 
+    @server_tip
     async def api_server(self):
         try:
             await APIServer(

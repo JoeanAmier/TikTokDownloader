@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Header, HTTPException, Depends
 from fastapi.responses import RedirectResponse
 from uvicorn import Config
 from uvicorn import Server
@@ -12,6 +12,7 @@ from ..custom import (
     VERSION_BETA,
     REPOSITORY,
     __VERSION__,
+    is_valid_token,
 )
 from ..models import (
     GeneralSearch,
@@ -24,6 +25,14 @@ if TYPE_CHECKING:
     from ..manager import Database
 
 __all__ = ["APIServer"]
+
+
+def token_dependency(token: str = Header(None)):
+    if not is_valid_token(token):
+        raise HTTPException(
+            status_code=403,
+            detail=_("无效令牌！"),
+        )
 
 
 class APIServer(TikTok):
@@ -68,9 +77,12 @@ class APIServer(TikTok):
             "/search/general",
             response_model=Response,
         )
-        async def handle(extract: GeneralSearch):
+        async def handle(
+                extract: GeneralSearch, token: str = Depends(token_dependency)
+        ):
             if data := await self.deal_search_data(
                     extract,
+                    extract.source,
             ):
                 return Response(
                     message=_("获取成功！"),
