@@ -1,16 +1,19 @@
 from typing import Literal
 
-from pydantic import BaseModel
 from pydantic import Field
 from pydantic import field_validator
+
+from .base import APIModel
 
 try:
     from src.translation import _
 except ImportError:
-    _ = lambda x: x
+
+    def _(x):
+        return x
 
 
-class BaseSearch(BaseModel):
+class BaseSearch(APIModel):
     keyword: str
     pages: int = Field(
         99999,

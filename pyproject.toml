@@ -12,6 +12,7 @@ dependencies = [
     "aiofiles>=24.1.0",
     "aiosqlite>=0.21.0",
     "emoji>=2.14.1",
+    "fastapi>=0.115.8",
     "gmssl>=3.2.2",
     "httpx[socks]>=0.28.1",
     "lxml>=5.3.1",
@@ -20,6 +21,7 @@ dependencies = [
     "qrcode>=8.0",
     "rich>=13.9.4",
     "rookiepy>=0.5.6",
+    "uvicorn>=0.34.0",
 ]
 
 [project.urls]

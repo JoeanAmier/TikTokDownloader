@@ -20,9 +20,9 @@ from src.custom import (
     LICENCE,
     DOCUMENTATION_URL,
     PROJECT_NAME,
+    SERVER_HOST,
+    SERVER_PORT,
 )
-# from src.custom import SERVER_HOST
-# from src.custom import SERVER_PORT
 from src.custom import TEXT_REPLACEMENT
 from src.manager import Database
 from src.manager import DownloadRecorder
@@ -37,7 +37,7 @@ from src.tools import choose
 from src.tools import remove_empty_directories
 from src.tools import safe_pop
 from src.translation import switch_language, _
-# from .main_api_server import APIServer
+from .main_api import APIServer
 from .main_complete import TikTok
 
 # from typing import Type
@@ -118,7 +118,7 @@ class TikTokDownloader:
             (_("从浏览器获取 Cookie (TikTok)"), self.browser_cookie_tiktok),
             (_("终端交互模式"), self.complete),
             (_("后台监测模式"), self.disable_function),
-            (_("Web API 模式"), self.disable_function),
+            (_("Web API 模式"), self.api_server),
             (_("Web UI 模式"), self.disable_function),
             (_("服务器部署模式"), self.disable_function),
             # (_("Web API 模式"), self.__api_object),
@@ -146,8 +146,17 @@ class TikTokDownloader:
             "该功能正在重构，预计 5.6 版本开发完成重新开放！",
         )
 
-    # def __api_object(self):
-    #     self.server(APIServer, SERVER_HOST)
+    async def api_server(self):
+        try:
+            await APIServer(
+                self.parameter,
+                self.database,
+            ).run_server(
+                SERVER_HOST,
+                SERVER_PORT,
+            )
+        except KeyboardInterrupt:
+            self.running = False
 
     # def __web_ui_object(self):
     #     self.server(WebUI, token=False)

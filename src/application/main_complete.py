@@ -41,7 +41,7 @@ from ..interface import (
 from ..link import Extractor as LinkExtractor
 from ..link import ExtractorTikTok
 from ..manager import Cache
-from ..module import (
+from ..models import (
     GeneralSearch,
     VideoSearch,
     UserSearch,
@@ -1735,6 +1735,8 @@ class TikTok:
                         keyword=keyword,
                         pages=pages,
                     )
+                case _:
+                    raise TikTokDownloaderError
         except ValidationError as e:
             return repr(e)
 
@@ -1754,7 +1756,7 @@ class TikTok:
                 self.logger.warning(model)
                 continue
             self.logger.info(f"搜索参数: {model.model_dump()}", False)
-            if not await self._deal_search_data(
+            if not await self.deal_search_data(
                     model,
             ):
                 self.logger.warning(_("搜索结果为空"))
@@ -1819,17 +1821,13 @@ class TikTok:
                 )
         return "_".join(name)
 
-    async def _deal_search_data(
+    async def deal_search_data(
             self,
             model: "BaseModel",
-            cookie: str = None,
-            proxy: str = None,
             source=False,
     ):
         data = await Search(
             self.parameter,
-            cookie,
-            proxy,
             **model.model_dump(),
         ).run()
         if not any(data):

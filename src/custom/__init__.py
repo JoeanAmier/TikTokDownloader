@@ -49,6 +49,7 @@ from .internal import (
     SEARCH_AVATAR_INDEX,
     MUSIC_COLLECTION_COVER_INDEX,
     MUSIC_COLLECTION_DOWNLOAD_INDEX,
+    __VERSION__,
 )
 from .static import (
     MAX_WORKERS,
