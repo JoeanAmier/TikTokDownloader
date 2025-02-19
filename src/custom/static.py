@@ -16,7 +16,7 @@ TEXT_REPLACEMENT = {
 SERVER_HOST = "127.0.0.1"
 
 # 服务器模式端口，对 Web API 接口模式、Web UI 交互模式、服务器部署模式 生效
-SERVER_PORT = 5000
+SERVER_PORT = 5555
 
 # Cookie 更新间隔，单位：秒
 COOKIE_UPDATE_INTERVAL = 20 * 60

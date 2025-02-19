@@ -76,17 +76,19 @@
 [![终端模式截图](docs/终端交互模式截图CN2.png)](https://www.bilibili.com/video/BV1RAcHe5EpF/)
 *****
 [![终端模式截图](docs/终端交互模式截图CN3.png)](https://www.bilibili.com/video/BV1RAcHe5EpF/)
-<br><br>
+
 **Web UI 交互模式：**
-<br><br>
+
 ![WebUI模式截图](docs/WebUI模式截图1.png)
 *****
 ![WebUI模式截图](docs/WebUI模式截图2.png)
 *****
 ![WebUI模式截图](docs/WebUI模式截图3.png)
-<br><br>
+
 **Web API 接口模式：**
-<br><br>
+
+**访问 `http://127.0.0.1:5555/docs` 或者 `http://127.0.0.1:5555/redoc` 可以查阅自动生成的文档！**
+
 ![WebAPI模式截图](docs/WebAPI模式截图.png)
 
 # 📈 项目状态

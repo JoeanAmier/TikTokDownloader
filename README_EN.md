@@ -77,17 +77,19 @@
 [![终端模式截图](docs/终端交互模式截图EN2.png)](https://www.bilibili.com/video/BV1RAcHe5EpF/)
 *****
 [![终端模式截图](docs/终端交互模式截图EN3.png)](https://www.bilibili.com/video/BV1RAcHe5EpF/)
-<br><br>
+
 **Web UI interaction mode：**
-<br><br>
+
 ![WebUI模式截图](docs/WebUI模式截图1.png)
 *****
 ![WebUI模式截图](docs/WebUI模式截图2.png)
 *****
 ![WebUI模式截图](docs/WebUI模式截图3.png)
-<br><br>
+
 **Web API mode：**
-<br><br>
+
+**Open http://127.0.0.1:5555/docs or http://127.0.0.1:5555/redoc to access the automatically generated documentation!**
+
 ![WebAPI模式截图](docs/WebAPI模式截图.png)
 
 # 📈 Project Status

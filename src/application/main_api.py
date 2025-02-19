@@ -17,6 +17,9 @@ from ..custom import (
 from ..models import (
     GeneralSearch,
     Response,
+    VideoSearch,
+    UserSearch,
+    LiveSearch,
 )
 from ..translation import _
 
@@ -69,26 +72,73 @@ class APIServer(TikTok):
         await server.serve()
 
     def setup_routes(self):
-        @self.server.get("/")
+        @self.server.get(
+            "/",
+            summary=_("项目仓库"),
+            description=_("重定向至项目仓库"),
+            tags=[_("项目")],
+        )
         async def index():
             return RedirectResponse(url=REPOSITORY)
 
         @self.server.post(
-            "/search/general",
+            "/douyin/search/general",
+            summary=_("综合搜索"),
+            description=_("获取综合搜索数据"),
+            tags=[_("抖音")],
             response_model=Response,
         )
-        async def handle(
+        async def handle_general(
                 extract: GeneralSearch, token: str = Depends(token_dependency)
         ):
-            if data := await self.deal_search_data(
-                    extract,
-                    extract.source,
-            ):
-                return Response(
-                    message=_("获取成功！"),
-                    data=data,
-                )
+            return await self.handle_search(extract)
+
+        @self.server.post(
+            "/douyin/search/video",
+            summary=_("视频搜索"),
+            description=_("获取视频搜索数据"),
+            tags=[_("抖音")],
+            response_model=Response,
+        )
+        async def handle_video(
+                extract: VideoSearch, token: str = Depends(token_dependency)
+        ):
+            return await self.handle_search(extract)
+
+        @self.server.post(
+            "/douyin/search/user",
+            summary=_("用户搜索"),
+            description=_("获取用户搜索数据"),
+            tags=[_("抖音")],
+            response_model=Response,
+        )
+        async def handle_user(
+                extract: UserSearch, token: str = Depends(token_dependency)
+        ):
+            return await self.handle_search(extract)
+
+        @self.server.post(
+            "/douyin/search/live",
+            summary=_("直播搜索"),
+            description=_("获取直播搜索数据"),
+            tags=[_("抖音")],
+            response_model=Response,
+        )
+        async def handle_live(
+                extract: LiveSearch, token: str = Depends(token_dependency)
+        ):
+            return await self.handle_search(extract)
+
+    async def handle_search(self, extract):
+        if data := await self.deal_search_data(
+                extract,
+                extract.source,
+        ):
             return Response(
-                message=_("获取失败！"),
+                message=_("获取成功！"),
                 data=data,
             )
+        return Response(
+            message=_("获取失败！"),
+            data=data,
+        )
