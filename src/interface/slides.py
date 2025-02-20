@@ -16,15 +16,11 @@ class Slides(API):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             slides_id: str | list | tuple = ...,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-        )
+        super().__init__(params, cookie, proxy)
         self.slides_id = slides_id
         self.api = f"{self.short_domain}web/api/v2/aweme/slidesinfo/"
         self.text = _("作品")

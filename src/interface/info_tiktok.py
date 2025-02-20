@@ -13,20 +13,14 @@ class InfoTikTok(APITikTok):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str | dict = None,
+            cookie: str = "",
             proxy: str = None,
             unique_id: Union[str] = "",
             sec_user_id: Union[str] = "",
             *args,
             **kwargs,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-            *args,
-            **kwargs,
-        )
+        super().__init__(params, cookie, proxy, *args, **kwargs)
         self.api = f"{self.domain}api/user/detail/"
         self.unique_id = unique_id
         self.sec_user_id = sec_user_id

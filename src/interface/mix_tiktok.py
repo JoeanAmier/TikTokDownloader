@@ -14,7 +14,7 @@ class MixTikTok(APITikTok):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             mix_title: str = ...,
             mix_id: str = ...,
@@ -24,13 +24,7 @@ class MixTikTok(APITikTok):
             *args,
             **kwargs,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-            *args,
-            **kwargs,
-        )
+        super().__init__(params, cookie, proxy, *args, **kwargs)
         self.mix_title = mix_title
         self.mix_id = mix_id
         # self.detail_id = detail_id  # 未使用
@@ -83,7 +77,7 @@ class MixListTikTok(APITikTok):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             sec_user_id: str = "",
             cursor=0,
@@ -91,13 +85,7 @@ class MixListTikTok(APITikTok):
             *args,
             **kwargs,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-            *args,
-            **kwargs,
-        )
+        super().__init__(params, cookie, proxy, *args, **kwargs)
         self.sec_user_id = sec_user_id
         self.cursor = cursor
         self.count = count

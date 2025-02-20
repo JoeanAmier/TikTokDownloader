@@ -22,7 +22,7 @@ class AccountTikTok(
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str | dict = None,
+            cookie: str = "",
             proxy: str = None,
             sec_user_id: str = ...,
             tab="post",

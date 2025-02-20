@@ -16,20 +16,14 @@ class Collects(API):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             cursor=0,
             count=10,
             *args,
             **kwargs,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-            *args,
-            **kwargs,
-        )
+        super().__init__(params, cookie, proxy, *args, **kwargs)
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/collects/list/"
@@ -80,7 +74,7 @@ class CollectsDetail(Collection, API):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             collects_id: str = ...,
             pages: int = None,
@@ -89,14 +83,7 @@ class CollectsDetail(Collection, API):
             *args,
             **kwargs,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-            None,
-            *args,
-            **kwargs,
-        )
+        super().__init__(params, cookie, proxy, None, *args, **kwargs)
         self.collects_id = collects_id
         self.pages = pages or params.max_pages
         self.api = f"{self.domain}aweme/v1/web/collects/video/list/"
@@ -152,20 +139,14 @@ class CollectsMix(API):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             cursor=0,
             count=12,
             *args,
             **kwargs,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-            *args,
-            **kwargs,
-        )
+        super().__init__(params, cookie, proxy, *args, **kwargs)
         self.cursor = cursor
         self.count = count
         self.api = f"{self.domain}aweme/v1/web/mix/listcollection/"
@@ -218,7 +199,7 @@ class CollectsSeries(CollectsMix):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             cursor=0,
             count=12,
@@ -272,7 +253,7 @@ class CollectsMusic(CollectsMix):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             cursor=0,
             count=20,

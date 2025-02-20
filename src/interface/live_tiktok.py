@@ -14,15 +14,11 @@ class LiveTikTok(APITikTok):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             room_id=...,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-        )
+        super().__init__(params, cookie, proxy)
         self.black_headers = params.headers_download
         self.room_id = room_id
 

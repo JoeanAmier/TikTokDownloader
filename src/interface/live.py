@@ -16,17 +16,13 @@ class Live(API):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             web_rid=None,
             room_id=None,
             sec_user_id=None,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-        )
+        super().__init__(params, cookie, proxy)
         self.black_headers = params.headers_download
         self.web_rid = web_rid
         self.room_id = room_id

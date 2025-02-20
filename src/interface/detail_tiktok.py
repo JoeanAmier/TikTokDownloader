@@ -14,15 +14,11 @@ class DetailTikTok(APITikTok):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             detail_id: str = ...,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-        )
+        super().__init__(params, cookie, proxy)
         self.detail_id = detail_id
         self.api = f"{self.domain}/api/item/detail/"
         self.text = _("作品")

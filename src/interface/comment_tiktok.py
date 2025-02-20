@@ -14,7 +14,7 @@ class CommentTikTok(Comment, APITikTok):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str | dict = None,
+            cookie: str = "",
             proxy: str = None,
             item_id: str = ...,
             pages: int = None,
@@ -46,7 +46,7 @@ class ReplyTikTok(Reply, CommentTikTok, APITikTok):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str | dict = None,
+            cookie: str = "",
             proxy: str = None,
             item_id: str = "",
             comment_id: str = "",

@@ -16,7 +16,7 @@ class Comment(API):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str | dict = None,
+            cookie: str = "",
             proxy: str = None,
             item_id: str = ...,
             pages: int = None,
@@ -25,11 +25,7 @@ class Comment(API):
             count_reply: int = 3,
             reply: bool = False,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-        )
+        super().__init__(params, cookie, proxy)
         self.params_object = params
         self.cookie = cookie
         self.proxy = proxy
@@ -213,7 +209,7 @@ class Reply(Comment):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str | dict = None,
+            cookie: str = "",
             proxy: str = None,
             item_id: str = ...,
             comment_id: str = ...,

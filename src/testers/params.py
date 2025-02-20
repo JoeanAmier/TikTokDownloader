@@ -13,11 +13,11 @@ from src.tools import create_client
 
 class Params:
     def __init__(self):
-        self.cookie = "自行填入抖音 Cookie"
-        self.cookie_tiktok = "自行填入 TikTok Cookie"
-        self.headers = DATA_HEADERS | {"Cookie": self.cookie}
+        self.cookie_str = "自行填入抖音 Cookie"
+        self.cookie_str_tiktok = "自行填入 TikTok Cookie"
+        self.headers = DATA_HEADERS | {"Cookie": self.cookie_str}
         self.headers_tiktok = DATA_HEADERS_TIKTOK | {
-            "Cookie": self.cookie_tiktok,
+            "Cookie": self.cookie_str_tiktok,
         }
         self.headers_download = DOWNLOAD_HEADERS_TIKTOK
         self.logger = Logger()

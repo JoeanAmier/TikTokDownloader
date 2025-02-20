@@ -15,7 +15,7 @@ class Collection(API):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             sec_user_id: str = "",
             count=10,
@@ -24,13 +24,7 @@ class Collection(API):
             *args,
             **kwargs,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-            *args,
-            **kwargs,
-        )
+        super().__init__(params, cookie, proxy, *args, **kwargs)
         self.api = f"{self.domain}aweme/v1/web/aweme/listcollection/"
         self.text = _("账号收藏作品")
         self.count = count

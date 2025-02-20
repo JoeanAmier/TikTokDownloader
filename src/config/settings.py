@@ -197,7 +197,7 @@ class Settings:
                     "default_mode",
                     "",
                 ),
-            )  # TODO: 暂时兼容旧版本配置文件，未来将会移除
+            )
         if "update_cookie" in data:
             self.console.info(
                 "配置文件 update_cookie 参数已变更为 douyin_platform 参数，请注意修改配置文件！"
@@ -208,7 +208,7 @@ class Settings:
                     "update_cookie",
                     True,
                 ),
-            )  # TODO: 暂时兼容旧版本配置文件，未来将会移除
+            )
         if "update_cookie_tiktok" in data:
             self.console.info(
                 "配置文件 update_cookie_tiktok 参数已变更为 tiktok_platform 参数，请注意修改配置文件！"
@@ -219,5 +219,5 @@ class Settings:
                     "update_cookie_tiktok",
                     True,
                 ),
-            )  # TODO: 暂时兼容旧版本配置文件，未来将会移除
+            )
         return data

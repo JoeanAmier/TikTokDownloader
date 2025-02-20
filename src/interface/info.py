@@ -13,19 +13,13 @@ class Info(API):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str | dict = None,
+            cookie: str = "",
             proxy: str = None,
             sec_user_id: Union[str, list[str], tuple[str]] = ...,
             *args,
             **kwargs,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-            *args,
-            **kwargs,
-        )
+        super().__init__(params, cookie, proxy, *args, **kwargs)
         self.api = f"{self.domain}aweme/v1/web/im/user/info/"
         self.sec_user_id = sec_user_id
         self.static_params = self.params | {

@@ -135,7 +135,7 @@ class Search(API):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             keyword: str = ...,
             channel: int = 0,
@@ -152,13 +152,7 @@ class Search(API):
             *args,
             **kwargs,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-            *args,
-            **kwargs,
-        )
+        super().__init__(params, cookie, proxy, *args, **kwargs)
         self.keyword = keyword
         self.channel = self.channel_map.get(channel, self.search_params[-1])
         self.pages = pages

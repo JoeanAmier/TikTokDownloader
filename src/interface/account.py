@@ -22,7 +22,7 @@ class Account(API):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str | dict = None,
+            cookie: str = "",
             proxy: str = None,
             sec_user_id: str = ...,
             tab="post",
@@ -34,13 +34,7 @@ class Account(API):
             *args,
             **kwargs,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-            *args,
-            **kwargs,
-        )
+        super().__init__(params, cookie, proxy, *args, **kwargs)
         self.sec_user_id = sec_user_id
         self.api, self.favorite, self.pages = self.check_type(
             tab, pages or params.max_pages

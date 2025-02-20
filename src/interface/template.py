@@ -72,7 +72,7 @@ class API:
     def __init__(
             self,
             params: Union["Parameter", "Params"],
-            cookie: str | dict = None,
+            cookie: str = "",
             proxy: str = None,
             *args,
             **kwargs,
@@ -86,7 +86,7 @@ class API:
         self.proxy = proxy
         self.max_retry = params.max_retry
         self.timeout = params.timeout
-        self.cookie = cookie or params.cookie
+        self.cookie = cookie
         self.client: AsyncClient = params.client
         self.pages = 99999
         self.cursor = 0
@@ -95,7 +95,7 @@ class API:
         self.text = ""
         self.set_temp_cookie(cookie)
 
-    def set_temp_cookie(self, cookie: str = None):
+    def set_temp_cookie(self, cookie: str = ""):
         if cookie:
             self.headers["Cookie"] = cookie
 
@@ -453,20 +453,14 @@ class APITikTok(API):
     def __init__(
             self,
             params: Union["Parameter", "Params"],
-            cookie: str | dict = None,
+            cookie: str = "",
             proxy: str = None,
             *args,
             **kwargs,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-            *args,
-            **kwargs,
-        )
+        super().__init__(params, cookie, proxy, *args, **kwargs)
         self.headers = params.headers_tiktok.copy()
-        self.cookie = cookie or params.cookie_tiktok
+        self.cookie = cookie
         self.client: AsyncClient = params.client_tiktok
         self.set_temp_cookie(cookie)
 

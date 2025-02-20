@@ -16,7 +16,7 @@ class Mix(API):
     def __init__(
             self,
             params: Union["Parameter", Params],
-            cookie: str = None,
+            cookie: str = "",
             proxy: str = None,
             mix_id: str = None,
             detail_id: str = None,
@@ -25,13 +25,7 @@ class Mix(API):
             *args,
             **kwargs,
     ):
-        super().__init__(
-            params,
-            cookie,
-            proxy,
-            *args,
-            **kwargs,
-        )
+        super().__init__(params, cookie, proxy, *args, **kwargs)
         self.mix_title = None
         self.mix_id = mix_id
         self.detail_id = detail_id
