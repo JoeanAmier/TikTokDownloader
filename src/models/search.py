@@ -20,8 +20,8 @@ class BaseSearch(APIModel):
         gt=0,
     )
 
-    @field_validator("keyword")
     @classmethod
+    @field_validator("keyword")
     def keyword_validator(cls, v):
         if not v:
             raise ValueError(_("keyword 参数无效"))
@@ -59,6 +59,7 @@ class GeneralSearch(BaseSearch):
         2,
     ] = 0
 
+    @classmethod
     @field_validator(
         "sort_type",
         "publish_time",
@@ -67,7 +68,6 @@ class GeneralSearch(BaseSearch):
         "content_type",
         mode="before",
     )
-    @classmethod
     def val_number(cls, value: str | int) -> int:
         return int(value) if isinstance(value, str) else value
 
@@ -98,10 +98,10 @@ class VideoSearch(BaseSearch):
         3,
     ] = 0
 
+    @classmethod
     @field_validator(
         "sort_type", "publish_time", "duration", "search_range", mode="before"
     )
-    @classmethod
     def val_number(cls, value: str | int) -> int:
         return int(value) if isinstance(value, str) else value
 
@@ -123,24 +123,11 @@ class UserSearch(BaseSearch):
         3,
     ] = 0
 
-    @field_validator("douyin_user_fans", "douyin_user_type", mode="before")
     @classmethod
+    @field_validator("douyin_user_fans", "douyin_user_type", mode="before")
     def val_number(cls, value: str | int) -> int:
         return int(value) if isinstance(value, str) else value
 
 
 class LiveSearch(BaseSearch):
     channel: Literal[3,] = 3
-
-
-if __name__ == "__main__":
-    from pydantic import ValidationError
-
-    try:
-        search = BaseSearch(
-            keyword="test",
-        )
-        print(search.model_dump())
-    except ValidationError as e:
-        print(repr(e))
-    print(GeneralSearch(keyword="test", sort_type="2").model_dump())

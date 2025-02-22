@@ -137,8 +137,10 @@ class APIServer(TikTok):
             return Response(
                 message=_("获取成功！"),
                 data=data,
+                params=extract.model_dump(),
             )
         return Response(
             message=_("获取失败！"),
             data=data,
+            params=extract.model_dump(),
         )
