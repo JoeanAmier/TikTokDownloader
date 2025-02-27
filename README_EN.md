@@ -106,8 +106,8 @@
 
 ## Quick Start
 
-<p>⭐ Mac OS and Windows 10 and above users can go to <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> to download the compiled program, ready to use!</p>
-<p>⭐ This project includes GitHub Actions for manually building executable files. Users can use GitHub Actions to build the latest source code into executable files at any time!</p>
+<p>⭐ Mac OS and Windows 10 and above users can go to <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> or <a href="https://github.com/JoeanAmier/TikTokDownloader/actions">Actions</a> to download the compiled program, ready to use!</p>
+<p>⭐ This project includes GitHub Actions for automatic building executable files. Users can use GitHub Actions to build the latest source code into executable files at any time!</p>
 <p><strong>Note: The executable file <code>main</code> on Mac OS may need to be started from the terminal command line. Due to device limitations, the executable file on the Mac OS platform has not been tested, and its usability cannot be guaranteed!</strong></p>
 <hr>
 <ol>
@@ -257,7 +257,7 @@ the program based on the latest source code!
 #### 3. Manually Trigger the Build Process
 
 1. In your forked repository, click the **Actions** tab at the top
-2. Find the workflow named **Manual Build of Executable File**
+2. Find the workflow named **构建可执行文件**
 3. Click the **Run workflow** button on the right:
     - Select the **master** or **develop** branch
     - Click **Run workflow**

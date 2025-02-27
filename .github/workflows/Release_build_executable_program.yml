@@ -1,8 +1,8 @@
-name: 发布构建可执行文件
+name: 自动构建并发布可执行文件
 
 on:
   release:
-    types: [ created ]
+    types: [ published ]
 
 permissions:
   contents: write
