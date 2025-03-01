@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 from typing import Union
 
-from ..tools import PrivateRetry
+from ..tools import Retry
 
 if TYPE_CHECKING:
     from typing import Iterable
@@ -50,7 +50,7 @@ class BaseTextLogger:
         return new_
 
     @staticmethod
-    @PrivateRetry.retry_infinite
+    @Retry.retry_infinite
     def __rename_file(old_file: Path, new_file: Path) -> bool:
         if old_file.exists() and not new_file.exists():
             try:

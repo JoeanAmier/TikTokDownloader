@@ -30,7 +30,7 @@ from ..custom import (
     PROGRESS,
 )
 from ..tools import CacheError
-from ..tools import PrivateRetry
+from ..tools import Retry
 from ..tools import TikTokDownloaderError
 from ..tools import beautify_string
 from ..tools import format_size
@@ -555,7 +555,7 @@ class Downloader:
         """未传入 switch 参数则判断音乐下载开关设置"""
         return all((switch or self.music, url, not self.is_exists(path)))
 
-    @PrivateRetry.retry
+    @Retry.retry
     async def request_file(
             self,
             url: str,

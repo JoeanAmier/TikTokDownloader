@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 # from ..custom import PHONE_HEADERS
 from ..custom import wait
-from ..tools import PrivateRetry
+from ..tools import Retry
 from ..tools import TikTokDownloaderError
 from ..tools import capture_error_request
 
@@ -44,7 +44,7 @@ class Requester:
             await wait()
         return " ".join(i for i in result if i)
 
-    @PrivateRetry.retry
+    @Retry.retry
     @capture_error_request
     async def request_url(
             self,

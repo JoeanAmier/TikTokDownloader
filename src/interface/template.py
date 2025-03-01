@@ -18,7 +18,7 @@ from rich.progress import (
 from ..custom import PROGRESS
 from ..custom import USERAGENT
 from ..custom import wait
-from ..tools import PrivateRetry
+from ..tools import Retry
 from ..tools import TikTokDownloaderError
 from ..tools import capture_error_request
 from ..translation import _
@@ -284,7 +284,7 @@ class API:
             case _:
                 raise TikTokDownloaderError
 
-    @PrivateRetry.retry
+    @Retry.retry
     @capture_error_request
     async def __request_data_get(
             self,
@@ -309,7 +309,7 @@ class API:
         )
         return await self.__return_response(response)
 
-    @PrivateRetry.retry
+    @Retry.retry
     @capture_error_request
     async def __request_data_post(
             self, url: str, params: str, data: dict, headers: dict, finished=False, **kwargs

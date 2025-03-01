@@ -16,7 +16,7 @@ from .format import (
     format_size,
 )
 from .list_pop import safe_pop
-from .retry import PrivateRetry
+from .retry import Retry
 from .session import (
     request_params,
     create_client,

@@ -1,4 +1,5 @@
 from json.decoder import JSONDecodeError
+from ssl import SSLError
 from typing import TYPE_CHECKING
 from typing import Union
 
@@ -34,7 +35,10 @@ def capture_error_params(function):
             logger.error(_("网络异常：{error}").format(error=e))
         except TimeoutException as e:
             logger.error(_("请求超时：{error}").format(error=e))
-        except RequestError as e:
+        except (
+                RequestError,
+                SSLError,
+        ) as e:
             logger.error(_("网络异常：{error}").format(error=e))
         return None
 
@@ -53,7 +57,10 @@ def capture_error_request(function):
             self.log.error(_("网络异常：{error}").format(error=e))
         except TimeoutException as e:
             self.log.error(_("请求超时：{error}").format(error=e))
-        except RequestError as e:
+        except (
+                RequestError,
+                SSLError,
+        ) as e:
             self.log.error(_("网络异常：{error}").format(error=e))
         return None
 

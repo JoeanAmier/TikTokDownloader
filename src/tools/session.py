@@ -8,7 +8,7 @@ from httpx import HTTPTransport
 from httpx import Limits
 
 from .capture import capture_error_params
-from .retry import PrivateRetry
+from .retry import Retry
 from ..custom import MAX_WORKERS
 from ..custom import TIMEOUT
 from ..custom import USERAGENT
@@ -93,7 +93,7 @@ async def request_params(
         )
 
 
-@PrivateRetry.retry_lite
+@Retry.retry_lite
 @capture_error_params
 async def request(
         logger: Union[

@@ -6,7 +6,7 @@ aiosqlite==0.21.0
     # via tiktokdownloader (pyproject.toml)
 emoji==2.14.1
     # via tiktokdownloader (pyproject.toml)
-fastapi==0.115.8
+fastapi==0.115.9
     # via tiktokdownloader (pyproject.toml)
 gmssl==3.2.2
     # via tiktokdownloader (pyproject.toml)

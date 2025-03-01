@@ -20,7 +20,7 @@ from ..custom import QRCODE_HEADERS
 from ..custom import WARNING
 from ..encrypt import MsToken
 # from ..encrypt import VerifyFp
-from ..tools import PrivateRetry
+from ..tools import Retry
 from ..tools import cookie_str_to_str
 
 if TYPE_CHECKING:
@@ -206,7 +206,7 @@ class Register:
             return False
         return cookie_str_to_str(history[1].headers.get("Set-Cookie"))
 
-    @PrivateRetry.retry_lite
+    @Retry.retry_lite
     async def request_data(self, json=True, **kwargs):
         try:
             response = await self.client.get(headers=self.headers, **kwargs)

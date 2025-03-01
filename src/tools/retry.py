@@ -2,10 +2,10 @@ from ..custom import RETRY
 from ..custom import wait
 from ..translation import _
 
-__all__ = ["PrivateRetry"]
+__all__ = ["Retry"]
 
 
-class PrivateRetry:
+class Retry:
     """重试器，仅适用于本项目！"""
 
     @staticmethod

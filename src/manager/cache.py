@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from ..tools import PrivateRetry
+from ..tools import Retry
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -210,7 +210,7 @@ class Cache:
         self.log.info(f"文件 {old_file} 重命名为 {new_file}", False)
         return True
 
-    @PrivateRetry.retry_limited
+    @Retry.retry_limited
     def __rename(
             self,
             old_: Path,
