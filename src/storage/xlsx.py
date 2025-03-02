@@ -3,8 +3,10 @@ from typing import TYPE_CHECKING
 
 from openpyxl import Workbook
 from openpyxl import load_workbook
+from openpyxl.utils.exceptions import IllegalCharacterError
 
 from .text import BaseTextLogger
+from ..translation import _
 
 if TYPE_CHECKING:
     from ..tools import ColorfulConsole
@@ -54,4 +56,9 @@ class XLSXLogger(BaseTextLogger):
                 self.sheet.cell(row=1, column=col, value=value)
 
     async def _save(self, data, *args, **kwargs):
-        self.sheet.append(data)
+        try:
+            self.sheet.append(data)
+        except IllegalCharacterError as e:
+            self.console.warning(
+                _("数据包含非法字符，保存数据失败：{error}").format(error=e)
+            )
