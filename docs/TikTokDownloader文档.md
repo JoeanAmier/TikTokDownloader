@@ -1652,6 +1652,10 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 <p><code>Set-Cookie</code> 的内容格式为：<code>ttwid=XXX; Path=/; Domain=tiktok.com; Max-Age=31536000; HttpOnly; Secure; SameSite=None</code>，复制时只需要复制 <code>ttwid=XXX</code> 部分，而不是复制全部内容！</p>
 <h2>采集数据而不下载文件</h2>
 <p>将配置文件的 <code>download</code> 参数设置为 <code>false</code>，并设置 <code>storage_format</code> 参数，程序将不会下载任何文件，仅采集数据。</p>
+<h2>请求超时：timed out</h2>
+<p>网络异常；如果您的网络需要使用代理才能访问 TikTok，请在配置文件设置 <code>proxy</code> 参数！</p>
+<h2>self 获取账号信息失败</h2>
+<p>请把配置文件的 <code>owner_url</code> 参数修改为实际的抖音主页链接，获取方式请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/issues/416">issue</a></p>
 <h1>免责声明</h1>
 <ul>
 <li>使用者对本项目的使用由使用者自行决定，并自行承担风险。作者对使用者使用本项目所产生的任何损失、责任、或风险概不负责。</li>

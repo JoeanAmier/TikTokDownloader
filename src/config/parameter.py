@@ -274,7 +274,7 @@ class Parameter:
     ) -> None | str:
         if isinstance(cookie, dict):
             for i in parameters:
-                if isinstance(i, dict):
+                if i:
                     self.logger.info(
                         f"参数: {i}",
                         False,
@@ -282,7 +282,7 @@ class Parameter:
                     cookie |= i
         elif isinstance(cookie, str):
             for i in parameters:
-                if isinstance(i, dict):
+                if i:
                     self.logger.info(
                         f"参数: {i}",
                         False,
@@ -291,16 +291,17 @@ class Parameter:
             return cookie
 
     async def __get_tt_wid_params(self) -> dict:
-        tt_wid = await TtWid.get_tt_wid(
+        if tt_wid := await TtWid.get_tt_wid(
             self.logger,
             self.headers_params,
             proxy=self.proxy,
-        )
-        self.logger.info(f"抖音 {TtWid.NAME} 请求值: {tt_wid[TtWid.NAME]}", False)
-        return tt_wid
+        ):
+            self.logger.info(f"抖音 {TtWid.NAME} 请求值: {tt_wid[TtWid.NAME]}", False)
+            return tt_wid
+        return {}
 
     async def __get_tt_wid_params_tiktok(self) -> dict:
-        tt_wid = await TtWidTikTok.get_tt_wid(
+        if tt_wid := await TtWidTikTok.get_tt_wid(
             self.logger,
             self.headers_params_tiktok,
             self.twc_tiktok
@@ -312,11 +313,12 @@ class Parameter:
             )
             }",
             proxy=self.proxy_tiktok,
-        )
-        self.logger.info(
-            f"TikTok {TtWidTikTok.NAME} 请求值: {tt_wid[TtWidTikTok.NAME]}", False
-        )
-        return tt_wid
+        ):
+            self.logger.info(
+                f"TikTok {TtWidTikTok.NAME} 请求值: {tt_wid[TtWidTikTok.NAME]}", False
+            )
+            return tt_wid
+        return {}
 
     def __check_root(self, root: str) -> Path:
         if not root:
