@@ -34,18 +34,18 @@ class WebUI(TikTok):
     @staticmethod
     def _convert_bool(data: dict):
         for i in (
-                "folder_mode",
-                "music",
-                "dynamic_cover",
-                "original_cover",
-                "download",
+            "folder_mode",
+            "music",
+            "dynamic_cover",
+            "static_cover",
+            "download",
         ):
             data[i] = {"on": True, None: False}[data.get(i)]
         for i, j in (
-                ("max_size", 0),
-                ("chunk", 1024 * 1024),
-                ("max_retry", 5),
-                ("max_pages", 0),
+            ("max_size", 0),
+            ("chunk", 1024 * 1024),
+            ("max_retry", 5),
+            ("max_pages", 0),
         ):
             try:
                 data[i] = int(data[i])

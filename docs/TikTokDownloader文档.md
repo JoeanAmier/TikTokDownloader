@@ -405,7 +405,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <td align="center">false</td>
 </tr>
 <tr>
-<td align="center">original_cover</td>
+<td align="center">static_cover</td>
 <td align="center">bool</td>
 <td align="center">是否下载视频作品静态封面图</td>
 <td align="center">false</td>
@@ -569,7 +569,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
   },
   "cookie_tiktok": "参数规则与 cookie 一致",
   "dynamic_cover": false,
-  "original_cover": false,
+  "static_cover": false,
   "proxy": "http://127.0.0.1:9999",
   "proxy_tiktok": "参数规则与 proxy 一致",
   "twc_tiktok": "",
@@ -1185,7 +1185,7 @@ print(response.json())
   "storage_format": "可选参数",
   "cookie": "可选参数",
   "dynamic_cover": "可选参数",
-  "original_cover": "可选参数",
+  "static_cover": "可选参数",
   "proxies": "可选参数",
   "download": "可选参数",
   "max_size": "可选参数",

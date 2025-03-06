@@ -70,8 +70,8 @@ class Downloader:
         self.split = params.split
         self.folder_mode = params.folder_mode
         self.music = params.music
-        self.dynamic = params.dynamic_cover
-        self.original = params.original_cover
+        self.dynamic_cover = params.dynamic_cover
+        self.static_cover = params.static_cover
         # self.cookie = params.cookie
         # self.cookie_tiktok = params.cookie_tiktok
         self.proxy = params.proxy
@@ -126,11 +126,11 @@ class Downloader:
         )
 
     async def run(
-            self,
-            data: Union[list[dict], list[tuple]],
-            type_: str,
-            tiktok=False,
-            **kwargs,
+        self,
+        data: Union[list[dict], list[tuple]],
+        type_: str,
+        tiktok=False,
+        **kwargs,
     ) -> None:
         if not self.download or not data:
             return
@@ -148,17 +148,17 @@ class Downloader:
                 raise ValueError
 
     async def run_batch(
-            self,
-            data: list[dict],
-            tiktok: bool,
-            mode: str = "",
-            mark: str = "",
-            user_id: str = "",
-            user_name: str = "",
-            mix_id: str = "",
-            mix_title: str = "",
-            collect_id: str = "",
-            collect_name: str = "",
+        self,
+        data: list[dict],
+        tiktok: bool,
+        mode: str = "",
+        mark: str = "",
+        user_id: str = "",
+        user_name: str = "",
+        mix_id: str = "",
+        mix_title: str = "",
+        collect_id: str = "",
+        collect_name: str = "",
     ):
         root = self.storage_folder(
             mode,
@@ -188,9 +188,9 @@ class Downloader:
         )
 
     async def run_music(
-            self,
-            data: list[dict],
-            **kwargs,
+        self,
+        data: list[dict],
+        **kwargs,
     ):
         root = self.root.joinpath("Music")
         tasks = []
@@ -217,10 +217,10 @@ class Downloader:
         )
 
     async def run_live(
-            self,
-            data: list[tuple],
-            tiktok=False,
-            **kwargs,
+        self,
+        data: list[tuple],
+        tiktok=False,
+        **kwargs,
     ):
         if not data or not self.download:
             return
@@ -235,10 +235,10 @@ class Downloader:
         self.__download_live(download_command, tiktok)
 
     def generate_live_commands(
-            self,
-            data: list[tuple],
-            commands: list,
-            suffix: str = "mp4",
+        self,
+        data: list[tuple],
+        commands: list,
+        suffix: str = "mp4",
     ):
         root = self.root.joinpath("Live")
         root.mkdir(exist_ok=True)
@@ -256,9 +256,9 @@ class Downloader:
             )
 
     def __download_live(
-            self,
-            commands: list,
-            tiktok: bool,
+        self,
+        commands: list,
+        tiktok: bool,
     ):
         self.ffmpeg.download(
             commands,
@@ -324,12 +324,12 @@ class Downloader:
         self.statistics_count(count)
 
     async def downloader_chart(
-            self,
-            tasks: list[tuple],
-            count: SimpleNamespace,
-            progress: Progress,
-            semaphore: Semaphore = None,
-            **kwargs,
+        self,
+        tasks: list[tuple],
+        count: SimpleNamespace,
+        progress: Progress,
+        semaphore: Semaphore = None,
+        **kwargs,
     ):
         with progress:
             tasks = [
@@ -345,10 +345,10 @@ class Downloader:
             await gather(*tasks)
 
     def deal_folder_path(
-            self,
-            root: Path,
-            name: str,
-            folder_mode=False,
+        self,
+        root: Path,
+        name: str,
+        folder_mode=False,
     ) -> tuple[Path, Path]:
         """生成文件的临时路径和目标路径"""
         root = self.create_detail_folder(root, name, folder_mode)
@@ -368,16 +368,16 @@ class Downloader:
         return await self.is_downloaded(id_) or self.is_exists(path)
 
     async def download_image(
-            self,
-            tasks: list,
-            name: str,
-            id_: str,
-            item: SimpleNamespace,
-            skipped: set,
-            temp_root: Path,
-            actual_root: Path,
-            suffix: str = "jpeg",
-            type_: str = _("图集"),
+        self,
+        tasks: list,
+        name: str,
+        id_: str,
+        item: SimpleNamespace,
+        skipped: set,
+        temp_root: Path,
+        actual_root: Path,
+        suffix: str = "jpeg",
+        type_: str = _("图集"),
     ) -> None:
         if not item["downloads"]:
             self.log.error(
@@ -387,8 +387,8 @@ class Downloader:
             )
             return
         for index, img in enumerate(
-                item["downloads"],
-                start=1,
+            item["downloads"],
+            start=1,
         ):
             if await self.is_downloaded(id_):
                 skipped.add(id_)
@@ -419,16 +419,16 @@ class Downloader:
             )
 
     async def download_video(
-            self,
-            tasks: list,
-            name: str,
-            id_: str,
-            item: SimpleNamespace,
-            skipped: set,
-            temp_root: Path,
-            actual_root: Path,
-            suffix: str = "mp4",
-            type_: str = _("视频"),
+        self,
+        tasks: list,
+        name: str,
+        id_: str,
+        item: SimpleNamespace,
+        skipped: set,
+        temp_root: Path,
+        actual_root: Path,
+        suffix: str = "mp4",
+        type_: str = _("视频"),
     ) -> None:
         if not item["downloads"]:
             self.log.error(
@@ -438,10 +438,10 @@ class Downloader:
             )
             return
         if await self.is_skip(
-                id_,
-                p := actual_root.with_name(
-                    f"{name}.{suffix}",
-                ),
+            id_,
+            p := actual_root.with_name(
+                f"{name}.{suffix}",
+            ),
         ):
             self.log.info(
                 _("【{type}】{name} 存在下载记录或文件已存在，跳过下载").format(
@@ -463,23 +463,23 @@ class Downloader:
         )
 
     def download_music(
-            self,
-            tasks: list,
-            name: str,
-            id_: str,
-            item: dict,
-            temp_root: Path,
-            actual_root: Path,
-            key: str = "music_url",
-            switch: bool = False,
-            suffix: str = "mp3",
-            type_: str = _("音乐"),
-            **kwargs,
+        self,
+        tasks: list,
+        name: str,
+        id_: str,
+        item: dict,
+        temp_root: Path,
+        actual_root: Path,
+        key: str = "music_url",
+        switch: bool = False,
+        suffix: str = "mp3",
+        type_: str = _("音乐"),
+        **kwargs,
     ) -> None:
         if self.check_deal_music(
-                url := item[key],
-                p := actual_root.with_name(f"{name}.{suffix}"),
-                switch,
+            url := item[key],
+            p := actual_root.with_name(f"{name}.{suffix}"),
+            switch,
         ):
             tasks.append(
                 (
@@ -496,25 +496,25 @@ class Downloader:
             )
 
     def download_cover(
-            self,
-            tasks: list,
-            name: str,
-            id_: str,
-            item: SimpleNamespace,
-            temp_root: Path,
-            actual_root: Path,
-            original_suffix: str = "jpeg",
-            dynamic_suffix: str = "webp",
-            **kwargs,
+        self,
+        tasks: list,
+        name: str,
+        id_: str,
+        item: SimpleNamespace,
+        temp_root: Path,
+        actual_root: Path,
+        original_suffix: str = "jpeg",
+        dynamic_suffix: str = "webp",
+        **kwargs,
     ) -> None:
         if all(
-                (
-                        self.original,
+            (
+                self.static_cover,
                 url := item["origin_cover"],
-                        not self.is_exists(
-                            p := actual_root.with_name(f"{name}.{original_suffix}")
-                        ),
-                )
+                not self.is_exists(
+                    p := actual_root.with_name(f"{name}.{original_suffix}")
+                ),
+            )
         ):
             tasks.append(
                 (
@@ -527,13 +527,13 @@ class Downloader:
                 )
             )
         if all(
-                (
-                        self.dynamic,
+            (
+                self.dynamic_cover,
                 url := item["dynamic_cover"],
-                        not self.is_exists(
-                            p := actual_root.with_name(f"{name}.{dynamic_suffix}")
-                        ),
-                )
+                not self.is_exists(
+                    p := actual_root.with_name(f"{name}.{dynamic_suffix}")
+                ),
+            )
         ):
             tasks.append(
                 (
@@ -547,29 +547,29 @@ class Downloader:
             )
 
     def check_deal_music(
-            self,
-            url: str,
-            path: Path,
-            switch=False,
+        self,
+        url: str,
+        path: Path,
+        switch=False,
     ) -> bool:
         """未传入 switch 参数则判断音乐下载开关设置"""
         return all((switch or self.music, url, not self.is_exists(path)))
 
     @Retry.retry
     async def request_file(
-            self,
-            url: str,
-            temp: Path,
-            actual: Path,
-            show: str,
-            id_: str,
-            suffix: str,
-            count: SimpleNamespace,
-            progress: Progress,
-            headers: dict = None,
-            tiktok=False,
-            unknown_size=False,
-            semaphore: Semaphore = None,
+        self,
+        url: str,
+        temp: Path,
+        actual: Path,
+        show: str,
+        id_: str,
+        suffix: str,
+        count: SimpleNamespace,
+        progress: Progress,
+        headers: dict = None,
+        tiktok=False,
+        unknown_size=False,
+        semaphore: Semaphore = None,
     ) -> bool | None:
         async with semaphore or self.semaphore:
             client = self.client_tiktok if tiktok else self.client
@@ -592,9 +592,9 @@ class Downloader:
                     temp,
                 )
                 async with client.stream(
-                        "GET",
-                        url,
-                        headers=headers,
+                    "GET",
+                    url,
+                    headers=headers,
                 ) as response:
                     if response.status_code == 416:
                         raise CacheError(_("文件缓存异常，尝试重新下载"))
@@ -660,16 +660,16 @@ class Downloader:
                 return False
 
     async def download_file(
-            self,
-            cache: Path,
-            actual: Path,
-            show: str,
-            id_: str,
-            response,
-            content: int,
-            position: int,
-            count: SimpleNamespace,
-            progress: Progress,
+        self,
+        cache: Path,
+        actual: Path,
+        show: str,
+        id_: str,
+        response,
+        content: int,
+        position: int,
+        count: SimpleNamespace,
+        progress: Progress,
     ) -> bool:
         task_id = progress.add_task(
             beautify_string(show, self.truncate),
@@ -683,8 +683,8 @@ class Downloader:
                     progress.update(task_id, advance=len(chunk))
                 progress.remove_task(task_id)
         except (
-                RequestError,
-                StreamError,
+            RequestError,
+            StreamError,
         ) as e:
             progress.remove_task(task_id)
             self.log.warning(
@@ -701,11 +701,11 @@ class Downloader:
         return True
 
     def __adapter_headers(
-            self,
-            headers: dict,
-            tiktok: bool,
-            *args,
-            **kwargs,
+        self,
+        headers: dict,
+        tiktok: bool,
+        *args,
+        **kwargs,
     ) -> dict:
         return (headers or self.headers_tiktok if tiktok else self.headers).copy()
 
@@ -720,14 +720,14 @@ class Downloader:
 
     @staticmethod
     def data_classification(
-            mode: str = "",
-            mark: str = "",
-            user_id: str = "",
-            user_name: str = "",
-            mix_id: str = "",
-            mix_title: str = "",
-            collect_id: str = "",
-            collect_name: str = "",
+        mode: str = "",
+        mark: str = "",
+        user_id: str = "",
+        user_name: str = "",
+        mix_id: str = "",
+        mix_title: str = "",
+        collect_id: str = "",
+        collect_name: str = "",
     ) -> [str, str]:
         match mode:
             case "post" | "favorite" | "collection":
@@ -740,10 +740,10 @@ class Downloader:
                 raise TikTokDownloaderError
 
     def storage_folder(
-            self,
-            mode: str = "",
-            id_: str = "",
-            name: str = "",
+        self,
+        mode: str = "",
+        id_: str = "",
+        name: str = "",
     ) -> Path:
         match mode:
             case "post":
@@ -793,15 +793,15 @@ class Downloader:
 
     @staticmethod
     def create_detail_folder(
-            root: Path,
-            name: str,
-            folder_mode=False,
+        root: Path,
+        name: str,
+        folder_mode=False,
     ) -> Path:
         return root.joinpath(name) if folder_mode else root
 
     @staticmethod
     def delete(
-            temp: "Path",
+        temp: "Path",
     ):
         if temp.is_file():
             temp.unlink()
@@ -847,10 +847,10 @@ class Downloader:
         )
 
     def _record_response(
-            self,
-            response,
-            show: str,
-            length: int,
+        self,
+        response,
+        show: str,
+        length: int,
     ):
         self.log.info(f"{show} Response URL: {response.url}", False)
         self.log.info(f"{show} Response Code: {response.status_code}", False)
@@ -861,11 +861,11 @@ class Downloader:
         )
 
     async def __head_file(
-            self,
-            client: "AsyncClient",
-            url: str,
-            headers: dict,
-            suffix: str,
+        self,
+        client: "AsyncClient",
+        url: str,
+        headers: dict,
+        suffix: str,
     ) -> [int, str]:
         response = await client.head(
             url,
@@ -880,15 +880,15 @@ class Downloader:
         )
 
     def _extract_content(
-            self,
-            headers: dict,
-            suffix: str,
+        self,
+        headers: dict,
+        suffix: str,
     ) -> [int, str]:
         suffix = (
-                self.__extract_type(
-                    headers.get("Content-Type"),
-                )
-                or suffix
+            self.__extract_type(
+                headers.get("Content-Type"),
+            )
+            or suffix
         )
         length = headers.get(
             "Content-Length",
@@ -901,10 +901,10 @@ class Downloader:
         return file.stat().st_size if file.is_file() else 0
 
     def __update_headers_range(
-            self,
-            headers: dict,
-            file: Path,
-            length: int = 0,
+        self,
+        headers: dict,
+        file: Path,
+        length: int = 0,
     ) -> int:
         position = self.__get_resume_byte_position(file)
         # if length and position >= length:

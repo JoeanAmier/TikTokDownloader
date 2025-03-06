@@ -35,7 +35,7 @@ function get_parameters() {
         storage_format: $("#storage_format").val(),
         run_command: $("#run_command").val(),
         dynamic_cover: $("#dynamic_cover:checked").val(),
-        original_cover: $("#original_cover:checked").val(),
+        static_cover: $("#static_cover:checked").val(),
         proxies: $("#proxies").val(),
         chunk: $("#chunk").val(),
         max_size: $("#max_size").val(),
