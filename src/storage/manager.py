@@ -123,7 +123,7 @@ class RecordManager:
             "TEXT",
         ),
         (
-            "origin_cover",
+            "static_cover",
             "静态封面",
             "TEXT",
         ),

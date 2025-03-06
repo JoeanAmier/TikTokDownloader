@@ -6,7 +6,7 @@ VERSION_MINOR = 6
 VERSION_BETA = True
 __VERSION__ = f"{VERSION_MAJOR}.{VERSION_MINOR}.{'beta' if VERSION_BETA else 'stable'}"
 PROJECT_NAME = f"TikTokDownloader V{VERSION_MAJOR}.{VERSION_MINOR} {
-'Beta' if VERSION_BETA else 'Stable'
+    'Beta' if VERSION_BETA else 'Stable'
 }"
 
 REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
@@ -19,7 +19,7 @@ TIMEOUT = 10
 
 PHONE_HEADERS = {
     "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) "
-                  "CriOS/125.0.6422.51 Mobile/15E148 Safari/604.1",
+    "CriOS/125.0.6422.51 Mobile/15E148 Safari/604.1",
 }
 USERAGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 "
@@ -70,7 +70,7 @@ IMAGE_INDEX: int = -1
 IMAGE_TIKTOK_INDEX: int = -1
 VIDEOS_INDEX: int = -1
 DYNAMIC_COVER_INDEX: int = -1
-ORIGIN_COVER_INDEX: int = -1
+STATIC_COVER_INDEX: int = -1
 MUSIC_INDEX: int = -1
 COMMENT_IMAGE_INDEX: int = -1
 COMMENT_STICKER_INDEX: int = -1

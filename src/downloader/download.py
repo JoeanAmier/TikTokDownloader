@@ -503,27 +503,27 @@ class Downloader:
         item: SimpleNamespace,
         temp_root: Path,
         actual_root: Path,
-        original_suffix: str = "jpeg",
+        static_suffix: str = "jpeg",
         dynamic_suffix: str = "webp",
         **kwargs,
     ) -> None:
         if all(
             (
                 self.static_cover,
-                url := item["origin_cover"],
+                url := item["static_cover"],
                 not self.is_exists(
-                    p := actual_root.with_name(f"{name}.{original_suffix}")
+                    p := actual_root.with_name(f"{name}.{static_suffix}")
                 ),
             )
         ):
             tasks.append(
                 (
                     url,
-                    temp_root.with_name(f"{name}.{original_suffix}"),
+                    temp_root.with_name(f"{name}.{static_suffix}"),
                     p,
                     f"【封面】{name}",
                     id_,
-                    original_suffix,
+                    static_suffix,
                 )
             )
         if all(
@@ -923,20 +923,20 @@ class Downloader:
         return ""
 
     def _download_initial_check(
-            self,
-            length: int,
-            unknown_size: bool,
-            show: str,
+        self,
+        length: int,
+        unknown_size: bool,
+        show: str,
     ) -> int:
         if not length and not unknown_size:  # 响应内容大小判断
             self.log.warning(_("{show} 响应内容为空").format(show=show))
             return -1  # 执行重试
         if all(
-                (
+            (
                 self.max_size,
                 length,
                 length > self.max_size,
-                )
+            )
         ):  # 文件下载跳过判断
             self.log.info(_("{show} 文件大小超出限制，跳过下载").format(show=show))
             return 0  # 跳过下载
