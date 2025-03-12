@@ -47,6 +47,7 @@ from ..models import (
     UserSearch,
     LiveSearch,
 )
+from ..module import DetailTikTokUnofficial, DetailTikTokExtractor
 from ..storage import RecordManager
 from ..tools import TikTokDownloaderError
 from ..tools import choose
@@ -196,6 +197,10 @@ class TikTok:
                 self.live_interactive_tiktok,
             ),
             # (_("采集作品评论数据(TikTok)"), self.comment_interactive_tiktok,),
+            (
+                _("批量下载视频原画(TikTok)"),
+                self.detail_interactive_tiktok_unofficial,
+            ),
         )
         self.__function_account = (
             (_("使用 accounts_urls 参数的账号链接(推荐)"), self.account_detail_batch),
@@ -233,6 +238,10 @@ class TikTok:
         self.__function_detail_tiktok = (
             (_("手动输入待采集的作品链接"), self.__detail_inquire_tiktok),
             (_("从文本文档读取待采集的作品链接"), self.__detail_txt_tiktok),
+        )
+        self.__function_detail_tiktok_unofficial = (
+            (_("手动输入待采集的作品链接"), self.__detail_inquire_tiktok_unofficial),
+            (_("从文本文档读取待采集的作品链接"), self.__detail_txt_tiktok_unofficial),
         )
         self.__function_comment = (
             (_("手动输入待采集的作品链接"), self.__comment_inquire),
@@ -870,6 +879,19 @@ class TikTok:
         )
         self.logger.info(_("已退出批量下载链接作品(TikTok)模式"))
 
+    async def detail_interactive_tiktok_unofficial(
+        self,
+        select="",
+    ):
+        self.console.warning(
+            _("注意：本功能为实验性功能，依赖第三方 API 服务，可能不稳定或存在限制！")
+        )
+        await self.__detail_secondary_menu(
+            self.__function_detail_tiktok_unofficial,
+            select or safe_pop(self.run_command),
+        )
+        self.logger.info(_("已退出批量下载视频原画(TikTok)模式"))
+
     async def __detail_secondary_menu(self, menu, select="", *args, **kwargs):
         root, params, logger = self.record.run(self.parameter)
         async with logger(root, console=self.console, **params) as record:
@@ -917,6 +939,21 @@ class TikTok:
             tiktok,
         )
 
+    async def __detail_inquire_tiktok_unofficial(
+        self,
+        *args,
+        **kwargs,
+    ):
+        while url := self._inquire_input(_("作品")):
+            ids = await self.links_tiktok.run(url)
+            if not any(ids):
+                self.logger.warning(_("{url} 提取作品 ID 失败").format(url=url))
+                continue
+            self.console.print(
+                _("共提取到 {count} 个作品，开始处理！").format(count=len(ids))
+            )
+            await self.handle_detail_unofficial(ids)
+
     async def __detail_txt(
         self,
         tiktok=False,
@@ -937,6 +974,18 @@ class TikTok:
     ):
         await self.__detail_txt(
             tiktok=tiktok,
+        )
+
+    async def __detail_txt_tiktok_unofficial(
+        self,
+        *args,
+        **kwargs,
+    ):
+        await self._read_from_txt(
+            True,
+            "detail",
+            _("从文本文档提取作品 ID 失败"),
+            self.handle_detail_unofficial,
         )
 
     async def __read_detail_txt(self):
@@ -2061,14 +2110,14 @@ class TikTok:
         )
 
     async def _deal_collects_data(
-            self,
-            name: str,
-            id_: str,
-            api=False,
-            source=False,
-            cookie: str = None,
-            proxy: str = None,
-            tiktok=False,
+        self,
+        name: str,
+        id_: str,
+        api=False,
+        source=False,
+        cookie: str = None,
+        proxy: str = None,
+        tiktok=False,
     ):
         self.logger.info(_("开始获取收藏夹数据"))
         data = await CollectsDetail(
@@ -2091,17 +2140,32 @@ class TikTok:
         )
 
     async def hashtag_interactive(
-            self,
-            cookie: str = None,
-            proxy: str = None,
-            *args,
-            **kwargs,
+        self,
+        cookie: str = None,
+        proxy: str = None,
+        *args,
+        **kwargs,
     ):
         await HashTag(
             self.parameter,
             cookie,
             proxy,
         ).run()
+
+    async def handle_detail_unofficial(
+        self,
+        ids: list[str],
+        *args,
+        **kwargs,
+    ):
+        extractor = DetailTikTokExtractor(self.parameter)
+        for i in ids:
+            if data := await DetailTikTokUnofficial(
+                self.parameter,
+                detail_id=i,
+            ).run():
+                if data := extractor.run(data):
+                    await self.downloader.run([data], "detail", tiktok=True)
 
     async def run(self, run_command: list):
         self.run_command = run_command

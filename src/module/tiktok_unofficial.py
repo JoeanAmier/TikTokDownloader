@@ -31,7 +31,7 @@ class DetailTikTokUnofficial:
         self.log = params.logger
         self.console = params.console
         self.api = "https://www.tikwm.com/api/"
-        self.proxy = proxy
+        self.proxy = proxy or params.proxy_tiktok
         self.max_retry = params.max_retry
         self.timeout = params.timeout
         self.detail_id = detail_id
@@ -53,6 +53,10 @@ class DetailTikTokUnofficial:
             self.api,
             params={"url": self.detail_id, "hd": "1"},
             headers=self.headers,
+            timeout=self.timeout,
+            follow_redirects=True,
+            verify=False,
+            proxy=self.proxy,
         )
         response.raise_for_status()
         await wait()
@@ -149,7 +153,7 @@ async def test():
     async with Params() as params:
         i = DetailTikTokUnofficial(
             params,
-            detail_id="7469794354454973714",
+            detail_id="",
         )
         if data := await i.run():
             print(DetailTikTokExtractor(params).run(data))

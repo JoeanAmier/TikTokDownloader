@@ -25,6 +25,7 @@
 * ✅ Download DouYin video/image without watermarks
 * ✅ Download DouYin live photo without watermarks
 * ✅ Download the highest quality video file
+* ✅ Download TikTok video source files
 * ✅ Download TikTok video/image without watermarks
 * ✅ Download of DouYin account posts/liked/favorites works
 * ✅ Download of TikTok account posts/liked works
