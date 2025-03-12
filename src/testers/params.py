@@ -11,6 +11,7 @@ from src.custom import (
 from src.encrypt import ABogus
 from src.encrypt import XBogus
 from src.testers.logger import Logger
+from src.tools import Cleaner
 from src.tools import create_client
 
 ROOT = Path(__file__).resolve().parent.parent.parent
@@ -18,6 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 
 class Params:
     CONFIG = ROOT.joinpath("cookie.ini")
+    CLEANER = Cleaner()
 
     def __init__(self):
         self.cookie_str = ""
@@ -34,6 +36,7 @@ class Params:
         self.max_retry = 0
         self.timeout = 5
         self.max_pages = 2
+        self.date_format = "%Y-%m-%d %H:%M:%S"
         self.client = create_client(
             timeout=self.timeout,
         )
