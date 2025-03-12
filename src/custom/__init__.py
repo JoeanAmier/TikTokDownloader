@@ -50,6 +50,7 @@ from .internal import (
     MUSIC_COLLECTION_COVER_INDEX,
     MUSIC_COLLECTION_DOWNLOAD_INDEX,
     __VERSION__,
+    BLANK_HEADERS,
 )
 from .static import (
     MAX_WORKERS,

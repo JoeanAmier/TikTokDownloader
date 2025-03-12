@@ -1,4 +1,5 @@
 from configparser import ConfigParser, NoSectionError, NoOptionError
+from pathlib import Path
 
 from rich.console import Console
 
@@ -12,8 +13,12 @@ from src.encrypt import XBogus
 from src.testers.logger import Logger
 from src.tools import create_client
 
+ROOT = Path(__file__).resolve().parent.parent.parent
+
 
 class Params:
+    CONFIG = ROOT.joinpath("cookie.ini")
+
     def __init__(self):
         self.cookie_str = ""
         self.cookie_str_tiktok = ""
@@ -44,11 +49,11 @@ class Params:
             "dy": "",
             "tk": "",
         }
-        with open("cookie.ini", "w", encoding="utf-8") as configfile:
+        with self.CONFIG.open("w", encoding="utf-8") as configfile:
             self.config.write(configfile)
 
     def read_ini(self):
-        if not self.config.read("cookie.ini"):
+        if not self.config.read(self.CONFIG):
             self.create_ini()
             return
         try:
