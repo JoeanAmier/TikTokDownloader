@@ -3,20 +3,20 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from src.interface.template import API
-from src.testers import Params
 from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from src.testers import Params
 
 
 class Detail(API):
     def __init__(
-            self,
-            params: Union["Parameter", Params],
-            cookie: str = "",
-            proxy: str = None,
-            detail_id: str = ...,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        detail_id: str = ...,
     ):
         super().__init__(params, cookie, proxy)
         self.detail_id = detail_id
@@ -24,7 +24,7 @@ class Detail(API):
         self.text = _("作品")
 
     def generate_params(
-            self,
+        self,
     ) -> dict:
         return self.params | {
             "aweme_id": self.detail_id,
@@ -33,19 +33,19 @@ class Detail(API):
         }
 
     async def run(
-            self,
-            referer: str = None,
-            single_page=True,
-            data_key: str = "aweme_detail",
-            error_text="",
-            cursor="cursor",
-            has_more="has_more",
-            params: Callable = lambda: {},
-            data: Callable = lambda: {},
-            method="GET",
-            headers: dict = None,
-            *args,
-            **kwargs,
+        self,
+        referer: str = None,
+        single_page=True,
+        data_key: str = "aweme_detail",
+        error_text="",
+        cursor="cursor",
+        has_more="has_more",
+        params: Callable = lambda: {},
+        data: Callable = lambda: {},
+        method="GET",
+        headers: dict = None,
+        *args,
+        **kwargs,
     ):
         return await super().run(
             referer,
@@ -63,14 +63,14 @@ class Detail(API):
         )
 
     def check_response(
-            self,
-            data_dict: dict,
-            data_key: str,
-            error_text="",
-            cursor="cursor",
-            has_more="has_more",
-            *args,
-            **kwargs,
+        self,
+        data_dict: dict,
+        data_key: str,
+        error_text="",
+        cursor="cursor",
+        has_more="has_more",
+        *args,
+        **kwargs,
     ):
         try:
             if not (d := data_dict[data_key]):
@@ -84,6 +84,8 @@ class Detail(API):
 
 
 async def test():
+    from src.testers import Params
+
     async with Params() as params:
         i = Detail(
             params,

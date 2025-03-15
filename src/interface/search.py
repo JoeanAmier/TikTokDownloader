@@ -5,12 +5,12 @@ from typing import Union
 from urllib.parse import quote
 
 from src.interface.template import API
-from src.testers import Params
 from src.tools import TikTokDownloaderError
 from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from src.testers import Params
 
 
 class Search(API):
@@ -133,24 +133,24 @@ class Search(API):
     }
 
     def __init__(
-            self,
-            params: Union["Parameter", Params],
-            cookie: str = "",
-            proxy: str = None,
-            keyword: str = ...,
-            channel: int = 0,
-            pages: int = 99999,
-            sort_type: int = 0,
-            publish_time: int = 0,
-            duration: int = 0,
-            search_range: int = 0,
-            content_type: int = 0,
-            douyin_user_fans: int = 0,
-            douyin_user_type: int = 0,
-            cursor: int = 0,
-            count: int = 10,
-            *args,
-            **kwargs,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        keyword: str = ...,
+        channel: int = 0,
+        pages: int = 99999,
+        sort_type: int = 0,
+        publish_time: int = 0,
+        duration: int = 0,
+        search_range: int = 0,
+        content_type: int = 0,
+        douyin_user_fans: int = 0,
+        douyin_user_type: int = 0,
+        cursor: int = 0,
+        count: int = 10,
+        *args,
+        **kwargs,
     ):
         super().__init__(params, cookie, proxy, *args, **kwargs)
         self.keyword = keyword
@@ -207,16 +207,16 @@ class Search(API):
         return self.response
 
     def generate_filter_selected(
-            self,
+        self,
     ) -> str | None:
         if any(
-                (
+            (
                 self.sort_type,
                 self.publish_time,
                 self.duration,
                 self.search_range,
                 self.content_type,
-                )
+            )
         ):
             return dumps(
                 {
@@ -230,13 +230,13 @@ class Search(API):
             )
 
     def generate_search_filter_value(
-            self,
+        self,
     ) -> str | None:
         if any(
-                (
+            (
                 self.douyin_user_fans,
                 self.douyin_user_type,
-                )
+            )
         ):
             return dumps(
                 {
@@ -247,7 +247,7 @@ class Search(API):
             )
 
     def _generate_params_general(
-            self,
+        self,
     ) -> dict:
         params = self.params | {
             "search_channel": self.channel.channel,
@@ -274,7 +274,7 @@ class Search(API):
         return params
 
     def _generate_params_video(
-            self,
+        self,
     ) -> dict:
         params = self.params | {
             "search_channel": self.channel.channel,
@@ -316,7 +316,7 @@ class Search(API):
         return params
 
     def _generate_params_user(
-            self,
+        self,
     ) -> dict:
         params = self._generate_params_live()
         if self.search_filter_value:
@@ -327,7 +327,7 @@ class Search(API):
         return params
 
     def _generate_params_live(
-            self,
+        self,
     ) -> dict:
         params = self.params | {
             "search_channel": self.channel.channel,
@@ -348,14 +348,14 @@ class Search(API):
         return params
 
     def check_response(
-            self,
-            data_dict: dict,
-            data_key: str,
-            error_text="",
-            cursor="cursor",
-            has_more="has_more",
-            *args,
-            **kwargs,
+        self,
+        data_dict: dict,
+        data_key: str,
+        error_text="",
+        cursor="cursor",
+        has_more="has_more",
+        *args,
+        **kwargs,
     ):
         try:
             if not (d := data_dict[data_key]):
@@ -382,18 +382,19 @@ class Search(API):
             self.finished = True
 
     def append_response_video(
-            self,
-            data: list[dict],
-            key: str,
+        self,
+        data: list[dict],
+        key: str,
     ) -> None:
         self.append_response([i[key] for i in data])
 
 
 async def test():
+    from src.testers import Params
     async with Params() as params:
         i = Search(
             params,
-            keyword="玉足",
+            keyword="",
             channel=3,
             sort_type=2,
             publish_time=7,

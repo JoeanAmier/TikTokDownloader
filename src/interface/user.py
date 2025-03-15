@@ -2,22 +2,22 @@ from typing import TYPE_CHECKING, Callable, Type, Coroutine
 from typing import Union
 
 from src.interface.template import API
-from src.testers import Params
 from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from src.testers import Params
 
 
 class User(API):
     def __init__(
-            self,
-            params: Union["Parameter", Params],
-            cookie: str = "",
-            proxy: str = None,
-            sec_user_id: str = ...,
-            *args,
-            **kwargs,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        sec_user_id: str = ...,
+        *args,
+        **kwargs,
     ):
         super().__init__(params, cookie, proxy, *args, **kwargs)
         self.sec_user_id = sec_user_id
@@ -31,28 +31,28 @@ class User(API):
         )
 
     async def run_batch(
-            self,
-            data_key: str,
-            error_text="",
-            cursor="cursor",
-            has_more="has_more",
-            params: Callable = lambda: {},
-            data: Callable = lambda: {},
-            method="GET",
-            headers: dict = None,
-            callback: Type[Coroutine] = None,
-            *args,
-            **kwargs,
+        self,
+        data_key: str,
+        error_text="",
+        cursor="cursor",
+        has_more="has_more",
+        params: Callable = lambda: {},
+        data: Callable = lambda: {},
+        method="GET",
+        headers: dict = None,
+        callback: Type[Coroutine] = None,
+        *args,
+        **kwargs,
     ):
         pass
 
     def check_response(
-            self,
-            data_dict: dict,
-            data_key: str,
-            error_text="",
-            *args,
-            **kwargs,
+        self,
+        data_dict: dict,
+        data_key: str,
+        error_text="",
+        *args,
+        **kwargs,
     ):
         try:
             if not (d := data_dict[data_key]):
@@ -66,7 +66,7 @@ class User(API):
             self.finished = True
 
     def generate_params(
-            self,
+        self,
     ) -> dict:
         return self.params | {
             "publish_video_strategy_type": "2",
@@ -80,6 +80,8 @@ class User(API):
 
 
 async def test():
+    from src.testers import Params
+
     async with Params() as params:
         i = User(
             params,

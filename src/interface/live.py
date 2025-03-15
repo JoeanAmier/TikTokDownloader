@@ -2,11 +2,11 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from src.interface.template import API
-from src.testers import Params
 from src.tools import TikTokDownloaderError
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from src.testers import Params
 
 
 class Live(API):
@@ -14,13 +14,13 @@ class Live(API):
     live_api_share = "https://webcast.amemv.com/webcast/room/reflow/info/"
 
     def __init__(
-            self,
-            params: Union["Parameter", Params],
-            cookie: str = "",
-            proxy: str = None,
-            web_rid=None,
-            room_id=None,
-            sec_user_id=None,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        web_rid=None,
+        room_id=None,
+        sec_user_id=None,
     ):
         super().__init__(params, cookie, proxy)
         self.black_headers = params.headers_download
@@ -29,9 +29,9 @@ class Live(API):
         self.sec_user_id = sec_user_id
 
     async def run(
-            self,
-            *args,
-            **kwargs,
+        self,
+        *args,
+        **kwargs,
     ) -> dict:
         if self.web_rid:
             return await self.with_web_rid()
@@ -85,6 +85,8 @@ class Live(API):
 
 
 async def test():
+    from src.testers import Params
+
     async with Params() as params:
         i = Live(
             params,

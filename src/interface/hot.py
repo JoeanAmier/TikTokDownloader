@@ -5,11 +5,11 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from src.interface.template import API
-from src.testers import Params
 from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from src.testers import Params
 
 
 class Hot(API):
@@ -37,12 +37,12 @@ class Hot(API):
     )
 
     def __init__(
-            self,
-            params: Union["Parameter", Params],
-            cookie: str = "",
-            proxy: str = None,
-            *args,
-            **kwargs,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        *args,
+        **kwargs,
     ):
         super().__init__(params, cookie, proxy, *args, **kwargs)
         self.headers = self.headers | {
@@ -54,7 +54,7 @@ class Hot(API):
         self.time = None
 
     def generate_params(
-            self,
+        self,
     ) -> dict:
         return self.params | {
             "detail_list": "1",
@@ -66,19 +66,19 @@ class Hot(API):
         }
 
     async def run(
-            self,
-            referer: str = "https://www.douyin.com/discover",
-            single_page=True,
-            data_key: str = None,
-            error_text=None,
-            cursor=None,
-            has_more=None,
-            params: Callable = lambda: {},
-            data: Callable = lambda: {},
-            method="GET",
-            headers: dict = None,
-            *args,
-            **kwargs,
+        self,
+        referer: str = "https://www.douyin.com/discover",
+        single_page=True,
+        data_key: str = None,
+        error_text=None,
+        cursor=None,
+        has_more=None,
+        params: Callable = lambda: {},
+        data: Callable = lambda: {},
+        method="GET",
+        headers: dict = None,
+        *args,
+        **kwargs,
     ):
         self.time = f"{datetime.now():%Y_%m_%d_%H_%M_%S}"
         self.set_referer(referer)
@@ -101,15 +101,15 @@ class Hot(API):
         return self.time, self.response
 
     def check_response(
-            self,
-            data_dict: dict,
-            data_key: str = None,
-            error_text=None,
-            cursor=None,
-            has_more=None,
-            index: int = None,
-            *args,
-            **kwargs,
+        self,
+        data_dict: dict,
+        data_key: str = None,
+        error_text=None,
+        cursor=None,
+        has_more=None,
+        index: int = None,
+        *args,
+        **kwargs,
     ):
         try:
             if not (d := data_dict["data"]["word_list"]):
@@ -123,6 +123,8 @@ class Hot(API):
 
 
 async def test():
+    from src.testers import Params
+
     async with Params() as params:
         i = Hot(
             params,

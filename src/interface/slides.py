@@ -3,22 +3,22 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from src.interface.template import API
-from src.testers import Params
 from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from src.testers import Params
 
 __all__ = ["Slides"]
 
 
 class Slides(API):
     def __init__(
-            self,
-            params: Union["Parameter", Params],
-            cookie: str = "",
-            proxy: str = None,
-            slides_id: str | list | tuple = ...,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        slides_id: str | list | tuple = ...,
     ):
         super().__init__(params, cookie, proxy)
         self.slides_id = slides_id
@@ -30,6 +30,8 @@ class Slides(API):
 
 
 async def test():
+    from src.testers import Params
+
     async with Params() as params:
         i = Slides(
             params,

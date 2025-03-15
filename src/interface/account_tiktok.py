@@ -6,10 +6,10 @@ from typing import Union
 
 from src.interface.account import Account
 from src.interface.template import APITikTok
-from src.testers import Params
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from src.testers import Params
 
 
 class AccountTikTok(
@@ -20,19 +20,19 @@ class AccountTikTok(
     favorite_api = f"{APITikTok.domain}api/favorite/item_list/"
 
     def __init__(
-            self,
-            params: Union["Parameter", Params],
-            cookie: str = "",
-            proxy: str = None,
-            sec_user_id: str = ...,
-            tab="post",
-            earliest="",
-            latest="",
-            pages: int = None,
-            cursor=0,
-            count=35,
-            *args,
-            **kwargs,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        sec_user_id: str = ...,
+        tab="post",
+        earliest="",
+        latest="",
+        pages: int = None,
+        cursor=0,
+        count=35,
+        *args,
+        **kwargs,
     ):
         super().__init__(
             params,
@@ -50,19 +50,19 @@ class AccountTikTok(
         )
 
     async def run(
-            self,
-            referer: str = None,
-            single_page=False,
-            data_key: str = "itemList",
-            error_text="",
-            cursor="cursor",
-            has_more="hasMore",
-            params: Callable = lambda: {},
-            data: Callable = lambda: {},
-            method="GET",
-            headers: dict = None,
-            *args,
-            **kwargs,
+        self,
+        referer: str = None,
+        single_page=False,
+        data_key: str = "itemList",
+        error_text="",
+        cursor="cursor",
+        has_more="hasMore",
+        params: Callable = lambda: {},
+        data: Callable = lambda: {},
+        method="GET",
+        headers: dict = None,
+        *args,
+        **kwargs,
     ):
         self.set_referer(referer)
         match single_page:
@@ -97,18 +97,18 @@ class AccountTikTok(
         raise ValueError
 
     async def run_batch(
-            self,
-            data_key: str = "itemList",
-            error_text="",
-            cursor="cursor",
-            has_more="hasMore",
-            params: Callable = lambda: {},
-            data: Callable = lambda: {},
-            method="GET",
-            headers: dict = None,
-            callback: Type[Coroutine] = None,
-            *args,
-            **kwargs,
+        self,
+        data_key: str = "itemList",
+        error_text="",
+        cursor="cursor",
+        has_more="hasMore",
+        params: Callable = lambda: {},
+        data: Callable = lambda: {},
+        method="GET",
+        headers: dict = None,
+        callback: Type[Coroutine] = None,
+        *args,
+        **kwargs,
     ):
         await super().run_batch(
             data_key=data_key,
@@ -138,6 +138,8 @@ class AccountTikTok(
 
 
 async def test():
+    from src.testers import Params
+
     async with Params() as params:
         i = AccountTikTok(
             params,

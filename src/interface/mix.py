@@ -5,25 +5,25 @@ from typing import Union
 from src.extract import Extractor
 from src.interface.detail import Detail
 from src.interface.template import API
-from src.testers import Params
 from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from src.testers import Params
 
 
 class Mix(API):
     def __init__(
-            self,
-            params: Union["Parameter", Params],
-            cookie: str = "",
-            proxy: str = None,
-            mix_id: str = None,
-            detail_id: str = None,
-            cursor=0,
-            count=12,
-            *args,
-            **kwargs,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        mix_id: str = None,
+        detail_id: str = None,
+        cursor=0,
+        count=12,
+        *args,
+        **kwargs,
     ):
         super().__init__(params, cookie, proxy, *args, **kwargs)
         self.mix_title = None
@@ -41,7 +41,7 @@ class Mix(API):
         )
 
     def generate_params(
-            self,
+        self,
     ) -> dict:
         return self.params | {
             "mix_id": self.mix_id,
@@ -52,19 +52,19 @@ class Mix(API):
         }
 
     async def run(
-            self,
-            referer: str = None,
-            single_page=False,
-            data_key: str = "aweme_list",
-            error_text="",
-            cursor="cursor",
-            has_more="has_more",
-            params: Callable = lambda: {},
-            data: Callable = lambda: {},
-            method="GET",
-            headers: dict = None,
-            *args,
-            **kwargs,
+        self,
+        referer: str = None,
+        single_page=False,
+        data_key: str = "aweme_list",
+        error_text="",
+        cursor="cursor",
+        has_more="has_more",
+        params: Callable = lambda: {},
+        data: Callable = lambda: {},
+        method="GET",
+        headers: dict = None,
+        *args,
+        **kwargs,
     ):
         await self.__get_mix_id()
         if not self.mix_id:
@@ -91,6 +91,8 @@ class Mix(API):
 
 
 async def test():
+    from src.testers import Params
+
     async with Params() as params:
         i = Mix(
             params,

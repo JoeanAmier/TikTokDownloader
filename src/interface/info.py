@@ -2,22 +2,22 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from src.interface.template import API
-from src.testers import Params
 from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from src.testers import Params
 
 
 class Info(API):
     def __init__(
-            self,
-            params: Union["Parameter", Params],
-            cookie: str = "",
-            proxy: str = None,
-            sec_user_id: Union[str, list[str], tuple[str]] = ...,
-            *args,
-            **kwargs,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        sec_user_id: Union[str, list[str], tuple[str]] = ...,
+        *args,
+        **kwargs,
     ):
         super().__init__(params, cookie, proxy, *args, **kwargs)
         self.api = f"{self.domain}aweme/v1/web/im/user/info/"
@@ -29,10 +29,10 @@ class Info(API):
         self.text = _("账号简略")
 
     async def run(
-            self,
-            first=True,
-            *args,
-            **kwargs,
+        self,
+        first=True,
+        *args,
+        **kwargs,
     ) -> dict | list[dict]:
         self.set_referer()
         await self.run_single()
@@ -41,9 +41,9 @@ class Info(API):
         return self.response
 
     async def run_single(
-            self,
-            *args,
-            **kwargs,
+        self,
+        *args,
+        **kwargs,
     ):
         await super().run_single(
             "",
@@ -53,10 +53,10 @@ class Info(API):
         )
 
     def check_response(
-            self,
-            data_dict: dict,
-            *args,
-            **kwargs,
+        self,
+        data_dict: dict,
+        *args,
+        **kwargs,
     ):
         if d := data_dict.get("data"):
             self.append_response(d)
@@ -64,7 +64,7 @@ class Info(API):
             self.log.warning(_("获取{text}失败").format(text=self.text))
 
     def __generate_data(
-            self,
+        self,
     ) -> dict:
         if isinstance(self.sec_user_id, str):
             self.sec_user_id = [self.sec_user_id]
@@ -75,6 +75,8 @@ class Info(API):
 
 
 async def test():
+    from src.testers import Params
+
     async with Params() as params:
         i = Info(
             params,

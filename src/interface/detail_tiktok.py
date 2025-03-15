@@ -3,20 +3,20 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from src.interface.template import APITikTok
-from src.testers import Params
 from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from src.testers import Params
 
 
 class DetailTikTok(APITikTok):
     def __init__(
-            self,
-            params: Union["Parameter", Params],
-            cookie: str = "",
-            proxy: str = None,
-            detail_id: str = ...,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        detail_id: str = ...,
     ):
         super().__init__(params, cookie, proxy)
         self.detail_id = detail_id
@@ -24,26 +24,26 @@ class DetailTikTok(APITikTok):
         self.text = _("作品")
 
     def generate_params(
-            self,
+        self,
     ) -> dict:
         return self.params | {
             "itemId": self.detail_id,
         }
 
     async def run(
-            self,
-            referer: str = None,
-            single_page=True,
-            data_key: str = None,
-            error_text="",
-            cursor=None,
-            has_more=None,
-            params: Callable = lambda: {},
-            data: Callable = lambda: {},
-            method="GET",
-            headers: dict = None,
-            *args,
-            **kwargs,
+        self,
+        referer: str = None,
+        single_page=True,
+        data_key: str = None,
+        error_text="",
+        cursor=None,
+        has_more=None,
+        params: Callable = lambda: {},
+        data: Callable = lambda: {},
+        method="GET",
+        headers: dict = None,
+        *args,
+        **kwargs,
     ):
         return await super().run(
             referer,
@@ -61,14 +61,14 @@ class DetailTikTok(APITikTok):
         )
 
     def check_response(
-            self,
-            data_dict: dict,
-            data_key: str = None,
-            error_text="",
-            cursor=None,
-            has_more=None,
-            *args,
-            **kwargs,
+        self,
+        data_dict: dict,
+        data_key: str = None,
+        error_text="",
+        cursor=None,
+        has_more=None,
+        *args,
+        **kwargs,
     ):
         try:
             if not (d := data_dict["itemInfo"]["itemStruct"]):
@@ -82,6 +82,8 @@ class DetailTikTok(APITikTok):
 
 
 async def test():
+    from src.testers import Params
+
     async with Params() as params:
         i = DetailTikTok(
             params,

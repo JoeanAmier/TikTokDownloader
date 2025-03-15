@@ -8,11 +8,11 @@ from typing import Type
 from typing import Union
 
 from src.interface.template import API
-from src.testers import Params
 from src.translation import _
 
 if TYPE_CHECKING:
     from src.config import Parameter
+    from src.testers import Params
 
 
 class Account(API):
@@ -20,19 +20,19 @@ class Account(API):
     favorite_api = f"{API.domain}aweme/v1/web/aweme/favorite/"
 
     def __init__(
-            self,
-            params: Union["Parameter", Params],
-            cookie: str = "",
-            proxy: str = None,
-            sec_user_id: str = ...,
-            tab="post",
-            earliest: str | float | int = "",
-            latest="",
-            pages: int = None,
-            cursor=0,
-            count=18,
-            *args,
-            **kwargs,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        sec_user_id: str = ...,
+        tab="post",
+        earliest: str | float | int = "",
+        latest="",
+        pages: int = None,
+        cursor=0,
+        count=18,
+        *args,
+        **kwargs,
     ):
         super().__init__(params, cookie, proxy, *args, **kwargs)
         self.sec_user_id = sec_user_id
@@ -46,19 +46,19 @@ class Account(API):
         self.text = _("账号喜欢作品") if self.favorite else _("账号发布作品")
 
     async def run(
-            self,
-            referer: str = None,
-            single_page=False,
-            data_key: str = "aweme_list",
-            error_text="",
-            cursor="max_cursor",
-            has_more="has_more",
-            params: Callable = lambda: {},
-            data: Callable = lambda: {},
-            method="GET",
-            headers: dict = None,
-            *args,
-            **kwargs,
+        self,
+        referer: str = None,
+        single_page=False,
+        data_key: str = "aweme_list",
+        error_text="",
+        cursor="max_cursor",
+        has_more="has_more",
+        params: Callable = lambda: {},
+        data: Callable = lambda: {},
+        method="GET",
+        headers: dict = None,
+        *args,
+        **kwargs,
     ):
         if self.favorite:
             self.set_referer(f"{self.domain}user/{self.sec_user_id}?showTab=like")
@@ -102,17 +102,17 @@ class Account(API):
         raise ValueError
 
     async def run_single(
-            self,
-            data_key: str = "aweme_list",
-            error_text="",
-            cursor="max_cursor",
-            has_more="has_more",
-            params: Callable = lambda: {},
-            data: Callable = lambda: {},
-            method="GET",
-            headers: dict = None,
-            *args,
-            **kwargs,
+        self,
+        data_key: str = "aweme_list",
+        error_text="",
+        cursor="max_cursor",
+        has_more="has_more",
+        params: Callable = lambda: {},
+        data: Callable = lambda: {},
+        method="GET",
+        headers: dict = None,
+        *args,
+        **kwargs,
     ):
         await super().run_single(
             data_key,
@@ -128,18 +128,18 @@ class Account(API):
         )
 
     async def run_batch(
-            self,
-            data_key: str = "aweme_list",
-            error_text="",
-            cursor="max_cursor",
-            has_more="has_more",
-            params: Callable = lambda: {},
-            data: Callable = lambda: {},
-            method="GET",
-            headers: dict = None,
-            callback: Type[Coroutine] = None,
-            *args,
-            **kwargs,
+        self,
+        data_key: str = "aweme_list",
+        error_text="",
+        cursor="max_cursor",
+        has_more="has_more",
+        params: Callable = lambda: {},
+        data: Callable = lambda: {},
+        method="GET",
+        headers: dict = None,
+        callback: Type[Coroutine] = None,
+        *args,
+        **kwargs,
     ):
         await super().run_batch(
             data_key,
@@ -159,14 +159,14 @@ class Account(API):
     async def early_stop(self):
         """如果获取数据的发布日期已经早于限制日期，就不需要再获取下一页的数据了"""
         if (
-                not self.favorite
-                and self.earliest
-                > datetime.fromtimestamp(max(int(self.cursor) / 1000, 0)).date()
+            not self.favorite
+            and self.earliest
+            > datetime.fromtimestamp(max(int(self.cursor) / 1000, 0)).date()
         ):
             self.finished = True
 
     def generate_params(
-            self,
+        self,
     ) -> dict:
         match self.favorite:
             case True:
@@ -250,14 +250,14 @@ class Account(API):
             return default_date
 
     def check_response(
-            self,
-            data_dict: dict,
-            data_key: str,
-            error_text="",
-            cursor="cursor",
-            has_more="has_more",
-            *args,
-            **kwargs,
+        self,
+        data_dict: dict,
+        data_key: str,
+        error_text="",
+        cursor="cursor",
+        has_more="has_more",
+        *args,
+        **kwargs,
     ):
         try:
             if not (d := data_dict[data_key]):
@@ -278,6 +278,8 @@ class Account(API):
 
 
 async def test():
+    from src.testers import Params
+
     async with Params() as params:
         i = Account(
             params,

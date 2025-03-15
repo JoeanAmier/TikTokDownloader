@@ -1,5 +1,4 @@
 from configparser import ConfigParser, NoSectionError, NoOptionError
-from pathlib import Path
 
 from rich.console import Console
 
@@ -8,17 +7,16 @@ from src.custom import (
     DATA_HEADERS_TIKTOK,
     DOWNLOAD_HEADERS_TIKTOK,
 )
+from src.custom import PROJECT_ROOT
 from src.encrypt import ABogus
 from src.encrypt import XBogus
 from src.testers.logger import Logger
 from src.tools import Cleaner
 from src.tools import create_client
 
-ROOT = Path(__file__).resolve().parent.parent.parent
-
 
 class Params:
-    CONFIG = ROOT.joinpath("cookie.ini")
+    CONFIG = PROJECT_ROOT.joinpath("test_cookie.ini")
     CLEANER = Cleaner()
 
     def __init__(self):
@@ -44,13 +42,17 @@ class Params:
             timeout=self.timeout,
             proxy="http://127.0.0.1:10809",
         )
-        self.config = ConfigParser()
+        self.config = ConfigParser(
+            interpolation=None,
+        )
         self.read_ini()
 
     def create_ini(self):
-        self.config["Cookie"] = {
-            "dy": "",
-            "tk": "",
+        self.config["dy"] = {
+            "cookie": "",
+        }
+        self.config["tk"] = {
+            "cookie": "",
         }
         with self.CONFIG.open("w", encoding="utf-8") as configfile:
             self.config.write(configfile)
@@ -61,12 +63,12 @@ class Params:
             return
         try:
             self.cookie_str = self.config.get(
-                "Cookie",
                 "dy",
+                "cookie",
             )
             self.cookie_str_tiktok = self.config.get(
-                "Cookie",
                 "tk",
+                "cookie",
             )
         except (NoSectionError, NoOptionError) as e:
             print(f"读取 Cookie 错误: {e}")

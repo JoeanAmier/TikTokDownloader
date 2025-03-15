@@ -2,30 +2,30 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from src.interface.template import APITikTok
-from src.testers import Params
 
 if TYPE_CHECKING:
     from ..config import Parameter
+    from src.testers import Params
 
 
 class LiveTikTok(APITikTok):
     live_api = "https://webcast.us.tiktok.com/webcast/room/enter/"
 
     def __init__(
-            self,
-            params: Union["Parameter", Params],
-            cookie: str = "",
-            proxy: str = None,
-            room_id=...,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        room_id=...,
     ):
         super().__init__(params, cookie, proxy)
         self.black_headers = params.headers_download
         self.room_id = room_id
 
     async def run(
-            self,
-            *args,
-            **kwargs,
+        self,
+        *args,
+        **kwargs,
     ) -> dict:
         return await self.with_room_id()
 
@@ -38,7 +38,7 @@ class LiveTikTok(APITikTok):
         )
 
     def __generate_room_id_data(
-            self,
+        self,
     ) -> dict:
         return {
             "enter_source": "others-others",
@@ -47,6 +47,8 @@ class LiveTikTok(APITikTok):
 
 
 async def test():
+    from src.testers import Params
+
     async with Params() as params:
         i = LiveTikTok(
             params,
