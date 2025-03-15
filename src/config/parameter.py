@@ -684,23 +684,24 @@ class Parameter:
                 )
             )
             return {}
-        if d := await MsTokenTikTok.get_long_ms_token(
-            self.logger,
-            self.headers_params_tiktok,
-            m,
-            proxy=self.proxy_tiktok,
-        ):
-            self.logger.info(
-                f"TikTok MsToken 请求值: {d[MsTokenTikTok.NAME]}",
-                False,
-            )
-            return d
-        else:
-            self.logger.info(
-                f"TikTok MsToken 本地值: {m}",
-                False,
-            )
-            return {MsTokenTikTok.NAME: m}
+        # if d := await MsTokenTikTok.get_long_ms_token(
+        #     self.logger,
+        #     self.headers_params_tiktok,
+        #     m,
+        #     proxy=self.proxy_tiktok,
+        # ):
+        #     self.logger.info(
+        #         f"TikTok MsToken 请求值: {d[MsTokenTikTok.NAME]}",
+        #         False,
+        #     )
+        #     return d
+        # else:
+        #     self.logger.info(
+        #         f"TikTok MsToken 本地值: {m}",
+        #         False,
+        #     )
+        #     return {MsTokenTikTok.NAME: m}
+        return {MsTokenTikTok.NAME: m}
 
     def set_uif_id(
         self,
