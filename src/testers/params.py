@@ -22,6 +22,10 @@ class Params:
     def __init__(self):
         self.cookie_str = ""
         self.cookie_str_tiktok = ""
+        self.config = ConfigParser(
+            interpolation=None,
+        )
+        self.read_ini()
         self.headers = DATA_HEADERS | {"Cookie": self.cookie_str}
         self.headers_tiktok = DATA_HEADERS_TIKTOK | {
             "Cookie": self.cookie_str_tiktok,
@@ -42,10 +46,6 @@ class Params:
             timeout=self.timeout,
             proxy="http://127.0.0.1:10809",
         )
-        self.config = ConfigParser(
-            interpolation=None,
-        )
-        self.read_ini()
 
     def create_ini(self):
         self.config["dy"] = {
