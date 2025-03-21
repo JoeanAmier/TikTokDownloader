@@ -287,8 +287,8 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 </tr>
 <tr>
 <td align="center"><i>latest</i></td>
-<td align="center">str</td>
-<td align="center">作品最晚发布日期，格式：<code>2023/1/1</code>；<strong>属于 accounts_urls 子参数</strong></td>
+<td align="center">str | float | int</td>
+<td align="center">作品最晚发布日期，格式：<code>2023/1/1</code>、<code>整数</code>、<code>浮点数</code>；设置为数值代表基于当天的前 XX 天，<strong>属于 accounts_urls 子参数</strong></td>
 <td align="center">不限制</td>
 </tr>
 <tr>
@@ -677,6 +677,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <p>如果已经采集某账号的全部发布作品，建议设置 <code>earliest</code> 和 <code>latest</code> 参数以减少后续采集请求次数，提高程序运行效率；<code>accounts_urls_tiktok</code>参数规则一致。</p>
 <p>示例：将 <code>earliest</code> 参数设置为 <code>2023/12/1</code>，程序获取账号发布作品数据时，不会获取早于 <code>2023/12/1</code> 的作品数据。</p>
 <p>示例：将 <code>earliest</code> 参数设置为 <code>30</code>，<code>latest</code> 参数设置为 <code>2024/12/1</code>，程序获取账号发布作品数据时，仅获取 2024 年 12 月 1 日当天及之前 30 天内发布的作品数据。</p>
+<p>示例：将 <code>earliest</code> 参数设置为 <code>15</code>，<code>latest</code> 参数设置为 <code>5</code>，程序获取账号发布作品数据时，仅获取前 5 天 ~ 前 20 天之间发布的作品数据。</p>
 <h3>文件储存路径</h3>
 
 ```json

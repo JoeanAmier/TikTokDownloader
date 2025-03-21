@@ -1,8 +1,4 @@
-from typing import Callable
-from typing import Coroutine
-from typing import TYPE_CHECKING
-from typing import Type
-from typing import Union
+from typing import TYPE_CHECKING, Callable, Coroutine, Type, Union
 
 from src.interface.account import Account
 from src.interface.template import APITikTok
@@ -26,8 +22,8 @@ class AccountTikTok(
         proxy: str = None,
         sec_user_id: str = ...,
         tab="post",
-        earliest="",
-        latest="",
+        earliest: str | float | int = "",
+        latest: str | float | int = "",
         pages: int = None,
         cursor=0,
         count=35,
