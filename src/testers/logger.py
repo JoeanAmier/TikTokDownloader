@@ -1,7 +1,7 @@
 class Logger:
     @staticmethod
     def info(
-            *args,
+        *args,
     ):
         print(
             *args,
@@ -9,7 +9,7 @@ class Logger:
 
     @staticmethod
     def warning(
-            *args,
+        *args,
     ):
         print(
             *args,
@@ -17,7 +17,7 @@ class Logger:
 
     @staticmethod
     def error(
-            *args,
+        *args,
     ):
         print(
             *args,

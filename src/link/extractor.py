@@ -1,9 +1,6 @@
 from re import compile
-from typing import TYPE_CHECKING
-from typing import Union
-from urllib.parse import parse_qs
-from urllib.parse import unquote
-from urllib.parse import urlparse
+from typing import TYPE_CHECKING, Union
+from urllib.parse import parse_qs, unquote, urlparse
 
 from .requester import Requester
 
@@ -53,9 +50,9 @@ class Extractor:
     )
 
     def __init__(
-            self,
-            params: "Parameter",
-            tiktok=False,
+        self,
+        params: "Parameter",
+        tiktok=False,
     ):
         self.client = params.client_tiktok if tiktok else params.client
         self.requester = Requester(
@@ -64,7 +61,7 @@ class Extractor:
         )
 
     async def run(
-            self, urls: str, type_="detail"
+        self, urls: str, type_="detail"
     ) -> Union[list[str], tuple[bool, list[str]]]:
         urls = await self.requester.run(
             urls,
@@ -81,22 +78,22 @@ class Extractor:
         raise ValueError
 
     def detail(
-            self,
-            urls: str,
+        self,
+        urls: str,
     ) -> list[str]:
         return self.__extract_detail(urls)
 
     def user(
-            self,
-            urls: str,
+        self,
+        urls: str,
     ) -> list[str]:
         link = self.extract_info(self.account_link, urls, 1)
         share = self.extract_info(self.account_share, urls, 1)
         return link + share
 
     def mix(
-            self,
-            urls: str,
+        self,
+        urls: str,
     ) -> [bool, list[str]]:
         if detail := self.__extract_detail(urls):
             return False, detail
@@ -105,8 +102,8 @@ class Extractor:
         return (True, m) if (m := link + share) else (None, [])
 
     def live(
-            self,
-            urls: str,
+        self,
+        urls: str,
     ) -> [bool, list]:
         live_link = self.extract_info(self.live_link, urls, 1)
         live_link_self = self.extract_info(self.live_link_self, urls, 1)
@@ -116,8 +113,8 @@ class Extractor:
         return False, self.extract_sec_user_id(live_link_share)
 
     def __extract_detail(
-            self,
-            urls: str,
+        self,
+        urls: str,
     ) -> list[str]:
         link = self.extract_info(self.detail_link, urls, 1)
         share = self.extract_info(self.detail_share, urls, 1)
@@ -168,7 +165,7 @@ class ExtractorTikTok(Extractor):
         )
 
     async def run(
-            self, urls: str, type_="detail"
+        self, urls: str, type_="detail"
     ) -> Union[list[str], tuple[bool, list[str]]]:
         urls = await self.requester.run(
             urls,
@@ -185,32 +182,32 @@ class ExtractorTikTok(Extractor):
         raise ValueError
 
     async def detail(
-            self,
-            urls: str,
+        self,
+        urls: str,
     ) -> list[str]:
         return self.__extract_detail(urls)
 
     async def user(
-            self,
-            urls: str,
+        self,
+        urls: str,
     ) -> list[str]:
         link = self.extract_info(self.account_link, urls, 1)
         link = [await self.__get_html_data(i, self.SEC_UID) for i in link]
         return [i for i in link if i]
 
     def __extract_detail(
-            self,
-            urls: str,
-            index=1,
+        self,
+        urls: str,
+        index=1,
     ) -> list[str]:
         link = self.extract_info(self.detail_link, urls, index)
         return link
 
     async def __get_html_data(
-            self,
-            url: str,
-            pattern,
-            index=1,
+        self,
+        url: str,
+        pattern,
+        index=1,
     ) -> str:
         html = await self.requester.request_url(
             url,
@@ -219,8 +216,8 @@ class ExtractorTikTok(Extractor):
         return m.group(index) if (m := pattern.search(html or "")) else ""
 
     async def mix(
-            self,
-            urls: str,
+        self,
+        urls: str,
     ) -> [bool, list[str]]:
         detail = self.__extract_detail(urls, index=0)
         detail = [await self.__get_html_data(i, self.MIX_ID) for i in detail]
@@ -230,8 +227,8 @@ class ExtractorTikTok(Extractor):
         return True, detail + mix, [None for _ in detail] + title
 
     async def live(
-            self,
-            urls: str,
+        self,
+        urls: str,
     ) -> [bool, list[str]]:
         link = self.extract_info(self.live_link, urls, 0)
         link = [await self.__get_html_data(i, self.ROOD_ID) for i in link]

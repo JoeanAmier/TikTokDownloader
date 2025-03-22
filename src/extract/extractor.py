@@ -1,41 +1,41 @@
 from datetime import datetime
 from json import dumps
-from time import localtime
-from time import strftime
+from time import localtime, strftime
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
 from ..custom import (
-    VIDEO_INDEX,
-    VIDEO_TIKTOK_INDEX,
+    AUTHOR_COVER_INDEX,
+    AUTHOR_COVER_URL_INDEX,
+    AVATAR_LARGER_INDEX,
+    BITRATE_INFO_TIKTOK_INDEX,
+    COMMENT_IMAGE_INDEX,
+    COMMENT_IMAGE_LIST_INDEX,
+    COMMENT_STICKER_INDEX,
+    DYNAMIC_COVER_INDEX,
+    HOT_WORD_COVER_INDEX,
     IMAGE_INDEX,
     IMAGE_TIKTOK_INDEX,
-    DYNAMIC_COVER_INDEX,
-    STATIC_COVER_INDEX,
-    MUSIC_INDEX,
-    COMMENT_IMAGE_INDEX,
-    COMMENT_STICKER_INDEX,
     LIVE_COVER_INDEX,
-    AUTHOR_COVER_INDEX,
-    HOT_WORD_COVER_INDEX,
-    COMMENT_IMAGE_LIST_INDEX,
-    BITRATE_INFO_TIKTOK_INDEX,
     LIVE_DATA_INDEX,
-    AVATAR_LARGER_INDEX,
-    AUTHOR_COVER_URL_INDEX,
-    SEARCH_USER_INDEX,
-    SEARCH_AVATAR_INDEX,
     MUSIC_COLLECTION_COVER_INDEX,
     MUSIC_COLLECTION_DOWNLOAD_INDEX,
+    MUSIC_INDEX,
+    SEARCH_AVATAR_INDEX,
+    SEARCH_USER_INDEX,
+    STATIC_COVER_INDEX,
+    VIDEO_INDEX,
+    VIDEO_TIKTOK_INDEX,
+    condition_filter,
 )
-from ..custom import condition_filter
 from ..tools import TikTokDownloaderError
 from ..translation import _
 
 if TYPE_CHECKING:
-    from ..config import Parameter
     from datetime import date
+
+    from ..config import Parameter
 
 __all__ = ["Extractor"]
 
@@ -1534,9 +1534,9 @@ class Extractor:
         return container.all_data
 
     def __extract_collection_music(
-            self,
-            container: SimpleNamespace,
-            data: SimpleNamespace,
+        self,
+        container: SimpleNamespace,
+        data: SimpleNamespace,
     ):
         container.cache = container.template.copy()
         container.cache["id"] = self.safe_extract(data, "id_str")

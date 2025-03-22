@@ -1,12 +1,9 @@
-from random import choice
-from random import randint
-from random import random
+from random import choice, randint, random
 from re import compile
 from time import time
-from urllib.parse import quote
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode
 
-from gmssl import sm3, func
+from gmssl import func, sm3
 
 from src.custom import USERAGENT
 
@@ -41,9 +38,9 @@ class ABogus:
     }
 
     def __init__(
-            self,
-            user_agent: str = USERAGENT,
-            platform: str = None,
+        self,
+        user_agent: str = USERAGENT,
+        platform: str = None,
     ):
         self.chunk = []
         self.size = 0
@@ -57,11 +54,11 @@ class ABogus:
 
     @classmethod
     def list_1(
-            cls,
-            random_num=None,
-            a=170,
-            b=85,
-            c=45,
+        cls,
+        random_num=None,
+        a=170,
+        b=85,
+        c=45,
     ) -> list:
         return cls.random_list(
             random_num,
@@ -75,10 +72,10 @@ class ABogus:
 
     @classmethod
     def list_2(
-            cls,
-            random_num=None,
-            a=170,
-            b=85,
+        cls,
+        random_num=None,
+        a=170,
+        b=85,
     ) -> list:
         return cls.random_list(
             random_num,
@@ -92,10 +89,10 @@ class ABogus:
 
     @classmethod
     def list_3(
-            cls,
-            random_num=None,
-            a=170,
-            b=85,
+        cls,
+        random_num=None,
+        a=170,
+        b=85,
     ) -> list:
         return cls.random_list(
             random_num,
@@ -109,13 +106,13 @@ class ABogus:
 
     @staticmethod
     def random_list(
-            a: float = None,
-            b=170,
-            c=85,
-            d=0,
-            e=0,
-            f=0,
-            g=0,
+        a: float = None,
+        b=170,
+        c=85,
+        d=0,
+        e=0,
+        f=0,
+        g=0,
     ) -> list:
         r = a or (random() * 10000)
         v = [
@@ -139,23 +136,23 @@ class ABogus:
 
     @classmethod
     def generate_string_1(
-            cls,
-            random_num_1=None,
-            random_num_2=None,
-            random_num_3=None,
+        cls,
+        random_num_1=None,
+        random_num_2=None,
+        random_num_3=None,
     ):
         return (
-                cls.from_char_code(*cls.list_1(random_num_1))
-                + cls.from_char_code(*cls.list_2(random_num_2))
-                + cls.from_char_code(*cls.list_3(random_num_3))
+            cls.from_char_code(*cls.list_1(random_num_1))
+            + cls.from_char_code(*cls.list_2(random_num_2))
+            + cls.from_char_code(*cls.list_3(random_num_3))
         )
 
     def generate_string_2(
-            self,
-            url_params: str,
-            method="GET",
-            start_time=0,
-            end_time=0,
+        self,
+        url_params: str,
+        method="GET",
+        start_time=0,
+        end_time=0,
     ) -> str:
         a = self.generate_string_2_list(
             url_params,
@@ -174,11 +171,11 @@ class ABogus:
         return self.sum(u)
 
     def generate_string_2_list(
-            self,
-            url_params: str,
-            method="GET",
-            start_time=0,
-            end_time=0,
+        self,
+        url_params: str,
+        method="GET",
+        start_time=0,
+        end_time=0,
     ) -> list:
         start_time = start_time or int(time() * 1000)
         end_time = end_time or (start_time + randint(4, 8))
@@ -253,10 +250,10 @@ class ABogus:
 
         for t in range(16):
             r[t] = (
-                    (e[4 * t] << 24)
-                    | (e[4 * t + 1] << 16)
-                    | (e[4 * t + 2] << 8)
-                    | e[4 * t + 3]
+                (e[4 * t] << 24)
+                | (e[4 * t + 1] << 16)
+                | (e[4 * t + 2] << 8)
+                | e[4 * t + 3]
             )
             r[t] &= 0xFFFFFFFF
 
@@ -285,23 +282,23 @@ class ABogus:
 
     @staticmethod
     def list_4(
-            a: int,
-            b: int,
-            c: int,
-            d: int,
-            e: int,
-            f: int,
-            g: int,
-            h: int,
-            i: int,
-            j: int,
-            k: int,
-            m: int,
-            n: int,
-            o: int,
-            p: int,
-            q: int,
-            r: int,
+        a: int,
+        b: int,
+        c: int,
+        d: int,
+        e: int,
+        f: int,
+        g: int,
+        h: int,
+        i: int,
+        j: int,
+        k: int,
+        m: int,
+        n: int,
+        o: int,
+        p: int,
+        q: int,
+        r: int,
     ) -> list:
         return [
             44,
@@ -359,8 +356,8 @@ class ABogus:
 
     @classmethod
     def decode_string(
-            cls,
-            url_string,
+        cls,
+        url_string,
     ):
         decoded = cls.__filter.sub(cls.replace_func, url_string)
         return decoded
@@ -405,7 +402,7 @@ class ABogus:
     def split_array(arr, chunk_size=64):
         result = []
         for i in range(0, len(arr), chunk_size):
-            result.append(arr[i: i + chunk_size])
+            result.append(arr[i : i + chunk_size])
         return result
 
     @staticmethod
@@ -413,8 +410,8 @@ class ABogus:
         return [ord(char) for char in s]
 
     def write(
-            self,
-            e,
+        self,
+        e,
     ):
         self.size = len(e)
         if isinstance(e, str):
@@ -429,7 +426,7 @@ class ABogus:
             self.chunk = chunks[-1]
 
     def reset(
-            self,
+        self,
     ):
         self.chunk = []
         self.size = 0
@@ -532,7 +529,7 @@ class ABogus:
         h = sm3.sm3_hash(func.bytes_to_list(b))
 
         # 将十六进制字符串结果转换为十进制整数列表
-        return [int(h[i: i + 2], 16) for i in range(0, len(h), 2)]
+        return [int(h[i : i + 2], 16) for i in range(0, len(h), 2)]
 
     @classmethod
     def generate_browser_info(cls, platform: str = "Win32") -> str:
@@ -586,14 +583,14 @@ class ABogus:
         return "".join(cipher)
 
     def get_value(
-            self,
-            url_params: dict | str,
-            method="GET",
-            start_time=0,
-            end_time=0,
-            random_num_1=None,
-            random_num_2=None,
-            random_num_3=None,
+        self,
+        url_params: dict | str,
+        method="GET",
+        start_time=0,
+        end_time=0,
+        random_num_1=None,
+        random_num_2=None,
+        random_num_3=None,
     ) -> str:
         string_1 = self.generate_string_1(
             random_num_1,

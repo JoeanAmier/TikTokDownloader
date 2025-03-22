@@ -1,27 +1,26 @@
 from typing import TYPE_CHECKING
 
-from fastapi import FastAPI, Header, HTTPException, Depends
+from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.responses import RedirectResponse
-from uvicorn import Config
-from uvicorn import Server
+from uvicorn import Config, Server
 
-from .main_complete import TikTok
 from ..custom import (
+    __VERSION__,
+    REPOSITORY,
     SERVER_HOST,
     SERVER_PORT,
     VERSION_BETA,
-    REPOSITORY,
-    __VERSION__,
     is_valid_token,
 )
 from ..models import (
     GeneralSearch,
-    Response,
-    VideoSearch,
-    UserSearch,
     LiveSearch,
+    Response,
+    UserSearch,
+    VideoSearch,
 )
 from ..translation import _
+from .main_complete import TikTok
 
 if TYPE_CHECKING:
     from ..config import Parameter
@@ -40,9 +39,9 @@ def token_dependency(token: str = Header(None)):
 
 class APIServer(TikTok):
     def __init__(
-            self,
-            parameter: "Parameter",
-            database: "Database",
+        self,
+        parameter: "Parameter",
+        database: "Database",
     ):
         super().__init__(
             parameter,
@@ -51,10 +50,10 @@ class APIServer(TikTok):
         self.server = None
 
     async def run_server(
-            self,
-            host=SERVER_HOST,
-            port=SERVER_PORT,
-            log_level="info",
+        self,
+        host=SERVER_HOST,
+        port=SERVER_PORT,
+        log_level="info",
     ):
         self.server = FastAPI(
             debug=VERSION_BETA,
@@ -89,7 +88,7 @@ class APIServer(TikTok):
             response_model=Response,
         )
         async def handle_general(
-                extract: GeneralSearch, token: str = Depends(token_dependency)
+            extract: GeneralSearch, token: str = Depends(token_dependency)
         ):
             return await self.handle_search(extract)
 
@@ -101,7 +100,7 @@ class APIServer(TikTok):
             response_model=Response,
         )
         async def handle_video(
-                extract: VideoSearch, token: str = Depends(token_dependency)
+            extract: VideoSearch, token: str = Depends(token_dependency)
         ):
             return await self.handle_search(extract)
 
@@ -113,7 +112,7 @@ class APIServer(TikTok):
             response_model=Response,
         )
         async def handle_user(
-                extract: UserSearch, token: str = Depends(token_dependency)
+            extract: UserSearch, token: str = Depends(token_dependency)
         ):
             return await self.handle_search(extract)
 
@@ -125,14 +124,14 @@ class APIServer(TikTok):
             response_model=Response,
         )
         async def handle_live(
-                extract: LiveSearch, token: str = Depends(token_dependency)
+            extract: LiveSearch, token: str = Depends(token_dependency)
         ):
             return await self.handle_search(extract)
 
     async def handle_search(self, extract):
         if data := await self.deal_search_data(
-                extract,
-                extract.source,
+            extract,
+            extract.source,
         ):
             return Response(
                 message=_("获取成功！"),

@@ -1,6 +1,4 @@
-from typing import Callable
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Callable, Union
 
 from src.interface.collection import Collection
 from src.interface.template import API
@@ -328,4 +326,5 @@ async def test():
 
 if __name__ == "__main__":
     from asyncio import run
+
     run(test())

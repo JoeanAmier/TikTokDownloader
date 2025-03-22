@@ -1,11 +1,6 @@
 from time import time
-from typing import Callable
-from typing import Coroutine
-from typing import TYPE_CHECKING
-from typing import Type
-from typing import Union
-from urllib.parse import quote
-from urllib.parse import urlencode
+from typing import TYPE_CHECKING, Callable, Coroutine, Type, Union
+from urllib.parse import quote, urlencode
 
 from httpx import AsyncClient
 from rich.progress import (
@@ -15,12 +10,8 @@ from rich.progress import (
     TimeElapsedColumn,
 )
 
-from ..custom import PROGRESS
-from ..custom import USERAGENT
-from ..custom import wait
-from ..tools import Retry
-from ..tools import TikTokDownloaderError
-from ..tools import capture_error_request
+from ..custom import PROGRESS, USERAGENT, wait
+from ..tools import Retry, TikTokDownloaderError, capture_error_request
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -70,12 +61,12 @@ class API:
     }
 
     def __init__(
-            self,
-            params: Union["Parameter", "Params"],
-            cookie: str = "",
-            proxy: str = None,
-            *args,
-            **kwargs,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        *args,
+        **kwargs,
     ):
         self.headers = params.headers.copy()
         self.log = params.logger
@@ -100,7 +91,7 @@ class API:
             self.headers["Cookie"] = cookie
 
     def generate_params(
-            self,
+        self,
     ) -> dict:
         return self.params
 
@@ -108,19 +99,19 @@ class API:
         return {}
 
     async def run(
-            self,
-            referer: str = None,
-            single_page=False,
-            data_key: str = "",
-            error_text="",
-            cursor="cursor",
-            has_more="has_more",
-            params: Callable = lambda: {},
-            data: Callable = lambda: {},
-            method="GET",
-            headers: dict = None,
-            *args,
-            **kwargs,
+        self,
+        referer: str = None,
+        single_page=False,
+        data_key: str = "",
+        error_text="",
+        cursor="cursor",
+        has_more="has_more",
+        params: Callable = lambda: {},
+        data: Callable = lambda: {},
+        method="GET",
+        headers: dict = None,
+        *args,
+        **kwargs,
     ):
         self.set_referer(referer)
         match single_page:
@@ -155,25 +146,25 @@ class API:
         return self.response
 
     async def run_single(
-            self,
-            data_key: str,
-            error_text="",
-            cursor="cursor",
-            has_more="has_more",
-            params: Callable = lambda: {},
-            data: Callable = lambda: {},
-            method="GET",
-            headers: dict = None,
-            *args,
-            **kwargs,
+        self,
+        data_key: str,
+        error_text="",
+        cursor="cursor",
+        has_more="has_more",
+        params: Callable = lambda: {},
+        data: Callable = lambda: {},
+        method="GET",
+        headers: dict = None,
+        *args,
+        **kwargs,
     ):
         if data := await self.request_data(
-                self.api,
-                params=params() or self.generate_params(),
-                data=data() or self.generate_data(),
-                method=method,
-                headers=headers,
-                finished=True,
+            self.api,
+            params=params() or self.generate_params(),
+            data=data() or self.generate_data(),
+            method=method,
+            headers=headers,
+            finished=True,
         ):
             self.check_response(
                 data, data_key, error_text, cursor, has_more, *args, **kwargs
@@ -182,18 +173,18 @@ class API:
             self.log.warning(_("获取{self_text}数据失败").format(self_text=self.text))
 
     async def run_batch(
-            self,
-            data_key: str,
-            error_text="",
-            cursor="cursor",
-            has_more="has_more",
-            params: Callable = lambda: {},
-            data: Callable = lambda: {},
-            method="GET",
-            headers: dict = None,
-            callback: Type[Coroutine] = None,
-            *args,
-            **kwargs,
+        self,
+        data_key: str,
+        error_text="",
+        cursor="cursor",
+        has_more="has_more",
+        params: Callable = lambda: {},
+        data: Callable = lambda: {},
+        method="GET",
+        headers: dict = None,
+        callback: Type[Coroutine] = None,
+        *args,
+        **kwargs,
     ):
         with self.progress_object() as progress:
             task_id = progress.add_task(
@@ -219,14 +210,14 @@ class API:
                     await callback()
 
     def check_response(
-            self,
-            data_dict: dict,
-            data_key: str,
-            error_text="",
-            cursor="cursor",
-            has_more="has_more",
-            *args,
-            **kwargs,
+        self,
+        data_dict: dict,
+        data_key: str,
+        error_text="",
+        cursor="cursor",
+        has_more="has_more",
+        *args,
+        **kwargs,
     ):
         try:
             if not (d := data_dict[data_key]):
@@ -246,16 +237,16 @@ class API:
         self.headers["Referer"] = url or self.referer
 
     async def request_data(
-            self,
-            url: str,
-            params: dict = None,
-            data: dict = None,
-            method="GET",
-            headers: dict = None,
-            encryption="GET",
-            finished=False,
-            *args,
-            **kwargs,
+        self,
+        url: str,
+        params: dict = None,
+        data: dict = None,
+        method="GET",
+        headers: dict = None,
+        encryption="GET",
+        finished=False,
+        *args,
+        **kwargs,
     ):
         params = self.deal_url_params(
             params,
@@ -287,12 +278,12 @@ class API:
     @Retry.retry
     @capture_error_request
     async def __request_data_get(
-            self,
-            url: str,
-            params: str,
-            headers: dict,
-            finished=False,
-            **kwargs,
+        self,
+        url: str,
+        params: str,
+        headers: dict,
+        finished=False,
+        **kwargs,
     ):
         # TODO: 临时代理未生效
         self.__record_request_messages(
@@ -312,7 +303,7 @@ class API:
     @Retry.retry
     @capture_error_request
     async def __request_data_post(
-            self, url: str, params: str, data: dict, headers: dict, finished=False, **kwargs
+        self, url: str, params: str, data: dict, headers: dict, finished=False, **kwargs
     ):
         # TODO: 临时代理未生效
         self.__record_request_messages(
@@ -344,12 +335,12 @@ class API:
         return response.json()
 
     def __record_request_messages(
-            self,
-            url: str,
-            params: str | None,
-            data: dict | None,
-            headers: dict,
-            **kwargs,
+        self,
+        url: str,
+        params: str | None,
+        data: dict | None,
+        headers: dict,
+        **kwargs,
     ):
         self.log.info(f"URL: {url}", False)
         self.log.info(f"Params: {params}", False)
@@ -360,10 +351,10 @@ class API:
         self.log.info(f"Other: {kwargs}", False)
 
     def deal_url_params(
-            self,
-            params: dict,
-            method="GET",
-            **kwargs,
+        self,
+        params: dict,
+        method="GET",
+        **kwargs,
     ) -> str:
         if params:
             params = urlencode(
@@ -375,7 +366,7 @@ class API:
         return ""
 
     def summary_works(
-            self,
+        self,
     ) -> None:
         self.log.info(
             _("共获取到 {count} 个{text}").format(
@@ -400,12 +391,12 @@ class API:
         )
 
     def append_response(
-            self,
-            data: list[dict],
-            start: int = None,
-            end: int = None,
-            *args,
-            **kwargs,
+        self,
+        data: list[dict],
+        start: int = None,
+        end: int = None,
+        *args,
+        **kwargs,
     ) -> None:
         for item in data[start:end]:
             self.response.append(item)
@@ -426,7 +417,7 @@ class APITikTok(API):
         "browser_online": "true",
         "browser_platform": "Win32",
         "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 "
-                           "Safari/537.36",
+        "Safari/537.36",
         "channel": "tiktok_web",
         "cookie_enabled": "true",
         "data_collection_enabled": "true",
@@ -451,12 +442,12 @@ class APITikTok(API):
     }
 
     def __init__(
-            self,
-            params: Union["Parameter", "Params"],
-            cookie: str = "",
-            proxy: str = None,
-            *args,
-            **kwargs,
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        *args,
+        **kwargs,
     ):
         super().__init__(params, cookie, proxy, *args, **kwargs)
         self.headers = params.headers_tiktok.copy()
@@ -465,16 +456,16 @@ class APITikTok(API):
         self.set_temp_cookie(cookie)
 
     async def request_data(
-            self,
-            url: str,
-            params: dict = None,
-            data: dict = None,
-            method="GET",
-            headers: dict = None,
-            encryption=8,
-            finished=False,
-            *args,
-            **kwargs,
+        self,
+        url: str,
+        params: dict = None,
+        data: dict = None,
+        method="GET",
+        headers: dict = None,
+        encryption=8,
+        finished=False,
+        *args,
+        **kwargs,
     ):
         return await super().request_data(
             url=url,
@@ -489,10 +480,10 @@ class APITikTok(API):
         )
 
     def deal_url_params(
-            self,
-            params: dict,
-            number=8,
-            **kwargs,
+        self,
+        params: dict,
+        number=8,
+        **kwargs,
     ) -> str:
         if params:
             params = urlencode(
@@ -500,9 +491,9 @@ class APITikTok(API):
                 quote_via=quote,
             )
             params += f"&X-Bogus={
-            self.xb.get_x_bogus(
-                params, number, self.headers.get('User-Agent', USERAGENT)
-            )
+                self.xb.get_x_bogus(
+                    params, number, self.headers.get('User-Agent', USERAGENT)
+                )
             }"
             return params
         return ""

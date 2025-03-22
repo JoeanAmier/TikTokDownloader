@@ -12,16 +12,16 @@ class SQLLogger(BaseSQLLogger):
     """SQLite 数据库保存数据"""
 
     def __init__(
-            self,
-            root: Path,
-            db_name: str,
-            title_line: tuple,
-            title_type: tuple,
-            field_keys: tuple,
-            old=None,
-            name="Solo_Download",
-            *args,
-            **kwargs,
+        self,
+        root: Path,
+        db_name: str,
+        title_line: tuple,
+        title_type: tuple,
+        field_keys: tuple,
+        old=None,
+        name="Solo_Download",
+        *args,
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.db = None  # 数据库
@@ -45,14 +45,14 @@ class SQLLogger(BaseSQLLogger):
 
     async def create(self):
         create_sql = f"""CREATE TABLE IF NOT EXISTS {self.name} ({
-        ", ".join([f"{i} {j}" for i, j in zip(self.title_line, self.title_type)])
+            ", ".join([f"{i} {j}" for i, j in zip(self.title_line, self.title_type)])
         });"""
         await self.cursor.execute(create_sql)
         await self.db.commit()
 
     async def _save(self, data, *args, **kwargs):
         insert_sql = f"""REPLACE INTO {self.name} ({
-        ", ".join(self.title_line)
+            ", ".join(self.title_line)
         }) VALUES ({", ".join(["?" for _ in self.title_line])});"""
         await self.cursor.execute(insert_sql, data)
         await self.db.commit()

@@ -22,27 +22,27 @@ class Cookie:
         self.console = console
 
     def run(
-            self,
-            key="cookie",
-            tiktok=0,
+        self,
+        key="cookie",
+        tiktok=0,
     ):
         """提取 Cookie 并写入配置文件"""
         if not (
-                cookie := self.console.input(
-                    _("请粘贴 {platform} Cookie 内容: ").format(
-                        platform=self.PLATFORM[tiktok]
-                    )
+            cookie := self.console.input(
+                _("请粘贴 {platform} Cookie 内容: ").format(
+                    platform=self.PLATFORM[tiktok]
                 )
+            )
         ):
             return False
         self.extract(cookie, key=key)
         return True
 
     def extract(
-            self,
-            cookie: str,
-            write=True,
-            key="cookie",
+        self,
+        cookie: str,
+        write=True,
+        key="cookie",
     ) -> dict:
         cookie_dict = cookie_str_to_dict(cookie)
         self.__check_state(cookie_dict)

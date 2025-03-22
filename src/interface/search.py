@@ -1,7 +1,6 @@
 from json import dumps
 from types import SimpleNamespace
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Union
 from urllib.parse import quote
 
 from src.interface.template import API
@@ -391,6 +390,7 @@ class Search(API):
 
 async def test():
     from src.testers import Params
+
     async with Params() as params:
         i = Search(
             params,

@@ -8,7 +8,7 @@ from src.translation import _
 
 class Write:
     def __init__(
-            self,
+        self,
     ):
         self.console = ColorfulConsole()
         self.settings = Settings(PROJECT_ROOT, self.console)

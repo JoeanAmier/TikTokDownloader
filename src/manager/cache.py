@@ -13,11 +13,11 @@ __all__ = ["Cache"]
 
 class Cache:
     def __init__(
-            self,
-            parameter: "Parameter",
-            database: "Database",
-            mark: bool,
-            name: bool,
+        self,
+        parameter: "Parameter",
+        database: "Database",
+        mark: bool,
+        name: bool,
     ):
         self.console = parameter.console
         self.log = parameter.logger  # 日志记录对象
@@ -27,13 +27,13 @@ class Cache:
         self.name = name
 
     async def update_cache(
-            self,
-            solo_mode: bool,
-            prefix: str,
-            suffix: str,
-            id_: str,
-            name: str,
-            mark: str,
+        self,
+        solo_mode: bool,
+        prefix: str,
+        suffix: str,
+        id_: str,
+        name: str,
+        mark: str,
     ):
         if d := await self.has_cache(id_):
             self.__check_file(
@@ -57,19 +57,19 @@ class Cache:
         return await self.database.read_mapping_data(id_)
 
     def __check_file(
-            self,
-            solo_mode: bool,
-            prefix: str,
-            suffix: str,
-            id_: str,
-            name: str,
-            mark: str,
-            data: dict,
+        self,
+        solo_mode: bool,
+        prefix: str,
+        suffix: str,
+        id_: str,
+        name: str,
+        mark: str,
+        data: dict,
     ):
         if not (
-                old_folder := self.root.joinpath(
-                    f"{prefix}{id_}_{data['mark'] or data['name']}_{suffix}"
-                )
+            old_folder := self.root.joinpath(
+                f"{prefix}{id_}_{data['mark'] or data['name']}_{suffix}"
+            )
         ).is_dir():
             self.log.info(f"{old_folder} 文件夹不存在，自动跳过", False)
             return
@@ -98,12 +98,12 @@ class Cache:
             )
 
     def __rename_folder(
-            self,
-            old_folder: Path,
-            prefix: str,
-            suffix: str,
-            id_: str,
-            mark: str,
+        self,
+        old_folder: Path,
+        prefix: str,
+        suffix: str,
+        id_: str,
+        mark: str,
     ):
         new_folder = self.root.joinpath(f"{prefix}{id_}_{mark}_{suffix}")
         self.__rename(
@@ -114,12 +114,12 @@ class Cache:
         self.log.info(f"文件夹 {old_folder} 已重命名为 {new_folder}", False)
 
     def __rename_works_folder(
-            self,
-            old_: Path,
-            mark: str,
-            name: str,
-            key: str,
-            data: dict,
+        self,
+        old_: Path,
+        mark: str,
+        name: str,
+        key: str,
+        data: dict,
     ) -> Path:
         if (s := data[key]) in old_.name:
             new_ = old_.parent / old_.name.replace(
@@ -135,15 +135,15 @@ class Cache:
         return old_
 
     def __scan_file(
-            self,
-            solo_mode: bool,
-            prefix: str,
-            suffix: str,
-            id_: str,
-            name: str,
-            mark: str,
-            data: dict,
-            key="name",
+        self,
+        solo_mode: bool,
+        prefix: str,
+        suffix: str,
+        id_: str,
+        name: str,
+        mark: str,
+        data: dict,
+        key="name",
     ):
         root = self.root.joinpath(f"{prefix}{id_}_{mark}_{suffix}")
         item_list = root.iterdir()
@@ -177,13 +177,13 @@ class Cache:
             )
 
     def __batch_rename(
-            self,
-            root: Path,
-            files,
-            mark: str,
-            name: str,
-            key: str,
-            data: dict,
+        self,
+        root: Path,
+        files,
+        mark: str,
+        name: str,
+        key: str,
+        data: dict,
     ):
         for old_file in files:
             if (s := data[key]) not in old_file.name:
@@ -191,13 +191,13 @@ class Cache:
             self.__rename_file(root, old_file, s, mark, name, key)
 
     def __rename_file(
-            self,
-            root: Path,
-            old_file: Path,
-            keywords: str,
-            mark: str,
-            name: str,
-            field: str,
+        self,
+        root: Path,
+        old_file: Path,
+        keywords: str,
+        mark: str,
+        name: str,
+        field: str,
     ):
         new_file = root.joinpath(
             old_file.name.replace(keywords, {"name": name, "mark": mark}[field], 1)
@@ -212,10 +212,10 @@ class Cache:
 
     @Retry.retry_limited
     def __rename(
-            self,
-            old_: Path,
-            new_: Path,
-            type_=_("文件"),
+        self,
+        old_: Path,
+        new_: Path,
+        type_=_("文件"),
     ) -> bool:
         try:
             old_.rename(new_)

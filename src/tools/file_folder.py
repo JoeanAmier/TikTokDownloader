@@ -16,7 +16,7 @@ def remove_empty_directories(path: Path) -> None:
         "\\__",
     }
     for dir_path, dir_names, file_names in path.walk(
-            top_down=False,
+        top_down=False,
     ):
         if any(i in str(dir_path) for i in exclude):
             continue

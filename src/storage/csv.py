@@ -19,15 +19,15 @@ class CSVLogger(BaseTextLogger):
     encode = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
 
     def __init__(
-            self,
-            root: Path,
-            title_line: tuple,
-            field_keys: tuple,
-            console: "ColorfulConsole",
-            old=None,
-            name="Solo_Download",
-            *args,
-            **kwargs,
+        self,
+        root: Path,
+        title_line: tuple,
+        field_keys: tuple,
+        console: "ColorfulConsole",
+        old=None,
+        name="Solo_Download",
+        *args,
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.console = console

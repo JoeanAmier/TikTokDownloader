@@ -1,15 +1,14 @@
 from pathlib import Path
-from time import localtime
-from time import strftime
+from time import localtime, strftime
 from typing import TYPE_CHECKING
 
-from ..custom import VERSION_BETA
 from ..custom import (
-    WARNING,
-    ERROR,
-    INFO,
-    GENERAL,
     DEBUG,
+    ERROR,
+    GENERAL,
+    INFO,
+    VERSION_BETA,
+    WARNING,
 )
 from ..tools import Cleaner
 
@@ -23,12 +22,12 @@ class BaseLogger:
     DEBUG = VERSION_BETA
 
     def __init__(
-            self,
-            main_path: Path,
-            console: "ColorfulConsole",
-            root="",
-            folder="",
-            name="",
+        self,
+        main_path: Path,
+        console: "ColorfulConsole",
+        root="",
+        folder="",
+        name="",
     ):
         self.log = None  # 记录器主体
         self.console = console
@@ -40,11 +39,11 @@ class BaseLogger:
         )
 
     def init_check(
-            self,
-            main_path: Path,
-            root=None,
-            folder=None,
-            name=None,
+        self,
+        main_path: Path,
+        root=None,
+        folder=None,
+        name=None,
     ) -> tuple:
         root = self.check_root(root, main_path)
         folder = self.check_folder(folder)

@@ -1,20 +1,17 @@
-from logging import FileHandler
-from logging import Formatter
 from logging import INFO as INFO_LEVEL
-from logging import getLogger
+from logging import FileHandler, Formatter, getLogger
 from pathlib import Path
 from platform import system
-from time import localtime
-from time import strftime
+from time import localtime, strftime
 from typing import TYPE_CHECKING
 
-from .base import BaseLogger
 from ..custom import (
-    WARNING,
+    DEBUG,
     ERROR,
     INFO,
-    DEBUG,
+    WARNING,
 )
+from .base import BaseLogger
 
 if TYPE_CHECKING:
     from ..tools import ColorfulConsole
@@ -26,14 +23,14 @@ class LoggerManager(BaseLogger):
     encode = "UTF-8-SIG" if system() == "Windows" else "UTF-8"
 
     def __init__(
-            self, main_path: Path, console: "ColorfulConsole", root="", folder="", name=""
+        self, main_path: Path, console: "ColorfulConsole", root="", folder="", name=""
     ):
         super().__init__(main_path, console, root, folder, name)
 
     def run(
-            self,
-            format_="%(asctime)s[%(levelname)s]:  %(message)s",
-            filename=None,
+        self,
+        format_="%(asctime)s[%(levelname)s]:  %(message)s",
+        filename=None,
     ):
         if not (dir_ := self._root.joinpath(self._folder)).exists():
             dir_.mkdir()

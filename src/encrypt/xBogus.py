@@ -1,8 +1,7 @@
 from base64 import b64encode
 from hashlib import md5
 from time import time
-from urllib.parse import quote
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode
 
 from ..custom import USERAGENT
 
@@ -12,10 +11,10 @@ __all__ = ["XBogus", "XBogusTikTok"]
 class XBogus:
     __string = "Dkdpgh4ZKsQB80/Mfvw36XI1R25-WUAlEi7NLboqYTOPuzmFjJnryx9HVGcaStCe="
     __array = (
-            [None for _ in range(48)]
-            + list(range(10))
-            + [None for _ in range(39)]
-            + list(range(10, 16))
+        [None for _ in range(48)]
+        + list(range(10))
+        + [None for _ in range(39)]
+        + list(range(10, 16))
     )
     __canvas = 3873194319
 
@@ -161,7 +160,7 @@ class XBogus:
         return list(md5(value).digest())
 
     def generate_x_bogus(
-            self, query: list, params: int, user_agent: str, timestamp: int
+        self, query: list, params: int, user_agent: str, timestamp: int
     ):
         ua_array = self.generate_ua_array(user_agent, params)
         array = [
@@ -196,7 +195,7 @@ class XBogus:
         return "".join(self.generate_str(i) for i in self.generate_num(garbled))
 
     def get_x_bogus(
-            self, query: dict | str, params=8, user_agent=USERAGENT, test_time=None
+        self, query: dict | str, params=8, user_agent=USERAGENT, test_time=None
     ):
         timestamp = int(test_time or time())
         query = self.process_url_path(

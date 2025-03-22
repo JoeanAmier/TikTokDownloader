@@ -1,17 +1,14 @@
 from asyncio import run
 from http import cookies
 from json import dumps
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Union
 
-from src.custom import PARAMS_HEADERS
-from src.custom import PARAMS_HEADERS_TIKTOK
+from src.custom import PARAMS_HEADERS, PARAMS_HEADERS_TIKTOK
 from src.tools import request_params
 from src.translation import _
 
 if TYPE_CHECKING:
-    from src.record import BaseLogger
-    from src.record import LoggerManager
+    from src.record import BaseLogger, LoggerManager
     from src.testers import Logger
 
 __all__ = ["TtWid", "TtWidTikTok"]
@@ -27,26 +24,26 @@ class TtWid:
 
     @classmethod
     async def get_tt_wid(
-            cls,
-            logger: Union["BaseLogger", "LoggerManager", "Logger"],
-            headers: dict,
-            proxy: str = None,
-            **kwargs,
+        cls,
+        logger: Union["BaseLogger", "LoggerManager", "Logger"],
+        headers: dict,
+        proxy: str = None,
+        **kwargs,
     ) -> dict | None:
         if response := await request_params(
-                logger,
-                cls.API,
-                data=cls.DATA,
-                headers=headers,
-                proxy=proxy,
-                **kwargs,
+            logger,
+            cls.API,
+            data=cls.DATA,
+            headers=headers,
+            proxy=proxy,
+            **kwargs,
         ):
             return cls.extract(logger, response, cls.NAME)
         logger.error(_("获取 {name} 参数失败！").format(name=cls.NAME))
 
     @staticmethod
     def extract(
-            logger: Union["BaseLogger", "LoggerManager", "Logger"], headers, key: str
+        logger: Union["BaseLogger", "LoggerManager", "Logger"], headers, key: str
     ) -> dict | None:
         if c := headers.get("Set-Cookie"):
             cookie_jar = cookies.SimpleCookie()
@@ -73,24 +70,24 @@ class TtWidTikTok(TtWid):
 
     @classmethod
     async def get_tt_wid(
-            cls,
-            logger: Union["BaseLogger", "LoggerManager", "Logger"],
-            headers: dict,
-            cookie: str = "",
-            proxy: str = None,
-            **kwargs,
+        cls,
+        logger: Union["BaseLogger", "LoggerManager", "Logger"],
+        headers: dict,
+        cookie: str = "",
+        proxy: str = None,
+        **kwargs,
     ) -> dict | None:
         if response := await request_params(
-                logger,
-                cls.API,
-                data=cls.DATA,
-                headers=headers
-                        | {
-                            "Cookie": cookie,
-                            "Content-Type": "application/x-www-form-urlencoded",
-                        },
-                proxy=proxy,
-                **kwargs,
+            logger,
+            cls.API,
+            data=cls.DATA,
+            headers=headers
+            | {
+                "Cookie": cookie,
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            proxy=proxy,
+            **kwargs,
         ):
             return cls.extract(logger, response, cls.NAME)
         logger.error(_("获取 {name} 参数失败！").format(name=cls.NAME))

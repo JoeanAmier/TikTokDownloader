@@ -1,14 +1,12 @@
 from asyncio import run
 from re import compile
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Union
 
 from src.custom import PARAMS_HEADERS_TIKTOK
 from src.tools import request_params
 
 if TYPE_CHECKING:
-    from src.record import BaseLogger
-    from src.record import LoggerManager
+    from src.record import BaseLogger, LoggerManager
     from src.testers import Logger
 
 
@@ -19,10 +17,10 @@ class DeviceId:
 
     @classmethod
     async def get_device_id(
-            cls,
-            logger: Union["BaseLogger", "LoggerManager", "Logger"],
-            headers: dict,
-            **kwargs,
+        cls,
+        logger: Union["BaseLogger", "LoggerManager", "Logger"],
+        headers: dict,
+        **kwargs,
     ) -> [str, str]:
         response = await request_params(
             logger,
@@ -41,11 +39,11 @@ class DeviceId:
 
     @classmethod
     async def get_device_ids(
-            cls,
-            logger: Union["BaseLogger", "LoggerManager", "Logger"],
-            headers: dict,
-            number: int,
-            **kwargs,
+        cls,
+        logger: Union["BaseLogger", "LoggerManager", "Logger"],
+        headers: dict,
+        number: int,
+        **kwargs,
     ) -> [[str, str]]:
         return [
             await cls.get_device_id(

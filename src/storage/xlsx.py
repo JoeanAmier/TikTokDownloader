@@ -1,12 +1,11 @@
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from openpyxl import Workbook
-from openpyxl import load_workbook
+from openpyxl import Workbook, load_workbook
 from openpyxl.utils.exceptions import IllegalCharacterError
 
-from .text import BaseTextLogger
 from ..translation import _
+from .text import BaseTextLogger
 
 if TYPE_CHECKING:
     from ..tools import ColorfulConsole
@@ -20,15 +19,15 @@ class XLSXLogger(BaseTextLogger):
     __type = "xlsx"
 
     def __init__(
-            self,
-            root: Path,
-            title_line: tuple,
-            field_keys: tuple,
-            console: "ColorfulConsole",
-            old=None,
-            name="Solo_Download",
-            *args,
-            **kwargs,
+        self,
+        root: Path,
+        title_line: tuple,
+        field_keys: tuple,
+        console: "ColorfulConsole",
+        old=None,
+        name="Solo_Download",
+        *args,
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.console = console

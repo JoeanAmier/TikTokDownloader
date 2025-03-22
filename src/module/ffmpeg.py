@@ -36,11 +36,11 @@ class FFMPEG:
             Popen(command, shell=self.shell)
 
     def __generate_command(
-            self,
-            url,
-            file,
-            proxy,
-            user_agent,
+        self,
+        url,
+        file,
+        proxy,
+        user_agent,
     ) -> str:
         command = self.command.copy()
         command.extend(
@@ -87,7 +87,7 @@ class FFMPEG:
         )
         if proxy:
             for insert_index, item in enumerate(
-                    ("-http_proxy", proxy), start=len(self.command) + 2
+                ("-http_proxy", proxy), start=len(self.command) + 2
             ):
                 command.insert(insert_index, item)
         command.append(f'"{file}"')

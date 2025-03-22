@@ -6,6 +6,7 @@ from .function import (
     is_valid_token,
 )
 from .internal import (
+    DISCLAIMER_TEXT,
     PROJECT_ROOT,
     VERSION_MAJOR,
     VERSION_MINOR,

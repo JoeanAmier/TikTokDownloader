@@ -1,8 +1,7 @@
 from asyncio import CancelledError
 from contextlib import suppress
 
-from aiosqlite import Row
-from aiosqlite import connect
+from aiosqlite import Row, connect
 
 from ..custom import PROJECT_ROOT
 
@@ -13,7 +12,7 @@ class Database:
     __FILE = "TikTokDownloader.db"
 
     def __init__(
-            self,
+        self,
     ):
         self.file = PROJECT_ROOT.joinpath(self.__FILE)
         self.database = None
@@ -67,9 +66,9 @@ class Database:
         return await self.cursor.fetchall()
 
     async def update_config_data(
-            self,
-            name: str,
-            value: int,
+        self,
+        name: str,
+        value: int,
     ):
         await self.database.execute(
             "REPLACE INTO config_data (NAME, VALUE) VALUES (?,?)", (name, value)
@@ -77,9 +76,9 @@ class Database:
         await self.database.commit()
 
     async def update_option_data(
-            self,
-            name: str,
-            value: str,
+        self,
+        name: str,
+        value: str,
     ):
         await self.database.execute(
             "REPLACE INTO option_data (NAME, VALUE) VALUES (?,?)", (name, value)

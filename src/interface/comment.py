@@ -1,7 +1,4 @@
-from typing import Callable
-from typing import Coroutine, Type
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Callable, Coroutine, Type, Union
 
 from src.extract import Extractor
 from src.interface.template import API
@@ -344,6 +341,7 @@ class Reply(Comment):
 
 async def test():
     from src.testers import Params
+
     async with Params() as params:
         i = Comment(
             params,

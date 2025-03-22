@@ -11,9 +11,9 @@ __all__ = ["ClipboardMonitor", "WorksMonitor"]
 
 class ClipboardMonitor(TikTok):
     def __init__(
-            self,
-            parameter: "Parameter",
-            database: "Database",
+        self,
+        parameter: "Parameter",
+        database: "Database",
     ):
         super().__init__(
             parameter,
@@ -23,9 +23,9 @@ class ClipboardMonitor(TikTok):
 
 class WorksMonitor(TikTok):
     def __init__(
-            self,
-            parameter: "Parameter",
-            database: "Database",
+        self,
+        parameter: "Parameter",
+        database: "Database",
     ):
         super().__init__(
             parameter,

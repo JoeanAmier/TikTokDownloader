@@ -3,13 +3,12 @@ from typing import TYPE_CHECKING
 
 # from ..custom import PHONE_HEADERS
 from ..custom import wait
-from ..tools import Retry
-from ..tools import TikTokDownloaderError
-from ..tools import capture_error_request
+from ..tools import Retry, TikTokDownloaderError, capture_error_request
 
 if TYPE_CHECKING:
-    from ..config import Parameter
     from httpx import AsyncClient
+
+    from ..config import Parameter
 
 __all__ = ["Requester"]
 
@@ -18,17 +17,17 @@ class Requester:
     URL = compile(r"(https?://\S+)")
 
     def __init__(
-            self,
-            params: "Parameter",
-            client: "AsyncClient",
+        self,
+        params: "Parameter",
+        client: "AsyncClient",
     ):
         self.client = client
         self.log = params.logger
         self.max_retry = params.max_retry
 
     async def run(
-            self,
-            text: str,
+        self,
+        text: str,
     ) -> str:
         urls = self.URL.finditer(text)
         if not urls:
@@ -47,9 +46,9 @@ class Requester:
     @Retry.retry
     @capture_error_request
     async def request_url(
-            self,
-            url: str,
-            content="url",
+        self,
+        url: str,
+        content="url",
     ):
         self.log.info(f"URL: {url}", False)
         if content in {"url", "headers"}:
@@ -76,16 +75,16 @@ class Requester:
                 raise TikTokDownloaderError
 
     async def request_url_head(
-            self,
-            url: str,
+        self,
+        url: str,
     ):
         return await self.client.head(
             url,
         )
 
     async def request_url_get(
-            self,
-            url: str,
+        self,
+        url: str,
     ):
         response = await self.client.get(
             url,

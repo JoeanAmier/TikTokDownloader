@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING
 
 from ..custom import (
     ERROR,
-    WARNING,
     INFO,
+    WARNING,
 )
 
 if TYPE_CHECKING:
@@ -23,7 +23,7 @@ class __DownloadRecorder:
     works_id = compile(r"\d{19}")
 
     def __init__(
-            self, switch: bool, folder: Path, state: bool, console: "ColorfulConsole"
+        self, switch: bool, folder: Path, state: bool, console: "ColorfulConsole"
     ):
         self.switch = switch
         self.state = state
@@ -85,17 +85,17 @@ class __DownloadRecorder:
             return ids
         self.console.print(
             f"程序检测到上次运行可能没有正常结束，您的作品下载记录数据可能已经丢失！\n数据文件路径：{
-            self.path.resolve()
+                self.path.resolve()
             }",
             style=ERROR,
         )
         if self.backup.exists():
             if (
-                    self.console.input(
+                self.console.input(
                     "检测到 IDRecorder 备份文件，是否恢复最后一次备份的数据(YES/NO): ",
-                        style=WARNING,
-                    ).upper()
-                    == "YES"
+                    style=WARNING,
+                ).upper()
+                == "YES"
             ):
                 self.path.write_text(self.backup.read_text(encoding=self.encode))
                 self.console.print(

@@ -1,42 +1,40 @@
 from asyncio import run
-from threading import Event
-from threading import Thread
+from threading import Event, Thread
 from time import sleep
 
-from httpx import RequestError
-from httpx import get
+from httpx import RequestError, get
 
-from src.config import Parameter
-from src.config import Settings
-from src.custom import COOKIE_UPDATE_INTERVAL
-from src.custom import MASTER
+from src.config import Parameter, Settings
 from src.custom import (
+    COOKIE_UPDATE_INTERVAL,
+    DISCLAIMER_TEXT,
+    DOCUMENTATION_URL,
+    LICENCE,
+    MASTER,
+    PROJECT_NAME,
     PROJECT_ROOT,
-    VERSION_MAJOR,
-    VERSION_MINOR,
-    VERSION_BETA,
     RELEASES,
     REPOSITORY,
-    LICENCE,
-    DOCUMENTATION_URL,
-    PROJECT_NAME,
     SERVER_HOST,
     SERVER_PORT,
+    TEXT_REPLACEMENT,
+    VERSION_BETA,
+    VERSION_MAJOR,
+    VERSION_MINOR,
 )
-from src.custom import TEXT_REPLACEMENT
-from src.manager import Database
-from src.manager import DownloadRecorder
-from src.module import Cookie
-from src.module import Register
-from src.record import BaseLogger
-from src.record import LoggerManager
-from src.tools import Browser
-from src.tools import ColorfulConsole
-from src.tools import TikTokDownloaderError
-from src.tools import choose
-from src.tools import remove_empty_directories
-from src.tools import safe_pop
-from src.translation import switch_language, _
+from src.manager import Database, DownloadRecorder
+from src.module import Cookie, Register
+from src.record import BaseLogger, LoggerManager
+from src.tools import (
+    Browser,
+    ColorfulConsole,
+    TikTokDownloaderError,
+    choose,
+    remove_empty_directories,
+    safe_pop,
+)
+from src.translation import _, switch_language
+
 from .main_api import APIServer
 from .main_complete import TikTok
 
@@ -72,7 +70,7 @@ class TikTokDownloader:
     LINE = ">" * WIDTH
 
     def __init__(
-            self,
+        self,
     ):
         self.console = ColorfulConsole()
         self.logger = None
@@ -146,9 +144,9 @@ class TikTokDownloader:
         )
 
     async def disable_function(
-            self,
-            *args,
-            **kwargs,
+        self,
+        *args,
+        **kwargs,
     ):
         self.console.warning(
             "该功能正在重构，预计 5.6 版本开发完成重新开放！",
@@ -180,7 +178,7 @@ class TikTokDownloader:
         await self.change_config("Logger")
 
     async def _switch_language(
-            self,
+        self,
     ):
         if self.option["Language"] == "zh_CN":
             language = "en_US"
@@ -198,11 +196,10 @@ class TikTokDownloader:
     async def disclaimer(self):
         if not self.config["Disclaimer"]:
             await self.__init_language()
-            self.console.print(_("免责声明\n"), style=MASTER)
-            if (
-                    self.console.input(_("是否已仔细阅读上述免责声明(YES/NO): ")).upper()
-                    != "YES"
-            ):
+            self.console.print(_(DISCLAIMER_TEXT), style=MASTER)
+            if self.console.input(
+                _("是否已仔细阅读上述免责声明(YES/NO): ")
+            ).upper() not in ("Y", "YES"):
                 return False
             await self.database.update_config_data("Disclaimer", 1)
             self.console.print()
@@ -283,8 +280,8 @@ class TikTokDownloader:
             )
 
     async def main_menu(
-            self,
-            mode=None,
+        self,
+        mode=None,
     ):
         """选择功能模式"""
         while self.running:
@@ -340,8 +337,8 @@ class TikTokDownloader:
     #         return abort(403)
 
     async def change_config(
-            self,
-            key: str,
+        self,
+        key: str,
     ):
         self.config[key] = 0 if self.config[key] else 1
         await self.database.update_config_data(key, self.config[key])
@@ -359,7 +356,7 @@ class TikTokDownloader:
         self.console.print(
             _("Cookie 获取教程：")
             + "https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6"
-              "%95%99%E7%A8%8B.md"
+            "%95%99%E7%A8%8B.md"
         )
         if self.cookie.run(self.PLATFORM[index], index):
             await self.check_settings()
@@ -373,8 +370,8 @@ class TikTokDownloader:
         if self.console.input(_("是否返回上一级菜单(YES/NO)")).upper() != "NO":
             return
         if cookie := await Register(
-                self.parameter,
-                self.settings,
+            self.parameter,
+            self.settings,
         ).run():
             self.cookie.extract(cookie)
             await self.check_settings()
@@ -444,8 +441,8 @@ class TikTokDownloader:
         )
 
     def restart_cycle_task(
-            self,
-            restart=True,
+        self,
+        restart=True,
     ):
         if restart:
             self.event.set()
@@ -464,18 +461,18 @@ class TikTokDownloader:
         self.parameter.logger.info(_("正在关闭程序"))
 
     async def browser_cookie(
-            self,
+        self,
     ):
         if Browser(self.parameter, self.cookie).run(
-                select=safe_pop(self.run_command),
+            select=safe_pop(self.run_command),
         ):
             await self.check_settings()
 
     async def browser_cookie_tiktok(
-            self,
+        self,
     ):
         if Browser(self.parameter, self.cookie).run(
-                True,
-                select=safe_pop(self.run_command),
+            True,
+            select=safe_pop(self.run_command),
         ):
             await self.check_settings()
