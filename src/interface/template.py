@@ -2,7 +2,7 @@ from time import time
 from typing import TYPE_CHECKING, Callable, Coroutine, Type, Union
 from urllib.parse import quote, urlencode
 
-from httpx import AsyncClient
+from httpx import AsyncClient, get, post
 from rich.progress import (
     BarColumn,
     Progress,
@@ -252,9 +252,9 @@ class API:
             params,
             encryption,
         )
-        match method:
-            case "GET":
-                return await self.__request_data_get(
+        match (method, bool(self.proxy)):
+            case ("GET", False):
+                return await self.request_data_get(
                     url,
                     params,
                     headers or self.headers,
@@ -262,8 +262,27 @@ class API:
                     *args,
                     **kwargs,
                 )
-            case "POST":
-                return await self.__request_data_post(
+            case ("GET", True):
+                return await self.request_data_get_proxy(
+                    url,
+                    params,
+                    headers or self.headers,
+                    finished=finished,
+                    *args,
+                    **kwargs,
+                )
+            case ("POST", False):
+                return await self.request_data_post(
+                    url,
+                    params,
+                    data,
+                    headers or self.headers,
+                    finished=finished,
+                    *args,
+                    **kwargs,
+                )
+            case ("POST", True):
+                return await self.request_data_post_proxy(
                     url,
                     params,
                     data,
@@ -277,7 +296,7 @@ class API:
 
     @Retry.retry
     @capture_error_request
-    async def __request_data_get(
+    async def request_data_get(
         self,
         url: str,
         params: str,
@@ -285,7 +304,6 @@ class API:
         finished=False,
         **kwargs,
     ):
-        # TODO: 临时代理未生效
         self.__record_request_messages(
             url,
             params,
@@ -302,10 +320,37 @@ class API:
 
     @Retry.retry
     @capture_error_request
-    async def __request_data_post(
+    async def request_data_get_proxy(
+        self,
+        url: str,
+        params: str,
+        headers: dict,
+        finished=False,
+        **kwargs,
+    ):
+        self.__record_request_messages(
+            url,
+            params,
+            None,
+            headers,
+            **kwargs,
+        )
+        response = get(
+            f"{url}?{params}",
+            headers=headers,
+            proxy=self.proxy,
+            follow_redirects=True,
+            verify=False,
+            timeout=self.timeout,
+            **kwargs,
+        )
+        return await self.__return_response(response)
+
+    @Retry.retry
+    @capture_error_request
+    async def request_data_post(
         self, url: str, params: str, data: dict, headers: dict, finished=False, **kwargs
     ):
-        # TODO: 临时代理未生效
         self.__record_request_messages(
             url,
             params,
@@ -317,6 +362,30 @@ class API:
             f"{url}?{params}",
             data=data,
             headers=headers,
+            **kwargs,
+        )
+        return await self.__return_response(response)
+
+    @Retry.retry
+    @capture_error_request
+    async def request_data_post_proxy(
+        self, url: str, params: str, data: dict, headers: dict, finished=False, **kwargs
+    ):
+        self.__record_request_messages(
+            url,
+            params,
+            data,
+            headers,
+            **kwargs,
+        )
+        response = post(
+            f"{url}?{params}",
+            data=data,
+            headers=headers,
+            proxy=self.proxy,
+            follow_redirects=True,
+            verify=False,
+            timeout=self.timeout,
             **kwargs,
         )
         return await self.__return_response(response)

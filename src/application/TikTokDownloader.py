@@ -149,7 +149,7 @@ class TikTokDownloader:
         **kwargs,
     ):
         self.console.warning(
-            "该功能正在重构，预计 5.6 版本开发完成重新开放！",
+            "该功能正在重构，未来开发完成重新开放！",
         )
 
     @server_tip
