@@ -1,4 +1,4 @@
-from src.tools import switch_language, _
+from src.translation import _, switch_language
 
 if __name__ == "__main__":
     print(_("免责声明\n"))

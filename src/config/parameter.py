@@ -1,51 +1,37 @@
 from pathlib import Path
-from time import localtime
-from time import strftime
+from time import localtime, strftime
 from types import SimpleNamespace
-from typing import TYPE_CHECKING
-from typing import Type
+from typing import TYPE_CHECKING, Type
 
-from httpx import HTTPStatusError
-from httpx import RequestError
-from httpx import TimeoutException
-from httpx import get
+from httpx import HTTPStatusError, RequestError, TimeoutException, get
 
-from ..custom import BLANK_PREVIEW
 from ..custom import (
+    BLANK_PREVIEW,
     DATA_HEADERS,
+    DATA_HEADERS_TIKTOK,
     DOWNLOAD_HEADERS,
-    PROJECT_ROOT,
     DOWNLOAD_HEADERS_TIKTOK,
     PARAMS_HEADERS,
-    QRCODE_HEADERS,
     PARAMS_HEADERS_TIKTOK,
-    DATA_HEADERS_TIKTOK,
-    USERAGENT,
+    PROJECT_ROOT,
+    QRCODE_HEADERS,
     TIMEOUT,
+    USERAGENT,
 )
-from ..encrypt import ABogus
-from ..encrypt import MsToken
-from ..encrypt import MsTokenTikTok
-from ..encrypt import TtWid
-from ..encrypt import TtWidTikTok
-from ..encrypt import XBogus
+from ..encrypt import ABogus, MsToken, MsTokenTikTok, TtWid, TtWidTikTok, XBogus
 from ..extract import Extractor
-from ..interface import API
-from ..interface import APITikTok
+from ..interface import API, APITikTok
 from ..module import FFMPEG
-from ..record import BaseLogger
-from ..record import LoggerManager
+from ..record import BaseLogger, LoggerManager
 from ..storage import RecordManager
-from ..tools import Cleaner
-from ..tools import cookie_dict_to_str
-from ..tools import create_client
+from ..tools import Cleaner, cookie_dict_to_str, create_client
 from ..translation import _
 
 if TYPE_CHECKING:
     from ..manager import DownloadRecorder
+    from ..module import Cookie
     from ..tools import ColorfulConsole
     from .settings import Settings
-    from ..module import Cookie
 
 __all__ = ["Parameter"]
 
@@ -287,7 +273,7 @@ class Parameter:
                         f"参数: {i}",
                         False,
                     )
-                    cookie += cookie_dict_to_str(i)
+                    cookie += f"; {cookie_dict_to_str(i)}"
             return cookie
 
     async def __get_tt_wid_params(self) -> dict:

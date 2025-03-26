@@ -1,2 +1,2 @@
-from src.testers.logger import Logger
-from src.testers.params import Params
+from .logger import Logger
+from .params import Params
