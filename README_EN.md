@@ -339,7 +339,7 @@ repository to execute the build process
 <li>Before starting development, please pull the latest code from the <code>develop</code> branch as the basis for your modifications; this helps avoid merge conflicts and ensures your changes are based on the latest state of the project.</li>
 <li>If your changes involve multiple unrelated features or issues, please split them into several independent commits or pull requests.</li>
 <li>Each pull request should focus on a single feature or fix as much as possible, to facilitate code review and testing.</li>
-<li>Follow the existing coding style; make sure your code is consistent with the style already present in the project.</li>
+<li>Follow the existing coding style; make sure your code is consistent with the style already present in the project; please use the Ruff tool to maintain code formatting standards.</li>
 <li>Write code that is easy to read; add appropriate annotation to help others understand your intentions.</li>
 <li>Each commit should include a clear and concise commit message describing the changes made. The commit message should follow this format: <code>&lt;type&gt;: &lt;short description&gt;</code></li>
 <li>When you are ready to submit a pull request, please prioritize submitting them to the <code>develop</code> branch; this provides maintainers with a buffer zone for additional testing and review before final merging into the <code>master</code> branch.</li>
