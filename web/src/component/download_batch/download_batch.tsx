@@ -3,7 +3,9 @@
 
 const DownloadBatch = ()=>{
     return (
-        <div>BatchDownload</div>
+        <div>
+
+        </div>
     )
 }
 

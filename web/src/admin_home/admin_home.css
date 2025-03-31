@@ -56,3 +56,6 @@
 .ant-tabs-ink-bar {
     display: none !important;
 }
+.custom-tab-class {
+    height: 100% !important;
+}

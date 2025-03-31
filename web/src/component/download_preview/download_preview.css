@@ -1,0 +1,40 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.grid-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    min-height: 200px; /* 设置最小高度 */
+}
+
+/* 智能图片处理 */
+.grid-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center; /* 重点：确保裁剪从中心开始 */
+    transition: transform 0.3s ease;
+}
+
+.grid-item:hover img {
+    transform: scale(1.03);
+}
+
+/* 视频容器特殊处理 */
+.media-container {
+    position: relative;
+    padding-top: 56.25%; /* 16:9 比例 */
+}
+
+.media-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

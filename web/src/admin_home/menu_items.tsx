@@ -1,10 +1,6 @@
 import {
-    ClockCircleOutlined,
-    CloudDownloadOutlined,
-    DownloadOutlined,
-    SettingOutlined,
-    VideoCameraAddOutlined
-} from "@ant-design/icons";
+    ClockCircleOutlined, CloudDownloadOutlined, DownloadOutlined, SettingOutlined,
+    VideoCameraAddOutlined, ToolOutlined} from "@ant-design/icons";
 import {Link} from "react-router-dom";
 
 
@@ -43,6 +39,13 @@ const MenuItems = [
         label: <Link to="/download_preview">下载预览</Link> ,
         path:"/download_preview",
         cn:"下载预览"
+    },
+    {
+        key: '6',
+        icon: <ToolOutlined />,
+        label: <Link to="/other_function">其他功能</Link> ,
+        path:"/other_function",
+        cn:"其他功能"
     },
 ]
 

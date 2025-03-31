@@ -74,7 +74,7 @@ const AdminHomeTabs = () => {
     };
     const onEdit = (targetKey, action) => {
         if (action === 'add') {
-            add();
+            // add();
         } else {
             remove(targetKey);
         }
