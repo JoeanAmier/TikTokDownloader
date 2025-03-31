@@ -1,0 +1,58 @@
+
+.home-header {
+    margin: auto;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    overflow: auto;
+    background: linear-gradient(315deg, rgba(175, 27, 27, 0.4) 3%, rgba(238, 91, 91, 0.31) 38%, rgba(236, 130, 232, 0.49) 68%, rgba(64, 221, 255, 0.84) 98%);
+    animation: gradient 15s ease infinite;
+    background-size: 400% 400%;
+    background-attachment: fixed;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 0%;
+    }
+    50% {
+        background-position: 100% 100%;
+    }
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+@keyframes wave {
+    2% {
+        transform: translateX(1);
+    }
+
+    25% {
+        transform: translateX(-25%);
+    }
+
+    50% {
+        transform: translateX(-50%);
+    }
+
+    75% {
+        transform: translateX(-25%);
+    }
+
+    100% {
+        transform: translateX(1);
+    }
+}
+.home-content{
+    height: 100%;
+    width: 100%;
+    padding: 25px;
+    border-radius: 25px;
+}
+
+.ant-layout-sider{
+    background: rgba(0, 0, 0, 0) !important;
+}
+
+.ant-tabs-ink-bar {
+    display: none !important;
+}
