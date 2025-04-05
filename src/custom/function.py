@@ -1,8 +1,8 @@
-from asyncio import sleep
-from random import randint
+# from asyncio import sleep
+# from random import randint
 from typing import TYPE_CHECKING
 
-from ..translation import _
+# from ..translation import _
 
 if TYPE_CHECKING:
     from ..tools import ColorfulConsole
@@ -13,19 +13,19 @@ async def wait() -> None:
     设置网络请求间隔时间，仅对获取数据生效，不影响下载文件
     """
     # 随机延时
-    await sleep(randint(15, 45) * 0.1)
+    # await sleep(randint(10, 25) * 0.1)
     # 固定延时
     # await sleep(2)
     # 取消延时
-    # pass
+    pass
 
 
 def failure_handling() -> bool:
     """批量下载账号作品模式 和 批量下载合集作品模式 获取数据失败时，是否继续执行"""
     # 询问用户
-    return bool(input(_("输入任意字符继续处理账号/合集，直接回车停止处理账号/合集: ")))
+    # return bool(input(_("输入任意字符继续处理账号/合集，直接回车停止处理账号/合集: ")))
     # 继续执行
-    # return True
+    return True
     # 结束执行
     # return False
 
@@ -49,18 +49,18 @@ async def suspend(count: int, console: "ColorfulConsole") -> None:
     说明: 此处的一个数据代表一个账号或者一个合集，并非代表一个数据包
     """
     # 启用该函数
-    batches = 10  # 根据实际需求修改
-    if not count % batches:
-        rest_time = 60 * 5  # 根据实际需求修改
-        console.print(
-            _(
-                "程序连续处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，"
-                "程序已经暂停运行，将在 {rest_time} 秒后恢复运行！"
-            ).format(batches=batches, rest_time=rest_time),
-        )
-        await sleep(rest_time)
+    # batches = 10  # 根据实际需求修改
+    # if not count % batches:
+    #     rest_time = 60 * 5  # 根据实际需求修改
+    #     console.print(
+    #         _(
+    #             "程序连续处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，"
+    #             "程序已经暂停运行，将在 {rest_time} 秒后恢复运行！"
+    #         ).format(batches=batches, rest_time=rest_time),
+    #     )
+    #     await sleep(rest_time)
     # 禁用该函数
-    # pass
+    pass
 
 
 def is_valid_token(token: str) -> bool:

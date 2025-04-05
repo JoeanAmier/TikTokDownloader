@@ -823,7 +823,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <li><code>https://www.douyin.com/user/账号ID</code></li>
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
-<p>如果需要大批量采集账号作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
+<p>如果需要大批量采集账号作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 方法。</p>
 <p><b>下载账号喜欢作品时需要使用已登录的 Cookie，否则程序可能无法正常获取账号消息！</b></p>
 <p>如果当前账号昵称或账号标识不是有效的文件夹名称时，程序会自动替换为账号 ID。</p>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
@@ -897,7 +897,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <li><code>https://www.douyin.com/collection/合集ID</code></li>
 <li><code>https://www.douyin.com/channel/分区ID?modal_id=作品ID</code></li>
 </ul>
-<p>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
+<p>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 方法。</p>
 <p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会自动替换为合集 ID。</p>
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
 <h3>采集账号详细数据(抖音)</h3>
@@ -1105,7 +1105,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <li><code>https://www.tiktok.com/@TikTok号</code></li>
 <li><code>https://www.tiktok.com/@TikTok号/video/作品ID</code></li>
 </ul>
-<p>如果需要大批量采集账号作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
+<p>如果需要大批量采集账号作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 方法。</p>
 <p>如果当前账号昵称或账号标识不是有效的文件夹名称时，程序会自动替换为账号 ID。</p>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
 <h3>批量下载链接作品(TikTok)</h3>
@@ -1131,7 +1131,7 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <li><code>https://www.tiktok.com/@TikTok号/playlist/合辑信息</code></li>
 <li><code>https://www.tiktok.com/@TikTok号/collection/合辑信息</code></li>
 </ul>
-<p>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 函数。</p>
+<p>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 方法。</p>
 <p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会自动替换为合集 ID。</p>
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
 <h3>获取直播推流地址(TikTok)</h3>

@@ -1,12 +1,9 @@
-from datetime import date
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
 from platform import system
 from time import time
 from types import SimpleNamespace
-from typing import Callable
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Callable, Union
 
 from pydantic import ValidationError
 
@@ -17,47 +14,46 @@ from ..extract import Extractor
 from ..interface import (
     Account,
     AccountTikTok,
-    Comment,
-    Detail,
-    Live,
     Collection,
-    Mix,
-    Hot,
-    Search,
-    User,
-    HashTag,
-    DetailTikTok,
-    CollectsMix,
-    LiveTikTok,
-    MixTikTok,
     # CommentTikTok,
     Collects,
+    CollectsDetail,
+    CollectsMix,
     # CollectsSeries,
     CollectsMusic,
-    CollectsDetail,
+    Comment,
+    Detail,
+    DetailTikTok,
+    HashTag,
+    Hot,
     Info,
     InfoTikTok,
+    Live,
+    LiveTikTok,
+    Mix,
+    MixTikTok,
+    Search,
+    User,
 )
 from ..link import Extractor as LinkExtractor
 from ..link import ExtractorTikTok
 from ..manager import Cache
 from ..models import (
     GeneralSearch,
-    VideoSearch,
-    UserSearch,
     LiveSearch,
+    UserSearch,
+    VideoSearch,
 )
-from ..module import DetailTikTokUnofficial, DetailTikTokExtractor
+from ..module import DetailTikTokExtractor, DetailTikTokUnofficial
 from ..storage import RecordManager
-from ..tools import TikTokDownloaderError
-from ..tools import choose
-from ..tools import safe_pop
+from ..tools import TikTokDownloaderError, choose, safe_pop
 from ..translation import _
 
 if TYPE_CHECKING:
+    from pydantic import BaseModel
+
     from ..config import Parameter
     from ..manager import Database
-    from pydantic import BaseModel
 
 __all__ = [
     "TikTok",
@@ -508,7 +504,7 @@ class TikTok:
 
     async def __account_detail_handle(
         self,
-        links,
+        links: list[str],
         tiktok=False,
         *args,
         **kwargs,
