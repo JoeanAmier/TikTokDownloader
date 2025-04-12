@@ -437,7 +437,6 @@ class TikTokDownloader:
 
         run(
             inner(),
-            debug=self.VERSION_BETA,
         )
 
     def restart_cycle_task(

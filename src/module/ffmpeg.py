@@ -52,7 +52,7 @@ class FFMPEG:
                 "-loglevel",
                 "info",
                 "-protocol_whitelist",
-                "rtmp,crypto,file,http,https,tcp,tls,udp,rtp",
+                "rtmp,crypto,file,http,https,tcp,tls,udp,rtp,httpproxy",
                 "-analyzeduration",
                 f"{10 * 1000 * 1000}",
                 "-probesize",

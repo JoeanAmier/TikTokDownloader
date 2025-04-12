@@ -1168,7 +1168,6 @@ class TikTok:
             self.console.print(_("在线观众:"), item["user_count"])
             self.console.print(_("点赞次数:"), item["like_count"])
             self.show_live_stream_url_tiktok(item, download_tasks)
-        self.console.print("TikTok 直播下载功能尚未完成！")  # 完成后移除
         return [i for i in download_tasks if isinstance(i, tuple)]
 
     def show_live_stream_url(self, item: dict, tasks: list):
@@ -1194,20 +1193,21 @@ class TikTok:
         self.console.print(_("FLV 推流地址: "))
         for i, (k, v) in enumerate(item["flv_pull_url"].items(), start=1):
             self.console.print(i, k, v)
-        # TODO: TikTok 直播下载功能异常，代理错误
-        # if self.parameter.download:
-        #     tasks.append(
-        #         (
-        #             item,
-        #             *u,
-        #         ) if (
-        #             # TikTok 平台 暂无 m3u8 地址
-        #             u := self._choice_live_quality(
-        #                 item["flv_pull_url"],
-        #                 item["flv_pull_url"],
-        #             )
-        #         ) else u
-        #     )
+        if self.parameter.download:
+            tasks.append(
+                (
+                    item,
+                    *u,
+                )
+                # TikTok 平台 暂无 m3u8 地址
+                if (
+                    u := self._choice_live_quality(
+                        item["flv_pull_url"],
+                        item["flv_pull_url"],
+                    )
+                )
+                else u
+            )
 
     @check_storage_format
     async def comment_interactive_tiktok(self, select="", *args, **kwargs):

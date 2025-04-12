@@ -15,7 +15,7 @@
 </div>
 <br>
 <p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
-<p>⭐ <b>文档对应项目版本：<code>5.5</code>；文档内容正在完善中，如有发现任何错误或描述模糊之处，请告知作者以便改进！</b></p>
+<p>⭐ <b>文档对应项目版本：<code>5.6 Beta</code>；文档内容正在完善中，如有发现任何错误或描述模糊之处，请告知作者以便改进！</b></p>
 <hr>
 <h1>快速入门</h1>
 <p>⭐ 本项目包含手动构建可执行文件的 GitHub Actions，使用者可以随时使用 GitHub Actions 将最新源码构建为可执行文件！</p>
@@ -182,11 +182,11 @@ https://www.douyin.com/note/123456789
 
 <h2>直播下载</h2>
 <p><code>获取直播推流地址</code> 功能需要调用 <code>ffmpeg</code> 下载直播文件；程序会优先调用系统环境的 <code>ffmpeg</code>，其次调用 <code>ffmpeg</code> 参数指定的 <code>ffmpeg</code>，如果 <code>ffmpeg</code> 不可用，程序将不支持直播下载！</p>
-<p>建议前往 <a href="https://ffmpeg.org/download.html">官方网站</a> 获取 <code>ffmpeg</code> 程序！</p>
+<p>建议前往 <a href="https://ffmpeg.org/download.html">官方网站</a> 或者 <a href="https://github.com/BtbN/FFmpeg-Builds">FFmpeg-Builds</a> 获取 <code>ffmpeg</code> 程序！</p>
 <p>项目开发时所用的 FFmpeg 版本信息如下，不同版本的 FFmpeg 可能会有差异；若功能异常，请向作者反馈！</p>
 <pre>
-ffmpeg version N-116650-g7897b0beed-20240815 Copyright (c) 2000-2024 the FFmpeg developers
-built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
+ffmpeg version n7.1.1-6-g48c0f071d4-20250405 Copyright (c) 2000-2025 the FFmpeg developers
+built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 </pre>
 <h2>功能简介</h2>
 <table>
@@ -1141,7 +1141,28 @@ built with gcc 14.2.0 (crosstool-NG 1.26.0.106_ed12fa6)
 <li><code>https://vt.tiktok.com/分享码/</code></li>
 <li><code>https://www.tiktok.com/@TikTok号/live</code></li>
 </ul>
-<p>TikTok 平台直播视频下载功能尚未开发完成，请自行使用第三方工具下载！</p>
+<p>下载说明：</p>
+<ul>
+<li>程序会询问用户是否下载直播视频，支持同时下载多个直播视频。</li>
+<li>程序调用 <code>ffmpeg</code> 下载直播时，关闭 TikTokDownloader 不会影响直播下载。</li>
+<li><del>程序调用内置下载器下载直播时，需要保持 TikTokDownloader 运行直到直播结束。</del></li>
+<li>程序询问是否下载直播时，输入直播清晰度或者对应序号即可下载，例如：下载最高清晰度输入 <code>FULL_HD1</code> 或者 <code>1</code> 均可。</li>
+<li><del>程序调用内置下载器下载的直播文件，视频时长会显示为直播总时长，实际视频内容从下载时间开始，靠后部分的片段无法播放。</del></li>
+<li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹。</li>
+<li>经测试，强行终止程序或 <code>ffmpeg</code> 并不会导致已下载文件丢失或损坏，但无法继续下载。</li>
+</ul>
+<h3>批量下载视频原画(TikTok)</h3>
+<p><strong>注意：本功能为实验性功能，依赖第三方 API 服务，可能不稳定或存在限制！</strong></p>
+<ol>
+<li>手动输入待采集的作品链接。</li>
+<li>输入文本文档路径，读取文件包含的作品链接。</li>
+</ol>
+<p>支持链接格式：</p>
+<ul>
+<li><code>https://vm.tiktok.com/分享码/</code></li>
+<li><code>https://www.tiktok.com/@TikTok号/video/作品ID</code></li>
+</ul>
+<p>作品会下载至 <code>root</code> 参数和 <code>folder_name</code> 参数拼接成的文件夹。</p>
 <h2>后台监测模式</h2>
 <p>敬请期待！</p>
 <h2>Web API 接口模式</h2>
