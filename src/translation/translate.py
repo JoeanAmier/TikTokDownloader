@@ -28,7 +28,19 @@ class TranslationManager:
     def get_language_code() -> str:
         # 获取当前系统的语言和区域设置
         language_code, __ = getlocale()
-        return "zh_CN" if "Chinese" in language_code else "en_US"
+        if not language_code:
+            return "en_US"
+        return (
+            "zh_CN"
+            if any(
+                s in language_code.upper()
+                for s in (
+                    "CHINESE",
+                    "ZH",
+                )
+            )
+            else "en_US"
+        )
 
     def setup_translation(self, language: str = "zh_CN"):
         """设置gettext翻译环境"""
