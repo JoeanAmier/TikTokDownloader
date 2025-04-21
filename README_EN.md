@@ -137,10 +137,10 @@
 <ol><b>Get Cookie from Browser (recommended)</b>
 <li>Select the option <code>Get Cookie from Browser</code> and follow the prompts to choose the browser type.</li>
 </ol>
-<ol><b>Scan code login to get Cookie (deprecated)</b>
-<li>Select the option <code>Scan code login to get Cookie</code>, and the program will display a login QR code image and open the image with the default application.</li>
-<li>Use the DouYin APP to scan the QR code and log into your account.</li>
-<li>Follow the prompts to write the Cookie into the configuration file.</li>
+<ol><b><del>Scan code login to get Cookie (deprecated)</del></b>
+<li><del>Select the option <code>Scan code login to get Cookie</code>, and the program will display a login QR code image and open the image with the default application.</del></li>
+<li><del>Use the DouYin APP to scan the QR code and log into your account.</del></li>
+<li><del>Follow the prompts to write the Cookie into the configuration file.</del></li>
 </ol>
 </li>
 <li>Return to the program interface, sequentially select <code>Terminal interactive mode</code> -> <code>Batch download link works (general)</code> -> <code>Manually enter the link of the works to be collected</code>.</li>

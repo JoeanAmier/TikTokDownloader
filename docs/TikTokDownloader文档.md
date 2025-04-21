@@ -45,10 +45,10 @@
 <ol><b>从浏览器获取 Cookie（推荐）</b>
 <li>选择 <code>从浏览器获取 Cookie</code> 选项，按照提示选择浏览器类型</li>
 </ol>
-<ol><b>扫码登录获取 Cookie（弃用）</b>
-<li>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</li>
-<li>使用抖音 APP 扫描二维码并登录账号</li>
-<li>按照提示操作，将 Cookie 写入配置文件</li>
+<ol><b><del>扫码登录获取 Cookie（弃用）</del></b>
+<li><del>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</del></li>
+<li><del>使用抖音 APP 扫描二维码并登录账号</del></li>
+<li><del>按照提示操作，将 Cookie 写入配置文件</del></li>
 </ol>
 </li>
 <li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品(抖音)</code> -> <code>手动输入待采集的作品链接</code></li>
@@ -241,9 +241,9 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <td align="center">文件下载，数据采集</td>
 </tr>
 </tbody></table>
-<h2>关闭平台功能</h2>
-<p>本项目支持抖音平台和 TikTok 平台的数据采集和文件下载功能，平台功能默认开启，如果不需要使用平台的任何功能，可以编辑配置文件关闭平台功能。</p>
-<p>本项目内置参数更新机制，程序会周期性更新抖音与 TikTok 请求的部分参数，以保持参数的有效性（或许没有效果？），该功能无法防止参数失效，参数失效后需要重新写入 Cookie；关闭平台功能后，对应平台的参数更新功能将会禁用！</p>
+<h2><del>关闭平台功能</del></h2>
+<p><del>本项目支持抖音平台和 TikTok 平台的数据采集和文件下载功能，平台功能默认开启，如果不需要使用平台的任何功能，可以编辑配置文件关闭平台功能。</del></p>
+<p><del>本项目内置参数更新机制，程序会周期性更新抖音与 TikTok 请求的部分参数，以保持参数的有效性（或许没有效果？），该功能无法防止参数失效，参数失效后需要重新写入 Cookie；关闭平台功能后，对应平台的参数更新功能将会禁用！</del></p>
 <h1>配置文件</h1>
 <p>配置文件：项目根目录下的 <code>settings.json</code> 文件，可以自定义设置程序部分运行参数。</p>
 <p>若无特殊需求，大部分配置参数无需修改，直接使用默认值即可。</p>
@@ -477,13 +477,13 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <td align="center">无</td>
 </tr>
 <tr>
-<td align="center">douyin_platform</td>
+<td align="center"><del>douyin_platform</del></td>
 <td align="center">bool</td>
 <td align="center"><a href="#supplement"><sup>5</sup></a>是否启用抖音平台功能</td>
 <td align="center">true</td>
 </tr>
 <tr>
-<td align="center">tiktok_platform</td>
+<td align="center"><del>tiktok_platform</del></td>
 <td align="center">bool</td>
 <td align="center"><a href="#supplement"><sup>5</sup></a>是否启用 TikTok 平台功能</td>
 <td align="center">true</td>
@@ -509,7 +509,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li>设置为 <code>favorite</code> 时，需要确保账号喜欢作品公开可见，或者配置对应账号的登录 Cookie</li>
 <li>该参数仅在部分模式和功能中生效，如果不需要使用相应的模式和功能，无需设置该参数</li>
 <li>必须设置平台的 Cookie 才能使用该平台的数据采集和文件下载功能</li>
-<li>如果不需要使用该平台的任何功能，可以将该参数设置为 <code>false</code></li>
+<li><del>如果不需要使用该平台的任何功能，可以将该参数设置为 <code>false</code></del></li>
 </ol>
 </div>
 <h2>配置示例</h2>
@@ -790,9 +790,9 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li>设置非法字符替换规则</li>
 <li>开启服务器模式局域网访问功能</li>
 <li>设置服务器模式主机及端口</li>
-<li>设置平台参数更新间隔</li>
+<li><del>设置平台参数更新间隔</del></li>
 <li>设置彩色交互提示颜色</li>
-<li>设置请求数据延时间隔</li>
+<li><del>设置请求数据延时间隔</del></li>
 <li>设置自定义作品筛选规则</li>
 <li>设置分批获取数据策略</li>
 <li>设置服务器模式参数验证</li>
@@ -807,7 +807,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <p>成功写入配置文件后，程序会提示当前 Cookie 登录状态！</p>
 <p>Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie！</p>
 <h2><del>扫码登录获取 Cookie</del></h2>
-<p>程序自动获取抖音登录二维码，随后会在终端输出二维码，并使用系统默认图片浏览器打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片窗口，程序会自动检查登录结果并将登录后的 Cookie 写入配置文件。</p>
+<p><del>程序自动获取抖音登录二维码，随后会在终端输出二维码，并使用系统默认图片浏览器打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片窗口，程序会自动检查登录结果并将登录后的 Cookie 写入配置文件。</del></p>
 <p><b>注意：</b>扫码登录可能会导致抖音账号被风控，该功能仅限学习研究，未来可能禁用或移除该功能！</p>
 <h2>终端交互模式</h2>
 <p>功能最全面的模式，支持全部功能。</p>
@@ -1085,15 +1085,13 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <p>无需输入任何内容；采集 <code>抖音热榜</code>、<code>娱乐榜</code>、<code>社会榜</code>、<code>挑战榜</code> 数据并储存至文件；必须设置 <code>storage_format</code> 参数才能正常使用。</p>
 <p>储存名称格式：<code>热榜数据_采集时间_热榜名称</code></p>
 <h3>批量下载话题作品(抖音)</h3>
-<p>敬请期待！</p>
+<p>暂不支持！</p>
 <h3>批量下载收藏作品(抖音)</h3>
 <p>无需输入任何内容；需要在配置文件写入已登录的 Cookie，并在 <code>owner_url</code> 参数填入对应的账号主页链接和账号标识（可选参数）；目前仅支持采集当前 Cookie 对应账号的收藏作品。</p>
 <p>文件夹格式为 <code>UID123456789_mark_收藏作品</code> 或者 <code>UID123456789_账号昵称_收藏作品</code></p>
 <h3>批量下载收藏夹作品(抖音)</h3>
 <p>无需输入任何内容；需要在配置文件写入已登录的 Cookie，程序会自动获取当前 Cookie 账号的收藏夹数据并展示，根据程序提示输入收藏夹序号下载对应收藏夹作品文件，输入 <code>ALL</code> 下载全部收藏夹作品。</p>
 <p>文件夹格式为 <code>CID123456789_收藏夹名称_收藏作品</code></p>
-<h3>批量下载短剧作品(抖音)</h3>
-<p>敬请期待！</p>
 <h3>批量下载账号作品(TikTok)</h3>
 <ol>
 <li>使用 <code>settings.json</code> 的 <code>accounts_urls_tiktok</code> 参数中的账号链接。</li>
