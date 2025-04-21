@@ -413,9 +413,10 @@ class TikTokDownloader:
             recorder=self.recorder,
         )
         self.parameter.set_headers_cookie()
-        self.restart_cycle_task(
-            restart,
-        )
+        # self.restart_cycle_task(
+        #     restart,
+        # )
+        await self.parameter.update_params_beta()
         if not restart:
             self.run_command = self.parameter.run_command.copy()
         self.parameter.CLEANER.set_rule(TEXT_REPLACEMENT, True)
