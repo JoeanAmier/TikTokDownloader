@@ -18,6 +18,7 @@ from ..models import (
     Response,
     UserSearch,
     VideoSearch,
+    Settings,
 )
 from ..translation import _
 from .main_complete import TikTok
@@ -79,6 +80,39 @@ class APIServer(TikTok):
         )
         async def index():
             return RedirectResponse(url=REPOSITORY)
+
+        @self.server.get(
+            "/token",
+            summary=_("令牌验证"),
+            description=_("用于测试令牌有效性"),
+            tags=[_("项目")],
+            response_model=Response,
+        )
+        async def handle_test(token: str = Depends(token_dependency)):
+            return Response(
+                message=_("令牌验证成功！"),
+                data=None,
+                params=None,
+            )
+
+        @self.server.post(
+            "/settings",
+            summary=_("修改配置"),
+            description=_("修改项目全局配置"),
+            tags=[_("项目")],
+            response_model=Response,
+        )
+        async def handle_settings(extract, token: str = Depends(token_dependency)): ...
+
+        @self.server.get(
+            "/settings",
+            summary=_("查看配置"),
+            description=_("获取项目全局配置"),
+            tags=[_("项目")],
+            response_model=Settings,
+        )
+        async def get_settings(token: str = Depends(token_dependency)):
+            return Settings(**self.parameter.get_settings_data())
 
         @self.server.post(
             "/douyin/search/general",

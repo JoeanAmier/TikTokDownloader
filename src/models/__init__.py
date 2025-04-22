@@ -5,6 +5,7 @@ from .search import (
     UserSearch,
     LiveSearch,
 )
+from .settings import Settings
 
 __all__ = (
     "GeneralSearch",

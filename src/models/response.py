@@ -6,7 +6,7 @@ from pydantic import BaseModel, computed_field
 class Response(BaseModel):
     message: str
     data: dict | list[dict] | None = None
-    params: dict
+    params: dict | None
 
     @computed_field
     @property

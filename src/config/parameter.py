@@ -726,13 +726,13 @@ class Parameter:
         return FFMPEG(ffmpeg_path)
 
     def get_settings_data(self) -> dict:
-        # TODO: 未更新代码
         return {
             "accounts_urls": [vars(i) for i in self.accounts_urls],
             "accounts_urls_tiktok": [vars(i) for i in self.accounts_urls_tiktok],
             "mix_urls": [vars(i) for i in self.mix_urls],
             "mix_urls_tiktok": [vars(i) for i in self.mix_urls_tiktok],
             "owner_url": vars(self.owner_url),
+            "owner_url_tiktok": self.owner_url_tiktok,
             "root": str(self.root.resolve()),
             "folder_name": self.folder_name,
             "name_format": " ".join(self.name_format),
@@ -740,6 +740,7 @@ class Parameter:
             "split": self.split,
             "folder_mode": self.folder_mode,
             "music": self.music,
+            "truncate": self.truncate,
             "storage_format": self.storage_format,
             "cookie": self.cookie_str or self.cookie_dict,
             "cookie_tiktok": self.cookie_str_tiktok or self.cookie_dict_tiktok,
@@ -747,6 +748,7 @@ class Parameter:
             "static_cover": self.static_cover,
             "proxy": self.proxy,
             "proxy_tiktok": self.proxy_tiktok,
+            "twc_tiktok": self.twc_tiktok,
             "download": self.download,
             "max_size": self.max_size,
             "chunk": self.chunk,
