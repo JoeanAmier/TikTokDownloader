@@ -3,7 +3,7 @@ from pathlib import Path
 from platform import system
 from time import time
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Callable, Union
+from typing import TYPE_CHECKING, Callable, Union, Any
 
 from pydantic import ValidationError
 
@@ -1715,11 +1715,11 @@ class TikTok:
         return criteria.split("  ") if criteria else []
 
     @staticmethod
-    def fill_search_criteria(criteria: list[str]) -> list[str]:
+    def fill_search_criteria(criteria: list[str, ...]) -> list[str, Any]:
         if len(criteria) == 1:
-            criteria.append("1")
+            criteria.append(1)
         while len(criteria) < 9:
-            criteria.append("0")
+            criteria.append(0)
         return criteria
 
     @check_storage_format
