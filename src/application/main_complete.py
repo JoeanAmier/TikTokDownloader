@@ -1703,7 +1703,7 @@ class TikTok:
     def _enter_search_criteria(
         self,
         field: str,
-    ) -> list[str]:
+    ) -> list[Any]:
         criteria = self.console.input(
             _("请输入搜索参数；参数之间使用两个空格分隔({field})：\n").format(
                 field=field
@@ -1715,7 +1715,7 @@ class TikTok:
         return criteria.split("  ") if criteria else []
 
     @staticmethod
-    def fill_search_criteria(criteria: list[str, ...]) -> list[str, Any]:
+    def fill_search_criteria(criteria: list[Any]) -> list[Any]:
         if len(criteria) == 1:
             criteria.append(1)
         while len(criteria) < 9:
