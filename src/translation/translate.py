@@ -37,6 +37,7 @@ class TranslationManager:
                 for s in (
                     "CHINESE",
                     "ZH",
+                    "CHINA",
                 )
             )
             else "en_US"

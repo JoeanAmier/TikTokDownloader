@@ -2,10 +2,10 @@
 # from random import randint
 from typing import TYPE_CHECKING
 
-# from ..translation import _
+# from src.translation import _
 
 if TYPE_CHECKING:
-    from ..tools import ColorfulConsole
+    from src.tools import ColorfulConsole
 
 
 async def wait() -> None:

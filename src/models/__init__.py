@@ -13,4 +13,5 @@ __all__ = (
     "UserSearch",
     "LiveSearch",
     "Response",
+    "Settings",
 )

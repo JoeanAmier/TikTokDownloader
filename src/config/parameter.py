@@ -1,7 +1,7 @@
 from pathlib import Path
 from time import localtime, strftime
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Type
+from typing import TYPE_CHECKING, Type, Any
 
 from httpx import HTTPStatusError, RequestError, TimeoutException, get
 
@@ -100,6 +100,16 @@ class Parameter:
         self.cookie_object = cookie_object
         self.ROOT = PROJECT_ROOT  # 项目根路径
         self.cache = PROJECT_ROOT.joinpath("cache")  # 缓存路径
+        self.logger = logger(PROJECT_ROOT, console)
+        self.logger.run()
+        self.ab = ABogus()
+        self.xb = XBogus()
+        self.console = console
+        self.recorder = recorder
+        self.preview = BLANK_PREVIEW
+        self.ms_token = ""
+        self.ms_token_tiktok = ""
+
         self.headers = DATA_HEADERS
         self.headers_tiktok = DATA_HEADERS_TIKTOK
         self.headers_download = DOWNLOAD_HEADERS
@@ -107,59 +117,73 @@ class Parameter:
         self.headers_params = PARAMS_HEADERS
         self.headers_params_tiktok = PARAMS_HEADERS_TIKTOK
         self.headers_qrcode = QRCODE_HEADERS
-        self.logger = logger(PROJECT_ROOT, console)
-        self.logger.run()
-        self.ab = ABogus()
-        self.xb = XBogus()
-        self.console = console
-        self.douyin_platform = self.__check_bool(douyin_platform, True)
-        self.tiktok_platform = self.__check_bool(tiktok_platform, True)
+
+        self.accounts_urls: list[SimpleNamespace] = self.check_urls_params(
+            accounts_urls
+        )
+        self.accounts_urls_tiktok: list[SimpleNamespace] = self.check_urls_params(
+            accounts_urls_tiktok
+        )
+        self.mix_urls: list[SimpleNamespace] = self.check_urls_params(mix_urls)
+        self.mix_urls_tiktok: list[SimpleNamespace] = self.check_urls_params(
+            mix_urls_tiktok
+        )
+        self.owner_url: SimpleNamespace = self.check_url_params(owner_url)
+        self.owner_url_tiktok: SimpleNamespace | None = None
+
         self.cookie_dict, self.cookie_str = self.__check_cookie(cookie)
         self.cookie_dict_tiktok, self.cookie_str_tiktok = self.__check_cookie_tiktok(
             cookie_tiktok,
         )
         self.cookie_state: bool = self.__check_cookie_state()
         self.cookie_tiktok_state: bool = self.__check_cookie_state(True)
+        self.set_uif_id()
+        self.set_download_headers()
+
         self.root = self.__check_root(root)
         self.folder_name = self.__check_folder_name(folder_name)
         self.name_format = self.__check_name_format(name_format)
         self.date_format = self.__check_date_format(date_format)
         self.split = self.__check_split(split)
-        self.music = self.__check_bool(music)
-        self.folder_mode = self.__check_bool(folder_mode)
+        self.folder_mode = self.check_bool_false(folder_mode)
+        self.music = self.check_bool_false(music)
+        self.truncate = self.__check_truncate(truncate)
         self.storage_format = self.__check_storage_format(storage_format)
-        self.dynamic_cover = self.__check_bool(dynamic_cover)
-        self.static_cover = self.__check_bool(static_cover)
+        self.dynamic_cover = self.check_bool_false(dynamic_cover)
+        self.static_cover = self.check_bool_false(static_cover)
+        self.twc_tiktok = self.check_str(twc_tiktok)
+        self.download = self.check_bool_true(download)
+        self.max_size = self.__check_max_size(max_size)
+        self.chunk = self.__check_chunk(chunk)
         self.timeout = self.__check_timeout(timeout)
+        self.max_retry = self.__check_max_retry(max_retry)
+        self.max_pages = self.__check_max_pages(max_pages)
+        self.run_command = self.__check_run_command(run_command)
+        self.ffmpeg = self.__generate_ffmpeg_object(ffmpeg)
+        self.douyin_platform = self.check_bool_true(
+            douyin_platform,
+        )
+        self.tiktok_platform = self.check_bool_true(
+            tiktok_platform,
+        )
+
+        self.browser_info = self.merge_browser_info(
+            browser_info,
+            {},
+        )
+        self.browser_info_tiktok = self.merge_browser_info(
+            browser_info_tiktok,
+            {},
+        )
+        self.__set_browser_info(self.browser_info)
+        self.__set_browser_info_tiktok(self.browser_info_tiktok)
+
         self.proxy: str | None = self.__check_proxy(
             proxy,
             remark=_("抖音"),
             enable=self.douyin_platform,
         )
         self.proxy_tiktok: str | None = self.__check_proxy_tiktok(proxy_tiktok)
-        self.download = self.__check_bool(download)
-        self.max_size = self.__check_max_size(max_size)
-        self.chunk = self.__check_chunk(chunk)
-        self.max_retry = self.__check_max_retry(max_retry)
-        self.max_pages = self.__check_max_pages(max_pages)
-        self.recorder = recorder
-        self.accounts_urls: list[SimpleNamespace] = Extractor.generate_data_object(
-            accounts_urls
-        )
-        self.accounts_urls_tiktok: list[SimpleNamespace] = (
-            Extractor.generate_data_object(accounts_urls_tiktok)
-        )
-        self.mix_urls: list[SimpleNamespace] = Extractor.generate_data_object(mix_urls)
-        self.mix_urls_tiktok: list[SimpleNamespace] = Extractor.generate_data_object(
-            mix_urls_tiktok
-        )
-        self.owner_url: SimpleNamespace = Extractor.generate_data_object(owner_url)
-        self.owner_url_tiktok: SimpleNamespace = Extractor.generate_data_object(
-            owner_url_tiktok
-        )
-        self.run_command = self.__check_run_command(run_command)
-        self.preview = BLANK_PREVIEW
-        self.ffmpeg = self.__generate_ffmpeg_object(ffmpeg)
         self.client = create_client(
             timeout=self.timeout,
             proxy=self.proxy,
@@ -168,47 +192,57 @@ class Parameter:
             timeout=self.timeout,
             proxy=self.proxy_tiktok,
         )
-        # TODO: 未更新代码
-        self.check_rules = {
-            "accounts_urls": self.__check_accounts_urls,
-            "mix_urls": self.__check_mix_urls,
-            "owner_url": self.__check_owner_url,
-            "accounts_urls_tiktok": self.__check_accounts_urls,
-            "mix_urls_tiktok": self.__check_mix_urls,
-            "owner_url_tiktok": self.__check_owner_url,
+
+        self.__generate_folders()
+
+        # self.__URLS_PARAMS = {
+        #     "accounts_urls": None,
+        #     "accounts_urls_tiktok": None,
+        #     "mix_urls": None,
+        #     "mix_urls_tiktok": None,
+        #     "owner_url": None,
+        #     "owner_url_tiktok": None,
+        # }
+        self.__CHECK = {
             "root": self.__check_root,
             "folder_name": self.__check_folder_name,
             "name_format": self.__check_name_format,
             "date_format": self.__check_date_format,
             "split": self.__check_split,
-            "folder_mode": self.__check_bool,
-            "music": self.__check_bool,
+            "folder_mode": self.check_bool_false,
+            "music": self.check_bool_false,
+            "truncate": self.__check_truncate,
             "storage_format": self.__check_storage_format,
-            "dynamic_cover": self.__check_bool,
-            "static_cover": self.__check_bool,
-            "proxy": self.__check_proxy,
-            "proxy_tiktok": self.__check_proxy_tiktok,
-            "download": self.__check_bool,
+            "dynamic_cover": self.check_bool_false,
+            "static_cover": self.check_bool_false,
+            "twc_tiktok": self.check_str,
+            "download": self.check_bool_true,
             "max_size": self.__check_max_size,
             "chunk": self.__check_chunk,
+            "timeout": self.__check_timeout,
             "max_retry": self.__check_max_retry,
             "max_pages": self.__check_max_pages,
             "run_command": self.__check_run_command,
             "ffmpeg": self.__generate_ffmpeg_object,
+            "douyin_platform": self.check_bool_true,
+            "tiktok_platform": self.check_bool_true,
         }
-        self.twc_tiktok = twc_tiktok if isinstance(twc_tiktok, str) else ""
-        self.truncate = self.__check_truncate(truncate)
-        self.ms_token = ""
-        self.ms_token_tiktok = ""
-        self.__check_browser_info(browser_info)
-        self.__check_browser_info_tiktok(browser_info_tiktok)
-        self.__generate_folders()
-        self.set_uif_id()
-        self.set_download_headers()
+        # self.__BROWSER_INFO = {
+        #     "browser_info": None,
+        #     "browser_info_tiktok": None,
+        # }
 
     @staticmethod
-    def __check_bool(value: bool, default=False) -> bool:
-        return value if isinstance(value, bool) else default
+    def check_bool_false(
+        value: bool,
+    ) -> bool:
+        return value if isinstance(value, bool) else False
+
+    @staticmethod
+    def check_bool_true(
+        value: bool,
+    ) -> bool:
+        return value if isinstance(value, bool) else True
 
     def __check_cookie_tiktok(
         self,
@@ -407,7 +441,7 @@ class Parameter:
                     )
                 )
                 if not (proxy := proxy.get("https://")):
-                    return
+                    return None
             try:
                 response = get(
                     url,
@@ -429,6 +463,7 @@ class Parameter:
                         remark=remark, proxy=proxy
                     )
                 )
+                return None
             except (
                 RequestError,
                 HTTPStatusError,
@@ -438,6 +473,8 @@ class Parameter:
                         remark=remark, proxy=proxy, error=e
                     ),
                 )
+                return None
+        return None
 
     def __check_max_size(self, max_size: int) -> int:
         max_size = max(max_size, 0)
@@ -758,19 +795,43 @@ class Parameter:
             "ffmpeg": self.ffmpeg.path or "",
         }
 
-    async def update_settings_data(
+    async def set_settings_data(
         self,
         data: dict,
-    ) -> dict:
-        keys = list(self.check_rules.keys())[6:]
-        for key, value in data.items():
-            if key in keys:
-                # print(key, hasattr(self, key))  # 调试使用
-                setattr(self, key, self.check_rules[key](value))
-        await self.__update_cookie_data(data)
-        self.settings.update(data := self.get_settings_data())
-        # print(data)  # 调试使用
-        return data
+    ) -> None:
+        self.set_urls_params(
+            data.pop("accounts_urls"),
+            data.pop("mix_urls"),
+            data.pop("owner_url"),
+            data.pop("accounts_urls_tiktok"),
+            data.pop("mix_urls_tiktok"),
+            data.pop("owner_url_tiktok"),
+        )
+        self.set_cookie(
+            data.pop(
+                "cookie",
+            ),
+            data.pop(
+                "cookie_tiktok",
+            ),
+        )
+        self.set_browser_info(
+            data.pop(
+                "browser_info",
+            ),
+            data.pop(
+                "browser_info_tiktok",
+            ),
+        )
+        await self.set_proxy(
+            data.pop(
+                "proxy",
+            ),
+            data.pop(
+                "proxy_tiktok",
+            ),
+        )
+        self.set_general_params(data)
 
     async def __update_cookie_data(self, data: dict) -> None:
         for i in ("cookie", "cookie_tiktok"):
@@ -778,14 +839,109 @@ class Parameter:
                 setattr(self, i, self.cookie_object.extract(c, False, key=i))
         await self.update_params()
 
-    def __check_accounts_urls(self, data: list[dict]) -> list[dict]:
-        pass
+    @staticmethod
+    def check_urls_params(data: list[dict]) -> list[SimpleNamespace]:
+        items = []
+        for item in data:
+            if not item.get("url"):
+                continue
+            if not isinstance(item.get("mark"), str):
+                item["mark"] = ""
+            items.append(item)
+        return Extractor.generate_data_object(items)
 
-    def __check_mix_urls(self, data: list[dict]) -> list[dict]:
-        pass
+    @staticmethod
+    def check_url_params(data: dict) -> SimpleNamespace:
+        if not data.get("url"):
+            return SimpleNamespace()
+        if not isinstance(data.get("mark"), str):
+            data["mark"] = ""
+        return Extractor.generate_data_object(data)
 
-    def __check_owner_url(self, data: list[dict]) -> list[dict]:
-        pass
+    def set_urls_params(
+        self,
+        accounts_urls: list[dict],
+        mix_urls: list[dict],
+        owner_url: dict,
+        accounts_urls_tiktok: list[dict],
+        mix_urls_tiktok: list[dict],
+        owner_url_tiktok: dict,
+    ):
+        if accounts_urls:
+            self.accounts_urls = self.check_urls_params(accounts_urls)
+        if accounts_urls_tiktok:
+            self.accounts_urls_tiktok = self.check_urls_params(accounts_urls_tiktok)
+        if mix_urls:
+            self.mix_urls = self.check_urls_params(mix_urls)
+        if mix_urls_tiktok:
+            self.mix_urls_tiktok = self.check_urls_params(mix_urls_tiktok)
+        if owner_url:
+            self.owner_url = self.check_url_params(owner_url)
+        # if owner_url_tiktok:
+        #     self.owner_url_tiktok = self.check_url_params(owner_url_tiktok)
+
+    def set_cookie(
+        self, cookie: str | dict[str, str], cookie_tiktok: str | dict[str, str]
+    ):
+        if cookie:
+            self.cookie_dict, self.cookie_str = self.__check_cookie(cookie)
+            self.cookie_state: bool = self.__check_cookie_state()
+            self.set_uif_id()
+        if cookie_tiktok:
+            self.cookie_dict_tiktok, self.cookie_str_tiktok = (
+                self.__check_cookie_tiktok(
+                    cookie_tiktok,
+                )
+            )
+            self.cookie_tiktok_state: bool = self.__check_cookie_state(True)
+            self.__update_download_headers_tiktok()
+
+    def set_general_params(self, data: dict[str, Any]) -> None:
+        for i, j in data.items():
+            if j is not None:
+                self.__CHECK[i](j)
+
+    async def set_proxy(self, proxy: str | None, proxy_tiktok: str | None):
+        if isinstance(proxy, str):
+            self.proxy: str | None = self.__check_proxy(
+                proxy,
+                remark=_("抖音"),
+                enable=self.douyin_platform,
+            )
+        if isinstance(proxy_tiktok, str):
+            self.proxy_tiktok: str | None = self.__check_proxy_tiktok(proxy_tiktok)
+        await self.close_client()
+        self.client = create_client(
+            timeout=self.timeout,
+            proxy=self.proxy,
+        )
+        self.client_tiktok = create_client(
+            timeout=self.timeout,
+            proxy=self.proxy_tiktok,
+        )
+
+    @staticmethod
+    def merge_browser_info(
+        browser_info: dict,
+        new_info: dict,
+    ) -> dict:
+        return browser_info | new_info
+
+    def set_browser_info(self, browser_info: dict, browser_info_tiktok: dict):
+        self.browser_info = self.merge_browser_info(
+            self.browser_info,
+            browser_info or {},
+        )
+        self.browser_info_tiktok = self.merge_browser_info(
+            self.browser_info_tiktok,
+            browser_info_tiktok or {},
+        )
+        self.__set_browser_info(self.browser_info)
+        self.__set_browser_info_tiktok(self.browser_info_tiktok)
+
+    @staticmethod
+    def check_str(value: str) -> str:
+        return value if isinstance(value, str) else ""
 
     async def close_client(self) -> None:
         await self.client.aclose()
@@ -794,7 +950,7 @@ class Parameter:
     def __generate_folders(self):
         self.cache.mkdir(exist_ok=True)
 
-    def __check_browser_info(
+    def __set_browser_info(
         self,
         info: dict,
     ):
@@ -825,7 +981,7 @@ class Parameter:
             ):
                 API.params[i] = v
 
-    def __check_browser_info_tiktok(
+    def __set_browser_info_tiktok(
         self,
         info: dict,
     ):

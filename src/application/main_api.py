@@ -97,18 +97,22 @@ class APIServer(TikTok):
 
         @self.server.post(
             "/settings",
-            summary=_("修改配置"),
-            description=_("修改项目全局配置"),
-            tags=[_("项目")],
-            response_model=Response,
+            summary=_("更新配置"),
+            description=_("更新项目全局配置"),
+            tags=[_("配置")],
+            response_model=Settings,
         )
-        async def handle_settings(extract, token: str = Depends(token_dependency)): ...
+        async def handle_settings(
+            extract: Settings, token: str = Depends(token_dependency)
+        ):
+            await self.parameter.set_settings_data(extract.model_dump())
+            return Settings(**self.parameter.get_settings_data())
 
         @self.server.get(
             "/settings",
             summary=_("查看配置"),
             description=_("获取项目全局配置"),
-            tags=[_("项目")],
+            tags=[_("配置")],
             response_model=Settings,
         )
         async def get_settings(token: str = Depends(token_dependency)):
