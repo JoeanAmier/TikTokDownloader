@@ -1,0 +1,34 @@
+name: "自动管理过时的问题和PR"
+on:
+  schedule:
+    - cron: "0 18 * * *"
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          stale-issue-message: |
+            ⚠️ 此 Issue 已超过一定时间未活动，如果没有进一步更新，将在 30 天后关闭。
+          close-issue-message: |
+            🔒 由于长时间未响应，此 Issue 已被自动关闭。如有需要，请重新打开或提交新 issue。
+          stale-pr-message: |
+            ⚠️ 此 PR 已超过一定时间未更新，请更新，否则将在 30 天后关闭。
+          close-pr-message: |
+            🔒 此 PR 已因无更新而自动关闭。如仍需合并，请重新打开或提交新 PR。
+
+          days-before-issue-stale: 60
+          days-before-pr-stale: 60
+          days-before-close: 30
+
+          stale-issue-label: "未跟进问题(Stale)"
+          close-issue-label: "自动关闭(Close)"
+          stale-pr-label: "未跟进问题(Stale)"
+          close-pr-label: "自动关闭(Close)"
+          exempt-issue-labels: "新功能(feature),功能异常(bug),文档补充(docs),功能优化(enhancement),适合新手(good first issue),"
+          exempt-pr-labels: "新功能(feature),功能异常(bug),文档补充(docs),功能优化(enhancement),适合新手(good first issue),"
