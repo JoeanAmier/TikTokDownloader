@@ -61,20 +61,26 @@ class Extractor:
         )
 
     async def run(
-        self, urls: str, type_="detail"
-    ) -> Union[list[str], tuple[bool, list[str]]]:
-        urls = await self.requester.run(
-            urls,
+        self,
+        text: str,
+        type_="detail",
+        proxy: str = None,
+    ) -> Union[list[str], tuple[bool, list[str]], str]:
+        text = await self.requester.run(
+            text,
+            proxy,
         )
         match type_:
             case "detail":
-                return self.detail(urls)
+                return self.detail(text)
             case "user":
-                return self.user(urls)
+                return self.user(text)
             case "mix":
-                return self.mix(urls)
+                return self.mix(text)
             case "live":
-                return self.live(urls)
+                return self.live(text)
+            case "":
+                return text
         raise ValueError
 
     def detail(
@@ -165,20 +171,30 @@ class ExtractorTikTok(Extractor):
         )
 
     async def run(
-        self, urls: str, type_="detail"
-    ) -> Union[list[str], tuple[bool, list[str]]]:
-        urls = await self.requester.run(
-            urls,
+        self,
+        text: str,
+        type_="detail",
+        proxy: str = None,
+    ) -> Union[
+        list[str],
+        tuple[bool, list[str]],
+        str,
+    ]:
+        text = await self.requester.run(
+            text,
+            proxy,
         )
         match type_:
             case "detail":
-                return await self.detail(urls)
+                return await self.detail(text)
             case "user":
-                return await self.user(urls)
+                return await self.user(text)
             case "mix":
-                return await self.mix(urls)
+                return await self.mix(text)
             case "live":
-                return await self.live(urls)
+                return await self.live(text)
+            case "":
+                return text
         raise ValueError
 
     async def detail(

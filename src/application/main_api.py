@@ -15,10 +15,12 @@ from ..custom import (
 from ..models import (
     GeneralSearch,
     LiveSearch,
-    Response,
+    DataResponse,
     UserSearch,
     VideoSearch,
     Settings,
+    ShortUrl,
+    UrlResponse,
 )
 from ..translation import _
 from .main_complete import TikTok
@@ -49,6 +51,20 @@ class APIServer(TikTok):
             database,
         )
         self.server = None
+
+    async def handle_redirect(self, text: str, proxy: str = None) -> str:
+        return await self.links.run(
+            text,
+            "",
+            proxy,
+        )
+
+    async def handle_redirect_tiktok(self, text: str, proxy: str = None) -> str:
+        return await self.links_tiktok.run(
+            text,
+            "",
+            proxy,
+        )
 
     async def run_server(
         self,
@@ -86,10 +102,10 @@ class APIServer(TikTok):
             summary=_("令牌验证"),
             description=_("用于测试令牌有效性"),
             tags=[_("项目")],
-            response_model=Response,
+            response_model=DataResponse,
         )
         async def handle_test(token: str = Depends(token_dependency)):
-            return Response(
+            return DataResponse(
                 message=_("令牌验证成功！"),
                 data=None,
                 params=None,
@@ -119,11 +135,33 @@ class APIServer(TikTok):
             return Settings(**self.parameter.get_settings_data())
 
         @self.server.post(
+            "/douyin/share",
+            summary=_("分享链接"),
+            description=_("获取重定向的完整链接"),
+            tags=[_("抖音")],
+            response_model=UrlResponse,
+        )
+        async def handle_share(
+            extract: ShortUrl, token: str = Depends(token_dependency)
+        ):
+            if url := await self.handle_redirect(extract.text, extract.proxy):
+                return UrlResponse(
+                    message=_("请求成功！"),
+                    url=url,
+                    params=extract.model_dump(),
+                )
+            return UrlResponse(
+                message=_("请求失败！"),
+                url=None,
+                params=extract.model_dump(),
+            )
+
+        @self.server.post(
             "/douyin/search/general",
             summary=_("综合搜索"),
             description=_("获取综合搜索数据"),
             tags=[_("抖音")],
-            response_model=Response,
+            response_model=DataResponse,
         )
         async def handle_general(
             extract: GeneralSearch, token: str = Depends(token_dependency)
@@ -135,7 +173,7 @@ class APIServer(TikTok):
             summary=_("视频搜索"),
             description=_("获取视频搜索数据"),
             tags=[_("抖音")],
-            response_model=Response,
+            response_model=DataResponse,
         )
         async def handle_video(
             extract: VideoSearch, token: str = Depends(token_dependency)
@@ -147,7 +185,7 @@ class APIServer(TikTok):
             summary=_("用户搜索"),
             description=_("获取用户搜索数据"),
             tags=[_("抖音")],
-            response_model=Response,
+            response_model=DataResponse,
         )
         async def handle_user(
             extract: UserSearch, token: str = Depends(token_dependency)
@@ -159,24 +197,46 @@ class APIServer(TikTok):
             summary=_("直播搜索"),
             description=_("获取直播搜索数据"),
             tags=[_("抖音")],
-            response_model=Response,
+            response_model=DataResponse,
         )
         async def handle_live(
             extract: LiveSearch, token: str = Depends(token_dependency)
         ):
             return await self.handle_search(extract)
 
+        @self.server.post(
+            "/tiktok/share",
+            summary=_("分享链接"),
+            description=_("获取重定向的完整链接"),
+            tags=["TikTok"],
+            response_model=UrlResponse,
+        )
+        async def handle_share_tiktok(
+            extract: ShortUrl, token: str = Depends(token_dependency)
+        ):
+            if url := await self.handle_redirect_tiktok(extract.text, extract.proxy):
+                return UrlResponse(
+                    message=_("请求成功！"),
+                    url=url,
+                    params=extract.model_dump(),
+                )
+            return UrlResponse(
+                message=_("请求失败！"),
+                url=None,
+                params=extract.model_dump(),
+            )
+
     async def handle_search(self, extract):
         if data := await self.deal_search_data(
             extract,
             extract.source,
         ):
-            return Response(
+            return DataResponse(
                 message=_("获取成功！"),
                 data=data,
                 params=extract.model_dump(),
             )
-        return Response(
+        return DataResponse(
             message=_("获取失败！"),
             data=data,
             params=extract.model_dump(),
