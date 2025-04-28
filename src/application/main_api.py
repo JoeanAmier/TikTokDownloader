@@ -3,7 +3,9 @@ from typing import TYPE_CHECKING
 from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.responses import RedirectResponse
 from uvicorn import Config, Server
+from textwrap import dedent
 
+from models import DetailTikTok
 from ..custom import (
     __VERSION__,
     REPOSITORY,
@@ -21,6 +23,7 @@ from ..models import (
     Settings,
     ShortUrl,
     UrlResponse,
+    Detail,
 )
 from ..translation import _
 from .main_complete import TikTok
@@ -90,8 +93,8 @@ class APIServer(TikTok):
     def setup_routes(self):
         @self.server.get(
             "/",
-            summary=_("项目仓库"),
-            description=_("重定向至项目仓库"),
+            summary=_("访问项目 GitHub 仓库"),
+            description=_("重定向至项目 GitHub 仓库主页"),
             tags=[_("项目")],
         )
         async def index():
@@ -99,22 +102,25 @@ class APIServer(TikTok):
 
         @self.server.get(
             "/token",
-            summary=_("令牌验证"),
-            description=_("用于测试令牌有效性"),
+            summary=_("测试令牌有效性"),
             tags=[_("项目")],
             response_model=DataResponse,
         )
         async def handle_test(token: str = Depends(token_dependency)):
             return DataResponse(
-                message=_("令牌验证成功！"),
+                message=_("验证成功！"),
                 data=None,
                 params=None,
             )
 
         @self.server.post(
             "/settings",
-            summary=_("更新配置"),
-            description=_("更新项目全局配置"),
+            summary=_("更新项目全局配置"),
+            description=dedent(
+                _("""
+            待更新
+            """)
+            ),
             tags=[_("配置")],
             response_model=Settings,
         )
@@ -126,8 +132,12 @@ class APIServer(TikTok):
 
         @self.server.get(
             "/settings",
-            summary=_("查看配置"),
-            description=_("获取项目全局配置"),
+            summary=_("获取项目全局配置"),
+            description=dedent(
+                _("""
+                待更新
+                        """)
+            ),
             tags=[_("配置")],
             response_model=Settings,
         )
@@ -136,8 +146,12 @@ class APIServer(TikTok):
 
         @self.server.post(
             "/douyin/share",
-            summary=_("分享链接"),
-            description=_("获取重定向的完整链接"),
+            summary=_("获取分享链接重定向的完整链接"),
+            description=dedent(
+                _("""
+                待更新
+                        """)
+            ),
             tags=[_("抖音")],
             response_model=UrlResponse,
         )
@@ -157,9 +171,49 @@ class APIServer(TikTok):
             )
 
         @self.server.post(
+            "/douyin/detail",
+            summary=_("获取作品数据"),
+            description=dedent(
+                _("""
+                待更新
+                        """)
+            ),
+            tags=[_("抖音")],
+            response_model=DataResponse,
+        )
+        async def handle_detail(
+            extract: Detail, token: str = Depends(token_dependency)
+        ):
+            root, params, logger = self.record.run(self.parameter)
+            async with logger(root, console=self.console, **params) as record:
+                if data := await self._handle_detail(
+                    [extract.detail_id],
+                    False,
+                    record,
+                    True,
+                    extract.source,
+                    extract.cookie,
+                    extract.proxy,
+                ):
+                    return DataResponse(
+                        message=_("获取成功！"),
+                        data=data[0],
+                        params=extract.model_dump(),
+                    )
+                return DataResponse(
+                    message=_("获取失败！"),
+                    data=None,
+                    params=extract.model_dump(),
+                )
+
+        @self.server.post(
             "/douyin/search/general",
-            summary=_("综合搜索"),
-            description=_("获取综合搜索数据"),
+            summary=_("获取综合搜索数据"),
+            description=dedent(
+                _("""
+                待更新
+                        """)
+            ),
             tags=[_("抖音")],
             response_model=DataResponse,
         )
@@ -170,8 +224,12 @@ class APIServer(TikTok):
 
         @self.server.post(
             "/douyin/search/video",
-            summary=_("视频搜索"),
-            description=_("获取视频搜索数据"),
+            summary=_("获取视频搜索数据"),
+            description=dedent(
+                _("""
+                待更新
+                        """)
+            ),
             tags=[_("抖音")],
             response_model=DataResponse,
         )
@@ -182,8 +240,12 @@ class APIServer(TikTok):
 
         @self.server.post(
             "/douyin/search/user",
-            summary=_("用户搜索"),
-            description=_("获取用户搜索数据"),
+            summary=_("获取用户搜索数据"),
+            description=dedent(
+                _("""
+                待更新
+                        """)
+            ),
             tags=[_("抖音")],
             response_model=DataResponse,
         )
@@ -194,8 +256,12 @@ class APIServer(TikTok):
 
         @self.server.post(
             "/douyin/search/live",
-            summary=_("直播搜索"),
-            description=_("获取直播搜索数据"),
+            summary=_("获取直播搜索数据"),
+            description=dedent(
+                _("""
+                待更新
+                        """)
+            ),
             tags=[_("抖音")],
             response_model=DataResponse,
         )
@@ -206,8 +272,12 @@ class APIServer(TikTok):
 
         @self.server.post(
             "/tiktok/share",
-            summary=_("分享链接"),
-            description=_("获取重定向的完整链接"),
+            summary=_("获取分享链接重定向的完整链接"),
+            description=dedent(
+                _("""
+                待更新
+                        """)
+            ),
             tags=["TikTok"],
             response_model=UrlResponse,
         )
@@ -225,6 +295,42 @@ class APIServer(TikTok):
                 url=None,
                 params=extract.model_dump(),
             )
+
+        @self.server.post(
+            "/tiktok/detail",
+            summary=_("获取作品数据"),
+            description=dedent(
+                _("""
+                待更新
+                        """)
+            ),
+            tags=["TikTok"],
+            response_model=DataResponse,
+        )
+        async def handle_detail_tiktok(
+            extract: DetailTikTok, token: str = Depends(token_dependency)
+        ):
+            root, params, logger = self.record.run(self.parameter)
+            async with logger(root, console=self.console, **params) as record:
+                if data := await self._handle_detail(
+                    [extract.detail_id],
+                    True,
+                    record,
+                    True,
+                    extract.source,
+                    extract.cookie,
+                    extract.proxy,
+                ):
+                    return DataResponse(
+                        message=_("获取成功！"),
+                        data=data[0],
+                        params=extract.model_dump(),
+                    )
+                return DataResponse(
+                    message=_("获取失败！"),
+                    data=None,
+                    params=extract.model_dump(),
+                )
 
     async def handle_search(self, extract):
         if data := await self.deal_search_data(

@@ -7,6 +7,7 @@ from .search import (
 )
 from .settings import Settings
 from .share import ShortUrl
+from .detail import Detail, DetailTikTok
 
 __all__ = (
     "GeneralSearch",
@@ -17,4 +18,6 @@ __all__ = (
     "Settings",
     "UrlResponse",
     "ShortUrl",
+    "Detail",
+    "DetailTikTok",
 )
