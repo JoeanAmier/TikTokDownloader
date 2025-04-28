@@ -915,14 +915,16 @@ class Extractor:
                         mix_title,
                     )
                     return id_, name, mark
-                case "favorite" | "collection":
-                    pass
+                # case "favorite" | "collection":
+                #     pass
                 case "collects":
                     collect_name = self.cleaner.filter_name(
                         collect_name,
                         collect_id,
                     )
                     return collect_id, collect_name, collect_name
+                case _:
+                    raise TikTokDownloaderError
         else:
             raise TikTokDownloaderError
 

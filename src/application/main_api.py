@@ -24,6 +24,8 @@ from ..models import (
     ShortUrl,
     UrlResponse,
     Detail,
+    Account,
+    AccountTiktok,
 )
 from ..translation import _
 from .main_complete import TikTok
@@ -172,7 +174,7 @@ class APIServer(TikTok):
 
         @self.server.post(
             "/douyin/detail",
-            summary=_("获取作品数据"),
+            summary=_("获取单个作品数据"),
             description=dedent(
                 _("""
                 待更新
@@ -185,6 +187,22 @@ class APIServer(TikTok):
             extract: Detail, token: str = Depends(token_dependency)
         ):
             return await self.handle_detail(extract, False)
+
+        @self.server.post(
+            "/douyin/account",
+            summary=_("获取账号作品数据"),
+            description=dedent(
+                _("""
+                        待更新
+                                """)
+            ),
+            tags=[_("抖音")],
+            response_model=DataResponse,
+        )
+        async def handle_account(
+            extract: Account, token: str = Depends(token_dependency)
+        ):
+            return await self.handle_account(extract, False)
 
         @self.server.post(
             "/douyin/search/general",
@@ -278,7 +296,7 @@ class APIServer(TikTok):
 
         @self.server.post(
             "/tiktok/detail",
-            summary=_("获取作品数据"),
+            summary=_("获取单个作品数据"),
             description=dedent(
                 _("""
                 待更新
@@ -292,6 +310,22 @@ class APIServer(TikTok):
         ):
             return await self.handle_detail(extract, True)
 
+        @self.server.post(
+            "/tiktok/account",
+            summary=_("获取账号作品数据"),
+            description=dedent(
+                _("""
+                                待更新
+                                        """)
+            ),
+            tags=["TikTok"],
+            response_model=DataResponse,
+        )
+        async def handle_account_tiktok(
+            extract: AccountTiktok, token: str = Depends(token_dependency)
+        ):
+            return await self.handle_account(extract, True)
+
     async def handle_search(self, extract):
         if data := await self.deal_search_data(
             extract,
@@ -302,7 +336,7 @@ class APIServer(TikTok):
 
     async def handle_detail(
         self,
-        extract,
+        extract: Detail | DetailTikTok,
         tiktok=False,
     ):
         root, params, logger = self.record.run(self.parameter)
@@ -319,15 +353,39 @@ class APIServer(TikTok):
                 return self.success_response(extract, data[0])
             return self.failed_response(extract)
 
+    async def handle_account(
+        self,
+        extract: Account | AccountTiktok,
+        tiktok=False,
+    ):
+        if data := await self.deal_account_detail(
+            0,
+            extract.sec_user_id,
+            tab=extract.tab,
+            earliest=extract.earliest,
+            latest=extract.latest,
+            pages=extract.pages,
+            api=True,
+            source=extract.source,
+            cookie=extract.cookie,
+            proxy=extract.proxy,
+            tiktok=tiktok,
+            cursor=extract.cursor,
+            count=extract.count,
+        ):
+            return self.success_response(extract, data)
+        return self.failed_response(extract)
+
     @staticmethod
-    async def success_response(extract, data: dict | list[dict]):
+    def success_response(extract, data: dict | list[dict]):
         return DataResponse(
             message=_("获取数据成功！"),
             data=data,
             params=extract.model_dump(),
         )
+
     @staticmethod
-    async def failed_response(extract):
+    def failed_response(extract):
         return DataResponse(
             message=_("获取数据失败！"),
             data=None,

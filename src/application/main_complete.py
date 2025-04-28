@@ -551,7 +551,7 @@ class TikTok:
             else _("开始处理账号")
         )
         info = None
-        if tab in {
+        if not api and tab in {
             "favorite",
             "collection",
         }:
@@ -576,6 +576,7 @@ class TikTok:
             earliest=earliest,
             latest=latest,
             pages=pages,
+            **kwargs,
         )
         if not any(account_data):
             return None
@@ -733,7 +734,10 @@ class TikTok:
         old_mark = (
             f"{m['MARK']}_{suffix}" if (m := await self.cache.has_cache(id_)) else None
         )
-        root, params, logger = self.record.run(self.parameter)
+        root, params, logger = self.record.run(
+            self.parameter,
+            blank=api,
+        )
         async with logger(
             root,
             name=f"{prefix}{id_}_{mark}_{suffix}",
