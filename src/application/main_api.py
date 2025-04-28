@@ -160,12 +160,12 @@ class APIServer(TikTok):
         ):
             if url := await self.handle_redirect(extract.text, extract.proxy):
                 return UrlResponse(
-                    message=_("请求成功！"),
+                    message=_("请求链接成功！"),
                     url=url,
                     params=extract.model_dump(),
                 )
             return UrlResponse(
-                message=_("请求失败！"),
+                message=_("请求链接失败！"),
                 url=None,
                 params=extract.model_dump(),
             )
@@ -184,27 +184,7 @@ class APIServer(TikTok):
         async def handle_detail(
             extract: Detail, token: str = Depends(token_dependency)
         ):
-            root, params, logger = self.record.run(self.parameter)
-            async with logger(root, console=self.console, **params) as record:
-                if data := await self._handle_detail(
-                    [extract.detail_id],
-                    False,
-                    record,
-                    True,
-                    extract.source,
-                    extract.cookie,
-                    extract.proxy,
-                ):
-                    return DataResponse(
-                        message=_("获取成功！"),
-                        data=data[0],
-                        params=extract.model_dump(),
-                    )
-                return DataResponse(
-                    message=_("获取失败！"),
-                    data=None,
-                    params=extract.model_dump(),
-                )
+            return await self.handle_detail(extract, False)
 
         @self.server.post(
             "/douyin/search/general",
@@ -286,12 +266,12 @@ class APIServer(TikTok):
         ):
             if url := await self.handle_redirect_tiktok(extract.text, extract.proxy):
                 return UrlResponse(
-                    message=_("请求成功！"),
+                    message=_("请求链接成功！"),
                     url=url,
                     params=extract.model_dump(),
                 )
             return UrlResponse(
-                message=_("请求失败！"),
+                message=_("请求链接失败！"),
                 url=None,
                 params=extract.model_dump(),
             )
@@ -310,40 +290,46 @@ class APIServer(TikTok):
         async def handle_detail_tiktok(
             extract: DetailTikTok, token: str = Depends(token_dependency)
         ):
-            root, params, logger = self.record.run(self.parameter)
-            async with logger(root, console=self.console, **params) as record:
-                if data := await self._handle_detail(
-                    [extract.detail_id],
-                    True,
-                    record,
-                    True,
-                    extract.source,
-                    extract.cookie,
-                    extract.proxy,
-                ):
-                    return DataResponse(
-                        message=_("获取成功！"),
-                        data=data[0],
-                        params=extract.model_dump(),
-                    )
-                return DataResponse(
-                    message=_("获取失败！"),
-                    data=None,
-                    params=extract.model_dump(),
-                )
+            return await self.handle_detail(extract, True)
 
     async def handle_search(self, extract):
         if data := await self.deal_search_data(
             extract,
             extract.source,
         ):
-            return DataResponse(
-                message=_("获取成功！"),
-                data=data,
-                params=extract.model_dump(),
-            )
+            return self.success_response(extract, data)
+        return self.failed_response(extract)
+
+    async def handle_detail(
+        self,
+        extract,
+        tiktok=False,
+    ):
+        root, params, logger = self.record.run(self.parameter)
+        async with logger(root, console=self.console, **params) as record:
+            if data := await self._handle_detail(
+                [extract.detail_id],
+                tiktok,
+                record,
+                True,
+                extract.source,
+                extract.cookie,
+                extract.proxy,
+            ):
+                return self.success_response(extract, data[0])
+            return self.failed_response(extract)
+
+    @staticmethod
+    async def success_response(extract, data: dict | list[dict]):
         return DataResponse(
-            message=_("获取失败！"),
+            message=_("获取数据成功！"),
             data=data,
+            params=extract.model_dump(),
+        )
+    @staticmethod
+    async def failed_response(extract):
+        return DataResponse(
+            message=_("获取数据失败！"),
+            data=None,
             params=extract.model_dump(),
         )
