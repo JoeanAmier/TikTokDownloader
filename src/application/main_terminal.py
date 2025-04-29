@@ -362,6 +362,10 @@ class TikTok:
             True,
         )
 
+    @staticmethod
+    def check_url_items(urls: list[str]) -> list[str]:
+        pass
+
     async def __account_detail_batch(
         self,
         accounts: list[SimpleNamespace],
@@ -373,8 +377,6 @@ class TikTok:
             _("共有 {count} 个账号的作品等待下载").format(count=len(accounts))
         )
         for index, data in enumerate(accounts, start=1):
-            if hasattr(data, "enable") and not data.enable:
-                continue
             if not (
                 sec_user_id := await self.check_sec_user_id(
                     data.url,
@@ -383,11 +385,11 @@ class TikTok:
             ):
                 self.logger.warning(
                     _(
-                        "配置文件 {name} 参数第 {index} 条数据的 url {url} 错误，提取 sec_user_id 失败"
+                        "配置文件 {name} 参数的 url {url} 提取 sec_user_id 失败，错误配置：{data}"
                     ).format(
                         name=params_name,
-                        index=index,
                         url=data.url,
+                        data=vars(data),
                     )
                 )
                 count.failed += 1
@@ -550,23 +552,31 @@ class TikTok:
             if index
             else _("开始处理账号")
         )
-        info = None
-        if not api and tab in {
-            "favorite",
-            "collection",
-        }:
-            if not (
-                info := await self.get_user_info_data(
-                    tiktok,
-                    cookie,
-                    proxy,
-                    sec_user_id=sec_user_id,
+        if api:
+            info = None
+        elif not (
+            info := await self.get_user_info_data(
+                tiktok,
+                cookie,
+                proxy,
+                sec_user_id=sec_user_id,
+            )
+        ):
+            self.logger.info(
+                _("{sec_user_id} 获取账号信息失败，请检查 Cookie 登录状态！").format(
+                    sec_user_id=sec_user_id
                 )
-            ):
-                self.logger.warning(
-                    _("{sec_user_id} 获取账号信息失败").format(sec_user_id=sec_user_id)
-                )
+            )
+            if tab in {
+                "favorite",
+                "collection",
+            }:
                 return
+            self.logger.info(
+                _(
+                    "如果账号发布作品均为共创作品且该账号均不是作品作者时，请配置已登录的 Cookie 后重新运行程序，其余情况请无视该提示！"
+                )
+            )
         acquirer = self._get_account_data_tiktok if tiktok else self._get_account_data
         account_data, earliest, latest = await acquirer(
             cookie=cookie,
@@ -724,6 +734,9 @@ class TikTok:
             collect_id,
             collect_name,
         )
+        if not api and not all((id_, name, mark)):
+            self.logger.error(_("提取账号或合集信息发生错误！"))
+            return False
         self.__display_extracted_information(
             id_,
             name,
@@ -1500,8 +1513,6 @@ class TikTok:
     ):
         count = SimpleNamespace(time=time(), success=0, failed=0)
         for index, data in enumerate(mix, start=1):
-            if hasattr(data, "enable") and not data.enable:
-                continue
             mix_id, id_, title = await self._check_mix_id(
                 data.url,
                 tiktok,
@@ -1509,11 +1520,11 @@ class TikTok:
             if not id_:
                 self.logger.warning(
                     _(
-                        "配置文件 {name} 参数第 {index} 条数据的 url {url} 错误，获取作品 ID 或合集 ID 失败"
+                        "配置文件 {name} 参数的 url {url} 获取作品 ID 或合集 ID 失败，错误配置：{data}"
                     ).format(
                         name=params_name,
-                        index=index,
                         url=data.url,
+                        data=vars(data),
                     )
                 )
                 count.failed += 1
@@ -2099,7 +2110,7 @@ class TikTok:
             return None
         if source:
             return collection
-        return await self._batch_process_detail(
+        await self._batch_process_detail(
             collection,
             api,
             tiktok=tiktok,
@@ -2130,7 +2141,7 @@ class TikTok:
             return None
         if source:
             return data
-        return await self._batch_process_detail(
+        await self._batch_process_detail(
             data,
             mode="collects",
             collect_id=id_,

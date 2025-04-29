@@ -25,7 +25,7 @@ class CSVLogger(BaseTextLogger):
         field_keys: tuple,
         console: "ColorfulConsole",
         old=None,
-        name="Solo_Download",
+        name="Download",
         *args,
         **kwargs,
     ):

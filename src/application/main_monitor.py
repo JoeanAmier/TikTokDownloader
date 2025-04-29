@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from .main_complete import TikTok
+from .main_terminal import TikTok
 
 if TYPE_CHECKING:
     from ..config import Parameter

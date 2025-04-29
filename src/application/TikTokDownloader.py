@@ -36,7 +36,7 @@ from src.tools import (
 from src.translation import _, switch_language
 
 from .main_api import APIServer
-from .main_complete import TikTok
+from .main_terminal import TikTok
 
 # from typing import Type
 # from webbrowser import open

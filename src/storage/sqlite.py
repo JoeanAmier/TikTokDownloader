@@ -19,7 +19,7 @@ class SQLLogger(BaseSQLLogger):
         title_type: tuple,
         field_keys: tuple,
         old=None,
-        name="Solo_Download",
+        name="Download",
         *args,
         **kwargs,
     ):

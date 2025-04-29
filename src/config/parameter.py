@@ -843,7 +843,7 @@ class Parameter:
     def check_urls_params(data: list[dict]) -> list[SimpleNamespace]:
         items = []
         for item in data:
-            if not item.get("url"):
+            if not item.get("url") or not item.get("enable", True):
                 continue
             if not isinstance(item.get("mark"), str):
                 item["mark"] = ""
@@ -853,7 +853,10 @@ class Parameter:
     @staticmethod
     def check_url_params(data: dict) -> SimpleNamespace:
         if not data.get("url"):
-            return SimpleNamespace()
+            return SimpleNamespace(
+                mark="",
+                url="",
+            )
         if not isinstance(data.get("mark"), str):
             data["mark"] = ""
         return Extractor.generate_data_object(data)
