@@ -362,10 +362,6 @@ class TikTok:
             True,
         )
 
-    @staticmethod
-    def check_url_items(urls: list[str]) -> list[str]:
-        pass
-
     async def __account_detail_batch(
         self,
         accounts: list[SimpleNamespace],
@@ -1023,10 +1019,10 @@ class TikTok:
         cookie: str = None,
         proxy: str = None,
     ):
-        obj = DetailTikTok if tiktok else Detail
+        processor = DetailTikTok if tiktok else Detail
         return await self.__handle_detail(
             tiktok,
-            obj,
+            processor,
             ids,
             record,
             api=api,
@@ -1035,10 +1031,24 @@ class TikTok:
             proxy=proxy,
         )
 
+    async def handle_detail_single(
+        self,
+        processor: Callable,
+        cookie: str,
+        proxy: str,
+        detail_id: str,
+    ):
+        return await processor(
+            self.parameter,
+            cookie,
+            proxy,
+            detail_id,
+        ).run()
+
     async def __handle_detail(
         self,
         tiktok: bool,
-        request_obj: Callable,
+        processor: Callable,
         ids: list[str],
         record,
         api=False,
@@ -1047,12 +1057,12 @@ class TikTok:
         proxy: str = None,
     ):
         detail_data = [
-            await request_obj(
-                self.parameter,
+            await self.handle_detail_single(
+                processor,
                 cookie,
                 proxy,
                 i,
-            ).run()
+            )
             for i in ids
         ]
         if not any(detail_data):
@@ -1281,6 +1291,40 @@ class TikTok:
             self.comment_handle,
         )
 
+    async def comment_handle_single(
+        self,
+        detail_id: str,
+        cookie: str = None,
+        proxy: str = None,
+        **kwargs,
+    ) -> list:
+        if d := await Comment(
+            self.parameter,
+            cookie,
+            proxy,
+            detail_id=detail_id,
+            **kwargs,
+        ).run():
+            root, params, logger = self.record.run(self.parameter, type_="comment")
+            async with logger(
+                root,
+                name=_("作品{id}_评论数据").format(
+                    id=detail_id,
+                ),
+                console=self.console,
+                **params,
+            ) as record:
+                return await self.extractor.run(d, record, type_="comment")
+        return []
+
+    async def comment_handle_single_tiktok(
+        self,
+        detail_id: str,
+        cookie: str = None,
+        proxy: str = None,
+        **kwargs,
+    ) -> list: ...
+
     async def comment_handle(
         self,
         ids: list,
@@ -1289,34 +1333,24 @@ class TikTok:
         proxy: str = None,
         **kwargs,
     ):
-        if tiktok:  # TODO: 代码未完成
-            ...
+        if tiktok:
+            processor = self.comment_handle_single_tiktok
         else:
-            items = []
-            for i in ids:
-                name = _("作品{id}_评论数据").format(id=i)
-                if d := await Comment(
-                    self.parameter,
-                    cookie,
-                    proxy,
-                    detail_id=i,
-                    **kwargs,
-                ).run():
-                    root, params, logger = self.record.run(
-                        self.parameter, type_="comment"
+            processor = self.comment_handle_single
+        for i in ids:
+            if await processor(
+                i,
+                cookie,
+                proxy,
+                **kwargs,
+            ):
+                self.logger.info(
+                    _("作品评论数据已储存至 {filename}").format(
+                        filename=_("作品{id}_评论数据").format(id=i),
                     )
-                    async with logger(
-                        root, name=name, console=self.console, **params
-                    ) as record:
-                        items.append(
-                            await self.extractor.run(d, record, type_="comment")
-                        )
-                    self.logger.info(
-                        _("作品评论数据已储存至 {filename}").format(filename=name)
-                    )
-                else:
-                    self.logger.warning(_("采集评论数据失败"))
-            return items
+                )
+            else:
+                self.logger.warning(_("采集评论数据失败"))
 
     async def mix_interactive(
         self,
