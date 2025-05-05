@@ -563,9 +563,9 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
   "truncate": 32,
   "storage_format": "xlsx",
   "cookie": {
-    "passport_csrf_token": "demo",
-    "passport_csrf_token_default": "demo",
-    "odin_tt": "demo"
+    "key-1": "value-1",
+    "key-2": "value-2",
+    "key-3": "value-3"
   },
   "cookie_tiktok": "参数规则与 cookie 一致",
   "dynamic_cover": false,

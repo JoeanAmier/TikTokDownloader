@@ -1258,7 +1258,7 @@ class TikTok:
             self.console.print(
                 _("共提取到 {count} 个作品，开始处理！").format(count=len(ids))
             )
-            await self.__comment_handle(
+            await self.comment_handle(
                 ids,
                 tiktok=tiktok,
             )
@@ -1278,27 +1278,29 @@ class TikTok:
             tiktok,
             "detail",
             _("从文本文档提取作品 ID 失败"),
-            self.__comment_handle,
+            self.comment_handle,
         )
 
-    async def __comment_handle(
+    async def comment_handle(
         self,
         ids: list,
         tiktok=False,
         cookie: str = None,
         proxy: str = None,
+        **kwargs,
     ):
         if tiktok:  # TODO: 代码未完成
             ...
         else:
+            items = []
             for i in ids:
                 name = _("作品{id}_评论数据").format(id=i)
                 if d := await Comment(
                     self.parameter,
                     cookie,
                     proxy,
-                    item_id=i,
-                    reply=False,
+                    detail_id=i,
+                    **kwargs,
                 ).run():
                     root, params, logger = self.record.run(
                         self.parameter, type_="comment"
@@ -1306,12 +1308,15 @@ class TikTok:
                     async with logger(
                         root, name=name, console=self.console, **params
                     ) as record:
-                        await self.extractor.run(d, record, type_="comment")
+                        items.append(
+                            await self.extractor.run(d, record, type_="comment")
+                        )
                     self.logger.info(
                         _("作品评论数据已储存至 {filename}").format(filename=name)
                     )
                 else:
                     self.logger.warning(_("采集评论数据失败"))
+            return items
 
     async def mix_interactive(
         self,

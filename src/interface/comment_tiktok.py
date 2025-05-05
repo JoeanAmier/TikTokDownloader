@@ -16,14 +16,14 @@ class CommentTikTok(Comment, APITikTok):
         params: Union["Parameter", "Params"],
         cookie: str = "",
         proxy: str = None,
-        item_id: str = ...,
+        detail_id: str = ...,
         pages: int = None,
         cursor=0,
         count=20,
         count_reply=3,
     ):
         super().__init__(
-            params, cookie, proxy, item_id, pages, cursor, count, count_reply
+            params, cookie, proxy, detail_id, pages, cursor, count, count_reply
         )
         self.api = f"{self.domain}api/comment/list/"
         self.text = _("作品评论")
@@ -48,7 +48,7 @@ class ReplyTikTok(Reply, CommentTikTok, APITikTok):
         params: Union["Parameter", "Params"],
         cookie: str = "",
         proxy: str = None,
-        item_id: str = "",
+        detail_id: str = "",
         comment_id: str = "",
         pages: int = None,
         cursor=0,
@@ -60,7 +60,7 @@ class ReplyTikTok(Reply, CommentTikTok, APITikTok):
             params,
             cookie,
             proxy,
-            item_id,
+            detail_id,
             comment_id,
             pages,
             cursor,
@@ -89,12 +89,12 @@ async def test():
     async with Params() as params:
         i = CommentTikTok(
             params,
-            item_id="",
+            detail_id="",
         )
         print(await i.run())
         i = ReplyTikTok(
             params,
-            item_id="",
+            detail_id="",
             comment_id="",
         )
         print(await i.run())

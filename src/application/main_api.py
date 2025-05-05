@@ -5,7 +5,6 @@ from fastapi.responses import RedirectResponse
 from uvicorn import Config, Server
 from textwrap import dedent
 
-from models import DetailTikTok
 from ..custom import (
     __VERSION__,
     REPOSITORY,
@@ -26,6 +25,9 @@ from ..models import (
     Detail,
     Account,
     AccountTiktok,
+    DetailTikTok,
+    Comment,
+    Reply,
 )
 from ..translation import _
 from .main_terminal import TikTok
@@ -105,6 +107,11 @@ class APIServer(TikTok):
         @self.server.get(
             "/token",
             summary=_("测试令牌有效性"),
+            description=dedent(
+                _("""
+                    待更新
+                    """)
+            ),
             tags=[_("项目")],
             response_model=DataResponse,
         )
@@ -203,6 +210,51 @@ class APIServer(TikTok):
             extract: Account, token: str = Depends(token_dependency)
         ):
             return await self.handle_account(extract, False)
+
+        @self.server.post(
+            "/douyin/comment",
+            summary=_("获取作品评论数据"),
+            description=dedent(
+                _("""
+                                待更新
+                                        """)
+            ),
+            tags=[_("抖音")],
+            response_model=DataResponse,
+        )
+        async def handle_comment(
+            extract: Comment, token: str = Depends(token_dependency)
+        ):
+            if data := await self.comment_handle(
+                [
+                    extract.detail_id,
+                ],
+                tiktok=False,
+                cookie=extract.cookie,
+                proxy=extract.proxy,
+                pages=extract.pages,
+                cursor=extract.cursor,
+                count=extract.count,
+                count_reply=extract.count_reply,
+                reply=extract.reply,
+            ):
+                return self.success_response(extract, data[0])
+            return self.failed_response(extract)
+
+        @self.server.post(
+            "/douyin/reply",
+            summary=_("获取评论回复数据"),
+            description=dedent(
+                _("""
+                                        待更新
+                                                """)
+            ),
+            tags=[_("抖音")],
+            response_model=DataResponse,
+        )
+        async def handle_reply(
+            extract: Reply, token: str = Depends(token_dependency)
+        ): ...
 
         @self.server.post(
             "/douyin/search/general",

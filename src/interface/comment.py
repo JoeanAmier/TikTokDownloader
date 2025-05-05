@@ -15,7 +15,7 @@ class Comment(API):
         params: Union["Parameter", "Params"],
         cookie: str = "",
         proxy: str = None,
-        item_id: str = ...,
+        detail_id: str = ...,
         pages: int = None,
         cursor: int = 0,
         count: int = 20,
@@ -26,7 +26,7 @@ class Comment(API):
         self.params_object = params
         self.cookie = cookie
         self.proxy = proxy
-        self.item_id = item_id
+        self.item_id = detail_id
         self.pages = pages or params.max_pages
         self.cursor = cursor
         self.count = count
@@ -208,7 +208,7 @@ class Reply(Comment):
         params: Union["Parameter", "Params"],
         cookie: str = "",
         proxy: str = None,
-        item_id: str = ...,
+        detail_id: str = ...,
         comment_id: str = ...,
         pages: int = None,
         cursor=0,
@@ -221,7 +221,7 @@ class Reply(Comment):
             cookie,
             proxy,
         )
-        self.item_id = item_id
+        self.item_id = detail_id
         self.comment_id = comment_id
         self.pages = pages or params.max_pages
         self.cursor = cursor
@@ -345,12 +345,12 @@ async def test():
     async with Params() as params:
         i = Comment(
             params,
-            item_id="",
+            detail_id="",
         )
         print(await i.run())
         i = Reply(
             params,
-            item_id="",
+            detail_id="",
             comment_id="",
         )
         print(await i.run())
