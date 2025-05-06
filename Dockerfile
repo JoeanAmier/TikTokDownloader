@@ -14,8 +14,6 @@ COPY requirements.txt /TikTokDownloader/requirements.txt
 
 RUN pip install --no-cache-dir -r /TikTokDownloader/requirements.txt
 
-VOLUME /TikTokDownloader
-
 EXPOSE 5555
 
 CMD ["python", "main.py"]
