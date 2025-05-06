@@ -28,13 +28,13 @@ class InfoTikTok(APITikTok):
 
     async def run(
         self,
-        first=True,
+        # first=True,
         *args,
         **kwargs,
     ) -> dict | list[dict]:
         self.set_referer()
         await self.run_single()
-        return self.response
+        return self.response[0] if self.response else {}
 
     async def run_single(
         self,
