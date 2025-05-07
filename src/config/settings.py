@@ -87,27 +87,24 @@ class Settings:
         "douyin_platform": True,
         "tiktok_platform": True,
         "browser_info": {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/131.0.0.0 Safari/537.36",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
             "pc_libra_divert": "Windows",
             "browser_platform": "Win32",
             "browser_name": "Chrome",
-            "browser_version": "126.0.0.0",
+            "browser_version": "136.0.0.0",
             "engine_name": "Blink",
-            "engine_version": "126.0.0.0",
+            "engine_version": "136.0.0.0",
             "os_name": "Windows",
             "os_version": "10",
             "webid": "",
         },
         "browser_info_tiktok": {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/131.0.0.0 Safari/537.36",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
             "app_language": "zh-Hans",
             "browser_language": "zh-SG",
             "browser_name": "Mozilla",
             "browser_platform": "Win32",
-            "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
-            "Chrome/131.0.0.0 Safari/537.36",
+            "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
             "language": "zh-Hans",
             "os": "windows",
             "priority_region": "CN",

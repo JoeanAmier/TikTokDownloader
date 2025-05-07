@@ -34,6 +34,7 @@ from ..interface import (
     MixTikTok,
     Search,
     User,
+    Reply,
 )
 from ..link import Extractor as LinkExtractor
 from ..link import ExtractorTikTok
@@ -1298,23 +1299,14 @@ class TikTok:
         proxy: str = None,
         **kwargs,
     ) -> list:
-        if d := await Comment(
+        if data := await Comment(
             self.parameter,
             cookie,
             proxy,
             detail_id=detail_id,
             **kwargs,
         ).run():
-            root, params, logger = self.record.run(self.parameter, type_="comment")
-            async with logger(
-                root,
-                name=_("作品{id}_评论数据").format(
-                    id=detail_id,
-                ),
-                console=self.console,
-                **params,
-            ) as record:
-                return await self.extractor.run(d, record, type_="comment")
+            return await self.save_comment(detail_id, data)
         return []
 
     async def comment_handle_single_tiktok(
@@ -1351,6 +1343,54 @@ class TikTok:
                 )
             else:
                 self.logger.warning(_("采集评论数据失败"))
+
+    async def save_comment(self, detail_id: str, data: list[dict]) -> list:
+        root, params, logger = self.record.run(self.parameter, type_="comment")
+        async with logger(
+            root,
+            name=_("作品{id}_评论数据").format(
+                id=detail_id,
+            ),
+            console=self.console,
+            **params,
+        ) as record:
+            return await self.extractor.run(data, record, type_="comment")
+
+    async def reply_handle(
+        self,
+        detail_id: str,
+        comment_id: str,
+        pages: int = None,
+        cursor=0,
+        count=3,
+        cookie: str = None,
+        proxy: str = None,
+        source=False,
+    ):
+        if data := await Reply(
+            self.parameter,
+            cookie,
+            proxy,
+            detail_id=detail_id,
+            comment_id=comment_id,
+            pages=pages,
+            cursor=cursor,
+            count=count,
+        ).run():
+            return data if source else await self.save_comment(detail_id, data)
+        return []
+
+    async def reply_handle_tiktok(
+        self,
+        detail_id: str,
+        comment_id: str,
+        pages: int = None,
+        cursor=0,
+        count=3,
+        cookie: str = None,
+        proxy: str = None,
+        source=False,
+    ): ...
 
     async def mix_interactive(
         self,

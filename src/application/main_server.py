@@ -252,9 +252,19 @@ class APIServer(TikTok):
             tags=[_("抖音")],
             response_model=DataResponse,
         )
-        async def handle_reply(
-            extract: Reply, token: str = Depends(token_dependency)
-        ): ...
+        async def handle_reply(extract: Reply, token: str = Depends(token_dependency)):
+            if data := await self.reply_handle(
+                extract.detail_id,
+                extract.comment_id,
+                cookie=extract.cookie,
+                proxy=extract.proxy,
+                pages=extract.pages,
+                cursor=extract.cursor,
+                count=extract.count,
+                source=extract.source,
+            ):
+                return self.success_response(extract, data)
+            return self.failed_response(extract)
 
         @self.server.post(
             "/douyin/search/general",

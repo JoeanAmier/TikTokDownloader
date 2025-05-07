@@ -615,7 +615,7 @@ class Parameter:
             )
             API.params["msToken"] = ms_token
             await self.__update_cookie(
-                (ms_token,),
+                ({MsToken.NAME: ms_token},),
                 self.headers,
                 self.cookie_dict,
                 self.cookie_str,

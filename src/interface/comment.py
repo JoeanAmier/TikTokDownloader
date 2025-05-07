@@ -243,6 +243,8 @@ class Reply(Comment):
             "item_type": "0",
             "version_code": "170400",
             "version_name": "17.4.0",
+            "support_h265": "0",
+            "support_dash": "0",
         }
 
     async def run(
