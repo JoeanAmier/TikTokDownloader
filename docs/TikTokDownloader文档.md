@@ -3,15 +3,16 @@
 <h1>TikTokDownloader 项目文档</h1>
 <a href="https://trendshift.io/repositories/6222" target="_blank"><img src="https://trendshift.io/api/badge/repositories/6222" alt="JoeanAmier%2FTikTokDownloader | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 <br>
-<img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ff6348">
-<img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ffa502">
-<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ffee6f">
-<img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/JoeanAmier/TikTokDownloader?style=for-the-badge&color=13c2c2">
+<img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader?style=flat-square">
+<img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?style=flat-square&color=55efc4">
+<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/JoeanAmier/TikTokDownloader?style=flat-square&color=fda7df">
+<img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/JoeanAmier/TikTokDownloader?style=flat-square&color=a29bfe">
 <br>
-<img alt="Static Badge" src="https://img.shields.io/badge/Python-3.12-3498db?style=for-the-badge&logo=python&labelColor=fffa65">
-<img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader?style=for-the-badge&color=ff7675">
-<img src="https://img.shields.io/badge/Sourcery-enabled-884898?style=for-the-badge&color=e056fd" alt="">
-<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=for-the-badge&color=52c41a">
+<img alt="Static Badge" src="https://img.shields.io/badge/Python-3.12-b8e994?style=flat-square&logo=python&labelColor=3dc1d3">
+<img alt="GitHub release (with filter)" src="https://img.shields.io/github/v/release/JoeanAmier/TikTokDownloader?style=flat-square&color=48dbfb">
+<img src="https://img.shields.io/badge/Sourcery-enabled-884898?style=flat-square&color=1890ff" alt="">
+<img alt="Static Badge" src="https://img.shields.io/badge/Docker-badc58?style=flat-square&logo=docker">
+<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=flat-square&color=ffdd59">
 </div>
 <br>
 <p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
@@ -38,14 +39,14 @@
 </li>
 <li>阅读 TikTokDownloader 的免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
-<ol><b>手动复制粘贴 Cookie（推荐）</b>
+<ol><b>手动复制粘贴 Cookie</b>
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
 <li>选择 <code>复制粘贴写入 Cookie</code> 选项，按照提示将 Cookie 写入配置文件</li>
 </ol>
-<ol><b>从浏览器获取 Cookie（推荐）</b>
+<ol><b>从浏览器获取 Cookie</b>
 <li>选择 <code>从浏览器获取 Cookie</code> 选项，按照提示选择浏览器类型</li>
 </ol>
-<ol><b><del>扫码登录获取 Cookie（弃用）</del></b>
+<ol><b><del>扫码登录获取 Cookie</del>（失效）</b>
 <li><del>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</del></li>
 <li><del>使用抖音 APP 扫描二维码并登录账号</del></li>
 <li><del>按照提示操作，将 Cookie 写入配置文件</del></li>
@@ -1169,9 +1170,6 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <p><strong>访问 <code>http://127.0.0.1:5555/docs</code> 或者 <code>http://127.0.0.1:5555/redoc</code> 可以查阅自动生成的文档！</strong></p>
 <h2>Web UI 交互模式</h2>
 <p><b>项目代码已重构，该模式代码尚未更新，未来开发完成重新开放！</b></p>
-<h2>服务器部署模式</h2>
-<p><b>项目代码已重构，该模式代码尚未更新，未来开发完成重新开放！</b></p>
-<p>该模式用于部署至公开服务器，为网站访客提供解析服务；默认启用局域网访问，建议设置参数验证。</p>
 <h2>启用/禁用作品下载记录</h2>
 <ul>
 <li>启用该功能：程序会记录下载成功的作品 ID，如果对作品文件进行移动、重命名或者删除操作，程序不会重复下载该作品，如果想要重新下载该作品，需要删除记录数据中对应的作品 ID。</li>
@@ -1225,46 +1223,6 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <p><strong>数据路径: <code>./TikTokDownloader.db</code> 的 <code>mapping_data</code> 数据表；</strong>
 用于记录账号 / 合集标识和账号昵称，当账号 / 合集标识或账号昵称发生变化时，程序会对相应的文件夹和文件进行重命名更新处理。</p>
 <p><strong>缓存数据仅供程序读取和修改，不建议手动编辑数据内容。</strong></p>
-<h1>服务器部署模式二次开发</h1>
-<p><b>该模式代码尚未更新，未来开发完成将会更新文档！</b></p>
-<h2>API 文档</h2>
-<p>请求URL：<code>/single/</code></p>
-<p>请求类型：<code>POST</code></p>
-<p>请求格式：<code>JSON</code></p>
-<p>请求参数：</p>
-
-```json
-{
-  "url": "抖音作品链接或 TikTok 作品链接",
-  "token": "自定义参数"
-}
-```
-
-<p><strong>后端会自动处理 <code>url</code> 参数中的作品链接，可以不在前端对 <code>url</code> 参数进行额外处理。</strong></p>
-<p>支持链接：</p>
-<ul>
-<li><code>https://v.douyin.com/分享码/</code></li>
-<li><code>https://vm.tiktok.com/分享码/</code></li>
-<li><code>https://www.douyin.com/note/作品ID</code></li>
-<li><code>https://www.douyin.com/video/作品ID</code></li>
-<li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
-<li><code>https://www.tiktok.com/@账号昵称/video/作品ID</code></li>
-</ul>
-<p>响应格式：<code>JSON</code></p>
-<p>响应参数：</p>
-
-```json
-{
-  "text": "解析结果提示, 字符串",
-  "author": "作者昵称, 字符串; 失败时返回 null",
-  "describe": "作品描述, 字符串; 失败时返回 null",
-  "download": "作品下载地址, 视频返回字符串, 图集返回由下载地址成的数组; 失败时返回 false",
-  "music": "原声下载地址, 字符串, 失败时返回 false",
-  "origin": "静态封面图地址, 字符串; 失败时返回 false",
-  "dynamic": "动态封面图地址, 字符串; 失败时返回 false",
-  "preview": "作品预览图地址, 字符串, 视频返回静态封面图, 图集返回首张图片; 失败时返回空白预览图地址"
-}
-```
 
 # 构建可执行文件指南
 

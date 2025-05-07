@@ -35,7 +35,7 @@ from src.tools import (
 )
 from src.translation import _, switch_language
 
-from .main_api import APIServer
+from .main_server import APIServer
 from .main_terminal import TikTok
 
 # from typing import Type
@@ -119,17 +119,15 @@ class TikTokDownloader:
         self.__function_menu = (
             (_("复制粘贴写入 Cookie (抖音)"), self.write_cookie),
             (_("从浏览器获取 Cookie (抖音)"), self.browser_cookie),
-            (_("扫码登录获取 Cookie (抖音)"), self.auto_cookie),
+            # (_("扫码登录获取 Cookie (抖音)"), self.auto_cookie),
             (_("复制粘贴写入 Cookie (TikTok)"), self.write_cookie_tiktok),
             (_("从浏览器获取 Cookie (TikTok)"), self.browser_cookie_tiktok),
             (_("终端交互模式"), self.complete),
             (_("后台监测模式"), self.disable_function),
-            (_("Web API 模式"), self.api_server),
+            (_("Web API 模式"), self.server),
             (_("Web UI 模式"), self.disable_function),
-            (_("服务器部署模式"), self.disable_function),
             # (_("Web API 模式"), self.__api_object),
             # (_("Web UI 模式"), self.__web_ui_object),
-            # (_("服务器部署模式"), self.__server_object),
             (
                 _("{}作品下载记录").format(options[self.config["Record"]]),
                 self.__modify_record,
@@ -153,7 +151,7 @@ class TikTokDownloader:
         )
 
     @server_tip
-    async def api_server(self):
+    async def server(self):
         try:
             self.console.print(
                 _(
@@ -298,8 +296,8 @@ class TikTokDownloader:
                     [i for i, __ in self.__function_menu],
                     self.console,
                     separate=(
-                        5,
-                        10,
+                        4,
+                        8,
                     ),
                 )
             await self.compatible(mode)
@@ -316,31 +314,6 @@ class TikTokDownloader:
             self.running = example.running
         except KeyboardInterrupt:
             self.running = False
-
-    # def server(
-    #         self,
-    #         server: Type[APIServer | WebUI | Server],
-    #         host="0.0.0.0",
-    #         token=True):
-    #     """
-    #     服务器模式
-    #     """
-    #     self.console.print(
-    #         "如果您看到 WARNING: This is a development server. 提示，这并不是异常错误！\n如需关闭服务器，可以在终端按下 Ctrl + C 快捷键！",
-    #         style=INFO)
-    #     master = server(self.parameter)
-    #     app = master.run_server(Flask("__main__"))
-    #     register(self.recorder.close)
-    #     if token:
-    #         app.before_request(self.verify_token)
-    #     open(f"http://127.0.0.1:{SERVER_PORT}")
-    #     app.run(host=host, port=SERVER_PORT)
-
-    # @staticmethod
-    # def verify_token():
-    #     if request.method == "POST" and not verify_token(
-    #             request.json.get("token")):
-    #         return abort(403)
 
     async def change_config(
         self,

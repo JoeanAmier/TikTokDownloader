@@ -131,14 +131,14 @@
 </li>
 <li>Read the disclaimer of TikTokDownloader and enter content according to the prompt.</li>
 <li>Write Cookie information into the configuration file
-<ol><b>Manually copy and paste Cookie (recommended)</b>
+<ol><b>Manually copy and paste Cookie</b>
 <li>Refer to <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie Extraction Tutorial</a>, copy the required Cookie to the clipboard.</li>
 <li>Select the option to <code>copy and paste to write Cookie</code>, and follow the prompts to write the Cookie into the configuration file.</li>
 </ol>
-<ol><b>Get Cookie from Browser (recommended)</b>
+<ol><b>Get Cookie from Browser</b>
 <li>Select the option <code>Get Cookie from Browser</code> and follow the prompts to choose the browser type.</li>
 </ol>
-<ol><b><del>Scan code login to get Cookie (deprecated)</del></b>
+<ol><b><del>Scan code login to get Cookie</del> (Disabled)</b>
 <li><del>Select the option <code>Scan code login to get Cookie</code>, and the program will display a login QR code image and open the image with the default application.</del></li>
 <li><del>Use the DouYin APP to scan the QR code and log into your account.</del></li>
 <li><del>Follow the prompts to write the Cookie into the configuration file.</del></li>
