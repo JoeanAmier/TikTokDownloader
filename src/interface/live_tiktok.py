@@ -17,7 +17,7 @@ class LiveTikTok(APITikTok):
         params: Union["Parameter", "Params"],
         cookie: str = "",
         proxy: str = None,
-        room_id=...,
+        room_id: str = ...,
     ):
         super().__init__(params, cookie, proxy)
         self.black_headers = params.headers_download

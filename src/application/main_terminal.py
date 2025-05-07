@@ -1549,7 +1549,7 @@ class TikTok:
     ):
         count = SimpleNamespace(time=time(), success=0, failed=0)
         for index, i in enumerate(ids, start=1):
-            if not await self._deal_mix_detail(
+            if not await self.deal_mix_detail(
                 mix_id,
                 i,
                 index=index,
@@ -1608,7 +1608,7 @@ class TikTok:
                 )
                 count.failed += 1
                 continue
-            if not await self._deal_mix_detail(
+            if not await self.deal_mix_detail(
                 mix_id,
                 id_,
                 data.mark,
@@ -1626,7 +1626,7 @@ class TikTok:
             _("合集"),
         )
 
-    async def _deal_mix_detail(
+    async def deal_mix_detail(
         self,
         mix_id: bool = None,
         id_: str = None,
@@ -1638,6 +1638,7 @@ class TikTok:
         proxy: str = None,
         tiktok=False,
         mix_title: str = "",
+        **kwargs,
     ):
         self.logger.info(
             _("开始处理第 {index} 个合集").format(index=index)
@@ -1652,6 +1653,7 @@ class TikTok:
                 proxy,
                 mix_title=mix_title,
                 **mix_params,
+                **kwargs,
             )
         else:
             mix_obj = Mix(
@@ -1659,6 +1661,7 @@ class TikTok:
                 cookie,
                 proxy,
                 **mix_params,
+                **kwargs,
             )
         if any(mix_data := await mix_obj.run()):
             return (
@@ -1687,6 +1690,8 @@ class TikTok:
             case False:
                 mix_id, ids = await self.links.run(url, type_="mix")
                 return (mix_id, ids[0], "") if len(ids) > 0 else (mix_id, "", "")
+            case _:
+                raise TikTokDownloaderError
 
     async def user_batch(
         self,

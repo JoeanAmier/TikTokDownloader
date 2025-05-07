@@ -28,6 +28,8 @@ from ..models import (
     DetailTikTok,
     Comment,
     Reply,
+    Mix,
+    MixTikTok,
 )
 from ..translation import _
 from .main_terminal import TikTok
@@ -212,6 +214,41 @@ class APIServer(TikTok):
             return await self.handle_account(extract, False)
 
         @self.server.post(
+            "/douyin/mix",
+            summary=_("获取合集作品数据"),
+            description=dedent(
+                _("""
+                                待更新
+                                        """)
+            ),
+            tags=[_("抖音")],
+            response_model=DataResponse,
+        )
+        async def handle_mix(extract: Mix, token: str = Depends(token_dependency)):
+            is_mix, id_ = self.generate_mix_params(
+                extract.mix_id,
+                extract.detail_id,
+            )
+            if not isinstance(is_mix, bool):
+                return DataResponse(
+                    message=_("参数错误！"),
+                    data=None,
+                    params=extract.model_dump(),
+                )
+            if data := await self.deal_mix_detail(
+                is_mix,
+                id_,
+                api=True,
+                source=extract.source,
+                cookie=extract.cookie,
+                proxy=extract.proxy,
+                cursor=extract.cursor,
+                count=extract.count,
+            ):
+                return self.success_response(extract, data)
+            return self.failed_response(extract)
+
+        @self.server.post(
             "/douyin/comment",
             summary=_("获取作品评论数据"),
             description=dedent(
@@ -388,6 +425,33 @@ class APIServer(TikTok):
         ):
             return await self.handle_account(extract, True)
 
+        @self.server.post(
+            "/tiktok/mix",
+            summary=_("获取合辑作品数据"),
+            description=dedent(
+                _("""
+                                        待更新
+                                                """)
+            ),
+            tags=["TikTok"],
+            response_model=DataResponse,
+        )
+        async def handle_mix_tiktok(
+            extract: MixTikTok, token: str = Depends(token_dependency)
+        ):
+            if data := await self.deal_mix_detail(
+                True,
+                extract.mix_id,
+                api=True,
+                source=extract.source,
+                cookie=extract.cookie,
+                proxy=extract.proxy,
+                cursor=extract.cursor,
+                count=extract.count,
+            ):
+                return self.success_response(extract, data)
+            return self.failed_response(extract)
+
     async def handle_search(self, extract):
         if data := await self.deal_search_data(
             extract,
@@ -453,3 +517,9 @@ class APIServer(TikTok):
             data=None,
             params=extract.model_dump(),
         )
+
+    @staticmethod
+    def generate_mix_params(mix_id: str = None, detail_id: str = None):
+        if mix_id:
+            return True, mix_id
+        return (False, detail_id) if detail_id else (None, None)

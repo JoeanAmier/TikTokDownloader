@@ -11,6 +11,8 @@ from .detail import Detail, DetailTikTok
 from .account import Account, AccountTiktok
 from .comment import Comment
 from .reply import Reply
+from .mix import Mix, MixTikTok
+from .live import Live, LiveTikTok
 
 __all__ = (
     "GeneralSearch",
@@ -27,4 +29,8 @@ __all__ = (
     "AccountTiktok",
     "Comment",
     "Reply",
+    "Mix",
+    "MixTikTok",
+    "Live",
+    "LiveTikTok",
 )
