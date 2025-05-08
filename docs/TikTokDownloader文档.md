@@ -73,81 +73,7 @@
 </ol>
 <p>Docker 容器无法直接访问宿主机的文件系统，部分功能不可用，例如：<code>从浏览器获取 Cookie</code>；其他功能如有异常请反馈！</p>
 <h1>Cookie 说明</h1>
-<p><a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">点击查看 Cookie 获取教程</a>；无效或失效的 Cookie 会导致程序获取数据失败或者无法下载最高分辨率的视频文件！</p>
-<table>
-<thead>
-<tr>
-<th align="center">程序功能</th>
-<th align="center">是否需要登录</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center">下载账号发布作品</td>
-<td align="center">⭕建议登录</td>
-</tr>
-<tr>
-<td align="center">下载账号喜欢作品</td>
-<td align="center">⭕建议登录</td>
-</tr>
-<tr>
-<td align="center">下载链接作品</td>
-<td align="center">❌无需登录</td>
-</tr>
-<tr>
-<td align="center">获取直播推流地址 (抖音)</td>
-<td align="center">❌无需登录</td>
-</tr>
-<tr>
-<td align="center">获取直播推流地址 (TikTok)</td>
-<td align="center">✔️需要登录</td>
-</tr>
-<tr>
-<td align="center">下载直播视频</td>
-<td align="center">❌无需登录</td>
-</tr>
-<tr>
-<td align="center">获取作品评论数据</td>
-<td align="center">❌无需登录</td>
-</tr>
-<tr>
-<td align="center">下载合集作品</td>
-<td align="center">❌无需登录</td>
-</tr>
-<tr>
-<td align="center">获取账号数据</td>
-<td align="center">❌无需登录</td>
-</tr>
-<tr>
-<td align="center">采集搜索结果</td>
-<td align="center">❌无需登录</td>
-</tr>
-<tr>
-<td align="center">采集热榜数据</td>
-<td align="center">❌无需登录</td>
-</tr>
-<tr>
-<td align="center">下载收藏作品</td>
-<td align="center">✔️需要登录</td>
-</tr>
-<tr>
-<td align="center">下载收藏夹作品</td>
-<td align="center">✔️需要登录</td>
-</tr>
-<tr>
-<td align="center">获取收藏合集数据</td>
-<td align="center">✔️需要登录</td>
-</tr>
-<tr>
-<td align="center">获取收藏音乐数据</td>
-<td align="center">✔️需要登录</td>
-</tr>
-<tr>
-<td align="center">获取收藏短剧数据</td>
-<td align="center">✔️需要登录</td>
-</tr>
-</tbody>
-</table>
+<p><a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">点击查看 Cookie 获取教程</a>；无效或失效的 Cookie 会导致程序获取数据失败！</p>
 <ul>
 <li>Cookie 仅需在失效后重新写入配置文件，并非每次运行程序都要写入配置文件！</li>
 <li><p>Cookie 会影响下载的视频文件分辨率，如果无法下载最高分辨率的视频文件，请尝试更新 Cookie！</li>
@@ -189,7 +115,7 @@ https://www.douyin.com/note/123456789
 ffmpeg version n7.1.1-6-g48c0f071d4-20250405 Copyright (c) 2000-2025 the FFmpeg developers
 built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 </pre>
-<h2>功能简介</h2>
+<h2>功能汇总</h2>
 <table>
 <thead>
 <tr>
@@ -207,7 +133,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 </tr>
 <tr>
 <td align="center">获取直播推流地址</td>
-<td align="center">文件下载, 数据提取</td>
+<td align="center">文件下载, 数据采集</td>
 </tr>
 <tr>
 <td align="center">采集作品评论数据</td>
@@ -242,8 +168,8 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <td align="center">文件下载，数据采集</td>
 </tr>
 </tbody></table>
-<h2><del>关闭平台功能</del></h2>
-<p><del>本项目支持抖音平台和 TikTok 平台的数据采集和文件下载功能，平台功能默认开启，如果不需要使用平台的任何功能，可以编辑配置文件关闭平台功能。</del></p>
+<h2>关闭平台功能</h2>
+<p>本项目支持抖音平台和 TikTok 平台的数据采集和文件下载功能，平台功能默认开启，如果不需要使用平台的任何功能，可以编辑配置文件关闭平台功能。</p>
 <p><del>本项目内置参数更新机制，程序会周期性更新抖音与 TikTok 请求的部分参数，以保持参数的有效性（或许没有效果？），该功能无法防止参数失效，参数失效后需要重新写入 Cookie；关闭平台功能后，对应平台的参数更新功能将会禁用！</del></p>
 <h1>配置文件</h1>
 <p>配置文件：项目根目录下的 <code>settings.json</code> 文件，可以自定义设置程序部分运行参数。</p>
@@ -478,13 +404,13 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <td align="center">无</td>
 </tr>
 <tr>
-<td align="center"><del>douyin_platform</del></td>
+<td align="center">douyin_platform</td>
 <td align="center">bool</td>
 <td align="center"><a href="#supplement"><sup>5</sup></a>是否启用抖音平台功能</td>
 <td align="center">true</td>
 </tr>
 <tr>
-<td align="center"><del>tiktok_platform</del></td>
+<td align="center">tiktok_platform</td>
 <td align="center">bool</td>
 <td align="center"><a href="#supplement"><sup>5</sup></a>是否启用 TikTok 平台功能</td>
 <td align="center">true</td>
@@ -510,7 +436,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li>设置为 <code>favorite</code> 时，需要确保账号喜欢作品公开可见，或者配置对应账号的登录 Cookie</li>
 <li>该参数仅在部分模式和功能中生效，如果不需要使用相应的模式和功能，无需设置该参数</li>
 <li>必须设置平台的 Cookie 才能使用该平台的数据采集和文件下载功能</li>
-<li><del>如果不需要使用该平台的任何功能，可以将该参数设置为 <code>false</code></del></li>
+<li>如果不需要使用该平台的任何功能，可以将该参数设置为 <code>false</code></li>
 </ol>
 </div>
 <h2>配置示例</h2>
@@ -793,7 +719,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li>设置服务器模式主机及端口</li>
 <li><del>设置平台参数更新间隔</del></li>
 <li>设置彩色交互提示颜色</li>
-<li><del>设置请求数据延时间隔</del></li>
+<li>设置请求数据延时间隔</li>
 <li>设置自定义作品筛选规则</li>
 <li>设置分批获取数据策略</li>
 <li>设置服务器模式参数验证</li>
@@ -1165,7 +1091,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <h2>后台监测模式</h2>
 <p>敬请期待！</p>
 <h2>Web API 接口模式</h2>
-<p>启动服务器，提供 API 调用功能；支持局域网远程访问，可以部署至私有服务器或者公开服务器，远程部署建议设置参数验证。</p>
+<p>启动服务器，提供 API 调用功能；支持局域网远程访问，可以部署至私有服务器或者公开服务器，远程部署建议设置参数验证，防止恶意请求！</p>
 <p>默认禁用局域网访问，如需开启，请修改 <code>src/custom/static.py</code> 文件的 <code>SERVER_HOST</code> 变量。</p>
 <p><strong>访问 <code>http://127.0.0.1:5555/docs</code> 或者 <code>http://127.0.0.1:5555/redoc</code> 可以查阅自动生成的文档！</strong></p>
 <h2>Web UI 交互模式</h2>
