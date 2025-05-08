@@ -40,21 +40,8 @@ from .main_terminal import TikTok
 
 # from typing import Type
 # from webbrowser import open
-# from flask import abort
-# from flask import request
-
-# from .main_server import Server
-# from .main_web_UI import WebUI
 
 __all__ = ["TikTokDownloader"]
-
-
-def server_tip(function):
-    async def inner(self, *args, **kwargs):
-        self.console.print(_("正在启动服务器，如需关闭服务器，请按下 Ctrl + C"))
-        return await function(self, *args, **kwargs)
-
-    return inner
 
 
 class TikTokDownloader:
@@ -150,7 +137,6 @@ class TikTokDownloader:
             "该功能正在重构，未来开发完成重新开放！",
         )
 
-    @server_tip
     async def server(self):
         try:
             self.console.print(
@@ -168,12 +154,6 @@ class TikTokDownloader:
             )
         except KeyboardInterrupt:
             self.running = False
-
-    # def __web_ui_object(self):
-    #     self.server(WebUI, token=False)
-
-    # def __server_object(self):
-    #     self.server(Server)
 
     async def __modify_record(self):
         await self.change_config("Record")

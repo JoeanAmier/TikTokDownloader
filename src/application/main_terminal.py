@@ -1108,10 +1108,33 @@ class TikTok:
             return None
         return list(flv_items.values())[i], list(m3u8_items.values())[i]
 
-    async def live_interactive(
+    async def get_live_data(
         self,
+        web_rid: str = None,
+        room_id: str = None,
+        sec_user_id: str = None,
         cookie: str = None,
         proxy: str = None,
+    ):
+        return await Live(
+            self.parameter,
+            cookie,
+            proxy,
+            web_rid,
+            room_id,
+            sec_user_id,
+        ).run()
+
+    async def get_live_data_tiktok(
+        self,
+        room_id: str = None,
+        cookie: str = None,
+        proxy: str = None,
+    ):
+        return await LiveTikTok(self.parameter, cookie, proxy, room_id).run()
+
+    async def live_interactive(
+        self,
         *args,
     ):
         while url := self._inquire_input(_("直播")):
@@ -1121,9 +1144,7 @@ class TikTok:
             if not params:
                 self.logger.warning(_("{} 提取直播 ID 失败").format(url=url))
                 continue
-            live_data = [
-                await Live(self.parameter, cookie, proxy, **i).run() for i in params
-            ]
+            live_data = [await self.get_live_data(**i) for i in params]
             if not [i for i in live_data if i]:
                 self.logger.warning(_("获取直播数据失败"))
                 continue
@@ -1134,8 +1155,6 @@ class TikTok:
 
     async def live_interactive_tiktok(
         self,
-        cookie: str = None,
-        proxy: str = None,
         *args,
     ):
         while url := self._inquire_input(_("直播")):
@@ -1143,9 +1162,7 @@ class TikTok:
             if not ids:
                 self.logger.warning(_("{} 提取直播 ID 失败").format(url=url))
                 continue
-            live_data = [
-                await LiveTikTok(self.parameter, cookie, proxy, i).run() for i in ids
-            ]
+            live_data = [await self.get_live_data_tiktok(i) for i in ids]
             if not [i for i in live_data if i]:
                 self.logger.warning(_("获取直播数据失败"))
                 continue

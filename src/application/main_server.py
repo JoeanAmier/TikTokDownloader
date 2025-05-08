@@ -30,6 +30,8 @@ from ..models import (
     Reply,
     Mix,
     MixTikTok,
+    Live,
+    LiveTikTok,
 )
 from ..translation import _
 from .main_terminal import TikTok
@@ -45,7 +47,7 @@ def token_dependency(token: str = Header(None)):
     if not is_valid_token(token):
         raise HTTPException(
             status_code=403,
-            detail=_("无效令牌！"),
+            detail=_("验证失败！"),
         )
 
 
@@ -249,6 +251,34 @@ class APIServer(TikTok):
             return self.failed_response(extract)
 
         @self.server.post(
+            "/douyin/live",
+            summary=_("获取直播数据"),
+            description=dedent(
+                _("""
+                                        待更新
+                                                """)
+            ),
+            tags=[_("抖音")],
+            response_model=DataResponse,
+        )
+        async def handle_live(extract: Live, token: str = Depends(token_dependency)):
+            if self.check_live_params(
+                extract.web_rid,
+                extract.room_id,
+                extract.sec_user_id,
+            ):
+                if data := await self.handle_live(
+                    extract,
+                ):
+                    return self.success_response(extract, data[0])
+                return self.failed_response(extract)
+            return DataResponse(
+                message=_("参数错误！"),
+                data=None,
+                params=extract.model_dump(),
+            )
+
+        @self.server.post(
             "/douyin/comment",
             summary=_("获取作品评论数据"),
             description=dedent(
@@ -314,7 +344,7 @@ class APIServer(TikTok):
             tags=[_("抖音")],
             response_model=DataResponse,
         )
-        async def handle_general(
+        async def handle_search_general(
             extract: GeneralSearch, token: str = Depends(token_dependency)
         ):
             return await self.handle_search(extract)
@@ -330,7 +360,7 @@ class APIServer(TikTok):
             tags=[_("抖音")],
             response_model=DataResponse,
         )
-        async def handle_video(
+        async def handle_search_video(
             extract: VideoSearch, token: str = Depends(token_dependency)
         ):
             return await self.handle_search(extract)
@@ -346,7 +376,7 @@ class APIServer(TikTok):
             tags=[_("抖音")],
             response_model=DataResponse,
         )
-        async def handle_user(
+        async def handle_search_user(
             extract: UserSearch, token: str = Depends(token_dependency)
         ):
             return await self.handle_search(extract)
@@ -362,7 +392,7 @@ class APIServer(TikTok):
             tags=[_("抖音")],
             response_model=DataResponse,
         )
-        async def handle_live(
+        async def handle_search_live(
             extract: LiveSearch, token: str = Depends(token_dependency)
         ):
             return await self.handle_search(extract)
@@ -452,6 +482,27 @@ class APIServer(TikTok):
                 return self.success_response(extract, data)
             return self.failed_response(extract)
 
+        @self.server.post(
+            "/tiktok/live",
+            summary=_("获取直播数据"),
+            description=dedent(
+                _("""
+                                                        待更新
+                                                                """)
+            ),
+            tags=["TikTok"],
+            response_model=DataResponse,
+        )
+        async def handle_live_tiktok(
+            extract: Live, token: str = Depends(token_dependency)
+        ):
+            if data := await self.handle_live(
+                extract,
+                True,
+            ):
+                return self.success_response(extract, data[0])
+            return self.failed_response(extract)
+
     async def handle_search(self, extract):
         if data := await self.deal_search_data(
             extract,
@@ -523,3 +574,35 @@ class APIServer(TikTok):
         if mix_id:
             return True, mix_id
         return (False, detail_id) if detail_id else (None, None)
+
+    @staticmethod
+    def check_live_params(
+        web_rid: str = None,
+        room_id: str = None,
+        sec_user_id: str = None,
+    ) -> bool:
+        return bool(web_rid or room_id and sec_user_id)
+
+    async def handle_live(self, extract: Live | LiveTikTok, tiktok=False):
+        if tiktok:
+            data = await self.get_live_data_tiktok(
+                extract.room_id,
+                extract.cookie,
+                extract.proxy,
+            )
+        else:
+            data = await self.get_live_data(
+                extract.web_rid,
+                extract.room_id,
+                extract.sec_user_id,
+                extract.cookie,
+                extract.proxy,
+            )
+        if extract.source:
+            return data
+        return await self.extractor.run(
+            [data],
+            None,
+            "live",
+            tiktok=tiktok,
+        )
