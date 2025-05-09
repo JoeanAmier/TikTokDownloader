@@ -607,28 +607,48 @@ class Parameter:
                     _("TikTok cookie 参数未设置，相应功能可能无法正常使用")
                 )
 
-    async def update_params_beta(self) -> None:
+    async def update_params_offline(self) -> None:
         if self.douyin_platform:
-            ms_token = self.cookie_dict.get(MsToken.NAME) or self.get_cookie_value(
-                self.cookie_str,
-                MsToken.NAME,
-            )
-            API.params["msToken"] = ms_token
-            await self.__update_cookie(
-                ({MsToken.NAME: ms_token},),
-                self.headers,
-                self.cookie_dict,
-                self.cookie_str,
-            )
+            if any(
+                (
+                    self.cookie_dict,
+                    self.cookie_str,
+                )
+            ):
+                ms_token = self.cookie_dict.get(MsToken.NAME) or self.get_cookie_value(
+                    self.cookie_str,
+                    MsToken.NAME,
+                )
+                API.params["msToken"] = ms_token
+                await self.__update_cookie(
+                    ({MsToken.NAME: ms_token},),
+                    self.headers,
+                    self.cookie_dict,
+                    self.cookie_str,
+                )
+            else:
+                self.logger.warning(
+                    _("抖音 cookie 参数未设置，相应功能可能无法正常使用")
+                )
         if self.tiktok_platform:
-            ms_token = await self.__get_token_params_tiktok()
-            APITikTok.params["msToken"] = ms_token.get(MsTokenTikTok.NAME, "")
-            await self.__update_cookie(
-                (ms_token,),
-                self.headers_tiktok,
-                self.cookie_dict_tiktok,
-                self.cookie_str_tiktok,
-            )
+            if any(
+                (
+                    self.cookie_dict_tiktok,
+                    self.cookie_str_tiktok,
+                )
+            ):
+                ms_token = await self.__get_token_params_tiktok()
+                APITikTok.params["msToken"] = ms_token.get(MsTokenTikTok.NAME, "")
+                await self.__update_cookie(
+                    (ms_token,),
+                    self.headers_tiktok,
+                    self.cookie_dict_tiktok,
+                    self.cookie_str_tiktok,
+                )
+            else:
+                self.logger.warning(
+                    _("TikTok cookie 参数未设置，相应功能可能无法正常使用")
+                )
 
     async def __update_cookie(
         self,

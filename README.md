@@ -73,11 +73,11 @@
 
 <p><b>🎥 点击图片观看演示视频，建议通过配置文件管理账号，更多介绍请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">文档</a></b></p>
 
-[![终端模式截图](docs/终端交互模式截图CN1.png)](https://www.bilibili.com/video/BV1RAcHe5EpF/)
+[![终端模式截图](docs/终端交互模式截图CN1.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
 *****
-[![终端模式截图](docs/终端交互模式截图CN2.png)](https://www.bilibili.com/video/BV1RAcHe5EpF/)
+[![终端模式截图](docs/终端交互模式截图CN2.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
 *****
-[![终端模式截图](docs/终端交互模式截图CN3.png)](https://www.bilibili.com/video/BV1RAcHe5EpF/)
+[![终端模式截图](docs/终端交互模式截图CN3.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
 
 **Web UI 交互模式：**
 
