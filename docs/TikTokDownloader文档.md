@@ -1093,7 +1093,25 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <h2>Web API 接口模式</h2>
 <p>启动服务器，提供 API 调用功能；支持局域网远程访问，可以部署至私有服务器或者公开服务器，远程部署建议设置参数验证，防止恶意请求！</p>
 <p>默认禁用局域网访问，如需开启，请修改 <code>src/custom/static.py</code> 文件的 <code>SERVER_HOST</code> 变量。</p>
-<p><strong>访问 <code>http://127.0.0.1:5555/docs</code> 或者 <code>http://127.0.0.1:5555/redoc</code> 可以查阅自动生成的文档！</strong></p>
+<p><strong>启动该模式后，访问 <code>http://127.0.0.1:5555/docs</code> 或者 <code>http://127.0.0.1:5555/redoc</code> 可以查阅自动生成的文档！</strong></p>
+<h3>API 调用示例代码</h3>
+<pre>
+from httpx import post
+from rich import print
+
+
+def demo():
+headers = {"token": ""}
+data = {
+"detail_id": "0123456789",
+"pages": 2,
+}
+api = "http://127.0.0.1:5555/douyin/comment"
+response = post(api, json=data, headers=headers)
+print(response.json())
+
+demo()
+</pre>
 <h2>Web UI 交互模式</h2>
 <p><b>项目代码已重构，该模式代码尚未更新，未来开发完成重新开放！</b></p>
 <h2>启用/禁用作品下载记录</h2>

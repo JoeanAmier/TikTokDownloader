@@ -18,5 +18,5 @@ def choose(
     for i, j in enumerate(options, start=1):
         screen += f"{i: >2d}. {j}\n"
         if separate and i in separate:
-            screen += f"{'=' * 25}\n"
+            screen += f"{'=' * 32}\n"
     return console.input(screen)

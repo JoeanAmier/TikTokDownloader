@@ -4,7 +4,7 @@ from ..translation import _
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 VERSION_MAJOR = 5
 VERSION_MINOR = 6
-VERSION_BETA = True
+VERSION_BETA = False
 __VERSION__ = f"{VERSION_MAJOR}.{VERSION_MINOR}.{'beta' if VERSION_BETA else 'stable'}"
 PROJECT_NAME = f"TikTokDownloader V{VERSION_MAJOR}.{VERSION_MINOR} {
     'Beta' if VERSION_BETA else 'Stable'

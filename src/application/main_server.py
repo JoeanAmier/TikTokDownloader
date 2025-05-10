@@ -345,11 +345,8 @@ class APIServer(TikTok):
         async def handle_comment(
             extract: Comment, token: str = Depends(token_dependency)
         ):
-            if data := await self.comment_handle(
-                [
-                    extract.detail_id,
-                ],
-                tiktok=False,
+            if data := await self.comment_handle_single(
+                extract.detail_id,
                 cookie=extract.cookie,
                 proxy=extract.proxy,
                 pages=extract.pages,
@@ -358,7 +355,7 @@ class APIServer(TikTok):
                 count_reply=extract.count_reply,
                 reply=extract.reply,
             ):
-                return self.success_response(extract, data[0])
+                return self.success_response(extract, data)
             return self.failed_response(extract)
 
         @self.server.post(

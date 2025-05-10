@@ -70,7 +70,7 @@
 
 # 💻 Program Screenshot
 
-**Terminal interaction mode：**
+## Terminal interaction mode
 
 <p><b>🎥 Click on the image to watch the demonstration video. It is recommended to manage accounts through configuration files. For more information, please refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">documentation</a></b></p>
 
@@ -80,7 +80,10 @@
 *****
 [![终端模式截图](docs/终端交互模式截图EN3.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
 
-**Web UI interaction mode：**
+## Web UI interaction mode
+
+> **The project code has been refactored; the code for this mode has not yet been updated. It will be reopened after
+future development is completed!**
 
 ![WebUI模式截图](docs/WebUI模式截图1.png)
 *****
@@ -88,11 +91,35 @@
 *****
 ![WebUI模式截图](docs/WebUI模式截图3.png)
 
-**Web API mode：**
+## Web API mode
 
-**Open http://127.0.0.1:5555/docs or http://127.0.0.1:5555/redoc to access the automatically generated documentation!**
+![WebAPI模式截图](docs/WebAPI模式截图EN1.png)
+*****
+![WebAPI模式截图](docs/WebAPI模式截图EN2.png)
 
-![WebAPI模式截图](docs/WebAPI模式截图.png)
+> **After starting this mode, Open http://127.0.0.1:5555/docs or http://127.0.0.1:5555/redoc to access the automatically
+generated documentation!**
+
+### API call example code
+
+```python
+from httpx import post
+from rich import print
+
+
+def demo():
+    headers = {"token": ""}
+    data = {
+        "detail_id": "0123456789",
+        "pages": 2,
+    }
+    api = "http://127.0.0.1:5555/douyin/comment"
+    response = post(api, json=data, headers=headers)
+    print(response.json())
+
+
+demo()
+```
 
 # 📈 Project Status
 
@@ -173,25 +200,6 @@
 ## About Cookie
 
 [Click to view Cookie tutorial](https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md)
-
-|           Program Function            |     Login Required     |
-|:-------------------------------------:|:----------------------:|
-|     Download Account Posts Works      | ⭕ Recommended to Login |
-|     Download Account Liked Works      | ⭕ Recommended to Login |
-|         Download Linked Works         |  ❌ No Login Required   |
-| Obtain Live Stream Address \(DouYin\) |  ❌ No Login Required   |
-| Obtain Live Stream Address \(TikTok\) |   ✔️ Login Required    |
-|          Download Live Video          |  ❌ No Login Required   |
-|       Obtain Works Comment Data       |  ❌ No Login Required   |
-|          Download Mix Works           |  ❌ No Login Required   |
-|          Obtain Account Data          |  ❌ No Login Required   |
-|        Collect Search Results         |  ❌ No Login Required   |
-|        Collect Hot Board Data         |  ❌ No Login Required   |
-|       Download Favorites Works        |   ✔️ Login Required    |
-|      Download Collections Works       |   ✔️ Login Required    |
-|        Obtain Collections Mix         |   ✔️ Login Required    |
-|       Obtain Collections Music        |   ✔️ Login Required    |
-|       Obtain Collections Series       |   ✔️ Login Required    |
 
 > * Cookie only needs to be re-written to the configuration file after it expires, and not every time the program is
     run.

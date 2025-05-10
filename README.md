@@ -69,7 +69,7 @@
 
 # 💻 程序截图
 
-**终端交互模式：**
+## 终端交互模式
 
 <p><b>🎥 点击图片观看演示视频，建议通过配置文件管理账号，更多介绍请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">文档</a></b></p>
 
@@ -79,7 +79,9 @@
 *****
 [![终端模式截图](docs/终端交互模式截图CN3.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
 
-**Web UI 交互模式：**
+## Web UI 交互模式
+
+> **项目代码已重构，该模式代码尚未更新，未来开发完成重新开放！**
 
 ![WebUI模式截图](docs/WebUI模式截图1.png)
 *****
@@ -87,11 +89,34 @@
 *****
 ![WebUI模式截图](docs/WebUI模式截图3.png)
 
-**Web API 接口模式：**
+## Web API 接口模式
 
-**访问 `http://127.0.0.1:5555/docs` 或者 `http://127.0.0.1:5555/redoc` 可以查阅自动生成的文档！**
+![WebAPI模式截图](docs/WebAPI模式截图CN1.png)
+*****
+![WebAPI模式截图](docs/WebAPI模式截图CN2.png)
 
-![WebAPI模式截图](docs/WebAPI模式截图.png)
+> **启动该模式后，访问 `http://127.0.0.1:5555/docs` 或者 `http://127.0.0.1:5555/redoc` 可以查阅自动生成的文档！**
+
+### API 调用示例代码
+
+```python
+from httpx import post
+from rich import print
+
+
+def demo():
+    headers = {"token": ""}
+    data = {
+        "detail_id": "0123456789",
+        "pages": 2,
+    }
+    api = "http://127.0.0.1:5555/douyin/comment"
+    response = post(api, json=data, headers=headers)
+    print(response.json())
+
+
+demo()
+```
 
 # 📈 项目状态
 
@@ -169,25 +194,6 @@
 ## 关于 Cookie
 
 [点击查看 Cookie 获取教程](https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md)
-
-|        程序功能         | 是否需要登录 |
-|:-------------------:|:------:|
-|      下载账号发布作品       | ⭕建议登录  |
-|      下载账号喜欢作品       | ⭕建议登录  |
-|       下载链接作品        | ❌无需登录  |
-|   获取直播推流地址 \(抖音\)   | ❌无需登录  |
-| 获取直播推流地址 \(TikTok\) | ✔️需要登录 |
-|       下载直播视频        | ❌无需登录  |
-|      获取作品评论数据       | ❌无需登录  |
-|       下载合集作品        | ❌无需登录  |
-|       获取账号数据        | ❌无需登录  |
-|       采集搜索结果        | ❌无需登录  |
-|       采集热榜数据        | ❌无需登录  |
-|       下载收藏作品        | ✔️需要登录 |
-|       下载收藏夹作品       | ✔️需要登录 |
-|      获取收藏合集数据       | ✔️需要登录 |
-|      获取收藏音乐数据       | ✔️需要登录 |
-|      获取收藏短剧数据       | ✔️需要登录 |
 
 > * Cookie 仅需在失效后重新写入配置文件，并非每次运行程序都要写入配置文件！
 >
