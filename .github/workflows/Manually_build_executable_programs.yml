@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: 签出存储库
         uses: actions/checkout@v4
+        with:
+          ref: develop
 
       - name: 设置 Python
         uses: actions/setup-python@v5
