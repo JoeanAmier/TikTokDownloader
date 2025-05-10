@@ -111,11 +111,11 @@ class APIServer(TikTok):
         @self.server.get(
             "/token",
             summary=_("测试令牌有效性"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 项目默认无需令牌；公开部署时，建议设置令牌以防止恶意请求！
                 
-                令牌设置位置：`src/custom/function.py` -> `is_valid_token()`
+                令牌设置位置：`src/custom/function.py` - `is_valid_token()`
                 """)
             ),
             tags=[_("项目")],
@@ -131,8 +131,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/settings",
             summary=_("更新项目全局配置"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 更新项目配置文件 settings.json
                 
                 仅需传入需要更新的配置参数
@@ -152,11 +152,7 @@ class APIServer(TikTok):
         @self.server.get(
             "/settings",
             summary=_("获取项目全局配置"),
-            description=dedent(
-                _("""
-                返回项目全部配置参数
-                """)
-            ),
+            description=_("返回项目全部配置参数"),
             tags=[_("配置")],
             response_model=Settings,
         )
@@ -166,8 +162,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/douyin/share",
             summary=_("获取分享链接重定向的完整链接"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
                 
                 - **text**: 包含分享链接的字符串；必需参数
@@ -195,8 +191,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/douyin/detail",
             summary=_("获取单个作品数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
                 
                 - **cookie**: 抖音 Cookie；可选参数
@@ -216,8 +212,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/douyin/account",
             summary=_("获取账号作品数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
                 
                 - **cookie**: 抖音 Cookie；可选参数
@@ -243,8 +239,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/douyin/mix",
             summary=_("获取合集作品数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
                 
                 - **cookie**: 抖音 Cookie；可选参数
@@ -288,8 +284,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/douyin/live",
             summary=_("获取直播数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
                 
                 - **cookie**: 抖音 Cookie；可选参数
@@ -328,8 +324,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/douyin/comment",
             summary=_("获取作品评论数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
                 
                 - **cookie**: 抖音 Cookie；可选参数
@@ -368,8 +364,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/douyin/reply",
             summary=_("获取评论回复数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
                 
                 - **cookie**: 抖音 Cookie；可选参数
@@ -402,8 +398,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/douyin/search/general",
             summary=_("获取综合搜索数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
                 
                 - **cookie**: 抖音 Cookie；可选参数
@@ -417,7 +413,7 @@ class APIServer(TikTok):
                 - **search_range**: 搜索范围；可选参数
                 - **content_type**: 内容形式；可选参数
                 
-                **部分参数传入规则请查阅文档: [参数含义](https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E9%87%87%E9%9B%86%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E6%95%B0%E6%8D%AE%E6%8A%96%E9%9F%B3)**
+                **部分参数传入规则请查阅文档**: [参数含义](https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E9%87%87%E9%9B%86%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E6%95%B0%E6%8D%AE%E6%8A%96%E9%9F%B3)
                 """)
             ),
             tags=[_("抖音")],
@@ -431,8 +427,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/douyin/search/video",
             summary=_("获取视频搜索数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
                 
                 - **cookie**: 抖音 Cookie；可选参数
@@ -445,7 +441,7 @@ class APIServer(TikTok):
                 - **duration**: 视频时长；可选参数
                 - **search_range**: 搜索范围；可选参数
                 
-                **部分参数传入规则请查阅文档: [参数含义](https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E9%87%87%E9%9B%86%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E6%95%B0%E6%8D%AE%E6%8A%96%E9%9F%B3)**
+                **部分参数传入规则请查阅文档**: [参数含义](https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E9%87%87%E9%9B%86%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E6%95%B0%E6%8D%AE%E6%8A%96%E9%9F%B3)
                 """)
             ),
             tags=[_("抖音")],
@@ -459,8 +455,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/douyin/search/user",
             summary=_("获取用户搜索数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
                 
                 - **cookie**: 抖音 Cookie；可选参数
@@ -471,7 +467,7 @@ class APIServer(TikTok):
                 - **douyin_user_fans**: 粉丝数量；可选参数
                 - **douyin_user_type**: 用户类型；可选参数
                 
-                **部分参数传入规则请查阅文档: [参数含义](https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E9%87%87%E9%9B%86%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E6%95%B0%E6%8D%AE%E6%8A%96%E9%9F%B3)**
+                **部分参数传入规则请查阅文档**: [参数含义](https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E9%87%87%E9%9B%86%E6%90%9C%E7%B4%A2%E7%BB%93%E6%9E%9C%E6%95%B0%E6%8D%AE%E6%8A%96%E9%9F%B3)
                 """)
             ),
             tags=[_("抖音")],
@@ -485,8 +481,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/douyin/search/live",
             summary=_("获取直播搜索数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
                 
                 - **cookie**: 抖音 Cookie；可选参数
@@ -507,8 +503,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/tiktok/share",
             summary=_("获取分享链接重定向的完整链接"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
             **参数**:
 
             - **text**: 包含分享链接的字符串；必需参数
@@ -536,8 +532,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/tiktok/detail",
             summary=_("获取单个作品数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
 
                 - **cookie**: TikTok Cookie；可选参数
@@ -557,8 +553,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/tiktok/account",
             summary=_("获取账号作品数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
 
                 - **cookie**: TikTok Cookie；可选参数
@@ -584,8 +580,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/tiktok/mix",
             summary=_("获取合辑作品数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
 
                 - **cookie**: TikTok Cookie；可选参数
@@ -618,8 +614,8 @@ class APIServer(TikTok):
         @self.server.post(
             "/tiktok/live",
             summary=_("获取直播数据"),
-            description=dedent(
-                _("""
+            description=_(
+                dedent("""
                 **参数**:
 
                 - **cookie**: TikTok Cookie；可选参数

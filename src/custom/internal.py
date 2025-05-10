@@ -1,4 +1,5 @@
 from pathlib import Path
+from ..translation import _
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 VERSION_MAJOR = 5
@@ -14,7 +15,7 @@ LICENCE = "GNU General Public License v3.0"
 DOCUMENTATION_URL = "https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation"
 RELEASES = "https://github.com/JoeanAmier/TikTokDownloader/releases/latest"
 
-DISCLAIMER_TEXT = (
+DISCLAIMER_TEXT = _(
     ""
     "关于 TikTokDownloader 的 免责声明：\n"
     "\n"

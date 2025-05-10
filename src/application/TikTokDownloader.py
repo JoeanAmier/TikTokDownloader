@@ -180,7 +180,7 @@ class TikTokDownloader:
     async def disclaimer(self):
         if not self.config["Disclaimer"]:
             await self.__init_language()
-            self.console.print(_(DISCLAIMER_TEXT), style=MASTER)
+            self.console.print(DISCLAIMER_TEXT, style=MASTER)
             if self.console.input(
                 _("是否已仔细阅读上述免责声明(YES/NO): ")
             ).upper() not in ("Y", "YES"):
