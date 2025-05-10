@@ -30,14 +30,14 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           echo "DATE=$(Get-Date -Format 'yyyyMMdd')" >> $env:GITHUB_ENV
-          pyinstaller --icon=./static/images/TikTokDownloader.ico --add-data "static:static" --add-data "locale:locale" --add-data "templates:templates" --collect-all emoji main.py
+          pyinstaller --icon=./static/images/TikTokDownloader.ico --add-data "static:static" --add-data "locale:locale" --collect-all emoji main.py
         shell: pwsh
 
       - name: 构建 Mac 可执行文件
         if: runner.os == 'macOS'
         run: |
           echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
-          pyinstaller --icon=./static/images/TikTokDownloader.icns --add-data "static:static" --add-data "locale:locale" --add-data "templates:templates" --collect-all emoji main.py
+          pyinstaller --icon=./static/images/TikTokDownloader.icns --add-data "static:static" --add-data "locale:locale" --collect-all emoji main.py
 
       - name: 上传文件
         uses: actions/upload-artifact@v4
