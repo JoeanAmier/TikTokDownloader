@@ -1996,7 +1996,7 @@ class TikTok:
         ).run()
         if len(data) != 1 and not any(data):
             return None
-        if source:
+        if source or not any(data):
             return data
         root, params, logger = self.record.run(
             self.parameter,
