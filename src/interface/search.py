@@ -357,8 +357,11 @@ class Search(API):
         **kwargs,
     ):
         try:
-            if not (d := data_dict[data_key]):
+            if not isinstance(d := data_dict[data_key], list):
                 self.log.warning(error_text)
+                self.finished = True
+            elif len(d) == 0:
+                self.response.append([])
                 self.finished = True
             else:
                 self.cursor = data_dict[cursor]

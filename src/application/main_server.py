@@ -635,11 +635,16 @@ class APIServer(TikTok):
             return self.failed_response(extract)
 
     async def handle_search(self, extract):
-        if data := await self.deal_search_data(
-            extract,
-            extract.source,
+        if isinstance(
+            data := await self.deal_search_data(
+                extract,
+                extract.source,
+            ),
+            list,
         ):
-            return self.success_response(extract, data)
+            return self.success_response(
+                extract, data, None if any(data) else _("搜索结果为空！")
+            )
         return self.failed_response(extract)
 
     async def handle_detail(
@@ -685,17 +690,24 @@ class APIServer(TikTok):
         return self.failed_response(extract)
 
     @staticmethod
-    def success_response(extract, data: dict | list[dict]):
+    def success_response(
+        extract,
+        data: dict | list[dict],
+        message: str = None,
+    ):
         return DataResponse(
-            message=_("获取数据成功！"),
+            message=message or _("获取数据成功！"),
             data=data,
             params=extract.model_dump(),
         )
 
     @staticmethod
-    def failed_response(extract):
+    def failed_response(
+        extract,
+        message: str = None,
+    ):
         return DataResponse(
-            message=_("获取数据失败！"),
+            message=message or _("获取数据失败！"),
             data=None,
             params=extract.model_dump(),
         )
