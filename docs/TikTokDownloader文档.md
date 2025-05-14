@@ -786,7 +786,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li>程序询问是否下载直播时，输入直播清晰度或者对应序号即可下载，例如：下载最高清晰度输入 <code>FULL_HD1</code> 或者 <code>1</code> 均可。</li>
 <li><del>程序调用内置下载器下载的直播文件，视频时长会显示为直播总时长，实际视频内容从下载时间开始，靠后部分的片段无法播放。</del></li>
 <li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹。</li>
-<li>经测试，强行终止程序或 <code>ffmpeg</code> 并不会导致已下载文件丢失或损坏，但无法继续下载。</li>
+<li>按下 <code>Ctrl + C</code> 终止程序或 <code>ffmpeg</code> 并不会导致已下载文件丢失或损坏，但无法继续下载。</li>
 </ul>
 <h3>采集作品评论数据(抖音)</h3>
 <p><strong>评论回复采集功能暂不开放！</strong></p>
@@ -1074,7 +1074,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li>程序询问是否下载直播时，输入直播清晰度或者对应序号即可下载，例如：下载最高清晰度输入 <code>FULL_HD1</code> 或者 <code>1</code> 均可。</li>
 <li><del>程序调用内置下载器下载的直播文件，视频时长会显示为直播总时长，实际视频内容从下载时间开始，靠后部分的片段无法播放。</del></li>
 <li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹。</li>
-<li>经测试，强行终止程序或 <code>ffmpeg</code> 并不会导致已下载文件丢失或损坏，但无法继续下载。</li>
+<li>按下 <code>Ctrl + C</code> 终止程序或 <code>ffmpeg</code> 并不会导致已下载文件丢失或损坏，但无法继续下载。</li>
 </ul>
 <h3>批量下载视频原画(TikTok)</h3>
 <p><strong>注意：本功能为实验性功能，依赖第三方 API 服务，可能不稳定或存在限制！</strong></p>

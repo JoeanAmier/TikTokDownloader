@@ -226,6 +226,7 @@ demo()
 <li>This project does not support downloading paid works. Please do not report any issues related to downloading paid works.</li>
 <li>On Windows systems, the program needs to be run as an administrator to read Cookies from Chromium, Chrome, and Edge browsers.</li>
 <li>This project has not been optimized for running multiple instances of the program. If you need to run multiple instances, please copy the entire project folder to avoid unexpected issues.</li>
+<li>During program execution, if you need to terminate the program or <code>ffmpeg</code>, please press <code>Ctrl + C</code> to stop the process. Do not click the close button on the terminal window directly.</li>
 </ul>
 <hr>
 
