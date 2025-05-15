@@ -1,6 +1,7 @@
-name: 自动构建并发布 Docker 镜像
+name: 构建并发布 Docker 镜像
 
 on:
+  workflow_dispatch:
   release:
     types: [ published ]
 
@@ -17,6 +18,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
+      - name: 获取最新的发布标签
+        id: get-latest-release
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          LATEST_TAG=$(curl -s \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/releases/latest \
+            | jq -r '.tag_name')
+          echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+
+      - name: 发布标签
+        if: ${{ github.event_name == 'release' }}
+        run: |
+          echo "LATEST_TAG=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
 
       - name: 设置 QEMU
         uses: docker/setup-qemu-action@v3
@@ -44,7 +60,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ env.DOCKERHUB_REPO }}:${{ github.event.release.tag_name }}
+            ${{ env.DOCKERHUB_REPO }}:${{ env.LATEST_TAG }}
             ${{ env.DOCKERHUB_REPO }}:latest
-            ${{ env.GITHUB_CR_REPO }}:${{ github.event.release.tag_name }}
+            ${{ env.GITHUB_CR_REPO }}:${{ env.LATEST_TAG }}
             ${{ env.GITHUB_CR_REPO }}:latest
