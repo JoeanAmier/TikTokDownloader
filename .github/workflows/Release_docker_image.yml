@@ -4,6 +4,10 @@ on:
   release:
     types: [ published ]
 
+env:
+  DOCKERHUB_REPO: ${{ secrets.DOCKERHUB_USERNAME }}/tiktok-downloader
+  GITHUB_CR_REPO: ghcr.io/${{ github.repository_owner }}/tiktok-downloader
+
 jobs:
   publish-docker:
     runs-on: ubuntu-latest
@@ -26,6 +30,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: 登录到 GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: 构建和推送 Docker hub
         uses: docker/build-push-action@v6
         with:
@@ -33,5 +44,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/tiktok-downloader:${{ github.event.release.tag_name }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/tiktok-downloader:latest
+            ${{ env.DOCKERHUB_REPO }}:${{ github.event.release.tag_name }}
+            ${{ env.DOCKERHUB_REPO }}:latest
+            ${{ env.GITHUB_CR_REPO }}:${{ github.event.release.tag_name }}
+            ${{ env.GITHUB_CR_REPO }}:latest
