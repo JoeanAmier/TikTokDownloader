@@ -178,6 +178,7 @@ demo()
 <ul>
 <li>方式一：使用 <code>Dockerfile</code> 文件构建镜像</li>
 <li>方式二：使用 <code>docker pull joeanamier/tiktok-downloader</code> 命令拉取镜像</li>
+<li>方式三：使用 <code>docker pull ghcr.io/joeanamier/tiktok-downloader</code> 命令拉取镜像</li>
 </ul>
 <li>创建容器：<code>docker run --name 容器名称(可选) -p 主机端口号:5555 -v tiktok_downloader_volume:/TikTokDownloader -it joeanamier/tiktok-downloader</code></li>
 <li>运行容器

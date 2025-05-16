@@ -184,6 +184,7 @@ demo()
 <ul>
 <li>Method 1: Build the image using the <code>Dockerfile</code>.</li>
 <li>Method 2: Pull the image using the command <code>docker pull joeanamier/tiktok-downloader</code>.</li>
+<li>Method 3: Pull the image using the command <code>docker pull ghcr.io/joeanamier/tiktok-downloader</code>.</li>
 </ul>
 <li>Create the container: <code>docker run --name ContainerName(optional) -p HostPort:5555 -v tiktok_downloader_volume:/TikTokDownloader -it joeanamier/tiktok-downloader</code>.</li>
 <li>Run the container

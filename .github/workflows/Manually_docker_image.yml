@@ -2,6 +2,28 @@ name: 构建并发布 Docker 镜像
 
 on:
   workflow_dispatch:
+    inputs:
+      is_beta:
+        type: boolean
+        required: true
+        description: "开发版"
+        default: true
+      custom_version:
+        type: string
+        required: false
+        description: "版本号"
+        default: ""
+
+permissions:
+  contents: read
+  packages: write
+  attestations: write
+  id-token: write
+
+env:
+  REGISTRY: ghcr.io
+  DOCKER_REPO: ${{ secrets.DOCKERHUB_USERNAME }}/tiktok-downloader
+  GHCR_REPO: ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/tiktok-downloader
 
 jobs:
   publish-docker:
@@ -16,10 +38,17 @@ jobs:
       - name: 获取最新的发布标签
         id: get-latest-release
         run: |
-          LATEST_TAG=$(curl -s \
-            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/${{ github.repository }}/releases/latest \
-            | jq -r '.tag_name')
+          if [ -z "${{ github.event.inputs.custom_version }}" ]; then
+            LATEST_TAG=$(curl -s \
+              -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              https://api.github.com/repos/${{ github.repository }}/releases/latest \
+              | jq -r '.tag_name')
+          else
+            LATEST_TAG=${{ github.event.inputs.custom_version }}
+          fi
+          if [ -z "$LATEST_TAG" ]; then
+            exit 1
+          fi
           echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
 
       - name: 设置 QEMU
@@ -28,18 +57,37 @@ jobs:
       - name: 设置 Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: 登录到 DockerHub
+      - name: 生成标签
+        id: generate-tags
+        run: |
+          if [ "${{ inputs.is_beta }}" == "true" ]; then
+            LATEST_TAG="${LATEST_TAG%.*}.$(( ${LATEST_TAG##*.} + 1 ))"
+            echo "LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+            TAGS="${{ env.DOCKER_REPO }}:${LATEST_TAG}-dev,${{ env.GHCR_REPO }}:${LATEST_TAG}-dev"
+          else
+            TAGS="${{ env.DOCKER_REPO }}:${LATEST_TAG},${{ env.DOCKER_REPO }}:latest,${{ env.GHCR_REPO }}:${LATEST_TAG},${{ env.GHCR_REPO }}:latest"
+          fi
+          echo "TAGS=$TAGS" >> $GITHUB_ENV
+
+      - name: 登录到 Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: 构建和推送 Docker hub
+      - name: 登录到 GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 构建和推送 Docker 镜像到 Docker Hub 和 GHCR
         uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/tiktok-downloader:${{ env.LATEST_TAG }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/tiktok-downloader:latest
+          tags: ${{ env.TAGS }}
+          provenance: false
+          sbom: false
