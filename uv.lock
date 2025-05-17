@@ -410,7 +410,7 @@ wheels = [
 
 [[package]]
 name = "tiktokdownloader"
-version = "5.6b0"
+version = "5.7"
 source = { virtual = "." }
 dependencies = [
     { name = "aiofiles" },
