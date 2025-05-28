@@ -434,5 +434,4 @@ repository to execute the build process
 * https://github.com/carpedm20/emoji/
 * https://github.com/lxml/lxml
 * https://ffmpeg.org/ffmpeg-all.html
-* https://html5up.net/hyperspace
 * https://www.tikwm.com/

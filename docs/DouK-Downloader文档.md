@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://github.com/JoeanAmier/TikTokDownloader/blob/master/static/images/TikTokDownloader.png" alt="DouK-Downloader" height="256" width="256"><br>
+<img src="https://github.com/JoeanAmier/TikTokDownloader/blob/master/static/images/DouK-Downloader.png" alt="DouK-Downloader" height="256" width="256"><br>
 <h1>DouK-Downloader 项目文档</h1>
 <a href="https://trendshift.io/repositories/6222" target="_blank"><img src="https://trendshift.io/api/badge/repositories/6222" alt="" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 <br>
