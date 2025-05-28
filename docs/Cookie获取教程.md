@@ -18,7 +18,7 @@
 
 **截图示例：**
 
-<img src="Cookie获取教程1.png" alt="开发人员工具">
+<img src="screenshot/Cookie获取教程1.png" alt="开发人员工具">
 
 **方法二\(不适用本项目\)：**
 
@@ -34,10 +34,10 @@
 
 **截图示例：**
 
-<img src="Cookie获取教程2.png" alt="开发人员工具">
+<img src="screenshot/Cookie获取教程2.png" alt="开发人员工具">
 
 # device_id 参数
 
 `device_id` 参数获取方法与 Cookie 类似。
 
-<img src="device_id获取示例图.png" alt="开发人员工具">
+<img src="screenshot/device_id获取示例图.png" alt="开发人员工具">

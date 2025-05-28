@@ -47,7 +47,7 @@ from ..models import (
 )
 from ..module import DetailTikTokExtractor, DetailTikTokUnofficial
 from ..storage import RecordManager
-from ..tools import TikTokDownloaderError, choose, safe_pop
+from ..tools import DownloaderError, choose, safe_pop
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -806,7 +806,7 @@ class TikTok:
             case "collects":
                 return "CID"
             case _:
-                raise TikTokDownloaderError
+                raise DownloaderError
 
     @staticmethod
     def _generate_suffix(
@@ -824,7 +824,7 @@ class TikTok:
             case "collects":
                 return _("收藏夹作品")
             case _:
-                raise TikTokDownloaderError
+                raise DownloaderError
 
     def __display_extracted_information(
         self,
@@ -1708,7 +1708,7 @@ class TikTok:
                 mix_id, ids = await self.links.run(url, type_="mix")
                 return (mix_id, ids[0], "") if len(ids) > 0 else (mix_id, "", "")
             case _:
-                raise TikTokDownloaderError
+                raise DownloaderError
 
     async def user_batch(
         self,
@@ -1897,7 +1897,7 @@ class TikTok:
                         pages=pages,
                     )
                 case _:
-                    raise TikTokDownloaderError
+                    raise DownloaderError
         except ValidationError as e:
             return repr(e)
 

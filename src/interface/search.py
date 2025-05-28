@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Union
 from urllib.parse import quote
 
 from src.interface.template import API
-from src.tools import TikTokDownloaderError
+from src.tools import DownloaderError
 from src.translation import _
 
 if TYPE_CHECKING:
@@ -182,7 +182,7 @@ class Search(API):
 
     async def run(self, single_page=False, *args, **kwargs):
         if not self.api:
-            raise TikTokDownloaderError
+            raise DownloaderError
         self.set_referer(
             f"{self.domain}root/search/{quote(self.keyword)}?type={self.type}"
         )
@@ -202,7 +202,7 @@ class Search(API):
                     **kwargs,
                 )
             case _:
-                raise TikTokDownloaderError
+                raise DownloaderError
         return self.response
 
     def generate_filter_selected(
@@ -375,7 +375,7 @@ class Search(API):
                             "lives",
                         )
                     case _:
-                        raise TikTokDownloaderError
+                        raise DownloaderError
                 self.finished = not data_dict[has_more]
         except KeyError:
             self.log.error(

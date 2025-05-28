@@ -11,7 +11,7 @@ from rich.progress import (
 )
 
 from ..custom import PROGRESS, USERAGENT, wait
-from ..tools import Retry, TikTokDownloaderError, capture_error_request
+from ..tools import Retry, DownloaderError, capture_error_request
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -142,7 +142,7 @@ class API:
                     **kwargs,
                 )
             case _:
-                raise TikTokDownloaderError
+                raise DownloaderError
         return self.response
 
     async def run_single(
@@ -292,7 +292,7 @@ class API:
                     **kwargs,
                 )
             case _:
-                raise TikTokDownloaderError
+                raise DownloaderError
 
     @Retry.retry
     @capture_error_request

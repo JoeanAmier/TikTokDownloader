@@ -29,7 +29,7 @@ from ..custom import (
     VIDEO_TIKTOK_INDEX,
     condition_filter,
 )
-from ..tools import TikTokDownloaderError
+from ..tools import DownloaderError
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -158,7 +158,7 @@ class Extractor:
         **kwargs,
     ) -> list[dict]:
         if type_ not in self.type.keys():
-            raise TikTokDownloaderError
+            raise DownloaderError
         return await self.type[type_](data, recorder, tiktok, **kwargs)
 
     async def __batch(
@@ -922,9 +922,9 @@ class Extractor:
                     )
                     return collect_id, collect_name, collect_name
                 case _:
-                    raise TikTokDownloaderError
+                    raise DownloaderError
         else:
-            raise TikTokDownloaderError
+            raise DownloaderError
 
     def __select_item(
         self,
@@ -937,7 +937,7 @@ class Extractor:
             item = self.generate_data_object(item)
             if id_ == self.safe_extract(item, key):
                 return item
-        raise TikTokDownloaderError(_("提取账号信息或合集信息失败，请向作者反馈！"))
+        raise DownloaderError(_("提取账号信息或合集信息失败，请向作者反馈！"))
 
     def __extract_pretreatment_data(
         self,

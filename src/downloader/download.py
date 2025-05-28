@@ -31,7 +31,7 @@ from ..custom import (
 )
 from ..tools import CacheError
 from ..tools import Retry
-from ..tools import TikTokDownloaderError
+from ..tools import DownloaderError
 from ..tools import beautify_string
 from ..tools import format_size
 from ..translation import _
@@ -230,7 +230,7 @@ class Downloader:
             download_command,
         )
         self.console.info(
-            _("程序将会调用 ffmpeg 下载直播，关闭 TikTokDownloader 不会中断下载！"),
+            _("程序将会调用 ffmpeg 下载直播，关闭 DouK-Downloader 不会中断下载！"),
         )
         self.__download_live(download_command, tiktok)
 
@@ -312,7 +312,7 @@ class Downloader:
                     skipped=count.skipped_live,
                 )
             else:
-                raise TikTokDownloaderError
+                raise DownloaderError
             self.download_music(
                 **params,
                 type=_("音乐"),
@@ -632,6 +632,8 @@ class Downloader:
                             return True
                         case -1:
                             return False
+                        case _:
+                            raise DownloaderError
             except RequestError as e:
                 self.log.warning(_("网络异常: {error_repr}").format(error_repr=repr(e)))
                 return False
@@ -728,7 +730,7 @@ class Downloader:
         mix_title: str = "",
         collect_id: str = "",
         collect_name: str = "",
-    ) -> [str, str]:
+    ) -> tuple[str, str]:
         match mode:
             case "post" | "favorite" | "collection":
                 return user_id, mark or user_name
@@ -737,7 +739,7 @@ class Downloader:
             case "collects":
                 return collect_id, mark or collect_name
             case _:
-                raise TikTokDownloaderError
+                raise DownloaderError
 
     def storage_folder(
         self,
@@ -759,7 +761,7 @@ class Downloader:
             case "detail":
                 folder_name = self.folder_name
             case _:
-                raise TikTokDownloaderError
+                raise DownloaderError
         folder = self.root.joinpath(folder_name)
         folder.mkdir(exist_ok=True)
         return folder
@@ -866,7 +868,7 @@ class Downloader:
         url: str,
         headers: dict,
         suffix: str,
-    ) -> [int, str]:
+    ) -> tuple[int, str]:
         response = await client.head(
             url,
             headers=headers,
@@ -883,7 +885,7 @@ class Downloader:
         self,
         headers: dict,
         suffix: str,
-    ) -> [int, str]:
+    ) -> tuple[int, str]:
         suffix = (
             self.__extract_type(
                 headers.get("Content-Type"),

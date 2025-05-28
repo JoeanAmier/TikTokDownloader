@@ -1,11 +1,11 @@
-# Chinese translations for TikTokDownloader package
-# Copyright (C) 2024 THE TikTokDownloader'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the TikTokDownloader package.
+# Chinese translations for DouK-Downloader package
+# Copyright (C) 2024 THE DouK-Downloader'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the DouK-Downloader package.
 # FIRST AUTHOR <yonglelolu@foxmail.com>, 2024.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: TikTokDownloader 5.7\n"
+"Project-Id-Version: DouK-Downloader 5.7\n"
 "Report-Msgid-Bugs-To: <yonglelolu@foxmail.com>\n"
 "POT-Creation-Date: 2025-05-17 16:01+0800\n"
 "PO-Revision-Date: 2024-12-22 21:46+0800\n"
@@ -907,7 +907,7 @@ msgid "检测新版本失败"
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:275
-msgid "TikTokDownloader 功能选项"
+msgid "DouK-Downloader 功能选项"
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:304
@@ -1089,7 +1089,7 @@ msgid "配置文件 {old} 参数已变更为 {new} 参数，请注意修改配�
 msgstr ""
 
 msgid ""
-"关于 TikTokDownloader 的 免责声明：\n"
+"关于 DouK-Downloader 的 免责声明：\n"
 "\n"
 "1. 使用者对本项目的使用由使用者自行决定，并自行承担风险。作者对使用者使用本项"
 "目所产生的任何损失、责任、或风险概不负责。\n"
@@ -1110,8 +1110,8 @@ msgid ""
 "用者自行承担。\n"
 "8. 使用者在任何情况下均不得将本项目的作者、贡献者或其他相关方与使用者的使用行"
 "为联系起来，或要求其对使用者使用本项目所产生的任何损失或损害负责。\n"
-"9. 本项目的作者不会提供 TikTokDownloader 项目的付费版本，也不会提供与 "
-"TikTokDownloader 项目相关的任何商业服务。\n"
+"9. 本项目的作者不会提供 DouK-Downloader 项目的付费版本，也不会提供与 DouK-"
+"Downloader 项目相关的任何商业服务。\n"
 "10. 基于本项目进行的任何二次开发、修改或编译的程序与原创作者无关，原创作者不"
 "承担与二次开发行为或其结果相关的任何责任，使用者应自行对因二次开发可能带来的"
 "各种情况负全部责任。\n"
@@ -1140,7 +1140,7 @@ msgid "音乐"
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:233
-msgid "程序将会调用 ffmpeg 下载直播，关闭 TikTokDownloader 不会中断下载！"
+msgid "程序将会调用 ffmpeg 下载直播，关闭 DouK-Downloader 不会中断下载！"
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:307

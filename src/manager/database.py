@@ -9,7 +9,7 @@ __all__ = ["Database"]
 
 
 class Database:
-    __FILE = "TikTokDownloader.db"
+    __FILE = "DouK-Downloader.db"
 
     def __init__(
         self,

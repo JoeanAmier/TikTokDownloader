@@ -1,8 +1,8 @@
 <div align="center">
-<img src="./static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
-<h1>TikTokDownloader</h1>
+<img src="./static/images/DouK-Downloader.png" alt="DouK-Downloader" height="256" width="256"><br>
+<h1>DouK-Downloader</h1>
 <p><a href="README.md">简体中文</a> | English</p>
-<a href="https://trendshift.io/repositories/6222" target="_blank"><img src="https://trendshift.io/api/badge/repositories/6222" alt="JoeanAmier%2FTikTokDownloader | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/6222" target="_blank"><img src="https://trendshift.io/api/badge/repositories/6222" alt="" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 <br>
 <img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader?style=flat-square">
 <img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?style=flat-square&color=55efc4">
@@ -17,7 +17,7 @@
 </div>
 <br>
 <p>🔥 <b>TikTok Posts/Liked/Mix/Live/Video/Image/Music; DouYin Posts/Liked/Favorites/Collections/Video/Image/LivePhoto/Live/Music/Mix/Comments/Account/Search/Hot Board Data Acquisition Tools:</b> Fully open-source, free data collection and file download tool based on HTTPX module implementation; batch download of DouYin account posts works, liked works, favorites works and collections works; batch download of TikTok account posts works and liked works; download of DouYin linked or TikTok linked works; obtain DouYin live stream addresses; download DouYin live stream video; obtain TikTok live stream addresses; download TikTok live stream video; collect DouYin works comments data; batch download of DouYin Mix works; batch download of TikTok Mix works; collect detailed data of DouYin accounts; collect DouYin user/works/live search results; collect DouYin Hot Board data.</p>
-<p>⭐ This project is completely free and open-source, with no paid features. Please do not be deceived!</p>
+<p>⭐ This project is completely free and open-source, with no paid features. Please do not be deceived! The historical names of this project: <code>TikTokDownloader</code></p>
 <p>⭐ Due to the author's limited energy, I was unable to update the English document in a timely manner, and the content may have become outdated, partial translation is machine translation, the translation result may be incorrect, Suggest referring to Chinese documentation. If you want to contribute to translation, we warmly welcome you.</p>
 <hr>
 
@@ -74,28 +74,22 @@
 
 <p><b>🎥 Click on the image to watch the demonstration video. It is recommended to manage accounts through configuration files. For more information, please refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">documentation</a></b></p>
 
-[![终端模式截图](docs/终端交互模式截图EN1.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
+[![终端模式截图](docs/screenshot/终端交互模式截图EN1.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
 *****
-[![终端模式截图](docs/终端交互模式截图EN2.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
+[![终端模式截图](docs/screenshot/终端交互模式截图EN2.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
 *****
-[![终端模式截图](docs/终端交互模式截图EN3.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
+[![终端模式截图](docs/screenshot/终端交互模式截图EN3.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
 
 ## Web UI interaction mode
 
 > **The project code has been refactored; the code for this mode has not yet been updated. It will be reopened after
 future development is completed!**
 
-![WebUI模式截图](docs/WebUI模式截图1.png)
-*****
-![WebUI模式截图](docs/WebUI模式截图2.png)
-*****
-![WebUI模式截图](docs/WebUI模式截图3.png)
-
 ## Web API mode
 
-![WebAPI模式截图](docs/WebAPI模式截图EN1.png)
+![WebAPI模式截图](docs/screenshot/WebAPI模式截图EN1.png)
 *****
-![WebAPI模式截图](docs/WebAPI模式截图EN2.png)
+![WebAPI模式截图](docs/screenshot/WebAPI模式截图EN2.png)
 
 > **After starting this mode, Open http://127.0.0.1:5555/docs or http://127.0.0.1:5555/redoc to access the automatically
 generated documentation!**
@@ -126,7 +120,7 @@ demo()
 * 🟢 After testing, the source code published
   on [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) has been verified and all functions are
   normal.
-* 🟡 For the development plans and progress of TikTokDownloader, please
+* 🟡 For the development plans and progress of DouK-Downloader, please
   visit [Projects](https://github.com/users/JoeanAmier/projects/2).
 * 🔴 Note that the latest source code (Beta version) may have some unstable bugs.
 * 🔴 If you find any program bugs during use, please inform the author promptly for repairs.
@@ -153,10 +147,10 @@ demo()
 <li>Run the command <code>python -m venv venv</code> to create a virtual environment (optional).</li>
 <li>Run the command <code>.\venv\Scripts\activate.ps1</code> or <code>venv\Scripts\activate</code> to activate the virtual environment (optional).</li>
 <li>Run the command <code>pip install -r requirements.txt</code> to install the required modules for the program.</li>
-<li>Run the command <code>python .\main.py</code> or <code>python main.py</code> to start TikTokDownloader.</li>
+<li>Run the command <code>python .\main.py</code> or <code>python main.py</code> to start DouK-Downloader.</li>
 </ol>
 </li>
-<li>Read the disclaimer of TikTokDownloader and enter content according to the prompt.</li>
+<li>Read the disclaimer of DouK-Downloader and enter content according to the prompt.</li>
 <li>Write Cookie information into the configuration file
 <ol><b>Manually copy and paste Cookie</b>
 <li>Refer to <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie Extraction Tutorial</a>, copy the required Cookie to the clipboard.</li>
@@ -233,7 +227,7 @@ demo()
 
 ## Program Update
 
-> **Option 1:** Download and unzip the files, then copy the old version of the `TikTokDownloader.db` file and the
+> **Option 1:** Download and unzip the files, then copy the old version of the `DouK-Downloader.db` file and the
 `settings.json` file into the `_internal` folder.
 
 > **Option 2:** Download and unzip the files \(without running the program), then copy all the files and directly
@@ -338,7 +332,7 @@ repository to execute the build process
 <li>Users must not use this tool to engage in any activities that infringe intellectual property rights, including but not limited to downloading or distributing copyright-protected content without authorization. The developers do not participate in, support, or endorse any unauthorized acquisition or distribution of illegal content.</li>
 <li>This project assumes no responsibility for the compliance of any data processing activities (including collection, storage, and transmission) conducted by users. Users must comply with relevant laws and regulations and ensure that their processing activities are lawful and proper. Legal liabilities resulting from non-compliant operations shall be borne by the user.</li>
 <li>Under no circumstances may users associate the author, contributors, or other related parties of this project with their usage of the project, nor may they hold these parties responsible for any loss or damage arising from such usage.</li>
-<li>The author of this project will not provide a paid version of the TikTokDownloader project, nor will they offer any commercial services related to the TikTokDownloader project.</li>
+<li>The author of this project will not provide a paid version of the DouK-Downloader project, nor will they offer any commercial services related to the DouK-Downloader project.</li>
 <li>Any secondary development, modification, or compilation based on this project is unrelated to the original author. The original author assumes no liability for any consequences resulting from such secondary development. Users bear full responsibility for all outcomes arising from such modifications.</li>
 <li>This project grants no patent licenses; if the use of this project leads to patent disputes or infringement, the user bears all associated risks and responsibilities. Without written authorization from the author or rights holder, users may not use this project for any commercial promotion, marketing, or re-licensing.</li>
 <li>The author reserves the right to terminate service to any user who violates this disclaimer at any time and may require them to destroy all obtained code and derivative works.</li>
@@ -382,7 +376,7 @@ repository to execute the build process
 
 # ♥️ Support the Project
 
-<p>If <b>TikTokDownloader</b> has been helpful to you, please consider giving it a <b>Star</b> ⭐. Your support is greatly appreciated!</p>
+<p>If <b>DouK-Downloader</b> has been helpful to you, please consider giving it a <b>Star</b> ⭐. Your support is greatly appreciated!</p>
 <table>
 <thead>
 <tr>
@@ -396,7 +390,7 @@ repository to execute the build process
 </tr>
 </tbody>
 </table>
-<p>If you're willing, consider making a contribution to provide additional support for <b>TikTokDownloader</b>!</p>
+<p>If you're willing, consider making a contribution to provide additional support for <b>DouK-Downloader</b>!</p>
 
 # 💰 Project Sponsorship
 

@@ -77,6 +77,51 @@ wheels = [
 ]
 
 [[package]]
+name = "douk-downloader"
+version = "5.7"
+source = { virtual = "." }
+dependencies = [
+    { name = "aiofiles" },
+    { name = "aiosqlite" },
+    { name = "emoji" },
+    { name = "fastapi" },
+    { name = "gmssl" },
+    { name = "httpx", extra = ["socks"] },
+    { name = "lxml" },
+    { name = "openpyxl" },
+    { name = "pydantic" },
+    { name = "qrcode" },
+    { name = "rich" },
+    { name = "rookiepy" },
+    { name = "uvicorn" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "aiofiles", specifier = ">=24.1.0" },
+    { name = "aiosqlite", specifier = ">=0.21.0" },
+    { name = "emoji", specifier = ">=2.14.1" },
+    { name = "fastapi", specifier = ">=0.115.9" },
+    { name = "gmssl", specifier = ">=3.2.2" },
+    { name = "httpx", extras = ["socks"], specifier = ">=0.28.1" },
+    { name = "lxml", specifier = ">=5.3.1" },
+    { name = "openpyxl", specifier = ">=3.1.5" },
+    { name = "pydantic", specifier = ">=2.10.6" },
+    { name = "qrcode", specifier = ">=8.0" },
+    { name = "rich", specifier = ">=13.9.4" },
+    { name = "rookiepy", specifier = ">=0.5.6" },
+    { name = "uvicorn", specifier = ">=0.34.0" },
+]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.3.5" }]
+
+[[package]]
 name = "emoji"
 version = "2.14.1"
 source = { registry = "https://mirrors.ustc.edu.cn/pypi/simple" }
@@ -407,51 +452,6 @@ sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/ff/fb/2984a686808b89a
 wheels = [
     { url = "https://mirrors.ustc.edu.cn/pypi/packages/d9/61/f2b52e107b1fc8944b33ef56bf6ac4ebbe16d91b94d2b87ce013bf63fb84/starlette-0.45.3-py3-none-any.whl", hash = "sha256:dfb6d332576f136ec740296c7e8bb8c8a7125044e7c6da30744718880cdd059d", size = 71507 },
 ]
-
-[[package]]
-name = "tiktokdownloader"
-version = "5.7"
-source = { virtual = "." }
-dependencies = [
-    { name = "aiofiles" },
-    { name = "aiosqlite" },
-    { name = "emoji" },
-    { name = "fastapi" },
-    { name = "gmssl" },
-    { name = "httpx", extra = ["socks"] },
-    { name = "lxml" },
-    { name = "openpyxl" },
-    { name = "pydantic" },
-    { name = "qrcode" },
-    { name = "rich" },
-    { name = "rookiepy" },
-    { name = "uvicorn" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "aiofiles", specifier = ">=24.1.0" },
-    { name = "aiosqlite", specifier = ">=0.21.0" },
-    { name = "emoji", specifier = ">=2.14.1" },
-    { name = "fastapi", specifier = ">=0.115.9" },
-    { name = "gmssl", specifier = ">=3.2.2" },
-    { name = "httpx", extras = ["socks"], specifier = ">=0.28.1" },
-    { name = "lxml", specifier = ">=5.3.1" },
-    { name = "openpyxl", specifier = ">=3.1.5" },
-    { name = "pydantic", specifier = ">=2.10.6" },
-    { name = "qrcode", specifier = ">=8.0" },
-    { name = "rich", specifier = ">=13.9.4" },
-    { name = "rookiepy", specifier = ">=0.5.6" },
-    { name = "uvicorn", specifier = ">=0.34.0" },
-]
-
-[package.metadata.requires-dev]
-dev = [{ name = "pytest", specifier = ">=8.3.5" }]
 
 [[package]]
 name = "typing-extensions"

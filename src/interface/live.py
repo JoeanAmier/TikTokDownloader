@@ -2,7 +2,7 @@ from typing import TYPE_CHECKING
 from typing import Union
 
 from src.interface.template import API
-from src.tools import TikTokDownloaderError
+from src.tools import DownloaderError
 
 if TYPE_CHECKING:
     from src.config import Parameter
@@ -38,7 +38,7 @@ class Live(API):
         elif self.room_id and self.sec_user_id:
             return await self.with_room_id()
         else:
-            raise TikTokDownloaderError
+            raise DownloaderError
 
     async def with_web_rid(self) -> dict:
         self.set_referer("https://live.douyin.com/")

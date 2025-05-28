@@ -85,7 +85,7 @@ class APIServer(TikTok):
     ):
         self.server = FastAPI(
             debug=VERSION_BETA,
-            title="TikTokDownloader",
+            title="DouK-Downloader",
             version=__VERSION__,
         )
         self.setup_routes()

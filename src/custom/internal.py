@@ -5,7 +5,7 @@ VERSION_MAJOR = 5
 VERSION_MINOR = 7
 VERSION_BETA = True
 __VERSION__ = f"{VERSION_MAJOR}.{VERSION_MINOR}.{'beta' if VERSION_BETA else 'stable'}"
-PROJECT_NAME = f"TikTokDownloader V{VERSION_MAJOR}.{VERSION_MINOR} {
+PROJECT_NAME = f"DouK-Downloader V{VERSION_MAJOR}.{VERSION_MINOR} {
     'Beta' if VERSION_BETA else 'Stable'
 }"
 
@@ -15,7 +15,7 @@ DOCUMENTATION_URL = "https://github.com/JoeanAmier/TikTokDownloader/wiki/Documen
 RELEASES = "https://github.com/JoeanAmier/TikTokDownloader/releases/latest"
 
 DISCLAIMER_TEXT = (
-    "关于 TikTokDownloader 的 免责声明：\n"
+    "关于 DouK-Downloader 的 免责声明：\n"
     "\n"
     "1. 使用者对本项目的使用由使用者自行决定，并自行承担风险。作者对使用者使用本项目所产生的任何损失、责任、或风险概不负责。\n"
     "2. 本项目的作者提供的代码和功能是基于现有知识和技术的开发成果。作者按现有技术水平努力确保代码的正确性和安全性，但不保证代码完全没有错误或缺陷。\n"
@@ -25,7 +25,7 @@ DISCLAIMER_TEXT = (
     "6. 使用者不得使用本工具从事任何侵犯知识产权的行为，包括但不限于未经授权下载、传播受版权保护的内容，开发者不参与、不支持、不认可任何非法内容的获取或分发。\n"
     "7. 本项目不对使用者涉及的数据收集、存储、传输等处理活动的合规性承担责任。使用者应自行遵守相关法律法规，确保处理行为合法正当；因违规操作导致的法律责任由使用者自行承担。\n"
     "8. 使用者在任何情况下均不得将本项目的作者、贡献者或其他相关方与使用者的使用行为联系起来，或要求其对使用者使用本项目所产生的任何损失或损害负责。\n"
-    "9. 本项目的作者不会提供 TikTokDownloader 项目的付费版本，也不会提供与 TikTokDownloader 项目相关的任何商业服务。\n"
+    "9. 本项目的作者不会提供 DouK-Downloader 项目的付费版本，也不会提供与 DouK-Downloader 项目相关的任何商业服务。\n"
     "10. 基于本项目进行的任何二次开发、修改或编译的程序与原创作者无关，原创作者不承担与二次开发行为或其结果相关的任何责任，使用者应自行对因二次开发可能带来的各种情况负全部责任。\n"
     "11. 本项目不授予使用者任何专利许可；若使用本项目导致专利纠纷或侵权，使用者自行承担全部风险和责任。未经作者或权利人书面授权，不得使用本项目进行任何商业宣传、推广或再授权。\n"
     "12. 作者保留随时终止向任何违反本声明的使用者提供服务的权利，并可能要求其销毁已获取的代码及衍生作品。\n"

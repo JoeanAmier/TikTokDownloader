@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Union
 from httpx import AsyncClient, AsyncHTTPTransport, Client, HTTPTransport, Limits
 
 from ..custom import MAX_WORKERS, TIMEOUT, USERAGENT
-from ..tools import TikTokDownloaderError
+from ..tools import DownloaderError
 from .capture import capture_error_params
 from .retry import Retry
 
@@ -115,4 +115,4 @@ async def request(
         case "response":
             return response
         case _:
-            raise TikTokDownloaderError
+            raise DownloaderError

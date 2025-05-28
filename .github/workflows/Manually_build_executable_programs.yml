@@ -30,17 +30,17 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           echo "DATE=$(Get-Date -Format 'yyyyMMdd')" >> $env:GITHUB_ENV
-          pyinstaller --icon=./static/images/TikTokDownloader.ico --add-data "static:static" --add-data "locale:locale" --collect-all emoji main.py
+          pyinstaller --icon=./static/images/DouK-Downloader.ico --add-data "static:static" --add-data "locale:locale" --collect-all emoji main.py
         shell: pwsh
 
       - name: 构建 Mac 可执行文件
         if: runner.os == 'macOS'
         run: |
           echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
-          pyinstaller --icon=./static/images/TikTokDownloader.icns --add-data "static:static" --add-data "locale:locale" --collect-all emoji main.py
+          pyinstaller --icon=./static/images/DouK-Downloader.icns --add-data "static:static" --add-data "locale:locale" --collect-all emoji main.py
 
       - name: 上传文件
         uses: actions/upload-artifact@v4
         with:
-          name: TikTokDownloader_${{ runner.os }}_${{ runner.arch }}_${{ env.DATE }}
+          name: DouK-Downloader_${{ runner.os }}_${{ runner.arch }}_${{ env.DATE }}
           path: dist/main/

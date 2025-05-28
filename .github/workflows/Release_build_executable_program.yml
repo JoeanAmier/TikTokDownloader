@@ -34,25 +34,25 @@ jobs:
       - name: 构建 Win 可执行文件
         if: runner.os == 'Windows'
         run: |
-          pyinstaller --icon=./static/images/TikTokDownloader.ico --add-data "static:static" --add-data "locale:locale" --collect-all emoji main.py
+          pyinstaller --icon=./static/images/DouK-Downloader.ico --add-data "static:static" --add-data "locale:locale" --collect-all emoji main.py
         shell: pwsh
 
       - name: 构建 Mac 可执行文件
         if: runner.os == 'macOS'
         run: |
-          pyinstaller --icon=./static/images/TikTokDownloader.icns --add-data "static:static" --add-data "locale:locale" --collect-all emoji main.py
+          pyinstaller --icon=./static/images/DouK-Downloader.icns --add-data "static:static" --add-data "locale:locale" --collect-all emoji main.py
 
       - name: 创建压缩包
         run: |
-          7z a "TikTokDownloader_V${{ github.event.release.tag_name }}_${{ runner.os }}_${{ runner.arch }}.zip" ./dist/main/*
+          7z a "DouK-Downloader_V${{ github.event.release.tag_name }}_${{ runner.os }}_${{ runner.arch }}.zip" ./dist/main/*
         shell: bash
 
       - name: 上传文件到 release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            ./TikTokDownloader_V*.zip
-          name: TikTokDownloader V${{ github.event.release.tag_name }}
+            ./DouK-Downloader_V*.zip
+          name: DouK-Downloader V${{ github.event.release.tag_name }}
           body_path: ./docs/Release_Notes.md
           draft: ${{ github.event.release.draft }}
           prerelease: ${{ github.event.release.prerelease }}

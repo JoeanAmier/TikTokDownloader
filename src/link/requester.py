@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 from ..custom import BLANK_HEADERS
 from ..custom import wait
-from ..tools import Retry, TikTokDownloaderError, capture_error_request
+from ..tools import Retry, DownloaderError, capture_error_request
 
 if TYPE_CHECKING:
     from httpx import AsyncClient, get, head
@@ -72,7 +72,7 @@ class Requester:
             case False, False:
                 response = await self.request_url_get(url)
             case _:
-                raise TikTokDownloaderError
+                raise DownloaderError
         self.log.info(f"Response URL: {response.url}", False)
         self.log.info(f"Response Code: {response.status_code}", False)
         # 记录请求体数据会导致日志文件体积过大，仅在必要时记录
@@ -90,7 +90,7 @@ class Requester:
             case "url":
                 return str(response.url)
             case _:
-                raise TikTokDownloaderError
+                raise DownloaderError
 
     async def request_url_head(
         self,

@@ -28,10 +28,11 @@ from src.record import BaseLogger, LoggerManager
 from src.tools import (
     Browser,
     ColorfulConsole,
-    TikTokDownloaderError,
+    DownloaderError,
     choose,
     remove_empty_directories,
     safe_pop,
+    RenameCompatible,
 )
 from src.translation import _, switch_language
 
@@ -59,6 +60,7 @@ class TikTokDownloader:
     def __init__(
         self,
     ):
+        self.rename_compatible()
         self.console = ColorfulConsole()
         self.logger = None
         self.recorder = None
@@ -73,6 +75,10 @@ class TikTokDownloader:
         self.config = None
         self.option = None
         self.__function_menu = None
+
+    @staticmethod
+    def rename_compatible():
+        RenameCompatible.migration_file()
 
     async def read_config(self):
         self.config = self.__format_config(await self.database.read_config_data())
@@ -169,7 +175,7 @@ class TikTokDownloader:
         elif self.option["Language"] == "en_US":
             language = "zh_CN"
         else:
-            raise TikTokDownloaderError
+            raise DownloaderError
         await self._update_language(language)
 
     async def _update_language(self, language: str) -> None:
@@ -272,7 +278,7 @@ class TikTokDownloader:
             self.__update_menu()
             if not mode:
                 mode = choose(
-                    _("TikTokDownloader 功能选项"),
+                    _("DouK-Downloader 功能选项"),
                     [i for i, __ in self.__function_menu],
                     self.console,
                     separate=(

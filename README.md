@@ -1,8 +1,8 @@
 <div align="center">
-<img src="./static/images/TikTokDownloader.png" alt="TikTokDownloader" height="256" width="256"><br>
-<h1>TikTokDownloader</h1>
+<img src="./static/images/DouK-Downloader.png" alt="DouK-Downloader" height="256" width="256"><br>
+<h1>DouK-Downloader</h1>
 <p>简体中文 | <a href="README_EN.md">English</a></p>
-<a href="https://trendshift.io/repositories/6222" target="_blank"><img src="https://trendshift.io/api/badge/repositories/6222" alt="JoeanAmier%2FTikTokDownloader | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/6222" target="_blank"><img src="https://trendshift.io/api/badge/repositories/6222" alt="" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 <br>
 <img alt="GitHub" src="https://img.shields.io/github/license/JoeanAmier/TikTokDownloader?style=flat-square">
 <img alt="GitHub forks" src="https://img.shields.io/github/forks/JoeanAmier/TikTokDownloader?style=flat-square&color=55efc4">
@@ -17,7 +17,7 @@
 </div>
 <br>
 <p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
-<p>⭐ 本项目完全免费开源，无任何收费功能，请勿上当受骗！</p>
+<p>⭐ 本项目完全免费开源，无任何收费功能，请勿上当受骗！本项目历史名称：<code>TikTokDownloader</code></p>
 <hr>
 
 # 📝 项目功能
@@ -73,27 +73,21 @@
 
 <p><b>🎥 点击图片观看演示视频，建议通过配置文件管理账号，更多介绍请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">文档</a></b></p>
 
-[![终端模式截图](docs/终端交互模式截图CN1.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
+[![终端模式截图](docs/screenshot/终端交互模式截图CN1.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
 *****
-[![终端模式截图](docs/终端交互模式截图CN2.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
+[![终端模式截图](docs/screenshot/终端交互模式截图CN2.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
 *****
-[![终端模式截图](docs/终端交互模式截图CN3.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
+[![终端模式截图](docs/screenshot/终端交互模式截图CN3.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
 
 ## Web UI 交互模式
 
 > **项目代码已重构，该模式代码尚未更新，未来开发完成重新开放！**
 
-![WebUI模式截图](docs/WebUI模式截图1.png)
-*****
-![WebUI模式截图](docs/WebUI模式截图2.png)
-*****
-![WebUI模式截图](docs/WebUI模式截图3.png)
-
 ## Web API 接口模式
 
-![WebAPI模式截图](docs/WebAPI模式截图CN1.png)
+![WebAPI模式截图](docs/screenshot/WebAPI模式截图CN1.png)
 *****
-![WebAPI模式截图](docs/WebAPI模式截图CN2.png)
+![WebAPI模式截图](docs/screenshot/WebAPI模式截图CN2.png)
 
 > **启动该模式后，访问 `http://127.0.0.1:5555/docs` 或者 `http://127.0.0.1:5555/redoc` 可以查阅自动生成的文档！**
 
@@ -121,7 +115,7 @@ demo()
 # 📈 项目状态
 
 * 🟢 经过测试，[Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) 发布的源码已经验证所有功能正常可用
-* 🟡 TikTokDownloader 开发计划及进度可前往 [Projects](https://github.com/users/JoeanAmier/projects/2) 查阅
+* 🟡 DouK-Downloader 开发计划及进度可前往 [Projects](https://github.com/users/JoeanAmier/projects/2) 查阅
 * 🔴 请注意，最新源码\(Beta 版本\)可能存在一些不稳定的 Bug
 * 🔴 如果在使用过程中发现程序 Bug，请及时告知作者修复
 
@@ -147,10 +141,10 @@ demo()
 <li>运行 <code>python -m venv venv</code> 命令创建虚拟环境（可选）</li>
 <li>运行 <code>.\venv\Scripts\activate.ps1</code> 或者 <code>venv\Scripts\activate</code> 命令激活虚拟环境（可选）</li>
 <li>运行 <code>pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt</code> 命令安装程序所需模块</li>
-<li>运行 <code>python .\main.py</code> 或者 <code>python main.py</code> 命令启动 TikTokDownloader</li>
+<li>运行 <code>python .\main.py</code> 或者 <code>python main.py</code> 命令启动 DouK-Downloader</li>
 </ol>
 </li>
-<li>阅读 TikTokDownloader 的免责声明，根据提示输入内容</li>
+<li>阅读 DouK-Downloader 的免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
 <ol><b>手动复制粘贴 Cookie</b>
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
@@ -225,7 +219,7 @@ demo()
 
 ## 程序更新
 
-> **方案一：** 下载并解压文件，将旧版本的 `TikTokDownloader.db` 文件和 `settings.json` 文件复制到 `_internal` 文件夹。
+> **方案一：** 下载并解压文件，将旧版本的 `DouK-Downloader.db` 文件和 `settings.json` 文件复制到 `_internal` 文件夹。
 
 > **方案二：** 下载并解压文件（不要运行程序），复制全部文件，直接覆盖旧版本文件。
 
@@ -326,7 +320,7 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 <li>使用者不得使用本工具从事任何侵犯知识产权的行为，包括但不限于未经授权下载、传播受版权保护的内容，开发者不参与、不支持、不认可任何非法内容的获取或分发。</li>
 <li>本项目不对使用者涉及的数据收集、存储、传输等处理活动的合规性承担责任。使用者应自行遵守相关法律法规，确保处理行为合法正当；因违规操作导致的法律责任由使用者自行承担。</li>
 <li>使用者在任何情况下均不得将本项目的作者、贡献者或其他相关方与使用者的使用行为联系起来，或要求其对使用者使用本项目所产生的任何损失或损害负责。</li>
-<li>本项目的作者不会提供 TikTokDownloader 项目的付费版本，也不会提供与 TikTokDownloader 项目相关的任何商业服务。</li>
+<li>本项目的作者不会提供 DouK-Downloader 项目的付费版本，也不会提供与 DouK-Downloader 项目相关的任何商业服务。</li>
 <li>基于本项目进行的任何二次开发、修改或编译的程序与原创作者无关，原创作者不承担与二次开发行为或其结果相关的任何责任，使用者应自行对因二次开发可能带来的各种情况负全部责任。</li>
 <li>本项目不授予使用者任何专利许可；若使用本项目导致专利纠纷或侵权，使用者自行承担全部风险和责任。未经作者或权利人书面授权，不得使用本项目进行任何商业宣传、推广或再授权。</li>
 <li>作者保留随时终止向任何违反本声明的使用者提供服务的权利，并可能要求其销毁已获取的代码及衍生作品。</li>
@@ -372,7 +366,7 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 
 # ♥️ 支持项目
 
-<p>如果 <b>TikTokDownloader</b> 对您有帮助，请考虑为它点个 <b>Star</b> ⭐，感谢您的支持！</p>
+<p>如果 <b>DouK-Downloader</b> 对您有帮助，请考虑为它点个 <b>Star</b> ⭐，感谢您的支持！</p>
 <table>
 <thead>
 <tr>
@@ -386,7 +380,7 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 </tr>
 </tbody>
 </table>
-<p>如果您愿意，可以考虑提供资助为 <b>TikTokDownloader</b> 提供额外的支持！</p>
+<p>如果您愿意，可以考虑提供资助为 <b>DouK-Downloader</b> 提供额外的支持！</p>
 
 # 💰 项目赞助
 

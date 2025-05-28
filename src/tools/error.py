@@ -1,7 +1,7 @@
 from ..translation import _
 
 
-class TikTokDownloaderError(Exception):
+class DownloaderError(Exception):
     def __init__(
         self,
         message: str = "",
@@ -10,7 +10,7 @@ class TikTokDownloaderError(Exception):
         super().__init__(self.message)
 
     def __str__(self):
-        return f"TikTokDownloaderError: {self.message}"
+        return f"DownloaderError: {self.message}"
 
 
 class CacheError(Exception):
