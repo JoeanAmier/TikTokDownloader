@@ -349,6 +349,7 @@ repository to execute the build process
 <li>Write code that is easy to read; add appropriate annotation to help others understand your intentions.</li>
 <li>Each commit should include a clear and concise commit message describing the changes made. The commit message should follow this format: <code>&lt;type&gt;: &lt;short description&gt;</code></li>
 <li>When you are ready to submit a pull request, please prioritize submitting them to the <code>develop</code> branch; this provides maintainers with a buffer zone for additional testing and review before final merging into the <code>master</code> branch.</li>
+<li>It is recommended to communicate with the author before starting development or when encountering questions to ensure alignment in direction and avoid redundant efforts or unnecessary commits.</li>
 </ul>
 <p><strong>Reference materials:</strong></p>
 <ul>
