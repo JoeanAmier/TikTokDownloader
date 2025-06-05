@@ -742,7 +742,7 @@ class APIServer(TikTok):
                 extract.proxy,
             )
         if extract.source:
-            return data
+            return [data]
         return await self.extractor.run(
             [data],
             None,
