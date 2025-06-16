@@ -87,6 +87,7 @@ class Parameter:
         run_command: str,
         owner_url: dict,
         owner_url_tiktok: dict,
+        live_qualities: str,
         ffmpeg: str,
         recorder: "DownloadRecorder",
         browser_info: dict,
@@ -160,6 +161,7 @@ class Parameter:
         self.max_pages = self.__check_max_pages(max_pages)
         self.run_command = self.__check_run_command(run_command)
         self.ffmpeg = self.__generate_ffmpeg_object(ffmpeg)
+        self.live_qualities = self.__check_live_qualities(live_qualities)
         self.douyin_platform = self.check_bool_true(
             douyin_platform,
         )
@@ -224,6 +226,7 @@ class Parameter:
             "max_pages": self.__check_max_pages,
             "run_command": self.__check_run_command,
             "ffmpeg": self.__generate_ffmpeg_object,
+            "live_qualities": self.__check_live_qualities,
             "douyin_platform": self.check_bool_true,
             "tiktok_platform": self.check_bool_true,
         }
@@ -247,14 +250,14 @@ class Parameter:
     def __check_cookie_tiktok(
         self,
         cookie: dict | str,
-    ) -> [dict, str]:
+    ) -> tuple[dict, str]:
         # if isinstance(cookie, str):
         #     self.console.print(
         #         "参数 cookie_tiktok 应为字典格式！请修改配置文件后重新运行程序！",
         #         style=ERROR)
         return self.__check_cookie(cookie, name="cookie_tiktok")
 
-    def __check_cookie(self, cookie: dict | str, name="cookie") -> [dict, str]:
+    def __check_cookie(self, cookie: dict | str, name="cookie") -> tuple[dict, str]:
         if isinstance(cookie, dict):
             return cookie, ""
         elif isinstance(cookie, str):
@@ -1049,6 +1052,17 @@ class Parameter:
             ),
         )
         return 50
+
+    def __check_live_qualities(self, live_qualities: str) -> str:
+        if isinstance(live_qualities, str):
+            self.logger.info(f"live_qualities 参数已设置为 {live_qualities}", False)
+            return live_qualities
+        self.logger.warning(
+            _("live_qualities 参数 {live_qualities} 设置错误").format(
+                live_qualities=live_qualities
+            ),
+        )
+        return ""
 
     def __check_cookie_state(self, tiktok=False) -> bool:
         if tiktok:

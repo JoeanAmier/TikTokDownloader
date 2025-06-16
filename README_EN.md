@@ -397,26 +397,17 @@ repository to execute the build process
 
 ## JetBrains Tools
 
-![PyCharm logo](https://resources.jetbrains.com/storage/products/company/brand/logos/PyCharm.svg)
+[![PyCharm logo](https://resources.jetbrains.com/storage/products/company/brand/logos/PyCharm.svg)](https://www.jetbrains.com/)
 
-<p><b>JetBrains</b> support active projects recognized within the global open-source community with complimentary licenses for non-commercial development.</p>
+<p><a href="https://www.jetbrains.com/">JetBrains</a> support active projects recognized within the global open-source community with complimentary licenses for non-commercial development.</p>
 
 ***
 
 ## TikHub
 
-<img src="docs/赞助商_TikHub_Logo.png" alt="TikHub">
 <p><a href="https://tikhub.io/">TikHub</a> is a leading data interface service provider, specializing in offering high-quality data interfaces for multiple popular platforms, including DouYin, TikTok, Xiaohongshu, Instagram, Twitter, and Kuaishou.</p>
 <p>TikHub also provides customized services such as live streaming room monitoring, post monitoring, and influencer monitoring to meet the needs of different business scenarios.</p>
 <p>Through daily sign-ins, users can obtain a certain quota of usage for free. You can use my <strong>referral link</strong>：<a href="https://user.tikhub.io/users/signup?referral_code=ZrdH8McC">https://user.tikhub.io/users/signup?referral_code=ZrdH8McC</a> or <strong>Referral Code</strong>：<code>ZrdH8McC</code>，Register and recharge to receive <code>$2</code> limit！</p>
-<p><a href="https://tikhub.io/">TikHub</a> Provide the following services:</p>
-<ul>
-<li>Rich data interfaces</li>
-<li>Free daily check-in to obtain credit limit</li>
-<li>High quality API services</li>
-<li>Official website:<a href="https://tikhub.io/">https://tikhub.io/</a></li>
-<li>User login address:<a href="https://user.tikhub.io/">https://user.tikhub.io/</a></li>
-</ul>
 
 # 💡 Project References
 

@@ -405,6 +405,12 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <td align="center">无</td>
 </tr>
 <tr>
+<td align="center">live_qualities</td>
+<td align="center">str</td>
+<td align="center"><a href="#supplement"><sup>3</sup></a>下载直播时的默认清晰度，支持设置为清晰度或者序号；当设置了该参数时，获取直播推流地址将会直接下载指定清晰度的直播文件，不再提示输入清晰度；参数示例：<code>FULL_HD1</code>、<code>HD1</code>、<code>1</code>、<code>2</code> 等</td>
+<td align="center">无</td>
+</tr>
+<tr>
 <td align="center">douyin_platform</td>
 <td align="center">bool</td>
 <td align="center"><a href="#supplement"><sup>5</sup></a>是否启用抖音平台功能</td>
@@ -509,6 +515,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
   "max_pages": 2,
   "run_command": "6 2 1",
   "ffmpeg": "C:\\DouK-Downloader\\ffmpeg.exe",
+  "live_qualities": "1",
   "douyin_platform": true,
   "tiktok_platform": true,
   "browser_info": {

@@ -84,6 +84,7 @@ class Settings:
         "max_pages": 0,
         "run_command": "",
         "ffmpeg": "",
+        "live_qualities": "",
         "douyin_platform": True,
         "tiktok_platform": True,
         "browser_info": {

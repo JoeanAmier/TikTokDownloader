@@ -91,8 +91,9 @@ class Settings(BaseModel):
     max_pages: int | None = None
     run_command: str | None = None
     ffmpeg: str | None = None
-    # douyin_platform: bool | None = None
-    # tiktok_platform: bool | None = None
+    live_qualities: str | None = None
+    douyin_platform: bool | None = None
+    tiktok_platform: bool | None = None
     browser_info: BrowserInfo | None = None
     browser_info_tiktok: TikTokBrowserInfo | None = None
 

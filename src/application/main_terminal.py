@@ -1097,7 +1097,7 @@ class TikTok:
             self.logger.warning(_("程序未检测到有效的 ffmpeg，不支持直播下载功能！"))
             return None
         try:
-            choice_ = self.console.input(
+            choice_ = self.parameter.live_qualities or self.console.input(
                 _("请选择下载清晰度(输入清晰度或者对应序号，直接回车代表不下载): "),
             )
             if u := flv_items.get(choice_):
@@ -1105,6 +1105,7 @@ class TikTok:
             if not 0 <= (i := int(choice_) - 1) < len(flv_items):
                 raise ValueError
         except ValueError:
+            self.logger.info(_("未输入有效的清晰度或者序号，跳过下载！"))
             return None
         return list(flv_items.values())[i], list(m3u8_items.values())[i]
 

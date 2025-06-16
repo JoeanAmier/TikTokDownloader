@@ -387,26 +387,17 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 
 ## JetBrains 工具
 
-![PyCharm logo](https://resources.jetbrains.com/storage/products/company/brand/logos/PyCharm.svg)
+[![PyCharm logo](https://resources.jetbrains.com/storage/products/company/brand/logos/PyCharm.svg)](https://www.jetbrains.com/)
 
-**JetBrains** 支持全球开源社区认可的活跃项目，并为非商业开发提供免费许可证。
+[JetBrains](https://www.jetbrains.com/) 支持全球开源社区认可的活跃项目，并为非商业开发提供免费许可证。
 
 ***
 
 ## TikHub
 
-<img src="docs/赞助商_TikHub_Logo.png" alt="TikHub">
 <p><a href="https://tikhub.io/">TikHub</a> 是一家领先的数据接口服务供应商，专注于提供高质量的数据接口，涵盖了多个热门平台，包括 抖音、TikTok、小红书、Instagram、Twitter 和 快手 等平台。</p>
 <p>TikHub 还提供定制化的服务，如直播间监控、作品监控和达人监控，以满足不同业务场景的需求。</p>
 <p>通过每日签到，用户可以免费获取一定额度的使用量；可以使用我的 <strong>推荐链接</strong>：<a href="https://user.tikhub.io/users/signup?referral_code=ZrdH8McC">https://user.tikhub.io/users/signup?referral_code=ZrdH8McC</a> 或 <strong>推荐码</strong>：<code>ZrdH8McC</code>，注册并充值即可获得 <code>$2</code> 额度！</p>
-<p><a href="https://tikhub.io/">TikHub</a> 提供以下服务：</p>
-<ul>
-<li>丰富的数据接口</li>
-<li>每日签到免费获取额度</li>
-<li>高质量的 API 服务</li>
-<li>官网：<a href="https://tikhub.io/">https://tikhub.io/</a></li>
-<li>用户登陆地址：<a href="https://user.tikhub.io/">https://user.tikhub.io/</a></li>
-</ul>
 
 # 💡 项目参考
 
