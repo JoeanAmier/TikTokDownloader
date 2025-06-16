@@ -5,7 +5,6 @@ from platform import system
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
-from ..custom import ERROR
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -115,7 +114,7 @@ class Settings:
             "device_id": "",
         },
     }  # 默认配置
-    compatible = (
+    rename_params = (
         (
             "default_mode",
             "run_command",
@@ -169,25 +168,20 @@ class Settings:
             return self.default  # 读取配置文件发生错误时返回空配置
 
     def __check(self, data: dict) -> dict:
-        default_keys = self.default.keys()
         data = self.__compatible_with_old_settings(data)
-        data_keys = set(data.keys())
-        if not (miss := default_keys - data_keys):
-            return data
-        if (
-            self.console.input(
-                _(
-                    "配置文件 settings.json 缺少 {missing_params} 参数，是否需要生成默认配置文件(YES/NO): "
-                ).format(missing_params=", ".join(miss)),
-                style=ERROR,
-            ).upper()
-            == "YES"
-        ):
-            self.__create()
-        self.console.warning(
-            _("本次运行将会使用各项参数默认值，程序功能可能无法正常使用！"),
-        )
-        return self.default
+        update = False
+        for i, j in self.default.items():
+            if i not in data:
+                data[i] = j
+                update = True
+                self.console.info(
+                    _("配置文件 settings.json 缺少参数 {i}，已自动添加该参数！").format(
+                        i=i
+                    ),
+                )
+        if update:
+            self.update(data)
+        return data
 
     def update(self, settings: dict | SimpleNamespace):
         """更新配置文件"""
@@ -207,7 +201,7 @@ class Settings:
         data: dict,
     ) -> dict:
         """兼容旧版本配置文件"""
-        for old, new_, default in self.compatible:
+        for old, new_, default in self.rename_params:
             if old in data:
                 self.console.info(
                     _(
