@@ -578,7 +578,7 @@ class Parameter:
                 )
             else:
                 self.logger.warning(
-                    _("抖音 cookie 参数未设置，相应功能可能无法正常使用")
+                    _("配置文件 cookie 参数未设置，抖音平台功能可能无法正常使用")
                 )
         if self.tiktok_platform:
             if any(
@@ -607,7 +607,9 @@ class Parameter:
                 )
             else:
                 self.logger.warning(
-                    _("TikTok cookie 参数未设置，相应功能可能无法正常使用")
+                    _(
+                        "配置文件 cookie_tiktok 参数未设置，TikTok 平台功能可能无法正常使用"
+                    )
                 )
 
     async def update_params_offline(self) -> None:
@@ -631,7 +633,7 @@ class Parameter:
                 )
             else:
                 self.logger.warning(
-                    _("抖音 cookie 参数未设置，相应功能可能无法正常使用")
+                    _("配置文件 cookie 参数未设置，抖音平台功能可能无法正常使用")
                 )
         if self.tiktok_platform:
             if any(
@@ -650,7 +652,9 @@ class Parameter:
                 )
             else:
                 self.logger.warning(
-                    _("TikTok cookie 参数未设置，相应功能可能无法正常使用")
+                    _(
+                        "配置文件 cookie_tiktok 参数未设置，TikTok 平台功能可能无法正常使用"
+                    )
                 )
 
     async def __update_cookie(
