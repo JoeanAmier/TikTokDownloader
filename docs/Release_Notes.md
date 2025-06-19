@@ -5,8 +5,9 @@
 3. 修复 MacOS 下载直播报错的问题
 4. 搜索数据为空时不再保存至文件
 5. 支持设置直播下载的默认清晰度
-6. 重构调用 ffmpeg 下载直播功能
-7. 优化配置文件参数容错机制
-8. 恢复数据请求延时机制
+6. 重构复制粘贴写入 Cookie 功能
+7. 重构调用 ffmpeg 下载直播功能
+8. 优化配置文件参数容错机制
+9. 恢复数据请求延时机制
 
 <p><strong>更新公告：本项目名称由 <code>TikTokDownloader</code> 变更为 <code>DouK-Downloader</code></strong></p>

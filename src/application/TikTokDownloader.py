@@ -49,10 +49,6 @@ class TikTokDownloader:
     VERSION_MAJOR = VERSION_MAJOR
     VERSION_MINOR = VERSION_MINOR
     VERSION_BETA = VERSION_BETA
-    PLATFORM = (
-        "cookie",
-        "cookie_tiktok",
-    )
     NAME = PROJECT_NAME
     WIDTH = 50
     LINE = ">" * WIDTH
@@ -110,11 +106,11 @@ class TikTokDownloader:
             0: _("启用"),
         }
         self.__function_menu = (
-            (_("复制粘贴写入 Cookie (抖音)"), self.write_cookie),
-            (_("从浏览器获取 Cookie (抖音)"), self.browser_cookie),
+            (_("从剪贴板读取 Cookie (抖音)"), self.write_cookie),
+            (_("从浏览器读取 Cookie (抖音)"), self.browser_cookie),
             # (_("扫码登录获取 Cookie (抖音)"), self.auto_cookie),
-            (_("复制粘贴写入 Cookie (TikTok)"), self.write_cookie_tiktok),
-            (_("从浏览器获取 Cookie (TikTok)"), self.browser_cookie_tiktok),
+            (_("从剪贴板读取 Cookie (TikTok)"), self.write_cookie_tiktok),
+            (_("从浏览器读取 Cookie (TikTok)"), self.browser_cookie_tiktok),
             (_("终端交互模式"), self.complete),
             (_("后台监测模式"), self.disable_function),
             (_("Web API 模式"), self.server),
@@ -312,18 +308,24 @@ class TikTokDownloader:
         await self.check_settings()
 
     async def write_cookie(self):
-        await self.__write_cookie()
+        await self.__write_cookie(False)
 
     async def write_cookie_tiktok(self):
-        await self.__write_cookie(1)
+        await self.__write_cookie(True)
 
-    async def __write_cookie(self, index=0):
+    async def __write_cookie(self, tiktok: bool):
         self.console.print(
             _("Cookie 获取教程：")
             + "https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6"
             "%95%99%E7%A8%8B.md"
         )
-        if self.cookie.run(self.PLATFORM[index], index):
+        if self.console.input(
+            _(
+                "复制 Cookie 内容至剪贴板后，按回车键确认继续；若输入任意内容并按回车，则取消操作："
+            )
+        ):
+            return
+        if self.cookie.run(tiktok):
             await self.check_settings()
 
     async def auto_cookie(self):
@@ -338,7 +340,7 @@ class TikTokDownloader:
             self.parameter,
             self.settings,
         ).run():
-            self.cookie.extract(cookie)
+            self.cookie.extract(cookie, platform=_("抖音"))
             await self.check_settings()
         else:
             self.console.warning(

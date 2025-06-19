@@ -39,23 +39,23 @@
 </li>
 <li>阅读 DouK-Downloader 的免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
-<ol><b>手动复制粘贴 Cookie</b>
+<ol><b>从剪贴板读取 Cookie</b>
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
-<li>选择 <code>复制粘贴写入 Cookie</code> 选项，按照提示将 Cookie 写入配置文件</li>
+<li>选择 <code>从剪贴板读取 Cookie</code> 选项，程序会自动读取剪贴板的 Cookie 并写入配置文件</li>
 </ol>
-<ol><b>从浏览器获取 Cookie</b>
-<li>选择 <code>从浏览器获取 Cookie</code> 选项，按照提示选择浏览器类型</li>
+<ol><b>从浏览器读取 Cookie</b>
+<li>选择 <code>从浏览器读取 Cookie</code> 选项，按照提示输入浏览器类型或序号</li>
 </ol>
 <ol><b><del>扫码登录获取 Cookie</del>（失效）</b>
 <li><del>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</del></li>
 <li><del>使用抖音 APP 扫描二维码并登录账号</del></li>
-<li><del>按照提示操作，将 Cookie 写入配置文件</del></li>
+<li><del>按照提示操作，程序会自动将 Cookie 写入配置文件</del></li>
 </ol>
 </li>
 <li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品(抖音)</code> -> <code>手动输入待采集的作品链接</code></li>
 <li>输入抖音作品链接即可下载作品文件</li>
 </ol>
-<p><b>TikTok 平台功能需要额外设置配置文件 <code>browser_info_tiktok</code> 的 <code>device_id</code> 参数，否则平台功能可能无法正常使用！参数获取方式与 Cookie 类似，详见 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 获取教程</a></b></p>
+<p><b>TikTok 平台功能需要额外设置配置文件 <code>browser_info_tiktok</code> 的 <code>device_id</code> 参数，否则 TikTok 平台功能可能无法正常使用！参数获取方式与 Cookie 类似，详见 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 获取教程</a></b></p>
 <h2>Docker 容器</h2>
 <ol>
 <li>获取镜像</li>
@@ -72,7 +72,7 @@
 </ul>
 </li>
 </ol>
-<p>Docker 容器无法直接访问宿主机的文件系统，部分功能不可用，例如：<code>从浏览器获取 Cookie</code>；其他功能如有异常请反馈！</p>
+<p>Docker 容器无法直接访问宿主机的文件系统，部分功能不可用，例如：<code>从浏览器读取 Cookie</code>；其他功能如有异常请反馈！</p>
 <h1>Cookie 说明</h1>
 <p><a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">点击查看 Cookie 获取教程</a>；无效或失效的 Cookie 会导致程序获取数据失败！</p>
 <ul>
@@ -700,7 +700,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <ul>其他示例：
 <li><code>6 2</code>：代表依次执行 <code>终端交互模式</code> -> <code>批量下载账号作品(抖音)</code></li>
 <li><code>8</code>：代表执行<code>Web API 模式</code></li>
-<li><code>2 7</code>：代表依次执行<code>从浏览器获取 Cookie (抖音)</code> -> <code>Edge</code></li>
+<li><code>2 7</code>：代表依次执行<code>从浏览器读取 Cookie (抖音)</code> -> <code>Edge</code></li>
 </ul>
 <h3>程序代理设置</h3>
 
@@ -733,11 +733,10 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li>设置服务器模式参数验证</li>
 </ul>
 <h1>功能介绍</h1>
-<h2>复制粘贴写入 Cookie</h2>
-<p>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，手动从浏览器复制所需 Cookie 至剪贴板，按照程序提示输入 Cookie 后回车确认，程序会自动处理 Cookie 并写入配置文件。</p>
-<p>如果粘贴 Cookie 至终端后无响应，可能是 Cookie 文本长度超出终端最大文本长度限制，请考虑更换终端或者其他写入方式。</p>
+<h2>从剪贴板读取 Cookie</h2>
+<p>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，手动从浏览器复制所需 Cookie 内容至剪贴板，再按照程序提示操作；程序会自动读取剪贴板的内容并将有效的 Cookie 写入配置文件。</p>
 <p>成功写入配置文件后，程序会提示当前 Cookie 登录状态！</p>
-<h2>从浏览器获取 Cookie</h2>
+<h2>从浏览器读取 Cookie</h2>
 <p>自动读取本地浏览器的 Cookie 数据，并提取所需 Cookie 写入配置文件。</p>
 <p>成功写入配置文件后，程序会提示当前 Cookie 登录状态！</p>
 <p>Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie！</p>

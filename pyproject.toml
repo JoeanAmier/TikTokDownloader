@@ -18,6 +18,7 @@ dependencies = [
     "lxml>=5.3.1",
     "openpyxl>=3.1.5",
     "pydantic>=2.10.6",
+    "pyperclip>=1.9.0",
     "qrcode>=8.0",
     "rich>=13.9.4",
     "rookiepy>=0.5.6",

@@ -90,6 +90,7 @@ dependencies = [
     { name = "lxml" },
     { name = "openpyxl" },
     { name = "pydantic" },
+    { name = "pyperclip" },
     { name = "qrcode" },
     { name = "rich" },
     { name = "rookiepy" },
@@ -112,6 +113,7 @@ requires-dist = [
     { name = "lxml", specifier = ">=5.3.1" },
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pydantic", specifier = ">=2.10.6" },
+    { name = "pyperclip", specifier = ">=1.9.0" },
     { name = "qrcode", specifier = ">=8.0" },
     { name = "rich", specifier = ">=13.9.4" },
     { name = "rookiepy", specifier = ">=0.5.6" },
@@ -365,6 +367,12 @@ sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/7c/2d/c3338d48ea6cc0f
 wheels = [
     { url = "https://mirrors.ustc.edu.cn/pypi/packages/8a/0b/9fcc47d19c48b59121088dd6da2488a49d5f72dacf8262e2790a1d2c7d15/pygments-2.19.1-py3-none-any.whl", hash = "sha256:9ea1544ad55cecf4b8242fab6dd35a93bbce657034b0611ee383099054ab6d8c", size = 1225293 },
 ]
+
+[[package]]
+name = "pyperclip"
+version = "1.9.0"
+source = { registry = "https://mirrors.ustc.edu.cn/pypi/simple" }
+sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/30/23/2f0a3efc4d6a32f3b63cdff36cd398d9701d26cda58e3ab97ac79fb5e60d/pyperclip-1.9.0.tar.gz", hash = "sha256:b7de0142ddc81bfc5c7507eea19da920b92252b548b96186caf94a5e2527d310", size = 20961 }
 
 [[package]]
 name = "pytest"

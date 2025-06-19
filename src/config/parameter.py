@@ -859,9 +859,11 @@ class Parameter:
         self.set_general_params(data)
 
     async def __update_cookie_data(self, data: dict) -> None:
-        for i in ("cookie", "cookie_tiktok"):
+        for i, j in zip(("cookie", "cookie_tiktok"), (_("抖音"), "TikTok")):
             if c := data.get(i):
-                setattr(self, i, self.cookie_object.extract(c, False, key=i))
+                setattr(
+                    self, i, self.cookie_object.extract(c, False, key=i, platform=j)
+                )
         await self.update_params()
 
     @staticmethod

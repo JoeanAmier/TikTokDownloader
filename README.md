@@ -58,7 +58,7 @@
 * ✅ 采集抖音热榜数据
 * ✅ 记录已下载作品 ID
 * ☑️ ~~扫码登陆获取 Cookie~~
-* ✅ 从浏览器获取 Cookie
+* ✅ 从浏览器读取 Cookie
 * ✅ 支持 Web API 调用
 * ✅ 支持多线程下载作品
 * ✅ 文件完整性处理机制
@@ -146,17 +146,17 @@ demo()
 </li>
 <li>阅读 DouK-Downloader 的免责声明，根据提示输入内容</li>
 <li>将 Cookie 信息写入配置文件
-<ol><b>手动复制粘贴 Cookie</b>
+<ol><b>从剪贴板读取 Cookie</b>
 <li>参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie 提取教程</a>，复制所需 Cookie 至剪贴板</li>
-<li>选择 <code>复制粘贴写入 Cookie</code> 选项，按照提示将 Cookie 写入配置文件</li>
+<li>选择 <code>从剪贴板读取 Cookie</code> 选项，程序会自动读取剪贴板的 Cookie 并写入配置文件</li>
 </ol>
-<ol><b>从浏览器获取 Cookie</b>
-<li>选择 <code>从浏览器获取 Cookie</code> 选项，按照提示选择浏览器类型</li>
+<ol><b>从浏览器读取 Cookie</b>
+<li>选择 <code>从浏览器读取 Cookie</code> 选项，按照提示输入浏览器类型或序号</li>
 </ol>
 <ol><b><del>扫码登录获取 Cookie</del>（失效）</b>
 <li><del>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</del></li>
 <li><del>使用抖音 APP 扫描二维码并登录账号</del></li>
-<li><del>按照提示操作，将 Cookie 写入配置文件</del></li>
+<li><del>按照提示操作，程序会自动将 Cookie 写入配置文件</del></li>
 </ol>
 </li>
 <li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品(通用)</code> -> <code>手动输入待采集的作品链接</code></li>
@@ -182,7 +182,7 @@ demo()
 </ul>
 </li>
 </ol>
-<p>Docker 容器无法直接访问宿主机的文件系统，部分功能不可用，例如：<code>从浏览器获取 Cookie</code>；其他功能如有异常请反馈！</p>
+<p>Docker 容器无法直接访问宿主机的文件系统，部分功能不可用，例如：<code>从浏览器读取 Cookie</code>；其他功能如有异常请反馈！</p>
 
 <hr>
 
