@@ -1,7 +1,7 @@
 name: "自动管理过时的问题和PR"
 on:
   schedule:
-    - cron: "0 0 * * 5"
+    - cron: "0 0 * * 6"
 
 permissions:
   issues: write

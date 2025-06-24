@@ -1,0 +1,19 @@
+name: 删除 GHCR Untagged 镜像
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+
+jobs:
+  delete-untagged:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete all containers from package without tags
+        uses: Chizkiyahu/delete-untagged-ghcr-action@v6
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          repository_owner: ${{ github.repository_owner }}
+          repository: ${{ github.repository }}
+          package_name: "tiktok-downloader"
+          untagged_only: true
+          owner_type: user

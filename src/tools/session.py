@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING, Union
 
-from httpx import AsyncClient, AsyncHTTPTransport, Client, HTTPTransport, Limits
+from httpx import AsyncClient, AsyncHTTPTransport, Client, HTTPTransport
 
-from ..custom import MAX_WORKERS, TIMEOUT, USERAGENT
+from ..custom import TIMEOUT, USERAGENT
 from ..tools import DownloaderError
 from .capture import capture_error_params
 from .retry import Retry
@@ -18,7 +18,6 @@ def create_client(
     user_agent=USERAGENT,
     timeout=TIMEOUT,
     headers: dict = None,
-    max_connections=MAX_WORKERS,
     proxy: str = None,
     *args,
     **kwargs,
@@ -31,7 +30,6 @@ def create_client(
         timeout=timeout,
         follow_redirects=True,
         verify=False,
-        limits=Limits(max_connections=max_connections),
         mounts={
             "http://": AsyncHTTPTransport(proxy=proxy),
             "https://": AsyncHTTPTransport(proxy=proxy),
