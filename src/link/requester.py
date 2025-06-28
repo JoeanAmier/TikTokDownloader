@@ -14,7 +14,7 @@ __all__ = ["Requester"]
 
 
 class Requester:
-    URL = compile(r"(https?://\S+)")
+    URL = compile(r"(https?://[^\s\"<>\\^`{|}，。；！？、【】《》]+)")
     HEADERS = BLANK_HEADERS
 
     def __init__(
