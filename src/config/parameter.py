@@ -24,7 +24,7 @@ from ..interface import API, APITikTok
 from ..module import FFMPEG
 from ..record import BaseLogger, LoggerManager
 from ..storage import RecordManager
-from ..tools import Cleaner, cookie_dict_to_str, create_client
+from ..tools import Cleaner, cookie_dict_to_str, create_client, DownloaderError
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -139,7 +139,7 @@ class Parameter:
         self.cookie_state: bool = self.__check_cookie_state()
         self.cookie_tiktok_state: bool = self.__check_cookie_state(True)
         self.set_uif_id()
-        self.set_download_headers()
+        # self.set_download_headers()
 
         self.root = self.__check_root(root)
         self.folder_name = self.__check_folder_name(folder_name)
@@ -290,7 +290,7 @@ class Parameter:
     ) -> str:
         return self.__check_cookie_tiktok(cookie)[1]
 
-    async def __add_cookie(
+    def __add_cookie(
         self,
         parameters: tuple[dict, ...],
         cookie: dict | str,
@@ -303,6 +303,7 @@ class Parameter:
                         False,
                     )
                     cookie |= i
+            return None
         elif isinstance(cookie, str):
             for i in parameters:
                 if i:
@@ -312,6 +313,7 @@ class Parameter:
                     )
                     cookie += f"; {cookie_dict_to_str(i)}"
             return cookie
+        raise DownloaderError
 
     async def __get_tt_wid_params(self) -> dict:
         if tt_wid := await TtWid.get_tt_wid(
@@ -569,7 +571,10 @@ class Parameter:
                         ms_token,
                         tt_wid,
                     ),
-                    self.headers,
+                    (
+                        self.headers,
+                        self.headers_download,
+                    ),
                     self.cookie_dict,
                     self.cookie_str,
                 )
@@ -598,7 +603,10 @@ class Parameter:
                         ms_token,
                         tt_wid,
                     ),
-                    self.headers_tiktok,
+                    (
+                        self.headers_tiktok,
+                        self.headers_download_tiktok,
+                    ),
                     self.cookie_dict_tiktok,
                     self.cookie_str_tiktok,
                 )
@@ -627,7 +635,10 @@ class Parameter:
                 API.params["msToken"] = ms_token
                 await self.__update_cookie(
                     ({MsToken.NAME: ms_token},),
-                    self.headers,
+                    (
+                        self.headers,
+                        self.headers_download,
+                    ),
                     self.cookie_dict,
                     self.cookie_str,
                 )
@@ -646,7 +657,10 @@ class Parameter:
                 APITikTok.params["msToken"] = ms_token.get(MsTokenTikTok.NAME, "")
                 await self.__update_cookie(
                     (ms_token,),
-                    self.headers_tiktok,
+                    (
+                        self.headers_tiktok,
+                        self.headers_download_tiktok,
+                    ),
                     self.cookie_dict_tiktok,
                     self.cookie_str_tiktok,
                 )
@@ -660,30 +674,36 @@ class Parameter:
     async def __update_cookie(
         self,
         parameters: tuple[dict, ...],
-        headers: dict,
-        cookie: dict,
-        cache: str,
+        headers: tuple[dict, ...],
+        cookie_dict: dict,
+        cookie_str: str,
     ) -> None:
-        if cookie:
-            await self.__add_cookie(
-                parameters,
-                cookie,
-            )
-            headers["Cookie"] = cookie_dict_to_str(cookie)
-        elif cache:
-            headers["Cookie"] = await self.__add_cookie(parameters, cache)
+        cookie = self.__add_cookie(
+            parameters,
+            cookie_dict or cookie_str,
+        )
+        if not isinstance(cookie, str):
+            cookie = cookie_dict_to_str(cookie_dict)
+        for i in headers:
+            i["Cookie"] = cookie
 
     def set_headers_cookie(
         self,
     ) -> None:
         if self.cookie_dict:
-            self.headers["Cookie"] = cookie_dict_to_str(self.cookie_dict)
+            cookie = cookie_dict_to_str(self.cookie_dict)
+            self.headers["Cookie"] = cookie
+            self.headers_download["Cookie"] = cookie
         elif self.cookie_str:
             self.headers["Cookie"] = self.cookie_str
+            self.headers_download["Cookie"] = self.cookie_str
         if self.cookie_dict_tiktok:
-            self.headers_tiktok["Cookie"] = cookie_dict_to_str(self.cookie_dict_tiktok)
+            cookie = cookie_dict_to_str(self.cookie_dict_tiktok)
+            self.headers_tiktok["Cookie"] = cookie
+            self.headers_download_tiktok["Cookie"] = cookie
         elif self.cookie_str_tiktok:
             self.headers_tiktok["Cookie"] = self.cookie_str_tiktok
+            self.headers_download_tiktok["Cookie"] = self.cookie_str_tiktok
 
     def set_download_headers(self) -> None:
         self.__update_download_headers()
