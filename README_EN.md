@@ -131,6 +131,7 @@ demo()
 
 <p>⭐ Mac OS and Windows 10 and above users can go to <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> or <a href="https://github.com/JoeanAmier/TikTokDownloader/actions">Actions</a> to download the compiled program, ready to use!</p>
 <p>⭐ This project includes GitHub Actions for automatic building executable files. Users can use GitHub Actions to build the latest source code into executable files at any time!</p>
+<p>⭐ For the automatic building executable files tutorial, please refer to the <code>Build of Executable File Guide</code> section of this document. If you need a more detailed step-by-step tutorial with illustrations, please <a href="https://mp.weixin.qq.com/s/TorfoZKkf4-x8IBNLImNuw">check out this article</a>!</p>
 <p><strong>Note: The executable file <code>main</code> on Mac OS may need to be started from the terminal command line. Due to device limitations, the executable file on the Mac OS platform has not been tested, and its usability cannot be guaranteed!</strong></p>
 <hr>
 <ol>
