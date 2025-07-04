@@ -2,7 +2,13 @@ from pathlib import Path
 from re import sub
 
 from aiosqlite import connect
+from sqlite3 import OperationalError
 
+from rich.text import Text
+from rich import print
+
+from custom import ERROR
+from ..translation import _
 from .sql import BaseSQLLogger
 
 __all__ = ["SQLLogger"]
@@ -66,7 +72,26 @@ class SQLLogger(BaseSQLLogger):
         mark[-1] = old_sheet
         old_sheet = "_".join(mark)
         if await self.__check_sheet_exists(old_sheet):
-            await self.cursor.execute(self.UPDATE_SQL, (old_sheet, new_sheet))
+            try:
+                await self.cursor.execute(self.UPDATE_SQL, (old_sheet, new_sheet))
+            except OperationalError as e:
+                print(
+                    Text(
+                        " ".join(
+                            (
+                                _(
+                                    "更新数据表名称时发生错误，重命名失败，请向作者反馈以便修复问题！"
+                                ),
+                                e,
+                                old_sheet,
+                                new_sheet,
+                            )
+                        ),
+                        style=ERROR,
+                    )
+                )
+                self.name = old_sheet
+                return
             await self.db.commit()
         self.name = new_sheet
 
