@@ -7,7 +7,7 @@ from sqlite3 import OperationalError
 from rich.text import Text
 from rich import print
 
-from custom import ERROR
+from ..custom import ERROR
 from ..translation import _
 from .sql import BaseSQLLogger
 
