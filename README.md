@@ -400,6 +400,12 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 
 ***
 
+## ZMTO
+
+<p><a href="https://www.zmto.com/">ZMTO</a>：一家专业的云基础设施提供商，以可靠的尖端技术与专业支持，提供高效的解决方案，并为符合条件的开源项目提供企业级VPS基础设施，支持开源生态系统的可持续发展与创新。</p>
+
+***
+
 ## TikHub
 
 <p><a href="https://tikhub.io/">TikHub</a>：第三方 API 服务供应商，专注于提供各平台 API。</p>
