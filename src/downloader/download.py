@@ -577,13 +577,10 @@ class Downloader:
                 headers,
                 tiktok,
             )
-            self.log.info(
-                f"{show} URL: {url}",
-                False,
-            )
-            self.log.info(
-                f"{show} Headers: {headers}",
-                False,
+            self.__record_request_messages(
+                show,
+                url,
+                headers,
             )
             try:
                 # length, suffix = await self.__head_file(client, url, headers, suffix, )
@@ -701,6 +698,17 @@ class Downloader:
         await self.recorder.update_id(id_)
         self.add_count(show, id_, count)
         return True
+
+    def __record_request_messages(
+        self,
+        show: str,
+        url: str,
+        headers: dict,
+    ):
+        self.log.info(f"{show} URL: {url}", False)
+        # 请求头脱敏处理，不记录 Cookie
+        desensitize = {k: v for k, v in headers.items() if k != "Cookie"}
+        self.log.info(f"{show} Headers: {desensitize}", False)
 
     def __adapter_headers(
         self,
