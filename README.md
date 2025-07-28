@@ -17,7 +17,7 @@
 </div>
 <br>
 <p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
-<p>⭐ 本项目完全免费开源，无任何收费功能，请勿上当受骗！本项目历史名称：<code>TikTokDownloader</code></p>
+<p>⭐ 本项目历史名称：<code>TikTokDownloader</code></p>
 <hr>
 
 # 📝 项目功能
@@ -66,6 +66,7 @@
 * ✅ 按文件夹归档保存作品文件
 * ✅ 自定义设置文件大小上限
 * ✅ 支持文件断点续传下载
+* ✅ 监听剪贴板链接下载作品
 
 # 💻 程序截图
 
@@ -385,14 +386,6 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 <p>如果您愿意，可以考虑提供资助为 <b>DouK-Downloader</b> 提供额外的支持！</p>
 
 # 💰 项目赞助
-
-## JetBrains 工具
-
-[![PyCharm logo](https://resources.jetbrains.com/storage/products/company/brand/logos/PyCharm.svg)](https://www.jetbrains.com/)
-
-[JetBrains](https://www.jetbrains.com/) 支持全球开源社区认可的活跃项目，并为非商业开发提供免费许可证。
-
-***
 
 ## DartNode
 

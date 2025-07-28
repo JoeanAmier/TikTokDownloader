@@ -1,4 +1,4 @@
-from asyncio import run
+from asyncio import run, CancelledError
 from threading import Event, Thread
 from time import sleep
 
@@ -38,6 +38,7 @@ from src.translation import _, switch_language
 
 from .main_server import APIServer
 from .main_terminal import TikTok
+from .main_monitor import ClipboardMonitor
 
 # from typing import Type
 # from webbrowser import open
@@ -57,11 +58,13 @@ class TikTokDownloader:
         self,
     ):
         self.rename_compatible()
-        self.console = ColorfulConsole()
+        self.console = ColorfulConsole(
+            debug=self.VERSION_BETA,
+        )
         self.logger = None
         self.recorder = None
         self.settings = Settings(PROJECT_ROOT, self.console)
-        self.event = Event()
+        self.event_cookie = Event()
         self.cookie = Cookie(self.settings, self.console)
         self.params_task = None
         self.parameter = None
@@ -112,7 +115,7 @@ class TikTokDownloader:
             (_("从剪贴板读取 Cookie (TikTok)"), self.write_cookie_tiktok),
             (_("从浏览器读取 Cookie (TikTok)"), self.browser_cookie_tiktok),
             (_("终端交互模式"), self.complete),
-            (_("后台监测模式"), self.disable_function),
+            (_("后台监听模式"), self.monitor),
             (_("Web API 模式"), self.server),
             (_("Web UI 模式"), self.disable_function),
             # (_("Web API 模式"), self.__api_object),
@@ -297,6 +300,19 @@ class TikTokDownloader:
         except KeyboardInterrupt:
             self.running = False
 
+    async def monitor(self):
+        await self.monitor_clipboard()
+
+    async def monitor_clipboard(self):
+        example = ClipboardMonitor(
+            self.parameter,
+            self.database,
+        )
+        try:
+            await example.run(self.run_command)
+        except (KeyboardInterrupt, CancelledError):
+            await example.stop_listener()
+
     async def change_config(
         self,
         key: str,
@@ -399,9 +415,9 @@ class TikTokDownloader:
 
     def periodic_update_params(self):
         async def inner():
-            while not self.event.is_set():
+            while not self.event_cookie.is_set():
                 await self.parameter.update_params()
-                self.event.wait(COOKIE_UPDATE_INTERVAL)
+                self.event_cookie.wait(COOKIE_UPDATE_INTERVAL)
 
         run(
             inner(),
@@ -412,16 +428,16 @@ class TikTokDownloader:
         restart=True,
     ):
         if restart:
-            self.event.set()
+            self.event_cookie.set()
             while self.params_task.is_alive():
                 # print("等待子线程结束！")  # 调试代码
                 sleep(1)
         self.params_task = Thread(target=self.periodic_update_params)
-        self.event.clear()
+        self.event_cookie.clear()
         self.params_task.start()
 
     def close(self):
-        self.event.set()
+        self.event_cookie.set()
         if self.parameter.folder_mode:
             remove_empty_directories(self.parameter.ROOT)
             remove_empty_directories(self.parameter.root)

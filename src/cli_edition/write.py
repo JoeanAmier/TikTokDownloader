@@ -4,13 +4,16 @@ from src.config import Settings
 from src.custom import PROJECT_ROOT
 from src.tools import ColorfulConsole
 from src.translation import _
+from src.custom import VERSION_BETA
 
 
 class Write:
     def __init__(
         self,
     ):
-        self.console = ColorfulConsole()
+        self.console = ColorfulConsole(
+            debug=VERSION_BETA,
+        )
         self.settings = Settings(PROJECT_ROOT, self.console)
         self.data = self.settings.read()
 

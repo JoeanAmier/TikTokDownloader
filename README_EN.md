@@ -17,7 +17,7 @@
 </div>
 <br>
 <p>🔥 <b>TikTok Posts/Liked/Mix/Live/Video/Image/Music; DouYin Posts/Liked/Favorites/Collections/Video/Image/LivePhoto/Live/Music/Mix/Comments/Account/Search/Hot Board Data Acquisition Tools:</b> Fully open-source, free data collection and file download tool based on HTTPX module implementation; batch download of DouYin account posts works, liked works, favorites works and collections works; batch download of TikTok account posts works and liked works; download of DouYin linked or TikTok linked works; obtain DouYin live stream addresses; download DouYin live stream video; obtain TikTok live stream addresses; download TikTok live stream video; collect DouYin works comments data; batch download of DouYin Mix works; batch download of TikTok Mix works; collect detailed data of DouYin accounts; collect DouYin user/works/live search results; collect DouYin Hot Board data.</p>
-<p>⭐ This project is completely free and open-source, with no paid features. Please do not be deceived! The historical names of this project: <code>TikTokDownloader</code></p>
+<p>⭐ Previous project names: <code>TikTokDownloader</code></p>
 <p>⭐ Due to the author's limited energy, I was unable to update the English document in a timely manner, and the content may have become outdated, partial translation is machine translation, the translation result may be incorrect, Suggest referring to Chinese documentation. If you want to contribute to translation, we warmly welcome you.</p>
 <hr>
 
@@ -67,6 +67,7 @@
 * ✅ Archive and save works files by folder
 * ✅ Customize file size limit
 * ✅ Support resume downloading of files from breakpoints
+* ✅ Monitor clipboard links to download works
 
 # 💻 Program Screenshot
 
@@ -395,14 +396,6 @@ repository to execute the build process
 <p>If you're willing, consider making a contribution to provide additional support for <b>DouK-Downloader</b>!</p>
 
 # 💰 Project Sponsorship
-
-## JetBrains Tools
-
-[![PyCharm logo](https://resources.jetbrains.com/storage/products/company/brand/logos/PyCharm.svg)](https://www.jetbrains.com/)
-
-<p><a href="https://www.jetbrains.com/">JetBrains</a> support active projects recognized within the global open-source community with complimentary licenses for non-commercial development.</p>
-
-***
 
 ## DartNode
 
