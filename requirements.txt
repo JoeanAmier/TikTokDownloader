@@ -6,25 +6,25 @@ aiosqlite==0.21.0
     # via douk-downloader (pyproject.toml)
 emoji==2.14.1
     # via douk-downloader (pyproject.toml)
-fastapi==0.115.9
+fastapi==0.116.1
     # via douk-downloader (pyproject.toml)
 gmssl==3.2.2
     # via douk-downloader (pyproject.toml)
 httpx[socks]==0.28.1
     # via douk-downloader (pyproject.toml)
-lxml==5.3.1
+lxml==6.0.0
     # via douk-downloader (pyproject.toml)
 openpyxl==3.1.5
     # via douk-downloader (pyproject.toml)
-pydantic==2.10.6
+pydantic==2.11.7
     # via douk-downloader (pyproject.toml)
 pyperclip==1.9.0
     # via douk-downloader (pyproject.toml)
-qrcode==8.0
+qrcode==8.2
     # via douk-downloader (pyproject.toml)
-rich==13.9.4
+rich==14.1.0
     # via douk-downloader (pyproject.toml)
 rookiepy==0.5.6
     # via douk-downloader (pyproject.toml)
-uvicorn==0.34.0
+uvicorn==0.35.0
     # via douk-downloader (pyproject.toml)
