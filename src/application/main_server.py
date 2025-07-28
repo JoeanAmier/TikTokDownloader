@@ -349,6 +349,7 @@ class APIServer(TikTok):
                 extract.detail_id,
                 cookie=extract.cookie,
                 proxy=extract.proxy,
+                source=extract.source,
                 pages=extract.pages,
                 cursor=extract.cursor,
                 count=extract.count,

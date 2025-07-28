@@ -1315,6 +1315,7 @@ class TikTok:
         detail_id: str,
         cookie: str = None,
         proxy: str = None,
+        source: bool = False,
         **kwargs,
     ) -> list:
         if data := await Comment(
@@ -1324,7 +1325,7 @@ class TikTok:
             detail_id=detail_id,
             **kwargs,
         ).run():
-            return await self.save_comment(detail_id, data)
+            return data if source else await self.save_comment(detail_id, data)
         return []
 
     async def comment_handle_single_tiktok(
@@ -1332,6 +1333,7 @@ class TikTok:
         detail_id: str,
         cookie: str = None,
         proxy: str = None,
+        source: bool = False,
         **kwargs,
     ) -> list: ...
 
