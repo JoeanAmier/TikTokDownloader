@@ -354,6 +354,7 @@ class APIServer(TikTok):
                 count=extract.count,
                 count_reply=extract.count_reply,
                 reply=extract.reply,
+                source=extract.source,
             ):
                 return self.success_response(extract, data)
             return self.failed_response(extract)
