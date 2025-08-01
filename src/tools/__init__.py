@@ -28,3 +28,4 @@ from .truncate import beautify_string
 from .truncate import trim_string
 from .truncate import truncate_string
 from .rename_compatible import RenameCompatible
+from .progress import FakeProgress

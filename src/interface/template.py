@@ -11,7 +11,7 @@ from rich.progress import (
 )
 
 from ..custom import PROGRESS, USERAGENT, wait
-from ..tools import Retry, DownloaderError, capture_error_request
+from ..tools import Retry, DownloaderError, capture_error_request, FakeProgress
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -59,6 +59,7 @@ class API:
         "uifid": "",
         "msToken": "",
     }
+    progress_object: Callable
 
     def __init__(
         self,
@@ -443,7 +444,17 @@ class API:
             )
         )
 
-    def progress_object(self):
+    @classmethod
+    def init_progress_object(
+        cls,
+        server_mode: bool = False,
+    ) -> None:
+        if server_mode:
+            cls.progress_object = cls.__fake_progress_object
+        else:
+            cls.progress_object = cls.__general_progress_object
+
+    def __general_progress_object(self):
         return Progress(
             TextColumn(
                 "[progress.description]{task.description}",
@@ -458,6 +469,10 @@ class API:
             transient=True,
             expand=True,
         )
+
+    @staticmethod
+    def __fake_progress_object(*args, **kwargs):
+        return FakeProgress()
 
     def append_response(
         self,

@@ -56,10 +56,12 @@ class APIServer(TikTok):
         self,
         parameter: "Parameter",
         database: "Database",
+        server_mode: bool = True,
     ):
         super().__init__(
             parameter,
             database,
+            server_mode,
         )
         self.server = None
 

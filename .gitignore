@@ -16,4 +16,4 @@ __pycache__/
 *.spec
 *.ini
 *.txt
-!.github/workflows/*.yaml
+!/.github/

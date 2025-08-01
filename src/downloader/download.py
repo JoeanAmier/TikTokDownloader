@@ -7,7 +7,7 @@ from time import time
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 from typing import Union
-
+from typing import Callable
 from aiofiles import open
 from httpx import HTTPStatusError
 from httpx import RequestError
@@ -34,6 +34,7 @@ from ..tools import Retry
 from ..tools import DownloaderError
 from ..tools import beautify_string
 from ..tools import format_size
+from ..tools import FakeProgress
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -55,7 +56,11 @@ class Downloader:
         "audio/mpeg": "mp3",
     }
 
-    def __init__(self, params: "Parameter"):
+    def __init__(
+        self,
+        params: "Parameter",
+        server_mode: bool = False,
+    ):
         self.cleaner = params.CLEANER
         self.client: "AsyncClient" = params.client
         self.client_tiktok: "AsyncClient" = params.client_tiktok
@@ -85,6 +90,24 @@ class Downloader:
         self.ffmpeg = params.ffmpeg
         self.cache = params.cache
         self.truncate = params.truncate
+        self.general_progress_object: Callable = self.init_general_progress(
+            server_mode,
+        )
+
+    def init_general_progress(
+        self,
+        server_mode: bool = False,
+    ) -> Callable:
+        if server_mode:
+            return self.__fake_progress_object
+        return self.__general_progress_object
+
+    @staticmethod
+    def __fake_progress_object(
+        *args,
+        **kwargs,
+    ):
+        return FakeProgress()
 
     def __general_progress_object(self):
         """文件下载进度条"""
@@ -213,7 +236,7 @@ class Downloader:
                 type_=_("音乐"),
             )
         await self.downloader_chart(
-            tasks, SimpleNamespace(), self.__general_progress_object(), **kwargs
+            tasks, SimpleNamespace(), self.general_progress_object(), **kwargs
         )
 
     async def run_live(
@@ -319,7 +342,7 @@ class Downloader:
             )
             self.download_cover(**params)
         await self.downloader_chart(
-            tasks, count, self.__general_progress_object(), **kwargs
+            tasks, count, self.general_progress_object(), **kwargs
         )
         self.statistics_count(count)
 
