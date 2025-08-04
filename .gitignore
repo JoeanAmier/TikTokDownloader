@@ -4,6 +4,7 @@ __pycache__/
 /.venv/
 /.ruff_cache/
 /.idea/
+/.run/
 /Data/
 /Temp/
 /Log/

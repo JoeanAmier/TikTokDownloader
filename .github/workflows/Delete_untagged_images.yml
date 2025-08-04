@@ -1,5 +1,7 @@
 name: 删除 GHCR Untagged 镜像
 on:
+  schedule:
+    - cron: "0 0 15 * *"
   release:
     types: [ published ]
   workflow_dispatch:

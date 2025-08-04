@@ -2,6 +2,7 @@ name: "自动管理过时的问题和PR"
 on:
   schedule:
     - cron: "0 0 * * 6"
+  workflow_dispatch:
 
 permissions:
   issues: write
@@ -34,5 +35,5 @@ jobs:
           close-issue-label: "自动关闭(Close)"
           stale-pr-label: "未跟进问题(Stale)"
           close-pr-label: "自动关闭(Close)"
-          exempt-issue-labels: "新功能(feature),功能异常(bug),文档补充(docs),功能优化(enhancement),适合新手(good first issue),"
-          exempt-pr-labels: "新功能(feature),功能异常(bug),文档补充(docs),功能优化(enhancement),适合新手(good first issue),"
+          exempt-issue-labels: "功能异常(bug),文档补充(docs),功能优化(enhancement),适合新手(good first issue),"
+          exempt-pr-labels: "功能异常(bug),文档补充(docs),功能优化(enhancement),适合新手(good first issue),"
