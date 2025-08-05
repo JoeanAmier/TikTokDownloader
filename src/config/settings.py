@@ -1,15 +1,16 @@
-from json import dump
-from json import load
+from json import dump, load
 from json.decoder import JSONDecodeError
 from platform import system
+from shutil import move
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
 from ..translation import _
 
 if TYPE_CHECKING:
-    from ..tools import ColorfulConsole
     from pathlib import Path
+
+    from ..tools import ColorfulConsole
 
 __all__ = ["Settings"]
 
@@ -138,12 +139,14 @@ class Settings:
     )  # 兼容旧版本配置文件
 
     def __init__(self, root: "Path", console: "ColorfulConsole"):
-        self.file = root.joinpath("./settings.json")  # 配置文件
+        self.root = root
+        self.file = "settings.json"
+        self.path = root.joinpath(self.file)  # 配置文件
         self.console = console
 
     def __create(self) -> dict:
         """创建默认配置文件"""
-        with self.file.open("w", encoding=self.encode) as f:
+        with self.path.open("w", encoding=self.encode) as f:
             dump(self.default, f, indent=4, ensure_ascii=False)
         self.console.info(
             _(
@@ -156,9 +159,10 @@ class Settings:
 
     def read(self) -> dict:
         """读取配置文件，如果没有配置文件，则生成配置文件"""
+        self.compatible()
         try:
-            if self.file.exists():
-                with self.file.open("r", encoding=self.encode) as f:
+            if self.path.exists():
+                with self.path.open("r", encoding=self.encode) as f:
                     return self.__check(load(f))
             return self.__create()  # 生成的默认配置文件必须设置 cookie 才可以正常运行
         except JSONDecodeError:
@@ -185,7 +189,7 @@ class Settings:
 
     def update(self, settings: dict | SimpleNamespace):
         """更新配置文件"""
-        with self.file.open("w", encoding=self.encode) as f:
+        with self.path.open("w", encoding=self.encode) as f:
             dump(
                 settings if isinstance(settings, dict) else vars(settings),
                 f,
@@ -216,3 +220,9 @@ class Settings:
                     ),
                 )
         return data
+
+    def compatible(self):
+        if (
+            old := self.root.parent.joinpath(self.file)
+        ).exists() and not self.path.exists():
+            move(old, self.path)

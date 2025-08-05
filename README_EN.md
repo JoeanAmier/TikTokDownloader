@@ -182,7 +182,8 @@ demo()
 <li>Method 2: Pull the image using the command <code>docker pull joeanamier/tiktok-downloader</code>.</li>
 <li>Method 3: Pull the image using the command <code>docker pull ghcr.io/joeanamier/tiktok-downloader</code>.</li>
 </ul>
-<li>Create the container: <code>docker run --name ContainerName(optional) -p HostPort:5555 -v tiktok_downloader_volume:/TikTokDownloader -it joeanamier/tiktok-downloader</code>.</li>
+<li>Create the container: <code>docker run --name ContainerName(optional) -p HostPort:5555 -v tiktok_downloader_volume:/app/Volume -it &lt;image name&gt;</code>.</li>
+<br><b>Note:</b> The <code>&lt;image name&gt;</code> here must be consistent with the image name you used in the first step (<code>joeanamier/tiktok-downloader</code> or <code>ghcr.io/joeanamier/tiktok-downloader</code>)
 <li>Run the container
 <ul>
 <li>Start the container: <code>docker start -i container name/container ID</code>.</li>
@@ -191,7 +192,6 @@ demo()
 </li>
 </ol>
 <p>Docker containers cannot directly access the host machine's file system, and some features may be unavailable, for example: <code>Get Cookie from Browser</code>; if there are any other issues, please report!</p>
-
 <hr>
 
 ## About Cookie
@@ -229,11 +229,8 @@ demo()
 
 ## Program Update
 
-> **Option 1:** Download and unzip the files, then copy the old version of the `DouK-Downloader.db` file and the
-`settings.json` file into the `_internal` folder.
-
-> **Option 2:** Download and unzip the files \(without running the program), then copy all the files and directly
-> overwrite the old version files.
+<p><strong>Method 1:</strong> Download and extract the files, then copy the old version of the <code>_internal\Volume</code> folder into the new version's <code>_internal</code> folder.</p>
+<p><strong>Method 2:</strong> Download and extract the files (do not run the program), then copy all files and directly overwrite the old version.</p>
 
 ## Build of Executable File Guide
 

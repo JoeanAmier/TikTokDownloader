@@ -1,6 +1,7 @@
 from pathlib import Path
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.joinpath("Volume")
+PROJECT_ROOT.mkdir(exist_ok=True)
 VERSION_MAJOR = 5
 VERSION_MINOR = 7
 VERSION_BETA = True

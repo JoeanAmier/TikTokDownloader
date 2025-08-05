@@ -1,5 +1,6 @@
 from asyncio import CancelledError
 from contextlib import suppress
+from shutil import move
 
 from aiosqlite import Row, connect
 
@@ -124,6 +125,7 @@ class Database:
         await self.database.commit()
 
     async def __aenter__(self):
+        self.compatible()
         await self.__connect_database()
         return self
 
@@ -134,3 +136,9 @@ class Database:
 
     async def __aexit__(self, exc_type, exc_value, traceback):
         await self.close()
+
+    def compatible(self):
+        if (
+            old := PROJECT_ROOT.parent.joinpath(self.__FILE)
+        ).exists() and not self.file.exists():
+            move(old, self.file)

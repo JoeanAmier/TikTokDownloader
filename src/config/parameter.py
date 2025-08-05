@@ -1,7 +1,8 @@
 from pathlib import Path
+from shutil import move
 from time import localtime, strftime
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Type, Any
+from typing import TYPE_CHECKING, Any, Type
 
 from httpx import HTTPStatusError, RequestError, TimeoutException, get
 
@@ -24,7 +25,7 @@ from ..interface import API, APITikTok
 from ..module import FFMPEG
 from ..record import BaseLogger, LoggerManager
 from ..storage import RecordManager
-from ..tools import Cleaner, cookie_dict_to_str, create_client, DownloaderError
+from ..tools import Cleaner, DownloaderError, cookie_dict_to_str, create_client
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -100,7 +101,7 @@ class Parameter:
         self.settings = settings
         self.cookie_object = cookie_object
         self.ROOT = PROJECT_ROOT  # 项目根路径
-        self.cache = PROJECT_ROOT.joinpath("cache")  # 缓存路径
+        self.cache = PROJECT_ROOT.joinpath("Cache")  # 缓存路径
         self.logger = logger(PROJECT_ROOT, console)
         self.logger.run()
         self.ab = ABogus()
@@ -1002,6 +1003,7 @@ class Parameter:
         await self.client_tiktok.aclose()
 
     def __generate_folders(self):
+        self.compatible()
         self.cache.mkdir(exist_ok=True)
 
     def __set_browser_info(
@@ -1126,3 +1128,9 @@ class Parameter:
             return ""
 
         return f"{key}={value}" if return_key else value
+
+    def compatible(self):
+        if (
+            old := self.ROOT.parent.joinpath("Cache")
+        ).exists() and not self.cache.exists():
+            move(old, self.cache)

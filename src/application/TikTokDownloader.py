@@ -1,4 +1,4 @@
-from asyncio import run, CancelledError
+from asyncio import CancelledError, run
 from threading import Event, Thread
 from time import sleep
 
@@ -23,22 +23,22 @@ from src.custom import (
     VERSION_MINOR,
 )
 from src.manager import Database, DownloadRecorder
-from src.module import Cookie, Register
+from src.module import Cookie, MigrateFolder, Register
 from src.record import BaseLogger, LoggerManager
 from src.tools import (
     Browser,
     ColorfulConsole,
     DownloaderError,
+    RenameCompatible,
     choose,
     remove_empty_directories,
     safe_pop,
-    RenameCompatible,
 )
 from src.translation import _, switch_language
 
+from .main_monitor import ClipboardMonitor
 from .main_server import APIServer
 from .main_terminal import TikTok
-from .main_monitor import ClipboardMonitor
 
 # from typing import Type
 # from webbrowser import open
@@ -395,6 +395,7 @@ class TikTokDownloader:
             **self.settings.read(),
             recorder=self.recorder,
         )
+        MigrateFolder(self.parameter).compatible()
         self.parameter.set_headers_cookie()
         # self.restart_cycle_task(
         #     restart,

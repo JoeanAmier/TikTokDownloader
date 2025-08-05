@@ -176,7 +176,9 @@ demo()
 <li>方式二：使用 <code>docker pull joeanamier/tiktok-downloader</code> 命令拉取镜像</li>
 <li>方式三：使用 <code>docker pull ghcr.io/joeanamier/tiktok-downloader</code> 命令拉取镜像</li>
 </ul>
-<li>创建容器：<code>docker run --name 容器名称(可选) -p 主机端口号:5555 -v tiktok_downloader_volume:/TikTokDownloader -it joeanamier/tiktok-downloader</code></li>
+<li>创建容器：<code>docker run --name 容器名称(可选) -p 主机端口号:5555 -v tiktok_downloader_volume:/app/Volume -it &lt;镜像名称&gt;</code>
+</li>
+<br><b>注意：</b>此处的 <code>&lt;镜像名称&gt;</code> 需与您在第一步中使用的镜像名称保持一致（例如 <code>joeanamier/tiktok-downloader</code> 或 <code>ghcr.io/joeanamier/tiktok-downloader</code>）
 <li>运行容器
 <ul>
 <li>启动容器：<code>docker start -i 容器名称/容器 ID</code></li>
@@ -185,7 +187,6 @@ demo()
 </li>
 </ol>
 <p>Docker 容器无法直接访问宿主机的文件系统，部分功能不可用，例如：<code>从浏览器读取 Cookie</code>；其他功能如有异常请反馈！</p>
-
 <hr>
 
 ## 关于 Cookie
@@ -221,9 +222,8 @@ demo()
 
 ## 程序更新
 
-> **方案一：** 下载并解压文件，将旧版本的 `DouK-Downloader.db` 文件和 `settings.json` 文件复制到 `_internal` 文件夹。
-
-> **方案二：** 下载并解压文件（不要运行程序），复制全部文件，直接覆盖旧版本文件。
+<p><strong>方案一：</strong>下载并解压文件，将旧版本的 <code>_internal\Volume</code> 文件夹复制到新版本的 <code>_internal</code> 文件夹。</p>
+<p><strong>方案二：</strong>下载并解压文件（不要运行程序），复制全部文件，直接覆盖旧版本文件。</p>
 
 ## 构建可执行文件指南
 

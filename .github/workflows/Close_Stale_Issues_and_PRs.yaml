@@ -30,6 +30,7 @@ jobs:
           days-before-issue-stale: 28
           days-before-pr-stale: 28
           days-before-close: 14
+          operations-per-run: 100
 
           stale-issue-label: "未跟进问题(Stale)"
           close-issue-label: "自动关闭(Close)"

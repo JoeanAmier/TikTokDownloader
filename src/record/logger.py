@@ -2,6 +2,7 @@ from logging import INFO as INFO_LEVEL
 from logging import FileHandler, Formatter, getLogger
 from pathlib import Path
 from platform import system
+from shutil import move
 from time import localtime, strftime
 from typing import TYPE_CHECKING
 
@@ -32,8 +33,9 @@ class LoggerManager(BaseLogger):
         format_="%(asctime)s[%(levelname)s]:  %(message)s",
         filename=None,
     ):
-        if not (dir_ := self._root.joinpath(self._folder)).exists():
-            dir_.mkdir()
+        dir_ = self._root.joinpath(self._folder)
+        self.compatible(dir_)
+        dir_.mkdir(exist_ok=True)
         file_handler = FileHandler(
             dir_.joinpath(
                 f"{filename}.log"
@@ -67,3 +69,12 @@ class LoggerManager(BaseLogger):
         if self.DEBUG:
             self.console.print(text, style=DEBUG, **kwargs)
             self.log.debug(text.strip())
+
+    def compatible(
+        self,
+        path: Path,
+    ):
+        if (
+            old := self._root.parent.joinpath(self._folder)
+        ).exists() and not path.exists():
+            move(old, path)
