@@ -3,7 +3,7 @@ from pathlib import Path
 from platform import system
 from time import time
 from types import SimpleNamespace
-from typing import TYPE_CHECKING, Callable, Union, Any
+from typing import TYPE_CHECKING, Any, Callable, Union
 
 from pydantic import ValidationError
 
@@ -33,9 +33,9 @@ from ..interface import (
     LiveTikTok,
     Mix,
     MixTikTok,
+    Reply,
     Search,
     User,
-    Reply,
 )
 from ..link import Extractor as LinkExtractor
 from ..link import ExtractorTikTok
@@ -1512,12 +1512,13 @@ class TikTok:
         self,
         data: list[dict],
         text=_("收藏合集"),
+        select="",
         key="title",
     ) -> list[dict] | None:
         self.console.print(_("{text}列表：").format(text=_(text)))
         for i, j in enumerate(data, start=1):
             self.console.print(f"{i}. {j[key]}")
-        index = self.console.input(
+        index = select or self.console.input(
             _(
                 "请输入需要下载的{item}序号(多个序号使用空格分隔，输入 ALL 下载全部{item})："
             ).format(item=text)
@@ -2086,10 +2087,11 @@ class TikTok:
     @check_cookie_state(tiktok=False)
     async def collects_interactive(
         self,
-        *args,
+        select="",
         key: str = "name",
     ):
         if c := await self.__get_collects_list(
+            select=select,
             key=key,
         ):
             start = time()
@@ -2108,6 +2110,7 @@ class TikTok:
         proxy: str | dict = None,
         # api=False,
         source=False,
+        select="",
         key: str = "name",
         *args,
         **kwargs,
@@ -2125,6 +2128,7 @@ class TikTok:
         return self.__input_download_index(
             data,
             _("收藏夹"),
+            select,
             key,
         )
 
