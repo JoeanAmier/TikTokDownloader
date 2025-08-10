@@ -23,7 +23,7 @@ from src.custom import (
     VERSION_MINOR,
 )
 from src.manager import Database, DownloadRecorder
-from src.module import Cookie, MigrateFolder, Register
+from src.module import Cookie, MigrateFolder
 from src.record import BaseLogger, LoggerManager
 from src.tools import (
     Browser,
@@ -344,24 +344,24 @@ class TikTokDownloader:
         if self.cookie.run(tiktok):
             await self.check_settings()
 
-    async def auto_cookie(self):
-        self.console.error(
-            _(
-                "该功能为实验性功能，仅适用于学习和研究目的；目前仅支持抖音平台，建议使用其他方式获取 Cookie，未来可能会禁用或移除该功能！"
-            ),
-        )
-        if self.console.input(_("是否返回上一级菜单(YES/NO)")).upper() != "NO":
-            return
-        if cookie := await Register(
-            self.parameter,
-            self.settings,
-        ).run():
-            self.cookie.extract(cookie, platform=_("抖音"))
-            await self.check_settings()
-        else:
-            self.console.warning(
-                _("扫码登录失败，未写入 Cookie！"),
-            )
+    # async def auto_cookie(self):
+    #     self.console.error(
+    #         _(
+    #             "该功能为实验性功能，仅适用于学习和研究目的；目前仅支持抖音平台，建议使用其他方式获取 Cookie，未来可能会禁用或移除该功能！"
+    #         ),
+    #     )
+    #     if self.console.input(_("是否返回上一级菜单(YES/NO)")).upper() != "NO":
+    #         return
+    #     if cookie := await Register(
+    #         self.parameter,
+    #         self.settings,
+    #     ).run():
+    #         self.cookie.extract(cookie, platform=_("抖音"))
+    #         await self.check_settings()
+    #     else:
+    #         self.console.warning(
+    #             _("扫码登录失败，未写入 Cookie！"),
+    #         )
 
     async def compatible(self, mode: str):
         if mode in {"Q", "q", ""}:
@@ -397,10 +397,10 @@ class TikTokDownloader:
         )
         MigrateFolder(self.parameter).compatible()
         self.parameter.set_headers_cookie()
-        # self.restart_cycle_task(
-        #     restart,
-        # )
-        await self.parameter.update_params_offline()
+        self.restart_cycle_task(
+            restart,
+        )
+        # await self.parameter.update_params_offline()
         if not restart:
             self.run_command = self.parameter.run_command.copy()
         self.parameter.CLEANER.set_rule(TEXT_REPLACEMENT, True)

@@ -27,10 +27,10 @@ jobs:
             🔒 此 PR 已因无更新而自动关闭。如仍需合并，请重新打开或提交新 PR。
             🔒 This PR has been automatically closed due to inactivity. If you still wish to merge it, please reopen it or submit a new PR.
 
-          days-before-issue-stale: 28
-          days-before-pr-stale: 28
+          days-before-stale: 28
           days-before-close: 14
-          operations-per-run: 100
+
+          ascending: true
 
           stale-issue-label: "未跟进问题(Stale)"
           close-issue-label: "自动关闭(Close)"

@@ -23,51 +23,56 @@
 
 # 📝 Project Features
 
-* ✅ Download DouYin video/image without watermarks
-* ✅ Download DouYin live photo without watermarks
-* ✅ Download the highest quality video file
-* ✅ Download TikTok video source files
-* ✅ Download TikTok video/image without watermarks
-* ✅ Download of DouYin account posts/liked/favorites works
-* ✅ Download of TikTok account posts/liked works
-* ✅ Collect detailed data from DouYin/TikTok
-* ✅ Batch download of linked works
-* ✅ Batch download of works from multiple accounts
-* ✅ Automatically skip already downloaded files
-* ✅ Persistently save collected data
-* ✅ Support CSV/XLSX/SQLite format for saving data
-* ✅ Download dynamic/static cover images
-* ✅ Obtain DouYin live stream addresses
-* ✅ Obtain TikTok live stream addresses
-* ✅ Use ffmpeg to download live video
-* ✅ Web UI interaction interface
-* ✅ Collect comments data from DouYin works
-* ✅ Batch download of DouYin Mix works
-* ✅ Batch download of TikTok Mix works
-* ✅ Record statistics such as likes and favorites
-* ✅ Filter works based on publication time
-* ✅ Support incremental downloading of account works
-* ✅ Support data Collections using proxies
-* ✅ Support remote access via LAN
-* ✅ Collect detailed data from DouYin accounts
-* ✅ Update statistics of works
-* ✅ Support custom account/mix mark
-* ✅ Automatically update account nickname/mark
-* ✅ Deploy to private servers
-* ✅ Deploy to public servers
-* ✅ Collect DouYin search data
-* ✅ Collect DouYin hot board data
-* ✅ Record IDs of already downloaded works
-* ☑️ ~~Scan QR code to log in and obtain Cookies~~
-* ✅ Obtain Cookies from browsers
-* ✅ Support Web API calls
-* ✅ Support multithreaded downloading of works
-* ✅ File integrity processing mechanism
-* ✅ Custom rules for filtering works
-* ✅ Archive and save works files by folder
-* ✅ Customize file size limit
-* ✅ Support resume downloading of files from breakpoints
-* ✅ Monitor clipboard links to download works
+<details>
+<summary>Function List (Click to Expand)</summary>
+<ul>
+<li>✅ Download DouYin video/image without watermarks</li>
+<li>✅ Download DouYin live photo without watermarks</li>
+<li>✅ Download the highest quality video file</li>
+<li>✅ Download TikTok video source files</li>
+<li>✅ Download TikTok video/image without watermarks</li>
+<li>✅ Download of DouYin account posts/liked/favorites works</li>
+<li>✅ Download of TikTok account posts/liked works</li>
+<li>✅ Collect detailed data from DouYin/TikTok</li>
+<li>✅ Batch download of linked works</li>
+<li>✅ Batch download of works from multiple accounts</li>
+<li>✅ Automatically skip already downloaded files</li>
+<li>✅ Persistently save collected data</li>
+<li>✅ Support CSV/XLSX/SQLite format for saving data</li>
+<li>✅ Download dynamic/static cover images</li>
+<li>✅ Obtain DouYin live stream addresses</li>
+<li>✅ Obtain TikTok live stream addresses</li>
+<li>✅ Use ffmpeg to download live video</li>
+<li>✅ Web UI interaction interface</li>
+<li>✅ Collect comments data from DouYin works</li>
+<li>✅ Batch download of DouYin Mix works</li>
+<li>✅ Batch download of TikTok Mix works</li>
+<li>✅ Record statistics such as likes and favorites</li>
+<li>✅ Filter works based on publication time</li>
+<li>✅ Support incremental downloading of account works</li>
+<li>✅ Support data Collections using proxies</li>
+<li>✅ Support remote access via LAN</li>
+<li>✅ Collect detailed data from DouYin accounts</li>
+<li>✅ Update statistics of works</li>
+<li>✅ Support custom account/mix mark</li>
+<li>✅ Automatically update account nickname/mark</li>
+<li>✅ Deploy to private servers</li>
+<li>✅ Deploy to public servers</li>
+<li>✅ Collect DouYin search data</li>
+<li>✅ Collect DouYin hot board data</li>
+<li>✅ Record IDs of already downloaded works</li>
+<li>☑️ <del>Scan QR code to log in and obtain Cookies</del></li>
+<li>✅ Obtain Cookies from browsers</li>
+<li>✅ Support Web API calls</li>
+<li>✅ Support multithreaded downloading of works</li>
+<li>✅ File integrity processing mechanism</li>
+<li>✅ Custom rules for filtering works</li>
+<li>✅ Archive and save works files by folder</li>
+<li>✅ Customize file size limit</li>
+<li>✅ Support resume downloading of files from breakpoints</li>
+<li>✅ Monitor clipboard links to download works</li>
+</ul>
+</details>
 
 # 💻 Program Screenshot
 
@@ -115,16 +120,6 @@ def demo():
 
 demo()
 ```
-
-# 📈 Project Status
-
-* 🟢 After testing, the source code published
-  on [Releases](https://github.com/JoeanAmier/TikTokDownloader/releases/latest) has been verified and all functions are
-  normal.
-* 🟡 For the development plans and progress of DouK-Downloader, please
-  visit [Projects](https://github.com/users/JoeanAmier/projects/2).
-* 🔴 Note that the latest source code (Beta version) may have some unstable bugs.
-* 🔴 If you find any program bugs during use, please inform the author promptly for repairs.
 
 # 📋 Project Instructions
 
@@ -225,14 +220,9 @@ demo()
 <li>This project has not been optimized for running multiple instances of the program. If you need to run multiple instances, please copy the entire project folder to avoid unexpected issues.</li>
 <li>During program execution, if you need to terminate the program or <code>ffmpeg</code>, please press <code>Ctrl + C</code> to stop the process. Do not click the close button on the terminal window directly.</li>
 </ul>
-<hr>
-
-## Program Update
-
-<p><strong>Method 1:</strong> Download and extract the files, then copy the old version of the <code>_internal\Volume</code> folder into the new version's <code>_internal</code> folder.</p>
-<p><strong>Method 2:</strong> Download and extract the files (do not run the program), then copy all files and directly overwrite the old version.</p>
-
-## Build of Executable File Guide
+<h2>Build of Executable File Guide</h2>
+<details>
+<summary>Build of Executable File Guide (Click to Expand)</summary>
 
 This guide will walk you through forking this repository and executing GitHub Actions to automatically build and package
 the program based on the latest source code!
@@ -320,6 +310,13 @@ A:
 A: Due to permission restrictions, you cannot directly trigger Actions from the main repository. Please use the forked
 repository to execute the build process
 
+</details>
+
+## Program Update
+
+<p><strong>Method 1:</strong> Download and extract the files, then copy the old version of the <code>_internal\Volume</code> folder into the new version's <code>_internal</code> folder.</p>
+<p><strong>Method 2:</strong> Download and extract the files (do not run the program), then copy all files and directly overwrite the old version.</p>
+
 # ⚠️ Disclaimer
 
 <ol>
@@ -355,24 +352,6 @@ repository to execute the build process
 <li><a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/">Contributor Covenant</a></li>
 <li><a href="https://opensource.guide/how-to-contribute/">How to Contribute to Open Source</a></li>
 </ul>
-
-# ✉️ Contact the Author
-
-<ul>
-<li>Author's Email: yonglelolu@foxmail.com</li>
-<li>Author's WeChat: Downloader_Tools</li>
-<li>Official WeChat Account: Downloader Tools</li>
-<li><b>Discord Community</b>: <a href="https://discord.com/invite/ZYtmgKud9Y">Click to join the community</a></li>
-</ul>
-<p>✨ <b>The author's other open-source projects:</b></p>
-<ul>
-<li><b>XHS-Downloader（小红书、XiaoHongShu、RedNote）</b>：<a href="https://github.com/JoeanAmier/XHS-Downloader">https://github.com/JoeanAmier/XHS-Downloader</a></li>
-<li><b>KS-Downloader（快手、KuaiShou）</b>：<a href="https://github.com/JoeanAmier/KS-Downloader">https://github.com/JoeanAmier/KS-Downloader</a></li>
-</ul>
-<h1>⭐ Star History</h1>
-<p>
-<img alt="Star History Chart" src="https://api.star-history.com/svg?repos=JoeanAmier/TikTokDownloader&amp;type=Timeline"/>
-</p>
 
 # ♥️ Support the Project
 
@@ -411,6 +390,24 @@ repository to execute the build process
 
 <p><a href="https://tikhub.io/">TikHub</a>: Third-party API provider offering multi-platform APIs.</p>
 <p>Through daily check-ins, users can earn a small amount of free usage credits. You can also use my <strong>referral link</strong>: <a href="https://user.tikhub.io/users/signup?referral_code=ZrdH8McC">https://user.tikhub.io/users/signup?referral_code=ZrdH8McC</a> or <strong>referral code</strong>: <code>ZrdH8McC</code>, register and top up to get a $2 credit!</p>
+
+# ✉️ Contact the Author
+
+<ul>
+<li>Author's Email: yonglelolu@foxmail.com</li>
+<li>Author's WeChat: Downloader_Tools</li>
+<li>Official WeChat Account: Downloader Tools</li>
+<li><b>Discord Community</b>: <a href="https://discord.com/invite/ZYtmgKud9Y">Click to join the community</a></li>
+</ul>
+<p>✨ <b>The author's other open-source projects:</b></p>
+<ul>
+<li><b>XHS-Downloader（小红书、XiaoHongShu、RedNote）</b>：<a href="https://github.com/JoeanAmier/XHS-Downloader">https://github.com/JoeanAmier/XHS-Downloader</a></li>
+<li><b>KS-Downloader（快手、KuaiShou）</b>：<a href="https://github.com/JoeanAmier/KS-Downloader">https://github.com/JoeanAmier/KS-Downloader</a></li>
+</ul>
+<h1>⭐ Star History</h1>
+<p>
+<img alt="Star History Chart" src="https://api.star-history.com/svg?repos=JoeanAmier/TikTokDownloader&amp;type=Timeline"/>
+</p>
 
 # 💡 Project References
 

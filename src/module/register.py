@@ -23,10 +23,10 @@ from ..tools import Retry, cookie_str_to_str
 if TYPE_CHECKING:
     from ..config import Parameter, Settings
 
-__all__ = ["Register"]
+__all__ = ["__Register"]
 
 
-class Register:
+class __Register:
     """
     扫码登录功能已过期
     """
