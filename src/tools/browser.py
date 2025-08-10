@@ -73,13 +73,18 @@ class Browser:
         tiktok=False,
         select: str = None,
     ):
-        if browser := select or self.console.input(
-            _(
-                "读取指定浏览器的 {platform_name} Cookie 并写入配置文件；\n"
-                "注意：Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie！\n"
-                "{options}\n"
-                "请输入浏览器名称或序号："
-            ).format(platform_name=self.PLATFORM[tiktok].name, options=self.options),
+        if browser := (
+            select
+            or self.console.input(
+                _(
+                    "读取指定浏览器的 {platform_name} Cookie 并写入配置文件；\n"
+                    "注意：Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie！\n"
+                    "{options}\n"
+                    "请输入浏览器名称或序号："
+                ).format(
+                    platform_name=self.PLATFORM[tiktok].name, options=self.options
+                ),
+            )
         ):
             if cookie := self.get(
                 browser,
@@ -88,14 +93,14 @@ class Browser:
                 self.console.info(
                     _("读取 Cookie 成功！"),
                 )
+                self.__save_cookie(
+                    cookie,
+                    tiktok,
+                )
             else:
                 self.console.warning(
                     _("Cookie 数据为空！"),
                 )
-            self.__save_cookie(
-                cookie,
-                tiktok,
-            )
         else:
             self.console.print(_("未选择浏览器！"))
 
