@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DouK-Downloader 5.7\n"
 "Report-Msgid-Bugs-To: <yonglelolu@foxmail.com>\n"
-"POT-Creation-Date: 2025-05-17 16:01+0800\n"
+"POT-Creation-Date: 2025-08-18 16:59+0800\n"
 "PO-Revision-Date: 2024-12-22 21:46+0800\n"
 "Last-Translator: <yonglelolu@foxmail.com>\n"
 "Language-Team: Chinese (simplified)\n"
@@ -17,443 +17,458 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_monitor.py:41
+msgid ""
+"程序会自动检测并提取剪贴板中的抖音和 TikTok 作品链接，并自动下载作品文件；如"
+"需关闭，请按下 Ctrl+C，或将剪贴板内容设置为“close”以停止监听！"
+msgstr ""
+
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_monitor.py:129
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:941
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:968
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1293
+#, python-brace-format
+msgid "{url} 提取作品 ID 失败"
+msgstr ""
+
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:50
 msgid "验证失败！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:104
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:106
 msgid "访问项目 GitHub 仓库"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:105
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:107
 msgid "重定向至项目 GitHub 仓库主页"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:106
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:121
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:108
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:123
 msgid "项目"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:113
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:115
 msgid "测试令牌有效性"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:126
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:128
 msgid "验证成功！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:133
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:135
 msgid "更新项目全局配置"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:143
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:156
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:145
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:158
 msgid "配置"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:154
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:156
 msgid "获取项目全局配置"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:155
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:157
 msgid "返回项目全部配置参数"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:164
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:502
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:166
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:505
 msgid "获取分享链接重定向的完整链接"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:173
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:204
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:231
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:257
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:304
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:342
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:378
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:416
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:444
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:470
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:492
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:183
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:432
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:933
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\module\cookie.py:16
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:175
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:206
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:233
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:259
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:306
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:344
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:381
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:419
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:447
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:473
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:495
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:190
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:444
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:885
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:961
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\module\cookie.py:26
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:43
 msgid "抖音"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:181
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:519
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:183
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:522
 msgid "请求链接成功！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:186
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:524
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:188
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:527
 msgid "请求链接失败！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:193
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:531
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:195
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:534
 msgid "获取单个作品数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:214
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:552
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:216
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:555
 msgid "获取账号作品数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:241
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:243
 msgid "获取合集作品数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:267
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:319
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:269
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:321
 msgid "参数错误！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:286
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:613
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:288
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:616
 msgid "获取直播数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:326
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:328
 msgid "获取作品评论数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:363
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:366
 msgid "获取评论回复数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:397
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:400
 msgid "获取综合搜索数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:426
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:429
 msgid "获取视频搜索数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:454
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:457
 msgid "获取用户搜索数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:480
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:483
 msgid "获取直播搜索数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:579
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:582
 msgid "获取合辑作品数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:646
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:649
 msgid "搜索结果为空！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:699
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:702
 msgid "获取数据成功！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:710
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_server.py:713
 msgid "获取数据失败！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:70
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:71
 msgid ""
 "未设置 storage_format 参数，无法正常使用该功能，详细说明请查阅项目文档！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:85
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:86
 msgid "抖音 Cookie"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:89
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:90
 #, python-brace-format
 msgid "{tip} 未登录，无法使用该功能，详细说明请查阅项目文档！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:135
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:143
 msgid "批量下载账号作品(抖音)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:139
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:147
 msgid "批量下载链接作品(抖音)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:143
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:151
 msgid "获取直播推流地址(抖音)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:147
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:155
 msgid "采集作品评论数据(抖音)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:151
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:159
 msgid "批量下载合集作品(抖音)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:155
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:163
 msgid "采集账号详细数据(抖音)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:159
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:167
 msgid "采集搜索结果数据(抖音)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:163
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:171
 msgid "采集抖音热榜数据(抖音)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:168
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:176
 msgid "批量下载收藏作品(抖音)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:172
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:180
 msgid "批量下载收藏音乐(抖音)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:177
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:185
 msgid "批量下载收藏夹作品(抖音)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:181
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:189
 msgid "批量下载账号作品(TikTok)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:185
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:193
 msgid "批量下载链接作品(TikTok)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:189
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:197
 msgid "批量下载合集作品(TikTok)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:193
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:201
 msgid "获取直播推流地址(TikTok)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:198
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:206
 msgid "批量下载视频原画(TikTok)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:203
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:211
 msgid "使用 accounts_urls 参数的账号链接(推荐)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:204
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:212
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:228
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:220
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:236
 msgid "手动输入待采集的账号链接"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:205
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:213
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:229
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:221
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:237
 msgid "从文本文档读取待采集的账号链接"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:209
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:217
 msgid "使用 accounts_urls_tiktok 参数的账号链接(推荐)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:216
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:224
 msgid "使用 mix_urls 参数的合集链接(推荐)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:217
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:225
 msgid "获取当前账号收藏合集列表"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:218
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:223
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:226
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:231
 msgid "手动输入待采集的合集/作品链接"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:219
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:224
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:227
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:232
 msgid "从文本文档读取待采集的合集/作品链接"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:222
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:230
 msgid "使用 mix_urls_tiktok 参数的合集链接(推荐)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:227
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:235
 msgid "使用 accounts_urls 参数的账号链接"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:232
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:236
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:240
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:244
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:248
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:252
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:256
 msgid "手动输入待采集的作品链接"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:233
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:237
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:241
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:245
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:249
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:253
 msgid "从文本文档读取待采集的作品链接"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:253
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:261
 msgid "综合搜索数据采集"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:257
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:265
 msgid "视频搜索数据采集"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:261
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:269
 msgid "用户搜索数据采集"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:265
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:273
 msgid "直播搜索数据采集"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:275
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:283
 #, python-brace-format
 msgid "请输入{tip}链接: "
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:288
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:314
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:296
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:322
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1813
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:330
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1825
 msgid "请选择账号链接来源"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:292
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:300
 msgid "已退出批量下载账号作品(TikTok)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:294
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:407
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:527
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:302
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:415
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:535
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\user.py:25
 msgid "账号"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:298
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:306
 #, python-brace-format
 msgid "程序共处理 {0} 个{1}，成功 {2} 个，失败 {3} 个，耗时 {4} 分钟 {5} 秒"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:318
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:326
 msgid "已退出批量下载账号作品(抖音)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:374
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:382
 #, python-brace-format
 msgid "共有 {count} 个账号的作品等待下载"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:385
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:393
 #, python-brace-format
 msgid ""
 "配置文件 {name} 参数的 url {url} 提取 sec_user_id 失败，错误配置：{data}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:426
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:443
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1735
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:434
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:451
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1747
 msgid "账号主页"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:430
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:447
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1739
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:438
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:455
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1751
 #, python-brace-format
 msgid "{url} 提取账号 sec_user_id 失败"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:462
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:500
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1768
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:470
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:508
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1780
 msgid "从文本文档提取账号 sec_user_id 失败"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:548
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:556
 #, python-brace-format
 msgid "开始处理第 {index} 个账号"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:550
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:558
 msgid "开始处理账号"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:563
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:571
 #, python-brace-format
 msgid "{sec_user_id} 获取账号信息失败，请检查 Cookie 登录状态！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:574
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:582
 msgid ""
 "如果账号发布作品均为共创作品且该账号均不是作品作者时，请配置已登录的 Cookie "
 "后重新运行程序，其余情况请无视该提示！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:722
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:730
 msgid "开始提取作品数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:735
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:743
 msgid "提取账号或合集信息发生错误！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:817
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:825
 msgid "发布作品"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:819
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:827
 msgid "喜欢作品"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:821
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:829
 msgid "收藏作品"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:823
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:831
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\mix.py:35
 msgid "合集作品"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:825
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:833
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\collects.py:89
 msgid "收藏夹作品"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:836
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:844
 #, python-brace-format
 msgid "昵称/标题：{name}；标识：{mark}；ID：{id}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:876
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:910
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1268
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:884
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:918
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1277
 msgid "请选择作品链接来源"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:880
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:888
 msgid "已退出批量下载链接作品(抖音)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:890
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:898
 msgid "已退出批量下载链接作品(TikTok)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:897
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:905
 msgid "注意：本功能为实验性功能，依赖第三方 API 服务，可能不稳定或存在限制！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:903
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:911
 msgid "已退出批量下载视频原画(TikTok)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:930
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:957
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1279
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:938
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:965
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1288
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\detail.py:24
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\detail_tiktok.py:24
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\slides.py:26
@@ -461,44 +476,37 @@ msgstr ""
 msgid "作品"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:933
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:960
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1284
-#, python-brace-format
-msgid "{url} 提取作品 ID 失败"
-msgstr ""
-
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:936
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:963
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1009
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1287
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:944
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:971
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1017
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1296
 #, python-brace-format
 msgid "共提取到 {count} 个作品，开始处理！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:976
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:997
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1006
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1308
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:984
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1005
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1014
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1317
 msgid "从文本文档提取作品 ID 失败"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1085
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:295
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:298
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:380
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:714
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1093
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:320
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:323
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:405
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:749
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\extract\extractor.py:434
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\extract\extractor.py:453
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\extract\extractor.py:467
 msgid "图集"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1087
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:301
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:304
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:431
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:716
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1095
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:326
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:329
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:456
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:751
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\extract\extractor.py:351
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\extract\extractor.py:365
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\extract\extractor.py:480
@@ -508,420 +516,424 @@ msgstr ""
 msgid "视频"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1097
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1105
 msgid "程序未检测到有效的 ffmpeg，不支持直播下载功能！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1101
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1109
 msgid "请选择下载清晰度(输入清晰度或者对应序号，直接回车代表不下载): "
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1140
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1160
-msgid "直播"
-msgstr ""
-
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1145
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1163
-msgid "{} 提取直播 ID 失败"
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1116
+msgid "未输入有效的清晰度或者序号，跳过下载！"
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1149
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1167
-msgid "获取直播数据失败"
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1169
+msgid "直播"
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1154
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1172
+msgid "{} 提取直播 ID 失败"
+msgstr ""
+
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1158
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1176
+msgid "获取直播数据失败"
+msgstr ""
+
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1163
 msgid "已退出获取直播推流地址(抖音)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1177
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1186
 msgid "已退出获取直播推流地址(TikTok)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1182
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1191
 msgid "提取 web_rid 或者 room_id 失败！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1193
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1210
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1202
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1219
 msgid "直播标题:"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1194
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1211
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1203
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1220
 msgid "主播昵称:"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1195
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1213
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1204
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1222
 msgid "在线观众:"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1196
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1205
 msgid "观看次数:"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1198
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1207
 msgid "当前直播已结束！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1212
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1221
 msgid "开播时间:"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1214
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1223
 msgid "点赞次数:"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1219
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1238
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1228
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1247
 msgid "FLV 推流地址: "
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1222
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1231
 msgid "M3U8 推流地址: "
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1260
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1269
 msgid "已退出采集作品评论数据(TikTok)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1272
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1281
 msgid "已退出采集作品评论数据(抖音)模式)"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1357
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1368
 #, python-brace-format
 msgid "作品评论数据已储存至 {filename}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1358
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1368
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1369
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1379
 #, python-brace-format
 msgid "作品{id}_评论数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1362
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1373
 msgid "采集评论数据失败"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1417
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1428
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1439
 msgid "请选择合集链接来源"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1421
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1432
 msgid "已退出批量下载合集作品(抖音)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1432
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1443
 msgid "已退出批量下载合集作品(TikTok)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1449
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1464
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1460
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1475
 msgid "合集或作品"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1453
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1464
 #, python-brace-format
 msgid "{url} 获取作品 ID 或合集 ID 失败"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1467
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1478
 #, python-brace-format
 msgid "{url} 获取合集 ID 失败"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1496
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1503
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1507
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1514
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\collects.py:150
 msgid "收藏合集"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1506
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1518
 #, python-brace-format
 msgid "{text}列表："
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1511
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1523
 #, python-brace-format
 msgid ""
 "请输入需要下载的{item}序号(多个序号使用空格分隔，输入 ALL 下载全部{item})："
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1525
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1537
 #, python-brace-format
 msgid "{text}序号输入错误！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1533
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1545
 msgid "从文本文档提取作品 ID 或合集 ID 失败"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1543
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1555
 msgid "从文本文档提取合集 ID 失败"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1583
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1643
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1595
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1655
 msgid "合集"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1619
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1631
 #, python-brace-format
 msgid ""
 "配置文件 {name} 参数的 url {url} 获取作品 ID 或合集 ID 失败，错误配置：{data}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1661
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1673
 #, python-brace-format
 msgid "开始处理第 {index} 个合集"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1663
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1675
 msgid "开始处理合集"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1696
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1708
 msgid "采集合集作品数据失败"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1722
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1734
 #, python-brace-format
 msgid "配置文件 accounts_urls 参数第 {index} 条数据的 url 无效"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1746
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\cli_edition\write.py:37
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1758
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\cli_edition\write.py:40
 msgid "请输入文本文档路径："
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1753
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\cli_edition\write.py:44
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1765
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\cli_edition\write.py:47
 #, python-brace-format
 msgid "{path} 文件读取异常: {error}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1756
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\cli_edition\write.py:47
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1768
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\cli_edition\write.py:50
 #, python-brace-format
 msgid "{path} 文件不存在！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1780
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1792
 #, python-brace-format
 msgid "正在获取账号 {sec_user_id} 的数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1807
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1819
 msgid "账号数据已保存至文件"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1817
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1829
 msgid "已退出采集账号详细数据模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1824
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1836
 #, python-brace-format
 msgid "请输入搜索参数；参数之间使用两个空格分隔({field})：\n"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1847
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1859
 msgid "请选择搜索模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1926
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1938
 msgid "搜索结果为空"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1948
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:1960
 msgid "搜索数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2015
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2027
 #, python-brace-format
 msgid "搜索数据已保存至 {name}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2024
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2036
 msgid "已退出采集抖音热榜数据(抖音)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2044
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2056
 #, python-brace-format
 msgid "热榜数据_{time}_{name}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2058
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2070
 #, python-brace-format
 msgid "热榜数据已储存至: 热榜数据_{time} + 榜单类型"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2073
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2085
 msgid "已退出批量下载收藏作品(抖音)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2092
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2105
 msgid "已退出批量下载收藏夹作品(抖音)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2116
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2130
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\collects.py:27
 msgid "收藏夹"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2126
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2141
 #, python-brace-format
 msgid "配置文件 owner_url 的 url 参数 {url} 无效"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2156
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2171
 msgid "已退出批量下载收藏音乐(抖音)模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2164
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2179
 #, python-brace-format
 msgid "程序运行耗时 {minutes} 分钟 {seconds} 秒"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2194
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2209
 msgid "开始获取收藏数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2204
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2219
 #, python-brace-format
 msgid "{sec_user_id} 获取账号信息失败"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2237
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2252
 msgid "开始获取收藏夹数据"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2290
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\main_terminal.py:2305
 msgid "请选择采集功能"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:103
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:108
 msgid "禁用"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:104
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:109
 msgid "启用"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:107
-msgid "复制粘贴写入 Cookie (抖音)"
-msgstr ""
-
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:108
-msgid "从浏览器获取 Cookie (抖音)"
-msgstr ""
-
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:110
-msgid "复制粘贴写入 Cookie (TikTok)"
-msgstr ""
-
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:111
-msgid "从浏览器获取 Cookie (TikTok)"
-msgstr ""
-
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:112
-msgid "终端交互模式"
+msgid "从剪贴板读取 Cookie (抖音)"
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:113
-msgid "后台监测模式"
-msgstr ""
-
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:114
-msgid "Web API 模式"
+msgid "从浏览器读取 Cookie (抖音)"
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:115
-msgid "Web UI 模式"
+msgid "从剪贴板读取 Cookie (TikTok)"
+msgstr ""
+
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:116
+msgid "从浏览器读取 Cookie (TikTok)"
+msgstr ""
+
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:117
+msgid "终端交互模式"
+msgstr ""
+
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:118
+msgid "后台监听模式"
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:119
-msgid "{}作品下载记录"
+msgid "Web API 模式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:122
-msgid "删除作品下载记录"
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:120
+msgid "Web UI 模式"
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:124
-msgid "{}运行日志记录"
+msgid "{}作品下载记录"
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:127
+msgid "删除作品下载记录"
+msgstr ""
+
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:129
+msgid "{}运行日志记录"
+msgstr ""
+
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:132
 msgid "检查程序版本更新"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:128
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:133
 msgid "切换语言"
 msgstr "Switch to English"
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:144
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:149
 msgid ""
 "访问 http://127.0.0.1:5555/docs 或者 http://127.0.0.1:5555/redoc 可以查阅 "
 "API 模式说明文档！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:185
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:190
 msgid "是否已仔细阅读上述免责声明(YES/NO): "
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:219
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:224
 msgid "项目地址: {}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:220
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:225
 msgid "项目文档: {}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:221
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:226
 msgid "开源许可: {}\n"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:243
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:248
 #, python-brace-format
 msgid "检测到新版本: {major}.{minor}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:250
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:255
 msgid "当前版本为开发版, 可更新至正式版"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:255
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:260
 msgid "当前已是最新开发版"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:259
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:264
 msgid "当前已是最新正式版"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:263
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:268
 msgid "检测新版本失败"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:275
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:280
 msgid "DouK-Downloader 功能选项"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:304
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:322
 msgid "修改设置成功！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:316
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:334
 msgid "Cookie 获取教程："
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:326
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:340
 msgid ""
-"该功能为实验性功能，仅适用于学习和研究目的；目前仅支持抖音平台，建议使用其他"
-"方式获取 Cookie，未来可能会禁用或移除该功能！"
+"复制 Cookie 内容至剪贴板后，按回车键确认继续；若输入任意内容并按回车，则取消"
+"操作："
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:329
@@ -932,158 +944,147 @@ msgstr ""
 msgid "扫码登录失败，未写入 Cookie！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:355
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:379
 msgid "作品下载记录功能已禁用！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:420
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\application\TikTokDownloader.py:445
 msgid "正在关闭程序"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:263
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:273
 #, python-brace-format
 msgid "{name} 参数格式错误"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:354
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:366
 #, python-brace-format
 msgid "root 参数 {root} 不是有效的文件夹路径，程序将使用项目根路径作为储存路径"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:374
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:386
 #, python-brace-format
 msgid ""
 "folder_name 参数 {folder_name} 不是有效的文件夹名称，程序将使用默认值："
 "Download"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:387
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:399
 #, python-brace-format
 msgid ""
 "name_format 参数 {name_format} 设置错误，程序将使用默认值：创建时间 作品类型 "
 "账号昵称 作品描述"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:400
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:412
 #, python-brace-format
 msgid ""
 "date_format 参数 {date_format} 设置错误，程序将使用默认值：年-月-日 时:分:秒"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:409
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:421
 #, python-brace-format
 msgid "split 参数 {split} 包含非法字符，程序将使用默认值：-"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:439
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:451
 #, python-brace-format
 msgid "{remark}代理参数应为字符串格式，未来不再支持字典格式"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:455
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:467
 #, python-brace-format
 msgid "{remark}代理 {proxy} 测试成功"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:462
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:474
 #, python-brace-format
 msgid "{remark}代理 {proxy} 测试超时"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:472
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:484
 #, python-brace-format
 msgid "{remark}代理 {proxy} 测试失败：{error}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:489
-#, python-brace-format
-msgid "chunk 参数 {chunk} 设置错误，程序将使用默认值：{default_chunk}"
-msgstr ""
-
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:501
-#, python-brace-format
-msgid "max_retry 参数 {max_retry} 设置错误，程序将使用默认值：5"
-msgstr ""
-
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:514
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:519
 #, python-brace-format
 msgid "max_pages 参数 {max_pages} 设置错误，程序将使用默认值：99999"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:524
-#, python-brace-format
-msgid "timeout 参数 {timeout} 设置错误，程序将使用默认值：10"
-msgstr ""
-
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:541
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:543
 #, python-brace-format
 msgid ""
 "storage_format 参数 {storage_format} 设置错误，程序默认不会储存任何数据至文件"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:559
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:561
 msgid "正在更新抖音参数，请稍等..."
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:574
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:579
 msgid "抖音参数更新完毕！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:578
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:631
-msgid "抖音 cookie 参数未设置，相应功能可能无法正常使用"
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:583
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:644
+msgid "配置文件 cookie 参数未设置，抖音平台功能可能无法正常使用"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:588
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:593
 msgid "正在更新 TikTok 参数，请稍等..."
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:603
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:611
 msgid "TikTok 参数更新完毕！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:607
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:650
-msgid "TikTok cookie 参数未设置，相应功能可能无法正常使用"
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:616
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:667
+msgid "配置文件 cookie_tiktok 参数未设置，TikTok 平台功能可能无法正常使用"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:748
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:772
 #, python-brace-format
 msgid "TikTok cookie 缺少 {name} 键值对，请尝试重新写入 cookie"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:1047
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:1104
 #, python-brace-format
-msgid "truncate 参数 {truncate} 设置错误，程序将使用默认值：50"
+msgid "{key} 参数 {value} 设置过小，程序将使用默认值：{default}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\settings.py:150
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:1112
+#, python-brace-format
+msgid "{key} 参数 {value} 设置错误，程序将使用默认值：{default}"
+msgstr ""
+
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\parameter.py:1125
+#, python-brace-format
+msgid "live_qualities 参数 {live_qualities} 设置错误"
+msgstr ""
+
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\settings.py:156
 msgid ""
 "创建默认配置文件 settings.json 成功！\n"
 "请参考项目文档的快速入门部分，设置 Cookie 后重新运行程序！\n"
 "建议根据实际使用需求修改配置文件 settings.json！\n"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\settings.py:166
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\settings.py:173
 msgid "配置文件 settings.json 格式错误，请检查 JSON 格式！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\settings.py:179
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\settings.py:185
 #, python-brace-format
-msgid ""
-"配置文件 settings.json 缺少 {missing_params} 参数，是否需要生成默认配置文件"
-"(YES/NO): "
+msgid "配置文件 settings.json 缺少参数 {i}，已自动添加该参数！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\settings.py:187
-msgid "本次运行将会使用各项参数默认值，程序功能可能无法正常使用！"
-msgstr ""
-
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\settings.py:201
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\settings.py:203
 msgid "保存配置成功！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\settings.py:213
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\config\settings.py:215
 #, python-brace-format
 msgid "配置文件 {old} 参数已变更为 {new} 参数，请注意修改配置文件！"
 msgstr ""
@@ -1129,159 +1130,166 @@ msgid ""
 "和后果。\n"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:137
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\custom\function.py:56
+#, python-brace-format
+msgid ""
+"程序连续处理了 {batches} 个数据，为了避免请求频率过高导致账号或 IP 被风控，程"
+"序已经暂停运行，将在 {rest_time} 秒后恢复运行！"
+msgstr ""
+
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:159
 msgid "开始下载作品文件"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:213
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:318
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:476
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:235
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:343
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:501
 msgid "音乐"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:233
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:255
 msgid "程序将会调用 ffmpeg 下载直播，关闭 DouK-Downloader 不会中断下载！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:307
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:310
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:718
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:332
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:335
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:753
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\extract\extractor.py:422
 msgid "实况"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:384
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:435
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:409
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:460
 #, python-brace-format
 msgid "【{type}】{name} 提取文件下载地址失败，跳过下载"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:396
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:421
 #, python-brace-format
 msgid "【{type}】{name} 存在下载记录，跳过下载"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:403
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:428
 #, python-brace-format
 msgid "【{type}】{name}_{index} 文件已存在，跳过下载"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:447
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:472
 #, python-brace-format
 msgid "【{type}】{name} 存在下载记录或文件已存在，跳过下载"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:489
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:514
 #, python-brace-format
 msgid "【{type}】{name}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:600
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:622
 msgid "文件缓存异常，尝试重新下载"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:636
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:660
 #, python-brace-format
 msgid "网络异常: {error_repr}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:640
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:664
 #, python-brace-format
 msgid "响应码异常: {error_repr}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:644
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:668
 msgid ""
 "如果 TikTok 平台作品下载功能异常，请检查配置文件中 browser_info_tiktok 的 "
 "device_id 参数！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:655
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:679
 #, python-brace-format
 msgid "下载文件时发生预期之外的错误，请向作者反馈，错误信息: {error}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:691
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:715
 #, python-brace-format
 msgid "{show} 下载中断，错误信息：{error}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:697
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:721
 #, python-brace-format
 msgid "{show} 文件下载成功"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:750
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:785
 #, python-brace-format
 msgid "UID{id_}_{name}_发布作品"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:752
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:787
 #, python-brace-format
 msgid "UID{id_}_{name}_喜欢作品"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:754
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:789
 #, python-brace-format
 msgid "MID{id_}_{name}_合集作品"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:756
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:791
 #, python-brace-format
 msgid "UID{id_}_{name}_收藏作品"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:758
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:793
 #, python-brace-format
 msgid "CID{id_}_{name}_收藏夹作品"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:815
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:850
 #, python-brace-format
 msgid "{file_name} 文件已删除"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:819
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:854
 #, python-brace-format
 msgid "下载视频作品 {downloaded_video_count} 个"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:824
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:859
 #, python-brace-format
 msgid "跳过视频作品 {skipped_count} 个"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:829
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:864
 #, python-brace-format
 msgid "下载图集作品 {downloaded_image_count} 个"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:834
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:869
 #, python-brace-format
 msgid "跳过图集作品 {skipped_count} 个"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:839
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:874
 #, python-brace-format
 msgid "下载实况作品 {downloaded_image_count} 个"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:844
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:879
 #, python-brace-format
 msgid "跳过实况作品 {skipped_count} 个"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:922
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:957
 #, python-brace-format
 msgid "未收录的文件类型：{content}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:932
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:967
 #, python-brace-format
 msgid "{show} 响应内容为空"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:941
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\downloader\download.py:976
 #, python-brace-format
 msgid "{show} 文件大小超出限制，跳过下载"
 msgstr ""
@@ -1374,7 +1382,7 @@ msgstr ""
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\detail_tiktok.py:80
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\hot.py:121
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\search.py:382
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\template.py:232
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\template.py:233
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\user.py:64
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\module\tiktok_unofficial.py:74
 #, python-brace-format
@@ -1425,7 +1433,7 @@ msgid "作品 {item_id} 无评论"
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\comment.py:105
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\template.py:191
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\template.py:192
 #, python-brace-format
 msgid "正在获取{text}数据"
 msgstr ""
@@ -1604,12 +1612,12 @@ msgstr ""
 msgid "个人认证"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\template.py:173
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\template.py:174
 #, python-brace-format
 msgid "获取{self_text}数据失败"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\template.py:441
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\interface\template.py:442
 #, python-brace-format
 msgid "共获取到 {count} 个{text}"
 msgstr ""
@@ -1643,21 +1651,12 @@ msgstr ""
 msgid "keyword 参数无效"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\module\cookie.py:32
-#, python-brace-format
-msgid "请粘贴 {platform} Cookie 内容: "
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\module\cookie.py:42
+msgid "当前剪贴板的内容不是有效的 Cookie 内容！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\module\cookie.py:51
-msgid "写入 Cookie 成功！"
-msgstr ""
-
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\module\cookie.py:56
-msgid "当前 Cookie 已登录"
-msgstr ""
-
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\module\cookie.py:58
-msgid "当前 Cookie 未登录"
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\storage\sqlite.py:83
+msgid "更新数据表名称时发生错误，重命名失败，请向作者反馈以便修复问题！"
 msgstr ""
 
 #: C:\Users\You\PycharmProjects\TikTokDownloader\src\storage\xlsx.py:62
@@ -1665,7 +1664,7 @@ msgstr ""
 msgid "数据包含非法字符，保存数据失败：{error}"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:78
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:80
 #, python-brace-format
 msgid ""
 "读取指定浏览器的 {platform_name} Cookie 并写入配置文件；\n"
@@ -1675,27 +1674,27 @@ msgid ""
 "请输入浏览器名称或序号："
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:89
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:94
 msgid "读取 Cookie 成功！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:93
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:102
 msgid "Cookie 数据为空！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:100
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:105
 msgid "未选择浏览器！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:112
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:117
 msgid "浏览器名称或序号输入错误！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:120
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:125
 msgid "读取 Cookie 失败，未找到 Cookie 数据！"
 msgstr ""
 
-#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:159
+#: C:\Users\You\PycharmProjects\TikTokDownloader\src\tools\browser.py:164
 msgid "从浏览器读取 Cookie 功能不支持当前平台！"
 msgstr ""
 
