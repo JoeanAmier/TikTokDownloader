@@ -5,6 +5,7 @@ from shutil import move
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
+from ..custom import USERAGENT
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -90,7 +91,7 @@ class Settings:
         "douyin_platform": True,
         "tiktok_platform": True,
         "browser_info": {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+            "User-Agent": USERAGENT,
             "pc_libra_divert": "Windows",
             "browser_language": "zh-SG",
             "browser_platform": "Win32",
@@ -103,12 +104,12 @@ class Settings:
             "webid": "",
         },
         "browser_info_tiktok": {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+            "User-Agent": USERAGENT,
             "app_language": "zh-Hans",
             "browser_language": "zh-SG",
             "browser_name": "Mozilla",
             "browser_platform": "Win32",
-            "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+            "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
             "language": "zh-Hans",
             "os": "windows",
             "priority_region": "CN",

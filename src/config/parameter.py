@@ -1006,19 +1006,21 @@ class Parameter:
 
     def __set_browser_info(
         self,
-        info: dict,
-    ):
+        info: dict[str, str],
+    ) -> None:
         self.logger.info(f"抖音浏览器信息: {info}", False)
-        for j in (
-            self.headers,
-            self.headers_download,
-            self.headers_params,
-            self.headers_qrcode,
+        if ua := info.get(
+            "User-Agent",
         ):
-            if v := info.get(
-                "User-Agent",
+            for i in (
+                self.headers,
+                self.headers_download,
+                self.headers_params,
+                self.headers_qrcode,
             ):
-                j["User-Agent"] = v
+                i["User-Agent"] = ua
+        else:
+            ua = USERAGENT
         for i in (
             "pc_libra_divert",
             "browser_language",
@@ -1035,21 +1037,27 @@ class Parameter:
                 i,
             ):
                 API.params[i] = v
+        self.ab = ABogus(
+            ua,
+            info.get(
+                "browser_platform",
+            ),
+        )
 
     def __set_browser_info_tiktok(
         self,
         info: dict,
     ):
         self.logger.info(f"TikTok 浏览器信息: {info}", False)
-        for j in (
-            self.headers_tiktok,
-            self.headers_download_tiktok,
-            self.headers_params_tiktok,
+        if ua := info.get(
+            "User-Agent",
         ):
-            if v := info.get(
-                "User-Agent",
+            for i in (
+                self.headers_tiktok,
+                self.headers_download_tiktok,
+                self.headers_params_tiktok,
             ):
-                j["User-Agent"] = v
+                i["User-Agent"] = ua
         for i in (
             "app_language",
             "browser_language",
