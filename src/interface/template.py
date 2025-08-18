@@ -11,7 +11,7 @@ from rich.progress import (
 )
 
 from ..custom import PROGRESS, USERAGENT, wait
-from ..tools import Retry, DownloaderError, capture_error_request, FakeProgress
+from ..tools import DownloaderError, FakeProgress, Retry, capture_error_request
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -43,10 +43,10 @@ class API:
         "browser_language": "zh-SG",
         "browser_platform": "Win32",
         "browser_name": "Chrome",
-        "browser_version": "136.0.0.0",
+        "browser_version": "139.0.0.0",
         "browser_online": "true",
         "engine_name": "Blink",
-        "engine_version": "136.0.0.0",
+        "engine_version": "139.0.0.0",
         "os_name": "Windows",
         "os_version": "10",
         "cpu_core_num": "16",
@@ -500,7 +500,7 @@ class APITikTok(API):
         "browser_name": "Mozilla",
         "browser_online": "true",
         "browser_platform": "Win32",
-        "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+        "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
         "channel": "tiktok_web",
         "cookie_enabled": "true",
         "data_collection_enabled": "true",

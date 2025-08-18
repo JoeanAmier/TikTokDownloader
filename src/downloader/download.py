@@ -1,45 +1,42 @@
-from asyncio import Semaphore
-from asyncio import gather
+from asyncio import Semaphore, gather
 from datetime import datetime
 from pathlib import Path
 from shutil import move
 from time import time
 from types import SimpleNamespace
-from typing import TYPE_CHECKING
-from typing import Union
-from typing import Callable
+from typing import TYPE_CHECKING, Callable, Union
+
 from aiofiles import open
-from httpx import HTTPStatusError
-from httpx import RequestError
-from httpx import StreamError
+from httpx import HTTPStatusError, RequestError, StreamError
 from rich.progress import (
-    SpinnerColumn,
     BarColumn,
     DownloadColumn,
     Progress,
+    SpinnerColumn,
     TextColumn,
     TimeElapsedColumn,
     TimeRemainingColumn,
     TransferSpeedColumn,
 )
 
-from ..custom import DESCRIPTION_LENGTH
-from ..custom import MAX_FILENAME_LENGTH
-from ..custom import MAX_WORKERS
 from ..custom import (
+    MAX_WORKERS,
     PROGRESS,
 )
-from ..tools import CacheError
-from ..tools import Retry
-from ..tools import DownloaderError
-from ..tools import beautify_string
-from ..tools import format_size
-from ..tools import FakeProgress
+from ..tools import (
+    CacheError,
+    DownloaderError,
+    FakeProgress,
+    Retry,
+    beautify_string,
+    format_size,
+)
 from ..translation import _
 
 if TYPE_CHECKING:
-    from ..config import Parameter
     from httpx import AsyncClient
+
+    from ..config import Parameter
 
 __all__ = ["Downloader"]
 
@@ -72,6 +69,8 @@ class Downloader:
         self.root = params.root
         self.folder_name = params.folder_name
         self.name_format = params.name_format
+        self.desc_length = params.desc_length
+        self.name_length = params.name_length
         self.split = params.split
         self.folder_mode = params.folder_mode
         self.music = params.music
@@ -300,7 +299,10 @@ class Downloader:
         )
         tasks = []
         for item in data:
-            item["desc"] = beautify_string(item["desc"], DESCRIPTION_LENGTH)
+            item["desc"] = beautify_string(
+                item["desc"],
+                self.desc_length,
+            )
             name = self.generate_detail_name(item)
             temp_root, actual_root = self.deal_folder_path(
                 root,
@@ -804,7 +806,7 @@ class Downloader:
                 self.split.join(data[i] for i in self.name_format),
                 data["id"],
             ),
-            length=MAX_FILENAME_LENGTH,
+            length=self.name_length,
         )
 
     def generate_music_name(self, data: dict) -> str:
@@ -821,7 +823,7 @@ class Downloader:
                 ),
                 default=str(time())[:10],
             ),
-            length=MAX_FILENAME_LENGTH,
+            length=self.name_length,
         )
 
     @staticmethod

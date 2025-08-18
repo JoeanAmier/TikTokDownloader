@@ -45,10 +45,7 @@ PHONE_HEADERS = {
     "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) "
     "CriOS/125.0.6422.51 Mobile/15E148 Safari/604.1",
 }
-USERAGENT = (
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 "
-    "Safari/537.36"
-)
+USERAGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
 BLANK_HEADERS = {
     "User-Agent": USERAGENT,
 }

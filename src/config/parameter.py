@@ -69,6 +69,8 @@ class Parameter:
         mix_urls_tiktok: list[dict],
         folder_name: str,
         name_format: str,
+        desc_length: int,
+        name_length: int,
         date_format: str,
         split: str,
         music: bool,
@@ -145,6 +147,8 @@ class Parameter:
         self.root = self.__check_root(root)
         self.folder_name = self.__check_folder_name(folder_name)
         self.name_format = self.__check_name_format(name_format)
+        self.desc_length = self.__check_desc_length(desc_length)
+        self.name_length = self.__check_name_length(name_length)
         self.date_format = self.__check_date_format(date_format)
         self.split = self.__check_split(split)
         self.folder_mode = self.check_bool_false(folder_mode)
@@ -210,6 +214,8 @@ class Parameter:
             "root": self.__check_root,
             "folder_name": self.__check_folder_name,
             "name_format": self.__check_name_format,
+            "desc_length": self.__check_desc_length,
+            "name_length": self.__check_name_length,
             "date_format": self.__check_date_format,
             "split": self.__check_split,
             "folder_mode": self.check_bool_false,
@@ -488,27 +494,20 @@ class Parameter:
         return max_size
 
     def __check_chunk(self, chunk: int) -> int:
-        if isinstance(chunk, int) and chunk > 1024:
-            self.logger.info(f"chunk 参数已设置为 {chunk}", False)
-            return chunk
-        self.logger.warning(
-            _("chunk 参数 {chunk} 设置错误，程序将使用默认值：{default_chunk}").format(
-                chunk=chunk,
-                default_chunk=1024 * 1024 * 2,
-            ),
+        return self.__check_number_value(
+            chunk,
+            "chunk",
+            1024 * 128,
+            1024 * 1024 * 2,
         )
-        return 1024 * 1024 * 2
 
     def __check_max_retry(self, max_retry: int) -> int:
-        if isinstance(max_retry, int) and max_retry >= 0:
-            self.logger.info(f"max_retry 参数已设置为 {max_retry}", False)
-            return max_retry
-        self.logger.warning(
-            _("max_retry 参数 {max_retry} 设置错误，程序将使用默认值：5").format(
-                max_retry=max_retry
-            ),
+        return self.__check_number_value(
+            max_retry,
+            "max_retry",
+            0,
+            5,
         )
-        return 5
 
     def __check_max_pages(self, max_pages: int) -> int:
         if isinstance(max_pages, int) and max_pages > 0:
@@ -523,15 +522,12 @@ class Parameter:
         return 99999
 
     def __check_timeout(self, timeout: int | float) -> int | float:
-        if isinstance(timeout, (int, float)) and timeout > 0:
-            self.logger.info(f"timeout 参数已设置为 {timeout}", False)
-            return timeout
-        self.logger.warning(
-            _("timeout 参数 {timeout} 设置错误，程序将使用默认值：10").format(
-                timeout=timeout
-            )
+        return self.__check_number_value(
+            timeout,
+            "timeout",
+            2,
+            10,
         )
-        return 10
 
     def __check_storage_format(self, storage_format: str) -> str:
         if storage_format in RecordManager.DataLogger.keys():
@@ -823,6 +819,8 @@ class Parameter:
             "root": str(self.root.resolve()),
             "folder_name": self.folder_name,
             "name_format": " ".join(self.name_format),
+            "desc_length": self.desc_length,
+            "name_length": self.name_length,
             "date_format": self.date_format,
             "split": self.split,
             "folder_mode": self.folder_mode,
@@ -1023,6 +1021,7 @@ class Parameter:
                 j["User-Agent"] = v
         for i in (
             "pc_libra_divert",
+            "browser_language",
             "browser_platform",
             "browser_name",
             "browser_version",
@@ -1071,15 +1070,52 @@ class Parameter:
                 APITikTok.params[i] = v
 
     def __check_truncate(self, truncate: int) -> int:
-        if isinstance(truncate, int) and truncate >= 32:
-            self.logger.info(f"truncate 参数已设置为 {truncate}", False)
-            return truncate
+        return self.__check_number_value(
+            truncate,
+            "truncate",
+            25,
+            50,
+        )
+
+    def __check_name_length(self, name_length: int) -> int:
+        return self.__check_number_value(
+            name_length,
+            "name_length",
+            32,
+            128,
+        )
+
+    def __check_desc_length(self, desc_length: int) -> int:
+        return self.__check_number_value(
+            desc_length,
+            "desc_length",
+            16,
+            64,
+        )
+
+    def __check_number_value(
+        self, value: int, name: str, minimum: int, default: int
+    ) -> int:
+        if isinstance(value, int):
+            if value >= minimum:
+                self.logger.info(f"{name} 参数已设置为 {value}", False)
+                return value
+            self.logger.warning(
+                _("{key} 参数 {value} 设置过小，程序将使用默认值：{default}").format(
+                    key=name,
+                    value=value,
+                    default=default,
+                ),
+            )
+            return default
         self.logger.warning(
-            _("truncate 参数 {truncate} 设置错误，程序将使用默认值：50").format(
-                truncate=truncate
+            _("{key} 参数 {value} 设置错误，程序将使用默认值：{default}").format(
+                key=name,
+                value=value,
+                default=default,
             ),
         )
-        return 50
+        return default
 
     def __check_live_qualities(self, live_qualities: str) -> str:
         if isinstance(live_qualities, str):

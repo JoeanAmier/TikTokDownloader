@@ -16,7 +16,7 @@
 </div>
 <br>
 <p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
-<p>⭐ <b>项目版本：<code>5.7 Beta</code>；更新日期：<code>2025/8/5</code></b></p>
+<p>⭐ <b>项目版本：<code>5.7 Beta</code>；更新日期：<code>2025/8/18</code></b></p>
 <p>⭐ <b>项目文档正在完善，如果发现任何错误或描述模糊之处，请告知作者以便改进！本项目历史名称：<code>TikTokDownloader</code></b></p>
 <hr>
 <h1>快速入门</h1>
@@ -283,6 +283,18 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <td align="center">发布时间-作品类型-账号昵称-描述</td>
 </tr>
 <tr>
+<td align="center">desc_length</td>
+<td align="center">int</td>
+<td align="center">作品文件名中描述字段的最大字符数；超过限制的描述字段将折叠处理</td>
+<td align="center">64</td>
+</tr>
+<tr>
+<td align="center">name_length</td>
+<td align="center">int</td>
+<td align="center">作品文件名称的最大字符数；超过限制的文件名称将折叠处理</td>
+<td align="center">128</td>
+</tr>
+<tr>
 <td align="center">date_format</td>
 <td align="center">str</td>
 <td align="center">日期时间格式；<a href="https://docs.python.org/zh-cn/3/library/time.html?highlight=strftime#time.strftime">点击查看设置规则</a></td>
@@ -494,6 +506,8 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
   "root": "C:\\DouK-Downloader",
   "folder_name": "SOLO",
   "name_format": "create_time uid id",
+  "desc_length": 64,
+  "name_length": 128,
   "date_format": "%Y-%m-%d",
   "split": " ",
   "folder_mode": false,
@@ -523,30 +537,32 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
   "douyin_platform": true,
   "tiktok_platform": true,
   "browser_info": {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    "pc_libra_divert": "Windows",
+    "browser_language": "zh-SG",
     "browser_platform": "Win32",
     "browser_name": "Chrome",
-    "browser_version": "126.0.0.0",
+    "browser_version": "139.0.0.0",
     "engine_name": "Blink",
-    "engine_version": "126.0.0.0",
+    "engine_version": "139.0.0.0",
     "os_name": "Windows",
     "os_version": "10",
     "webid": ""
   },
   "browser_info_tiktok": {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
     "app_language": "zh-Hans",
     "browser_language": "zh-SG",
     "browser_name": "Mozilla",
     "browser_platform": "Win32",
-    "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
     "language": "zh-Hans",
     "os": "windows",
     "priority_region": "CN",
     "region": "US",
     "tz_name": "Asia/Shanghai",
     "webcast_language": "zh-Hans",
-    "device_id": "1234567890"
+    "device_id": "0123456789"
   }
 }
 ```

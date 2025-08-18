@@ -55,7 +55,6 @@ from .internal import (
 )
 from .static import (
     MAX_WORKERS,
-    DESCRIPTION_LENGTH,
     TEXT_REPLACEMENT,
     SERVER_HOST,
     SERVER_PORT,
@@ -68,7 +67,6 @@ from .static import (
     PROGRESS,
     DEBUG,
     COOKIE_UPDATE_INTERVAL,
-    MAX_FILENAME_LENGTH,
     FILE_SIGNATURES,
     FILE_SIGNATURES_LENGTH,
 )

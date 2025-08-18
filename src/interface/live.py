@@ -1,5 +1,4 @@
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Union
 
 from src.interface.template import API
 from src.tools import DownloaderError
@@ -55,7 +54,7 @@ class Live(API):
             "browser_language": "zh-CN",
             "browser_platform": "Win32",
             "browser_name": "Edge",
-            "browser_version": "125.0.0.0",
+            "browser_version": "139.0.0.0",
             "web_rid": self.web_rid,
             # "room_id_str": "",
             "enter_source": "",

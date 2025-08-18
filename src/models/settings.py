@@ -1,5 +1,6 @@
-from pydantic import BaseModel, Field
 from typing import List
+
+from pydantic import BaseModel, Field
 
 
 class AccountUrl(BaseModel):
@@ -31,6 +32,7 @@ class BrowserInfo(BaseModel):
         alias="User-Agent",
     )
     pc_libra_divert: str = ""
+    browser_language: str = ""
     browser_platform: str = ""
     browser_name: str = ""
     browser_version: str = ""
@@ -70,6 +72,8 @@ class Settings(BaseModel):
     root: str | None = None
     folder_name: str | None = None
     name_format: str | None = None
+    desc_length: int | None = None
+    name_length: int | None = None
     date_format: str | None = None
     split: str | None = None
     folder_mode: bool | None = None
