@@ -16,7 +16,7 @@
 </div>
 <br>
 <p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
-<p>⭐ <b>项目版本：<code>5.7 Beta</code>；更新日期：<code>2025/8/19</code></b></p>
+<p>⭐ <b>项目版本：<code>5.7 Stable</code>；文档更新日期：<code>2025/8/19</code></b></p>
 <p>⭐ <b>项目文档正在完善，如果发现任何错误或描述模糊之处，请告知作者以便改进！本项目历史名称：<code>TikTokDownloader</code></b></p>
 <hr>
 <h1>快速入门</h1>
@@ -175,7 +175,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 </tbody></table>
 <h2>关闭平台功能</h2>
 <p>本项目支持抖音平台和 TikTok 平台的数据采集和文件下载功能，平台功能默认开启，如果不需要使用平台的任何功能，可以编辑配置文件关闭平台功能。</p>
-<p><del>本项目内置参数更新机制，程序会周期性更新抖音与 TikTok 请求的部分参数，以保持参数的有效性（或许没有效果？），该功能无法防止参数失效，参数失效后需要重新写入 Cookie；关闭平台功能后，对应平台的参数更新功能将会禁用！</del></p>
+<p>本项目内置参数更新机制，程序会周期性更新抖音与 TikTok 请求的部分参数，以保持参数的有效性（或许没有效果？），该功能无法防止参数失效，参数失效后需要重新写入 Cookie；关闭平台功能后，对应平台的参数更新功能将会禁用！</p>
 <h1>配置文件</h1>
 <p>配置文件：项目根目录下的 <code>./Volume/settings.json</code> 文件，可以自定义设置程序部分运行参数。</p>
 <p>若无特殊需求，大部分配置参数无需修改，直接使用默认值即可。</p>
@@ -555,7 +555,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
     "browser_language": "zh-SG",
     "browser_name": "Mozilla",
     "browser_platform": "Win32",
-    "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36",
+    "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
     "language": "zh-Hans",
     "os": "windows",
     "priority_region": "CN",
@@ -737,15 +737,14 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li>v2rayN: <code>http://127.0.0.1:10809</code></li>
 </ul>
 <h1>高级配置</h1>
-<p>如果想要进一步修改程序功能，可以编辑 <code>src/custom</code> 文件夹内容（仅适用于通过源码运行项目），按照注释指引和实际需求进行自定义修改。</p>
+<p>如果想要进一步修改程序功能，可以编辑 <code>src/custom</code> 文件夹内容（不适用于可执行文件），按照注释指引和实际需求进行自定义修改。</p>
 <b>部分可自定义设置的功能：</b>
 <ul>
 <li>设置作品文件下载的最大线程数量</li>
-<li>设置文件名称的作品描述长度限制</li>
 <li>设置非法字符替换规则</li>
 <li>开启服务器模式局域网访问功能</li>
 <li>设置服务器模式主机及端口</li>
-<li><del>设置平台参数更新间隔</del></li>
+<li>设置平台参数更新间隔</li>
 <li>设置彩色交互提示颜色</li>
 <li>设置请求数据延时间隔</li>
 <li>设置自定义作品筛选规则</li>
@@ -777,7 +776,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li><code>https://www.douyin.com/user/账号ID</code></li>
 <li><code>https://www.douyin.com/user/账号ID?modal_id=作品ID</code></li>
 </ul>
-<p>如果需要大批量采集账号作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 方法。</p>
+<p><del>如果需要大批量采集账号作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 方法。</del>（默认启用）</p>
 <p><b>下载账号喜欢作品时需要使用已登录的 Cookie，否则程序可能无法正常获取账号消息！</b></p>
 <p>如果当前账号昵称或账号标识不是有效的文件夹名称时，程序会自动替换为账号 ID。</p>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
@@ -851,7 +850,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li><code>https://www.douyin.com/collection/合集ID</code></li>
 <li><code>https://www.douyin.com/channel/分区ID?modal_id=作品ID</code></li>
 </ul>
-<p>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 方法。</p>
+<p><del>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 方法。</del>（默认启用）</p>
 <p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会自动替换为合集 ID。</p>
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
 <h3>采集账号详细数据(抖音)</h3>
@@ -1057,7 +1056,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li><code>https://www.tiktok.com/@TikTok号</code></li>
 <li><code>https://www.tiktok.com/@TikTok号/video/作品ID</code></li>
 </ul>
-<p>如果需要大批量采集账号作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 方法。</p>
+<p><del>如果需要大批量采集账号作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 方法。</del>（默认启用）</p>
 <p>如果当前账号昵称或账号标识不是有效的文件夹名称时，程序会自动替换为账号 ID。</p>
 <p>每个账号的作品会下载至 <code>root</code> 参数路径下的账号文件夹，账号文件夹格式为 <code>UID123456789_mark_类型</code> 或者 <code>UID123456789_账号昵称_类型</code></p>
 <h3>批量下载链接作品(TikTok)</h3>
@@ -1083,7 +1082,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li><code>https://www.tiktok.com/@TikTok号/playlist/合辑信息</code></li>
 <li><code>https://www.tiktok.com/@TikTok号/collection/合辑信息</code></li>
 </ul>
-<p>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 方法。</p>
+<p><del>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 方法。</del>（默认启用）</p>
 <p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会自动替换为合集 ID。</p>
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
 <h3>获取直播推流地址(TikTok)</h3>

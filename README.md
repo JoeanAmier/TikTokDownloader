@@ -75,15 +75,17 @@
 
 # 💻 程序截图
 
+<p><a href="https://www.bilibili.com/video/BV1d7eAzTEFs/">前往 bilibili 观看演示</a>；<a href="https://youtu.be/yMU-RWl55hg">前往 YouTube 观看演示</a></p>
+
 ## 终端交互模式
 
-<p><b>🎥 点击图片观看演示视频，建议通过配置文件管理账号，更多介绍请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">文档</a></b></p>
+<p>建议通过配置文件管理账号，更多介绍请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">文档</a></p>
 
-[![终端模式截图](docs/screenshot/终端交互模式截图CN1.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
+![终端模式截图](docs/screenshot/终端交互模式截图CN1.png)
 *****
-[![终端模式截图](docs/screenshot/终端交互模式截图CN2.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
+![终端模式截图](docs/screenshot/终端交互模式截图CN2.png)
 *****
-[![终端模式截图](docs/screenshot/终端交互模式截图CN3.png)](https://www.bilibili.com/video/BV18tVDzVEK7/)
+![终端模式截图](docs/screenshot/终端交互模式截图CN3.png)
 
 ## Web UI 交互模式
 

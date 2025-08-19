@@ -1,6 +1,4 @@
-from typing import Callable
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Callable, Union
 
 from src.interface.template import APITikTok
 from src.translation import _
@@ -136,9 +134,14 @@ async def test():
     from src.testers import Params
 
     async with Params() as params:
-        i = MixTikTok(
+        # i = MixTikTok(
+        #     params,
+        #     mix_id="",
+        # )
+        # print(await i.run())
+        i = MixListTikTok(
             params,
-            mix_id="",
+            sec_user_id="",
         )
         print(await i.run())
 

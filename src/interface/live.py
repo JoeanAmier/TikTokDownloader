@@ -18,8 +18,8 @@ class Live(API):
         cookie: str = "",
         proxy: str = None,
         web_rid: str = ...,
-        room_id: str = None,
-        sec_user_id: str = None,
+        room_id: str = ...,
+        sec_user_id: str = "",
     ):
         super().__init__(params, cookie, proxy)
         self.black_headers = params.headers_download
@@ -34,7 +34,7 @@ class Live(API):
     ) -> dict:
         if isinstance(self.web_rid, str):
             return await self.with_web_rid()
-        elif self.room_id and self.sec_user_id:
+        elif self.room_id:
             return await self.with_room_id()
         else:
             raise DownloaderError
@@ -68,12 +68,11 @@ class Live(API):
         )
 
     async def with_room_id(self) -> dict:
-        params = {  # 已失效
+        params = {
             "type_id": "0",
             "live_id": "1",
             "room_id": self.room_id,
             "sec_user_id": self.sec_user_id,
-            "version_code": "99.99.99",
             "app_id": "1128",
         }
         return await self.request_data(
@@ -89,7 +88,7 @@ async def test():
     async with Params() as params:
         i = Live(
             params,
-            web_rid="",
+            room_id="",
         )
         print(await i.run())
 
