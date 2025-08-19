@@ -1147,17 +1147,12 @@ class TikTok:
         *args,
     ):
         while url := self._inquire_input(_("直播")):
-            params = self._generate_live_params(
-                *await self.links.run(url, type_="live")
-            )
-            if not params:
-                self.logger.warning(_("{} 提取直播 ID 失败").format(url=url))
-                continue
-            live_data = [await self.get_live_data(**i) for i in params]
+            ids = await self.links.run(url, type_="live")
+            live_data = [await self.get_live_data(i) for i in ids]
+            live_data = await self.extractor.run(live_data, None, "live")
             if not [i for i in live_data if i]:
                 self.logger.warning(_("获取直播数据失败"))
                 continue
-            live_data = await self.extractor.run(live_data, None, "live")
             download_tasks = self.show_live_info(live_data)
             await self.downloader.run(download_tasks, type_="live")
         self.logger.info(_("已退出获取直播推流地址(抖音)模式"))
@@ -1167,7 +1162,7 @@ class TikTok:
         *args,
     ):
         while url := self._inquire_input(_("直播")):
-            __, ids = await self.links_tiktok.run(url, type_="live")
+            ids = await self.links_tiktok.run(url, type_="live")
             if not ids:
                 self.logger.warning(_("{} 提取直播 ID 失败").format(url=url))
                 continue
@@ -1185,16 +1180,16 @@ class TikTok:
             await self.downloader.run(download_tasks, type_="live", tiktok=True)
         self.logger.info(_("已退出获取直播推流地址(TikTok)模式"))
 
-    def _generate_live_params(self, rid: bool, ids: list[list]) -> list[dict]:
-        if not ids:
-            self.console.warning(
-                _("提取 web_rid 或者 room_id 失败！"),
-            )
-            return []
-        if rid:
-            return [{"web_rid": id_} for id_ in ids]
-        else:
-            return [{"room_id": id_[0], "sec_user_id": id_[1]} for id_ in ids]
+    # def _generate_live_params(self, rid: bool, ids: list[list]) -> list[dict]:
+    #     if not ids:
+    #         self.console.warning(
+    #             _("提取 web_rid 或者 room_id 失败！"),
+    #         )
+    #         return []
+    #     if rid:
+    #         return [{"web_rid": id_} for id_ in ids]
+    #     else:
+    #         return [{"room_id": id_[0], "sec_user_id": id_[1]} for id_ in ids]
 
     def show_live_info(self, data: list[dict]) -> list[tuple]:
         download_tasks = []

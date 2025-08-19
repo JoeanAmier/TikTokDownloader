@@ -1122,32 +1122,32 @@ class Extractor:
         container: SimpleNamespace,
         data: SimpleNamespace,
     ):
-        data = self.safe_extract(
+        if data := self.safe_extract(
             data, f"data.data[{LIVE_DATA_INDEX}]"
-        ) or self.safe_extract(data, "data.room")
-        live_data = {
-            "status": self.safe_extract(data, "status"),
-            "nickname": self.safe_extract(data, "owner.nickname"),
-            "title": self.safe_extract(data, "title"),
-            "flv_pull_url": vars(
-                self.safe_extract(
-                    data,
-                    "stream_url.flv_pull_url",
-                    SimpleNamespace(),
-                )
-            ),
-            "hls_pull_url_map": vars(
-                self.safe_extract(
-                    data,
-                    "stream_url.hls_pull_url_map",
-                    SimpleNamespace(),
-                )
-            ),
-            "cover": self.safe_extract(data, f"cover.url_list[{LIVE_COVER_INDEX}]"),
-            "total_user_str": self.safe_extract(data, "stats.total_user_str"),
-            "user_count_str": self.safe_extract(data, "stats.user_count_str"),
-        }
-        container.all_data.append(live_data)
+        ) or self.safe_extract(data, "data.room"):
+            live_data = {
+                "status": self.safe_extract(data, "status"),
+                "nickname": self.safe_extract(data, "owner.nickname"),
+                "title": self.safe_extract(data, "title"),
+                "flv_pull_url": vars(
+                    self.safe_extract(
+                        data,
+                        "stream_url.flv_pull_url",
+                        SimpleNamespace(),
+                    )
+                ),
+                "hls_pull_url_map": vars(
+                    self.safe_extract(
+                        data,
+                        "stream_url.hls_pull_url_map",
+                        SimpleNamespace(),
+                    )
+                ),
+                "cover": self.safe_extract(data, f"cover.url_list[{LIVE_COVER_INDEX}]"),
+                "total_user_str": self.safe_extract(data, "stats.total_user_str"),
+                "user_count_str": self.safe_extract(data, "stats.user_count_str"),
+            }
+            container.all_data.append(live_data)
 
     def __extract_live_data_tiktok(
         self,

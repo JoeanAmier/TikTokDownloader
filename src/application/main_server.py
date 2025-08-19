@@ -1,9 +1,9 @@
+from textwrap import dedent
 from typing import TYPE_CHECKING
 
 from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.responses import RedirectResponse
 from uvicorn import Config, Server
-from textwrap import dedent
 
 from ..custom import (
     __VERSION__,
@@ -14,24 +14,24 @@ from ..custom import (
     is_valid_token,
 )
 from ..models import (
-    GeneralSearch,
-    LiveSearch,
+    Account,
+    AccountTiktok,
+    Comment,
     DataResponse,
-    UserSearch,
-    VideoSearch,
+    Detail,
+    DetailTikTok,
+    GeneralSearch,
+    Live,
+    LiveSearch,
+    LiveTikTok,
+    Mix,
+    MixTikTok,
+    Reply,
     Settings,
     ShortUrl,
     UrlResponse,
-    Detail,
-    Account,
-    AccountTiktok,
-    DetailTikTok,
-    Comment,
-    Reply,
-    Mix,
-    MixTikTok,
-    Live,
-    LiveTikTok,
+    UserSearch,
+    VideoSearch,
 )
 from ..translation import _
 from .main_terminal import TikTok
@@ -294,34 +294,32 @@ class APIServer(TikTok):
                 - **proxy**: 代理；可选参数
                 - **source**: 是否返回原始响应数据；可选参数，默认值：False
                 - **web_rid**: 抖音直播 web_rid
-                - **room_id**: 抖音直播 room_id
-                - **sec_user_id**: 抖音直播账号 sec_user_id
-                
-                **本接口支持两种参数传入方式**:
-                
-                - 方式一 ：传入 `web_rid`
-                - 方式二 ：同时传入 `room_id` 和 `sec_user_id`
                 """)
             ),
             tags=[_("抖音")],
             response_model=DataResponse,
         )
         async def handle_live(extract: Live, token: str = Depends(token_dependency)):
-            if self.check_live_params(
-                extract.web_rid,
-                extract.room_id,
-                extract.sec_user_id,
+            # if self.check_live_params(
+            #     extract.web_rid,
+            #     extract.room_id,
+            #     extract.sec_user_id,
+            # ):
+            #     if data := await self.handle_live(
+            #         extract,
+            #     ):
+            #         return self.success_response(extract, data[0])
+            #     return self.failed_response(extract)
+            # return DataResponse(
+            #     message=_("参数错误！"),
+            #     data=None,
+            #     params=extract.model_dump(),
+            # )
+            if data := await self.handle_live(
+                extract,
             ):
-                if data := await self.handle_live(
-                    extract,
-                ):
-                    return self.success_response(extract, data[0])
-                return self.failed_response(extract)
-            return DataResponse(
-                message=_("参数错误！"),
-                data=None,
-                params=extract.model_dump(),
-            )
+                return self.success_response(extract, data[0])
+            return self.failed_response(extract)
 
         @self.server.post(
             "/douyin/comment",
@@ -739,10 +737,10 @@ class APIServer(TikTok):
         else:
             data = await self.get_live_data(
                 extract.web_rid,
-                extract.room_id,
-                extract.sec_user_id,
-                extract.cookie,
-                extract.proxy,
+                # extract.room_id,
+                # extract.sec_user_id,
+                cookie=extract.cookie,
+                proxy=extract.proxy,
             )
         if extract.source:
             return [data]
