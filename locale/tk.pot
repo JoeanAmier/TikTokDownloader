@@ -6,7 +6,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: DouK-Downloader 5.7\n"
+"Project-Id-Version: DouK-Downloader 5.8\n"
 "Report-Msgid-Bugs-To: <yonglelolu@foxmail.com>\n"
 "POT-Creation-Date: 2025-08-19 15:43+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"

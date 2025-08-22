@@ -78,7 +78,7 @@ wheels = [
 
 [[package]]
 name = "douk-downloader"
-version = "5.7"
+version = "5.8"
 source = { virtual = "." }
 dependencies = [
     { name = "aiofiles" },

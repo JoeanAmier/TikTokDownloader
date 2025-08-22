@@ -1,6 +1,6 @@
 [project]
 name = "DouK-Downloader"
-version = "5.7"
+version = "5.8"
 description = "TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具"
 authors = [
     { name = "JoeanAmier", email = "yonglelolu@foxmail.com" },

@@ -6,8 +6,8 @@ TEXT_REPLACEMENT = {
     " ": " ",
 }
 
-# 服务器模式主机，对 Web API 接口模式、Web UI 交互模式 生效，设置为 "0.0.0.0" 可以启用局域网访问（外部可用）
-SERVER_HOST = "127.0.0.1"
+# 服务器模式主机，对 Web API 接口模式、Web UI 交互模式 生效，设置为 "127.0.0.1" 代表仅本地可用
+SERVER_HOST = "0.0.0.0"
 
 # 服务器模式端口，对 Web API 接口模式、Web UI 交互模式 生效
 SERVER_PORT = 5555
