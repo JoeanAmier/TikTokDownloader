@@ -93,7 +93,7 @@ class Settings:
         "browser_info": {
             "User-Agent": USERAGENT,
             "pc_libra_divert": "Windows",
-            "browser_language": "zh-SG",
+            "browser_language": "zh-CN",
             "browser_platform": "Win32",
             "browser_name": "Chrome",
             "browser_version": "139.0.0.0",
@@ -106,7 +106,7 @@ class Settings:
         "browser_info_tiktok": {
             "User-Agent": USERAGENT,
             "app_language": "zh-Hans",
-            "browser_language": "zh-SG",
+            "browser_language": "zh-CN",
             "browser_name": "Mozilla",
             "browser_platform": "Win32",
             "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",

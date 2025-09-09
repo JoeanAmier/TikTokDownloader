@@ -644,7 +644,8 @@ class APIServer(TikTok):
             list,
         ):
             return self.success_response(
-                extract, data, None if any(data) else _("搜索结果为空！")
+                extract,
+                *(data, None) if any(data) else (None, _("搜索结果为空！")),
             )
         return self.failed_response(extract)
 

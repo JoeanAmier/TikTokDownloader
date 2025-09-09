@@ -249,6 +249,7 @@ class Search(API):
         self,
     ) -> dict:
         params = self.params | {
+            "pc_search_top_1_params": '{"enable_ai_search_top_1":1}',
             "search_channel": self.channel.channel,
             "enable_history": "1",
             "keyword": self.keyword,
@@ -256,6 +257,7 @@ class Search(API):
             "query_correct_type": "1",
             "is_filter_search": "0",
             "from_group_id": "",
+            "disable_rs": "0",
             "offset": self.cursor,
             "count": self.count,
             "need_filter_settings": "0",
@@ -276,6 +278,7 @@ class Search(API):
         self,
     ) -> dict:
         params = self.params | {
+            "pc_search_top_1_params": '{"enable_ai_search_top_1":1}',
             "search_channel": self.channel.channel,
             "enable_history": "1",
             "keyword": self.keyword,
@@ -283,6 +286,7 @@ class Search(API):
             "query_correct_type": "1",
             "is_filter_search": "0",
             "from_group_id": "",
+            "disable_rs": "0",
             "offset": self.cursor,
             "count": self.count,
             "need_filter_settings": "0",
@@ -329,12 +333,14 @@ class Search(API):
         self,
     ) -> dict:
         params = self.params | {
+            "pc_search_top_1_params": '{"enable_ai_search_top_1":1}',
             "search_channel": self.channel.channel,
             "keyword": self.keyword,
             "search_source": "tab_search",
             "query_correct_type": "1",
             "is_filter_search": "0",
             "from_group_id": "",
+            "disable_rs": "0",
             "offset": self.cursor,
             "count": self.count,
             "need_filter_settings": "0",
