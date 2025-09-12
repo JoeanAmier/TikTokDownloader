@@ -388,14 +388,6 @@ repository to execute the build process
 
 ***
 
-## Thordata
-
-[![Thordata](docs/ThordataAD.png)](https://www.thordata.com/?ls=github&lk=JoeanAmier)
-
-<p><a href="https://www.thordata.com/?ls=github&lk=JoeanAmier">Thordata</a> is a leading proxy IP service specializing in large-scale public web data collection, offering: 195+ countries & cities coverage, 60 million residential IPs from just $0.65/GB, unlimited bandwidth, unlimited IPs, and unlimited concurrent connections. We also provide local dedicated ISP static proxies and high-performance datacenter proxies (both starting at $0.75/IP with flexible pricing). Register by clicking the image and contact our Chinese support team for a free trial. Enjoy a 100% bonus credit on your first recharge! Enhance your data collection efficiency by integrating with EasySpider for high-performance web scraping.</p>
-
-***
-
 ## TikHub
 
 <p><a href="https://tikhub.io/">TikHub</a>: Third-party API provider offering multi-platform APIs.</p>

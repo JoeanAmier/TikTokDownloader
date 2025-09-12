@@ -383,14 +383,6 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 
 ***
 
-## Thordata
-
-[![Thordata](docs/ThordataAD.png)](https://www.thordata.com/?ls=github&lk=JoeanAmier)
-
-<p><a href="https://www.thordata.com/?ls=github&lk=JoeanAmier">Thordata</a> 是全球代理 IP 解决方案提供商，支持大规模采集公共网络数据，提供 195+ 国家城市、6000 万住宅 IP，价格低至 $0.65/GB，支持不限流量、不限 IP、不限并发；还包括本土独享 ISP 静态代理和高性能数据中心代理（均为 $0.75/IP，弹性定价）；点击图片注册后联系中文客服即可免费试用，现在首充还有赠送同额金额活动；可与 EasySpider 工具配合使用，高效采集网络数据。</p>
-
-***
-
 ## TikHub
 
 <p><a href="https://tikhub.io/">TikHub</a>：第三方 API 服务供应商，专注于提供各平台 API。</p>
