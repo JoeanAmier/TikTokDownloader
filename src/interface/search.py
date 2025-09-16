@@ -146,7 +146,7 @@ class Search(API):
         content_type: int = 0,
         douyin_user_fans: int = 0,
         douyin_user_type: int = 0,
-        cursor: int = 0,
+        offset: int = 0,
         count: int = 10,
         *args,
         **kwargs,
@@ -162,7 +162,7 @@ class Search(API):
         self.search_range = search_range
         self.douyin_user_fans = self.douyin_user_fans_map.get(douyin_user_fans, [""])
         self.douyin_user_type = self.douyin_user_type_map.get(douyin_user_type, [""])
-        self.cursor = cursor
+        self.offset = offset
         self.count = count
         self.type = self.channel.type
         self.api = self.channel.api
@@ -258,7 +258,7 @@ class Search(API):
             "is_filter_search": "0",
             "from_group_id": "",
             "disable_rs": "0",
-            "offset": self.cursor,
+            "offset": self.offset,
             "count": self.count,
             "need_filter_settings": "0",
             "list_type": "single",
@@ -287,7 +287,7 @@ class Search(API):
             "is_filter_search": "0",
             "from_group_id": "",
             "disable_rs": "0",
-            "offset": self.cursor,
+            "offset": self.offset,
             "count": self.count,
             "need_filter_settings": "0",
             "list_type": "single",
@@ -341,7 +341,7 @@ class Search(API):
             "is_filter_search": "0",
             "from_group_id": "",
             "disable_rs": "0",
-            "offset": self.cursor,
+            "offset": self.offset,
             "count": self.count,
             "need_filter_settings": "0",
             "list_type": "single",
@@ -370,7 +370,7 @@ class Search(API):
                 self.response.append([])
                 self.finished = True
             else:
-                self.cursor = data_dict[cursor]
+                self.offset = data_dict[cursor]
                 self.search_id = data_dict["log_pb"]["impr_id"]
                 match self.type:
                     case "general" | "video" | "user":

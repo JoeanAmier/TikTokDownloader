@@ -404,6 +404,8 @@ class APIServer(TikTok):
                 - **proxy**: 代理；可选参数
                 - **source**: 是否返回原始响应数据；可选参数，默认值：False
                 - **keyword**: 关键词；必需参数
+                - **offset**: 起始页码；可选参数
+                - **count**: 数据数量；可选参数
                 - **pages**: 总页数；可选参数
                 - **sort_type**: 排序依据；可选参数
                 - **publish_time**: 发布时间；可选参数
@@ -433,6 +435,8 @@ class APIServer(TikTok):
                 - **proxy**: 代理；可选参数
                 - **source**: 是否返回原始响应数据；可选参数，默认值：False
                 - **keyword**: 关键词；必需参数
+                - **offset**: 起始页码；可选参数
+                - **count**: 数据数量；可选参数
                 - **pages**: 总页数；可选参数
                 - **sort_type**: 排序依据；可选参数
                 - **publish_time**: 发布时间；可选参数
@@ -461,6 +465,8 @@ class APIServer(TikTok):
                 - **proxy**: 代理；可选参数
                 - **source**: 是否返回原始响应数据；可选参数，默认值：False
                 - **keyword**: 关键词；必需参数
+                - **offset**: 起始页码；可选参数
+                - **count**: 数据数量；可选参数
                 - **pages**: 总页数；可选参数
                 - **douyin_user_fans**: 粉丝数量；可选参数
                 - **douyin_user_type**: 用户类型；可选参数
@@ -487,6 +493,8 @@ class APIServer(TikTok):
                 - **proxy**: 代理；可选参数
                 - **source**: 是否返回原始响应数据；可选参数，默认值：False
                 - **keyword**: 关键词；必需参数
+                - **offset**: 起始页码；可选参数
+                - **count**: 数据数量；可选参数
                 - **pages**: 总页数；可选参数
                 """)
             ),

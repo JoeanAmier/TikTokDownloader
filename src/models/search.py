@@ -1,7 +1,6 @@
 from typing import Literal
 
-from pydantic import Field
-from pydantic import field_validator
+from pydantic import Field, field_validator
 
 from src.models.base import APIModel
 
@@ -18,6 +17,14 @@ class BaseSearch(APIModel):
     pages: int = Field(
         1,
         gt=0,
+    )
+    offset: int = Field(
+        0,
+        ge=0,
+    )
+    count: int = Field(
+        10,
+        ge=5,
     )
 
     @field_validator("keyword", mode="before")
