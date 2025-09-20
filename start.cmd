@@ -1,3 +1,3 @@
 call ".venv/Scripts/activate.bat"
-pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
+uv sync
 python ./main.py
