@@ -227,6 +227,7 @@ class Search(API):
                 },
                 separators=(",", ":"),
             )
+        return None
 
     def generate_search_filter_value(
         self,
@@ -244,6 +245,7 @@ class Search(API):
                 },
                 separators=(",", ":"),
             )
+        return None
 
     def _generate_params_general(
         self,
@@ -367,7 +369,8 @@ class Search(API):
                 self.log.warning(error_text)
                 self.finished = True
             elif len(d) == 0:
-                self.response.append([])
+                if not self.response:
+                    self.response.append([])
                 self.finished = True
             else:
                 self.offset = data_dict[cursor]
