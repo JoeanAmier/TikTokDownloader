@@ -383,15 +383,16 @@ repository to execute the build process
 
 ## ZMTO
 
-<a href="https://www.zmto.com/"><img src="https://console.zmto.com/templates/2019/dist/images/logo_dark.svg" alt="ZMTO"></a>
+<p><a href="https://www.zmto.com/"><img src="https://console.zmto.com/templates/2019/dist/images/logo_dark.svg" alt="ZMTO"></a></p>
 <p><a href="https://www.zmto.com/">ZMTO</a>: A professional cloud infrastructure provider offering sophisticated solutions with reliable technology and expert support. We also empower qualified open source initiatives with enterprise-grade VPS infrastructure, driving sustainable development and innovation in the open source ecosystem. </p>
 
 ***
 
 ## TikHub
 
-<p><a href="https://tikhub.io/">TikHub</a>: Third-party API provider offering multi-platform APIs.</p>
-<p>Through daily check-ins, users can earn a small amount of free usage credits. You can also use my <strong>referral link</strong>: <a href="https://user.tikhub.io/users/signup?referral_code=ZrdH8McC">https://user.tikhub.io/users/signup?referral_code=ZrdH8McC</a> or <strong>referral code</strong>: <code>ZrdH8McC</code>, register and top up to get a $2 credit!</p>
+<p><a href="https://tikhub.io"><img src="docs/TIKHUB_AD.jpg" alt="TIKHUB"></a></p>
+<p><a href="https://tikhub.io">TikHub API</a> offers over 700 endpoints to retrieve and analyze data from 14+ social media platforms—including videos, users, comments, stores, products, trends, and more—enabling one-stop access and analysis of all your data.</p>
+<p>Sign up using the <strong>referral link</strong>: <a href="https://user.tikhub.io/users/signup?referral_code=ZrdH8McC">https://user.tikhub.io/users/signup?referral_code=ZrdH8McC</a> or the <strong>referral code</strong>: <code>ZrdH8McC</code>, and get a <code>$2</code> credit upon registration and top-up!</p>
 
 # ✉️ Contact the Author
 

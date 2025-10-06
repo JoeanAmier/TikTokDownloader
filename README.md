@@ -378,15 +378,16 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 
 ## ZMTO
 
-<a href="https://www.zmto.com/"><img src="https://console.zmto.com/templates/2019/dist/images/logo_dark.svg" alt="ZMTO"></a>
+<p><a href="https://www.zmto.com/"><img src="https://console.zmto.com/templates/2019/dist/images/logo_dark.svg" alt="ZMTO"></a></p>
 <p><a href="https://www.zmto.com/">ZMTO</a>：一家专业的云基础设施提供商，以可靠的尖端技术与专业支持，提供高效的解决方案，并为符合条件的开源项目提供企业级VPS基础设施，支持开源生态系统的可持续发展与创新。</p>
 
 ***
 
 ## TikHub
 
-<p><a href="https://tikhub.io/">TikHub</a>：第三方 API 服务供应商，专注于提供各平台 API。</p>
-<p>通过每日签到，用户可以免费获取少量使用额度；可以使用我的 <strong>推荐链接</strong>：<a href="https://user.tikhub.io/users/signup?referral_code=ZrdH8McC">https://user.tikhub.io/users/signup?referral_code=ZrdH8McC</a> 或 <strong>推荐码</strong>：<code>ZrdH8McC</code>，注册并充值即可获得 <code>$2</code> 额度！</p>
+<p><a href="https://tikhub.io"><img src="docs/TIKHUB_AD.jpg" alt="TIKHUB"></a></p>
+<p><a href="https://tikhub.io">TikHub API</a> 提供超过 700 个端点，可用于从 14+ 个社交媒体平台获取与分析数据 —— 包括视频、用户、评论、商店、商品与趋势等，一站式完成所有数据访问与分析。</p>
+<p>通过 <strong>邀请链接</strong>：<a href="https://user.tikhub.io/users/signup?referral_code=ZrdH8McC">https://user.tikhub.io/users/signup?referral_code=ZrdH8McC</a> 或 <strong>邀请码</strong>：<code>ZrdH8McC</code>，注册并充值即可获得 <code>$2</code> 额度！</p>
 
 # ✉️ 联系作者
 
