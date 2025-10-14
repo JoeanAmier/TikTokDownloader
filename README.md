@@ -385,8 +385,8 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 
 ## TikHub
 
-<p><a href="https://tikhub.io"><img src="docs/TIKHUB_AD.jpg" alt="TIKHUB"></a></p>
-<p><a href="https://tikhub.io">TikHub API</a> 提供超过 700 个端点，可用于从 14+ 个社交媒体平台获取与分析数据 —— 包括视频、用户、评论、商店、商品与趋势等，一站式完成所有数据访问与分析。</p>
+<p><a href="https://tikhub.io/?utm_source=github&utm_medium=readme&utm_campaign=tiktok_downloader&ref=github_joeanamier_tiktokdownloader"><img src="docs/TIKHUB_AD.jpg" alt="TIKHUB"></a></p>
+<p><a href="https://tikhub.io/?utm_source=github&utm_medium=readme&utm_campaign=tiktok_downloader&ref=github_joeanamier_tiktokdownloader">TikHub API</a> 提供超过 700 个端点，可用于从 14+ 个社交媒体平台获取与分析数据 —— 包括视频、用户、评论、商店、商品与趋势等，一站式完成所有数据访问与分析。</p>
 <p>通过 <strong>邀请链接</strong>：<a href="https://user.tikhub.io/users/signup?referral_code=ZrdH8McC">https://user.tikhub.io/users/signup?referral_code=ZrdH8McC</a> 或 <strong>邀请码</strong>：<code>ZrdH8McC</code>，注册并充值即可获得 <code>$2</code> 额度！</p>
 
 # ✉️ 联系作者
@@ -396,7 +396,7 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 <li>作者微信: Downloader_Tools</li>
 <li>微信公众号: Downloader Tools</li>
 <li><b>Discord 社区</b>: <a href="https://discord.com/invite/ZYtmgKud9Y">点击加入社区</a></li>
-<li>QQ 群聊(项目交流): <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">扫码加入群聊</a></li>
+<li>QQ 群聊(用于项目交流与摸鱼闲聊): <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/QQ%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png">扫码加入群聊</a></li>
 </ul>
 <p>✨ <b>作者的其他开源项目：</b></p>
 <ul>

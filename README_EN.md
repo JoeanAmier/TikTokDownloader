@@ -390,8 +390,8 @@ repository to execute the build process
 
 ## TikHub
 
-<p><a href="https://tikhub.io"><img src="docs/TIKHUB_AD.jpg" alt="TIKHUB"></a></p>
-<p><a href="https://tikhub.io">TikHub API</a> offers over 700 endpoints to retrieve and analyze data from 14+ social media platforms—including videos, users, comments, stores, products, trends, and more—enabling one-stop access and analysis of all your data.</p>
+<p><a href="https://tikhub.io/?utm_source=github&utm_medium=readme&utm_campaign=tiktok_downloader&ref=github_joeanamier_tiktokdownloader"><img src="docs/TIKHUB_AD.jpg" alt="TIKHUB"></a></p>
+<p><a href="https://tikhub.io/?utm_source=github&utm_medium=readme&utm_campaign=tiktok_downloader&ref=github_joeanamier_tiktokdownloader">TikHub API</a> offers over 700 endpoints to retrieve and analyze data from 14+ social media platforms—including videos, users, comments, stores, products, trends, and more—enabling one-stop access and analysis of all your data.</p>
 <p>Sign up using the <strong>referral link</strong>: <a href="https://user.tikhub.io/users/signup?referral_code=ZrdH8McC">https://user.tikhub.io/users/signup?referral_code=ZrdH8McC</a> or the <strong>referral code</strong>: <code>ZrdH8McC</code>, and get a <code>$2</code> credit upon registration and top-up!</p>
 
 # ✉️ Contact the Author
