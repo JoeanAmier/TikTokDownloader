@@ -130,10 +130,10 @@ demo()
 <p>⭐ Mac OS and Windows 10 and above users can go to <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> or <a href="https://github.com/JoeanAmier/TikTokDownloader/actions">Actions</a> to download the compiled program, ready to use!</p>
 <p>⭐ This project includes GitHub Actions for automatic building executable files. Users can use GitHub Actions to build the latest source code into executable files at any time!</p>
 <p>⭐ For the automatic building executable files tutorial, please refer to the <code>Build of Executable File Guide</code> section of this document. If you need a more detailed step-by-step tutorial with illustrations, please <a href="https://mp.weixin.qq.com/s/TorfoZKkf4-x8IBNLImNuw">check out this article</a>!</p>
-<p><strong>Note: The executable file <code>main</code> on Mac OS may need to be started from the terminal command line. Due to device limitations, the executable file on the Mac OS platform has not been tested, and its usability cannot be guaranteed!</strong></p>
+<p><strong>Note: Due to the macOS platform's executable file <code>main</code> not being code-signed, it will be restricted by system security measures on first run. Please execute the command <code>xattr -cr main.app</code> in the terminal to remove the security flag, after which it can run normally.</strong></p>
 <hr>
 <ol>
-<li><b>Run the executable file</b> or <b>configure the environment to run</b>
+<li><b>Run the executable file</b> or <b>configure the environment to run</b>(choose one of the two)
 <ol><b>Run the executable file</b>
 <li>Download the executable file compressed file built by <a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a> or Actions.</li>
 <li>After extracting, open the program folder and double-click to run <code>main</code>.</li>
@@ -151,7 +151,7 @@ demo()
 </li>
 <li>Read the disclaimer of DouK-Downloader and enter content according to the prompt.</li>
 <li>Write Cookie Information into Configuration File 
-<ol><b>Read Cookie from Clipboard</b>
+<ol><b>Read Cookie from Clipboard(Recommended)</b>
 <li>Refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie Extraction Tutorial</a>, copy the required Cookie to the clipboard</li>
 <li>Select the <code>Read Cookie from Clipboard</code> option, the program will automatically read the Cookie from the clipboard and write it into the configuration file</li>
 </ol>
@@ -215,7 +215,7 @@ demo()
 <li>When downloading files, the program first downloads them to a temporary folder and then moves them to the storage folder upon completion. The temporary folder will be emptied when the program ends.</li>
 <li>The <code>Batch Download Favorites Works Mode</code> currently only supports downloading Favorites works for the account corresponding to the currently logged-in Cookie and does not support multiple accounts.</li>
 <li>If you want the program to use a proxy to request data, you must set the <code>proxy</code> parameter in <code>settings.json</code>; otherwise, the program will not use a proxy.</li>
-<li>If your computer does not have a suitable program for editing JSON files, we recommend using the <a href="https://try8.cn/tool/format/json">JSON Online Tool</a> to edit the configuration file content.</li>
+<li>If your computer does not have a suitable program for editing JSON files, we recommend using the <a href="https://www.toolhelper.cn/JSON/JSONFormat">Online Tool</a> to edit the configuration file content, after modification, the software needs to be restarted to take effect.</li>
 <li>When the program prompts the user to input content or links, please be careful to avoid including newline characters, as this may cause unexpected issues.</li>
 <li>This project does not support downloading paid works. Please do not report any issues related to downloading paid works.</li>
 <li>On Windows systems, the program needs to be run as an administrator to read Cookies from Chromium, Chrome, and Edge browsers.</li>

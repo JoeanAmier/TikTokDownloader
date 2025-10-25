@@ -576,7 +576,7 @@ class TikTok:
                 "favorite",
                 "collection",
             }:
-                return
+                return None
             self.logger.info(
                 _(
                     "如果账号发布作品均为共创作品且该账号均不是作品作者时，请配置已登录的 Cookie 后重新运行程序，其余情况请无视该提示！"
