@@ -19,7 +19,7 @@ class Requester:
         self,
         params: "Parameter",
         client: "AsyncClient",
-        headers:dict[str, str],
+        headers: dict[str, str],
     ):
         self.client = client
         self.headers = headers
