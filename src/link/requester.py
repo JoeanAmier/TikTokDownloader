@@ -1,9 +1,8 @@
 from re import compile
 from typing import TYPE_CHECKING
 
-from ..custom import BLANK_HEADERS
 from ..custom import wait
-from ..tools import Retry, DownloaderError, capture_error_request
+from ..tools import DownloaderError, Retry, capture_error_request
 
 if TYPE_CHECKING:
     from httpx import AsyncClient, get, head
@@ -15,14 +14,15 @@ __all__ = ["Requester"]
 
 class Requester:
     URL = compile(r"(https?://[^\s\"<>\\^`{|}，。；！？、【】《》]+)")
-    HEADERS = BLANK_HEADERS
 
     def __init__(
         self,
         params: "Parameter",
         client: "AsyncClient",
+        headers:dict[str, str],
     ):
         self.client = client
+        self.headers = headers
         self.log = params.logger
         self.max_retry = params.max_retry
         self.timeout = params.timeout
@@ -98,6 +98,7 @@ class Requester:
     ):
         return await self.client.head(
             url,
+            headers=self.headers,
         )
 
     def request_url_head_proxy(
@@ -107,7 +108,7 @@ class Requester:
     ):
         return head(
             url,
-            headers=self.HEADERS,
+            headers=self.headers,
             proxy=proxy,
             follow_redirects=True,
             verify=False,
@@ -120,6 +121,7 @@ class Requester:
     ):
         response = await self.client.get(
             url,
+            headers=self.headers,
         )
         response.raise_for_status()
         return response
@@ -131,7 +133,7 @@ class Requester:
     ):
         response = get(
             url,
-            headers=self.HEADERS,
+            headers=self.headers,
             proxy=proxy,
             follow_redirects=True,
             verify=False,

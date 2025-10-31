@@ -56,10 +56,10 @@ class Extractor:
         params: "Parameter",
         tiktok=False,
     ):
-        self.client = params.client_tiktok if tiktok else params.client
         self.requester = Requester(
             params,
-            self.client,
+            params.client_tiktok if tiktok else params.client,
+            params.headers_tiktok if tiktok else params.headers,
         )
 
     async def run(
