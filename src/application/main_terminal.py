@@ -1695,6 +1695,7 @@ class TikTok:
                     mix_data,
                     mode="mix",
                     mix_id=mix_obj.mix_id,
+                    mix_title=mix_obj.mix_title,
                     mark=mark,
                     api=api,
                     tiktok=tiktok,

@@ -896,24 +896,28 @@ class Extractor:
                     )
                     return id_, name, mark
                 case "mix":
-                    item = self.__select_item(
-                        data,
-                        mix_id,
-                        (self.extract_params_tiktok if tiktok else self.extract_params)[
-                            "mix_id"
-                        ],
-                    )
-                    id_, name, mark = self.__extract_pretreatment_data(
-                        item,
-                        (self.extract_params_tiktok if tiktok else self.extract_params)[
-                            "mix_id"
-                        ],
-                        (self.extract_params_tiktok if tiktok else self.extract_params)[
-                            "mix_title"
-                        ],
-                        mark,
-                        mix_title,
-                    )
+                    if tiktok:
+                        id_ = mix_id
+                        name = self.cleaner.filter_name(
+                            mix_title,
+                        ).strip()
+                        mark = self.cleaner.filter_name(
+                            mark,
+                            name,
+                        ).strip()
+                    else:
+                        item = self.__select_item(
+                            data,
+                            mix_id,
+                            self.extract_params["mix_id"],
+                        )
+                        id_, name, mark = self.__extract_pretreatment_data(
+                            item,
+                            self.extract_params["mix_id"],
+                            self.extract_params["mix_title"],
+                            mark,
+                            mix_title,
+                        )
                     return id_, name, mark
                 case "collects":
                     collect_name = self.cleaner.filter_name(

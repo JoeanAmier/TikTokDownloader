@@ -28,7 +28,7 @@ class MixTikTok(APITikTok):
         # self.detail_id = detail_id  # 未使用
         self.cursor = cursor
         self.count = count
-        self.api = f"{self.domain}api/mix/item_list/"
+        self.api = f"{self.domain}api/collection/item_list/"
         self.text = _("合辑作品")
 
     def generate_params(
@@ -37,7 +37,8 @@ class MixTikTok(APITikTok):
         return self.params | {
             "count": self.count,
             "cursor": self.cursor,
-            "mixId": self.mix_id,
+            "collectionId": self.mix_id,
+            "sourceType": "113",
         }
 
     async def run(
