@@ -16,7 +16,7 @@
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=flat-square&color=ffdd59">
 </div>
 <br>
-<p>🔥 <b>TikTok Posts/Liked/Mix/Live/Video/Image/Music; DouYin Posts/Liked/Favorites/Collections/Video/Image/LivePhoto/Live/Music/Mix/Comments/Account/Search/Hot Board Data Acquisition Tools:</b> Fully open-source, free data collection and file download tool based on HTTPX module implementation; batch download of DouYin account posts works, liked works, favorites works and collections works; batch download of TikTok account posts works and liked works; download of DouYin linked or TikTok linked works; obtain DouYin live stream addresses; download DouYin live stream video; obtain TikTok live stream addresses; download TikTok live stream video; collect DouYin works comments data; batch download of DouYin Mix works; batch download of TikTok Mix works; collect detailed data of DouYin accounts; collect DouYin user/works/live search results; collect DouYin Hot Board data.</p>
+<p>🔥 <b>TikTok Posts/Liked/Mix/Live/Video/Image/Music; DouYin Posts/Liked/Favorites/Collections/Video/Image/LivePhoto/Live/Music/Mix/Comments/Account/Search/Hot Board Data Acquisition Tools:</b> Fully open-source, free data collection and file download tool based on HTTPX module implementation; batch download of DouYin account posts works, liked works, favorites works and collections works; batch download of TikTok account posts works and liked works; download of DouYin linked or TikTok linked works; obtain DouYin live stream push addresses; download DouYin live stream video; obtain TikTok live stream push addresses; download TikTok live stream video; collect DouYin works comments data; batch download of DouYin Mix works; batch download of TikTok Mix works; collect detailed data of DouYin accounts; collect DouYin user/works/live search results; collect DouYin Hot Board data.</p>
 <p>⭐ Previous project names: <code>TikTokDownloader</code></p>
 <p>📣 This project will undergo code structure refactoring in the future, with the goal of making the code more robust and providing better maintainability and extensibility. If you have any thoughts on project design, implementation methods, or optimization ideas, you are welcome to make suggestions or participate in discussions!</p>
 <p>⭐ Due to the author's limited energy, I was unable to update the English document in a timely manner, and the content may have become outdated, partial translation is machine translation, the translation result may be incorrect, Suggest referring to Chinese documentation. If you want to contribute to translation, we warmly welcome you.</p>
@@ -41,8 +41,8 @@
 <li>✅ Persistently save collected data</li>
 <li>✅ Support CSV/XLSX/SQLite format for saving data</li>
 <li>✅ Download dynamic/static cover images</li>
-<li>✅ Obtain DouYin live stream addresses</li>
-<li>✅ Obtain TikTok live stream addresses</li>
+<li>✅ Obtain DouYin live stream push addresses</li>
+<li>✅ Obtain TikTok live stream push addresses</li>
 <li>✅ Use ffmpeg to download live video</li>
 <li>✅ Web UI interaction interface</li>
 <li>✅ Collect comments data from DouYin works</li>

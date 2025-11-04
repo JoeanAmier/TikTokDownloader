@@ -148,7 +148,7 @@ class TikTok:
                 self.detail_interactive,
             ),
             (
-                _("获取直播推流地址(抖音)"),
+                _("获取直播拉流地址(抖音)"),
                 self.live_interactive,
             ),
             (
@@ -198,7 +198,7 @@ class TikTok:
                 self.mix_interactive_tiktok,
             ),
             (
-                _("获取直播推流地址(TikTok)"),
+                _("获取直播拉流地址(TikTok)"),
                 self.live_interactive_tiktok,
             ),
             # (_("采集作品评论数据(TikTok)"), self.comment_interactive_tiktok,),
@@ -1155,7 +1155,7 @@ class TikTok:
                 continue
             download_tasks = self.show_live_info(live_data)
             await self.downloader.run(download_tasks, type_="live")
-        self.logger.info(_("已退出获取直播推流地址(抖音)模式"))
+        self.logger.info(_("已退出获取直播拉流地址(抖音)模式"))
 
     async def live_interactive_tiktok(
         self,
@@ -1178,7 +1178,7 @@ class TikTok:
             )
             download_tasks = self.show_live_info_tiktok(live_data)
             await self.downloader.run(download_tasks, type_="live", tiktok=True)
-        self.logger.info(_("已退出获取直播推流地址(TikTok)模式"))
+        self.logger.info(_("已退出获取直播拉流地址(TikTok)模式"))
 
     # def _generate_live_params(self, rid: bool, ids: list[list]) -> list[dict]:
     #     if not ids:
@@ -1220,10 +1220,10 @@ class TikTok:
         return [i for i in download_tasks if isinstance(i, tuple)]
 
     def show_live_stream_url(self, item: dict, tasks: list):
-        self.console.print(_("FLV 推流地址: "))
+        self.console.print(_("FLV 拉流地址: "))
         for i, (k, v) in enumerate(item["flv_pull_url"].items(), start=1):
             self.console.print(i, k, v)
-        self.console.print(_("M3U8 推流地址: "))
+        self.console.print(_("M3U8 拉流地址: "))
         for i, (k, v) in enumerate(item["hls_pull_url_map"].items(), start=1):
             self.console.print(i, k, v)
         if self.parameter.download:
@@ -1239,7 +1239,7 @@ class TikTok:
             )
 
     def show_live_stream_url_tiktok(self, item: dict, tasks: list):
-        self.console.print(_("FLV 推流地址: "))
+        self.console.print(_("FLV 拉流地址: "))
         for i, (k, v) in enumerate(item["flv_pull_url"].items(), start=1):
             self.console.print(i, k, v)
         if self.parameter.download:

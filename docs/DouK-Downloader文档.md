@@ -15,7 +15,7 @@
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/JoeanAmier/TikTokDownloader/total?style=flat-square&color=ffdd59">
 </div>
 <br>
-<p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播推流地址；下载抖音直播视频；获取 TikTok 直播推流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
+<p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播拉流地址；下载抖音直播视频；获取 TikTok 直播拉流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
 <p>⭐ <b>项目版本：<code>5.8 Beta</code>；文档更新日期：<code>2025/11/3</code></b></p>
 <p>⭐ <b>项目文档正在完善，如果发现任何错误或描述模糊之处，请告知作者以便改进！本项目历史名称：<code>TikTokDownloader</code></b></p>
 <p>⭐ Due to the author’s limited time and energy, the complete English documentation for this project is not yet available. If you wish to read the full documentation, we recommend using AI translation tools to assist your understanding. If you would like to contribute to the translation, your help is warmly welcomed.</p>
@@ -115,7 +115,7 @@ https://www.douyin.com/note/123456789
 ```
 
 <h2>直播下载</h2>
-<p><code>获取直播推流地址</code> 功能需要调用 <code>ffmpeg</code> 下载直播文件；程序会优先调用系统环境的 <code>ffmpeg</code>，其次调用 <code>ffmpeg</code> 参数指定的 <code>ffmpeg</code>，如果 <code>ffmpeg</code> 不可用，程序将不支持直播下载！</p>
+<p><code>获取直播拉流地址</code> 功能需要调用 <code>ffmpeg</code> 下载直播文件；程序会优先调用系统环境的 <code>ffmpeg</code>，其次调用 <code>ffmpeg</code> 参数指定的 <code>ffmpeg</code>，如果 <code>ffmpeg</code> 不可用，程序将不支持直播下载！</p>
 <p>建议前往 <a href="https://ffmpeg.org/download.html">官方网站</a> 或者 <a href="https://github.com/BtbN/FFmpeg-Builds">FFmpeg-Builds</a> 获取 <code>ffmpeg</code> 程序！</p>
 <p>项目开发时所用的 FFmpeg 版本信息如下，不同版本的 FFmpeg 可能会有差异；若功能异常，请向作者反馈！</p>
 <pre>
@@ -139,7 +139,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <td align="center">文件下载, 数据采集</td>
 </tr>
 <tr>
-<td align="center">获取直播推流地址</td>
+<td align="center">获取直播拉流地址</td>
 <td align="center">文件下载, 数据采集</td>
 </tr>
 <tr>
@@ -425,7 +425,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <tr>
 <td align="center">live_qualities</td>
 <td align="center">str</td>
-<td align="center"><a href="#supplement"><sup>3</sup></a>下载直播时的默认清晰度，支持设置为清晰度或者序号；当设置了该参数时，获取直播推流地址将会直接下载指定清晰度的直播文件，不再提示输入清晰度；参数示例：<code>FULL_HD1</code>、<code>HD1</code>、<code>1</code>、<code>2</code> 等</td>
+<td align="center"><a href="#supplement"><sup>3</sup></a>下载直播时的默认清晰度，支持设置为清晰度或者序号；当设置了该参数时，获取直播拉流地址将会直接下载指定清晰度的直播文件，不再提示输入清晰度；参数示例：<code>FULL_HD1</code>、<code>HD1</code>、<code>1</code>、<code>2</code> 等</td>
 <td align="center">无</td>
 </tr>
 <tr>
@@ -798,7 +798,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li><code>https://www.douyin.com/channel/分区ID?modal_id=作品ID</code></li>
 </ul>
 <p>作品会下载至 <code>root</code> 参数和 <code>folder_name</code> 参数拼接成的文件夹。</p>
-<h3>获取直播推流地址(抖音)</h3>
+<h3>获取直播拉流地址(抖音)</h3>
 <p>输入直播链接，不支持已结束的直播。</p>
 <p>支持链接格式：</p>
 <ul>
@@ -1087,7 +1087,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <p><del>如果需要大批量采集合集作品，建议启用 <code>src/custom/function.py</code> 文件的 <code>suspend</code> 方法。</del>（默认启用）</p>
 <p>如果当前合集标题或合集标识不是有效的文件夹名称时，程序会自动替换为合集 ID。</p>
 <p>每个合集的作品会下载至 <code>root</code> 参数路径下的合集文件夹，合集文件夹格式为 <code>MIX123456789_mark_合集作品</code> 或者 <code>MIX123456789_合集标题_合集作品</code></p>
-<h3>获取直播推流地址(TikTok)</h3>
+<h3>获取直播拉流地址(TikTok)</h3>
 <p>输入直播链接，不支持已结束的直播。</p>
 <p>支持链接格式：</p>
 <ul>
@@ -1160,7 +1160,7 @@ demo()
 <p>如果检查新版本失败，可能是访问 GitHub 超时，并非功能异常；如果存在新版本会提示新版本的 <code>URL</code> 地址，不会自动下载更新。</p>
 <h1>其他功能说明</h1>
 <h2>单次输入多个链接</h2>
-<p><code>批量下载账号作品</code>、<code>批量下载链接作品</code>、<code>获取直播推流地址</code>、<code>采集作品评论数据</code>、<code>批量下载合集作品</code>、<code>采集账号详细数据</code>
+<p><code>批量下载账号作品</code>、<code>批量下载链接作品</code>、<code>获取直播拉流地址</code>、<code>采集作品评论数据</code>、<code>批量下载合集作品</code>、<code>采集账号详细数据</code>
 功能支持单次输入多个链接，实现批量下载 / 提取功能；支持完整链接与分享链接混合输入；输入多个链接时，需要使用空格分隔；无需对复制的链接进行额外处理，程序会自动提取输入文本中的有效链接。</p>
 <h2 id="mark">账号/合集标识说明</h2>
 <h3>标识设置规则</h3>
