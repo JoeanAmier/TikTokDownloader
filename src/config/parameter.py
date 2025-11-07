@@ -337,13 +337,7 @@ class Parameter:
             self.logger,
             self.headers_params_tiktok,
             self.twc_tiktok
-            or f"{TtWidTikTok.NAME}={
-                self.cookie_dict_tiktok.get(TtWidTikTok.NAME, '')
-                or self.get_cookie_value(
-                    self.cookie_str_tiktok,
-                    TtWidTikTok.NAME,
-                )
-            }",
+            or f"{TtWidTikTok.NAME}={self.cookie_dict_tiktok.get(TtWidTikTok.NAME, '') or self.get_cookie_value(self.cookie_str_tiktok, TtWidTikTok.NAME)}",
             proxy=self.proxy_tiktok,
         ):
             self.logger.info(

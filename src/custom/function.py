@@ -1,4 +1,5 @@
 from asyncio import sleep
+import os
 from random import randint
 from typing import TYPE_CHECKING
 from src.translation import _
@@ -63,5 +64,22 @@ async def suspend(count: int, console: "ColorfulConsole") -> None:
 
 
 def is_valid_token(token: str) -> bool:
-    """Web API 接口模式 和 Web UI 交互模式 token 参数验证"""
-    return True
+    """
+    功能: Web API 接口模式 和 Web UI 交互模式的令牌校验。
+
+    参数:
+    - token (str): 请求头传入的令牌值，FastAPI 通过 Header 注入。
+
+    返回:
+    - bool: 当未设置环境变量令牌时总是返回 True；当设置了环境变量 `DOUK_TOKEN` 时，
+      仅当入参 `token` 与其相等时返回 True，否则返回 False。
+
+    用途:
+    - 保护公开部署的接口免受未授权访问；在本地默认跳过校验。
+    """
+    expected = os.getenv("DOUK_TOKEN", "464341643")
+    if not expected:
+        # 默认无需令牌，兼容本地使用
+        return True
+    # 已设置令牌，严格校验
+    return token == expected

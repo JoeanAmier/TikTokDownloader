@@ -25,7 +25,7 @@ FROM python:3.12-slim
 WORKDIR /app
 
 # 添加元数据标签
-LABEL name="DouK-Downloader" authors="JoeanAmier" repository="https://github.com/JoeanAmier/TikTokDownloader"
+LABEL name="DouK-Downloader" authors="JoeanAmier" repository="https://github.com/fetsfan/TikTokDownloader"
 
 # 从构建器阶段，将已经安装好的依赖包复制到最终镜像的系统路径中
 COPY --from=builder /install /usr/local
@@ -35,7 +35,41 @@ COPY src /app/src
 COPY locale /app/locale
 COPY static /app/static
 COPY license /app/license
+COPY main.py /app/main.py# ---- 阶段 1: 构建器 (Builder) ----
+FROM python:3.12-bullseye as builder
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir --prefix="/install" -r requirements.txt
+
+# ---- 阶段 2: 最终镜像 (Final Image) ----
+FROM python:3.12-slim
+WORKDIR /app
+LABEL name="DouK-Downloader" authors="JoeanAmier" repository="https://github.com/JoeanAmier/TikTokDownloader"
+COPY --from=builder /install /usr/local
+COPY src /app/src
+COPY locale /app/locale
+COPY static /app/static
+COPY license /app/license
 COPY main.py /app/main.py
+
+# 预置 settings.json -> Web API 模式
+RUN python - <<'PY'
+import json, os
+p = '/app/settings.json'
+d = {'run_command': '7'}
+with open(p, 'w', encoding='utf-8') as f:
+    json.dump(d, f, ensure_ascii=False, indent=4)
+PY
+
+# 可选：令牌（如公开部署务必设置）
+ENV DOUK_TOKEN=your-secret-token
+
+EXPOSE 5555
+VOLUME /app/Volume
+CMD ["python", "main.py"]
 
 # 暴露端口
 EXPOSE 5555

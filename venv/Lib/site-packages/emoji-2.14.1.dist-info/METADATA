@@ -1,0 +1,202 @@
+Metadata-Version: 2.2
+Name: emoji
+Version: 2.14.1
+Summary: Emoji for Python
+Author-email: Taehoon Kim <carpedm20@gmail.com>, Kevin Wurster <wursterk@gmail.com>
+Project-URL: homepage, https://github.com/carpedm20/emoji/
+Project-URL: repository, https://github.com/carpedm20/emoji/
+Keywords: emoji
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Programming Language :: Python :: Implementation :: CPython
+Classifier: Programming Language :: Python :: Implementation :: PyPy
+Classifier: Programming Language :: Python
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Multimedia :: Graphics :: Presentation
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Typing :: Typed
+Requires-Python: >=3.7
+Description-Content-Type: text/x-rst
+License-File: LICENSE.txt
+Requires-Dist: typing_extensions>=4.7.0; python_version < "3.9"
+Provides-Extra: dev
+Requires-Dist: pytest>=7.4.4; extra == "dev"
+Requires-Dist: coverage; extra == "dev"
+
+Emoji
+=====
+
+Emoji for Python.  This project was inspired by `kyokomi <https://github.com/kyokomi/emoji>`__.
+
+
+Example
+-------
+
+The entire set of Emoji codes as defined by the `Unicode consortium <https://unicode.org/emoji/charts/full-emoji-list.html>`__
+is supported in addition to a bunch of `aliases <https://www.webfx.com/tools/emoji-cheat-sheet/>`__.  By
+default, only the official list is enabled but doing ``emoji.emojize(language='alias')`` enables
+both the full list and aliases.
+
+.. code-block:: python
+
+    >>> import emoji
+    >>> print(emoji.emojize('Python is :thumbs_up:'))
+    Python is 👍
+    >>> print(emoji.emojize('Python is :thumbsup:', language='alias'))
+    Python is 👍
+    >>> print(emoji.demojize('Python is 👍'))
+    Python is :thumbs_up:
+    >>> print(emoji.emojize("Python is fun :red_heart:"))
+    Python is fun ❤
+    >>> print(emoji.emojize("Python is fun :red_heart:", variant="emoji_type"))
+    Python is fun ❤️ #red heart, not black heart
+    >>> print(emoji.is_emoji("👍"))
+    True
+
+..
+
+By default, the language is English (``language='en'``) but also supported languages are:
+
+* Spanish (``'es'``)
+* Portuguese (``'pt'``)
+* Italian (``'it'``)
+* French (``'fr'``)
+* German (``'de'``)
+* Farsi/Persian (``'fa'``)
+* Indonesian (``'id'``)
+* Simplified Chinese (``'zh'``)
+* Japanese (``'ja'``)
+* Korean (``'ko'``)
+* Russian (``'ru'``)
+* Arabic (``'ar'``)
+* Turkish (``'tr'``)
+
+
+.. code-block:: python
+
+    >>> print(emoji.emojize('Python es :pulgar_hacia_arriba:', language='es'))
+    Python es 👍
+    >>> print(emoji.demojize('Python es 👍', language='es'))
+    Python es :pulgar_hacia_arriba:
+    >>> print(emoji.emojize("Python é :polegar_para_cima:", language='pt'))
+    Python é 👍
+    >>> print(emoji.demojize("Python é 👍", language='pt'))
+    Python é :polegar_para_cima:️
+
+..
+
+Installation
+------------
+
+Via pip:
+
+.. code-block:: console
+
+    $ python -m pip install emoji --upgrade
+
+From master branch:
+
+.. code-block:: console
+
+    $ git clone https://github.com/carpedm20/emoji.git
+    $ cd emoji
+    $ python -m pip install .
+
+
+Developing
+----------
+
+.. code-block:: console
+
+    $ git clone https://github.com/carpedm20/emoji.git
+    $ cd emoji
+    $ python -m pip install -e .\[dev\]
+    $ pytest
+    $ coverage run -m pytest
+    $ coverage report
+
+The ``utils/generate_emoji.py`` script is used to generate
+``unicode_codes/emoji.json``. Generally speaking it scrapes a table on the
+`Unicode Consortium's website <https://www.unicode.org/reports/tr51/#emoji_data>`__
+with `BeautifulSoup <http://www.crummy.com/software/BeautifulSoup/>`__
+For more information take a look in the `utils/README.md <utils/README.md>`__ file.
+
+Check the code style with:
+
+.. code-block:: console
+
+    $ python -m pip install ruff
+    $ ruff check emoji
+
+Test the type checks with:
+
+.. code-block:: console
+
+    $ python -m pip install pyright mypy typeguard
+    $ pyright emoji
+    $ pyright tests
+    $ mypy emoji
+    $ pytest --typeguard-packages=emoji
+
+
+Links
+-----
+
+**Documentation**
+
+`https://carpedm20.github.io/emoji/docs/ <https://carpedm20.github.io/emoji/docs/>`__
+
+**Overview of all emoji:**
+
+`https://carpedm20.github.io/emoji/ <https://carpedm20.github.io/emoji/>`__
+
+(auto-generated list of the emoji that are supported by the current version of this package)
+
+**For English:**
+
+`Emoji Cheat Sheet <https://www.webfx.com/tools/emoji-cheat-sheet/>`__
+
+`Official Unicode list <http://www.unicode.org/emoji/charts/full-emoji-list.html>`__
+
+**For Spanish:**
+
+`Unicode list <https://emojiterra.com/es/lista-es/>`__
+
+**For Portuguese:**
+
+`Unicode list <https://emojiterra.com/pt/lista/>`__
+
+**For Italian:**
+
+`Unicode list <https://emojiterra.com/it/lista-it/>`__
+
+**For French:**
+
+`Unicode list <https://emojiterra.com/fr/liste-fr/>`__
+
+**For German:**
+
+`Unicode list <https://emojiterra.com/de/liste/>`__
+
+
+Authors
+-------
+
+Taehoon Kim / `@carpedm20 <http://carpedm20.github.io/about/>`__
+
+Kevin Wurster / `@geowurster <http://twitter.com/geowurster/>`__
+
+Maintainer
+----------
+Tahir Jalilov / `@TahirJalilov <https://github.com/TahirJalilov>`__

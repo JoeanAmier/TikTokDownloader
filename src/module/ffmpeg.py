@@ -41,12 +41,15 @@ class FFMPEG:
 
     @staticmethod
     def generate_command_darwin(command: list) -> None:
-        script = dedent(f"""
+        joined = " ".join(command).replace('"', '\\"')
+        script = dedent(
+            f"""
                 tell application "Terminal"
-                    do script "{" ".join(command).replace('"', '\\"')}"
+                    do script "{joined}"
                     activate
                 end tell
-                """)
+                """
+        )
         Popen(["osascript", "-e", script])
 
     @staticmethod
@@ -147,4 +150,4 @@ class FFMPEG:
 
     @staticmethod
     def __check_system_ffmpeg(path: Path = None):
-        return which(path or "ffmpeg")
+        return which(str(path)) if path else which("ffmpeg")
