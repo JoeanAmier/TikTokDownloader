@@ -1,4 +1,4 @@
-from configparser import ConfigParser, NoSectionError, NoOptionError
+from configparser import ConfigParser, NoOptionError, NoSectionError
 
 from rich.console import Console
 
@@ -6,13 +6,11 @@ from src.custom import (
     DATA_HEADERS,
     DATA_HEADERS_TIKTOK,
     DOWNLOAD_HEADERS_TIKTOK,
+    PROJECT_ROOT,
 )
-from src.custom import PROJECT_ROOT
-from src.encrypt import ABogus
-from src.encrypt import XBogus
+from src.encrypt import ABogus, XBogus
 from src.testers.logger import Logger
-from src.tools import Cleaner
-from src.tools import create_client
+from src.tools import Cleaner, create_client
 
 
 class Params:
@@ -22,6 +20,9 @@ class Params:
     def __init__(self):
         self.cookie_str = ""
         self.cookie_str_tiktok = ""
+        self.uifid = ""
+        self.msToken = ""
+        self.msToken_tiktok = ""
         self.config = ConfigParser(
             interpolation=None,
         )
@@ -44,15 +45,18 @@ class Params:
         )
         self.client_tiktok = create_client(
             timeout=self.timeout,
-            proxy="http://127.0.0.1:10809",
+            proxy="http://127.0.0.1:10808",
         )
 
     def create_ini(self):
         self.config["dy"] = {
             "cookie": "",
+            "uifid": "",
+            "msToken": "",
         }
         self.config["tk"] = {
             "cookie": "",
+            "msToken": "",
         }
         with self.CONFIG.open("w", encoding="utf-8") as configfile:
             self.config.write(configfile)
@@ -66,9 +70,21 @@ class Params:
                 "dy",
                 "cookie",
             )
+            self.uifid = self.config.get(
+                "dy",
+                "uifid",
+            )
+            self.msToken = self.config.get(
+                "dy",
+                "msToken",
+            )
             self.cookie_str_tiktok = self.config.get(
                 "tk",
                 "cookie",
+            )
+            self.msToken_tiktok = self.config.get(
+                "tk",
+                "msToken",
             )
         except (NoSectionError, NoOptionError) as e:
             print(f"读取 Cookie 错误: {e}")

@@ -22,3 +22,11 @@ class Logger:
         print(
             *args,
         )
+
+    @staticmethod
+    def debug(
+        *args,
+    ):
+        print(
+            *args,
+        )

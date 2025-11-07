@@ -452,9 +452,13 @@ class API:
         server_mode: bool = False,
     ) -> None:
         if server_mode:
-            cls.progress_object = cls.__fake_progress_object
+            cls._progress_factory = cls.__fake_progress_object
         else:
-            cls.progress_object = cls.__general_progress_object
+            cls._progress_factory = cls.__general_progress_object
+
+    def progress_object(self):
+        factory = getattr(self, "_progress_factory", self.__general_progress_object)
+        return factory()
 
     def __general_progress_object(self):
         return Progress(
