@@ -255,7 +255,7 @@ class Search(API):
             "search_channel": self.channel.channel,
             "enable_history": "1",
             "keyword": self.keyword,
-            "search_source": "tab_search",
+            "search_source": "switch_tab",
             "query_correct_type": "1",
             "is_filter_search": "0",
             "from_group_id": "",
@@ -284,7 +284,7 @@ class Search(API):
             "search_channel": self.channel.channel,
             "enable_history": "1",
             "keyword": self.keyword,
-            "search_source": "tab_search",
+            "search_source": "switch_tab",
             "query_correct_type": "1",
             "is_filter_search": "0",
             "from_group_id": "",
@@ -338,7 +338,7 @@ class Search(API):
             "pc_search_top_1_params": '{"enable_ai_search_top_1":1}',
             "search_channel": self.channel.channel,
             "keyword": self.keyword,
-            "search_source": "tab_search",
+            "search_source": "switch_tab",
             "query_correct_type": "1",
             "is_filter_search": "0",
             "from_group_id": "",
@@ -404,6 +404,8 @@ async def test():
     from src.testers import Params
 
     async with Params() as params:
+        Search.params["uifid"] = params.uifid
+        Search.params["msToken"] = params.msToken_tiktok
         i = Search(
             params,
             keyword="",

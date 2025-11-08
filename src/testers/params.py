@@ -42,6 +42,7 @@ class Params:
         self.date_format = "%Y-%m-%d %H:%M:%S"
         self.client = create_client(
             timeout=self.timeout,
+            proxy=None,
         )
         self.client_tiktok = create_client(
             timeout=self.timeout,
