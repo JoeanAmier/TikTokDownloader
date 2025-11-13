@@ -4,6 +4,10 @@ from .search import (
     VideoSearch,
     UserSearch,
     LiveSearch,
+    TikTokGeneralSearch,
+    TikTokVideoSearch,
+    TikTokUserSearch,
+    TikTokLiveSearch,
 )
 from .settings import Settings
 from .share import ShortUrl
@@ -19,6 +23,10 @@ __all__ = (
     "VideoSearch",
     "UserSearch",
     "LiveSearch",
+    "TikTokGeneralSearch",
+    "TikTokVideoSearch",
+    "TikTokUserSearch",
+    "TikTokLiveSearch",
     "DataResponse",
     "Settings",
     "UrlResponse",

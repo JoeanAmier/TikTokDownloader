@@ -22,6 +22,7 @@ from ..interface.mix import Mix
 from ..interface.mix_tiktok import MixListTikTok
 from ..interface.mix_tiktok import MixTikTok
 from ..interface.search import Search
+from ..interface.search import SearchTikTok
 from ..interface.template import API
 from ..interface.template import APITikTok
 from ..interface.user import User

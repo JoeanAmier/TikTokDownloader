@@ -1260,16 +1260,17 @@ class Extractor:
         tab: int,
     ) -> list[dict]:
         if tab in {0, 1}:
-            return await self.__search_general(data, recorder)
+            return await self.__search_general(data, recorder, tiktok)
         elif tab == 2:
-            return await self.__search_user(data, recorder)
+            return await self.__search_user(data, recorder, tiktok)
         elif tab == 3:
-            return await self.__search_live(data, recorder)
+            return await self.__search_live(data, recorder, tiktok)
 
     async def __search_general(
         self,
         data: list[dict],
         recorder,
+        tiktok: bool,
     ) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
@@ -1280,7 +1281,7 @@ class Extractor:
             same=False,
         )
         [
-            self.__search_result_classify(container, self.generate_data_object(i))
+            self.__search_result_classify(container, self.generate_data_object(i), tiktok = tiktok)
             for i in data
         ]
         await self.__record_data(recorder, container.all_data)
@@ -1290,7 +1291,11 @@ class Extractor:
         self,
         container: SimpleNamespace,
         data: SimpleNamespace,
+        tiktok: bool = False,
     ):
+        if tiktok:  # 直接处理原始 TikTok 视频字典
+            self.__extract_batch_tiktok(container, data)
+            return
         if d := self.safe_extract(data, "aweme_info"):
             self.__extract_batch(container, d)
         elif d := self.safe_extract(data, "aweme_mix_info.mix_items"):
@@ -1312,6 +1317,7 @@ class Extractor:
         self,
         data: list[dict],
         recorder,
+        tiktok: bool,
     ) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
@@ -1366,6 +1372,7 @@ class Extractor:
         self,
         data: list[dict],
         recorder,
+        tiktok: bool,
     ) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
@@ -1374,7 +1381,7 @@ class Extractor:
                 "collection_time": datetime.now().strftime(self.date_format),
             },
         )
-        [self.__deal_search_live(container, self.generate_data_object(i)) for i in data]
+        [self.__deal_search_live(container, self.generate_data_object(i), tiktok = tiktok) for i in data]
         await self.__record_data(recorder, container.all_data)
         return container.all_data
 
@@ -1382,6 +1389,7 @@ class Extractor:
         self,
         container: SimpleNamespace,
         data: SimpleNamespace,
+        tiktok: bool = False
     ):
         container.cache = container.template.copy()
         self.__deal_search_user_live(

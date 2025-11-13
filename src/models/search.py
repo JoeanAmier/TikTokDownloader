@@ -138,3 +138,37 @@ class UserSearch(BaseSearch):
 
 class LiveSearch(BaseSearch):
     channel: Literal[3,] = 3
+
+class TikTokBaseSearch(APIModel):
+    """TikTok Web Search 基础模型"""
+    keyword: str
+    pages: int = Field(1, gt=0)
+    offset: int = Field(0, ge=0)
+    count: int = Field(10, ge=5)
+
+    @field_validator("keyword", mode="before")
+    @classmethod
+    def validate_keyword(cls, v):
+        if not v:
+            raise ValueError("keyword 参数无效")
+        return v
+
+
+class TikTokGeneralSearch(TikTokBaseSearch):
+    """综合搜索（Web API 可用字段）"""
+    channel: Literal[0] = 0  # 综合搜索频道
+
+
+class TikTokVideoSearch(TikTokBaseSearch):
+    """视频搜索"""
+    channel: Literal[1] = 1  # 视频搜索频道
+
+
+class TikTokUserSearch(TikTokBaseSearch):
+    """用户搜索"""
+    channel: Literal[2] = 2  # 用户搜索频道
+
+
+class TikTokLiveSearch(TikTokBaseSearch):
+    """直播搜索"""
+    channel: Literal[3] = 3  # 直播搜索频道
