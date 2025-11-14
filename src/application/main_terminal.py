@@ -35,6 +35,7 @@ from ..interface import (
     MixTikTok,
     Reply,
     Search,
+    SearchTikTok,
     User,
 )
 from ..link import Extractor as LinkExtractor
@@ -45,6 +46,12 @@ from ..models import (
     LiveSearch,
     UserSearch,
     VideoSearch,
+)
+from ..models import (
+    TikTokGeneralSearch,
+    TikTokLiveSearch,
+    TikTokUserSearch,
+    TikTokVideoSearch,
 )
 from ..module import DetailTikTokExtractor, DetailTikTokUnofficial
 from ..storage import RecordManager
@@ -186,6 +193,10 @@ class TikTok:
                 self.collects_interactive,
             ),
             (
+                _("采集搜索结果数据(TikTok)"),
+                self.search_interactive_tiktok,
+            ),
+            (
                 _("批量下载账号作品(TikTok)"),
                 self.account_acquisition_interactive_tiktok,
             ),
@@ -272,6 +283,24 @@ class TikTok:
             (
                 _("直播搜索数据采集"),
                 self._search_interactive_live,
+            ),
+        )
+        self.__function_search_tiktok = (
+            (
+                _("综合搜索数据采集(tiktok)"),
+                self._search_interactive_general_tiktok,
+            ),
+            (
+                _("视频搜索数据采集(tiktok)"),
+                self._search_interactive_video_tiktok,
+            ),
+            (
+                _("用户搜索数据采集(tiktok)"),
+                self._search_interactive_user_tiktok,
+            ),
+            (
+                _("直播搜索数据采集(tiktok)"),
+                self._search_interactive_live_tiktok,
             ),
         )
 
@@ -1997,6 +2026,7 @@ class TikTok:
         self,
         model: "BaseModel",
         source=False,
+        tiktok=False,
     ):
         data = await Search(
             self.parameter,
@@ -2019,9 +2049,148 @@ class TikTok:
                 logger,
                 type_="search",
                 tab=model.channel,
+                tiktok=tiktok,
             )
             self.logger.info(_("搜索数据已保存至 {name}").format(name=name))
         return search_data
+
+    @check_storage_format
+    async def search_interactive_tiktok(
+        self,
+        select="",
+    ):
+        await self.__secondary_menu(
+            _("请选择搜索模式"),
+            function=self.__function_search_tiktok,
+            select=select or safe_pop(self.run_command),
+        )
+        self.logger.info("已退出采集搜索结果数据模式")
+
+
+    @staticmethod
+    def generate_model_tiktok(
+        channel: int,
+        keyword: str,
+        pages: int = 1,
+        *args, **kwargs
+    ) -> Union["BaseModel", str]:
+        try:
+            match channel:
+                case 0:
+                    return TikTokGeneralSearch(
+                        keyword=keyword,
+                        pages=pages,
+                    )
+                case 1:
+                    return TikTokVideoSearch(
+                        keyword=keyword,
+                        pages=pages,
+                    )
+                case 2:
+                    return TikTokUserSearch(
+                        keyword=keyword,
+                        pages=pages,
+                    )
+                case 3:
+                    return TikTokLiveSearch(
+                        keyword=keyword,
+                        pages=pages,
+                    )
+                case _:
+                    raise DownloaderError
+        except ValidationError as e:
+            return repr(e)
+
+    async def _search_interactive_general_tiktok(
+        self,
+        index=0,
+    ):
+        while criteria := self._enter_search_criteria(Search.search_criteria[index]):
+            criteria = self.fill_search_criteria(criteria)
+            if isinstance(
+                model := self.generate_model_tiktok(
+                    index,
+                    *criteria,
+                ),
+                str,
+            ):
+                self.logger.warning(model)
+                continue
+            self.logger.info(f"搜索参数: {model.model_dump()}", False)
+            if isinstance(
+                r := await self.deal_search_data_tiktok(
+                    model,
+                ),
+                list,
+            ) and not any(r):
+                self.logger.warning(_("搜索结果为空"))
+
+    async def _search_interactive_video_tiktok(self):
+        await self._search_interactive_general_tiktok(
+            1,
+        )
+
+    async def _search_interactive_user_tiktok(self):
+        await self._search_interactive_general_tiktok(
+            2,
+        )
+
+    async def _search_interactive_live_tiktok(self):
+        await self._search_interactive_general_tiktok(
+            3,
+        )
+
+    @staticmethod
+    def _generate_search_name_tiktok(
+        model: "BaseModel",
+    ) -> str:
+        name = [
+            _("搜索数据"),
+            f"{datetime.now():%Y_%m_%d_%H_%M_%S}",
+            Search.search_params[model.channel].note,
+        ]
+        match model.channel:
+            case 0:
+                name.append(model.keyword)  # General
+            case 1:
+                name.append(model.keyword)  # Video
+            case 2:
+                name.append(model.keyword)  # User
+            case 3:
+                name.append(model.keyword)  # Live
+        return "_".join(name)
+
+    async def deal_search_data_tiktok(
+        self,
+        model: "BaseModel",
+        source=False,
+    ):
+        data = await SearchTikTok(
+            self.parameter,
+            **model.model_dump(),
+        ).run()
+        if len(data) != 1 and not any(data):
+            return None
+        if source or not any(data):
+            return data
+        root, params, logger = self.record.run(
+            self.parameter,
+            type_=Search.search_data_field[model.channel],
+        )
+        name = self._generate_search_name_tiktok(
+            model,
+        )
+        async with logger(root, name=name, console=self.console, **params) as logger:
+            search_data = await self.extractor.run(
+                data,
+                logger,
+                type_="search",
+                tiktok = True,
+                tab=model.channel,
+            )
+            self.logger.info(_("搜索数据已保存至 {name}").format(name=name))
+        return search_data
+
 
     @check_storage_format
     async def hot_interactive(

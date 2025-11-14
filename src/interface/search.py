@@ -3,7 +3,7 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING, Union
 from urllib.parse import quote
 
-from src.interface.template import API
+from src.interface.template import API, APITikTok
 from src.tools import DownloaderError
 from src.translation import _
 
@@ -136,7 +136,7 @@ class Search(API):
         params: Union["Parameter", "Params"],
         cookie: str = "",
         proxy: str = None,
-        keyword: str = ...,
+        keyword: str = "",
         channel: int = 0,
         pages: int = 99999,
         sort_type: int = 0,
@@ -399,22 +399,254 @@ class Search(API):
     ) -> None:
         self.append_response([i[key] for i in data])
 
+class SearchTikTok(APITikTok):
+    # 支持四类 TikTok 搜索接口：general / item / user / live
+    search_params = (
+        SimpleNamespace(
+            note=_("综合搜索"),
+            api=f"{APITikTok.domain}api/search/general/full/",
+            channel="tiktok_web",
+            type="general",
+            key="data",
+        ),
+        SimpleNamespace(
+            note=_("视频搜索"),
+            api=f"{APITikTok.domain}api/search/item/full/",
+            channel="tiktok_web",
+            type="video",
+            key="item_list",
+        ),
+        SimpleNamespace(
+            note=_("用户搜索"),
+            api=f"{APITikTok.domain}api/search/user/full/",
+            channel="tiktok_web",
+            type="user",
+            key="user_List",
+        ),
+        SimpleNamespace(
+            note=_("直播搜索"),
+            api=f"{APITikTok.domain}api/search/live/full/",
+            channel="tiktok_web",
+            type="live",
+            key="data",
+        ),
+        SimpleNamespace(
+            note=None,
+            api=None,
+            channel=None,
+            type=None,
+            key=None,
+        ),
+    )
+    search_criteria = {
+        0: _("关键词  总页数"),
+        1: _("关键词  总页数"),
+        2: _("关键词  总页数"),
+        3: _("关键词  总页数"),
+    }
+    channel_map = {
+        0: search_params[0],
+        1: search_params[1],
+        2: search_params[2],
+        3: search_params[3],
+    }
+
+    def __init__(
+        self,
+        params: Union["Parameter", "Params"],
+        cookie: str = "",
+        proxy: str = None,
+        keyword: str = "",
+        channel: int = 0,
+        pages: int = 99999,
+        offset: int = 0,
+        count: int = 10,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(params, cookie, proxy, *args, **kwargs)
+        self.keyword = keyword
+        self.channel = self.channel_map.get(channel, self.search_params[-1])
+        self.pages = pages
+        self.offset = offset
+        self.count = count
+        self.api = self.channel.api
+        self.key = self.channel.key
+        self.text = f"{self.channel.note}"
+        self.type = self.channel.type
+        self.search_id = None
+        self.params_func = {
+            0: self._generate_params_general,
+            1: self._generate_params_video,
+            2: self._generate_params_user,
+            3: self._generate_params_live,
+        }.get(channel)
+
+    def _generate_params_general(
+        self,
+    ) -> dict:
+        params = self.params | {
+            "pc_search_top_1_params": '{"enable_ai_search_top_1":1}',
+            "search_channel": self.channel.channel,
+            "enable_history": "1",
+            "keyword": self.keyword,
+            "search_source": "tab_search",
+            "query_correct_type": "1",
+            "from_group_id": "",
+            "disable_rs": "0",
+            "offset": self.offset,
+            "count": self.count,
+            "need_filter_settings": "0",
+            "list_type": "single",
+            "version_code": "190600",
+            "version_name": "19.6.0",
+        }
+        if self.search_id:
+            params |= {"search_id": self.search_id}
+        return params
+
+    def _generate_params_video(
+        self,
+    ) -> dict:
+        params = self.params | {
+            "pc_search_top_1_params": '{"enable_ai_search_top_1":1}',
+            "search_channel": self.channel.channel,
+            "enable_history": "1",
+            "keyword": self.keyword,
+            "search_source": "tab_search",
+            "query_correct_type": "1",
+            "from_group_id": "",
+            "disable_rs": "0",
+            "offset": self.offset,
+            "count": self.count,
+            "need_filter_settings": "0",
+            "list_type": "single",
+            "version_code": "170400",
+            "version_name": "17.4.0",
+        }
+        if self.search_id:
+            params |= {"search_id": self.search_id}
+        return params
+    
+    def _generate_params_user(
+        self,
+    ) -> dict:
+        params = self._generate_params_live()
+        return params
+
+    def _generate_params_live(
+        self,
+    ) -> dict:
+        params = self.params | {
+            "pc_search_top_1_params": '{"enable_ai_search_top_1":1}',
+            "search_channel": self.channel.channel,
+            "keyword": self.keyword,
+            "search_source": "tab_search",
+            "query_correct_type": "1",
+            "from_group_id": "",
+            "disable_rs": "0",
+            "offset": self.offset,
+            "count": self.count,
+            "need_filter_settings": "0",
+            "list_type": "single",
+            "version_code": "170400",
+            "version_name": "17.4.0",
+        }
+        if self.search_id:
+            params |= {"search_id": self.search_id}
+        return params
+
+    def check_response(
+        self,
+        data_dict: dict,
+        data_key: str,
+        error_text="解析错误！",
+        cursor="cursor",
+        has_more="has_more",
+        *args,
+        **kwargs,
+    ):
+        try:
+            if not isinstance(d := data_dict[data_key], list):
+                self.log.warning(error_text)
+                self.finished = True
+            elif len(d) == 0:
+                if not self.response:
+                    self.response.append([])
+                self.finished = True
+            else:
+                self.offset = data_dict[cursor]
+                self.search_id = data_dict["log_pb"]["impr_id"]
+                match self.type:
+                    case "general" | "video" | "user":
+                        self.append_response(d)
+                    case "live":
+                        self.append_response_video(
+                            d,
+                            "live_info",
+                        )
+                    case _:
+                        raise DownloaderError
+                self.finished = not data_dict[has_more]
+        except KeyError:
+            self.log.error(
+                _("数据解析失败，请告知作者处理: {data},KEYERROR!").format(data=data_dict)
+            )
+            self.finished = True
+
+    def append_response_video(
+        self,
+        data: list[dict],
+        key: str,
+    ) -> None:
+        try:
+            self.append_response([i[key] for i in data])
+        except Exception:
+            self.append_response(data)
+
+    async def run(self, single_page=False, *args, **kwargs):
+        if not self.api:
+            raise DownloaderError
+        self.set_referer(
+            f"{self.domain}search?q={quote(self.keyword)}&type={self.type}"
+        )
+        match single_page:
+            case True:
+                await self.run_single(
+                    self.channel.key,
+                    params=self.params_func,
+                    *args,
+                    **kwargs,
+                )
+            case False:
+                await self.run_batch(
+                    self.channel.key,
+                    params=self.params_func,
+                    *args,
+                    **kwargs,
+                )
+            case _:
+                raise DownloaderError
+        return self.response
 
 async def test():
     from src.testers import Params
 
     async with Params() as params:
-        i = Search(
+        # Dry-run: 不发起网络请求，只打印构造的 api/key/params
+        t = SearchTikTok(
             params,
-            keyword="",
-            channel=3,
-            sort_type=2,
-            publish_time=7,
-            duration=2,
-            douyin_user_fans=5,
-            pages=1,
+            keyword="labubu",
+            channel=1,  # 视频搜索
+            offset=0,
+            count=3,
         )
-        print(await i.run())
+        print("--- SearchTikTok info ---")
+        print("api:", t.api)
+        print("key:", t.key)
+        # params_func 是一个函数，调用它以获取最终的查询参数
+        print("generated params:", t.params_func())
+        print("--- end ---")
 
 
 if __name__ == "__main__":
