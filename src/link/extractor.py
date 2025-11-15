@@ -164,7 +164,7 @@ class Extractor:
 
 
 class ExtractorTikTok(Extractor):
-    SEC_UID = compile(r'"secUid":"([a-zA-Z0-9_-]+)"')
+    SEC_UID = compile(r'"verified":(?:false|true),"secUid":"([a-zA-Z0-9_-]+)"')
     ROOD_ID = compile(r'"roomId":"(\d+)"')
     MIX_ID = compile(r'"canonical":"\S+?(\d{19})"')
 
