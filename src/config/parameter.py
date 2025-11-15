@@ -19,7 +19,15 @@ from ..custom import (
     TIMEOUT,
     USERAGENT,
 )
-from ..encrypt import ABogus, MsToken, MsTokenTikTok, TtWid, TtWidTikTok, XBogus
+from ..encrypt import (
+    ABogus,
+    MsToken,
+    MsTokenTikTok,
+    TtWid,
+    TtWidTikTok,
+    XBogus,
+    XGnarly,
+)
 from ..extract import Extractor
 from ..interface import API, APITikTok
 from ..module import FFMPEG
@@ -108,6 +116,7 @@ class Parameter:
         self.logger.run()
         self.ab = ABogus()
         self.xb = XBogus()
+        self.xg = XGnarly()
         self.console = console
         self.recorder = recorder
         self.preview = BLANK_PREVIEW
