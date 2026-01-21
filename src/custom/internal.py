@@ -6,9 +6,7 @@ VERSION_MAJOR = 5
 VERSION_MINOR = 8
 VERSION_BETA = True
 __VERSION__ = f"{VERSION_MAJOR}.{VERSION_MINOR}.{'beta' if VERSION_BETA else 'stable'}"
-PROJECT_NAME = f"DouK-Downloader V{VERSION_MAJOR}.{VERSION_MINOR} {
-    'Beta' if VERSION_BETA else 'Stable'
-}"
+PROJECT_NAME = f"DouK-Downloader V{VERSION_MAJOR}.{VERSION_MINOR} {'Beta' if VERSION_BETA else 'Stable'}"
 
 REPOSITORY = "https://github.com/JoeanAmier/TikTokDownloader"
 LICENCE = "GNU General Public License v3.0"
