@@ -73,7 +73,7 @@ class SQLLogger(BaseSQLLogger):
         old_sheet = "_".join(mark)
         if await self.__check_sheet_exists(old_sheet):
             try:
-                await self.cursor.execute(self.UPDATE_SQL, (old_sheet, new_sheet))
+                await self.cursor.execute(self.UPDATE_SQL.format(old_name=old_sheet, new_name=new_sheet))
             except OperationalError as e:
                 print(
                     Text(
@@ -82,7 +82,7 @@ class SQLLogger(BaseSQLLogger):
                                 _(
                                     "更新数据表名称时发生错误，重命名失败，请向作者反馈以便修复问题！"
                                 ),
-                                e,
+                                str(e),
                                 old_sheet,
                                 new_sheet,
                             )
