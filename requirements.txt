@@ -22,7 +22,7 @@ pyperclip==1.11.0
     # via douk-downloader (pyproject.toml)
 qrcode==8.2
     # via douk-downloader (pyproject.toml)
-rich==14.2.0
+rich==14.3.3
     # via douk-downloader (pyproject.toml)
 rookiepy==0.5.6
     # via douk-downloader (pyproject.toml)
