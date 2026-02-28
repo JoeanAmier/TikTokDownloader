@@ -26,11 +26,11 @@
 <details>
 <summary>功能列表（点击展开）</summary>
 <ul>
-<li>✅ 下载抖音无水印视频/图集</li>
-<li>✅ 下载抖音无水印实况/动图</li>
+<li>✅ 下载抖音视频/图集</li>
+<li>✅ 下载抖音实况/动图</li>
 <li>✅ 下载最高画质视频文件</li>
 <li>✅ 下载 TikTok 视频原画</li>
-<li>✅ 下载 TikTok 无水印视频/图集</li>
+<li>✅ 下载 TikTok 视频/图集</li>
 <li>✅ 下载抖音账号发布/喜欢/收藏/收藏夹作品</li>
 <li>✅ 下载 TikTok 账号发布/喜欢作品</li>
 <li>✅ 采集抖音 / TikTok 详细数据</li>
@@ -148,8 +148,7 @@ demo()
 <li>运行 <code>python .\main.py</code> 或者 <code>python main.py</code> 命令启动 DouK-Downloader</li>
 </ol>
 <ol><b>使用 uv 安装项目依赖（推荐）</b>
-<li>运行 <code>uv venv</code> 命令创建虚拟环境</li>
-<li>运行 <code>uv sync</code> 命令同步环境依赖</li>
+<li>运行 <code>uv sync --no-dev</code> 命令同步环境依赖</li>
 <li>运行 <code>uv run main.py</code> 命令启动 DouK-Downloader</li>
 </ol>
 </ol>
@@ -391,13 +390,6 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 
 ***
 
-## Thordata
-
-<p><a href="https://www.thordata.com/?ls=github&lk=TikTokDownloader"><img src="docs/AD/Thordata_CN_AD.jpg" alt="Thordata" width="600" height="314"></a></p>
-<p><a href="https://www.thordata.com/?ls=github&lk=TikTokDownloader">Thordata</a>：可靠且价格实惠的住宅代理，一键助您收集全球数据；注册即可免费获得 1GB 住宅代理和 2000 次 SERP API；凭折扣码 <b>THOR66</b> 可获 30% 折扣。</p>
-
-***
-
 ## TikHub
 
 <p><a href="https://tikhub.io/?utm_source=github&utm_medium=readme&utm_campaign=tiktok_downloader&ref=github_joeanamier_tiktokdownloader"><img src="docs/AD/TIKHUB_AD.jpg" alt="TIKHUB" width="458" height="319"></a></p>
@@ -426,7 +418,6 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 # 💡 项目参考
 
 * https://github.com/Johnserf-Seed/f2
-* https://github.com/Johnserf-Seed/TikTokDownload
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://github.com/justbeluga/tiktok-web-reverse-engineering
 * https://github.com/ihmily/DouyinLiveRecorder
@@ -439,4 +430,3 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 * https://github.com/carpedm20/emoji/
 * https://github.com/lxml/lxml
 * https://ffmpeg.org/ffmpeg-all.html
-* https://www.tikwm.com/

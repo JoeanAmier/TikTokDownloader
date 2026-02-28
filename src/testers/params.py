@@ -40,14 +40,16 @@ class Params:
         self.max_retry = 0
         self.timeout = 5
         self.max_pages = 2
+        self.proxy = None
+        self.proxy_tiktok = "http://127.0.0.1:10808"
         self.date_format = "%Y-%m-%d %H:%M:%S"
         self.client = create_client(
             timeout=self.timeout,
-            proxy=None,
+            proxy=self.proxy,
         )
         self.client_tiktok = create_client(
             timeout=self.timeout,
-            proxy="http://127.0.0.1:10808",
+            proxy=self.proxy_tiktok,
         )
 
     def create_ini(self):

@@ -27,11 +27,11 @@
 <details>
 <summary>Function List (Click to Expand)</summary>
 <ul>
-<li>✅ Download DouYin video/image without watermarks</li>
-<li>✅ Download DouYin live photo without watermarks</li>
+<li>✅ Download DouYin video/image</li>
+<li>✅ Download DouYin live photo</li>
 <li>✅ Download the highest quality video file</li>
 <li>✅ Download TikTok video source files</li>
-<li>✅ Download TikTok video/image without watermarks</li>
+<li>✅ Download TikTok video/image</li>
 <li>✅ Download of DouYin account posts/liked/favorites works</li>
 <li>✅ Download of TikTok account posts/liked works</li>
 <li>✅ Collect detailed data from DouYin/TikTok</li>
@@ -151,8 +151,7 @@ demo()
 <li>Run the command <code>python .\main.py</code> or <code>python main.py</code> to start DouK-Downloader</li>
 </ol>
 <ol><b>Install project dependencies using uv (recommended)</b>
-<li>Run the command <code>uv venv</code> to create a virtual environment</li>
-<li>Run the command <code>uv sync</code> to synchronize environment dependencies</li>
+<li>Run the command <code>uv sync --no-dev</code> to synchronize environment dependencies</li>
 <li>Run the command <code>uv run main.py</code> to start DouK-Downloader</li>
 </ol>
 </ol>
@@ -396,13 +395,6 @@ repository to execute the build process
 
 ***
 
-## Thordata
-
-<p><a href="https://www.thordata.com/?ls=github&lk=TikTokDownloader"><img src="docs/AD/Thordata_EN_AD.jpg" alt="Thordata" width="600" height="314"></a></p>
-<p><a href="https://www.thordata.com/?ls=github&lk=TikTokDownloader">Thordata</a>：Reliable and cost-effective residential proxies for streamlined global data acquisition. Register now to receive 1GB of residential proxy traffic and 2,000 SERP API credits. Use code <b>THOR66</b> for a 30% discount.</p>
-
-***
-
 ## TikHub
 
 <p><a href="https://tikhub.io/?utm_source=github&utm_medium=readme&utm_campaign=tiktok_downloader&ref=github_joeanamier_tiktokdownloader"><img src="docs/AD/TIKHUB_AD.jpg" alt="TIKHUB" width="458" height="319"></a></p>
@@ -430,7 +422,6 @@ repository to execute the build process
 # 💡 Project References
 
 * https://github.com/Johnserf-Seed/f2
-* https://github.com/Johnserf-Seed/TikTokDownload
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://github.com/justbeluga/tiktok-web-reverse-engineering
 * https://github.com/ihmily/DouyinLiveRecorder
@@ -443,4 +434,3 @@ repository to execute the build process
 * https://github.com/carpedm20/emoji/
 * https://github.com/lxml/lxml
 * https://ffmpeg.org/ffmpeg-all.html
-* https://www.tikwm.com/
