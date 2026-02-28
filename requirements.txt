@@ -6,7 +6,7 @@ aiosqlite==0.21.0
     # via douk-downloader (pyproject.toml)
 emoji==2.15.0
     # via douk-downloader (pyproject.toml)
-fastapi==0.124.2
+fastapi==0.134.0
     # via douk-downloader (pyproject.toml)
 gmssl==3.2.2
     # via douk-downloader (pyproject.toml)
