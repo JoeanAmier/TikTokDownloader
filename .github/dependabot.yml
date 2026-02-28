@@ -1,0 +1,15 @@
+version: 2
+registries:
+  pip_mirror:
+    type: python-index
+    url: https://mirrors.ustc.edu.cn/pypi/simple
+updates:
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "cron"
+      cronjob: "0 0 * * 6"
+      timezone: "Asia/Shanghai"
+    target-branch: "develop"
+    registries:
+      - pip_mirror
