@@ -56,20 +56,20 @@ class Requester:
         proxy: str = None,
     ):
         self.log.info(f"URL: {url}", False)
-        match (content in {"url", "headers"}, bool(proxy)):
-            case True, True:
-                response = self.request_url_head_proxy(
-                    url,
-                    proxy,
-                )
-            case True, False:
-                response = await self.request_url_head(url)
-            case False, True:
+        match bool(proxy):
+            # case True, True:
+            #     response = self.request_url_head_proxy(
+            #         url,
+            #         proxy,
+            #     )
+            # case True, False:
+            #     response = await self.request_url_head(url)
+            case True:
                 response = self.request_url_get_proxy(
                     url,
                     proxy,
                 )
-            case False, False:
+            case False:
                 response = await self.request_url_get(url)
             case _:
                 raise DownloaderError
