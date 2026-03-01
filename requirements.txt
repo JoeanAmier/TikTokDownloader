@@ -26,5 +26,5 @@ rich==14.3.3
     # via douk-downloader (pyproject.toml)
 rookiepy==0.5.6
     # via douk-downloader (pyproject.toml)
-uvicorn==0.38.0
+uvicorn==0.41.0
     # via douk-downloader (pyproject.toml)
