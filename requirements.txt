@@ -2,7 +2,7 @@
 #    uv pip compile pyproject.toml --no-deps --no-strip-extras -o requirements.txt
 aiofiles==25.1.0
     # via douk-downloader (pyproject.toml)
-aiosqlite==0.21.0
+aiosqlite==0.22.1
     # via douk-downloader (pyproject.toml)
 emoji==2.15.0
     # via douk-downloader (pyproject.toml)
