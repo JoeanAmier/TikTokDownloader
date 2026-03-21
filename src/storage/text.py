@@ -1,6 +1,5 @@
 from pathlib import Path
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Union
 
 from ..tools import Retry
 
@@ -27,17 +26,14 @@ class BaseTextLogger:
     async def __aenter__(self):
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        pass
+    async def __aexit__(self, exc_type, exc_val, exc_tb): ...
 
     @convert_to_string
     async def save(self, data: "Iterable", *args, **kwargs):
         # 数据保存方法入口
         return await self._save(data, *args, **kwargs)
 
-    async def _save(self, data: "Iterable", *args, **kwargs):
-        # 实际数据保存逻辑
-        pass
+    async def _save(self, data: "Iterable", *args, **kwargs): ...
 
     @classmethod
     def _rename(cls, root: Path, type_: str, old: str, new_: str) -> str:

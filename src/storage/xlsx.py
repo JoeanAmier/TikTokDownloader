@@ -45,8 +45,11 @@ class XLSXLogger(BaseTextLogger):
         return self
 
     async def __aexit__(self, exc_type, exc_val, exc_tb):
-        self.book.save(self.path)
-        self.book.close()
+        try:
+            if exc_type is None:
+                self.book.save(self.path)
+        finally:
+            self.book.close()
 
     def title(self):
         if not self.sheet["A1"].value:
@@ -61,3 +64,5 @@ class XLSXLogger(BaseTextLogger):
             self.console.warning(
                 _("数据包含非法字符，保存数据失败：{error}").format(error=e)
             )
+        except Exception as e:
+            self.console.error(_("保存数据发生异常：{error}").format(error=e))
