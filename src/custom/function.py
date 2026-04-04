@@ -1,10 +1,20 @@
 from asyncio import sleep
-from random import randint
+from math import log
+from random import lognormvariate
 from typing import TYPE_CHECKING
+
 from src.translation import _
 
 if TYPE_CHECKING:
     from src.tools import ColorfulConsole
+
+
+def get_wait_time(
+    avg_delay: float | int = 6.0,
+    sigma: float = 0.6,
+) -> float:
+    mu = log(avg_delay) - (sigma**2 / 2)
+    return max(0.5, lognormvariate(mu, sigma))
 
 
 async def wait() -> None:
@@ -12,9 +22,7 @@ async def wait() -> None:
     设置网络请求间隔时间，仅对获取数据生效，不影响下载文件
     """
     # 随机延时
-    await sleep(randint(5, 20) * 0.1)
-    # 固定延时
-    # await sleep(1)
+    await sleep(get_wait_time())
     # 取消延时
     # pass
 
