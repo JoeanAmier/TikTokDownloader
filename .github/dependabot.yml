@@ -8,7 +8,7 @@ updates:
     directory: "/"
     schedule:
       interval: "cron"
-      cronjob: "0 0 * * 6"
+      cronjob: "0 0 14,28 * *"
       timezone: "Asia/Shanghai"
     target-branch: "develop"
     registries:
