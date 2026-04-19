@@ -12,7 +12,7 @@ gmssl==3.2.2
     # via douk-downloader (pyproject.toml)
 httpx[socks]==0.28.1
     # via douk-downloader (pyproject.toml)
-lxml==6.0.3
+lxml==6.0.4
     # via douk-downloader (pyproject.toml)
 openpyxl==3.1.5
     # via douk-downloader (pyproject.toml)
