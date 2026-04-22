@@ -125,7 +125,7 @@ demo()
 
 ## クイックスタート
 
-<p>⭐ Mac OSおよびWindows 10以降のユーザーは、<a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a>または<a href="https://github.com/JoeanAmier/TikTokDownloader/actions">Actions</a>からコンパイル済みプログラムをダウンロードして、すぐに使用できます！</p>
+<p>⭐ macOSおよびWindows 10以降のユーザーは、<a href="https://github.com/JoeanAmier/TikTokDownloader/releases/latest">Releases</a>または<a href="https://github.com/JoeanAmier/TikTokDownloader/actions">Actions</a>からコンパイル済みプログラムをダウンロードして、すぐに使用できます！</p>
 <p>⭐ 本プロジェクトにはGitHub Actionsによる実行ファイルの自動ビルド機能が含まれています。ユーザーはいつでもGitHub Actionsを使用して最新のソースコードから実行ファイルをビルドできます！</p>
 <p>⭐ 実行ファイルの自動ビルドチュートリアルについては、本ドキュメントの<code>実行ファイルのビルドガイド</code>セクションを参照してください。より詳細なステップバイステップのイラスト付きチュートリアルが必要な場合は、<a href="https://mp.weixin.qq.com/s/TorfoZKkf4-x8IBNLImNuw">こちらの記事をご覧ください</a>！</p>
 <p><strong>注意：macOSプラットフォームの実行ファイル<code>main</code>はコード署名されていないため、初回実行時にシステムのセキュリティ制限を受けます。ターミナルで<code>xattr -cr プロジェクトフォルダパス</code>コマンドを実行してセキュリティフラグを削除すると、正常に実行できるようになります。</strong></p>
