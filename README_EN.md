@@ -160,18 +160,18 @@ demo()
 <li>Write Cookie Information into Configuration File 
 <ol><b>Read Cookie from Clipboard(Recommended)</b>
 <li>Refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/blob/master/docs/Cookie%E8%8E%B7%E5%8F%96%E6%95%99%E7%A8%8B.md">Cookie Extraction Tutorial</a>, copy the required Cookie to the clipboard</li>
-<li>Select the <code>Read Cookie from Clipboard</code> option, the program will automatically read the Cookie from the clipboard and write it into the configuration file</li>
+<li>Select the <code>Extracting cookie from clipboard</code> option, the program will automatically read the Cookie from the clipboard and write it into the configuration file</li>
 </ol>
 <ol><b>Read Cookie from Browser</b>
-<li>Select the <code>Read Cookie from Browser</code> option, then follow the prompts to input the browser type or its corresponding number</li>
+<li>Select the <code>Extracting cookie from browser</code> option, then follow the prompts to input the browser type or its corresponding number</li>
 </ol>
 <ol><b><del>Obtain Cookie via QR Code Login</del> (No longer valid)</b>
-<li><del>Select the <code>Obtain Cookie via QR Code Login</code> option, the program will display a login QR code image and open it with the default application</del></li>
-<li><del>Use the TikTok app to scan the QR code and log in</del></li>
+<li><del>Select the <code>Scan code to login and get cookies (DouYin)</code> option, the program will display a login QR code image and open it with the default application</del></li>
+<li><del>Use the DouYin app to scan the QR code and log in</del></li>
 <li><del>Follow the prompts, the program will automatically write the Cookie into the configuration file</del></li>
 </ol>
 </li>
-<li>Return to the program interface, sequentially select <code>Terminal interactive mode</code> -> <code>Batch download link works (general)</code> -> <code>Manually enter the link of the works to be collected</code>.</li>
+<li>Return to the program interface, sequentially select <code>Terminal Mode</code> -> <code>Batch Download Works from Links</code> -> <code>Manually enter the works links to be collected</code>.</li>
 <li>Input the DouYin works link to download the works file (the TikTok platform requires more initial setup, please refer to the documentation for details).</li>
 <li>For more detailed instructions, please see <b><a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">Project Documentation</a></b>.</li>
 </ol>
