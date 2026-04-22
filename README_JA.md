@@ -82,11 +82,11 @@
 
 <p>設定ファイルを通じてアカウントを管理することを推奨します。詳細については<a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation">ドキュメント</a>を参照してください。</p>
 
-![ターミナルモードスクリーンショット](docs/screenshot/終端交互模式截図EN1.png)
+![ターミナルモードスクリーンショット](docs/screenshot/终端交互模式截图EN1.png)
 *****
-![ターミナルモードスクリーンショット](docs/screenshot/終端交互模式截図EN2.png)
+![ターミナルモードスクリーンショット](docs/screenshot/终端交互模式截图EN2.png)
 *****
-![ターミナルモードスクリーンショット](docs/screenshot/終端交互模式截図EN3.png)
+![ターミナルモードスクリーンショット](docs/screenshot/终端交互模式截图EN3.png)
 
 ## Web UIインタラクションモード
 
@@ -94,9 +94,9 @@
 
 ## Web APIモード
 
-![WebAPIモードスクリーンショット](docs/screenshot/WebAPI模式截図EN1.png)
+![WebAPIモードスクリーンショット](docs/screenshot/WebAPI模式截图EN1.png)
 *****
-![WebAPIモードスクリーンショット](docs/screenshot/WebAPI模式截図EN2.png)
+![WebAPIモードスクリーンショット](docs/screenshot/WebAPI模式截图EN2.png)
 
 > **このモードを起動後、http://127.0.0.1:5555/docs または http://127.0.0.1:5555/redoc を開いて自動生成されたドキュメントにアクセスしてください！**
 
