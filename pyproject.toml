@@ -20,7 +20,7 @@ dependencies = [
     "pydantic>=2.13.4",
     "pyperclip>=1.11.0",
     "rich>=15.0.0",
-    "uvicorn>=0.46.0",
+    "uvicorn>=0.48.0",
 ]
 
 [project.urls]
