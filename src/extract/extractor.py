@@ -897,29 +897,32 @@ class Extractor:
                     return id_, name, mark
                 case "favorite" | "collection":
                     try:
+                        params = (
+                            self.extract_params_tiktok
+                            if tiktok
+                            else self.extract_params
+                        )
                         item = self.__select_item(
                             data,
                             user_id,
-                            (self.extract_params_tiktok if tiktok else self.extract_params)[
-                                "sec_uid"
-                            ],
+                            params["sec_uid"],
                         )
                         id_, name, mark = self.__extract_pretreatment_data(
                             item,
-                            (self.extract_params_tiktok if tiktok else self.extract_params)[
-                                "uid"
-                            ],
-                            (self.extract_params_tiktok if tiktok else self.extract_params)[
-                                "nickname"
-                            ],
+                            params["uid"],
+                            params["nickname"],
                             mark,
                         )
                         return id_, name, mark
-                    except DownloaderError:
+                    except DownloaderError as e:
+                        self.log.warning(
+                            _("fallback user info: {error}").format(error=e),
+                        )
+                        name = self.cleaner.filter_name(mark, user_id)
                         return (
                             user_id,
-                            self.cleaner.filter_name(mark, user_id),
-                            self.cleaner.filter_name(mark, user_id),
+                            name,
+                            self.cleaner.filter_name(mark, name),
                         )
                 case "mix":
                     if tiktok:
