@@ -2287,7 +2287,7 @@ class TikTok:
             pages=pages,
         )
         if not any(account_data):
-            return None
+            return
         if source:
             return self.extractor.source_date_filter(
                 account_data,
