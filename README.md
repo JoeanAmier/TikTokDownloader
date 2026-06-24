@@ -329,6 +329,13 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 
 ***
 
+## Thordata
+
+<p><a href="https://www.thordata.com/?ls=Tkd&lk=Tkd"><img src="docs/AD/Thordata_CN_AD.jpg" alt="Thordata" width="600" height="314"></a></p>
+<p><a href="https://www.thordata.com/?ls=Tkd&lk=Tkd">Thordata</a>：提供 190+ 国家 100M+ 动态住宅 IP，无限量代理适合高并发、高流量任务，低至 $38/天，旋转或粘性会话，精准定位更稳连接；凭折扣码 <b>Thor20d</b> 可获 10% 折扣。</p>
+
+***
+
 ## DartNode
 
 [![Powered by DartNode](docs/AD/DartNode_AD.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
