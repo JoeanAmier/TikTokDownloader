@@ -1,5 +1,5 @@
 # 同时下载作品文件的最大任务数，对直播无效
-MAX_WORKERS = 4
+MAX_WORKERS = 8
 
 # 非法字符替换规则，key 为替换前的文本，value 为替换后的文本
 TEXT_REPLACEMENT = {
