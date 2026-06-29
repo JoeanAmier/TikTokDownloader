@@ -130,31 +130,73 @@ class Engine:
         if not secs:
             print("× 未能从链接提取账号 sec_user_id,请确认是博主【主页】链接")
             return
+        for index, sec in enumerate(secs, start=1):
+            await self._download_one_account(sec, index)
+        print("\n=== 博主作品下载流程结束 ===")
+
+    async def _download_one_account(self, sec: str, index: int = 1):
+        """整号下载/更新单个博主: 整夹归主类 + 登记到 authors.json"""
         clean = self.tk.parameter.CLEANER
         base_root = self.tk.downloader.root
-        for index, sec in enumerate(secs, start=1):
-            print(f"\n>>> 第 {index} 个账号:拉取作品列表 …")
-            raw = await self.tk.deal_account_detail(
-                index, sec_user_id=sec, tab="post", source=True)   # source=True 拿原始数据(含分类)
-            if not raw:
-                print("× 没拉到作品(Cookie 失效? 链接不对?)")
-                continue
-            # 整号:整个博主归到"主类"(出现最多的抖音分类),不拆散
-            votes = {}
-            for it in raw:
-                c = clean.filter_name(self._category_of(it), "未分类") or "未分类"
-                votes[c] = votes.get(c, 0) + 1
-            cat = max(votes, key=votes.get)
-            print(f"共获取到 {len(raw)} 个作品,主类【{cat}】,下到 {cat}/UID_博主 …")
-            cat_root = base_root.joinpath(cat)
-            cat_root.mkdir(parents=True, exist_ok=True)
-            self.tk.downloader.root = cat_root
-            try:
-                await self.tk._batch_process_detail(
-                    raw, api=False, mode="post", user_id=sec, mark="")
-            finally:
-                self.tk.downloader.root = base_root
-        print("\n=== 博主作品下载流程结束 ===")
+        print(f"\n>>> 第 {index} 个账号:拉取作品列表 …")
+        raw = await self.tk.deal_account_detail(
+            index, sec_user_id=sec, tab="post", source=True)   # source=True 拿原始数据(含分类)
+        if not raw:
+            print("× 没拉到作品(Cookie 失效? 链接不对?)")
+            return
+        # 整号:整个博主归到"主类"(出现最多的抖音分类),不拆散
+        votes = {}
+        for it in raw:
+            c = clean.filter_name(self._category_of(it), "未分类") or "未分类"
+            votes[c] = votes.get(c, 0) + 1
+        cat = max(votes, key=votes.get)
+        a0 = raw[0].get("author") or {}
+        nick = a0.get("nickname") or sec
+        uid = str(a0.get("uid") or "")
+        print(f"共获取到 {len(raw)} 个作品,主类【{cat}】({nick}),下到 {cat}/UID_博主 …")
+        self.register_author(sec, uid, nick, cat)
+        cat_root = base_root.joinpath(cat)
+        cat_root.mkdir(parents=True, exist_ok=True)
+        self.tk.downloader.root = cat_root
+        try:
+            await self.tk._batch_process_detail(
+                raw, api=False, mode="post", user_id=sec, mark="")
+        finally:
+            self.tk.downloader.root = base_root
+
+    # ---------- 关注博主登记表(Volume/authors.json) ----------
+    def _authors_path(self):
+        from pathlib import Path
+        return Path(self.tk.parameter.root).joinpath("authors.json")
+
+    def load_authors(self) -> list:
+        import json
+        p = self._authors_path()
+        try:
+            data = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+        except Exception:
+            data = {}
+        return [{"sec": s, "uid": v.get("uid", ""), "nickname": v.get("nickname", ""),
+                 "category": v.get("category", "未分类")} for s, v in data.items()]
+
+    def register_author(self, sec, uid, nick, cat):
+        import json
+        p = self._authors_path()
+        try:
+            data = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+        except Exception:
+            data = {}
+        data[sec] = {"uid": uid, "nickname": nick, "category": cat}
+        try:
+            p.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+        except Exception as e:
+            print("登记博主失败:", e)
+
+    async def update_authors(self, secs: list):
+        print(f">>> 更新 {len(secs)} 个关注博主 …")
+        for i, sec in enumerate(secs, start=1):
+            await self._download_one_account(sec, i)
+        print("\n=== 关注博主更新结束 ===")
 
     # ---------- 下载:单个视频 ----------
     async def download_detail(self, url: str):
@@ -239,10 +281,11 @@ class App:
         self.dl_total = 0      # 当前批次作品总数(来自"共获取到 N 个")
         self.dl_done = 0       # 已完成文件计数
         self._linebuf = ""     # 日志按行处理用的缓冲
+        self.author_vars = {}  # sec_uid -> BooleanVar(关注博主勾选)
 
         root.title("抖音下载器")
-        root.geometry("760x560")
-        root.minsize(640, 480)
+        root.geometry("820x740")
+        root.minsize(680, 560)
 
         pad = {"padx": 10, "pady": 6}
 
@@ -253,6 +296,30 @@ class App:
         self.cookie_label = ttk.Label(top, textvariable=self.cookie_var, font=("Microsoft YaHei", 10, "bold"))
         self.cookie_label.pack(side="left")
         ttk.Button(top, text="设置 Cookie", command=self.on_set_cookie).pack(side="right")
+
+        # 上部:关注的博主(按分类) —— 勾选后一键更新
+        afr = ttk.LabelFrame(root, text="关注的博主（按分类，勾选后点更新拉新作品）")
+        afr.pack(fill="x", **pad)
+        abar = ttk.Frame(afr)
+        abar.pack(fill="x", padx=8, pady=(6, 2))
+        self.btn_update = ttk.Button(abar, text="🔄 更新选中", command=self.on_update_authors)
+        self.btn_update.pack(side="left")
+        ttk.Button(abar, text="↻ 刷新", command=self.refresh_authors).pack(side="left", padx=6)
+        ttk.Button(abar, text="全选", command=lambda: self._set_all_authors(True)).pack(side="left")
+        ttk.Button(abar, text="清空", command=lambda: self._set_all_authors(False)).pack(side="left", padx=6)
+        acanvas = tk.Canvas(afr, height=150, highlightthickness=0)
+        asb = ttk.Scrollbar(afr, orient="vertical", command=acanvas.yview)
+        self.authors_inner = ttk.Frame(acanvas)
+        self.authors_inner.bind(
+            "<Configure>", lambda e: acanvas.configure(scrollregion=acanvas.bbox("all")))
+        acanvas.create_window((0, 0), window=self.authors_inner, anchor="nw")
+        acanvas.configure(yscrollcommand=asb.set)
+        acanvas.pack(side="left", fill="both", expand=True, padx=(8, 0), pady=(0, 8))
+        asb.pack(side="right", fill="y", pady=(0, 8))
+        # 鼠标滚轮(仅悬停在面板上时生效,不影响日志区滚动)
+        acanvas.bind("<Enter>", lambda e: acanvas.bind_all(
+            "<MouseWheel>", lambda ev: acanvas.yview_scroll(int(-ev.delta / 120), "units")))
+        acanvas.bind("<Leave>", lambda e: acanvas.unbind_all("<MouseWheel>"))
 
         # 中部:URL 输入 + 两个下载按钮
         mid = ttk.LabelFrame(root, text="粘贴链接")
@@ -316,7 +383,46 @@ class App:
         self._set_buttons(True)
         self.dir_var.set(f"下载目录:{self.engine.download_root()}")
         self._refresh_cookie()
+        self.refresh_authors()
         self._log_line("引擎就绪。粘贴链接,点对应按钮即可下载。\n")
+
+    # ---------- 关注博主面板 ----------
+    def refresh_authors(self):
+        for w in self.authors_inner.winfo_children():
+            w.destroy()
+        self.author_vars = {}
+        try:
+            authors = self.engine.load_authors()
+        except Exception:
+            authors = []
+        if not authors:
+            ttk.Label(self.authors_inner, foreground="#888",
+                      text="（还没有关注的博主。粘博主主页链接下载一个后,会自动出现在这里。）").pack(anchor="w")
+            return
+        by_cat = {}
+        for a in authors:
+            by_cat.setdefault(a["category"] or "未分类", []).append(a)
+        for cat in sorted(by_cat):
+            ttk.Label(self.authors_inner, text=f"【{cat}】",
+                      font=("Microsoft YaHei", 9, "bold")).pack(anchor="w", pady=(4, 0))
+            for a in sorted(by_cat[cat], key=lambda x: x["nickname"]):
+                var = tk.BooleanVar()
+                self.author_vars[a["sec"]] = var
+                ttk.Checkbutton(self.authors_inner, text="  " + (a["nickname"] or a["sec"][:12]),
+                                variable=var).pack(anchor="w", padx=14)
+
+    def _set_all_authors(self, val: bool):
+        for var in self.author_vars.values():
+            var.set(val)
+
+    def on_update_authors(self):
+        if self.busy:
+            return
+        secs = [s for s, v in self.author_vars.items() if v.get()]
+        if not secs:
+            messagebox.showwarning("提示", "请先勾选要更新的博主")
+            return
+        self._start_task(self.engine.update_authors(secs), "update")
 
     def _refresh_cookie(self):
         if self.engine.cookie_logged_in():
@@ -368,6 +474,7 @@ class App:
         self.btn_account.configure(state=state)
         self.btn_detail.configure(state=state)
         self.btn_collection.configure(state=state)
+        self.btn_update.configure(state=state)
         # 停止按钮与下载按钮相反:下载中才可点
         self.btn_stop.configure(state="disabled" if enabled else "normal")
 
@@ -390,6 +497,7 @@ class App:
         self.busy = False
         self._current_fut = None
         self._set_buttons(True)
+        self.refresh_authors()   # 下完可能新增了关注博主,刷新面板
         if fut.cancelled():
             self._log_line("\n⏹ 已停止下载（已下完的文件保留，下次可续传）\n")
             return
