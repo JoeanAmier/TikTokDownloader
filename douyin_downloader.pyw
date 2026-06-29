@@ -154,6 +154,14 @@ class Engine:
         print("\n=== 单个视频下载流程结束 ===")
 
     # ---------- 下载:我的收藏(默认收藏⭐,纯 Cookie,无需主页链接) ----------
+    # 两级目录: Volume/{抖音分类}/UID{数字}_{博主}/视频  (分类取 video_tag 大类)
+    @staticmethod
+    def _category_of(item: dict) -> str:
+        vt = item.get("video_tag") or []
+        if isinstance(vt, list) and vt and isinstance(vt[0], dict):
+            return vt[0].get("tag_name") or ""
+        return ""
+
     async def download_collection(self):
         from src.interface import Collection
         print(">>> 正在拉取你的收藏列表(收藏多的话要等一会儿)…")
@@ -162,26 +170,35 @@ class Engine:
         if not n:
             print("× 没拉到收藏。Cookie 可能失效了 → 点「设置 Cookie」重贴一串再试")
             return
-        # 按原作者(博主)分组,各自下到 "{博主昵称}_收藏作品" 文件夹
+        clean = self.tk.parameter.CLEANER
+        base_root = self.tk.downloader.root
+        # 按 (分类, 博主) 两级分组
         groups = {}
         for it in collection:
             sec = (it.get("author") or {}).get("sec_uid") or ""
-            groups.setdefault(sec, []).append(it)
-        print(f"共获取到 {n} 个收藏作品,来自 {len(groups)} 个博主,按博主分文件夹下载 …")
-        for sec, items in groups.items():
-            if sec:
-                a = items[0].get("author") or {}
-                info = {"nickname": a.get("nickname", "未知作者"),
-                        "sec_uid": sec, "uid": a.get("uid", "")}
-                uid = sec
-            else:
-                # 个别拿不到作者信息的,丢进"我的收藏"兜底夹
-                info = {"nickname": "我的收藏", "sec_uid": "self", "uid": "self"}
-                uid = "self"
-            await self.tk._batch_process_detail(
-                items, api=False, mode="collection",
-                info=info, user_id=uid, mark="",
-            )
+            cat = clean.filter_name(self._category_of(it), "未分类") or "未分类"
+            groups.setdefault((cat, sec), []).append(it)
+        cats = sorted({c for c, _ in groups})
+        print(f"共获取到 {n} 个收藏作品,{len(cats)} 个分类,按 分类/博主 两级下载 …")
+        try:
+            for (cat, sec), items in groups.items():
+                cat_root = base_root.joinpath(cat)
+                cat_root.mkdir(parents=True, exist_ok=True)
+                self.tk.downloader.root = cat_root   # 临时把下载根指到 分类 子目录
+                if sec:
+                    a = items[0].get("author") or {}
+                    info = {"nickname": a.get("nickname", "未知作者"),
+                            "sec_uid": sec, "uid": a.get("uid", "")}
+                    uid = sec
+                else:
+                    info = {"nickname": "我的收藏", "sec_uid": "self", "uid": "self"}
+                    uid = "self"
+                await self.tk._batch_process_detail(
+                    items, api=False, mode="collection",
+                    info=info, user_id=uid, mark="",
+                )
+        finally:
+            self.tk.downloader.root = base_root   # 复原下载根
         print("\n=== 我的收藏下载流程结束 ===")
 
     def download_root(self) -> str:
