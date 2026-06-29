@@ -781,14 +781,11 @@ class Downloader:
         name: str = "",
     ) -> Path:
         match mode:
-            case "post":
-                folder_name = _("UID{id_}_{name}_发布作品").format(id_=id_, name=name)
-            case "favorite":
-                folder_name = _("UID{id_}_{name}_喜欢作品").format(id_=id_, name=name)
+            case "post" | "favorite" | "collection":
+                # 统一:每个博主一个文件夹 UID{数字}_{名称},不分发布/喜欢/收藏
+                folder_name = "UID{id_}_{name}".format(id_=id_, name=name)
             case "mix":
                 folder_name = _("MID{id_}_{name}_合集作品").format(id_=id_, name=name)
-            case "collection":
-                folder_name = _("UID{id_}_{name}_收藏作品").format(id_=id_, name=name)
             case "collects":
                 folder_name = _("CID{id_}_{name}_收藏夹作品").format(id_=id_, name=name)
             case "detail":

@@ -153,6 +153,37 @@ class Engine:
             await self.tk._handle_detail(ids, False, record)
         print("\n=== 单个视频下载流程结束 ===")
 
+    # ---------- 下载:我的收藏(默认收藏⭐,纯 Cookie,无需主页链接) ----------
+    async def download_collection(self):
+        from src.interface import Collection
+        print(">>> 正在拉取你的收藏列表(收藏多的话要等一会儿)…")
+        collection = await Collection(self.tk.parameter).run()   # 纯 Cookie,自动翻全部页
+        n = len(collection) if collection else 0
+        if not n:
+            print("× 没拉到收藏。Cookie 可能失效了 → 点「设置 Cookie」重贴一串再试")
+            return
+        # 按原作者(博主)分组,各自下到 "{博主昵称}_收藏作品" 文件夹
+        groups = {}
+        for it in collection:
+            sec = (it.get("author") or {}).get("sec_uid") or ""
+            groups.setdefault(sec, []).append(it)
+        print(f"共获取到 {n} 个收藏作品,来自 {len(groups)} 个博主,按博主分文件夹下载 …")
+        for sec, items in groups.items():
+            if sec:
+                a = items[0].get("author") or {}
+                info = {"nickname": a.get("nickname", "未知作者"),
+                        "sec_uid": sec, "uid": a.get("uid", "")}
+                uid = sec
+            else:
+                # 个别拿不到作者信息的,丢进"我的收藏"兜底夹
+                info = {"nickname": "我的收藏", "sec_uid": "self", "uid": "self"}
+                uid = "self"
+            await self.tk._batch_process_detail(
+                items, api=False, mode="collection",
+                info=info, user_id=uid, mark="",
+            )
+        print("\n=== 我的收藏下载流程结束 ===")
+
     def download_root(self) -> str:
         try:
             return str(self.app.parameter.root)
@@ -166,6 +197,7 @@ class App:
         self.root = root
         self.engine = Engine()
         self.busy = False
+        self._current_fut = None   # 当前下载任务的 future(给停止按钮用)
         self.dl_total = 0      # 当前批次作品总数(来自"共获取到 N 个")
         self.dl_done = 0       # 已完成文件计数
         self._linebuf = ""     # 日志按行处理用的缓冲
@@ -198,6 +230,10 @@ class App:
         self.btn_account.pack(side="left")
         self.btn_detail = ttk.Button(btns, text="⬇ 下载单个视频", command=self.on_download_detail)
         self.btn_detail.pack(side="left", padx=8)
+        self.btn_collection = ttk.Button(btns, text="⭐ 下载我的收藏", command=self.on_download_collection)
+        self.btn_collection.pack(side="left")
+        self.btn_stop = ttk.Button(btns, text="⏹ 停止", command=self.on_stop, state="disabled")
+        self.btn_stop.pack(side="right")
         ttk.Label(
             mid,
             text="博主主页:https://www.douyin.com/user/MS4w...   |   单个视频:作品页链接 或 分享短链",
@@ -293,12 +329,15 @@ class App:
         state = "normal" if enabled else "disabled"
         self.btn_account.configure(state=state)
         self.btn_detail.configure(state=state)
+        self.btn_collection.configure(state=state)
+        # 停止按钮与下载按钮相反:下载中才可点
+        self.btn_stop.configure(state="disabled" if enabled else "normal")
 
     def _start_task(self, coro, what: str):
         if self.busy:
             return
         url = self.url_var.get().strip()
-        if what != "cookie" and not url:
+        if what in ("account", "detail") and not url:
             messagebox.showwarning("提示", "请先粘贴链接")
             return
         self.busy = True
@@ -306,15 +345,28 @@ class App:
         self.dl_done = 0
         self._set_buttons(False)
         fut = self.engine.submit(coro)
+        self._current_fut = fut
         fut.add_done_callback(self._after(self._on_task_done))
 
     def _on_task_done(self, fut):
         self.busy = False
+        self._current_fut = None
         self._set_buttons(True)
+        if fut.cancelled():
+            self._log_line("\n⏹ 已停止下载（已下完的文件保留，下次可续传）\n")
+            return
         err = fut.exception()
         if err:
             self._log_line(f"× 出错:{err}\n")
             self._log_line(traceback.format_exc() + "\n")
+
+    def on_stop(self):
+        fut = self._current_fut
+        if fut and not fut.done():
+            self._log_line("\n⏹ 正在停止…\n")
+            fut.cancel()
+        else:
+            self._log_line("（当前没有进行中的下载）\n")
 
     # ---------- 按钮回调 ----------
     def on_download_account(self):
@@ -330,6 +382,10 @@ class App:
             messagebox.showwarning("提示", "请先粘贴视频链接")
             return
         self._start_task(self.engine.download_detail(url), "detail")
+
+    def on_download_collection(self):
+        # 下载我的收藏不需要链接,纯 Cookie
+        self._start_task(self.engine.download_collection(), "collection")
 
     def on_set_cookie(self):
         CookieDialog(self.root, self._do_set_cookie)
