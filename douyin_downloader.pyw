@@ -161,13 +161,22 @@ class Engine:
 
     async def _download_one_account(self, sec: str, index: int = 1):
         """整号下载/更新单个博主: 整夹归主类 + 登记到 authors.json"""
+        import math
+        from src.interface.account import Account
         clean = self.tk.parameter.CLEANER
         base_root = self.tk.downloader.root
-        print(f"\n>>> 第 {index} 个账号:拉取作品列表 …")
-        raw = await self.tk.deal_account_detail(
-            index, sec_user_id=sec, tab="post", source=True)   # source=True 拿原始数据(含分类)
+        N = getattr(self, "dl_limit", 0) or 0     # 0=全部, >0=只下最新N个
+        tip = f"(最新 {N} 个)" if N > 0 else ""
+        print(f"\n>>> 第 {index} 个账号:拉取作品列表{tip} …")
+        a = Account(self.tk.parameter, sec_user_id=sec, tab="post")
+        if N > 0:
+            a.pages = max(1, math.ceil(N / 18))   # 覆盖默认"全拉",只拉需要的页数
+        await a.run()                              # 翻页拉作品(含 video_tag)
+        raw = a.response or []
+        if N > 0:
+            raw = raw[:N]                          # 精确截到最新 N 个
         if not raw:
-            print("× 没拉到作品(Cookie 失效? 链接不对?)")
+            print("× 没拉到作品(Cookie 失效? 私密号? 已限速?)")
             return
         # 整号:整个博主归到"主类"(出现最多的抖音分类),不拆散
         votes = {}
@@ -179,7 +188,8 @@ class Engine:
         nick = a0.get("nickname") or sec
         uid = str(a0.get("uid") or "")
         print(f"共获取到 {len(raw)} 个作品,主类【{cat}】({nick}),下到 {cat}/UID_博主 …")
-        self.register_author(sec, uid, nick, cat)
+        # 限了数量时 len(raw) 只是本次拉的数,不是总数 → 不覆盖作品数(留拉关注得到的总数)
+        self.register_author(sec, uid, nick, cat, works=(len(raw) if N == 0 else None))
         cat_root = base_root.joinpath(cat)
         cat_root.mkdir(parents=True, exist_ok=True)
         self.tk.downloader.root = cat_root
@@ -202,16 +212,21 @@ class Engine:
         except Exception:
             data = {}
         return [{"sec": s, "uid": v.get("uid", ""), "nickname": v.get("nickname", ""),
-                 "category": v.get("category", "未分类")} for s, v in data.items()]
+                 "category": v.get("category", "未分类"), "works": v.get("works")}
+                for s, v in data.items()]
 
-    def register_author(self, sec, uid, nick, cat):
+    def register_author(self, sec, uid, nick, cat, works=None):
         import json
         p = self._authors_path()
         try:
             data = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
         except Exception:
             data = {}
-        data[sec] = {"uid": uid, "nickname": nick, "category": cat}
+        entry = data.get(sec, {})            # 合并,保留 works/following 等已有字段
+        entry.update({"uid": uid, "nickname": nick, "category": cat})
+        if works is not None:
+            entry["works"] = works
+        data[sec] = entry
         try:
             p.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
         except Exception as e:
@@ -271,7 +286,8 @@ class Engine:
             for x in fl:
                 s = x.get("sec_uid")
                 if s and s not in seen:
-                    seen[s] = {"uid": str(x.get("uid", "")), "nickname": x.get("nickname", "")}
+                    seen[s] = {"uid": str(x.get("uid", "")), "nickname": x.get("nickname", ""),
+                               "works": x.get("aweme_count")}
             if not r.get("has_more") or not fl or not r.get("min_time"):
                 break
             mt = r["min_time"]
@@ -284,10 +300,12 @@ class Engine:
         for s, v in seen.items():
             if s not in data:
                 data[s] = {"uid": v["uid"], "nickname": v["nickname"],
-                           "category": "未分类", "following": True}
+                           "category": "未分类", "following": True, "works": v.get("works")}
                 added += 1
             else:
                 data[s]["following"] = True
+                if v.get("works") is not None:
+                    data[s]["works"] = v["works"]
                 if not data[s].get("nickname"):
                     data[s]["nickname"] = v["nickname"]
         def _save():
@@ -432,6 +450,10 @@ class App:
         ttk.Button(abar, text="↻ 刷新", command=self.refresh_authors).pack(side="left")
         ttk.Button(abar, text="全选", command=lambda: self._set_all_authors(True)).pack(side="left")
         ttk.Button(abar, text="清空", command=lambda: self._set_all_authors(False)).pack(side="left", padx=6)
+        ttk.Label(abar, text="下载范围:").pack(side="left", padx=(12, 2))
+        self.dl_limit_var = tk.StringVar(value="全部")
+        ttk.Combobox(abar, textvariable=self.dl_limit_var, width=8,
+                     values=["全部", "最新100", "最新200", "最新500"]).pack(side="left")
         acanvas = tk.Canvas(afr, height=150, highlightthickness=0)
         asb = ttk.Scrollbar(afr, orient="vertical", command=acanvas.yview)
         self.authors_inner = ttk.Frame(acanvas)
@@ -539,12 +561,24 @@ class App:
             for i, a in enumerate(sorted(by_cat[cat], key=lambda x: x["nickname"])):
                 var = tk.BooleanVar()
                 self.author_vars[a["sec"]] = var
-                ttk.Checkbutton(grid, text=(a["nickname"] or a["sec"][:12]), variable=var).grid(
+                nm = a["nickname"] or a["sec"][:12]
+                w = a.get("works")
+                disp = f"{nm}（{w}）" if w not in (None, "") else nm
+                ttk.Checkbutton(grid, text=disp, variable=var).grid(
                     row=i // COLS, column=i % COLS, sticky="ew", padx=(0, 8), pady=1)
 
     def _set_all_authors(self, val: bool):
         for var in self.author_vars.values():
             var.set(val)
+
+    def _get_dl_limit(self) -> int:
+        """下载范围: 全部/0 -> 0; 最新N / 纯数字 -> N"""
+        import re as _re
+        v = (self.dl_limit_var.get() or "").strip()
+        if not v or v in ("全部", "0"):
+            return 0
+        m = _re.search(r"\d+", v)
+        return int(m.group()) if m else 0
 
     def on_update_authors(self):
         if self.busy:
@@ -553,6 +587,7 @@ class App:
         if not secs:
             messagebox.showwarning("提示", "请先勾选要更新的博主")
             return
+        self.engine.dl_limit = self._get_dl_limit()
         self._start_task(self.engine.update_authors(secs), "update")
 
     def on_fetch_following(self):
@@ -657,6 +692,7 @@ class App:
         if not url:
             messagebox.showwarning("提示", "请先粘贴博主主页链接")
             return
+        self.engine.dl_limit = self._get_dl_limit()
         self._start_task(self.engine.download_account(url), "account")
 
     def on_download_detail(self):
