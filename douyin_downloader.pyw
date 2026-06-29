@@ -233,6 +233,24 @@ class Engine:
             print("获取自己 sec_uid 失败:", e)
             return ""
 
+    async def _categorize_one(self, sec: str) -> str:
+        """拉该博主一页作品,取出现最多的 video_tag 大类当主类(拿不到返回空)"""
+        from src.interface.account import Account
+        clean = self.tk.parameter.CLEANER
+        try:
+            a = Account(self.tk.parameter, sec_user_id=sec, tab="post")
+            await a.run(single_page=True)
+            works = a.response or []
+        except Exception:
+            return ""
+        if not works:
+            return ""
+        votes = {}
+        for w in works:
+            c = clean.filter_name(self._category_of(w), "未分类") or "未分类"
+            votes[c] = votes.get(c, 0) + 1
+        return max(votes, key=votes.get) if votes else ""
+
     async def fetch_following(self):
         """拉我的抖音关注列表(纯 Cookie),合并进登记表(新关注先归'未分类')"""
         import json
@@ -272,11 +290,26 @@ class Engine:
                 data[s]["following"] = True
                 if not data[s].get("nickname"):
                     data[s]["nickname"] = v["nickname"]
-        try:
-            p.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
-        except Exception as e:
-            print("写登记表失败:", e)
-        print(f"拉到 {len(seen)} 个关注博主,新增 {added} 个(未下载的归'未分类',下载/更新后自动归类)")
+        def _save():
+            try:
+                p.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+            except Exception as e:
+                print("写登记表失败:", e)
+        _save()
+        print(f"拉到 {len(seen)} 个关注,新增 {added} 个。开始给未分类的各拉一页定主类(可点⏹停止)…")
+        # 给"未分类"的关注自动定分类;每 10 个存一次盘,停止也不丢
+        todo = [s for s in seen if (data.get(s, {}).get("category") or "未分类") == "未分类"]
+        done = 0
+        for i, s in enumerate(todo, 1):
+            cat = await self._categorize_one(s)
+            if cat and cat != "未分类":
+                data[s]["category"] = cat
+                done += 1
+            if i % 10 == 0:
+                _save()
+                print(f"  …已处理 {i}/{len(todo)},归类 {done} 个")
+        _save()
+        print(f"=== 关注列表就绪:共 {len(seen)} 个,本次新归类 {done}/{len(todo)} 个 ===")
 
     # ---------- 下载:单个视频 ----------
     async def download_detail(self, url: str):
@@ -404,7 +437,9 @@ class App:
         self.authors_inner = ttk.Frame(acanvas)
         self.authors_inner.bind(
             "<Configure>", lambda e: acanvas.configure(scrollregion=acanvas.bbox("all")))
-        acanvas.create_window((0, 0), window=self.authors_inner, anchor="nw")
+        self._acanvas_win = acanvas.create_window((0, 0), window=self.authors_inner, anchor="nw")
+        # 内层宽度跟着画布走 → 列随窗口拉伸变宽,名字才能完整露出
+        acanvas.bind("<Configure>", lambda e: acanvas.itemconfig(self._acanvas_win, width=e.width))
         acanvas.configure(yscrollcommand=asb.set)
         acanvas.pack(side="left", fill="both", expand=True, padx=(8, 0), pady=(0, 8))
         asb.pack(side="right", fill="y", pady=(0, 8))
@@ -488,14 +523,24 @@ class App:
         by_cat = {}
         for a in authors:
             by_cat.setdefault(a["category"] or "未分类", []).append(a)
-        for cat in sorted(by_cat):
-            ttk.Label(self.authors_inner, text=f"【{cat}】",
+        # 分类顺序: 财经 → 科技 → 其余按博主数从多到少 → 未分类垫底
+        _pri = ["财经", "科技"]
+        _rest = sorted((c for c in by_cat if c not in _pri and c != "未分类"),
+                       key=lambda c: -len(by_cat[c]))
+        ordered = [c for c in _pri if c in by_cat] + _rest + (["未分类"] if "未分类" in by_cat else [])
+        COLS = 8   # 每行放几个博主(横排)
+        for cat in ordered:
+            ttk.Label(self.authors_inner, text=f"【{cat}】（{len(by_cat[cat])}）",
                       font=("Microsoft YaHei", 9, "bold")).pack(anchor="w", pady=(4, 0))
-            for a in sorted(by_cat[cat], key=lambda x: x["nickname"]):
+            grid = ttk.Frame(self.authors_inner)
+            grid.pack(fill="x", anchor="w", padx=14)
+            for c in range(COLS):
+                grid.columnconfigure(c, weight=1, uniform="auth")   # 8列等宽,随窗口拉伸变宽
+            for i, a in enumerate(sorted(by_cat[cat], key=lambda x: x["nickname"])):
                 var = tk.BooleanVar()
                 self.author_vars[a["sec"]] = var
-                ttk.Checkbutton(self.authors_inner, text="  " + (a["nickname"] or a["sec"][:12]),
-                                variable=var).pack(anchor="w", padx=14)
+                ttk.Checkbutton(grid, text=(a["nickname"] or a["sec"][:12]), variable=var).grid(
+                    row=i // COLS, column=i % COLS, sticky="ew", padx=(0, 8), pady=1)
 
     def _set_all_authors(self, val: bool):
         for var in self.author_vars.values():
