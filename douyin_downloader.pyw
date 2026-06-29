@@ -130,9 +130,30 @@ class Engine:
         if not secs:
             print("× 未能从链接提取账号 sec_user_id,请确认是博主【主页】链接")
             return
+        clean = self.tk.parameter.CLEANER
+        base_root = self.tk.downloader.root
         for index, sec in enumerate(secs, start=1):
-            print(f"\n>>> 开始下载第 {index} 个账号的全部作品 ...")
-            await self.tk.deal_account_detail(index, sec_user_id=sec, tab="post")
+            print(f"\n>>> 第 {index} 个账号:拉取作品列表 …")
+            raw = await self.tk.deal_account_detail(
+                index, sec_user_id=sec, tab="post", source=True)   # source=True 拿原始数据(含分类)
+            if not raw:
+                print("× 没拉到作品(Cookie 失效? 链接不对?)")
+                continue
+            # 整号:整个博主归到"主类"(出现最多的抖音分类),不拆散
+            votes = {}
+            for it in raw:
+                c = clean.filter_name(self._category_of(it), "未分类") or "未分类"
+                votes[c] = votes.get(c, 0) + 1
+            cat = max(votes, key=votes.get)
+            print(f"共获取到 {len(raw)} 个作品,主类【{cat}】,下到 {cat}/UID_博主 …")
+            cat_root = base_root.joinpath(cat)
+            cat_root.mkdir(parents=True, exist_ok=True)
+            self.tk.downloader.root = cat_root
+            try:
+                await self.tk._batch_process_detail(
+                    raw, api=False, mode="post", user_id=sec, mark="")
+            finally:
+                self.tk.downloader.root = base_root
         print("\n=== 博主作品下载流程结束 ===")
 
     # ---------- 下载:单个视频 ----------
