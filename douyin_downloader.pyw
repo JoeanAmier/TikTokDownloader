@@ -62,6 +62,31 @@ from tkinter import ttk, scrolledtext, messagebox
 # ---- 引擎(在 stdout 重定向之后再导入) ----
 from src.application import TikTokDownloader
 from src.application.main_terminal import TikTok
+from src.interface.template import API
+
+
+# ---- 抖音"我的关注"接口(引擎没有,这里自建;纯 Cookie) ----
+class _SelfProfile(API):
+    """profile/self: 用 Cookie 拿到自己的 sec_uid"""
+    def __init__(self, params, cookie="", proxy=None):
+        super().__init__(params, cookie, proxy)
+        self.api = f"{self.domain}aweme/v1/web/user/profile/self/"
+    def generate_params(self):
+        return self.params | {"publish_video_strategy_type": "2"}
+
+
+class _Following(API):
+    """following/list: 拉自己的关注列表(max_time 游标分页)"""
+    def __init__(self, params, cookie="", proxy=None, sec_user_id="", max_time=0):
+        super().__init__(params, cookie, proxy)
+        self.api = f"{self.domain}aweme/v1/web/user/following/list/"
+        self.sec_user_id = sec_user_id
+        self.max_time = max_time
+    def generate_params(self):
+        return self.params | {
+            "sec_user_id": self.sec_user_id, "offset": "0", "min_time": "0",
+            "max_time": str(self.max_time), "count": "20", "source_type": "1",
+        }
 
 
 # ============================ 引擎封装 ============================
@@ -198,6 +223,61 @@ class Engine:
             await self._download_one_account(sec, i)
         print("\n=== 关注博主更新结束 ===")
 
+    async def _get_self_sec(self) -> str:
+        try:
+            sp = _SelfProfile(self.tk.parameter)
+            r = await sp.request_data(sp.api, params=sp.generate_params(), data={},
+                                      method="GET", encryption="GET", finished=True)
+            return (r.get("user") or {}).get("sec_uid", "") if isinstance(r, dict) else ""
+        except Exception as e:
+            print("获取自己 sec_uid 失败:", e)
+            return ""
+
+    async def fetch_following(self):
+        """拉我的抖音关注列表(纯 Cookie),合并进登记表(新关注先归'未分类')"""
+        import json
+        sec = await self._get_self_sec()
+        if not sec:
+            print("× 拿不到你的账号信息(Cookie 失效?)")
+            return
+        print(">>> 正在拉取你的关注列表 …")
+        seen = {}
+        mt = 0
+        for _ in range(40):
+            f = _Following(self.tk.parameter, sec_user_id=sec, max_time=mt)
+            r = await f.request_data(f.api, params=f.generate_params(), data={},
+                                     method="GET", encryption="GET", finished=True)
+            if not isinstance(r, dict):
+                break
+            fl = r.get("followings") or []
+            for x in fl:
+                s = x.get("sec_uid")
+                if s and s not in seen:
+                    seen[s] = {"uid": str(x.get("uid", "")), "nickname": x.get("nickname", "")}
+            if not r.get("has_more") or not fl or not r.get("min_time"):
+                break
+            mt = r["min_time"]
+        p = self._authors_path()
+        try:
+            data = json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
+        except Exception:
+            data = {}
+        added = 0
+        for s, v in seen.items():
+            if s not in data:
+                data[s] = {"uid": v["uid"], "nickname": v["nickname"],
+                           "category": "未分类", "following": True}
+                added += 1
+            else:
+                data[s]["following"] = True
+                if not data[s].get("nickname"):
+                    data[s]["nickname"] = v["nickname"]
+        try:
+            p.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+        except Exception as e:
+            print("写登记表失败:", e)
+        print(f"拉到 {len(seen)} 个关注博主,新增 {added} 个(未下载的归'未分类',下载/更新后自动归类)")
+
     # ---------- 下载:单个视频 ----------
     async def download_detail(self, url: str):
         root, params, logger = self.tk.record.run(self.tk.parameter)
@@ -302,9 +382,11 @@ class App:
         afr.pack(fill="x", **pad)
         abar = ttk.Frame(afr)
         abar.pack(fill="x", padx=8, pady=(6, 2))
+        self.btn_fetch = ttk.Button(abar, text="⬇ 拉取关注列表", command=self.on_fetch_following)
+        self.btn_fetch.pack(side="left")
         self.btn_update = ttk.Button(abar, text="🔄 更新选中", command=self.on_update_authors)
-        self.btn_update.pack(side="left")
-        ttk.Button(abar, text="↻ 刷新", command=self.refresh_authors).pack(side="left", padx=6)
+        self.btn_update.pack(side="left", padx=6)
+        ttk.Button(abar, text="↻ 刷新", command=self.refresh_authors).pack(side="left")
         ttk.Button(abar, text="全选", command=lambda: self._set_all_authors(True)).pack(side="left")
         ttk.Button(abar, text="清空", command=lambda: self._set_all_authors(False)).pack(side="left", padx=6)
         acanvas = tk.Canvas(afr, height=150, highlightthickness=0)
@@ -424,6 +506,11 @@ class App:
             return
         self._start_task(self.engine.update_authors(secs), "update")
 
+    def on_fetch_following(self):
+        if self.busy:
+            return
+        self._start_task(self.engine.fetch_following(), "fetch")
+
     def _refresh_cookie(self):
         if self.engine.cookie_logged_in():
             self.cookie_var.set("Cookie:✅ 已登录")
@@ -475,6 +562,7 @@ class App:
         self.btn_detail.configure(state=state)
         self.btn_collection.configure(state=state)
         self.btn_update.configure(state=state)
+        self.btn_fetch.configure(state=state)
         # 停止按钮与下载按钮相反:下载中才可点
         self.btn_stop.configure(state="disabled" if enabled else "normal")
 
