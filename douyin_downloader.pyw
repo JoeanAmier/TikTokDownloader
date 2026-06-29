@@ -369,17 +369,27 @@ class App:
 
         pad = {"padx": 10, "pady": 6}
 
-        # 顶部:Cookie 状态 + 设置按钮
+        # 顶部:Cookie 状态 + 设置按钮(固定)
         top = ttk.Frame(root)
-        top.pack(fill="x", **pad)
+        top.pack(side="top", fill="x", **pad)
         self.cookie_var = tk.StringVar(value="Cookie:初始化中…")
         self.cookie_label = ttk.Label(top, textvariable=self.cookie_var, font=("Microsoft YaHei", 10, "bold"))
         self.cookie_label.pack(side="left")
         ttk.Button(top, text="设置 Cookie", command=self.on_set_cookie).pack(side="right")
 
-        # 上部:关注的博主(按分类) —— 勾选后一键更新
-        afr = ttk.LabelFrame(root, text="关注的博主（按分类，勾选后点更新拉新作品）")
-        afr.pack(fill="x", **pad)
+        # 底部:下载目录 + 打开文件夹(固定,先占位)
+        bottom = ttk.Frame(root)
+        bottom.pack(side="bottom", fill="x", **pad)
+        self.dir_var = tk.StringVar(value="下载目录:(初始化中)")
+        ttk.Label(bottom, textvariable=self.dir_var, foreground="#666").pack(side="left")
+        ttk.Button(bottom, text="打开下载文件夹", command=self.on_open_folder).pack(side="right")
+
+        # 上/中/下 三段:用竖直 PanedWindow,段之间可拖动调高度
+        paned = ttk.PanedWindow(root, orient="vertical")
+        paned.pack(side="top", fill="both", expand=True, padx=10, pady=4)
+
+        # 上:关注的博主(按分类) —— 勾选后一键更新
+        afr = ttk.LabelFrame(paned, text="关注的博主（按分类，勾选后点更新拉新作品）")
         abar = ttk.Frame(afr)
         abar.pack(fill="x", padx=8, pady=(6, 2))
         self.btn_fetch = ttk.Button(abar, text="⬇ 拉取关注列表", command=self.on_fetch_following)
@@ -402,10 +412,10 @@ class App:
         acanvas.bind("<Enter>", lambda e: acanvas.bind_all(
             "<MouseWheel>", lambda ev: acanvas.yview_scroll(int(-ev.delta / 120), "units")))
         acanvas.bind("<Leave>", lambda e: acanvas.unbind_all("<MouseWheel>"))
+        paned.add(afr, weight=1)
 
-        # 中部:URL 输入 + 两个下载按钮
-        mid = ttk.LabelFrame(root, text="粘贴链接")
-        mid.pack(fill="x", **pad)
+        # 中:链接输入 + 下载按钮
+        mid = ttk.LabelFrame(paned, text="粘贴链接")
         self.url_var = tk.StringVar()
         entry = ttk.Entry(mid, textvariable=self.url_var, font=("Consolas", 10))
         entry.pack(fill="x", padx=10, pady=(8, 4))
@@ -426,19 +436,13 @@ class App:
             text="博主主页:https://www.douyin.com/user/MS4w...   |   单个视频:作品页链接 或 分享短链",
             foreground="#888",
         ).pack(anchor="w", padx=10, pady=(0, 6))
+        paned.add(mid, weight=0)
 
-        # 下部:日志区
-        logf = ttk.LabelFrame(root, text="运行日志")
-        logf.pack(fill="both", expand=True, **pad)
-        self.log = scrolledtext.ScrolledText(logf, height=14, font=("Consolas", 9), state="disabled", wrap="word")
+        # 下:日志区
+        logf = ttk.LabelFrame(paned, text="运行日志")
+        self.log = scrolledtext.ScrolledText(logf, height=10, font=("Consolas", 9), state="disabled", wrap="word")
         self.log.pack(fill="both", expand=True, padx=6, pady=6)
-
-        # 底部:下载目录 + 打开文件夹
-        bottom = ttk.Frame(root)
-        bottom.pack(fill="x", **pad)
-        self.dir_var = tk.StringVar(value="下载目录:(初始化中)")
-        ttk.Label(bottom, textvariable=self.dir_var, foreground="#666").pack(side="left")
-        ttk.Button(bottom, text="打开下载文件夹", command=self.on_open_folder).pack(side="right")
+        paned.add(logf, weight=4)
 
         self._set_buttons(False)
         self.root.after(120, self._drain_log)
