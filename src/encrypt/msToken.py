@@ -220,7 +220,7 @@ class MsTokenTikTok(MsToken):
             headers |= {"Cookie": f"{cls.NAME}={token}"}
             params["X-Bogus"] = quote(
                 XBogusTikTok().get_x_bogus(
-                    params, user_agent=headers.get("User-Agent", USERAGENT)
+                    params, None, user_agent=headers.get("User-Agent", USERAGENT)
                 ),
                 safe="",
             )

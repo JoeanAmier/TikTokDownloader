@@ -252,14 +252,13 @@ class API:
         data: dict = None,
         method="GET",
         headers: dict = None,
-        encryption="GET",
         finished=False,
-        *args,
         **kwargs,
     ):
         params = self.deal_url_params(
             params,
-            encryption,
+            data,
+            method,
         )
         match (method, bool(self.proxy)):
             case ("GET", False):
@@ -268,7 +267,6 @@ class API:
                     params,
                     headers or self.headers,
                     finished=finished,
-                    *args,
                     **kwargs,
                 )
             case ("GET", True):
@@ -277,7 +275,6 @@ class API:
                     params,
                     headers or self.headers,
                     finished=finished,
-                    *args,
                     **kwargs,
                 )
             case ("POST", False):
@@ -287,7 +284,6 @@ class API:
                     data,
                     headers or self.headers,
                     finished=finished,
-                    *args,
                     **kwargs,
                 )
             case ("POST", True):
@@ -297,7 +293,6 @@ class API:
                     data,
                     headers or self.headers,
                     finished=finished,
-                    *args,
                     **kwargs,
                 )
             case _:
@@ -431,6 +426,7 @@ class API:
     def deal_url_params(
         self,
         params: dict,
+        data: dict | None = None,
         method="GET",
         **kwargs,
     ) -> str:
@@ -440,7 +436,7 @@ class API:
                 safe="=",
                 quote_via=quote,
             )
-            params += f"&a_bogus={self.ab.get_value(params, method)}"
+            params += f"&a_bogus={self.ab.get_value(params, data, method)}"
             return params
         return ""
 
@@ -561,9 +557,7 @@ class APITikTok(API):
         data: dict = None,
         method="GET",
         headers: dict = None,
-        encryption=8,
         finished=False,
-        *args,
         **kwargs,
     ):
         return await super().request_data(
@@ -572,16 +566,15 @@ class APITikTok(API):
             data=data,
             method=method,
             headers=headers,
-            encryption=encryption,
             finished=finished,
-            *args,
             **kwargs,
         )
 
     def deal_url_params(
         self,
         params: dict,
-        number=8,
+        data: dict | None = None,
+        method="GET",
         **kwargs,
     ) -> str:
         if params:
@@ -591,10 +584,10 @@ class APITikTok(API):
                 quote_via=quote,
             )
             xb = self.xb.get_x_bogus(
-                params, number, self.headers.get("User-Agent", USERAGENT)
+                params, data, self.headers.get("User-Agent", USERAGENT)
             )
             xg = self.xg.generate(
-                params, user_agent=self.headers.get("User-Agent", USERAGENT)
+                params, data, user_agent=self.headers.get("User-Agent", USERAGENT)
             )
             params += f"&X-Bogus={xb}&X-Gnarly={xg}"
             return params

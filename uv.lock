@@ -93,6 +93,7 @@ dependencies = [
     { name = "gmssl" },
     { name = "httpx", extra = ["socks"] },
     { name = "lxml" },
+    { name = "never-jscore" },
     { name = "openpyxl" },
     { name = "pydantic" },
     { name = "pyperclip" },
@@ -114,6 +115,7 @@ requires-dist = [
     { name = "gmssl", specifier = ">=3.2.2" },
     { name = "httpx", extras = ["socks"], specifier = ">=0.28.1" },
     { name = "lxml", specifier = ">=6.1.1" },
+    { name = "never-jscore", specifier = ">=3.2.0" },
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pydantic", specifier = ">=2.13.4" },
     { name = "pyperclip", specifier = ">=1.11.0" },
@@ -328,6 +330,15 @@ source = { registry = "https://mirrors.ustc.edu.cn/pypi/simple" }
 sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/d6/54/cfe61301667036ec958cb99bd3efefba235e65cdeb9c84d24a8293ba1d90/mdurl-0.1.2.tar.gz", hash = "sha256:bb413d29f5eea38f31dd4754dd7377d4465116fb207585f97bf925588687c1ba", size = 8729, upload-time = "2022-08-14T12:40:10.846Z" }
 wheels = [
     { url = "https://mirrors.ustc.edu.cn/pypi/packages/b3/38/89ba8ad64ae25be8de66a6d463314cf1eb366222074cfda9ee839c56a4b4/mdurl-0.1.2-py3-none-any.whl", hash = "sha256:84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8", size = 9979, upload-time = "2022-08-14T12:40:09.779Z" },
+]
+
+[[package]]
+name = "never-jscore"
+version = "3.2.0"
+source = { registry = "https://mirrors.ustc.edu.cn/pypi/simple" }
+wheels = [
+    { url = "https://mirrors.ustc.edu.cn/pypi/packages/76/be/644f9613c3da1ed2357581e3ae88bc850f6ac9f23563dc61ade3098a432f/never_jscore-3.2.0-cp38-abi3-manylinux_2_34_x86_64.whl", hash = "sha256:2b6f776d98f0a4f8a47a0c7651de83a18b83e7ffbe30c3245f042b7cb9929e59", size = 55568970, upload-time = "2026-04-12T07:11:23.37Z" },
+    { url = "https://mirrors.ustc.edu.cn/pypi/packages/78/08/ee3d1dd5e4adb28986a91999871351288bea2f52bbe790a2f1c61cb34093/never_jscore-3.2.0-cp38-abi3-win_amd64.whl", hash = "sha256:6985a324411c7d0c9e103780060930bb39da4a3c00f4a4f6075f1f60d8cc35ed", size = 50333213, upload-time = "2026-04-12T08:13:06.898Z" },
 ]
 
 [[package]]

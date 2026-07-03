@@ -16,7 +16,8 @@
 </div>
 <br>
 <p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播拉流地址；下载抖音直播视频；获取 TikTok 直播拉流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
-<p>⭐ <b>项目版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/6/13</code></b></p>
+<p>⚠️ 本项目的加密参数算法已过期失效，参数算法不再维护，部分功能可能无法正常工作。如需使用，请自行准备加密参数生成代码，配置方法请查阅 <a href="#encipher">加密参数生成代码配置</a>！</p>
+<p>⭐ <b>项目版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/7/4</code></b></p>
 <p>⭐ <b>项目文档正在完善，如果发现任何错误或描述模糊之处，请告知作者以便改进！本项目历史名称：<code>TikTokDownloader</code></b></p>
 <p>⭐ Due to the author’s limited time and energy, the complete English documentation for this project is not yet available. If you wish to read the full documentation, we recommend using AI translation tools to assist your understanding. If you would like to contribute to the translation, your help is warmly welcomed.</p>
 <hr>
@@ -87,6 +88,75 @@
 <li>Cookie 仅需在失效后重新写入配置文件，并非每次运行程序都要写入配置文件！</li>
 <li><p>Cookie 会影响下载的视频文件分辨率，如果无法下载最高分辨率的视频文件，请尝试更新 Cookie！</li>
 <li>程序获取数据失败时，可以尝试更新 Cookie 或者使用已登录的 Cookie！</li>
+</ul>
+<h1 id="encipher">加密参数生成代码配置</h1>
+<p>此章节涉及加密参数生成代码的编写与调试，需要具备一定的编程基础（如 Python/JavaScript、HTTP 请求调试等），建议有相关经验的用户阅读！</p>
+<p>加密参数生成代码配置是可选的；若项目功能正常，无需额外配置！若功能异常，可能是加密参数无效，此时您需要自行准备加密参数的生成代码！</p>
+<p>加密参数代码模板：</p>
+
+```python
+# import httpx  # 可用于发送 HTTP 请求, Can be used to send HTTP requests
+# import never_jscore  # 可用于执行 JavaScript 代码, Can be used to execute JavaScript code
+
+__all__ = [
+    "ABogus",
+    "XBogus",
+    "XGnarly",
+]
+
+
+class ABogus:
+    """
+    抖音接口加密参数
+    """
+
+    def __init__(self): ...
+
+    def get_value(
+            self,
+            query: dict | str | None = None,
+            data: dict | None = None,
+            method: str | None = None,
+    ) -> str: ...
+
+
+class XBogus:
+    """
+    TikTok 接口加密参数
+    """
+
+    def __init__(self): ...
+
+    def get_x_bogus(
+            self,
+            query: dict | str | None = None,
+            data: dict | None = None,
+            method: str | None = None,
+    ) -> str: ...
+
+
+class XGnarly:
+    """
+    TikTok 接口加密参数
+    """
+
+    def __init__(self): ...
+
+    def generate(
+            self,
+            query: dict | str | None = None,
+            data: dict | None = None,
+            method: str | None = None,
+    ) -> str: ...
+```
+
+<ul>
+<li>加密参数代码文件固定命名：<code>encipher.py</code></li>
+<li>通过源码运行时，加密参数代码文件放置在项目根目录</li>
+<li>通过可执行文件运行时，加密参数代码文件放置在 <code>_internal</code> 目录下</li>
+<li>加密参数代码支持调用 <code>httpx</code>、<code>never_jscore</code> 库及 Python 标准库</li>
+<li>每个加密参数类需实现一个用于生成加密结果的方法（参考模板中的方法签名）</li>
+<li>模板中的加密参数类无需全部实现，可根据实际需求删除不需要的类</li>
 </ul>
 <h1>入门说明</h1>
 <h2>关于终端</h2>

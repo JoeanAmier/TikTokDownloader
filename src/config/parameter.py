@@ -33,7 +33,13 @@ from ..interface import API, APITikTok
 from ..module import FFMPEG
 from ..record import BaseLogger, LoggerManager
 from ..storage import RecordManager
-from ..tools import Cleaner, DownloaderError, cookie_dict_to_str, create_client
+from ..tools import (
+    Cleaner,
+    DownloaderError,
+    cookie_dict_to_str,
+    create_client,
+    load_objects_from_external_py,
+)
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -114,9 +120,7 @@ class Parameter:
         self.cache = PROJECT_ROOT.joinpath("Cache")  # 缓存路径
         self.logger = logger(PROJECT_ROOT, console)
         self.logger.run()
-        self.ab = ABogus()
-        self.xb = XBogus()
-        self.xg = XGnarly()
+        self.ab, self.xb, self.xg = self.check_objects_from_external_py(console)
         self.console = console
         self.recorder = recorder
         self.preview = BLANK_PREVIEW
@@ -1187,3 +1191,19 @@ class Parameter:
             old := self.ROOT.parent.joinpath("Cache")
         ).exists() and not self.cache.exists():
             move(old, self.cache)
+
+    @staticmethod
+    def check_objects_from_external_py(console: "ColorfulConsole"):
+        objects = load_objects_from_external_py(
+            "encipher",
+            [
+                "ABogus",
+                "XBogus",
+                "XGnarly",
+            ],
+            console,
+        )
+        ab = objects.get("ABogus", ABogus)
+        xb = objects.get("XBogus", XBogus)
+        xg = objects.get("XGnarly", XGnarly)
+        return ab(), xb(), xg()

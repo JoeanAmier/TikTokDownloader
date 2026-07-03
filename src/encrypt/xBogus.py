@@ -195,13 +195,18 @@ class XBogus:
         return "".join(self.generate_str(i) for i in self.generate_num(garbled))
 
     def get_x_bogus(
-        self, query: dict | str, params=8, user_agent=USERAGENT, test_time=None
+        self,
+        query: dict | str,
+        data: dict | None = None,
+        method: str | None = None,
+        user_agent=USERAGENT,
+        test_time=None,
     ):
         timestamp = int(test_time or time())
         query = self.process_url_path(
             urlencode(query, quote_via=quote) if isinstance(query, dict) else query
         )
-        return self.generate_x_bogus(query, params, user_agent, timestamp)
+        return self.generate_x_bogus(query, 8, user_agent, timestamp)
 
 
 class XBogusTikTok(XBogus):

@@ -16,6 +16,7 @@ dependencies = [
     "gmssl>=3.2.2",
     "httpx[socks]>=0.28.1",
     "lxml>=6.1.1",
+    "never-jscore>=3.2.0",
     "openpyxl>=3.1.5",
     "pydantic>=2.13.4",
     "pyperclip>=1.11.0",
