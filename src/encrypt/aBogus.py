@@ -587,6 +587,7 @@ class ABogus:
         params: dict | str,
         data: dict | None = None,
         method="GET",
+        user_agent=USERAGENT,
         start_time=0,
         end_time=0,
         random_num_1=None,

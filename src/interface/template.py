@@ -10,7 +10,7 @@ from rich.progress import (
     TimeElapsedColumn,
 )
 
-from ..custom import PROGRESS, USERAGENT, wait
+from ..custom import PROGRESS, wait
 from ..tools import DownloaderError, FakeProgress, Retry, capture_error_request
 from ..translation import _
 
@@ -436,7 +436,7 @@ class API:
                 safe="=",
                 quote_via=quote,
             )
-            params += f"&a_bogus={self.ab.get_value(params, data, method)}"
+            params += f"&a_bogus={self.ab.get_value(params, data, method, user_agent=self.headers['User-Agent'])}"
             return params
         return ""
 
@@ -584,10 +584,16 @@ class APITikTok(API):
                 quote_via=quote,
             )
             xb = self.xb.get_x_bogus(
-                params, data, self.headers.get("User-Agent", USERAGENT)
+                params,
+                data,
+                method,
+                user_agent=self.headers["User-Agent"],
             )
             xg = self.xg.generate(
-                params, data, user_agent=self.headers.get("User-Agent", USERAGENT)
+                params,
+                data,
+                method,
+                user_agent=self.headers["User-Agent"],
             )
             params += f"&X-Bogus={xb}&X-Gnarly={xg}"
             return params

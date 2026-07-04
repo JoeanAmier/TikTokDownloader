@@ -6,7 +6,7 @@ from time import time
 from typing import TYPE_CHECKING, Union
 from urllib.parse import quote
 
-from src.custom import PARAMS_HEADERS, PARAMS_HEADERS_TIKTOK, USERAGENT
+from src.custom import PARAMS_HEADERS, PARAMS_HEADERS_TIKTOK
 from src.encrypt.ttWid import TtWid
 from src.encrypt.xBogus import XBogusTikTok
 from src.tools import request_params
@@ -220,7 +220,7 @@ class MsTokenTikTok(MsToken):
             headers |= {"Cookie": f"{cls.NAME}={token}"}
             params["X-Bogus"] = quote(
                 XBogusTikTok().get_x_bogus(
-                    params, None, user_agent=headers.get("User-Agent", USERAGENT)
+                    params, None, None, user_agent=headers["User-Agent"]
                 ),
                 safe="",
             )
