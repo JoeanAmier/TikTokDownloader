@@ -532,10 +532,15 @@ class Downloader:
         dynamic_suffix: str = "webp",
         **kwargs,
     ) -> None:
+        static_url = item["static_cover"]
+        dynamic_url = item["dynamic_cover"]
+        both_covers = all(
+            (self.static_cover, static_url, self.dynamic_cover, dynamic_url)
+        )
         if all(
             (
                 self.static_cover,
-                url := item["static_cover"],
+                static_url,
                 not self.is_exists(
                     p := actual_root.with_name(f"{name}.{static_suffix}")
                 ),
@@ -543,7 +548,7 @@ class Downloader:
         ):
             tasks.append(
                 (
-                    url,
+                    static_url,
                     temp_root.with_name(f"{name}.{static_suffix}"),
                     p,
                     f"【封面】{name}",
@@ -551,20 +556,35 @@ class Downloader:
                     static_suffix,
                 )
             )
+        # A bare WebP can be a legacy dynamic cover or a static cover normalized
+        # to WebP. There is no source metadata, so preserve the legacy behavior.
+        legacy_dynamic = actual_root.with_name(f"{name}.{dynamic_suffix}")
+        typed_dynamic = actual_root.with_name(f"{name}_dynamic.{dynamic_suffix}")
+        normalized_dynamic_exists = any(
+            self.is_exists(typed_dynamic.with_suffix(f".{suffix}"))
+            for content_type, suffix in self.CONTENT_TYPE_MAP.items()
+            if content_type.startswith("image/")
+        )
+        dynamic_exists = any(
+            (
+                self.is_exists(legacy_dynamic),
+                self.is_exists(typed_dynamic),
+                normalized_dynamic_exists,
+            )
+        )
+        dynamic_path = typed_dynamic if both_covers else legacy_dynamic
         if all(
             (
                 self.dynamic_cover,
-                url := item["dynamic_cover"],
-                not self.is_exists(
-                    p := actual_root.with_name(f"{name}.{dynamic_suffix}")
-                ),
+                dynamic_url,
+                not dynamic_exists,
             )
         ):
             tasks.append(
                 (
-                    url,
-                    temp_root.with_name(f"{name}.{dynamic_suffix}"),
-                    p,
+                    dynamic_url,
+                    temp_root.with_name(dynamic_path.name),
+                    dynamic_path,
                     f"【动图】{name}",
                     id_,
                     dynamic_suffix,
