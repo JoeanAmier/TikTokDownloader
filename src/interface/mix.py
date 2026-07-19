@@ -1,6 +1,4 @@
-from typing import Callable
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Callable, Union
 
 from src.extract import Extractor
 from src.interface.detail import Detail
@@ -17,7 +15,7 @@ class Mix(API):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         mix_id: str = None,
         detail_id: str = None,
         cursor=0,

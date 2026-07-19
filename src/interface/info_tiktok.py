@@ -13,7 +13,7 @@ class InfoTikTok(APITikTok):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         unique_id: Union[str] = "",
         sec_user_id: Union[str] = "",
         *args,

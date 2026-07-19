@@ -1,6 +1,5 @@
 # from typing import Callable
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Union
 
 from src.interface.template import API
 from src.translation import _
@@ -17,7 +16,7 @@ class Slides(API):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         slides_id: str | list | tuple = ...,
     ):
         super().__init__(params, cookie, proxy)

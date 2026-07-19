@@ -1,5 +1,4 @@
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Union
 
 from src.interface.template import API
 from src.translation import _
@@ -14,7 +13,7 @@ class Info(API):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         sec_user_id: Union[str, list[str], tuple[str]] = ...,
         *args,
         **kwargs,

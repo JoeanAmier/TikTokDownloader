@@ -67,7 +67,7 @@ class API:
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         *args,
         **kwargs,
     ):
@@ -538,7 +538,7 @@ class APITikTok(API):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         *args,
         **kwargs,
     ):

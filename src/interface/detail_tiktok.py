@@ -13,7 +13,7 @@ class DetailTikTok(APITikTok):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         detail_id: str = ...,
     ):
         super().__init__(params, cookie, proxy)

@@ -1,5 +1,4 @@
-from typing import TYPE_CHECKING, Callable, Type, Coroutine
-from typing import Union
+from typing import TYPE_CHECKING, Callable, Coroutine, Type, Union
 
 from src.interface.template import API
 from src.translation import _
@@ -14,7 +13,7 @@ class User(API):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         sec_user_id: str = ...,
         *args,
         **kwargs,
@@ -70,6 +69,7 @@ class User(API):
     ) -> dict:
         return self.params | {
             "publish_video_strategy_type": "2",
+            "source": "channel_pc_web",
             "sec_user_id": self.sec_user_id,
             "personal_center_strategy": "1",
             "profile_other_record_enable": "1",

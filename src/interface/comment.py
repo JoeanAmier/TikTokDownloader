@@ -14,11 +14,11 @@ class Comment(API):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         detail_id: str = ...,
-        pages: int = None,
+        pages: int | None = None,
         cursor: int = 0,
-        count: int = 20,
+        count: int = 10,
         count_reply: int = 3,
         reply: bool = False,
     ):
@@ -43,6 +43,7 @@ class Comment(API):
     ) -> dict:
         return self.params | {
             "aweme_id": self.item_id,
+            "pc_img_format": "webp",
             "cursor": self.cursor,
             "count": self.count,
             "item_type": "0",
@@ -207,7 +208,7 @@ class Reply(Comment):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         detail_id: str = ...,
         comment_id: str = ...,
         pages: int = None,
@@ -243,8 +244,6 @@ class Reply(Comment):
             "item_type": "0",
             "version_code": "170400",
             "version_name": "17.4.0",
-            "support_h265": "0",
-            "support_dash": "0",
         }
 
     async def run(

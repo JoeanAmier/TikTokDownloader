@@ -13,7 +13,7 @@ class Collection(API):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         sec_user_id: str = "",
         count=10,
         cursor=0,

@@ -16,7 +16,7 @@ class Live(API):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         web_rid: str = ...,
         room_id: str = ...,
         sec_user_id: str = "",

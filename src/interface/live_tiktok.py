@@ -1,12 +1,12 @@
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Union
 
 from src.interface.template import APITikTok
 from src.translation import _
 
 if TYPE_CHECKING:
-    from ..config import Parameter
     from src.testers import Params
+
+    from ..config import Parameter
 
 
 class LiveTikTok(APITikTok):
@@ -16,7 +16,7 @@ class LiveTikTok(APITikTok):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         room_id: str = ...,
     ):
         super().__init__(params, cookie, proxy)

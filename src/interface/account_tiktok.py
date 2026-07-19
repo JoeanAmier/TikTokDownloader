@@ -19,7 +19,7 @@ class AccountTikTok(
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         sec_user_id: str = ...,
         tab="post",
         earliest: str | float | int = "",

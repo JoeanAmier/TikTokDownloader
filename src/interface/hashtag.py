@@ -1,5 +1,4 @@
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Union
 
 from src.interface.template import API
 
@@ -15,7 +14,7 @@ class HashTag(API):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         *args,
         **kwargs,
     ):

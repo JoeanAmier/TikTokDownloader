@@ -1,8 +1,6 @@
 from datetime import datetime
 from types import SimpleNamespace
-from typing import Callable
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Callable, Union
 
 from src.interface.template import API
 from src.translation import _
@@ -40,7 +38,7 @@ class Hot(API):
         self,
         params: Union["Parameter", "Params"],
         cookie: str = "",
-        proxy: str = None,
+        proxy: str | None = None,
         *args,
         **kwargs,
     ):
