@@ -35,7 +35,7 @@ class Cookie:
         tiktok: bool = False,
     ) -> bool:
         """提取 Cookie 并写入配置文件"""
-        if cookie is None:
+        if not cookie:
             cookie: str = paste()
 
         if not self.validate_cookie_minimal(cookie):
