@@ -557,7 +557,7 @@ class TikTok:
             if index
             else _("开始处理账号")
         )
-        if api:
+        if api and tab not in {"favorite", "collection"}:
             info = None
         elif not (
             info := await self.get_user_info_data(
