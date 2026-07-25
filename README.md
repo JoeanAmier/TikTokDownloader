@@ -329,23 +329,9 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 
 ***
 
-## Thordata
-
-<p><a href="https://www.thordata.com/?ls=Tkd&lk=Tkd"><img src="docs/AD/Thordata_CN_AD.jpg" alt="Thordata" width="600" height="314"></a></p>
-<p><a href="https://www.thordata.com/?ls=Tkd&lk=Tkd">Thordata</a>：提供 190+ 国家 100M+ 动态住宅 IP，无限量代理适合高并发、高流量任务，低至 $38/天，旋转或粘性会话，精准定位更稳连接；凭折扣码 <b>Thor20d</b> 可获 10% 折扣。</p>
-
-***
-
 ## DartNode
 
 [![Powered by DartNode](docs/AD/DartNode_AD.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
-
-***
-
-## ZMTO
-
-<p><a href="https://www.zmto.com/"><img src="https://console.zmto.com/templates/2019/dist/images/logo_dark.svg" alt="ZMTO"></a></p>
-<p><a href="https://www.zmto.com/">ZMTO</a>：一家专业的云基础设施提供商，以可靠的尖端技术与专业支持，提供高效的解决方案，并为符合条件的开源项目提供企业级VPS基础设施，支持开源生态系统的可持续发展与创新。</p>
 
 ***
 

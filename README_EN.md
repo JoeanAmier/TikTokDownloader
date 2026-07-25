@@ -339,23 +339,9 @@ repository to execute the build process
 
 ***
 
-## Thordata
-
-<p><a href="https://www.thordata.com/?ls=Tkd&lk=Tkd"><img src="docs/AD/Thordata_EN_AD.jpg" alt="Thordata" width="600" height="314"></a></p>
-<p><a href="https://www.thordata.com/?ls=Tkd&lk=Tkd">Thordata</a>: offers 100M+ rotating residential IPs across 190+ countries, Unlimited proxies are ideal for high-concurrency, high-traffic tasks, from $38/day, rotating or sticky sessions, precise targeting and more stable connections. Use code <b>Thor20d</b> for a 10% discount.</p>
-
-***
-
 ## DartNode
 
 [![Powered by DartNode](docs/AD/DartNode_AD.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
-
-***
-
-## ZMTO
-
-<p><a href="https://www.zmto.com/"><img src="https://console.zmto.com/templates/2019/dist/images/logo_dark.svg" alt="ZMTO"></a></p>
-<p><a href="https://www.zmto.com/">ZMTO</a>: A professional cloud infrastructure provider offering sophisticated solutions with reliable technology and expert support. We also empower qualified open source initiatives with enterprise-grade VPS infrastructure, driving sustainable development and innovation in the open source ecosystem. </p>
 
 ***
 
