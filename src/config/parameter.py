@@ -1195,7 +1195,7 @@ class Parameter:
     @staticmethod
     def check_objects_from_external_py(console: "ColorfulConsole"):
         objects = load_objects_from_external_py(
-            "encipher",
+            "encipher.py",
             [
                 "ABogus",
                 "XBogus",

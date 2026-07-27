@@ -14,7 +14,7 @@ def get_base_dir() -> Path:
     获取基础目录
     """
     if getattr(sys, "frozen", False):
-        return Path(sys.executable).parent.parent / "_internal"
+        return Path(sys.executable).parent / "_internal"
     else:
         return Path(__file__).resolve().parent.parent.parent
 
