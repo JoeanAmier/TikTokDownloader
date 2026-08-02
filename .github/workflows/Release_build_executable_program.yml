@@ -6,52 +6,84 @@ on:
 
 permissions:
   contents: write
-  discussions: write
 
 jobs:
   build:
     name: 构建于 ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+
+    env:
+      PYTHONUTF8: "1"
+      UV_DEFAULT_INDEX: https://pypi.org/simple
+
     strategy:
+      fail-fast: false
       matrix:
-        os: [ windows-latest, windows-11-arm, macos-15-intel, macos-latest ]
+        include:
+          - os: windows-latest
+            executable: dist/DouK-Downloader/DouK-Downloader.exe
+            artifact: Windows_X64
+
+          - os: windows-11-arm
+            executable: dist/DouK-Downloader/DouK-Downloader.exe
+            artifact: Windows_ARM64
+
+          - os: macos-15-intel
+            executable: dist/DouK-Downloader/DouK-Downloader
+            artifact: macOS_X64
+
+          - os: macos-latest
+            executable: dist/DouK-Downloader/DouK-Downloader
+            artifact: macOS_ARM64
 
     steps:
       - name: 签出存储库
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: 设置 Python
-        uses: actions/setup-python@v5
+      - name: 设置 uv
+        uses: astral-sh/setup-uv@v9.0.0
         with:
-          python-version: "3.12"
+          enable-cache: true
 
       - name: 安装依赖项
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyinstaller
+          uv python install 3.12
+          uv sync --frozen --no-dev --no-install-project --python 3.12
+          uv pip install cx_Freeze
 
-      - name: 构建 Win 可执行文件
-        if: runner.os == 'Windows'
-        run: |
-          pyinstaller --icon=./static/images/DouK-Downloader.ico --add-data "static:static" --add-data "locale:locale" --collect-all rich main.py
-        shell: pwsh
-
-      - name: 构建 Mac 可执行文件
-        if: runner.os == 'macOS'
-        run: |
-          pyinstaller --icon=./static/images/DouK-Downloader.icns --add-data "static:static" --add-data "locale:locale" --collect-all rich main.py
+      - name: 构建可执行文件
+        run: uv run python setup.py build_exe --build-exe dist/DouK-Downloader
 
       - name: 创建压缩包
         run: |
-          7z a "DouK-Downloader_V${{ github.event.release.tag_name }}_${{ runner.os }}_${{ runner.arch }}.zip" ./dist/main/*
-        shell: bash
+          uv run python -c "import shutil; shutil.make_archive('DouK-Downloader_V${{ github.event.release.tag_name }}_${{ matrix.artifact }}', 'zip', 'dist/DouK-Downloader')"
 
-      - name: 上传文件到 release
-        uses: softprops/action-gh-release@v2
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v7
         with:
-          files: |
-            ./DouK-Downloader_V*.zip
+          name: ${{ matrix.artifact }}
+          path: ./DouK-Downloader_V${{ github.event.release.tag_name }}_${{ matrix.artifact }}.zip
+          if-no-files-found: error
+
+  release:
+    name: 发布 Release
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 签出存储库
+        uses: actions/checkout@v7
+
+      - name: 下载构建产物
+        uses: actions/download-artifact@v8
+        with:
+          path: release-assets
+          merge-multiple: true
+
+      - name: 发布文件到 Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: ./release-assets/*.zip
           name: DouK-Downloader V${{ github.event.release.tag_name }}
           body_path: ./docs/Release_Notes.md
           draft: ${{ github.event.release.draft }}

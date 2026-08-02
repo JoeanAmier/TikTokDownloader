@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: 报告项目问题
-title: '[功能异常] '
+title: ''
 labels: ''
 assignees: JoeanAmier
 

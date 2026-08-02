@@ -288,8 +288,7 @@ the program based on the latest source code!
 ### Notes
 
 1. **Resource Usage**:
-    - GitHub provides free build environments for Actions, with a monthly usage limit (2000 minutes) for free-tier
-      users
+    - GitHub provides free build environments for Actions, with a monthly usage limit (2000 minutes) for free-tier users
 
 2. **Code Modifications**:
     - You are free to modify the code in your forked repository to customize the build process
@@ -432,7 +431,7 @@ repository to execute the build process
 * https://github.com/Textualize/rich
 * https://github.com/omnilib/aiosqlite
 * https://github.com/Tinche/aiofiles
-* https://github.com/pyinstaller/pyinstaller
+* https://github.com/marcelotduarte/cx_Freeze
 * https://foss.heptapod.net/openpyxl/openpyxl
 * https://github.com/carpedm20/emoji/
 * https://github.com/lxml/lxml

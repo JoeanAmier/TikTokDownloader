@@ -428,7 +428,7 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 * https://github.com/Textualize/rich
 * https://github.com/omnilib/aiosqlite
 * https://github.com/Tinche/aiofiles
-* https://github.com/pyinstaller/pyinstaller
+* https://github.com/marcelotduarte/cx_Freeze
 * https://foss.heptapod.net/openpyxl/openpyxl
 * https://github.com/carpedm20/emoji/
 * https://github.com/lxml/lxml

@@ -7,40 +7,57 @@ jobs:
   build:
     name: 构建于 ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+
+    env:
+      PYTHONUTF8: "1"
+      UV_DEFAULT_INDEX: https://pypi.org/simple
+
     strategy:
+      fail-fast: false
       matrix:
-        os: [ windows-latest, windows-11-arm, macos-15-intel, macos-latest ]
+        include:
+          - os: windows-latest
+            executable: dist/DouK-Downloader/DouK-Downloader.exe
+            artifact: DouK-Downloader_Windows_X64
+
+          - os: windows-11-arm
+            executable: dist/DouK-Downloader/DouK-Downloader.exe
+            artifact: DouK-Downloader_Windows_ARM64
+
+          - os: macos-15-intel
+            executable: dist/DouK-Downloader/DouK-Downloader
+            artifact: DouK-Downloader_macOS_X64
+
+          - os: macos-latest
+            executable: dist/DouK-Downloader/DouK-Downloader
+            artifact: DouK-Downloader_macOS_ARM64
 
     steps:
       - name: 签出存储库
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: 设置 Python
-        uses: actions/setup-python@v5
+      - name: 设置 uv
+        uses: astral-sh/setup-uv@v9.0.0
         with:
-          python-version: "3.12"
+          enable-cache: true
 
       - name: 安装依赖项
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyinstaller
+          uv python install 3.12
+          uv sync --frozen --no-dev --no-install-project --python 3.12
+          uv pip install cx_Freeze
 
-      - name: 构建 Win 可执行文件
-        if: runner.os == 'Windows'
-        run: |
-          echo "DATE=$(Get-Date -Format 'yyyyMMdd')" >> $env:GITHUB_ENV
-          pyinstaller --icon=./static/images/DouK-Downloader.ico --add-data "static:static" --add-data "locale:locale" --collect-all rich main.py
-        shell: pwsh
+      - name: 获取构建日期
+        run: >-
+          uv run python -c
+          "from datetime import datetime; from os import environ; open(environ['GITHUB_ENV'], 'a', encoding='utf-8').write(f'DATE={datetime.now():%Y%m%d}\n')"
 
-      - name: 构建 Mac 可执行文件
-        if: runner.os == 'macOS'
-        run: |
-          echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
-          pyinstaller --icon=./static/images/DouK-Downloader.icns --add-data "static:static" --add-data "locale:locale" --collect-all rich main.py
+      - name: 构建可执行文件
+        run: uv run python setup.py build_exe --build-exe dist/DouK-Downloader
 
-      - name: 上传文件
-        uses: actions/upload-artifact@v4
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v7
         with:
-          name: DouK-Downloader_${{ runner.os }}_${{ runner.arch }}_${{ env.DATE }}
-          path: dist/main/
+          name: ${{ matrix.artifact }}_${{ env.DATE }}
+          path: dist/DouK-Downloader
+          if-no-files-found: error

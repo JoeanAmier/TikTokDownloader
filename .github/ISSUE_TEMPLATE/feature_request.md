@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: 功能优化建议
-title: '[优化建议] '
+title: ''
 labels: ''
 assignees: JoeanAmier
 

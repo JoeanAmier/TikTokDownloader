@@ -12,7 +12,7 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/stale@v9
+      - uses: actions/stale@v11
         with:
           stale-issue-message: |
             ⚠️ 此 Issue 已超过一定时间未活动，如果没有进一步更新，将在 14 天后关闭。
@@ -36,5 +36,5 @@ jobs:
           close-issue-label: "自动关闭(Close)"
           stale-pr-label: "未跟进问题(Stale)"
           close-pr-label: "自动关闭(Close)"
-          exempt-issue-labels: "功能异常(bug),文档补充(docs),功能优化(enhancement),适合新手(good first issue),"
-          exempt-pr-labels: "功能异常(bug),文档补充(docs),功能优化(enhancement),适合新手(good first issue),"
+          exempt-issue-labels: "功能异常(bug),文档补充(docs),功能优化(enhancement),适合新手(good first issue)"
+          exempt-pr-labels: "功能异常(bug),文档补充(docs),功能优化(enhancement),适合新手(good first issue)"
