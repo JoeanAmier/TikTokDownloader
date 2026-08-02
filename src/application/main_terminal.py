@@ -171,6 +171,10 @@ class TikTok:
                 _("采集抖音热榜数据(抖音)"),
                 self.hot_interactive,
             ),
+            (
+                _("批量下载喜欢作品(抖音)"),
+                self.favorite_interactive,
+            ),
             # (_("批量下载话题作品(抖音)"),),
             (
                 _("批量下载收藏作品(抖音)"),
@@ -2070,6 +2074,19 @@ class TikTok:
         return time_, data
 
     @check_cookie_state(tiktok=False)
+    async def favorite_interactive(
+        self,
+        *args,
+    ):
+        if sec_user_id := await self.__check_owner_url():
+            start = time()
+            await self._deal_favorite_data(
+                sec_user_id,
+            )
+            self._time_statistics(start)
+        self.logger.info(_("已退出批量下载喜欢作品(抖音)模式"))
+
+    @check_cookie_state(tiktok=False)
     async def collection_interactive(
         self,
         *args,
@@ -2232,6 +2249,59 @@ class TikTok:
             api,
             tiktok=tiktok,
             mode="collection",
+            mark=self.owner.mark,
+            user_id=sec_user_id,
+            info=info,
+        )
+
+    async def _deal_favorite_data(
+        self,
+        sec_user_id: str,
+        api=False,
+        source=False,
+        cookie: str = None,
+        proxy: str = None,
+        pages: int = None,
+        tiktok=False,
+    ):
+        self.logger.info(_("开始获取喜欢作品数据"))
+        if not (
+            info := await self.get_user_info_data(
+                tiktok,
+                cookie,
+                proxy,
+                sec_user_id=sec_user_id,
+            )
+        ):
+            self.logger.warning(
+                _("{sec_user_id} 获取账号信息失败").format(sec_user_id=sec_user_id)
+            )
+            return
+        account_data, earliest, latest = await self._get_account_data(
+            cookie=cookie,
+            proxy=proxy,
+            sec_user_id=sec_user_id,
+            tab="favorite",
+            earliest="",
+            latest="",
+            pages=pages,
+        )
+        if not any(account_data):
+            return
+        if source:
+            return self.extractor.source_date_filter(
+                account_data,
+                earliest,
+                latest,
+                tiktok,
+            )
+        await self._batch_process_detail(
+            account_data,
+            api,
+            earliest=earliest,
+            latest=latest,
+            tiktok=tiktok,
+            mode="favorite",
             mark=self.owner.mark,
             user_id=sec_user_id,
             info=info,
