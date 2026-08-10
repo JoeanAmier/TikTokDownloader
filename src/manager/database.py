@@ -4,7 +4,7 @@ from shutil import move
 
 from aiosqlite import Row, connect
 
-from ..custom import PROJECT_ROOT
+from ..custom import VOLUME
 
 __all__ = ["Database"]
 
@@ -15,7 +15,7 @@ class Database:
     def __init__(
         self,
     ):
-        self.file = PROJECT_ROOT.joinpath(self.__FILE)
+        self.file = VOLUME.joinpath(self.__FILE)
         self.database = None
         self.cursor = None
 
@@ -139,6 +139,6 @@ class Database:
 
     def compatible(self):
         if (
-            old := PROJECT_ROOT.parent.joinpath(self.__FILE)
+            old := VOLUME.parent.joinpath(self.__FILE)
         ).exists() and not self.file.exists():
             move(old, self.file)

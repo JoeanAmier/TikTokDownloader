@@ -12,7 +12,6 @@ from src.custom import (
     LICENCE,
     MASTER,
     PROJECT_NAME,
-    PROJECT_ROOT,
     RELEASES,
     REPOSITORY,
     SERVER_HOST,
@@ -21,6 +20,7 @@ from src.custom import (
     VERSION_BETA,
     VERSION_MAJOR,
     VERSION_MINOR,
+    VOLUME,
 )
 from src.manager import Database, DownloadRecorder
 from src.module import Cookie, MigrateFolder
@@ -63,7 +63,7 @@ class TikTokDownloader:
         )
         self.logger = None
         self.recorder = None
-        self.settings = Settings(PROJECT_ROOT, self.console)
+        self.settings = Settings(VOLUME, self.console)
         self.event_cookie = Event()
         self.cookie = Cookie(self.settings, self.console)
         self.params_task = None

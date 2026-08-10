@@ -1,8 +1,13 @@
+import sys
 from gettext import translation
 from locale import getlocale
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent.parent
+ROOT = (
+    Path(sys.executable).resolve().parent
+    if getattr(sys, "frozen", False)
+    else Path(__file__).resolve().parent.parent.parent
+)
 
 
 class TranslationManager:

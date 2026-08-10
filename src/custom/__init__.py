@@ -7,7 +7,7 @@ from .function import (
 )
 from .internal import (
     DISCLAIMER_TEXT,
-    PROJECT_ROOT,
+    VOLUME,
     VERSION_MAJOR,
     VERSION_MINOR,
     VERSION_BETA,

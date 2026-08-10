@@ -6,7 +6,7 @@ from src.custom import (
     DATA_HEADERS,
     DATA_HEADERS_TIKTOK,
     DOWNLOAD_HEADERS_TIKTOK,
-    PROJECT_ROOT,
+    VOLUME,
 )
 from src.encrypt import ABogus, XBogus, XGnarly
 from src.testers.logger import Logger
@@ -14,7 +14,7 @@ from src.tools import Cleaner, create_client
 
 
 class Params:
-    CONFIG = PROJECT_ROOT.joinpath("test_cookie.ini")
+    CONFIG = VOLUME.joinpath("test_cookie.ini")
     CLEANER = Cleaner()
 
     def __init__(self):

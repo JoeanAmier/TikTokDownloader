@@ -14,10 +14,10 @@ from ..custom import (
     DOWNLOAD_HEADERS_TIKTOK,
     PARAMS_HEADERS,
     PARAMS_HEADERS_TIKTOK,
-    PROJECT_ROOT,
     QRCODE_HEADERS,
     TIMEOUT,
     USERAGENT,
+    VOLUME,
 )
 from ..encrypt import (
     ABogus,
@@ -116,9 +116,9 @@ class Parameter:
     ):
         self.settings = settings
         self.cookie_object = cookie_object
-        self.ROOT = PROJECT_ROOT  # 项目根路径
-        self.cache = PROJECT_ROOT.joinpath("Cache")  # 缓存路径
-        self.logger = logger(PROJECT_ROOT, console)
+        self.ROOT = VOLUME  # 项目根路径
+        self.cache = VOLUME.joinpath("Cache")  # 缓存路径
+        self.logger = logger(VOLUME, console)
         self.logger.run()
         self.ab, self.xb, self.xg = self.check_objects_from_external_py(console)
         self.console = console

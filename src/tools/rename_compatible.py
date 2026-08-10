@@ -1,10 +1,11 @@
-from ..custom import PROJECT_ROOT
 from shutil import copy2
+
+from ..custom import VOLUME
 
 
 class RenameCompatible:
-    OLD_DB_FILE = PROJECT_ROOT.joinpath("TikTokDownloader.db")
-    NEW_DB_FILE = PROJECT_ROOT.joinpath("DouK-Downloader.db")
+    OLD_DB_FILE = VOLUME.joinpath("TikTokDownloader.db")
+    NEW_DB_FILE = VOLUME.joinpath("DouK-Downloader.db")
 
     @classmethod
     def migration_file(
