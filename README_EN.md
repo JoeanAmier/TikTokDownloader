@@ -419,7 +419,7 @@ repository to execute the build process
 <b>Before using the code and functionalities of this project, please carefully consider and accept the above disclaimer. If you have any questions or disagree with the statement, please do not use the code and functionalities of this project. If you use the code and functionalities of this project, it is considered that you fully understand and accept the above disclaimer, and willingly assume all risks and consequences associated with the use of this project.</b>
 <h1>⭐ Star History</h1>
 <p>
-<img alt="Star History Chart" src="https://api.star-history.com/svg?repos=JoeanAmier/TikTokDownloader&amp;type=Timeline"/>
+<img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=JoeanAmier/TikTokDownloader&amp;type=Timeline"/>
 </p>
 
 # 💡 Project References

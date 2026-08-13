@@ -416,7 +416,7 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 <b>在使用本项目的代码和功能之前，请您认真考虑并接受以上免责声明。如果您对上述声明有任何疑问或不同意，请不要使用本项目的代码和功能。如果您使用了本项目的代码和功能，则视为您已完全理解并接受上述免责声明，并自愿承担使用本项目的一切风险和后果。</b>
 <h1>⭐ Star 趋势</h1>
 <p>
-<img alt="Star History Chart" src="https://api.star-history.com/svg?repos=JoeanAmier/TikTokDownloader&amp;type=Timeline"/>
+<img alt="Star History Chart" src="https://star-history.dera.page/svg?repos=JoeanAmier/TikTokDownloader&amp;type=Timeline"/>
 </p>
 
 # 💡 项目参考
