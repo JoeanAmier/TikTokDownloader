@@ -17,8 +17,8 @@ __all__ = ["request_params", "create_client"]
 def create_client(
     user_agent=USERAGENT,
     timeout=TIMEOUT,
-    headers: dict = None,
-    proxy: str = None,
+    headers: dict | None = None,
+    proxy: str | None = None,
     *args,
     **kwargs,
 ) -> AsyncClient:
@@ -47,13 +47,13 @@ async def request_params(
     ],
     url: str,
     method: str = "POST",
-    params: dict | str = None,
-    data: dict | str = None,
+    params: dict | str = "",
+    data: dict | str = "",
     useragent=USERAGENT,
     timeout=TIMEOUT,
-    headers: dict = None,
+    headers: dict | None = None,
     resp="headers",
-    proxy: str = None,
+    proxy: str | None = None,
     **kwargs,
 ):
     with Client(

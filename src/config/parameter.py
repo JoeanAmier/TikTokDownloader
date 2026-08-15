@@ -105,6 +105,7 @@ class Parameter:
         owner_url: dict,
         owner_url_tiktok: dict,
         live_qualities: str,
+        original_quality: bool,
         ffmpeg: str,
         recorder: "DownloadRecorder",
         browser_info: dict,
@@ -180,6 +181,7 @@ class Parameter:
         self.run_command = self.__check_run_command(run_command)
         self.ffmpeg = self.__generate_ffmpeg_object(ffmpeg)
         self.live_qualities = self.__check_live_qualities(live_qualities)
+        self.original_quality = self.check_bool_false(original_quality)
         self.douyin_platform = self.check_bool_true(
             douyin_platform,
         )
@@ -247,6 +249,7 @@ class Parameter:
             "run_command": self.__check_run_command,
             "ffmpeg": self.__generate_ffmpeg_object,
             "live_qualities": self.__check_live_qualities,
+            "original_quality": self.check_bool_false,
             "douyin_platform": self.check_bool_true,
             "tiktok_platform": self.check_bool_true,
         }
@@ -854,6 +857,7 @@ class Parameter:
             "max_pages": self.max_pages,
             "run_command": " ".join(self.run_command[::-1]),
             "ffmpeg": self.ffmpeg.path or "",
+            "original_quality": self.original_quality,
         }
 
     async def set_settings_data(

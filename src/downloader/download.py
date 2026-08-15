@@ -7,7 +7,7 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING, Callable, Union
 
 from aiofiles import open
-from httpx import HTTPStatusError, RequestError, StreamError
+from httpx import HTTPStatusError, RequestError, Response, StreamError
 from rich.progress import (
     BarColumn,
     DownloadColumn,
@@ -37,6 +37,10 @@ if TYPE_CHECKING:
     from httpx import AsyncClient
 
     from ..config import Parameter
+    from ..manager import DownloadRecorder
+    from ..module import FFMPEG
+    from ..record import BaseLogger
+    from ..tools import ColorfulConsole
 
 __all__ = ["Downloader"]
 
@@ -61,42 +65,44 @@ class Downloader:
         self.cleaner = params.CLEANER
         self.client: "AsyncClient" = params.client
         self.client_tiktok: "AsyncClient" = params.client_tiktok
-        self.headers = params.headers_download
-        self.headers_tiktok = params.headers_download_tiktok
-        self.log = params.logger
+        self.headers: dict = params.headers_download
+        self.headers_tiktok: dict = params.headers_download_tiktok
+        self.log: "BaseLogger" = params.logger
         self.xb = params.xb
-        self.console = params.console
-        self.root = params.root
-        self.folder_name = params.folder_name
-        self.name_format = params.name_format
-        self.desc_length = params.desc_length
-        self.name_length = params.name_length
-        self.split = params.split
-        self.folder_mode = params.folder_mode
-        self.music = params.music
-        self.dynamic_cover = params.dynamic_cover
-        self.static_cover = params.static_cover
+        self.console: "ColorfulConsole" = params.console
+        self.root: Path = params.root
+        self.folder_name: str = params.folder_name
+        self.name_format: list[str] = params.name_format
+        self.desc_length: int = params.desc_length
+        self.name_length: int = params.name_length
+        self.split: str = params.split
+        self.folder_mode: bool = params.folder_mode
+        self.music: bool = params.music
+        self.dynamic_cover: bool = params.dynamic_cover
+        self.static_cover: bool = params.static_cover
         # self.cookie = params.cookie
         # self.cookie_tiktok = params.cookie_tiktok
         self.proxy = params.proxy
         self.proxy_tiktok = params.proxy_tiktok
-        self.download = params.download
-        self.max_size = params.max_size
-        self.chunk = params.chunk
-        self.max_retry = params.max_retry
-        self.recorder = params.recorder
-        self.timeout = params.timeout
-        self.ffmpeg = params.ffmpeg
-        self.cache = params.cache
-        self.truncate = params.truncate
-        self.general_progress_object: Callable = self.init_general_progress(
-            server_mode,
+        self.download: bool = params.download
+        self.max_size: int = params.max_size
+        self.chunk: int = params.chunk
+        self.max_retry: int = params.max_retry
+        self.recorder: "DownloadRecorder" = params.recorder
+        self.timeout: int | float = params.timeout
+        self.ffmpeg: "FFMPEG" = params.ffmpeg
+        self.cache: Path = params.cache
+        self.truncate: int = params.truncate
+        self.general_progress_object: Callable[..., Progress | FakeProgress] = (
+            self.init_general_progress(
+                server_mode,
+            )
         )
 
     def init_general_progress(
         self,
         server_mode: bool = False,
-    ) -> Callable:
+    ) -> Callable[..., Progress | FakeProgress]:
         if server_mode:
             return self.__fake_progress_object
         return self.__general_progress_object
@@ -105,10 +111,10 @@ class Downloader:
     def __fake_progress_object(
         *args,
         **kwargs,
-    ):
+    ) -> FakeProgress:
         return FakeProgress()
 
-    def __general_progress_object(self):
+    def __general_progress_object(self) -> Progress:
         """文件下载进度条"""
         return Progress(
             TextColumn(
@@ -128,7 +134,7 @@ class Downloader:
             expand=True,
         )
 
-    def __live_progress_object(self):
+    def __live_progress_object(self) -> Progress:
         """直播下载进度条"""
         return Progress(
             TextColumn(
@@ -151,7 +157,7 @@ class Downloader:
         self,
         data: Union[list[dict], list[tuple]],
         type_: str,
-        tiktok=False,
+        tiktok: bool = False,
         **kwargs,
     ) -> None:
         if not self.download or not data:
@@ -181,7 +187,7 @@ class Downloader:
         mix_title: str = "",
         collect_id: str = "",
         collect_name: str = "",
-    ):
+    ) -> None:
         root = self.storage_folder(
             mode,
             *self.data_classification(
@@ -201,7 +207,12 @@ class Downloader:
             tiktok=tiktok,
         )
 
-    async def run_general(self, data: list[dict], tiktok: bool, **kwargs):
+    async def run_general(
+        self,
+        data: list[dict],
+        tiktok: bool,
+        **kwargs,
+    ) -> None:
         root = self.storage_folder(mode="detail")
         await self.batch_processing(
             data,
@@ -213,7 +224,7 @@ class Downloader:
         self,
         data: list[dict],
         **kwargs,
-    ):
+    ) -> None:
         root = self.root.joinpath("Music")
         tasks = []
         for i in data:
@@ -241,9 +252,9 @@ class Downloader:
     async def run_live(
         self,
         data: list[tuple],
-        tiktok=False,
+        tiktok: bool = False,
         **kwargs,
-    ):
+    ) -> None:
         if not data or not self.download:
             return
         download_command = []
@@ -261,7 +272,7 @@ class Downloader:
         data: list[tuple],
         commands: list,
         suffix: str = "mp4",
-    ):
+    ) -> None:
         root = self.root.joinpath("Live")
         root.mkdir(exist_ok=True)
         for i, f, m in data:
@@ -281,7 +292,7 @@ class Downloader:
         self,
         commands: list,
         tiktok: bool,
-    ):
+    ) -> None:
         self.ffmpeg.download(
             commands,
             self.proxy_tiktok if tiktok else self.proxy,
@@ -373,7 +384,7 @@ class Downloader:
         self,
         root: Path,
         name: str,
-        folder_mode=False,
+        folder_mode: bool = False,
     ) -> tuple[Path, Path]:
         """生成文件的临时路径和目标路径"""
         root = self.create_detail_folder(root, name, folder_mode)
@@ -445,7 +456,7 @@ class Downloader:
 
     async def download_video(
         self,
-        tasks: list,
+        tasks: list[tuple],
         name: str,
         id_: str,
         item: SimpleNamespace,
@@ -575,7 +586,7 @@ class Downloader:
         self,
         url: str,
         path: Path,
-        switch=False,
+        switch: bool = False,
     ) -> bool:
         """未传入 switch 参数则判断音乐下载开关设置"""
         return all((switch or self.music, url, not self.is_exists(path)))
@@ -689,7 +700,7 @@ class Downloader:
         actual: Path,
         show: str,
         id_: str,
-        response,
+        response: Response,
         content: int,
         position: int,
         count: SimpleNamespace,
@@ -883,10 +894,10 @@ class Downloader:
 
     def _record_response(
         self,
-        response,
+        response: Response,
         show: str,
         length: int,
-    ):
+    ) -> None:
         self.log.info(f"{show} Response URL: {response.url}", False)
         self.log.info(f"{show} Response Code: {response.status_code}", False)
         self.log.info(f"{show} Response Headers: {response.headers}", False)

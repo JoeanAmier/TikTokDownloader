@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from json import dumps
 from time import localtime, strftime
 from types import SimpleNamespace
@@ -33,9 +33,9 @@ from ..tools import DownloaderError
 from ..translation import _
 
 if TYPE_CHECKING:
-    from datetime import date
-
     from ..config import Parameter
+    from ..record import BaseLogger
+    from ..storage import BaseTextLogger
 
 __all__ = ["Extractor"]
 
@@ -74,10 +74,11 @@ class Extractor:
     }
 
     def __init__(self, params: "Parameter"):
-        self.log = params.logger
-        self.date_format = params.date_format
+        self.log: "BaseLogger" = params.logger
+        self.date_format: str = params.date_format
         self.cleaner = params.CLEANER
-        self.type = {
+        self.original_quality: bool = params.original_quality
+        self.type: dict = {
             "batch": self.__batch,
             "detail": self.__detail,
             "comment": self.__comment,
@@ -152,9 +153,9 @@ class Extractor:
     async def run(
         self,
         data: list[dict],
-        recorder,
-        type_="detail",
-        tiktok=False,
+        recorder: "BaseTextLogger",
+        type_: str = "detail",
+        tiktok: bool = False,
         **kwargs,
     ) -> list[dict]:
         if type_ not in self.type.keys():
@@ -164,13 +165,13 @@ class Extractor:
     async def __batch(
         self,
         data: list[dict],
-        recorder,
+        recorder: "BaseTextLogger",
         tiktok: bool,
         name: str,
         mark: str,
-        earliest,
-        latest,
-        same=True,
+        earliest: date,
+        latest: date,
+        same: bool = True,
     ) -> list[dict]:
         """批量下载作品"""
         container = SimpleNamespace(
@@ -204,7 +205,7 @@ class Extractor:
     @staticmethod
     def __condition_filter(
         container: SimpleNamespace,
-    ):
+    ) -> None:
         """自定义筛选作品"""
         result = [i for i in container.all_data if condition_filter(i)]
         container.all_data = result
@@ -212,7 +213,7 @@ class Extractor:
     def __summary_detail(
         self,
         data: list[dict],
-    ):
+    ) -> None:
         """汇总作品数量"""
         self.log.info(_("筛选处理后作品数量: {count}").format(count=len(data)))
 
@@ -252,7 +253,7 @@ class Extractor:
         self,
         item: dict,
         data: SimpleNamespace,
-    ):
+    ) -> None:
         if e := self.safe_extract(data, "anchor_info"):
             extra = dumps(e, ensure_ascii=False, indent=2, default=lambda x: vars(x))
         else:
@@ -263,7 +264,7 @@ class Extractor:
         self,
         item: dict,
         data: SimpleNamespace,
-    ):
+    ) -> None:
         # TODO: 尚未适配 TikTok 额外信息
         item["extra"] = ""
 
@@ -271,14 +272,14 @@ class Extractor:
         self,
         item: dict,
         data: SimpleNamespace,
-    ):
+    ) -> None:
         pass
 
     def __extract_game_data(
         self,
         item: dict,
         data: SimpleNamespace,
-    ):
+    ) -> None:
         pass
 
     def __extract_description(self, data: SimpleNamespace) -> str:
@@ -369,8 +370,8 @@ class Extractor:
         self,
         item: dict,
         data: SimpleNamespace,
-        tiktok=False,
-    ):
+        tiktok: bool = False,
+    ) -> None:
         # item["ratio"] = self.safe_extract(data, "video.ratio")
         item["share_url"] = self.__generate_link(
             item["type"],
@@ -382,7 +383,7 @@ class Extractor:
     def __generate_link(
         type_: str,
         id_: str,
-        unique_id: str = None,
+        unique_id: str | None = None,
     ) -> str:
         match bool(unique_id), type_:
             case True, "视频":
@@ -445,7 +446,7 @@ class Extractor:
         self,
         item: dict,
         data: SimpleNamespace,
-        images: list,
+        images: list[SimpleNamespace],
     ) -> None:
         self.__set_blank_data(
             item,
@@ -464,8 +465,8 @@ class Extractor:
         self,
         item: dict,
         data: SimpleNamespace,
-        type_=_("图集"),
-    ):
+        type_: str = _("图集"),
+    ) -> None:
         item["type"] = type_
         item["duration"] = "00:00:00"
         item["uri"] = ""
@@ -489,6 +490,8 @@ class Extractor:
             self.safe_extract(data, "video.duration", 0)
         )
         item["uri"] = self.safe_extract(data, "video.play_addr.uri")
+        if self.original_quality:
+            item["downloads"] = self.generate_original_quality_url(item["uri"])
         self.__extract_cover(item, data, True)
 
     def __classify_slides_item(
@@ -567,7 +570,7 @@ class Extractor:
         self,
         item: dict,
         data: SimpleNamespace,
-        type_=_("视频"),
+        type_: str = _("视频"),
     ) -> None:
         item["type"] = type_
         # item["downloads"] = self.safe_extract(
@@ -667,7 +670,7 @@ class Extractor:
         self,
         item: dict,
         data: SimpleNamespace,
-    ):
+    ) -> None:
         """作品标签"""
         text = [
             self.safe_extract(i, "hashtag_name")
@@ -679,7 +682,7 @@ class Extractor:
         self,
         item: dict,
         data: SimpleNamespace,
-    ):
+    ) -> None:
         """作品标签"""
         text = [
             self.safe_extract(i, "hashtagName")
@@ -691,7 +694,7 @@ class Extractor:
         self,
         item: dict,
         data: SimpleNamespace,
-        has=False,
+        has: bool = False,
     ) -> None:
         if has:
             # 动态封面图链接
@@ -709,7 +712,7 @@ class Extractor:
         self,
         item: dict,
         data: SimpleNamespace,
-        has=False,
+        has: bool = False,
     ) -> None:
         if has:
             # 动态封面图链接
@@ -723,7 +726,7 @@ class Extractor:
         self,
         item: dict,
         data: SimpleNamespace,
-        tiktok=False,
+        tiktok: bool = False,
     ) -> None:
         if music_data := self.safe_extract(data, "music"):
             if tiktok:
@@ -790,7 +793,7 @@ class Extractor:
         self,
         container: SimpleNamespace,
         data: SimpleNamespace,
-        key="author",
+        key: str = "author",
     ) -> None:
         data = self.safe_extract(data, key)
         container.cache["uid"] = self.safe_extract(data, "uid")
@@ -808,7 +811,7 @@ class Extractor:
         self,
         container: SimpleNamespace,
         data: SimpleNamespace,
-        key="author",
+        key: str = "author",
     ) -> None:
         data = self.safe_extract(data, key)
         container.cache["uid"] = self.safe_extract(data, "id")
@@ -935,7 +938,7 @@ class Extractor:
         data: list[dict],
         id_: str,
         key: str,
-    ):
+    ) -> SimpleNamespace:
         """从多个数据返回对象"""
         for item in data:
             item = self.generate_data_object(item)
@@ -949,8 +952,8 @@ class Extractor:
         id_: str,
         name: str,
         mark: str,
-        title: str = None,  # TikTok 合辑需要直接传入标题
-    ):
+        title: str | None = None,  # TikTok 合辑需要直接传入标题
+    ) -> tuple[str, str, str]:
         id_ = self.safe_extract(item, id_)
         name = self.cleaner.filter_name(
             title
@@ -992,7 +995,7 @@ class Extractor:
     async def __detail(
         self,
         data: list[dict],
-        recorder,
+        recorder: "BaseTextLogger",
         tiktok: bool,
     ) -> list[dict]:
         container = SimpleNamespace(
@@ -1019,9 +1022,9 @@ class Extractor:
     async def __comment(
         self,
         data: list[dict],
-        recorder,
+        recorder: "BaseTextLogger",
         tiktok: bool,
-        source=False,
+        source: bool = False,
     ) -> list[dict]:
         if not any(data):
             return []
@@ -1097,14 +1100,14 @@ class Extractor:
         return container.reply_ids
 
     @staticmethod
-    def __filter_reply_ids(container: SimpleNamespace):
+    def __filter_reply_ids(container: SimpleNamespace) -> None:
         if container.cache["reply_comment_total"] > 0:
             container.reply_ids.append(container.cache["cid"])
 
     async def __live(
         self,
         data: list[dict],
-        recorder,
+        recorder: "BaseTextLogger",
         tiktok: bool,
         *args,
     ) -> list[dict]:
@@ -1125,7 +1128,7 @@ class Extractor:
         self,
         container: SimpleNamespace,
         data: SimpleNamespace,
-    ):
+    ) -> None:
         if data := self.safe_extract(
             data, f"data.data[{LIVE_DATA_INDEX}]"
         ) or self.safe_extract(data, "data.room"):
@@ -1157,7 +1160,7 @@ class Extractor:
         self,
         container: SimpleNamespace,
         data: SimpleNamespace,
-    ):
+    ) -> None:
         data = self.safe_extract(data, "data")
         live_data = {
             "create_time": datetime.fromtimestamp(t)
@@ -1178,7 +1181,7 @@ class Extractor:
     async def __user(
         self,
         data: list[dict],
-        recorder,
+        recorder: "BaseTextLogger",
         tiktok: bool,
     ) -> list[dict]:
         container = SimpleNamespace(
@@ -1202,7 +1205,7 @@ class Extractor:
         self,
         container: SimpleNamespace,
         data: SimpleNamespace,
-    ):
+    ) -> None:
         container.cache = container.template.copy()
         container.cache["avatar"] = self.safe_extract(
             data, f"avatar_larger.url_list[{AVATAR_LARGER_INDEX}]"
@@ -1255,7 +1258,7 @@ class Extractor:
     async def __search(
         self,
         data: list[dict],
-        recorder,
+        recorder: "BaseTextLogger",
         tiktok: bool,
         tab: int,
     ) -> list[dict]:
@@ -1269,7 +1272,7 @@ class Extractor:
     async def __search_general(
         self,
         data: list[dict],
-        recorder,
+        recorder: "BaseTextLogger",
     ) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
@@ -1311,7 +1314,7 @@ class Extractor:
     async def __search_user(
         self,
         data: list[dict],
-        recorder,
+        recorder: "BaseTextLogger",
     ) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
@@ -1333,8 +1336,8 @@ class Extractor:
         self,
         container: SimpleNamespace,
         data: SimpleNamespace,
-        user=True,
-    ):
+        user: bool = True,
+    ) -> None:
         if user:
             container.cache = container.template.copy()
         container.cache["avatar"] = self.safe_extract(
@@ -1365,7 +1368,7 @@ class Extractor:
     async def __search_live(
         self,
         data: list[dict],
-        recorder,
+        recorder: "BaseTextLogger",
     ) -> list[dict]:
         container = SimpleNamespace(
             all_data=[],
@@ -1382,7 +1385,7 @@ class Extractor:
         self,
         container: SimpleNamespace,
         data: SimpleNamespace,
-    ):
+    ) -> None:
         container.cache = container.template.copy()
         self.__deal_search_user_live(
             container, self.safe_extract(data, "author"), False
@@ -1416,17 +1419,24 @@ class Extractor:
         }
         container.append(cache)
 
-    async def __record_data(self, record, data: list[dict]):
+    async def __record_data(
+        self,
+        record: "BaseTextLogger",
+        data: list[dict],
+    ) -> None:
         # 记录数据
         for i in data:
             await record.save(self.__extract_values(record, i))
 
     @staticmethod
-    def __extract_values(record, data: dict) -> list:
+    def __extract_values(
+        record: "BaseTextLogger",
+        data: dict,
+    ) -> list:
         return [data[key] for key in record.field_keys]
 
     @staticmethod
-    def __date_filter(container: SimpleNamespace):
+    def __date_filter(container: SimpleNamespace) -> None:
         # print("前", len(container.all_data))  # 调试代码
         result = []
         for item in container.all_data:
@@ -1481,7 +1491,7 @@ class Extractor:
         data = cls.generate_data_object(data)
         return cls.safe_extract(data, "mix_info.mix_id")
 
-    def __extract_item_records(self, data: list[dict]):
+    def __extract_item_records(self, data: list[dict]) -> None:
         # 记录提取成功的条目
         for i in data:
             self.log.info(f"{i['type']} {i['id']} 数据提取成功", False)
@@ -1541,7 +1551,7 @@ class Extractor:
         self,
         container: SimpleNamespace,
         data: SimpleNamespace,
-    ):
+    ) -> None:
         container.cache = container.template.copy()
         container.cache["id"] = self.safe_extract(data, "id_str")
         container.cache["title"] = self.safe_extract(data, "title")
@@ -1557,3 +1567,7 @@ class Extractor:
             self.safe_extract(data, "duration", 0)
         )
         container.all_data.append(container.cache)
+
+    @staticmethod
+    def generate_original_quality_url(uri: str) -> str:
+        return f"https://www.douyin.com/aweme/v1/play/?video_id={uri}&ratio=default"

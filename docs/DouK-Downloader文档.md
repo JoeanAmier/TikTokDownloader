@@ -17,7 +17,7 @@
 <br>
 <p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播拉流地址；下载抖音直播视频；获取 TikTok 直播拉流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
 <p>⚠️ 本项目的加密参数算法已过期失效；为确保项目合法合规，参数算法不再维护，部分功能可能无法正常工作。如需使用，请自行准备加密参数生成代码，配置方法请查阅 <a href="#encipher">加密参数生成代码配置</a>！</p>
-<p>⭐ <b>项目版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/7/4</code></b></p>
+<p>⭐ <b>项目版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/8/15</code></b></p>
 <p>⭐ <b>项目文档正在完善，如果发现任何错误或描述模糊之处，请告知作者以便改进！本项目历史名称：<code>TikTokDownloader</code></b></p>
 <p>⭐ Due to the author’s limited time and energy, the complete English documentation for this project is not yet available. If you wish to read the full documentation, we recommend using AI translation tools to assist your understanding. If you would like to contribute to the translation, your help is warmly welcomed.</p>
 <hr>
@@ -506,6 +506,12 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <td align="center">无</td>
 </tr>
 <tr>
+<td align="center">original_quality</td>
+<td align="center">bool</td>
+<td align="center">是否下载最高质量视频文件</td>
+<td align="center">false</td>
+</tr>
+<tr>
 <td align="center">douyin_platform</td>
 <td align="center">bool</td>
 <td align="center"><a href="#supplement"><sup>5</sup></a>是否启用抖音平台功能</td>
@@ -613,6 +619,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
   "run_command": "6 2 1",
   "ffmpeg": "C:\\DouK-Downloader\\ffmpeg.exe",
   "live_qualities": "1",
+  "original_quality": true,
   "douyin_platform": true,
   "tiktok_platform": true,
   "browser_info": {
@@ -1206,23 +1213,26 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <p>默认禁用局域网访问，如需开启，请修改 <code>src/custom/static.py</code> 文件的 <code>SERVER_HOST</code> 变量。</p>
 <p><strong>启动该模式后，访问 <code>http://127.0.0.1:5555/docs</code> 或者 <code>http://127.0.0.1:5555/redoc</code> 可以查阅自动生成的文档！</strong></p>
 <h3>API 调用示例代码</h3>
-<pre>
+
+```python
 from httpx import post
 from rich import print
 
 
 def demo():
-headers = {"token": ""}
-data = {
-"detail_id": "0123456789",
-"pages": 2,
-}
-api = "http://127.0.0.1:5555/douyin/comment"
-response = post(api, json=data, headers=headers)
-print(response.json())
+    headers = {"token": ""}
+    data = {
+        "detail_id": "0123456789",
+        "pages": 2,
+    }
+    api = "http://127.0.0.1:5555/douyin/comment"
+    response = post(api, json=data, headers=headers)
+    print(response.json())
+
 
 demo()
-</pre>
+```
+
 <h2>Web UI 交互模式</h2>
 <p><b>项目代码已重构，该模式代码尚未更新，未来开发完成重新开放！</b></p>
 <h2>启用/禁用作品下载记录</h2>

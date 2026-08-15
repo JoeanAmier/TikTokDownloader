@@ -96,6 +96,7 @@ class Settings(BaseModel):
     run_command: str | None = None
     ffmpeg: str | None = None
     live_qualities: str | None = None
+    original_quality: bool | None = None
     douyin_platform: bool | None = None
     tiktok_platform: bool | None = None
     browser_info: BrowserInfo | None = None
