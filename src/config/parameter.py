@@ -23,6 +23,7 @@ from ..encrypt import (
     ABogus,
     MsToken,
     MsTokenTikTok,
+    TikTokWebParams,
     TtWid,
     TtWidTikTok,
     XBogus,
@@ -122,6 +123,7 @@ class Parameter:
         self.logger = logger(VOLUME, console)
         self.logger.run()
         self.ab, self.xb, self.xg = self.check_objects_from_external_py(console)
+        self.web_params = TikTokWebParams()
         self.console = console
         self.recorder = recorder
         self.preview = BLANK_PREVIEW

@@ -8,7 +8,7 @@ from src.custom import (
     DOWNLOAD_HEADERS_TIKTOK,
     VOLUME,
 )
-from src.encrypt import ABogus, XBogus, XGnarly
+from src.encrypt import ABogus, TikTokWebParams, XBogus, XGnarly
 from src.testers.logger import Logger
 from src.tools import Cleaner, create_client
 
@@ -36,6 +36,7 @@ class Params:
         self.ab = ABogus()
         self.xb = XBogus()
         self.xg = XGnarly()
+        self.web_params = TikTokWebParams()
         self.console = Console()
         self.max_retry = 0
         self.timeout = 5

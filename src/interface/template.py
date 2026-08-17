@@ -545,6 +545,7 @@ class APITikTok(API):
         super().__init__(params, cookie, proxy, *args, **kwargs)
         self.xb = params.xb
         self.xg = params.xg
+        self.web_params = params.web_params
         self.headers = params.headers_tiktok.copy()
         self.cookie = cookie
         self.client: AsyncClient = params.client_tiktok
@@ -583,18 +584,24 @@ class APITikTok(API):
                 safe="=",
                 quote_via=quote,
             )
-            xb = self.xb.get_x_bogus(
+            # xb = self.xb.get_x_bogus(
+            #     params,
+            #     data,
+            #     method,
+            #     user_agent=self.headers["User-Agent"],
+            # )
+            # xg = self.xg.generate(
+            #     params,
+            #     data,
+            #     method,
+            #     user_agent=self.headers["User-Agent"],
+            # )
+            # params += f"&X-Bogus={xb}&X-Gnarly={xg}"
+            web_params = self.web_params.sign(
                 params,
-                data,
-                method,
                 user_agent=self.headers["User-Agent"],
+                ms_token=self.params["msToken"],
             )
-            xg = self.xg.generate(
-                params,
-                data,
-                method,
-                user_agent=self.headers["User-Agent"],
-            )
-            params += f"&X-Bogus={xb}&X-Gnarly={xg}"
+            params += f"&X-Dynosaur={web_params['X-Dynosaur']}&X-Bogus={web_params['X-Bogus']}&X-Gnarly={web_params['X-Gnarly']}"
             return params
         return ""
