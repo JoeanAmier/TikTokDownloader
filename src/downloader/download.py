@@ -68,7 +68,6 @@ class Downloader:
         self.headers: dict = params.headers_download
         self.headers_tiktok: dict = params.headers_download_tiktok
         self.log: "BaseLogger" = params.logger
-        self.xb = params.xb
         self.console: "ColorfulConsole" = params.console
         self.root: Path = params.root
         self.folder_name: str = params.folder_name

@@ -27,12 +27,14 @@ JS 算法来源：
 """
 
 from typing import Any
+from urllib.parse import quote, urlencode
 
 from never_jscore import Context
 
 from ..custom import ROOT, USERAGENT
+from .params import Params
 
-__all__ = ["TikTokWebParams"]
+__all__ = ["TikTokParams"]
 
 _JS_FILE = ROOT / "static" / "js" / "tiktok-web-params.js"
 
@@ -50,7 +52,7 @@ def _load_js() -> str:
     return _JS_FILE.read_text(encoding="utf-8")
 
 
-class TikTokWebParams:
+class TikTokParams(Params):
     """TikTok Web 请求签名参数生成器。
 
     封装的 JS 算法来源于第三方开源项目
@@ -62,61 +64,80 @@ class TikTokWebParams:
     """
 
     def __init__(self) -> None:
+        super().__init__()
         self._ctx = Context()
         self._ctx.compile(_load_js())
 
     def sign(
         self,
-        query: str,
+        query: dict | str = "",
+        data: dict | str | None = None,
+        method: str = "",
         user_agent: str = USERAGENT,
         ms_token: str = "",
     ) -> dict[str, str]:
         """
-        调用 JS 中的 signUrl()，返回含 X-Dynosaur / X-Gnarly / X-Bogus 的字典。
+        计算 TikTok Web 接口的三个签名参数。
 
         Parameters
         ----------
-        query : str
-            URL 查询字符串（如 "aid=1988&count=2"）。
+        query : dict | str
+            原始查询字符串或字典。
+        data : dict | str | None
+            未使用，保留参数。
+        method : str
+            未使用，保留参数。
         user_agent : str
-            User-Agent。
+            请求使用的 User-Agent。
         ms_token : str
-            msToken，可为空字符串。
+            参与签名的 msToken。
 
         Returns
         -------
         dict
-            至少包含 ``X-Dynosaur`` / ``X-Gnarly`` / ``X-Bogus`` / ``msToken``。
+            键为 ``X-Dynosaur`` / ``X-Gnarly`` / ``X-Bogus``。
         """
+        if isinstance(query, dict):
+            query = urlencode(
+                query,
+                safe="=",
+                quote_via=quote,
+            )
         opts: dict[str, Any] = {
             "ua": user_agent,
             "msToken": ms_token,
             "env": _DEFAULT_ENV,
         }
         result = self._ctx.call("signUrl", [query, opts])
+        x_dynosaur = result["dynosaur"]
+        x_gnarly = result["gnarly"]
+        x_bogus = result["xbogus"]
         return {
-            "X-Dynosaur": result.get("dynosaur", ""),
-            "X-Gnarly": result.get("gnarly", ""),
-            "X-Bogus": result.get("xbogus", ""),
-            "msToken": ms_token,
+            "X-Dynosaur": x_dynosaur,
+            "X-Gnarly": x_gnarly,
+            "X-Bogus": x_bogus,
         }
 
     def sign_url(
         self,
-        base_url: str,
-        query: str,
+        base_url: str = "",
+        query: dict | str = "",
+        data: dict | str | None = None,
+        method: str = "",
         user_agent: str = USERAGENT,
         ms_token: str = "",
     ) -> str:
         """
-        便捷方法：传入基础 URL 和查询参数，返回拼好三个签名参数的完整 URL。
-
         Parameters
         ----------
         base_url : str
-            基础 URL，例如 ``"https://www.tiktok.com/api/feed"``。
-        query : str
-            查询参数。
+            接口基础地址；留空则仅返回 query 字符串。
+        query : dict | str
+            原始查询字符串或字典。
+        data : dict | str | None
+            未使用，保留参数。
+        method : str
+            未使用，保留参数。
         user_agent : str
             User-Agent。
         ms_token : str
@@ -125,14 +146,24 @@ class TikTokWebParams:
         Returns
         -------
         str
-            形如 ``base_url?query&X-Dynosaur=...&msToken=...&X-Bogus=...&X-Gnarly=...``。
+            完整 URL 或带签名的 query 字符串。
         """
-        params = self.sign(query, user_agent, ms_token)
-        sep = "&" if ("?" in base_url or query) else "?"
-        return (
-            f"{base_url}{sep}{query}"
-            f"&X-Dynosaur={params['X-Dynosaur']}"
-            f"&msToken={ms_token}"
-            f"&X-Bogus={params['X-Bogus']}"
-            f"&X-Gnarly={params['X-Gnarly']}"
+        if isinstance(query, dict):
+            query = urlencode(
+                query,
+                safe="=",
+                quote_via=quote,
+            )
+        params = self.sign(query, data, method, user_agent, ms_token)
+        signed_query = "&".join(
+            [
+                query,
+                f"X-Dynosaur={params['X-Dynosaur']}",
+                f"X-Bogus={params['X-Bogus']}",
+                f"X-Gnarly={params['X-Gnarly']}",
+            ]
         )
+        if not base_url:
+            return signed_query
+        sep = "&" if "?" in base_url else "?"
+        return f"{base_url}{sep}{signed_query}"

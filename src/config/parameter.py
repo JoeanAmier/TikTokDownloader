@@ -20,14 +20,12 @@ from ..custom import (
     VOLUME,
 )
 from ..encrypt import (
-    ABogus,
+    DouYinParams,
     MsToken,
     MsTokenTikTok,
-    TikTokWebParams,
+    TikTokParams,
     TtWid,
     TtWidTikTok,
-    XBogus,
-    XGnarly,
 )
 from ..extract import Extractor
 from ..interface import API, APITikTok
@@ -122,8 +120,9 @@ class Parameter:
         self.cache = VOLUME.joinpath("Cache")  # 缓存路径
         self.logger = logger(VOLUME, console)
         self.logger.run()
-        self.ab, self.xb, self.xg = self.check_objects_from_external_py(console)
-        self.web_params = TikTokWebParams()
+        self.douyin_params, self.tiktok_params = self.check_objects_from_external_py(
+            console
+        )
         self.console = console
         self.recorder = recorder
         self.preview = BLANK_PREVIEW
@@ -1056,12 +1055,6 @@ class Parameter:
                 i,
             ):
                 API.params[i] = v
-        self.ab = ABogus(
-            ua,
-            info.get(
-                "browser_platform",
-            ),
-        )
 
     def __set_browser_info_tiktok(
         self,
@@ -1203,13 +1196,11 @@ class Parameter:
         objects = load_objects_from_external_py(
             "encipher.py",
             [
-                "ABogus",
-                "XBogus",
-                "XGnarly",
+                "DouYinParams",
+                "TikTokParams",
             ],
             console,
         )
-        ab = objects.get("ABogus", ABogus)
-        xb = objects.get("XBogus", XBogus)
-        xg = objects.get("XGnarly", XGnarly)
-        return ab(), xb(), xg()
+        douyin_params = objects.get("DouYinParams", DouYinParams)
+        tiktok_params = objects.get("TikTokParams", TikTokParams)
+        return douyin_params(), tiktok_params()

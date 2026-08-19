@@ -16,6 +16,7 @@ from ..translation import _
 
 if TYPE_CHECKING:
     from ..config import Parameter
+    from ..encrypt import DouYinParams, TikTokParams
     from ..testers import Params
 
 __all__ = [
@@ -73,7 +74,7 @@ class API:
     ):
         self.headers = params.headers.copy()
         self.log = params.logger
-        self.ab = params.ab
+        self.douyin_params: "DouYinParams" = params.douyin_params
         self.console = params.console
         self.api = ""
         self.proxy = proxy
@@ -436,7 +437,9 @@ class API:
                 safe="=",
                 quote_via=quote,
             )
-            params += f"&a_bogus={self.ab.get_value(params, data, method, user_agent=self.headers['User-Agent'])}"
+            params = self.douyin_params.sign_url(
+                "", params, data, method, user_agent=self.headers["User-Agent"]
+            )
             return params
         return ""
 
@@ -543,9 +546,7 @@ class APITikTok(API):
         **kwargs,
     ):
         super().__init__(params, cookie, proxy, *args, **kwargs)
-        self.xb = params.xb
-        self.xg = params.xg
-        self.web_params = params.web_params
+        self.tiktok_params: "TikTokParams" = params.tiktok_params
         self.headers = params.headers_tiktok.copy()
         self.cookie = cookie
         self.client: AsyncClient = params.client_tiktok
@@ -584,24 +585,13 @@ class APITikTok(API):
                 safe="=",
                 quote_via=quote,
             )
-            # xb = self.xb.get_x_bogus(
-            #     params,
-            #     data,
-            #     method,
-            #     user_agent=self.headers["User-Agent"],
-            # )
-            # xg = self.xg.generate(
-            #     params,
-            #     data,
-            #     method,
-            #     user_agent=self.headers["User-Agent"],
-            # )
-            # params += f"&X-Bogus={xb}&X-Gnarly={xg}"
-            web_params = self.web_params.sign(
+            params = self.tiktok_params.sign_url(
+                "",
                 params,
+                data,
+                method,
                 user_agent=self.headers["User-Agent"],
                 ms_token=self.params["msToken"],
             )
-            params += f"&X-Dynosaur={web_params['X-Dynosaur']}&X-Bogus={web_params['X-Bogus']}&X-Gnarly={web_params['X-Gnarly']}"
             return params
         return ""
