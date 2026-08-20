@@ -11,24 +11,29 @@ jobs:
     env:
       PYTHONUTF8: "1"
       UV_DEFAULT_INDEX: https://pypi.org/simple
+      SIGNPATH_AVAILABLE: ${{ secrets.SIGNPATH_API_TOKEN != '' }}
 
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: windows-latest
+            sign: true
             executable: dist/DouK-Downloader/DouK-Downloader.exe
             artifact: DouK-Downloader_Windows_X64
 
           - os: windows-11-arm
+            sign: true
             executable: dist/DouK-Downloader/DouK-Downloader.exe
             artifact: DouK-Downloader_Windows_ARM64
 
           - os: macos-15-intel
+            sign: false
             executable: dist/DouK-Downloader/DouK-Downloader
             artifact: DouK-Downloader_macOS_X64
 
           - os: macos-latest
+            sign: false
             executable: dist/DouK-Downloader/DouK-Downloader
             artifact: DouK-Downloader_macOS_ARM64
 
@@ -55,7 +60,46 @@ jobs:
       - name: 构建可执行文件
         run: uv run python setup.py build_exe --build-exe dist/DouK-Downloader
 
-      - name: 上传构建产物
+      - name: 上传待签名构建产物
+        if: matrix.sign && env.SIGNPATH_AVAILABLE == 'true'
+        id: upload-artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.artifact }}_${{ env.DATE }}
+          path: dist/DouK-Downloader
+          if-no-files-found: error
+
+      - name: SignPath 签名
+        if: matrix.sign && env.SIGNPATH_AVAILABLE == 'true'
+        uses: signpath/github-action-submit-signing-request@v2
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: 78e7a38e-787f-4da9-ac91-c895719feb41
+          project-slug: TikTokDownloader
+          signing-policy-slug: test-signing
+          github-artifact-id: ${{ steps.upload-artifact.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: signed
+
+      - name: 上传签名版本
+        if: matrix.sign && env.SIGNPATH_AVAILABLE == 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.artifact }}_${{ env.DATE }}
+          path: signed
+          overwrite: true
+          if-no-files-found: error
+
+      - name: 上传未签名 Windows 版本
+        if: matrix.sign && env.SIGNPATH_AVAILABLE != 'true'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.artifact }}_${{ env.DATE }}
+          path: dist/DouK-Downloader
+          if-no-files-found: error
+
+      - name: 上传 macOS 构建产物
+        if: ${{ !matrix.sign }}
         uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.artifact }}_${{ env.DATE }}
