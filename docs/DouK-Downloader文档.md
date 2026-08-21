@@ -17,7 +17,7 @@
 <br>
 <p>🔥 <b>TikTok 发布/喜欢/合辑/直播/视频/图集/音乐；抖音发布/喜欢/收藏/收藏夹/视频/图集/实况/直播/音乐/合集/评论/账号/搜索/热榜数据采集工具：</b>完全开源，基于 HTTPX 模块实现的免费数据采集和文件下载工具；批量下载抖音账号发布、喜欢、收藏、收藏夹作品；批量下载 TikTok 账号发布、喜欢作品；下载抖音链接或 TikTok 链接作品；获取抖音直播拉流地址；下载抖音直播视频；获取 TikTok 直播拉流地址；下载 TikTok 直播视频；采集抖音作品评论数据；批量下载抖音合集作品；批量下载 TikTok 合辑作品；采集抖音账号详细数据；采集抖音用户 / 作品 / 直播搜索结果；采集抖音热榜数据。</p>
 <p>⚠️ 本项目的加密参数算法已过期失效；为确保项目合法合规，参数算法不再维护，部分功能可能无法正常工作。如需使用，请自行准备加密参数生成代码，配置方法请查阅 <a href="#encipher">加密参数生成代码配置</a>！</p>
-<p>⭐ <b>项目版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/8/19</code></b></p>
+<p>⭐ <b>项目版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/8/21</code></b></p>
 <p>⭐ <b>项目文档正在完善，如果发现任何错误或描述模糊之处，请告知作者以便改进！本项目历史名称：<code>TikTokDownloader</code></b></p>
 <p>⭐ Due to the author’s limited time and energy, the complete English documentation for this project is not yet available. If you wish to read the full documentation, we recommend using AI translation tools to assist your understanding. If you would like to contribute to the translation, your help is warmly welcomed.</p>
 <hr>
@@ -95,6 +95,8 @@
 <p>加密参数代码模板：</p>
 
 ```python
+from abc import ABC, abstractmethod
+
 # import httpx  # 可用于发送 HTTP 请求, Can be used to send HTTP requests
 # import never_jscore  # 可用于执行 JavaScript 代码, Can be used to execute JavaScript code
 
@@ -104,9 +106,10 @@ __all__ = [
 ]
 
 
-class Params:
+class Params(ABC):
     def __init__(self): ...
 
+    @abstractmethod
     def sign(
             self,
             query: dict | str = "",
@@ -114,8 +117,10 @@ class Params:
             method: str = "",
             user_agent: str = "",
             ms_token: str = "",
-    ) -> dict[str, str]: ...
+    ) -> dict[str, str]:
+        raise NotImplementedError
 
+    @abstractmethod
     def sign_url(
             self,
             base_url: str = "",
@@ -124,7 +129,8 @@ class Params:
             method: str = "",
             user_agent: str = "",
             ms_token: str = "",
-    ) -> str: ...
+    ) -> str:
+        raise NotImplementedError
 
 
 class DouYinParams(Params):
