@@ -21,10 +21,15 @@ class DouYinParams(Params):
         user_agent: str = USERAGENT,
         ms_token: str = "",
     ) -> dict[str, str]:
-        if isinstance(query, dict):
-            query = urlencode(query, safe="=", quote_via=quote)
-        a_bogus = self._ab.get_value(query, data, method, user_agent=user_agent)
-        return {"a_bogus": a_bogus}
+        # if isinstance(query, dict):
+        #     query = urlencode(query, safe="=", quote_via=quote)
+        # a_bogus = self._ab.get_value(query, data, method, user_agent=user_agent)
+        # return {"a_bogus": a_bogus}
+        return {
+            "a_bogus": "dv0Rge7imxQbadKb8cBqy5VU8tnlrBSyhsTobG1PyxKSyq0TDmPc"
+            "/neMbxoQ4Ahv1upzwHQH6DsATjxbN0UTp9OkzmhDus7W7t2VIumLgqq6Tl4/DHDFe8vFuwsCWcsw"
+            "-/deEeyRWs0i6d5l9qCiABB7w/4n-mRmMr-UVZutx9KsUAujhn/Ca-S2Y7iqPj=="
+        }
 
     def sign_url(
         self,
