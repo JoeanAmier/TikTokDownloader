@@ -1,4 +1,4 @@
-from asyncio import Semaphore, gather
+from asyncio import Semaphore, gather, to_thread
 from datetime import datetime
 from pathlib import Path
 from shutil import move
@@ -298,6 +298,7 @@ class Downloader:
             skipped_live=set(),
         )
         tasks = []
+        merge_tasks = []  # 动图视频背景音乐合并任务
         for item in data:
             item["desc"] = beautify_string(
                 item["desc"],
@@ -336,6 +337,7 @@ class Downloader:
                     **params,
                     skipped=count.skipped_live,
                 )
+                merge_tasks.append(params)
             else:
                 raise DownloaderError
             self.download_music(
@@ -346,6 +348,7 @@ class Downloader:
         await self.downloader_chart(
             tasks, count, self.general_progress_object(), **kwargs
         )
+        await self.merge_music(merge_tasks)
         self.statistics_count(count)
 
     async def downloader_chart(
@@ -579,6 +582,62 @@ class Downloader:
     ) -> bool:
         """未传入 switch 参数则判断音乐下载开关设置"""
         return all((switch or self.music, url, not self.is_exists(path)))
+
+    async def merge_music(
+        self,
+        data: list[dict],
+    ) -> None:
+        """将背景音乐合并到动图视频文件中，音乐时长超过视频时自动截断音乐"""
+        if not self.ffmpeg.state:
+            self.log.warning(
+                _("程序未检测到有效的 ffmpeg，不支持为动图视频合并背景音乐！")
+            )
+            return
+        for params in data:
+            item = params["item"]
+            if not item["music_url"]:
+                continue
+            actual_root = params["actual_root"]
+            name = params["name"]
+            if not (music := self.__find_music_file(actual_root, name)):
+                continue
+            for index, __ in enumerate(
+                item["downloads"],
+                start=1,
+            ):
+                video = actual_root.with_name(f"{name}_{index}.mp4")
+                if not self.is_exists(video):
+                    continue
+                temp = video.with_name(f"{video.name}.tmp")
+                self.delete(temp)
+                show = f"【{item['type']}】{video.name}"
+                success, error = await to_thread(
+                    self.ffmpeg.merge_audio,
+                    str(video.resolve()),
+                    str(music.resolve()),
+                    str(temp.resolve()),
+                )
+                if success:
+                    temp.replace(video)
+                    self.log.info(_("{show} 合并背景音乐成功").format(show=show))
+                    self.log.info(f"文件路径 {video.resolve()}", False)
+                else:
+                    self.delete(temp)
+                    self.log.warning(
+                        _("{show} 合并背景音乐失败: {error}").format(
+                            show=show,
+                            error=error,
+                        )
+                    )
+
+    @staticmethod
+    def __find_music_file(root: Path, name: str) -> Path | None:
+        """查找已下载的背景音乐文件"""
+        for suffix in ("mp3", "m4a"):
+            path = root.with_name(f"{name}.{suffix}")
+            if path.is_file():
+                return path
+        return None
 
     @Retry.retry
     async def request_file(

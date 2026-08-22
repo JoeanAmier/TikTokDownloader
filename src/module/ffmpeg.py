@@ -92,6 +92,58 @@ class FFMPEG:
             )
             self.run_command(command)
 
+    def merge_audio(
+        self,
+        video: str,
+        music: str,
+        output: str,
+    ) -> tuple[bool, str]:
+        """将背景音乐合并到视频文件中，音乐时长超过视频时自动截断音乐
+
+        :param video: 视频文件路径
+        :param music: 背景音乐文件路径
+        :param output: 输出文件路径
+        :return: (是否合并成功, 失败原因)
+        """
+        command = [
+            self.path,
+            "-y",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-i",
+            video,
+            "-i",
+            music,
+            "-map",
+            "0:v:0",
+            "-map",
+            "1:a:0",
+            "-c:v",
+            "copy",
+            "-c:a",
+            "aac",
+            "-af",
+            "apad",
+            "-shortest",
+            "-movflags",
+            "+faststart",
+            "-f",
+            "mp4",
+            output,
+        ]
+        try:
+            result = run(
+                command,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+        except OSError as e:
+            return False, str(e)
+        return result.returncode == 0, result.stderr.strip()
+
     def __generate_command(
         self,
         url,
