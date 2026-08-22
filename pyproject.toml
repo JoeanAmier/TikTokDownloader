@@ -10,18 +10,18 @@ license = "GPL-3.0"
 requires-python = ">=3.12"
 dependencies = [
     "aiofiles>=25.1.0",
-    "aiosqlite>=0.21.0",
+    "aiosqlite>=0.22.1",
     "emoji>=2.15.0",
     "fastapi>=0.141.1",
     "gmssl>=3.2.2",
     "httpx[socks]>=0.28.1",
-    "lxml>=6.1.1",
+    "lxml>=6.1.2",
     "never-jscore==3.1.0",
     "openpyxl>=3.1.5",
     "pydantic>=2.13.4",
     "pyperclip>=1.11.0",
     "rich>=15.0.0",
-    "uvicorn>=0.52.1",
+    "uvicorn>=0.52.4",
 ]
 
 [project.urls]
