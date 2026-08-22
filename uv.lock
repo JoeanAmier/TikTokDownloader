@@ -115,7 +115,7 @@ requires-dist = [
     { name = "gmssl", specifier = ">=3.2.2" },
     { name = "httpx", extras = ["socks"], specifier = ">=0.28.1" },
     { name = "lxml", specifier = ">=6.1.1" },
-    { name = "never-jscore", specifier = ">=3.2.0" },
+    { name = "never-jscore", specifier = "==3.1.0" },
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pydantic", specifier = ">=2.13.4" },
     { name = "pyperclip", specifier = ">=1.11.0" },
@@ -334,11 +334,14 @@ wheels = [
 
 [[package]]
 name = "never-jscore"
-version = "3.2.0"
+version = "3.1.0"
 source = { registry = "https://mirrors.ustc.edu.cn/pypi/simple" }
+sdist = { url = "https://mirrors.ustc.edu.cn/pypi/packages/b9/38/cb0470430e5f97ac0fb2ba1cf617d5eb3fab09a07e8bf73bac2b281fd7c7/never_jscore-3.1.0.tar.gz", hash = "sha256:afee6438406ceff1478ad4d477e6949945bb23422e0cd77342390efca4af0477", size = 245131, upload-time = "2026-01-30T16:40:33.226Z" }
 wheels = [
-    { url = "https://mirrors.ustc.edu.cn/pypi/packages/76/be/644f9613c3da1ed2357581e3ae88bc850f6ac9f23563dc61ade3098a432f/never_jscore-3.2.0-cp38-abi3-manylinux_2_34_x86_64.whl", hash = "sha256:2b6f776d98f0a4f8a47a0c7651de83a18b83e7ffbe30c3245f042b7cb9929e59", size = 55568970, upload-time = "2026-04-12T07:11:23.37Z" },
-    { url = "https://mirrors.ustc.edu.cn/pypi/packages/78/08/ee3d1dd5e4adb28986a91999871351288bea2f52bbe790a2f1c61cb34093/never_jscore-3.2.0-cp38-abi3-win_amd64.whl", hash = "sha256:6985a324411c7d0c9e103780060930bb39da4a3c00f4a4f6075f1f60d8cc35ed", size = 50333213, upload-time = "2026-04-12T08:13:06.898Z" },
+    { url = "https://mirrors.ustc.edu.cn/pypi/packages/a5/3c/fd55b4d19c74de833bd699e37b3a03d77bf5aa9eadda23ad12394515293d/never_jscore-3.1.0-cp38-abi3-macosx_10_12_x86_64.whl", hash = "sha256:9ace939ff4bb7385cb65a754d949999510779bfdd2a0e6cdcd2c11203480db2c", size = 24987449, upload-time = "2026-01-30T16:40:26.793Z" },
+    { url = "https://mirrors.ustc.edu.cn/pypi/packages/d9/2e/47519cd528a791321db94bd8c7da9e77693f01bb7cdfce3f91a309604036/never_jscore-3.1.0-cp38-abi3-macosx_11_0_arm64.whl", hash = "sha256:bbbb4d649814d1c6dfbfb86cc811da797b4fc3eb56650745386db32faa21f070", size = 23803236, upload-time = "2026-01-30T16:40:29.781Z" },
+    { url = "https://mirrors.ustc.edu.cn/pypi/packages/47/0f/7ff191c6cd8aa6a8d14d1aa5f3b977e97c46cd94b2ef6cd2aacd68e32d15/never_jscore-3.1.0-cp38-abi3-manylinux_2_34_x86_64.whl", hash = "sha256:cea0e0d2528562a92b1ed49debd1fdc1f1815779111ecd0310d4ac4cb9bba68e", size = 30710310, upload-time = "2026-01-30T17:11:33.851Z" },
+    { url = "https://mirrors.ustc.edu.cn/pypi/packages/97/66/8c7b94ca434c1deff2e204961d76433bc636ee3292f1f9c19614f5339062/never_jscore-3.1.0-cp38-abi3-win_amd64.whl", hash = "sha256:fb7e87df714707ebc32acef3509ed97456aa5f2f1bba622d70e3e30fbc272a40", size = 24680852, upload-time = "2026-01-30T17:10:41.955Z" },
 ]
 
 [[package]]
