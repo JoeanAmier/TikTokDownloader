@@ -141,7 +141,7 @@ class FFMPEG:
         # 参数均为程序内部生成的选项与本地文件路径,
         # 路径来源于下载器生成并经 Cleaner.filter_name 清洗的作品文件名
         try:
-            result = run(
+            result = run(  # nosemgrep: python.lang.security.audit.dangerous-subprocess-use-audit
                 command,
                 capture_output=True,
                 text=True,
@@ -194,50 +194,42 @@ class FFMPEG:
                 )
             )
             list_file = f.name
+        command = [
+            self.path,
+            "-y",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-f",
+            "concat",
+            "-safe",
+            "0",
+            "-i",
+            list_file,
+            "-i",
+            music,
+            "-map",
+            "0:v:0",
+            "-map",
+            "1:a:0",
+            "-c:v",
+            "copy",
+            "-c:a",
+            "aac",
+            "-af",
+            "apad",
+            "-shortest",
+            "-movflags",
+            "+faststart",
+            "-f",
+            "mp4",
+            output,
+        ]
         try:
-            command = [
-                self.path,
-                "-y",
-                "-hide_banner",
-                "-loglevel",
-                "error",
-                "-f",
-                "concat",
-                "-safe",
-                "0",
-                "-i",
-                list_file,
-                "-i",
-                music,
-                "-map",
-                "0:v:0",
-                "-map",
-                "1:a:0",
-                "-c:v",
-                "copy",
-                "-c:a",
-                "aac",
-                "-af",
-                "apad",
-                "-shortest",
-                "-movflags",
-                "+faststart",
-                "-f",
-                "mp4",
-                output,
-            ]
-            result = run(
-                command,
-                capture_output=True,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-            )
-        except OSError:
-            return None
+            success, _ = self.__run_command(command)
         finally:
             Path(list_file).unlink(missing_ok=True)
-        if result.returncode == 0:
+        if success:
             return True, ""
         return None
 
