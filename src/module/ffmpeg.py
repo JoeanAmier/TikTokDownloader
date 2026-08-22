@@ -239,11 +239,25 @@ class FFMPEG:
         music: str,
         output: str,
     ) -> tuple[bool, str]:
-        """使用 concat filter 重新编码拼接视频并合并背景音乐"""
+        """使用 concat filter 重新编码拼接视频并合并背景音乐
+
+        以第一个视频的分辨率为基准，将各视频缩放/填充至相同尺寸，
+        并统一像素格式、SAR 和帧率后再拼接，兼容分辨率或参数不一致的动图视频
+        """
         inputs = []
         for video in videos:
             inputs.extend(("-i", video))
         inputs.extend(("-i", music))
+        filters = ["[0:v]fps=30,format=yuv420p,setsar=1[v0]"]
+        for i in range(1, len(videos)):
+            filters.append(
+                f"[{i}:v][v0]scale2ref[v{i}_s][v0];"
+                f"[v{i}_s]fps=30,format=yuv420p,setsar=1[v{i}]"
+            )
+        filters.append(
+            "".join(f"[v{i}]" for i in range(len(videos)))
+            + f"concat=n={len(videos)}:v=1:a=0[v]"
+        )
         command = [
             self.path,
             "-y",
@@ -252,8 +266,7 @@ class FFMPEG:
             "error",
             *inputs,
             "-filter_complex",
-            "".join(f"[{i}:v]" for i in range(len(videos)))
-            + f"concat=n={len(videos)}:v=1:a=0[v]",
+            ";".join(filters),
             "-map",
             "[v]",
             "-map",
