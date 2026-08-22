@@ -2,6 +2,7 @@ from pathlib import Path
 from shutil import which
 from platform import system
 from subprocess import Popen, run
+from tempfile import NamedTemporaryFile
 from textwrap import dedent
 
 __all__ = ["FFMPEG"]
@@ -132,6 +133,9 @@ class FFMPEG:
             "mp4",
             output,
         ]
+        return self.__run_command(command)
+
+    def __run_command(self, command: list[str]) -> tuple[bool, str]:
         try:
             result = run(
                 command,
@@ -143,6 +147,132 @@ class FFMPEG:
         except OSError as e:
             return False, str(e)
         return result.returncode == 0, result.stderr.strip()
+
+    def merge_music_videos(
+        self,
+        videos: list[str],
+        music: str,
+        output: str,
+    ) -> tuple[bool, str]:
+        """将多个视频拼接为单个视频后合并背景音乐，音乐时长超过视频时自动截断音乐
+
+        优先使用 concat demuxer 无损拼接，视频参数不一致时回退为 concat filter 重新编码
+
+        :param videos: 视频文件路径列表
+        :param music: 背景音乐文件路径
+        :param output: 输出文件路径
+        :return: (是否合并成功, 失败原因)
+        """
+        if result := self.__merge_music_videos_concat(videos, music, output):
+            return result
+        return self.__merge_music_videos_filter(videos, music, output)
+
+    def __merge_music_videos_concat(
+        self,
+        videos: list[str],
+        music: str,
+        output: str,
+    ) -> tuple[bool, str] | None:
+        """使用 concat demuxer 无损拼接视频并合并背景音乐
+
+        :return: 成功返回 (True, "")；失败返回 None 以尝试其他方案
+        """
+        with NamedTemporaryFile(
+            "w",
+            encoding="utf-8",
+            suffix=".txt",
+            delete=False,
+        ) as f:
+            f.write("".join(f"file '{Path(v).as_posix()}'\n" for v in videos))
+            list_file = f.name
+        try:
+            command = [
+                self.path,
+                "-y",
+                "-hide_banner",
+                "-loglevel",
+                "error",
+                "-f",
+                "concat",
+                "-safe",
+                "0",
+                "-i",
+                list_file,
+                "-i",
+                music,
+                "-map",
+                "0:v:0",
+                "-map",
+                "1:a:0",
+                "-c:v",
+                "copy",
+                "-c:a",
+                "aac",
+                "-af",
+                "apad",
+                "-shortest",
+                "-movflags",
+                "+faststart",
+                "-f",
+                "mp4",
+                output,
+            ]
+            result = run(
+                command,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+        except OSError:
+            return None
+        finally:
+            Path(list_file).unlink(missing_ok=True)
+        if result.returncode == 0:
+            return True, ""
+        return None
+
+    def __merge_music_videos_filter(
+        self,
+        videos: list[str],
+        music: str,
+        output: str,
+    ) -> tuple[bool, str]:
+        """使用 concat filter 重新编码拼接视频并合并背景音乐"""
+        inputs = []
+        for video in videos:
+            inputs.extend(("-i", video))
+        inputs.extend(("-i", music))
+        command = [
+            self.path,
+            "-y",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            *inputs,
+            "-filter_complex",
+            "".join(f"[{i}:v]" for i in range(len(videos)))
+            + f"concat=n={len(videos)}:v=1:a=0[v]",
+            "-map",
+            "[v]",
+            "-map",
+            f"{len(videos)}:a:0",
+            "-c:v",
+            "libx264",
+            "-pix_fmt",
+            "yuv420p",
+            "-c:a",
+            "aac",
+            "-af",
+            "apad",
+            "-shortest",
+            "-movflags",
+            "+faststart",
+            "-f",
+            "mp4",
+            output,
+        ]
+        return self.__run_command(command)
 
     def __generate_command(
         self,

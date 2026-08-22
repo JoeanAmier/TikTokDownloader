@@ -587,7 +587,11 @@ class Downloader:
         self,
         data: list[dict],
     ) -> None:
-        """将背景音乐合并到动图视频文件中，音乐时长超过视频时自动截断音乐"""
+        """将背景音乐合并到动图视频文件中
+
+        单个动图直接合并背景音乐，多个动图先拼接为单个视频再合并背景音乐，
+        音乐时长超过视频时自动截断音乐
+        """
         if not self.ffmpeg.state:
             self.log.warning(
                 _("程序未检测到有效的 ffmpeg，不支持为动图视频合并背景音乐！")
@@ -601,34 +605,100 @@ class Downloader:
             name = params["name"]
             if not (music := self.__find_music_file(actual_root, name)):
                 continue
-            for index, __ in enumerate(
-                item["downloads"],
-                start=1,
-            ):
-                video = actual_root.with_name(f"{name}_{index}.mp4")
-                if not self.is_exists(video):
-                    continue
-                temp = video.with_name(f"{video.name}.tmp")
-                self.delete(temp)
-                show = f"【{item['type']}】{video.name}"
-                success, error = await to_thread(
-                    self.ffmpeg.merge_audio,
-                    str(video.resolve()),
-                    str(music.resolve()),
-                    str(temp.resolve()),
+            videos = self.__find_videos(actual_root, name, len(item["downloads"]))
+            if not videos:
+                continue
+            if len(videos) == 1:
+                await self.__merge_music_to_video(
+                    videos[0],
+                    music,
+                    item["type"],
                 )
-                if success:
-                    temp.replace(video)
-                    self.log.info(_("{show} 合并背景音乐成功").format(show=show))
-                    self.log.info(f"文件路径 {video.resolve()}", False)
-                else:
-                    self.delete(temp)
-                    self.log.warning(
-                        _("{show} 合并背景音乐失败: {error}").format(
-                            show=show,
-                            error=error,
-                        )
-                    )
+            else:
+                await self.__merge_music_to_videos(
+                    videos,
+                    music,
+                    actual_root,
+                    name,
+                    item["type"],
+                )
+
+    async def __merge_music_to_video(
+        self,
+        video: Path,
+        music: Path,
+        type_: str,
+    ) -> None:
+        """单个动图视频合并背景音乐"""
+        temp = video.with_name(f"{video.name}.tmp")
+        self.delete(temp)
+        show = f"【{type_}】{video.name}"
+        success, error = await to_thread(
+            self.ffmpeg.merge_audio,
+            str(video.resolve()),
+            str(music.resolve()),
+            str(temp.resolve()),
+        )
+        if success:
+            temp.replace(video)
+            self.log.info(_("{show} 合并背景音乐成功").format(show=show))
+            self.log.info(f"文件路径 {video.resolve()}", False)
+        else:
+            self.delete(temp)
+            self.log.warning(
+                _("{show} 合并背景音乐失败: {error}").format(
+                    show=show,
+                    error=error,
+                )
+            )
+
+    async def __merge_music_to_videos(
+        self,
+        videos: list[Path],
+        music: Path,
+        actual_root: Path,
+        name: str,
+        type_: str,
+    ) -> None:
+        """多个动图视频拼接为单个视频并合并背景音乐"""
+        output = actual_root.with_name(f"{name}.mp4")
+        temp = output.with_name(f"{output.name}.tmp")
+        self.delete(temp)
+        show = f"【{type_}】{output.name}"
+        success, error = await to_thread(
+            self.ffmpeg.merge_music_videos,
+            [str(video.resolve()) for video in videos],
+            str(music.resolve()),
+            str(temp.resolve()),
+        )
+        if success:
+            temp.replace(output)
+            for video in videos:
+                self.delete(video)
+            self.log.info(_("{show} 合并背景音乐成功").format(show=show))
+            self.log.info(f"文件路径 {output.resolve()}", False)
+        else:
+            self.delete(temp)
+            self.log.warning(
+                _("{show} 合并背景音乐失败: {error}").format(
+                    show=show,
+                    error=error,
+                )
+            )
+
+    @staticmethod
+    def __find_videos(
+        root: Path,
+        name: str,
+        count: int,
+    ) -> list[Path]:
+        """查找已下载的动图视频文件"""
+        videos = []
+        for index in range(1, count + 1):
+            video = root.with_name(f"{name}_{index}.mp4")
+            if video.is_file():
+                videos.append(video)
+        return videos
 
     @staticmethod
     def __find_music_file(root: Path, name: str) -> Path | None:
