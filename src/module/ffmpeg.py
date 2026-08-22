@@ -136,6 +136,10 @@ class FFMPEG:
         return self.__run_command(command)
 
     def __run_command(self, command: list[str]) -> tuple[bool, str]:
+        # 安全说明: run() 以参数列表形式直接执行 ffmpeg 可执行文件
+        # (shell=False, 不经过 shell), 不存在 shell 命令注入;
+        # 参数均为程序内部生成的选项与本地文件路径,
+        # 路径来源于下载器生成并经 Cleaner.filter_name 清洗的作品文件名
         try:
             result = run(
                 command,
@@ -183,7 +187,12 @@ class FFMPEG:
             suffix=".txt",
             delete=False,
         ) as f:
-            f.write("".join(f"file '{Path(v).as_posix()}'\n" for v in videos))
+            f.write(
+                "".join(
+                    f"file '{self.__escape_concat_path(Path(v).as_posix())}'\n"
+                    for v in videos
+                )
+            )
             list_file = f.name
         try:
             command = [
@@ -326,6 +335,11 @@ class FFMPEG:
                 command.insert(insert_index, item)
         command.append(f'"{file}"')
         return command
+
+    @staticmethod
+    def __escape_concat_path(path: str) -> str:
+        """转义 concat 列表文件中的路径单引号"""
+        return path.replace("'", "'\\''")
 
     @staticmethod
     def __check_system_ffmpeg(path: Path = None):

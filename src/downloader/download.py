@@ -592,6 +592,8 @@ class Downloader:
         单个动图直接合并背景音乐，多个动图先拼接为单个视频再合并背景音乐，
         音乐时长超过视频时自动截断音乐
         """
+        if not self.music:
+            return
         if not self.ffmpeg.state:
             self.log.warning(
                 _("程序未检测到有效的 ffmpeg，不支持为动图视频合并背景音乐！")
@@ -640,7 +642,17 @@ class Downloader:
             str(temp.resolve()),
         )
         if success:
-            temp.replace(video)
+            try:
+                temp.replace(video)
+            except OSError as e:
+                self.delete(temp)
+                self.log.warning(
+                    _("{show} 合并背景音乐失败: {error}").format(
+                        show=show,
+                        error=e,
+                    )
+                )
+                return
             self.log.info(_("{show} 合并背景音乐成功").format(show=show))
             self.log.info(f"文件路径 {video.resolve()}", False)
         else:
@@ -672,7 +684,17 @@ class Downloader:
             str(temp.resolve()),
         )
         if success:
-            temp.replace(output)
+            try:
+                temp.replace(output)
+            except OSError as e:
+                self.delete(temp)
+                self.log.warning(
+                    _("{show} 合并背景音乐失败: {error}").format(
+                        show=show,
+                        error=e,
+                    )
+                )
+                return
             for video in videos:
                 self.delete(video)
             self.log.info(_("{show} 合并背景音乐成功").format(show=show))
