@@ -1,16 +1,12 @@
-from time import strftime, localtime
+from time import localtime, strftime
 from types import SimpleNamespace
-from typing import TYPE_CHECKING
-from typing import Union
+from typing import TYPE_CHECKING, Union
 
-from httpx import get
+from curl_cffi.requests import get
 
-from src.custom import BLANK_HEADERS
 from src.custom import wait
 from src.extract import Extractor
-from src.testers import Params
-from src.tools import Retry
-from src.tools import capture_error_request
+from src.tools import Retry, capture_error_request
 from src.translation import _
 
 if TYPE_CHECKING:
@@ -27,7 +23,6 @@ class DetailTikTokUnofficial:
         *args,
         **kwargs,
     ):
-        self.headers = BLANK_HEADERS
         self.log = params.logger
         self.console = params.console
         self.api = "https://www.tikwm.com/api/"
@@ -36,6 +31,7 @@ class DetailTikTokUnofficial:
         self.timeout = params.timeout
         self.detail_id = detail_id
         self.text = _("作品")
+        self.impersonate = params.impersonate_tiktok
 
     async def run(
         self,
@@ -52,9 +48,9 @@ class DetailTikTokUnofficial:
         response = get(
             self.api,
             params={"url": self.detail_id, "hd": "1"},
-            headers=self.headers,
             timeout=self.timeout,
-            follow_redirects=True,
+            impersonate=self.impersonate,
+            allow_redirects=True,
             verify=False,
             proxy=self.proxy,
         )

@@ -10,7 +10,7 @@ fastapi==0.141.1
     # via douk-downloader (pyproject.toml)
 gmssl==3.2.2
     # via douk-downloader (pyproject.toml)
-httpx[socks]==0.28.1
+curl-cffi==0.16.2
     # via douk-downloader (pyproject.toml)
 lxml==6.1.2
     # via douk-downloader (pyproject.toml)

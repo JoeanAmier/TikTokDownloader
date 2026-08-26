@@ -5,7 +5,7 @@ from shutil import move
 from types import SimpleNamespace
 from typing import TYPE_CHECKING
 
-from ..custom import USERAGENT
+from ..custom import IMPERSONATE
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -92,27 +92,27 @@ class Settings:
         "douyin_platform": True,
         "tiktok_platform": True,
         "browser_info": {
-            "User-Agent": USERAGENT,
-            "pc_libra_divert": "Windows",
+            "impersonate": IMPERSONATE,
+            "pc_libra_divert": "Mac",
             "browser_language": "zh-CN",
-            "browser_platform": "Win32",
+            "browser_platform": "MacIntel",
             "browser_name": "Chrome",
-            "browser_version": "150.0.0.0",
+            "browser_version": "146.0.0.0",
             "engine_name": "Blink",
-            "engine_version": "150.0.0.0",
-            "os_name": "Windows",
-            "os_version": "10",
+            "engine_version": "146.0.0.0",
+            "os_name": "Mac OS",
+            "os_version": "10.15.7",
             "webid": "",
         },
         "browser_info_tiktok": {
-            "User-Agent": USERAGENT,
+            "impersonate": IMPERSONATE,
             "app_language": "zh-Hans",
             "browser_language": "zh-CN",
             "browser_name": "Mozilla",
-            "browser_platform": "Win32",
-            "browser_version": "5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+            "browser_platform": "MacIntel",
+            "browser_version": "5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36",
             "language": "zh-Hans",
-            "os": "windows",
+            "os": "mac",
             "priority_region": "US",
             "region": "US",
             "tz_name": "Asia/Shanghai",

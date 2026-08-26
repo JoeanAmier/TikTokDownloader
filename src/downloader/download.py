@@ -7,7 +7,8 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING, Callable, Union
 
 from aiofiles import open
-from httpx import HTTPStatusError, RequestError, Response, StreamError
+from curl_cffi.requests import Response
+from curl_cffi.requests.exceptions import HTTPError, RequestException
 from rich.progress import (
     BarColumn,
     DownloadColumn,
@@ -34,7 +35,7 @@ from ..tools import (
 from ..translation import _
 
 if TYPE_CHECKING:
-    from httpx import AsyncClient
+    from curl_cffi.requests import AsyncSession
 
     from ..config import Parameter
     from ..manager import DownloadRecorder
@@ -63,8 +64,8 @@ class Downloader:
         server_mode: bool = False,
     ):
         self.cleaner = params.CLEANER
-        self.client: "AsyncClient" = params.client
-        self.client_tiktok: "AsyncClient" = params.client_tiktok
+        self.client: "AsyncSession" = params.client
+        self.client_tiktok: "AsyncSession" = params.client_tiktok
         self.headers: dict = params.headers_download
         self.headers_tiktok: dict = params.headers_download_tiktok
         self.log: "BaseLogger" = params.logger
@@ -623,53 +624,51 @@ class Downloader:
                     headers,
                     temp,
                 )
-                async with client.stream(
+                response = await client.request(
                     "GET",
                     url,
                     headers=headers,
-                ) as response:
-                    if response.status_code == 416:
-                        raise CacheError(_("文件缓存异常，尝试重新下载"))
-                    response.raise_for_status()
-                    length, suffix = self._extract_content(
-                        response.headers,
-                        suffix,
-                    )
-                    length += position
-                    self._record_response(
-                        response,
-                        show,
-                        length,
-                    )
-                    match self._download_initial_check(
-                        length,
-                        unknown_size,
-                        show,
-                    ):
-                        case 1:
-                            return await self.download_file(
-                                temp,
-                                actual.with_suffix(
-                                    f".{suffix}",
-                                ),
-                                show,
-                                id_,
-                                response,
-                                length,
-                                position,
-                                count,
-                                progress,
-                            )
-                        case 0:
-                            return True
-                        case -1:
-                            return False
-                        case _:
-                            raise DownloaderError
-            except RequestError as e:
-                self.log.warning(_("网络异常: {error_repr}").format(error_repr=repr(e)))
-                return False
-            except HTTPStatusError as e:
+                    stream=True,
+                )
+                if response.status_code == 416:
+                    raise CacheError(_("文件缓存异常，尝试重新下载"))
+                response.raise_for_status()
+                length, suffix = self._extract_content(
+                    response.headers,
+                    suffix,
+                )
+                length += position
+                self._record_response(
+                    response,
+                    show,
+                    length,
+                )
+                match self._download_initial_check(
+                    length,
+                    unknown_size,
+                    show,
+                ):
+                    case 1:
+                        return await self.download_file(
+                            temp,
+                            actual.with_suffix(
+                                f".{suffix}",
+                            ),
+                            show,
+                            id_,
+                            response,
+                            length,
+                            position,
+                            count,
+                            progress,
+                        )
+                    case 0:
+                        return True
+                    case -1:
+                        return False
+                    case _:
+                        raise DownloaderError
+            except HTTPError as e:
                 self.log.warning(
                     _("响应码异常: {error_repr}").format(error_repr=repr(e))
                 )
@@ -678,6 +677,9 @@ class Downloader:
                         "如果 TikTok 平台作品下载功能异常，请检查配置文件中 browser_info_tiktok 的 device_id 参数！"
                     ),
                 )
+                return False
+            except RequestException as e:
+                self.log.warning(_("网络异常: {error_repr}").format(error_repr=repr(e)))
                 return False
             except CacheError as e:
                 self.delete(temp)
@@ -712,14 +714,11 @@ class Downloader:
         )
         try:
             async with open(cache, "ab") as f:
-                async for chunk in response.aiter_bytes(self.chunk):
+                async for chunk in response.aiter_content(self.chunk):
                     await f.write(chunk)
                     progress.update(task_id, advance=len(chunk))
                 progress.remove_task(task_id)
-        except (
-            RequestError,
-            StreamError,
-        ) as e:
+        except RequestException as e:
             progress.remove_task(task_id)
             self.log.warning(
                 _("{show} 下载中断，错误信息：{error}").format(show=show, error=e)
@@ -907,7 +906,7 @@ class Downloader:
 
     async def __head_file(
         self,
-        client: "AsyncClient",
+        client: "AsyncSession",
         url: str,
         headers: dict,
         suffix: str,

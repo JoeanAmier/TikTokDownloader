@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-# import httpx  # 可用于发送 HTTP 请求, Can be used to send HTTP requests
+# import curl_cffi  # 可用于发送 HTTP 请求, Can be used to send HTTP requests
 # import never_jscore  # 可用于执行 JavaScript 代码, Can be used to execute JavaScript code
 
 __all__ = [

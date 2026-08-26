@@ -51,10 +51,8 @@ PHONE_HEADERS = {
     "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) "
     "CriOS/125.0.6422.51 Mobile/15E148 Safari/604.1",
 }
-USERAGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
-BLANK_HEADERS = {
-    "User-Agent": USERAGENT,
-}
+USERAGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
+IMPERSONATE = "chrome146"
 REFERER = "https://www.douyin.com/?recommend=1"
 REFERER_TIKTOK = "https://www.tiktok.com/explore"
 PARAMS_HEADERS = {
@@ -62,7 +60,6 @@ PARAMS_HEADERS = {
     "Accept-Encoding": "*/*",
     "Content-Type": "text/plain;charset=UTF-8",
     "Referer": REFERER,
-    "User-Agent": USERAGENT,
 }
 PARAMS_HEADERS_TIKTOK = PARAMS_HEADERS | {
     "Referer": REFERER_TIKTOK,
@@ -71,7 +68,6 @@ DATA_HEADERS = {
     "Accept": "*/*",
     "Accept-Encoding": "*/*",
     "Referer": REFERER,
-    "User-Agent": USERAGENT,
 }
 DATA_HEADERS_TIKTOK = DATA_HEADERS | {
     "Referer": REFERER_TIKTOK,
@@ -80,7 +76,6 @@ DOWNLOAD_HEADERS = {
     "Accept": "*/*",
     "Range": "bytes=0-",
     "Referer": REFERER,
-    "User-Agent": USERAGENT,
 }
 DOWNLOAD_HEADERS_TIKTOK = DOWNLOAD_HEADERS | {
     "Referer": REFERER_TIKTOK,
@@ -89,7 +84,6 @@ QRCODE_HEADERS = {
     "Accept": "*/*",
     "Accept-Encoding": "*/*",
     "Referer": REFERER,
-    "User-Agent": USERAGENT,
 }
 
 BLANK_PREVIEW = "static/images/blank.png"

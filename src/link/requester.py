@@ -1,11 +1,11 @@
 from re import compile
 from typing import TYPE_CHECKING
 
-from ..custom import wait
+from ..custom import IMPERSONATE, wait
 from ..tools import DownloaderError, Retry, capture_error_request
 
 if TYPE_CHECKING:
-    from httpx import AsyncClient, get, head
+    from curl_cffi.requests import AsyncSession, get, head
 
     from ..config import Parameter
 
@@ -18,11 +18,13 @@ class Requester:
     def __init__(
         self,
         params: "Parameter",
-        client: "AsyncClient",
+        client: "AsyncSession",
         headers: dict[str, str],
+        impersonate: str = IMPERSONATE,
     ):
         self.client = client
         self.headers = headers
+        self.impersonate = impersonate
         self.log = params.logger
         self.max_retry = params.max_retry
         self.timeout = params.timeout
@@ -110,7 +112,8 @@ class Requester:
             url,
             headers=self.headers,
             proxy=proxy,
-            follow_redirects=True,
+            impersonate=self.impersonate,
+            allow_redirects=True,
             verify=False,
             timeout=self.timeout,
         )
@@ -135,7 +138,8 @@ class Requester:
             url,
             headers=self.headers,
             proxy=proxy,
-            follow_redirects=True,
+            impersonate=self.impersonate,
+            allow_redirects=True,
             verify=False,
             timeout=self.timeout,
         )

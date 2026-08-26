@@ -20,7 +20,7 @@
 <hr>
 <p>⚠️ 当前版本部分功能已失效。项目计划在 <code>6.0</code> 版本进行重构，重构完成后将会修复部分失效的功能！</p>
 <p>⚠️ 本项目的加密参数算法已过期失效；为确保项目合法合规，参数算法不再维护，部分功能可能无法正常工作。如需使用，请自行准备加密参数生成代码，配置方法请查阅 <a href="#encipher">加密参数生成代码配置</a>！</p>
-<p>⭐ <b>项目文档版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/8/22</code></b></p>
+<p>⭐ <b>项目文档版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/8/26</code></b></p>
 <p>⭐ Due to the author’s limited time and energy, the complete English documentation for this project is not yet available. If you wish to read the full documentation, we recommend using AI translation tools to assist your understanding. If you would like to contribute to the translation, your help is warmly welcomed.</p>
 <hr>
 <h1>快速入门</h1>
@@ -99,7 +99,7 @@
 ```python
 from abc import ABC, abstractmethod
 
-# import httpx  # 可用于发送 HTTP 请求, Can be used to send HTTP requests
+# import curl_cffi  # 可用于发送 HTTP 请求, Can be used to send HTTP requests
 # import never_jscore  # 可用于执行 JavaScript 代码, Can be used to execute JavaScript code
 
 __all__ = [
@@ -154,7 +154,7 @@ class TikTokParams(Params):
 <ul>
 <li>加密参数代码文件固定命名：<code>encipher.py</code></li>
 <li>加密参数代码文件固定放置在项目根目录</li>
-<li>加密参数代码支持调用 <code>httpx</code>、<code>never_jscore</code> 库及 Python 标准库</li>
+<li>加密参数代码支持调用 <code>curl_cffi</code>、<code>never_jscore</code> 库及 Python 标准库</li>
 <li>每个平台的加密参数类需继承 <code>Params</code> 基类，并实现 <code>sign</code>（生成签名参数）与 <code>sign_url</code>（生成带签名的完整 URL/查询字符串）方法</li>
 <li>模板中的加密参数类无需全部实现，可根据实际需求删除不需要的类</li>
 <li>可以通过执行自定义的 JavaScript 代码生成加密参数</li>
@@ -1212,7 +1212,7 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <h3>API 调用示例代码</h3>
 
 ```python
-from httpx import post
+from curl_cffi.requests import post
 from rich import print
 
 

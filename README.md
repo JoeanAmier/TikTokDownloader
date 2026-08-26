@@ -105,7 +105,7 @@
 ### API 调用示例代码
 
 ```python
-from httpx import post
+from curl_cffi.requests import post
 from rich import print
 
 
@@ -427,7 +427,7 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://github.com/ihmily/DouyinLiveRecorder
 * https://github.com/xvhuan/tiktok-web-params
-* https://github.com/encode/httpx/
+* https://github.com/lexiforest/curl_cffi/
 * https://github.com/Textualize/rich
 * https://github.com/omnilib/aiosqlite
 * https://github.com/Tinche/aiofiles
