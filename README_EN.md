@@ -437,5 +437,5 @@ repository to execute the build process
 * https://foss.heptapod.net/openpyxl/openpyxl
 * https://github.com/carpedm20/emoji/
 * https://github.com/lxml/lxml
-* https://github.com/neverl805/never-jscore
+* https://github.com/extremeheat/JSPyBridge
 * https://ffmpeg.org/ffmpeg-all.html

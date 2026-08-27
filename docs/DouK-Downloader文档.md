@@ -20,7 +20,7 @@
 <hr>
 <p>⚠️ 当前版本部分功能已失效。项目计划在 <code>6.0</code> 版本进行重构，重构完成后将会修复部分失效的功能！</p>
 <p>⚠️ 本项目的加密参数算法已过期失效；为确保项目合法合规，参数算法不再维护，部分功能可能无法正常工作。如需使用，请自行准备加密参数生成代码，配置方法请查阅 <a href="#encipher">加密参数生成代码配置</a>！</p>
-<p>⭐ <b>项目文档版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/8/26</code></b></p>
+<p>⭐ <b>项目文档版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/8/27</code></b></p>
 <p>⭐ Due to the author’s limited time and energy, the complete English documentation for this project is not yet available. If you wish to read the full documentation, we recommend using AI translation tools to assist your understanding. If you would like to contribute to the translation, your help is warmly welcomed.</p>
 <hr>
 <h1>快速入门</h1>
@@ -100,7 +100,9 @@
 from abc import ABC, abstractmethod
 
 # import curl_cffi  # 可用于发送 HTTP 请求, Can be used to send HTTP requests
-# import never_jscore  # 可用于执行 JavaScript 代码, Can be used to execute JavaScript code
+# https://github.com/lexiforest/curl_cffi
+# import javascript  # 可用于执行 JavaScript 代码, Can be used to execute JavaScript code
+# https://github.com/extremeheat/JSPyBridge
 
 __all__ = [
     "DouYinParams",

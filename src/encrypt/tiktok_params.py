@@ -29,7 +29,7 @@ JS 算法来源：
 from typing import Any
 from urllib.parse import quote, urlencode
 
-from never_jscore import Context
+from javascript import require
 
 from ..custom import ROOT, USERAGENT
 from .params import Params
@@ -48,10 +48,6 @@ _DEFAULT_ENV: dict[str, int] = {
 }
 
 
-def _load_js() -> str:
-    return _JS_FILE.read_text(encoding="utf-8")
-
-
 class TikTokParams(Params):
     """TikTok Web 请求签名参数生成器。
 
@@ -65,8 +61,7 @@ class TikTokParams(Params):
 
     def __init__(self) -> None:
         super().__init__()
-        self._ctx = Context()
-        self._ctx.compile(_load_js())
+        self._js = require(str(_JS_FILE.resolve()))
 
     def sign(
         self,
@@ -108,7 +103,7 @@ class TikTokParams(Params):
             "msToken": ms_token,
             "env": _DEFAULT_ENV,
         }
-        result = self._ctx.call("signUrl", [query, opts])
+        result = self._js.signUrl(query, opts)
         x_dynosaur = result["dynosaur"]
         x_gnarly = result["gnarly"]
         x_bogus = result["xbogus"]

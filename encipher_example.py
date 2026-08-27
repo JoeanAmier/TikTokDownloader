@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 
 # import curl_cffi  # 可用于发送 HTTP 请求, Can be used to send HTTP requests
-# import never_jscore  # 可用于执行 JavaScript 代码, Can be used to execute JavaScript code
+# https://github.com/lexiforest/curl_cffi
+# import javascript  # 可用于执行 JavaScript 代码, Can be used to execute JavaScript code
+# https://github.com/extremeheat/JSPyBridge
 
 __all__ = [
     "DouYinParams",
