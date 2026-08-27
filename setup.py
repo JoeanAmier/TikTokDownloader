@@ -1,5 +1,4 @@
-from cx_Freeze import setup, Executable
-
+from cx_Freeze import Executable, setup
 
 build_exe_options = {
     "packages": [
@@ -8,6 +7,7 @@ build_exe_options = {
     ],
     "include_files": [
         ("locale", "locale"),
+        ("static", "static"),
     ],
     "include_msvcr": True,
 }
