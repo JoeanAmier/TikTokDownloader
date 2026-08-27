@@ -133,6 +133,7 @@ demo()
 <p>⭐ This project includes GitHub Actions for automatic building executable files. Users can use GitHub Actions to build the latest source code into executable files at any time!</p>
 <p>⭐ For the automatic building executable files tutorial, please refer to the <code>Build of Executable File Guide</code> section of this document. If you need a more detailed step-by-step tutorial with illustrations, please <a href="https://mp.weixin.qq.com/s/TorfoZKkf4-x8IBNLImNuw">check out this article</a>!</p>
 <p><strong>Note: Due to the macOS platform's executable file <code>main</code> not being code-signed, it will be restricted by system security measures on first run. Please execute the command <code>xattr -cr project_folder_path</code> in the terminal to remove the security flag, after which it can run normally.</strong></p>
+<p><strong>Node.js (Optional)</strong>: Some features require Node.js to execute JavaScript code. Please install <strong>Node.js >= 18</strong> if you use these features. Other features can be used normally without Node.js.</p>
 <hr>
 <ol>
 <li><b>Run the executable file</b> or <b>configure the environment to run</b> (choose one of the two)

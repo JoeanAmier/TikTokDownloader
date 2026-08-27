@@ -32,6 +32,7 @@ from urllib.parse import quote, urlencode
 from javascript import require
 
 from ..custom import ROOT, USERAGENT
+from ..tools import is_node_available
 from .params import Params
 
 __all__ = ["TikTokParams"]
@@ -61,7 +62,7 @@ class TikTokParams(Params):
 
     def __init__(self) -> None:
         super().__init__()
-        self._js = require(str(_JS_FILE.resolve()))
+        self._js = require(str(_JS_FILE.resolve())) if is_node_available() else None
 
     def sign(
         self,
@@ -92,6 +93,12 @@ class TikTokParams(Params):
         dict
             键为 ``X-Dynosaur`` / ``X-Gnarly`` / ``X-Bogus``。
         """
+        if self._js is None:
+            return {
+                "X-Dynosaur": "",
+                "X-Gnarly": "",
+                "X-Bogus": "",
+            }
         if isinstance(query, dict):
             query = urlencode(
                 query,

@@ -27,6 +27,8 @@
 <p>⭐ 本项目包含手动构建可执行文件的 GitHub Actions，使用者可以随时使用 GitHub Actions 将最新源码构建为可执行文件！</p>
 <p>⭐ 自动构建可执行文件教程请查阅本文档的 <code>构建可执行文件指南</code> 部分；如果需要更加详细的图文教程，请 <a href="https://mp.weixin.qq.com/s/TorfoZKkf4-x8IBNLImNuw">查阅文章</a>！</p>
 <p><strong>注意：由于 Mac OS 平台的可执行文件 <code>main</code> 未经过代码签名，首次运行时会受到系统安全限制。请先在终端执行 <code>xattr -cr main.app</code> 命令移除安全标记，执行一次后即可正常运行。</strong></p>
+<p><strong>Node.js（可选）</strong>：部分功能需要使用 Node.js 执行 JavaScript 代码，使用这些功能时请安装 <strong>Node.js >= 18</strong>；未安装 Node.js 不影响其他功能的正常使用。</p>
+<hr>
 <ol>
 <li><b>运行可执行文件</b> 或者 <b>配置环境运行</b>
 <ol><b>运行可执行文件</b>

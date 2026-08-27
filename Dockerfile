@@ -21,6 +21,12 @@ RUN pip install --no-cache-dir --prefix="/install" -r requirements.txt
 # 使用轻量级 slim 镜像作为最终的运行环境
 FROM python:3.12-slim-bookworm
 
+# 安装 Node.js
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
 # 设置工作目录
 WORKDIR /app
 
