@@ -31,7 +31,6 @@
 <li>✅ 下载抖音视频/图集</li>
 <li>✅ 下载抖音实况/动图</li>
 <li>✅ 下载最高画质视频文件</li>
-<li>✅ 下载 TikTok 视频原画</li>
 <li>✅ 下载 TikTok 视频/图集</li>
 <li>✅ 下载抖音账号发布/喜欢/收藏/收藏夹作品</li>
 <li>✅ 下载 TikTok 账号发布/喜欢作品</li>
@@ -63,7 +62,6 @@
 <li>✅ 采集抖音搜索数据</li>
 <li>✅ 采集抖音热榜数据</li>
 <li>✅ 记录已下载作品 ID</li>
-<li>☑️ <del>扫码登陆获取 Cookie</del></li>
 <li>✅ 从浏览器读取 Cookie</li>
 <li>✅ 支持 Web API 调用</li>
 <li>✅ 支持多线程下载作品</li>
@@ -166,11 +164,6 @@ demo()
 </ol>
 <ol><b><del>从浏览器读取 Cookie（弃用）</del></b>
 <li><del>选择 <code>从浏览器读取 Cookie</code> 选项，按照提示输入浏览器类型或序号</del></li>
-</ol>
-<ol><b><del>扫码登录获取 Cookie</del>（失效）</b>
-<li><del>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</del></li>
-<li><del>使用抖音 APP 扫描二维码并登录账号</del></li>
-<li><del>按照提示操作，程序会自动将 Cookie 写入配置文件</del></li>
 </ol>
 </li>
 <li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品</code> -> <code>手动输入待采集的作品链接</code></li>

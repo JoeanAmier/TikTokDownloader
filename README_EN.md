@@ -31,7 +31,6 @@
 <li>✅ Download DouYin video/image</li>
 <li>✅ Download DouYin live photo</li>
 <li>✅ Download the highest quality video file</li>
-<li>✅ Download TikTok video source files</li>
 <li>✅ Download TikTok video/image</li>
 <li>✅ Download of DouYin account posts/liked/favorites works</li>
 <li>✅ Download of TikTok account posts/liked works</li>
@@ -63,7 +62,6 @@
 <li>✅ Collect DouYin search data</li>
 <li>✅ Collect DouYin hot board data</li>
 <li>✅ Record IDs of already downloaded works</li>
-<li>☑️ <del>Scan QR code to log in and obtain Cookies</del></li>
 <li>✅ Obtain Cookies from browsers</li>
 <li>✅ Support Web API calls</li>
 <li>✅ Support multithreaded downloading of works</li>
@@ -168,11 +166,6 @@ demo()
 </ol>
 <ol><b><del>Read Cookie from Browser (Deprecated)</del></b>
 <li><del>Select the <code>Extracting cookie from browser</code> option, then follow the prompts to input the browser type or its corresponding number</del></li>
-</ol>
-<ol><b><del>Obtain Cookie via QR Code Login</del> (No longer valid)</b>
-<li><del>Select the <code>Scan code to login and get cookies (DouYin)</code> option, the program will display a login QR code image and open it with the default application</del></li>
-<li><del>Use the DouYin app to scan the QR code and log in</del></li>
-<li><del>Follow the prompts, the program will automatically write the Cookie into the configuration file</del></li>
 </ol>
 </li>
 <li>Return to the program interface, sequentially select <code>Terminal Mode</code> -> <code>Batch Download Works from Links</code> -> <code>Manually enter the works links to be collected</code>.</li>

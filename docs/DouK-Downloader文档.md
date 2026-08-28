@@ -20,7 +20,7 @@
 <hr>
 <p>⚠️ 当前版本部分功能已失效。项目计划在 <code>6.0</code> 版本进行重构，重构完成后将会修复部分失效的功能！</p>
 <p>⚠️ 本项目的加密参数算法已过期失效；为确保项目合法合规，参数算法不再维护，部分功能可能无法正常工作。如需使用，请自行准备加密参数生成代码，配置方法请查阅 <a href="#encipher">加密参数生成代码配置</a>！</p>
-<p>⭐ <b>项目文档版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/8/27</code></b></p>
+<p>⭐ <b>项目文档版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/8/28</code></b></p>
 <p>⭐ Due to the author’s limited time and energy, the complete English documentation for this project is not yet available. If you wish to read the full documentation, we recommend using AI translation tools to assist your understanding. If you would like to contribute to the translation, your help is warmly welcomed.</p>
 <hr>
 <h1>快速入门</h1>
@@ -56,11 +56,6 @@
 </ol>
 <ol><b><del>从浏览器读取 Cookie（弃用）</del></b>
 <li><del>选择 <code>从浏览器读取 Cookie</code> 选项，按照提示输入浏览器类型或序号</del></li>
-</ol>
-<ol><b><del>扫码登录获取 Cookie</del>（失效）</b>
-<li><del>选择 <code>扫码登录获取 Cookie</code> 选项，程序会显示登录二维码图片，并使用默认应用打开图片</del></li>
-<li><del>使用抖音 APP 扫描二维码并登录账号</del></li>
-<li><del>按照提示操作，程序会自动将 Cookie 写入配置文件</del></li>
 </ol>
 </li>
 <li>返回程序界面，依次选择 <code>终端交互模式</code> -> <code>批量下载链接作品</code> -> <code>手动输入待采集的作品链接</code></li>
@@ -851,9 +846,6 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <p><del>成功写入配置文件后，程序会提示当前 Cookie 登录状态！</del></p>
 <p><del>Windows 系统需要以管理员身份运行程序才能读取 Chromium、Chrome、Edge 浏览器 Cookie！</del></p>
 <p><strong>兼容性提醒：此功能依赖的第三方模块已长期未更新，可能无法正常支持最新浏览器版本。若功能出现异常，请尝试手动获取 Cookie！</strong></p>
-<h2><del>扫码登录获取 Cookie</del></h2>
-<p><del>程序自动获取抖音登录二维码，随后会在终端输出二维码，并使用系统默认图片浏览器打开二维码图片，使用者通过抖音 APP 扫码并登录账号，操作后关闭二维码图片窗口，程序会自动检查登录结果并将登录后的 Cookie 写入配置文件。</del></p>
-<p><b>注意：</b>扫码登录可能会导致抖音账号被风控，该功能仅限学习研究，未来可能禁用或移除该功能！</p>
 <h2>终端交互模式</h2>
 <p>功能最全面的模式，支持全部功能。</p>
 <h3>批量下载账号作品(抖音)</h3>
@@ -1194,18 +1186,6 @@ built with gcc 14.2.0 (crosstool-NG 1.27.0.18_7458341)
 <li>直播视频会下载至 <code>root</code> 参数路径下的 <code>Live</code> 文件夹。</li>
 <li>按下 <code>Ctrl + C</code> 终止程序或 <code>ffmpeg</code> 并不会导致已下载文件丢失或损坏，但无法继续下载。</li>
 </ul>
-<h3><del>批量下载视频原画(TikTok)</del></h3>
-<p><strong>注意：本功能为实验性功能，依赖第三方 API 服务，可能不稳定或存在限制！</strong></p>
-<ol>
-<li>手动输入待采集的作品链接。</li>
-<li>输入文本文档路径，读取文件包含的作品链接。</li>
-</ol>
-<p>支持链接格式：</p>
-<ul>
-<li><code>https://vm.tiktok.com/分享码/</code></li>
-<li><code>https://www.tiktok.com/@TikTok号/video/作品ID</code></li>
-</ul>
-<p>作品会下载至 <code>root</code> 参数和 <code>folder_name</code> 参数拼接成的文件夹。</p>
 <h2>后台监听模式</h2>
 <h3>剪贴板监听下载</h3>
 <p>程序会自动检测并提取剪贴板中的抖音和 TikTok 作品链接，并自动下载作品文件；如需关闭，请按下 Ctrl+C，或将剪贴板内容设置为“close”以停止监听！</p>
