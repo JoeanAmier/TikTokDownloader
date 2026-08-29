@@ -29,8 +29,6 @@ JS 算法来源：
 from typing import Any
 from urllib.parse import quote, urlencode
 
-from javascript import require
-
 from ..custom import ROOT, USERAGENT
 from ..tools import is_node_available
 from .params import Params
@@ -62,7 +60,12 @@ class TikTokParams(Params):
 
     def __init__(self) -> None:
         super().__init__()
-        self._js = require(str(_JS_FILE.resolve())) if is_node_available() else None
+        if is_node_available():
+            from javascript import require
+
+            self._js = require(str(_JS_FILE.resolve()))
+        else:
+            self._js = None
 
     def sign(
         self,

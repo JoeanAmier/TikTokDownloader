@@ -57,7 +57,7 @@ class Downloader:
         "audio/mp4": "m4a",
         "audio/mpeg": "mp3",
     }
-    WRITE_BUFFER_SIZE = 1024 * 1024 * 50
+    WRITE_BUFFER_SIZE = 1024 * 1024 * 100
 
     def __init__(
         self,
