@@ -589,12 +589,16 @@ class Extractor:
     @Retry.retry
     async def __request_video_size(self, url: str) -> tuple[int, str] | None:
         try:
-            response = await self.client.head(
+            response = await self.client.get(
                 url,
+                headers={"Range": "bytes=0-0"},
             )
             await wait()
             response.raise_for_status()
-            size = int(response.headers.get("Content-Length", 0))
+            content_range = response.headers.get("Content-Range", "")
+            if "/" not in content_range:
+                return None
+            size = int(content_range.rsplit("/", 1)[1])
             return (size, str(response.url)) if size else None
         except (RequestException, TypeError, ValueError):
             return None
