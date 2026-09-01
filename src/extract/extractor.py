@@ -30,6 +30,7 @@ from ..custom import (
     VIDEO_INDEX,
     VIDEO_TIKTOK_INDEX,
     condition_filter,
+    wait,
 )
 from ..tools import DownloaderError, Retry
 from ..translation import _
@@ -591,6 +592,7 @@ class Extractor:
             response = await self.client.head(
                 url,
             )
+            await wait()
             response.raise_for_status()
             size = int(response.headers.get("Content-Length", 0))
             return (size, str(response.url)) if size else None

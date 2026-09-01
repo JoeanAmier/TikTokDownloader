@@ -1,7 +1,6 @@
 from configparser import ConfigParser, NoOptionError, NoSectionError
 
-from rich.console import Console
-
+from src.config import Parameter
 from src.custom import (
     DATA_HEADERS,
     DATA_HEADERS_TIKTOK,
@@ -12,7 +11,7 @@ from src.custom import (
 )
 from src.encrypt import DouYinParams, TikTokParams
 from src.testers.logger import Logger
-from src.tools import Cleaner, create_client
+from src.tools import Cleaner, ColorfulConsole, create_client
 
 
 class Params:
@@ -37,7 +36,7 @@ class Params:
         self.logger = Logger()
         self.douyin_params = DouYinParams()
         self.tiktok_params = TikTokParams()
-        self.console = Console()
+        self.console = ColorfulConsole()
         self.max_retry = 0
         self.timeout = 5
         self.max_pages = 2
@@ -57,6 +56,9 @@ class Params:
             timeout=self.timeout,
             proxy=self.proxy_tiktok,
             impersonate=self.impersonate,
+        )
+        self.douyin_params, self.tiktok_params = (
+            Parameter.check_objects_from_external_py(self.console)
         )
 
     def create_ini(self):

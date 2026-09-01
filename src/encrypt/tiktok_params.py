@@ -69,6 +69,7 @@ class TikTokParams(Params):
 
     def sign(
         self,
+        url: str = "",
         query: dict | str = "",
         data: dict | str | None = None,
         method: str = "",
@@ -125,7 +126,7 @@ class TikTokParams(Params):
 
     def sign_url(
         self,
-        base_url: str = "",
+        url: str = "",
         query: dict | str = "",
         data: dict | str | None = None,
         method: str = "",
@@ -135,7 +136,7 @@ class TikTokParams(Params):
         """
         Parameters
         ----------
-        base_url : str
+        url : str
             接口基础地址；留空则仅返回 query 字符串。
         query : dict | str
             原始查询字符串或字典。
@@ -159,7 +160,7 @@ class TikTokParams(Params):
                 safe="=",
                 quote_via=quote,
             )
-        params = self.sign(query, data, method, user_agent, ms_token)
+        params = self.sign(url, query, data, method, user_agent, ms_token)
         signed_query = "&".join(
             [
                 query,
@@ -168,7 +169,7 @@ class TikTokParams(Params):
                 f"X-Gnarly={params['X-Gnarly']}",
             ]
         )
-        if not base_url:
+        if not url:
             return signed_query
-        sep = "&" if "?" in base_url else "?"
-        return f"{base_url}{sep}{signed_query}"
+        sep = "&" if "?" in url else "?"
+        return f"{url}{sep}{signed_query}"

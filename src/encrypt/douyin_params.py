@@ -15,6 +15,7 @@ class DouYinParams(Params):
 
     def sign(
         self,
+        url: str = "",
         query: dict | str = "",
         data: dict | str | None = None,
         method: str = "",
@@ -33,7 +34,7 @@ class DouYinParams(Params):
 
     def sign_url(
         self,
-        base_url: str = "",
+        url: str = "",
         query: dict | str = "",
         data: dict | str | None = None,
         method: str = "",
@@ -42,9 +43,9 @@ class DouYinParams(Params):
     ) -> str:
         if isinstance(query, dict):
             query = urlencode(query, safe="=", quote_via=quote)
-        a_bogus = self.sign(query, data, method, user_agent)["a_bogus"]
+        a_bogus = self.sign(url, query, data, method, user_agent)["a_bogus"]
         signed_query = f"{query}&a_bogus={a_bogus}"
-        if not base_url:
+        if not url:
             return signed_query
-        sep = "&" if "?" in base_url else "?"
-        return f"{base_url}{sep}{signed_query}"
+        sep = "&" if "?" in url else "?"
+        return f"{url}{sep}{signed_query}"

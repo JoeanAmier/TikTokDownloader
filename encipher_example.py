@@ -17,6 +17,7 @@ class Params(ABC):
     @abstractmethod
     def sign(
         self,
+        url: str = "",
         query: dict | str = "",
         data: dict | str | None = None,
         method: str = "",
@@ -28,7 +29,7 @@ class Params(ABC):
     @abstractmethod
     def sign_url(
         self,
-        base_url: str = "",
+        url: str = "",
         query: dict | str = "",
         data: dict | str | None = None,
         method: str = "",

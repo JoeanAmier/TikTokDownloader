@@ -11,7 +11,7 @@ def test_douyin_sign():
 def test_douyin_sign_url_with_base():
     signer = DouYinParams()
     url = signer.sign_url(
-        base_url="https://www.douyin.com/aweme/v1/web/aweme/post",
+        url="https://www.douyin.com/aweme/v1/web/aweme/post",
         query="aid=6383&sec_user_id=test_sec_user_id&count=10",
     )
     assert url.startswith("https://www.douyin.com/aweme/v1/web/aweme/post?")
@@ -22,7 +22,7 @@ def test_douyin_sign_url_with_base():
 def test_douyin_sign_url_without_base():
     signer = DouYinParams()
     query = signer.sign_url(
-        base_url="",
+        url="",
         query="aid=6383&sec_user_id=test_sec_user_id&count=10",
     )
     assert "aid=6383&sec_user_id=test_sec_user_id&count=10" in query

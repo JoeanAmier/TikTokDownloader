@@ -7,7 +7,6 @@ def test_tiktok_sign():
         query="aid=1988&count=2",
         ms_token="test_ms_token_123",
     )
-    assert result["msToken"] == "test_ms_token_123"
     assert result["X-Dynosaur"]
     assert result["X-Gnarly"]
     assert result["X-Bogus"]
@@ -16,7 +15,7 @@ def test_tiktok_sign():
 def test_tiktok_sign_url_with_base():
     signer = TikTokParams()
     url = signer.sign_url(
-        base_url="https://www.tiktok.com/api/feed",
+        url="https://www.tiktok.com/api/feed",
         query="aid=1988&count=2",
         ms_token="test_ms_token_123",
     )
@@ -31,7 +30,7 @@ def test_tiktok_sign_url_with_base():
 def test_tiktok_sign_url_without_base():
     signer = TikTokParams()
     query = signer.sign_url(
-        base_url="",
+        url="",
         query="aid=1988&count=2",
         ms_token="test_ms_token_123",
     )

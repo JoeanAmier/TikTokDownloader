@@ -259,6 +259,7 @@ class API:
         **kwargs,
     ):
         params = self.deal_url_params(
+            url,
             params,
             data,
             method,
@@ -430,6 +431,7 @@ class API:
 
     def deal_url_params(
         self,
+        url: str,
         params: dict,
         data: dict | None = None,
         method="GET",
@@ -442,7 +444,7 @@ class API:
                 quote_via=quote,
             )
             params = self.douyin_params.sign_url(
-                "", params, data, method, user_agent=self.user_agent
+                url, params, data, method, user_agent=self.user_agent
             )
             return params
         return ""
@@ -580,6 +582,7 @@ class APITikTok(API):
 
     def deal_url_params(
         self,
+        url: str,
         params: dict,
         data: dict | None = None,
         method="GET",
@@ -592,7 +595,7 @@ class APITikTok(API):
                 quote_via=quote,
             )
             params = self.tiktok_params.sign_url(
-                "",
+                url,
                 params,
                 data,
                 method,
