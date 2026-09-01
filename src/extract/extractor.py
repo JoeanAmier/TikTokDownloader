@@ -5,6 +5,8 @@ from types import SimpleNamespace
 from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
+from curl_cffi.requests.exceptions import RequestException
+
 from ..custom import (
     AUTHOR_COVER_INDEX,
     AUTHOR_COVER_URL_INDEX,
@@ -29,7 +31,7 @@ from ..custom import (
     VIDEO_TIKTOK_INDEX,
     condition_filter,
 )
-from ..tools import DownloaderError
+from ..tools import DownloaderError, Retry
 from ..translation import _
 
 if TYPE_CHECKING:
@@ -78,6 +80,8 @@ class Extractor:
         self.date_format: str = params.date_format
         self.cleaner = params.CLEANER
         self.original_quality: bool = params.original_quality
+        self.client = params.client
+        self.max_retry = params.max_retry
         self.type: dict = {
             "batch": self.__batch,
             "detail": self.__detail,
@@ -186,7 +190,7 @@ class Extractor:
             earliest=earliest,
             latest=latest,
         )
-        self.__platform_classify_detail(
+        await self.__platform_classify_detail(
             data,
             container,
             tiktok,
@@ -217,14 +221,14 @@ class Extractor:
         """汇总作品数量"""
         self.log.info(_("筛选处理后作品数量: {count}").format(count=len(data)))
 
-    def __extract_batch(
+    async def __extract_batch(
         self,
         container: SimpleNamespace,
         data: SimpleNamespace,
     ) -> None:
         """批量提取作品信息"""
         container.cache = container.template.copy()
-        self.__extract_detail_info(container.cache, data)
+        await self.__extract_detail_info(container.cache, data)
         self.__extract_account_info(container, data)
         self.__extract_music(container.cache, data)
         self.__extract_statistics(container.cache, data)
@@ -303,7 +307,7 @@ class Extractor:
             localtime(data or None),
         )
 
-    def __extract_detail_info(
+    async def __extract_detail_info(
         self,
         item: dict,
         data: SimpleNamespace,
@@ -318,7 +322,7 @@ class Extractor:
         item["create_timestamp"] = self.safe_extract(data, "create_time")
         item["create_time"] = self.__format_date(item["create_timestamp"])
         self.__extract_text_extra(item, data)
-        self.__classifying_detail(item, data)
+        await self.__classifying_detail(item, data)
 
     def __extract_detail_info_tiktok(
         self,
@@ -337,16 +341,16 @@ class Extractor:
         self.__extract_text_extra_tiktok(item, data)
         self.__classifying_detail_tiktok(item, data)
 
-    def __classifying_detail(
+    async def __classifying_detail(
         self,
         item: dict,
         data: SimpleNamespace,
     ) -> None:
         # 作品分类
         if images := self.safe_extract(data, "images"):
-            self.__extract_image_info(item, data, images)
+            await self.__extract_image_info(item, data, images)
         else:
-            self.__extract_video_info(
+            await self.__extract_video_info(
                 item,
                 data,
                 _("视频"),
@@ -404,7 +408,7 @@ class Extractor:
         parsed_url = urlparse(url)
         return f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path}"
 
-    def __extract_image_info(
+    async def __extract_image_info(
         self,
         item: dict,
         data: SimpleNamespace,
@@ -423,10 +427,10 @@ class Extractor:
                 _("实况"),
             )
             item["downloads"] = [
-                self.__classify_slides_item(
-                    i,
+                await self.__classify_slides_item(
+                    image,
                 )
-                for i in images
+                for image in images
             ]
         else:
             self.__set_blank_data(
@@ -474,45 +478,50 @@ class Extractor:
         item["width"] = -1
         self.__extract_cover(item, data)
 
-    def __extract_video_info(
+    async def __extract_video_info(
         self,
         item: dict,
         data: SimpleNamespace,
         type_=_("视频"),
     ) -> None:
         item["type"] = type_
-        item["height"], item["width"], item["downloads"] = (
-            self.__extract_video_download(
-                data,
-            )
+        (
+            item["height"],
+            item["width"],
+            item["downloads"],
+        ) = await self.__extract_video_download(
+            data,
+            use_original_quality=True,
         )
         item["duration"] = self.time_conversion(
             self.safe_extract(data, "video.duration", 0)
         )
         item["uri"] = self.safe_extract(data, "video.play_addr.uri")
-        if self.original_quality:
-            item["downloads"] = self.generate_original_quality_url(item["uri"])
         self.__extract_cover(item, data, True)
 
-    def __classify_slides_item(
+    async def __classify_slides_item(
         self,
         item: SimpleNamespace,
     ) -> str:
         if self.safe_extract(item, "video"):
-            return self.__extract_video_download(
-                item,
+            return (
+                await self.__extract_video_download(
+                    item,
+                )
             )[-1]
         return self.safe_extract(item, f"url_list[{IMAGE_INDEX}]")
 
-    def __extract_video_download(
+    async def __extract_video_download(
         self,
         data: SimpleNamespace,
+        use_original_quality: bool = False,
     ) -> tuple[int, int, str]:
         bit_rate: list[SimpleNamespace] = self.safe_extract(
             data,
             "video.bit_rate",
             [],
         )
+        bitrate_size = 0
         try:
             bit_rate: list[tuple[int, int, int, int, int, list[str]]] = [
                 (
@@ -536,7 +545,7 @@ class Extractor:
                     x[2],
                 ),
             )
-            return (
+            height, width, url = (
                 (
                     bit_rate[-1][-3],
                     bit_rate[-1][-2],
@@ -545,6 +554,8 @@ class Extractor:
                 if bit_rate
                 else (-1, -1, "")
             )
+            if bit_rate:
+                bitrate_size = bit_rate[-1][2]
         except AttributeError:
             self.log.error(
                 f"视频下载地址解析失败: {data}",
@@ -564,7 +575,27 @@ class Extractor:
                 bit_rate[0],
                 f"play_addr.url_list[{VIDEO_INDEX}]",
             )
-            return height, width, url
+        if use_original_quality and self.original_quality:
+            uri = self.safe_extract(data, "video.play_addr.uri")
+            if uri:
+                original_url = self.generate_original_quality_url(uri)
+                if result := await self.__request_video_size(original_url):
+                    original_size, original_url = result
+                    if original_size >= bitrate_size:
+                        url = original_url
+        return height, width, url
+
+    @Retry.retry
+    async def __request_video_size(self, url: str) -> tuple[int, str] | None:
+        try:
+            response = await self.client.head(
+                url,
+            )
+            response.raise_for_status()
+            size = int(response.headers.get("Content-Length", 0))
+            return (size, str(response.url)) if size else None
+        except (RequestException, TypeError, ValueError):
+            return None
 
     def __extract_video_info_tiktok(
         self,
@@ -969,7 +1000,7 @@ class Extractor:
         )
         return id_, name.strip(), mark.strip()
 
-    def __platform_classify_detail(
+    async def __platform_classify_detail(
         self,
         data: list[dict],
         container: SimpleNamespace,
@@ -985,7 +1016,7 @@ class Extractor:
             ]
         else:
             [
-                self.__extract_batch(
+                await self.__extract_batch(
                     container,
                     self.generate_data_object(item),
                 )
@@ -1006,7 +1037,7 @@ class Extractor:
             cache=None,
             same=False,
         )
-        self.__platform_classify_detail(
+        await self.__platform_classify_detail(
             data,
             container,
             tiktok,
@@ -1283,25 +1314,28 @@ class Extractor:
             same=False,
         )
         [
-            self.__search_result_classify(container, self.generate_data_object(i))
-            for i in data
+            await self.__search_result_classify(
+                container,
+                self.generate_data_object(item),
+            )
+            for item in data
         ]
         await self.__record_data(recorder, container.all_data)
         return container.all_data
 
-    def __search_result_classify(
+    async def __search_result_classify(
         self,
         container: SimpleNamespace,
         data: SimpleNamespace,
     ):
         if d := self.safe_extract(data, "aweme_info"):
-            self.__extract_batch(container, d)
+            await self.__extract_batch(container, d)
         elif d := self.safe_extract(data, "aweme_mix_info.mix_items"):
-            [self.__extract_batch(container, i) for i in d]
+            [await self.__extract_batch(container, item) for item in d]
         elif d := self.safe_extract(data, "card_info.attached_info.aweme_list"):
-            [self.__extract_batch(container, i) for i in d]
+            [await self.__extract_batch(container, item) for item in d]
         elif d := self.safe_extract(data, f"user_list[{SEARCH_USER_INDEX}].items"):
-            [self.__extract_batch(container, i) for i in d]
+            [await self.__extract_batch(container, item) for item in d]
         # elif d := self.safe_extract(data, "user_list.user_info"):
         #     pass
         # elif d := self.safe_extract(data, "music_list"):

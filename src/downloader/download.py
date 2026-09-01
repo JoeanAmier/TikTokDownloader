@@ -56,6 +56,7 @@ class Downloader:
         "video/quicktime": "mov",
         "audio/mp4": "m4a",
         "audio/mpeg": "mp3",
+        "application/octet-stream": "mp4",
     }
     WRITE_BUFFER_SIZE = 1024 * 1024 * 100
 
