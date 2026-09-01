@@ -17,12 +17,10 @@ from urllib.parse import parse_qsl, urlencode, urlsplit
 from src.encrypt.aBogus import ABogus
 
 from ..custom import ROOT, USERAGENT
+from ..tools import is_node_available
 from .params import Params
 
 __all__ = ["DouYinParams"]
-
-
-from javascript import require
 
 
 def _query_to_string(
@@ -274,6 +272,8 @@ module.exports = {{
         bridge = self._create_bridge()
 
         if self._module is None:
+            from javascript import require
+
             self._module = require(str(bridge.resolve()))
 
         result = self._module.sign(
@@ -337,7 +337,7 @@ class DouYinParams(Params):
         super().__init__()
         self._ab = ABogus()
 
-        self._websign = _DouyinWebSign()
+        self._websign = _DouyinWebSign() if is_node_available() else None
 
     # --------------------------------------------------------
     # ABogus
@@ -470,6 +470,9 @@ class DouYinParams(Params):
         # ================================================
         # 5. WebSign
         # ================================================
+
+        if self._websign is None:
+            return signed_query
 
         signed_url, signature = self._websign.sign(
             full_url,

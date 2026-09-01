@@ -169,7 +169,8 @@ class TikTokParams(Params):
                 f"X-Gnarly={params['X-Gnarly']}",
             ]
         )
-        if not url:
-            return signed_query
-        sep = "&" if "?" in url else "?"
-        return f"{url}{sep}{signed_query}"
+        # if not url:
+        #     return signed_query
+        # sep = "&" if "?" in url else "?"
+        # return f"{url}{sep}{signed_query}"
+        return signed_query
