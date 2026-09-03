@@ -588,6 +588,7 @@ class Extractor:
 
     @Retry.retry
     async def __request_video_size(self, url: str) -> tuple[int, str] | None:
+        content_range = None
         try:
             response = await self.client.get(
                 url,
@@ -607,14 +608,15 @@ class Extractor:
                 raise ValueError
             size = int(r[-1])
             return size, response.url
-        except (
-            HTTPError,
-            ValueError,
-        ):
-            self.log.warning("解析最高质量下载链接失败！")
+        except HTTPError:
             return -1, ""
-        except RequestException:
+        except ValueError:
+            self.log.warning("解析最高质量下载链接失败！")
+            self.log.warning(f"Url: {url}, Content-Range: {content_range}", False)
+            return -1, ""
+        except RequestException as e:
             self.log.warning("获取最高质量下载链接失败！")
+            self.log.warning(f"Url: {url}, Error: {e}", False)
             return None
 
     def __extract_video_info_tiktok(
