@@ -457,7 +457,6 @@ class API:
             params = urlencode(
                 params,
                 safe="=",
-                quote_via=quote,
             )
             params = self.douyin_params.sign_url(
                 url, params, data, method, user_agent=self.user_agent

@@ -4,7 +4,7 @@ aiofiles==25.1.0
     # via douk-downloader (pyproject.toml)
 aiosqlite==0.22.1
     # via douk-downloader (pyproject.toml)
-curl-cffi==0.16.2
+curl-cffi==0.16.3
     # via douk-downloader (pyproject.toml)
 emoji==2.15.0
     # via douk-downloader (pyproject.toml)
@@ -14,11 +14,11 @@ gmssl==3.2.2
     # via douk-downloader (pyproject.toml)
 javascript==1!1.2.6
     # via douk-downloader (pyproject.toml)
-lxml==6.1.2
+lxml==6.1.3
     # via douk-downloader (pyproject.toml)
 openpyxl==3.1.5
     # via douk-downloader (pyproject.toml)
-pydantic==2.13.4
+pydantic==2.13.5
     # via douk-downloader (pyproject.toml)
 pyperclip==1.11.0
     # via douk-downloader (pyproject.toml)
