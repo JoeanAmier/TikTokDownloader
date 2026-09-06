@@ -37,6 +37,7 @@ from ..tools import (
     Cleaner,
     DownloaderError,
     cookie_dict_to_str,
+    cookie_str_to_dict,
     create_client,
     get_ua_sync,
     load_objects_from_external_py,
@@ -823,6 +824,12 @@ class Parameter:
     def set_uif_id(
         self,
     ) -> None:
+        if uifid := self.__get_cookie_uifid():
+            self.headers["uifid"] = uifid
+        elif self.cookie_dict or self.cookie_str:
+            self.logger.warning(
+                _("抖音 cookie 缺少 uifid 键值对，请尝试重新写入 cookie"),
+            )
         if self.cookie_dict:
             API.params["uifid"] = self.cookie_dict.get("UIFID", "")
         elif self.cookie_str:
@@ -830,6 +837,13 @@ class Parameter:
                 self.cookie_str,
                 "UIFID",
             )
+
+    def __get_cookie_uifid(self) -> str:
+        cookie = self.cookie_dict or cookie_str_to_dict(self.cookie_str)
+        return next(
+            (value for key, value in cookie.items() if key.lower() == "uifid"),
+            "",
+        )
 
     @staticmethod
     def __generate_ffmpeg_object(ffmpeg_path: str) -> FFMPEG:
