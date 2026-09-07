@@ -2404,3 +2404,14 @@ msgstr ""
 #~ msgstr ""
 #~ "Enter any character to continue processing Accounts/Mix, press Enter to "
 #~ "stop processing Accounts/Mix:"
+
+msgid "程序未检测到有效的 ffmpeg，不支持为动图视频合并背景音乐！"
+msgstr "The program did not detect a valid ffmpeg tool, background music merging for animated image videos is not supported!"
+
+#, python-brace-format
+msgid "{show} 合并背景音乐成功"
+msgstr "{show} Background music merged successfully"
+
+#, python-brace-format
+msgid "{show} 合并背景音乐失败: {error}"
+msgstr "{show} Background music merge failed: {error}"
