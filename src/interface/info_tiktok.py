@@ -79,7 +79,7 @@ async def test():
     from src.testers import Params
 
     async with Params() as params:
-        InfoTikTok.params["msToken"] = params.msToken_tiktok
+        InfoTikTok.params["msToken"] = params.ms_token_tiktok
         i = InfoTikTok(
             params,
             unique_id="",

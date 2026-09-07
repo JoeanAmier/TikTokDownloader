@@ -447,9 +447,7 @@ class DouYinParams(Params):
         # 不是所有抖音接口都需要 WebSign。
         # 没有 UIFID 时保持正常 a_bogus 行为。
         if not uifid:
-            separator = "&" if "?" in url else "?"
-
-            return f"{url}{separator}{signed_query}"
+            return signed_query
 
         # ================================================
         # 4. 完整 URL

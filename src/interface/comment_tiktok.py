@@ -86,8 +86,8 @@ async def test():
     from src.testers import Params
 
     async with Params() as params:
-        CommentTikTok.params["msToken"] = params.msToken_tiktok
-        ReplyTikTok.params["msToken"] = params.msToken_tiktok
+        CommentTikTok.params["msToken"] = params.ms_token_tiktok
+        ReplyTikTok.params["msToken"] = params.ms_token_tiktok
         i = CommentTikTok(
             params,
             detail_id="",

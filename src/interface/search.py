@@ -405,7 +405,7 @@ async def test():
 
     async with Params() as params:
         Search.params["uifid"] = params.uifid
-        Search.params["msToken"] = params.msToken_tiktok
+        Search.params["msToken"] = params.ms_token
         i = Search(
             params,
             keyword="",

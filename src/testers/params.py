@@ -22,8 +22,8 @@ class Params:
         self.cookie_str = ""
         self.cookie_str_tiktok = ""
         self.uifid = ""
-        self.msToken = ""
-        self.msToken_tiktok = ""
+        self.ms_token = ""
+        self.ms_token_tiktok = ""
         self.config = ConfigParser(
             interpolation=None,
         )
@@ -87,7 +87,7 @@ class Params:
                 "dy",
                 "uifid",
             )
-            self.msToken = self.config.get(
+            self.ms_token = self.config.get(
                 "dy",
                 "msToken",
             )
@@ -95,7 +95,7 @@ class Params:
                 "tk",
                 "cookie",
             )
-            self.msToken_tiktok = self.config.get(
+            self.ms_token_tiktok = self.config.get(
                 "tk",
                 "msToken",
             )

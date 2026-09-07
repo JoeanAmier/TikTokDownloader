@@ -26,6 +26,7 @@ class Live(API):
         self.web_rid = web_rid
         self.room_id = room_id
         self.sec_user_id = sec_user_id
+        self.ms_token = params.ms_token
 
     async def run(
         self,
@@ -41,26 +42,27 @@ class Live(API):
 
     async def with_web_rid(self) -> dict:
         self.set_referer("https://live.douyin.com/")
-        params = {  # TODO: 参数固定
+        params = {
             "aid": "6383",
             "app_name": "douyin_web",
             "live_id": "1",
             "device_platform": "web",
             "language": "zh-CN",
-            "enter_from": "web_share_link",
+            "enter_from": "link_share",
             "cookie_enabled": "true",
             "screen_width": "1536",
             "screen_height": "864",
             "browser_language": "zh-CN",
-            "browser_platform": "Win32",
-            "browser_name": "Edge",
-            "browser_version": "139.0.0.0",
+            "browser_platform": "MacIntel",
+            "browser_name": "Chrome",
+            "browser_version": "146.0.0.0",
             "web_rid": self.web_rid,
             # "room_id_str": "",
             "enter_source": "",
             "is_need_double_stream": "false",
             "insert_task_id": "",
             "live_reason": "",
+            "msToken": self.ms_token,
         }
         return await self.request_data(
             self.live_api,
