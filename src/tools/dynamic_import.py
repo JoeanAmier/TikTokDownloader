@@ -33,7 +33,7 @@ def load_objects_from_external_py(
     file_path = base_dir / file_name
 
     if not file_path.exists():
-        console.info(_("加密参数代码文件不存在！"))
+        console.print(_("加密参数代码文件不存在！"))
         return {}
 
     # 1. 动态加载 .py 文件为模块

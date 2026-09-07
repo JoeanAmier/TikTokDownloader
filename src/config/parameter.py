@@ -40,6 +40,7 @@ from ..tools import (
     cookie_str_to_dict,
     create_client,
     get_ua_sync,
+    is_node_available,
     load_objects_from_external_py,
 )
 from ..translation import _
@@ -131,7 +132,7 @@ class Parameter:
         self.ms_token = ""
         self.ms_token_tiktok = ""
 
-        self.headers = DATA_HEADERS
+        self.headers = DATA_HEADERS | {"x-tt-argus": "1"}
         self.headers_tiktok = DATA_HEADERS_TIKTOK
         self.headers_download = DOWNLOAD_HEADERS
         self.headers_download_tiktok = DOWNLOAD_HEADERS_TIKTOK
@@ -1208,6 +1209,8 @@ class Parameter:
 
     @staticmethod
     def check_objects_from_external_py(console: "ColorfulConsole"):
+        if not is_node_available():
+            console.print(_("未检测到 Node.js，部分功能可能受到影响！"))
         objects = load_objects_from_external_py(
             "encipher.py",
             [

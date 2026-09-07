@@ -20,14 +20,14 @@
 <hr>
 <p>⚠️ 当前版本部分功能已失效。项目计划在 <code>6.0</code> 版本进行重构，重构完成后将会修复部分失效的功能！</p>
 <p>⚠️ 本项目的加密参数算法已过期失效；为确保项目合法合规，参数算法不再维护，部分功能可能无法正常工作。如需使用，请自行准备加密参数生成代码，配置方法请查阅 <a href="#encipher">加密参数生成代码配置</a>！</p>
-<p>⭐ <b>项目文档版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/9/1</code></b></p>
+<p>⭐ <b>项目文档版本：<code>5.8 Beta</code>；文档更新日期：<code>2026/9/7</code></b></p>
 <p>⭐ Due to the author’s limited time and energy, the complete English documentation for this project is not yet available. If you wish to read the full documentation, we recommend using AI translation tools to assist your understanding. If you would like to contribute to the translation, your help is warmly welcomed.</p>
 <hr>
 <h1>快速入门</h1>
 <p>⭐ 本项目包含手动构建可执行文件的 GitHub Actions，使用者可以随时使用 GitHub Actions 将最新源码构建为可执行文件！</p>
 <p>⭐ 自动构建可执行文件教程请查阅本文档的 <code>构建可执行文件指南</code> 部分；如果需要更加详细的图文教程，请 <a href="https://mp.weixin.qq.com/s/TorfoZKkf4-x8IBNLImNuw">查阅文章</a>！</p>
 <p><strong>注意：由于 Mac OS 平台的可执行文件 <code>main</code> 未经过代码签名，首次运行时会受到系统安全限制。请先在终端执行 <code>xattr -cr main.app</code> 命令移除安全标记，执行一次后即可正常运行。</strong></p>
-<p><strong>Node.js（可选）</strong>：部分功能需要使用 Node.js 执行 JavaScript 代码，使用这些功能时请安装 <strong>Node.js >= 18</strong>；未安装 Node.js 不影响其他功能的正常使用。</p>
+<p><strong><a href="https://nodejs.org/">Node.js</a>（可选依赖）</strong>：部分功能依赖 Node.js 执行 JavaScript 代码，需要 Node.js 18 及以上版本；建议使用者自行安装，未安装时部分功能可能受到影响。</p>
 <hr>
 <ol>
 <li><b>运行可执行文件</b> 或者 <b>配置环境运行</b>
