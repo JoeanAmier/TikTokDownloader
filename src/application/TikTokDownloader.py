@@ -347,7 +347,7 @@ class TikTokDownloader:
         if read:
             if self.console.input(
                 _(
-                    "复制 Cookie 内容至剪贴板后，按回车键确认继续；若输入任意内容并按回车，则取消操作："
+                    "复制 Cookie 内容至剪贴板后，按下 Enter 键确认继续；若输入任意内容并按下 Enter 键，则取消操作："
                 )
             ):
                 self.logger.info(_("取消写入 Cookie 操作！"))
@@ -358,7 +358,7 @@ class TikTokDownloader:
             if not (
                 cookie := self.console.input(
                     _(
-                        "粘贴 Cookie 内容后按回车键确认继续；输入任意内容后回车则取消操作："
+                        "粘贴 Cookie 内容后按下 Enter 键确认继续；不输入内容按下 Enter 键则取消操作："
                     )
                 )
             ):

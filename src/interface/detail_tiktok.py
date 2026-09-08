@@ -83,7 +83,7 @@ async def test():
     from src.testers import Params
 
     async with Params() as params:
-        DetailTikTok.params["msToken"] = params.msToken_tiktok
+        DetailTikTok.params["msToken"] = params.ms_token_tiktok
         i = DetailTikTok(
             params,
             detail_id="",

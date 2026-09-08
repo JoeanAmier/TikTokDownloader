@@ -131,7 +131,7 @@ class AccountTikTok(
             "coverFormat": "2",
             "post_item_list_request_type": "0",
             "needPinnedItemIds": "true",
-            "video_encoding": "mp4",
+            "video_encoding": "dash",
         }
 
 
@@ -139,7 +139,7 @@ async def test():
     from src.testers import Params
 
     async with Params() as params:
-        AccountTikTok.params["msToken"] = params.msToken_tiktok
+        AccountTikTok.params["msToken"] = params.ms_token_tiktok
         i = AccountTikTok(
             params,
             sec_user_id="",

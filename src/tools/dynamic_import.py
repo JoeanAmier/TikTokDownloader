@@ -33,13 +33,13 @@ def load_objects_from_external_py(
     file_path = base_dir / file_name
 
     if not file_path.exists():
-        console.print(_("加密参数代码文件不存在！"))
+        console.print(_("encipher.py 未加载，将使用内置参数生成代码！"))
         return {}
 
     # 1. 动态加载 .py 文件为模块
     spec = importlib.util.spec_from_file_location("external_dynamic_module", file_path)
     if spec is None or spec.loader is None:
-        console.error(_("加密参数代码文件加载失败！"))
+        console.error(_("encipher.py 加载失败，无法使用外部参数生成代码！"))
         return {}
 
     module = importlib.util.module_from_spec(spec)
