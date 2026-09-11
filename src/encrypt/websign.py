@@ -1,21 +1,22 @@
 # ============================================================
 # 声明 (Declaration)
 #
-# 本文件算法整理自 (Apache-2.0 License):
-#   https://github.com/mlkt/Douyin_TikTok_Download_API
+# 本文件改编自以下项目的 WebSign 实现：
+#   `https://github.com/Evil0ctal/Douyin_TikTok_Download_API`
 #   src/dtk/signing/native/websign.py
 #
-# 该项目对抖音 secsdk（runtime_bundler_34.js, @byted/secsdk-strategy
-# v1.0.40, project-id="34"）webSignUrl 的独立逆向：
-#
-#     signature = md5("{uifid}_{timestamp}_{SALT}_{query}")
-#
-# 盐值为字节码字符串表第 39 号字符串，随 project 变化。
-# 签名是四个输入的纯函数，无 nonce、无会话状态。
+# 该项目逆向了抖音 secsdk（runtime_bundler_34.js, @byted/secsdk-strategy
+# v1.0.40, project-id="34"）的 webSignUrl。
+# 本文件针对 DouK-Downloader 的接口和代码结构进行了适配。
+# Portions Copyright (c) Evil0ctal
+# 感谢原作者 Evil0ctal 的开源贡献。
+# Apache License 2.0: `https://github.com/Evil0ctal/Douyin_TikTok_Download_API/blob/main/LICENSE`
+# 协议副本: licenses/Apache-2.0
 # ============================================================
 
 from hashlib import md5
 from time import time
+from urllib.parse import quote, unquote
 
 __all__ = [
     "SALT",
@@ -31,6 +32,27 @@ SALT = "A96D855A08C0A9707F8BEF0D9A527E4E"
 SIGNATURE_PARAM = "x-secsdk-web-signature"
 UIFID_PARAM = "uifid"
 TIMESTAMP_PARAM = "timestamp"
+
+
+def _query_pairs(query: str) -> list[tuple[str, str]]:
+    """Decode encoded query bytes while preserving literal ``+`` signs."""
+
+    pairs: list[tuple[str, str]] = []
+    for part in query.split("&"):
+        if not part:
+            continue
+        name, _, value = part.partition("=")
+        pairs.append((unquote(name), unquote(value)))
+    return pairs
+
+
+def _encode_pairs(pairs: list[tuple[str, str]]) -> str:
+    """Serialize pairs with the native WebSign percent-encoding rules."""
+
+    return "&".join(
+        f"{quote(name, safe='*-._')}={quote(value, safe='*-._')}"
+        for name, value in pairs
+    )
 
 
 def sign(
@@ -55,8 +77,10 @@ def sign(
     """
     stamp = str(int(time() if timestamp is None else timestamp))
     # 预映像中的 query 即发送字节序本身：签名覆盖的字节与发送的字节一致
-    hashed = (
-        f"{query}&{TIMESTAMP_PARAM}={stamp}" if query else f"{TIMESTAMP_PARAM}={stamp}"
-    )
+    pairs = _query_pairs(query)
+    if not any(name == UIFID_PARAM for name, _ in pairs):
+        pairs.append((UIFID_PARAM, uifid))
+    pairs.append((TIMESTAMP_PARAM, stamp))
+    hashed = _encode_pairs(pairs)
     signature = md5(f"{uifid}_{stamp}_{SALT}_{hashed}".encode()).hexdigest()
     return f"{hashed}&{SIGNATURE_PARAM}={signature}", signature

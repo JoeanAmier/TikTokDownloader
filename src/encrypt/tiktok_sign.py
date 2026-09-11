@@ -1,28 +1,27 @@
 # ============================================================
 # 声明 (Declaration)
 #
-# 本文件算法整理自 (Apache-2.0 License):
-#   https://github.com/mlkt/Douyin_TikTok_Download_API
+# 本文件改编自以下项目的 TikTok 签名实现：
+#   `https://github.com/Evil0ctal/Douyin_TikTok_Download_API`
 #   src/dtk/signing/native/tiktok_sign.py
 #
-# 该项目对 TikTok 网页端 webmssdk (2.0.0.561, 即 acrawler) 的独立
-# 逆向：签名是带内嵌密钥的加密信封，所有常量与两套自定义 base64
-# 字母表均可在 SDK 产物中找到，并已通过 Node 运行原版 SDK 的
-# 逐字节对照验证（20 组向量、4 个接口）。
-#
-# 用途限制 / ⚠️ For Learning & Exchange Only
-# -----------------------------------------
-# 本模块仅供学习交流、授权测试、安全研究使用，禁止用于绕过
-# TikTok 或任何平台的风控措施、批量抓取等违反平台服务条款的行为。
+# 该项目逆向了 TikTok 网页端 webmssdk (2.0.0.561, 即 acrawler)。
+# 本文件针对 DouK-Downloader 的接口和代码结构进行了适配。
+# Portions Copyright (c) Evil0ctal
+# 感谢原作者 Evil0ctal 的开源贡献。
+# Apache License 2.0: `https://github.com/Evil0ctal/Douyin_TikTok_Download_API/blob/main/LICENSE`
+# 协议副本: licenses/Apache-2.0
 # ============================================================
 
 from base64 import b64encode
+from collections.abc import Iterable
 from hashlib import md5
 from random import Random
 from time import time
 from typing import Final
 
 __all__ = [
+    "encode_query",
     "sign",
 ]
 
@@ -90,6 +89,40 @@ CALL_SEQUENCE_START: Final = 1
 # A 编码除校验和外的所有字段；B 编码校验和与三个标志位
 ENCODER_A: Final = (103, 1, None, 2, 1)
 ENCODER_B: Final = (102, 0, 165, 1, 0)
+
+# TikTok's browser serializer is not application/x-www-form-urlencoded:
+# spaces become ``%20`` (not ``+``), while parentheses, slashes and colons
+# remain literal. Keep this canonical encoder next to the signer so callers
+# hash and send exactly the same bytes.
+_MUST_ESCAPE: Final = {
+    " ": "%20",
+    '"': "%22",
+    "<": "%3C",
+    ">": "%3E",
+    "`": "%60",
+    "#": "%23",
+}
+
+
+def encode_query(pairs: Iterable[tuple[str, str]]) -> str:
+    """Serialize query pairs exactly as TikTok Web's browser path does."""
+
+    return "&".join(f"{_escape(key)}={_escape(value)}" for key, value in pairs)
+
+
+def _escape(text: str) -> str:
+    """Percent-escape only characters the browser must escape."""
+
+    out: list[str] = []
+    for char in text:
+        if char in _MUST_ESCAPE:
+            out.append(_MUST_ESCAPE[char])
+        elif " " < char <= "~":
+            out.append(char)
+        else:
+            out.extend(f"%{byte:02X}" for byte in char.encode("utf-8"))
+    return "".join(out)
+
 
 # 每个信封内嵌的密钥字数
 KEY_WORDS: Final = 12
@@ -445,7 +478,9 @@ def sign(
             embedded_token = value
             continue
         parts.append(part)
-    token = ms_token or embedded_token
+    # A token already present in the query is authoritative. This keeps the
+    # bytes signed in sync with a caller that intentionally pins a token.
+    token = embedded_token or ms_token
     query = "&".join(parts)
 
     dynosaur = seal(

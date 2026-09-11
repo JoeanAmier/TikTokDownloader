@@ -1,4 +1,5 @@
 from src.encrypt import TikTokParams
+from src.encrypt.tiktok_params import _query_to_string
 
 
 def test_tiktok_sign():
@@ -65,3 +66,28 @@ def test_tiktok_sign_url_ms_token_in_query():
     # query 自带的 msToken 被摘出并移至 SDK 固定位置，不出现第二份
     assert query.count("msToken=") == 1
     assert "msToken=test_ms_token_123" in query
+
+
+def test_tiktok_query_uses_browser_encoding():
+    assert _query_to_string(
+        {
+            "browser_version": "5.0 (Windows)",
+            "root_referer": "https://www.tiktok.com/",
+            "tz_name": "America/Los_Angeles",
+            "q": "中",
+        }
+    ) == (
+        "browser_version=5.0%20(Windows)"
+        "&root_referer=https://www.tiktok.com/"
+        "&tz_name=America/Los_Angeles"
+        "&q=%E4%B8%AD"
+    )
+
+
+def test_tiktok_query_ms_token_wins_over_explicit_argument():
+    query = TikTokParams().sign_url(
+        query="aid=1988&msToken=from-query",
+        ms_token="from-argument",
+    )
+    assert "&msToken=from-query&" in query
+    assert "from-argument" not in query

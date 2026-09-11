@@ -1,12 +1,14 @@
 # ============================================================
 # 声明 (Declaration)
 #
-# 本文件代码整理自 (Apache-2.0 License):
-#   https://github.com/mlkt/Douyin_TikTok_Download_API
+# 本文件改编自以下项目的 SM3 实现：
+#   `https://github.com/Evil0ctal/Douyin_TikTok_Download_API`
 #   src/dtk/signing/native/sm3.py
 #
-# SM3 杂凑算法 (GB/T 32905-2016) 的纯 Python 实现，
-# 输出与 gmssl.sm3.sm3_hash 逐字节一致。
+# Portions Copyright (c) Evil0ctal
+# 感谢原作者 Evil0ctal 的开源贡献。
+# Apache License 2.0: `https://github.com/Evil0ctal/Douyin_TikTok_Download_API/blob/main/LICENSE`
+# 协议副本: licenses/Apache-2.0
 # ============================================================
 
 __all__ = [

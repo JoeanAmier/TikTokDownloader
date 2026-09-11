@@ -1,13 +1,16 @@
 # ============================================================
 # 声明 (Declaration)
 #
-# 本文件代码整理自 (Apache-2.0 License):
-#   https://github.com/mlkt/Douyin_TikTok_Download_API
+# 本文件改编自以下项目的 A-Bogus 实现：
+#   `https://github.com/Evil0ctal/Douyin_TikTok_Download_API`
 #   src/dtk/signing/native/abogus.py
 #
-# 该实现为该项目对抖音 bdms.js (v1.0.1.19-fix.01) 的独立逆向，
-# 未移植任何第三方 GPL 实现；算法常量均可在 bdms.js 字节码中找到。
-# SM3 依赖本项目内的 src/encrypt/sm3.py。
+# 该项目逆向了抖音 bdms.js (v1.0.1.19-fix.01)。
+# 本文件针对 DouK-Downloader 的接口和代码结构进行了适配。
+# Portions Copyright (c) Evil0ctal
+# 感谢原作者 Evil0ctal 的开源贡献。
+# Apache License 2.0: `https://github.com/Evil0ctal/Douyin_TikTok_Download_API/blob/main/LICENSE`
+# 协议副本: licenses/Apache-2.0
 # ============================================================
 
 from random import Random
@@ -411,7 +414,9 @@ class ABogus:
         body_bytes += bytes((checksum,))
 
         header = bytes(
-            _mask_pair(HEADER_MAGIC, self._rng, high=_header_noise(self.user_agent, self._rng))
+            _mask_pair(
+                HEADER_MAGIC, self._rng, high=_header_noise(self.user_agent, self._rng)
+            )
         )
         frame = _expand_noise(body_bytes, self._rng)
         sealed = rc4(bytes((PAYLOAD_KEY,)), bytes(version) + frame)

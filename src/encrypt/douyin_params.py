@@ -1,18 +1,22 @@
 # ============================================================
 # 声明 (Declaration)
 #
-# 本文件的 a_bogus 与 x-secsdk-web-signature 为纯 Python 实现，
-# 整理自 (Apache-2.0 License):
-#   https://github.com/mlkt/Douyin_TikTok_Download_API
+# 本文件改编自以下项目的 a_bogus 与 x-secsdk-web-signature 签名实现：
+#   `https://github.com/Evil0ctal/Douyin_TikTok_Download_API`
+#   src/dtk/signing/native/abogus.py
+#   src/dtk/signing/native/websign.py
 #
-#   - A-Bogus: 该项目对抖音 bdms.js (v1.0.1.19-fix.01) 的独立逆向，
-#     详见 src/encrypt/aBogus.py
-#   - WebSign: 该项目对 secsdk (runtime_bundler_34.js,
-#     @byted/secsdk-strategy) webSignUrl 的独立逆向，
-#     详见 src/encrypt/websign.py
+#   - A-Bogus: 该项目逆向了抖音 bdms.js (v1.0.1.19-fix.01)。
+#   - WebSign: 该项目逆向了抖音 secsdk（runtime_bundler_34.js,
+#     @byted/secsdk-strategy v1.0.40, project-id="34"）的 webSignUrl。
+# 本文件针对 DouK-Downloader 的接口和代码结构进行了适配。
+# Portions Copyright (c) Evil0ctal
+# 感谢原作者 Evil0ctal 的开源贡献。
+# Apache License 2.0: `https://github.com/Evil0ctal/Douyin_TikTok_Download_API/blob/main/LICENSE`
+# 协议副本: licenses/Apache-2.0
 # ============================================================
 
-from urllib.parse import parse_qsl, quote, urlencode, urlsplit
+from urllib.parse import parse_qsl, quote, unquote, urlencode, urlsplit
 
 from ..custom import USERAGENT
 from .aBogus import ABogus
@@ -25,10 +29,6 @@ __all__ = ["DouYinParams"]
 
 # ============================================================
 # 抖音签名保护接口列表
-#
-# 整理自 (Apache-2.0 License):
-#   https://github.com/mlkt/Douyin_TikTok_Download_API
-#   src/dtk/signing/protection.py
 #
 # 抖音并非对所有接口做签名保护：其网页 SDK（runtime_bundler_34.js）
 # 的 webSign 策略在 config.protectedHost["www.douyin.com"].GET 中
@@ -94,7 +94,6 @@ def _query_to_string(
         return urlencode(
             query,
             doseq=True,
-            safe="=",
         )
 
     raise TypeError(f"query 类型错误: {type(query)!r}")
@@ -145,23 +144,21 @@ def _get_query_value(
     query: str,
     name: str,
 ) -> str:
-
-    return next(
-        (
-            value
-            for key, value in parse_qsl(
-                query,
-                keep_blank_values=True,
-            )
-            if key == name
-        ),
-        "",
-    )
+    # WebSign's native path decodes percent escapes but deliberately keeps a
+    # literal ``+``.  ``parse_qsl`` uses form semantics and would turn it into
+    # a space, changing the uifid value used in the md5 preimage.
+    for part in query.split("&"):
+        if not part:
+            continue
+        key, _, value = part.partition("=")
+        if unquote(key) == name:
+            return unquote(value)
+    return ""
 
 
 class DouYinParams(Params):
     """
-    TikTokDownloader 抖音参数实现（纯 Python）。
+    TikTokDownloader 抖音参数实现。
 
     sign():
 

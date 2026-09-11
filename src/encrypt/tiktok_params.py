@@ -1,39 +1,28 @@
 # ============================================================
 # 声明 (Declaration)
 #
-# 本文件的 X-Dynosaur / X-Gnarly 为纯 Python 实现，整理自
-# (Apache-2.0 License):
-#   https://github.com/mlkt/Douyin_TikTok_Download_API
+# 本文件改编自以下项目的 X-Dynosaur / X-Gnarly 签名实现：
+#   `https://github.com/Evil0ctal/Douyin_TikTok_Download_API`
+#   src/dtk/signing/native/tiktok_sign.py
 #
-#   该项目对 TikTok 网页端 webmssdk (2.0.0.561) 的独立逆向，
-#   并经 Node 运行原版 SDK 逐字节对照验证，详见
-#   src/encrypt/tiktok_sign.py
-#
-# 用途限制 / ⚠️ For Learning & Exchange Only
-# -----------------------------------------
-# 本模块仅供学习交流、授权测试、安全研究使用，禁止用于绕过
-# TikTok 或任何平台的风控措施、批量抓取等违反平台服务条款的行为。
+# 该项目逆向了 TikTok 网页端 webmssdk (2.0.0.561, 即 acrawler)。
+# 本文件针对 DouK-Downloader 的接口和代码结构进行了适配。
+# Portions Copyright (c) Evil0ctal
+# 感谢原作者 Evil0ctal 的开源贡献。
+# Apache License 2.0: `https://github.com/Evil0ctal/Douyin_TikTok_Download_API/blob/main/LICENSE`
+# 协议副本: licenses/Apache-2.0
 # ============================================================
-
-from urllib.parse import urlencode
 
 from ..custom import USERAGENT
 from .params import Params
+from .tiktok_sign import encode_query as tiktok_encode_query
 from .tiktok_sign import sign as tiktok_sign
 
 __all__ = ["TikTokParams"]
 
 
 class TikTokParams(Params):
-    """TikTok Web 请求签名参数生成器。
-
-    封装的算法为对 TikTok 网页端 webmssdk 的独立逆向成果
-    （Apache-2.0，见 src/encrypt/tiktok_sign.py），本类仅负责
-    调用与结果包装。
-
-    ⚠️ 仅供学习交流 / 授权测试 / 安全研究，请勿用于绕过风控、批量
-    抓取或违反任何平台服务条款的场景。
-    """
+    """TikTok Web 请求签名参数生成器。"""
 
     def __init__(self) -> None:
         super().__init__()
@@ -130,10 +119,15 @@ def _query_to_string(
         return query
 
     if isinstance(query, dict):
-        return urlencode(
-            query,
-            doseq=True,
-        )
+        pairs: list[tuple[str, str]] = []
+        for key, value in query.items():
+            # Match urlencode(..., doseq=True)'s useful behavior for list/tuple
+            # parameters while applying TikTok's browser serializer.
+            if isinstance(value, (list, tuple)):
+                pairs.extend((str(key), str(item)) for item in value)
+            else:
+                pairs.append((str(key), str(value)))
+        return tiktok_encode_query(pairs)
 
     raise TypeError(f"query 类型错误: {type(query)!r}")
 
@@ -150,6 +144,8 @@ def _data_to_bytes(
         return data.encode("utf-8")
 
     if isinstance(data, dict):
+        from urllib.parse import urlencode
+
         return urlencode(
             data,
             doseq=True,

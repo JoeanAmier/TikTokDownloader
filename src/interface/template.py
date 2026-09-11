@@ -1,6 +1,5 @@
 from time import time
 from typing import TYPE_CHECKING, Callable, Coroutine, Type, Union
-from urllib.parse import quote, urlencode
 
 from curl_cffi.requests import AsyncSession, get, post
 from rich.progress import (
@@ -454,14 +453,9 @@ class API:
         **kwargs,
     ) -> str:
         if params:
-            params = urlencode(
-                params,
-                safe="=",
-            )
-            params = self.douyin_params.sign_url(
+            return self.douyin_params.sign_url(
                 url, params, data, method, user_agent=self.user_agent
             )
-            return params
         return ""
 
     def summary_works(
@@ -604,12 +598,7 @@ class APITikTok(API):
         **kwargs,
     ) -> str:
         if params:
-            params = urlencode(
-                params,
-                safe="=",
-                quote_via=quote,
-            )
-            params = self.tiktok_params.sign_url(
+            return self.tiktok_params.sign_url(
                 url,
                 params,
                 data,
@@ -617,5 +606,4 @@ class APITikTok(API):
                 user_agent=self.user_agent_tiktok,
                 ms_token=self.params["msToken"],
             )
-            return params
         return ""

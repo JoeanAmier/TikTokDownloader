@@ -417,7 +417,7 @@ repository to execute the build process
 <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=JoeanAmier/TikTokDownloader&type=timeline&legend=bottom-right&sealed_token=_T_oN4xPDhh9ew5nz-OYOAjczkaYr6UUekQ5dTCrnmtR9kk5mM6h5fdHGJRy4ZaLEb36r8gSCrMfot4pk2E5lYzH-Ixk6eFOmmk1sNViVxsf-lkDYaQsbR9awBGeFyASWSX_RV10hHOWQEivZXRp4n9hcpf02mpReiwPVJHdQPXJryOXo1jDXlTF2UoX" />
 </p>
 
-# 💡 Project References
+# 💡 Acknowledgements
 
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
 * https://github.com/Johnserf-Seed/f2

@@ -1,4 +1,6 @@
 from src.encrypt import DouYinParams
+from src.encrypt.douyin_params import _query_to_string
+from src.encrypt.websign import sign as websign_sign
 
 
 def test_douyin_sign():
@@ -64,3 +66,40 @@ def test_douyin_sign_url_websign_skips_unprotected_endpoint():
     assert "timestamp=" not in query
     assert "x-secsdk-web-signature=" not in query
     assert "a_bogus=" in query
+
+
+def test_douyin_query_uses_standard_form_encoding_inside_signer():
+    # This matches the main project's A-Bogus query encoder: quote_plus with
+    # no extra safe characters.
+    assert _query_to_string({"keyword": "hello world", "value": "x=y"}) == (
+        "keyword=hello+world&value=x%3Dy"
+    )
+
+
+def test_douyin_sign_url_accepts_raw_mapping_and_encodes_once():
+    query = DouYinParams().sign_url(
+        url="https://www.douyin.com/aweme/v1/web/user/profile/other/",
+        query={"keyword": "hello world", "value": "x=y"},
+    )
+    assert query.startswith("keyword=hello+world&value=x%3Dy&")
+
+
+def test_douyin_websign_reencodes_query_like_native_signer():
+    query, _ = websign_sign(
+        "keyword=hello+world&uifid=test_uifid&a_bogus=sig%2Bwith%2Fchars",
+        "test_uifid",
+        timestamp=1788848901,
+    )
+    assert query.startswith(
+        "keyword=hello%2Bworld&uifid=test_uifid&"
+        "a_bogus=sig%2Bwith%2Fchars&timestamp=1788848901&"
+    )
+
+
+def test_douyin_websign_keeps_literal_plus_in_uifid():
+    query, _ = websign_sign(
+        "aid=6383&uifid=visitor+id&count=10",
+        "visitor+id",
+        timestamp=1788848901,
+    )
+    assert "uifid=visitor%2Bid" in query
