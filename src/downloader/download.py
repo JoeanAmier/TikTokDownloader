@@ -70,6 +70,8 @@ class Downloader:
         self.client_tiktok: "AsyncSession" = params.client_tiktok
         self.headers: dict = params.headers_download
         self.headers_tiktok: dict = params.headers_download_tiktok
+        self.user_agent: str = params.user_agent
+        self.user_agent_tiktok: str = params.user_agent_tiktok
         self.log: "BaseLogger" = params.logger
         self.console: "ColorfulConsole" = params.console
         self.root: Path = params.root
@@ -298,7 +300,7 @@ class Downloader:
         self.ffmpeg.download(
             commands,
             self.proxy_tiktok if tiktok else self.proxy,
-            self.headers["User-Agent"],
+            self.user_agent_tiktok if tiktok else self.user_agent,
         )
 
     async def batch_processing(self, data: list[dict], root: Path, **kwargs):
