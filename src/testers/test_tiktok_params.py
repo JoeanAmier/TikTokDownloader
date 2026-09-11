@@ -9,22 +9,23 @@ def test_tiktok_sign():
     )
     assert result["X-Dynosaur"]
     assert result["X-Gnarly"]
-    assert result["X-Bogus"]
+    # HTTP 请求上 X-Bogus 为字面量 "1"，与 SDK 行为一致
+    assert result["X-Bogus"] == "1"
+    assert result["msToken"] == "test_ms_token_123"
 
 
 def test_tiktok_sign_url_with_base():
     signer = TikTokParams()
-    url = signer.sign_url(
+    query = signer.sign_url(
         url="https://www.tiktok.com/api/feed",
         query="aid=1988&count=2",
         ms_token="test_ms_token_123",
     )
-    assert url.startswith("https://www.tiktok.com/api/feed?")
-    assert "aid=1988&count=2" in url
-    assert "X-Dynosaur=" in url
-    assert "msToken=test_ms_token_123" in url
-    assert "X-Bogus=" in url
-    assert "X-Gnarly=" in url
+    # sign_url 返回纯 query 字符串，URL 由传输层拼接
+    assert query.startswith("aid=1988&count=2&X-Dynosaur=")
+    assert "msToken=test_ms_token_123" in query
+    assert "X-Bogus=1" in query
+    assert "X-Gnarly=" in query
 
 
 def test_tiktok_sign_url_without_base():
@@ -34,7 +35,33 @@ def test_tiktok_sign_url_without_base():
         query="aid=1988&count=2",
         ms_token="test_ms_token_123",
     )
-    assert "aid=1988&count=2" in query
-    assert "X-Dynosaur=" in query
-    assert "X-Bogus=" in query
+    assert query.startswith("aid=1988&count=2&X-Dynosaur=")
+    assert "X-Bogus=1" in query
     assert "X-Gnarly=" in query
+
+
+def test_tiktok_sign_url_parameter_order():
+    signer = TikTokParams()
+    query = signer.sign_url(
+        url="",
+        query="aid=1988&count=2",
+        ms_token="test_ms_token_123",
+    )
+    # 参数顺序由 SDK 决定：X-Dynosaur、msToken、X-Bogus、X-Gnarly
+    assert (
+        query.index("X-Dynosaur=")
+        < query.index("msToken=")
+        < query.index("X-Bogus=")
+        < query.index("X-Gnarly=")
+    )
+
+
+def test_tiktok_sign_url_ms_token_in_query():
+    signer = TikTokParams()
+    query = signer.sign_url(
+        url="",
+        query="aid=1988&count=2&msToken=test_ms_token_123",
+    )
+    # query 自带的 msToken 被摘出并移至 SDK 固定位置，不出现第二份
+    assert query.count("msToken=") == 1
+    assert "msToken=test_ms_token_123" in query

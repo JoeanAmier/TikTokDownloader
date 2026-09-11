@@ -40,7 +40,6 @@ from ..tools import (
     cookie_str_to_dict,
     create_client,
     get_ua_sync,
-    is_node_available,
     load_objects_from_external_py,
 )
 from ..translation import _
@@ -1209,8 +1208,8 @@ class Parameter:
 
     @staticmethod
     def check_objects_from_external_py(console: "ColorfulConsole"):
-        if not is_node_available():
-            console.print(_("未检测到 Node.js，部分功能可能受到影响！"))
+        # if not is_node_available():
+        #     console.print(_("未检测到 Node.js，部分功能可能受到影响！"))
         objects = load_objects_from_external_py(
             "encipher.py",
             [

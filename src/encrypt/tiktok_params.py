@@ -1,71 +1,42 @@
-"""
-TikTok Web 请求签名参数生成器
-================================
+# ============================================================
+# 声明 (Declaration)
+#
+# 本文件的 X-Dynosaur / X-Gnarly 为纯 Python 实现，整理自
+# (Apache-2.0 License):
+#   https://github.com/mlkt/Douyin_TikTok_Download_API
+#
+#   该项目对 TikTok 网页端 webmssdk (2.0.0.561) 的独立逆向，
+#   并经 Node 运行原版 SDK 逐字节对照验证，详见
+#   src/encrypt/tiktok_sign.py
+#
+# 用途限制 / ⚠️ For Learning & Exchange Only
+# -----------------------------------------
+# 本模块仅供学习交流、授权测试、安全研究使用，禁止用于绕过
+# TikTok 或任何平台的风控措施、批量抓取等违反平台服务条款的行为。
+# ============================================================
 
-封装第三方开源项目 `tiktok-web-params <https://github.com/xvhuan/tiktok-web-params>`
-（作者 xvhuan，MIT License），提供 TikTok Web 接口所需的
-X-Dynosaur / X-Gnarly / X-Bogus 三个签名参数的本地计算能力。
+from urllib.parse import urlencode
 
-源代码
-------
-JS 算法来源：
-    https://github.com/xvhuan/tiktok-web-params
-    原始文件：tiktok-web-params.js
-    作者：xvhuan
-    协议：MIT
-
-用途限制 / ⚠️ For Learning & Exchange Only
------------------------------------------
-本模块仅供 **学习交流、授权测试、安全研究** 使用。**禁止**：
-
-- 用于绕过 TikTok 或任何平台的风控、限流、反爬措施；
-- 用于批量抓取、爬虫、数据挖掘等违反平台《服务条款》的行为；
-- 用于任何商业化或未授权场景。
-
-使用者应自行确保其使用场景合法合规，并承担由此产生的一切法律责任。
-作者 (xvhuan) 与本项目维护者均不对任何滥用或违规使用承担责任。
-"""
-
-from typing import Any
-from urllib.parse import quote, urlencode
-
-from ..custom import ROOT, USERAGENT
-from ..tools import is_node_available
+from ..custom import USERAGENT
 from .params import Params
+from .tiktok_sign import sign as tiktok_sign
 
 __all__ = ["TikTokParams"]
-
-_JS_FILE = ROOT / "static" / "js" / "tiktok-web-params.js"
-
-_DEFAULT_ENV: dict[str, int] = {
-    "envcode": 1,
-    "ubcode": 0,
-    "txr": 11,
-    "tfr": 22,
-    "ixr": 33,
-    "ifr": 44,
-}
 
 
 class TikTokParams(Params):
     """TikTok Web 请求签名参数生成器。
 
-    封装的 JS 算法来源于第三方开源项目
-    `xvhuan/tiktok-web-params <https://github.com/xvhuan/tiktok-web-params>`
-    （MIT License），本类仅负责加载、调用与返回结果包装。
+    封装的算法为对 TikTok 网页端 webmssdk 的独立逆向成果
+    （Apache-2.0，见 src/encrypt/tiktok_sign.py），本类仅负责
+    调用与结果包装。
 
-    ⚠️ 仅供学习交流 / 授权测试 / 安全研究，请勿用于绕过风控、批量抓取或
-    违反任何平台服务条款的场景。
+    ⚠️ 仅供学习交流 / 授权测试 / 安全研究，请勿用于绕过风控、批量
+    抓取或违反任何平台服务条款的场景。
     """
 
     def __init__(self) -> None:
         super().__init__()
-        if is_node_available():
-            from javascript import require
-
-            self._js = require(str(_JS_FILE.resolve()))
-        else:
-            self._js = None
 
     def sign(
         self,
@@ -77,52 +48,33 @@ class TikTokParams(Params):
         ms_token: str = "",
     ) -> dict[str, str]:
         """
-        计算 TikTok Web 接口的三个签名参数。
+        计算 TikTok Web 接口的四个签名参数。
 
         Parameters
         ----------
         query : dict | str
-            原始查询字符串或字典。
+            原始查询字符串或字典，为最终发送的字节序。
         data : dict | str | None
-            未使用，保留参数。
+            POST 请求体；字典以表单形式序列化后参与封印。
         method : str
             未使用，保留参数。
         user_agent : str
-            请求使用的 User-Agent。
+            请求使用的 User-Agent，必须与实际发送的一致。
         ms_token : str
-            参与签名的 msToken。
+            参与签名的 msToken；query 中已包含时以 query 为准。
 
         Returns
         -------
         dict
-            键为 ``X-Dynosaur`` / ``X-Gnarly`` / ``X-Bogus``。
+            键为 ``X-Dynosaur`` / ``msToken`` / ``X-Bogus`` / ``X-Gnarly``。
         """
-        if self._js is None:
-            return {
-                "X-Dynosaur": "",
-                "X-Gnarly": "",
-                "X-Bogus": "",
-            }
-        if isinstance(query, dict):
-            query = urlencode(
-                query,
-                safe="=",
-                quote_via=quote,
-            )
-        opts: dict[str, Any] = {
-            "ua": user_agent,
-            "msToken": ms_token,
-            "env": _DEFAULT_ENV,
-        }
-        result = self._js.signUrl(query, opts)
-        x_dynosaur = result["dynosaur"]
-        x_gnarly = result["gnarly"]
-        x_bogus = result["xbogus"]
-        return {
-            "X-Dynosaur": x_dynosaur,
-            "X-Gnarly": x_gnarly,
-            "X-Bogus": x_bogus,
-        }
+        _, parameters = tiktok_sign(
+            _query_to_string(query),
+            user_agent,
+            ms_token=ms_token,
+            body=_data_to_bytes(data),
+        )
+        return parameters
 
     def sign_url(
         self,
@@ -137,11 +89,11 @@ class TikTokParams(Params):
         Parameters
         ----------
         url : str
-            接口基础地址；留空则仅返回 query 字符串。
+            接口基础地址；签名层不拼接 URL，由传输层组合。
         query : dict | str
-            原始查询字符串或字典。
+            原始查询字符串或字典，为最终发送的字节序。
         data : dict | str | None
-            未使用，保留参数。
+            POST 请求体。
         method : str
             未使用，保留参数。
         user_agent : str
@@ -152,25 +104,55 @@ class TikTokParams(Params):
         Returns
         -------
         str
-            完整 URL 或带签名的 query 字符串。
+            带完整签名的 query 字符串：
+
+            ``<业务 query>&X-Dynosaur=..&msToken=..&X-Bogus=1&X-Gnarly=..``
+
+            参数顺序与封印范围均由 SDK 决定，签发后不可调序。
         """
-        if isinstance(query, dict):
-            query = urlencode(
-                query,
-                safe="=",
-                quote_via=quote,
-            )
-        params = self.sign(url, query, data, method, user_agent, ms_token)
-        signed_query = "&".join(
-            [
-                query,
-                f"X-Dynosaur={params['X-Dynosaur']}",
-                f"X-Bogus={params['X-Bogus']}",
-                f"X-Gnarly={params['X-Gnarly']}",
-            ]
+        signed_query, _ = tiktok_sign(
+            _query_to_string(query),
+            user_agent,
+            ms_token=ms_token,
+            body=_data_to_bytes(data),
         )
-        # if not url:
-        #     return signed_query
-        # sep = "&" if "?" in url else "?"
-        # return f"{url}{sep}{signed_query}"
         return signed_query
+
+
+def _query_to_string(
+    query: dict | str | None,
+) -> str:
+
+    if query is None:
+        return ""
+
+    if isinstance(query, str):
+        return query
+
+    if isinstance(query, dict):
+        return urlencode(
+            query,
+            doseq=True,
+        )
+
+    raise TypeError(f"query 类型错误: {type(query)!r}")
+
+
+def _data_to_bytes(
+    data: dict | str | None,
+) -> bytes:
+    """请求体的字节形式，与传输层的实际发送字节保持一致。"""
+
+    if data is None:
+        return b""
+
+    if isinstance(data, str):
+        return data.encode("utf-8")
+
+    if isinstance(data, dict):
+        return urlencode(
+            data,
+            doseq=True,
+        ).encode("utf-8")
+
+    raise TypeError(f"data 类型错误: {type(data)!r}")
