@@ -1,213 +1,238 @@
-from base64 import b64encode
-from hashlib import md5
-from time import time
-from urllib.parse import quote, urlencode
+# ============================================================
+# 声明 (Declaration)
+#
+# 本文件改编自以下项目的 X-Bogus 实现：
+#   `https://github.com/Evil0ctal/Douyin_TikTok_Download_API`
+#   src/dtk/signing/native/xbogus.py
+#
+# 该项目逆向了抖音与 TikTok 网页端的旧版签名 X-Bogus。
+# Portions Copyright (c) Evil0ctal
+# 感谢原作者 Evil0ctal 的开源贡献。
+# Apache License 2.0: `https://github.com/Evil0ctal/Douyin_TikTok_Download_API/blob/main/LICENSE`
+# 协议副本: licenses/Apache-2.0
+# ============================================================
 
-from ..custom import USERAGENT
+import base64
+import hashlib
+import time
+from typing import Final
 
-__all__ = ["XBogus", "XBogusTikTok"]
+#: Default User-Agent, kept identical to V4 so an unconfigured call still
+#: reproduces V4's output byte for byte.
+DEFAULT_USER_AGENT: Final = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36 Edg/122.0.0.0"
+)
+
+#: Output alphabet. Identical to A-Bogus alphabet ``s2``; kept separate because
+#: the two algorithms are free to diverge.
+CHARACTER: Final = "Dkdpgh4ZKsQB80/Mfvw36XI1R25-WUAlEi7NLboqYTOPuzmFjJnryx9HVGcaStCe="
+
+#: RC4 key applied to the User-Agent. Three control bytes.
+UA_KEY: Final[bytes] = bytes((0x00, 0x01, 0x0C))
+
+#: RC4 key applied to the assembled payload.
+PAYLOAD_KEY: Final[bytes] = bytes((0xFF,))
+
+#: Constant the site mixes in beside the timestamp.
+CANVAS_CONSTANT: Final = 536919696
+
+#: MD5 of the empty string, hashed a second time by the algorithm.
+EMPTY_MD5: Final = "d41d8cd98f00b204e9800998ecf8427e"
+
+#: Every X-Bogus value is this long: 21 payload bytes, three bytes per four
+#: output characters.
+X_BOGUS_LENGTH: Final = 28
+
+_HEX_VALUES: Final[dict[str, int]] = {
+    char: value for value, char in enumerate("0123456789abcdef")
+}
+
+
+def _hex_pairs_to_bytes(text: str) -> list[int]:
+    out: list[int] = []
+    for index in range(0, len(text) - 1, 2):
+        high = _HEX_VALUES.get(text[index])
+        low = _HEX_VALUES.get(text[index + 1])
+        if high is None or low is None:
+            raise ValueError(f"expected lowercase hex, got {text[index : index + 2]!r}")
+        out.append((high << 4) | low)
+    return out
+
+
+def rc4_encrypt(key: bytes, data: bytes) -> bytearray:
+    """RC4 over bytes."""
+    box = list(range(256))
+    j = 0
+    for i in range(256):
+        j = (j + box[i] + key[i % len(key)]) % 256
+        box[i], box[j] = box[j], box[i]
+
+    i = 0
+    j = 0
+    out = bytearray()
+    for byte in data:
+        i = (i + 1) % 256
+        j = (j + box[i]) % 256
+        box[i], box[j] = box[j], box[i]
+        out.append(byte ^ box[(box[i] + box[j]) % 256])
+    return out
 
 
 class XBogus:
-    __string = "Dkdpgh4ZKsQB80/Mfvw36XI1R25-WUAlEi7NLboqYTOPuzmFjJnryx9HVGcaStCe="
-    __array = (
-        [None for _ in range(48)]
-        + list(range(10))
-        + [None for _ in range(39)]
-        + list(range(10, 16))
-    )
-    __canvas = 3873194319
+    """Computes the ``X-Bogus`` query parameter for one browser identity."""
+
+    def __init__(self, user_agent: str | None = None) -> None:
+        self.user_agent = user_agent or DEFAULT_USER_AGENT
+
+    # -- hashing helpers ---------------------------------------------------
 
     @staticmethod
-    def disturb_array(a, b, e, d, c, f, t, n, o, i, r, _, x, u, s, l, v, h, g):
-        array = [0] * 19
-        array[0] = a
-        array[10] = b
-        array[1] = e
-        array[11] = d
-        array[2] = c
-        array[12] = f
-        array[3] = t
-        array[13] = n
-        array[4] = o
-        array[14] = i
-        array[5] = r
-        array[15] = _
-        array[6] = x
-        array[16] = u
-        array[7] = s
-        array[17] = l
-        array[8] = v
-        array[18] = h
-        array[9] = g
-        return array
+    def md5_str_to_array(value: str | list[int]) -> list[int]:
+        """Hex-decode a digest, or fall back to code points for longer text.
 
-    @staticmethod
-    def generate_garbled_1(a, b, e, d, c, f, t, n, o, i, r, _, x, u, s, l, v, h, g):
-        array = [0] * 19
-        array[0] = a
-        array[1] = r
-        array[2] = b
-        array[3] = _
-        array[4] = e
-        array[5] = x
-        array[6] = d
-        array[7] = u
-        array[8] = c
-        array[9] = s
-        array[10] = f
-        array[11] = l
-        array[12] = t
-        array[13] = v
-        array[14] = n
-        array[15] = h
-        array[16] = o
-        array[17] = g
-        array[18] = i
-        return "".join(map(chr, map(int, array)))
+        The length test is the site's, not ours: anything longer than a 32
+        character MD5 digest is treated as raw text.
+        """
+        if isinstance(value, list):
+            return list(value)
+        if len(value) > 32:
+            return [ord(char) for char in value]
+        return _hex_pairs_to_bytes(value)
 
-    @staticmethod
-    def generate_num(text):
-        return [
-            ord(text[i]) << 16 | ord(text[i + 1]) << 8 | ord(text[i + 2]) << 0
-            for i in range(0, 21, 3)
-        ]
+    @classmethod
+    def md5(cls, data: str | list[int]) -> str:
+        """MD5 hex digest of ``data``, decoded first when it is a string."""
+        array = cls.md5_str_to_array(data) if isinstance(data, str) else list(data)
+        return hashlib.md5(bytes(array)).hexdigest()
 
-    @staticmethod
-    def generate_garbled_2(a, b, c):
-        return chr(a) + chr(b) + c
+    @classmethod
+    def md5_encrypt(cls, url_path: str) -> list[int]:
+        """Two rounds of MD5 over the query string."""
+        return cls.md5_str_to_array(cls.md5(cls.md5_str_to_array(cls.md5(url_path))))
 
-    @staticmethod
-    def generate_garbled_3(a, b):
-        d = list(range(256))
-        c = 0
-        f = ""
-        for a_idx in range(256):
-            d[a_idx] = a_idx
-        for b_idx in range(256):
-            c = (c + d[b_idx] + ord(a[b_idx % len(a)])) % 256
-            e = d[b_idx]
-            d[b_idx] = d[c]
-            d[c] = e
-        t = 0
-        c = 0
-        for b_idx in range(len(b)):
-            t = (t + 1) % 256
-            c = (c + d[t]) % 256
-            e = d[t]
-            d[t] = d[c]
-            d[c] = e
-            f += chr(ord(b[b_idx]) ^ d[(d[t] + d[c]) % 256])
-        return f
+    @classmethod
+    def empty_digest(cls) -> list[int]:
+        """The second chain, which hashes nothing and is therefore a constant.
 
-    def calculate_md5(self, input_string):
-        if isinstance(input_string, str):
-            array = self.md5_to_array(input_string)
-        elif isinstance(input_string, list):
-            array = input_string
-        else:
-            raise TypeError
+        Its bytes 14 and 15 are in every X-Bogus ever produced. A decoder that
+        finds something else there is not looking at an X-Bogus.
+        """
+        return cls.md5_str_to_array(cls.md5(cls.md5_str_to_array(EMPTY_MD5)))
 
-        md5_hash = md5()
-        md5_hash.update(bytes(array))
-        return md5_hash.hexdigest()
+    def user_agent_digest(self) -> list[int]:
+        """The third chain: RC4 the User-Agent, base64 it, hash it twice-over.
 
-    def md5_to_array(self, md5_str):
-        if isinstance(md5_str, str) and len(md5_str) > 32:
-            return [ord(char) for char in md5_str]
-        else:
-            return [
-                (self.__array[ord(md5_str[index])] << 4)
-                | self.__array[ord(md5_str[index + 1])]
-                for index in range(0, len(md5_str), 2)
-            ]
-
-    def process_url_path(self, url_path):
-        return self.md5_to_array(
-            self.calculate_md5(self.md5_to_array(self.calculate_md5(url_path)))
+        Split out of :meth:`sign` so that a decoder can recompute it for a
+        candidate User-Agent and check it against the two bytes a captured
+        signature carries. That check is the whole of what those two bytes
+        support: they are a digest, and two bytes of one do not come back.
+        """
+        return self.md5_str_to_array(
+            self.md5(
+                base64.b64encode(
+                    rc4_encrypt(UA_KEY, self.user_agent.encode("ISO-8859-1"))
+                ).decode("ISO-8859-1")
+            )
         )
 
-    def generate_str(self, num):
-        string = [num & 16515072, num & 258048, num & 4032, num & 63]
-        string = [i >> j for i, j in zip(string, range(18, -1, -6))]
-        return "".join([self.__string[i] for i in string])
+    # -- payload assembly --------------------------------------------------
 
     @staticmethod
-    def handle_ua(a, b):
-        d = list(range(256))
-        c = 0
-        result = bytearray(len(b))
+    def split_even_odd(values: list[int | float]) -> list[int | float]:
+        """Even-indexed items first, then odd-indexed ones."""
+        return values[0::2] + values[1::2]
 
-        for i in range(256):
-            c = (c + d[i] + ord(a[i % len(a)])) % 256
-            d[i], d[c] = d[c], d[i]
+    @staticmethod
+    def interleave(values: list[int | float]) -> list[int]:
+        """Inverse of :meth:`split_even_odd` for a 19 item list.
 
-        t = 0
-        c = 0
+        The site splits the payload and immediately reinterleaves it; the only
+        thing the round trip really does is truncate the one fractional slot
+        (``0.00390625``, which is ``1 / 256``) to an integer. The shape is kept
+        because that is what the algorithm does.
+        """
+        head, tail = values[:10], values[10:]
+        out: list[int] = []
+        for index in range(len(head)):
+            out.append(int(head[index]))
+            if index < len(tail):
+                out.append(int(tail[index]))
+        return out
 
-        for i in range(len(b)):
-            t = (t + 1) % 256
-            c = (c + d[t]) % 256
-            d[t], d[c] = d[c], d[t]
-            result[i] = b[i] ^ d[(d[t] + d[c]) % 256]
-
-        return result
-
-    def generate_ua_array(self, user_agent: str, params: int) -> list:
-        ua_key = ["\u0000", "\u0001", chr(params)]
-        value = self.handle_ua(ua_key, user_agent.encode("utf-8"))
-        value = b64encode(value)
-        return list(md5(value).digest())
-
-    def generate_x_bogus(
-        self, query: list, params: int, user_agent: str, timestamp: int
-    ):
-        ua_array = self.generate_ua_array(user_agent, params)
-        array = [
-            64,
-            0.00390625,
-            1,
-            params,
-            query[-2],
-            query[-1],
-            69,
-            63,
-            ua_array[-2],
-            ua_array[-1],
-            timestamp >> 24 & 255,
-            timestamp >> 16 & 255,
-            timestamp >> 8 & 255,
-            timestamp >> 0 & 255,
-            self.__canvas >> 24 & 255,
-            self.__canvas >> 16 & 255,
-            self.__canvas >> 8 & 255,
-            self.__canvas >> 0 & 255,
-            None,
-        ]
-        zero = 0
-        for i in array[:-1]:
-            if isinstance(i, float):
-                i = int(i)
-            zero ^= i
-        array[-1] = zero
-        garbled = self.generate_garbled_1(*self.disturb_array(*array))
-        garbled = self.generate_garbled_2(2, 255, self.generate_garbled_3("ÿ", garbled))
-        return "".join(self.generate_str(i) for i in self.generate_num(garbled))
-
-    def get_x_bogus(
-        self,
-        query: dict | str,
-        data: dict | None = None,
-        method: str | None = None,
-        user_agent=USERAGENT,
-        test_time=None,
-    ):
-        timestamp = int(test_time or time())
-        query = self.process_url_path(
-            urlencode(query, quote_via=quote) if isinstance(query, dict) else query
+    def encode_group(self, first: int, second: int, third: int) -> str:
+        """Three payload bytes to four output characters."""
+        merged = ((first & 255) << 16) | ((second & 255) << 8) | third
+        return (
+            CHARACTER[(merged & 16515072) >> 18]
+            + CHARACTER[(merged & 258048) >> 12]
+            + CHARACTER[(merged & 4032) >> 6]
+            + CHARACTER[merged & 63]
         )
-        return self.generate_x_bogus(query, 8, user_agent, timestamp)
+
+    # -- public entry point ------------------------------------------------
+
+    def sign(self, query: str, *, timestamp: int | None = None) -> str:
+        """Return the ``X-Bogus`` value for a query string.
+
+        Args:
+            query: The query string exactly as it will be sent, without the
+                leading ``?``.
+            timestamp: Unix seconds; the current second when omitted. Two calls
+                in the same second produce the same signature, which is what
+                makes X-Bogus comparable against a browser's own output.
+        """
+        ua_digest = self.user_agent_digest()
+        empty_digest = self.empty_digest()
+        query_digest = self.md5_encrypt(query)
+
+        timer = int(time.time()) if timestamp is None else timestamp
+        constant = CANVAS_CONSTANT
+        # fmt: off
+        payload: list[int | float] = [
+            64, 0.00390625, 1, 12,
+            query_digest[14], query_digest[15],
+            empty_digest[14], empty_digest[15],
+            ua_digest[14], ua_digest[15],
+            timer >> 24 & 255, timer >> 16 & 255, timer >> 8 & 255, timer & 255,
+            constant >> 24 & 255, constant >> 16 & 255, constant >> 8 & 255, constant & 255,
+        ]
+        # fmt: on
+
+        checksum = int(payload[0])
+        for value in payload[1:]:
+            checksum ^= int(value)
+        payload.append(checksum)
+
+        merged = self.interleave(self.split_even_odd(payload))
+        encrypted = rc4_encrypt(PAYLOAD_KEY, bytes(merged)).decode("ISO-8859-1")
+        garbled = chr(2) + chr(255) + encrypted
+
+        signature = ""
+        for index in range(0, len(garbled) - 2, 3):
+            signature += self.encode_group(
+                ord(garbled[index]),
+                ord(garbled[index + 1]),
+                ord(garbled[index + 2]),
+            )
+        return signature
+
+    def sign_query(self, query: str, *, timestamp: int | None = None) -> str:
+        """``query`` with ``&X-Bogus=`` appended, ready to send verbatim."""
+        return f"{query}&X-Bogus={self.sign(query, timestamp=timestamp)}"
 
 
-class XBogusTikTok(XBogus):
-    pass
+#: The payload slots that carry something a decoder can name, as
+#: ``(first index, meaning)``. Written here because :meth:`XBogus.sign` builds
+#: the list positionally and a reader taking a capture apart needs the map.
+PAYLOAD_LEAD: Final[tuple[int, ...]] = (64, 0, 1, 12)
+QUERY_DIGEST_SLOTS: Final[tuple[int, int]] = (4, 5)
+EMPTY_DIGEST_SLOTS: Final[tuple[int, int]] = (6, 7)
+UA_DIGEST_SLOTS: Final[tuple[int, int]] = (8, 9)
+TIMER_SLOTS: Final[tuple[int, int, int, int]] = (10, 11, 12, 13)
+CONSTANT_SLOTS: Final[tuple[int, int, int, int]] = (14, 15, 16, 17)
+CHECKSUM_SLOT: Final = 18
+#: The two bytes each digest chain contributes, as indices into that digest.
+DIGEST_INDICES: Final[tuple[int, int]] = (14, 15)
+#: The two plaintext bytes the envelope opens with, before the ciphertext.
+ENVELOPE_LEAD: Final[tuple[int, int]] = (2, 255)

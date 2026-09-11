@@ -10,8 +10,6 @@ emoji==2.15.0
     # via douk-downloader (pyproject.toml)
 fastapi==0.141.1
     # via douk-downloader (pyproject.toml)
-gmssl==3.2.2
-    # via douk-downloader (pyproject.toml)
 javascript==1!1.2.6
     # via douk-downloader (pyproject.toml)
 lxml==6.1.3

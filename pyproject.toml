@@ -14,7 +14,6 @@ dependencies = [
     "curl-cffi>=0.16.2",
     "emoji>=2.15.0",
     "fastapi>=0.141.1",
-    "gmssl>=3.2.2",
     "javascript>=1!1.2.6",
     "lxml>=6.1.2",
     "openpyxl>=3.1.5",
