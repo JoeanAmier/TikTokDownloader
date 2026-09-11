@@ -4,11 +4,11 @@ from random import randint
 from string import ascii_lowercase, ascii_uppercase, digits
 from time import time
 from typing import TYPE_CHECKING, Union
-from urllib.parse import quote
+from urllib.parse import quote, urlencode
 
-from src.custom import PARAMS_HEADERS, PARAMS_HEADERS_TIKTOK
+from src.custom import PARAMS_HEADERS, PARAMS_HEADERS_TIKTOK, USERAGENT
 from src.encrypt.ttWid import TtWid
-from src.encrypt.xBogus import XBogusTikTok
+from src.encrypt.xBogus import XBogus
 from src.tools import request_params
 from src.translation import _
 
@@ -219,9 +219,7 @@ class MsTokenTikTok(MsToken):
         if token:
             headers |= {"Cookie": f"{cls.NAME}={token}"}
             params["X-Bogus"] = quote(
-                XBogusTikTok().get_x_bogus(
-                    params, None, None, user_agent=headers["User-Agent"]
-                ),
+                XBogus(USERAGENT).sign(urlencode(params, quote_via=quote)),
                 safe="",
             )
         return await cls._get_ms_token(
@@ -248,13 +246,13 @@ async def test():
     print(
         "TikTok",
         await MsTokenTikTok.get_real_ms_token(
-            Logger(), PARAMS_HEADERS_TIKTOK, proxy="http://127.0.0.1:10809"
+            Logger(), PARAMS_HEADERS_TIKTOK, proxy="http://127.0.0.1:10808"
         ),
     )
     print(
         "TikTok",
         await MsTokenTikTok.get_long_ms_token(
-            Logger(), PARAMS_HEADERS_TIKTOK, proxy="http://127.0.0.1:10809"
+            Logger(), PARAMS_HEADERS_TIKTOK, proxy="http://127.0.0.1:10808"
         ),
     )
 

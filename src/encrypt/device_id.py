@@ -62,14 +62,14 @@ async def test():
         await DeviceId.get_device_id(
             Logger(),
             PARAMS_HEADERS_TIKTOK,
-            proxy="http://127.0.0.1:10809",
+            proxy="http://127.0.0.1:10808",
         )
     )
     # print(await DeviceId.get_device_ids(
     #     Logger(),
     #     PARAMS_HEADERS_TIKTOK,
     #     5,
-    #     proxy="http://127.0.0.1:10809",
+    #     proxy="http://127.0.0.1:10808",
     # ))
 
 

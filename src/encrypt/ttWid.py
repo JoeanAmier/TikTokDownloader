@@ -103,7 +103,7 @@ async def test():
             Logger(),
             PARAMS_HEADERS_TIKTOK,
             cookie="ttwid=",
-            proxy="http://localhost:10809",
+            proxy="http://localhost:10808",
         ),
     )
 
