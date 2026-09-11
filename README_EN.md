@@ -19,8 +19,8 @@
 <p>⭐ Previous project names: <code>TikTokDownloader</code></p>
 </div>
 <hr>
-<p>⚠️ Some features in the current version are no longer functioning. The project plans to refactor in version <code>6.0</code>, and after the refactoring, some of the broken features will be fixed.</p>
-<p>⚠️ The encryption parameter algorithm for this project has expired and is no longer valid; to ensure legal and regulatory compliance, the parameter algorithm is no longer maintained, and some features may not work properly. If you need to use it, please prepare the encryption parameter generation code yourself. For configuration instructions, please refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E5%8A%A0%E5%AF%86%E5%8F%82%E6%95%B0%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81%E9%85%8D%E7%BD%AE">documentation</a>!</p>
+<p>⚠️ The project is planned to be fully refactored in version <code>6.0</code>. Support for a <code>GUI</code> or <code>WebUI</code> is expected after the refactoring is completed.</p>
+<p>⚠️ To ensure compliance with applicable laws and regulations, this project no longer maintains algorithms for generating encryption parameters. If platform updates cause some features to stop functioning properly, please implement your own encryption parameter generation code. For configuration instructions, please refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E5%8A%A0%E5%AF%86%E5%8F%82%E6%95%B0%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81%E9%85%8D%E7%BD%AE">documentation</a>.</p>
 <hr>
 
 # 📝 Project Features
@@ -419,10 +419,9 @@ repository to execute the build process
 
 # 💡 Project References
 
-* https://github.com/Johnserf-Seed/f2
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
+* https://github.com/Johnserf-Seed/f2
 * https://github.com/ihmily/DouyinLiveRecorder
-* https://github.com/xvhuan/tiktok-web-params
 * https://github.com/lexiforest/curl_cffi/
 * https://github.com/Textualize/rich
 * https://github.com/omnilib/aiosqlite

@@ -19,8 +19,8 @@
 <p>⭐ 本项目历史名称：<code>TikTokDownloader</code></p>
 </div>
 <hr>
-<p>⚠️ 当前版本部分功能已失效。项目计划在 <code>6.0</code> 版本进行重构，重构完成后将会修复部分失效的功能！</p>
-<p>⚠️ 本项目的加密参数算法已过期失效；为确保项目合法合规，参数算法不再维护，部分功能可能无法正常工作。如需使用，请自行准备加密参数生成代码，配置方法请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E5%8A%A0%E5%AF%86%E5%8F%82%E6%95%B0%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81%E9%85%8D%E7%BD%AE">文档</a>！</p>
+<p>⚠️ 项目计划在 <code>6.0</code> 版本进行彻底重构，预期重构完成后支持 <code>GUI</code> 或者 <code>WebUI</code>！</p>
+<p>⚠️ 为确保项目合法合规，本项目的加密参数算法不再维护；如因平台更新导致部分功能无法正常工作，请自行准备加密参数生成代码，配置方法请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E5%8A%A0%E5%AF%86%E5%8F%82%E6%95%B0%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81%E9%85%8D%E7%BD%AE">文档</a>！</p>
 <hr>
 
 # 📝 项目功能
@@ -417,10 +417,9 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 
 # 💡 项目参考
 
-* https://github.com/Johnserf-Seed/f2
 * https://github.com/Evil0ctal/Douyin_TikTok_Download_API
+* https://github.com/Johnserf-Seed/f2
 * https://github.com/ihmily/DouyinLiveRecorder
-* https://github.com/xvhuan/tiktok-web-params
 * https://github.com/lexiforest/curl_cffi/
 * https://github.com/Textualize/rich
 * https://github.com/omnilib/aiosqlite
