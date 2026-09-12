@@ -30,7 +30,6 @@ from ..custom import (
     VIDEO_INDEX,
     VIDEO_TIKTOK_INDEX,
     condition_filter,
-    wait,
 )
 from ..tools import DownloaderError, Retry
 from ..translation import _
@@ -595,7 +594,7 @@ class Extractor:
                 url,
                 headers={"Range": "bytes=0-0"},
             )
-            await wait()
+            # await wait()
             response.raise_for_status()
             content_range = response.headers.get("Content-Range", "")
             if (

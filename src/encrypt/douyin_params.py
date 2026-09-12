@@ -22,6 +22,7 @@ from ..custom import USERAGENT
 from .aBogus import ABogus
 from .params import Params
 from .websign import UIFID_PARAM
+from .websign import normalize_query as _websign_normalize_query
 from .websign import sign as web_sign
 
 __all__ = ["DouYinParams"]
@@ -80,25 +81,6 @@ def _is_sign_protected(
     return path in DOUYIN_SIGNED_PATHS
 
 
-def _query_to_string(
-    query: dict | str | None,
-) -> str:
-
-    if query is None:
-        return ""
-
-    if isinstance(query, str):
-        return query
-
-    if isinstance(query, dict):
-        return urlencode(
-            query,
-            doseq=True,
-        )
-
-    raise TypeError(f"query 类型错误: {type(query)!r}")
-
-
 def _data_to_string(
     data: dict | str | None,
 ) -> str:
@@ -124,20 +106,23 @@ def _data_to_string(
 
 
 def _normalize_query(
-    query: str,
+    query: dict | str | None,
 ) -> str:
-    """query 的规范化字节序。
+    """Serialize mappings once and canonicalize raw query strings."""
 
-    a_bogus 对哈希字节与发送字节的一致性敏感：先解码再统一序列化，
-    保证签名覆盖的字符串与最终发送的字符串逐字节相同
-    """
-    return urlencode(
-        parse_qsl(
-            query,
-            keep_blank_values=True,
-        ),
-        doseq=True,
-    )
+    if query is None:
+        return ""
+
+    if isinstance(query, dict):
+        return urlencode(query, doseq=True)
+
+    if isinstance(query, str):
+        return urlencode(
+            parse_qsl(query, keep_blank_values=True),
+            doseq=True,
+        )
+
+    raise TypeError(f"query 类型错误: {type(query)!r}")
 
 
 def _get_query_value(
@@ -145,8 +130,7 @@ def _get_query_value(
     name: str,
 ) -> str:
     # WebSign's native path decodes percent escapes but deliberately keeps a
-    # literal ``+``.  ``parse_qsl`` uses form semantics and would turn it into
-    # a space, changing the uifid value used in the md5 preimage.
+    # literal ``+`` in the value.
     for part in query.split("&"):
         if not part:
             continue
@@ -210,7 +194,7 @@ class DouYinParams(Params):
         ms_token: str = "",
     ) -> dict[str, str]:
 
-        query = _normalize_query(_query_to_string(query))
+        query = _normalize_query(query)
 
         a_bogus = self._get_a_bogus(
             query,
@@ -235,10 +219,17 @@ class DouYinParams(Params):
     ) -> str:
 
         # ================================================
-        # 1. 规范化 query 并计算 a_bogus
+        # 1. 规范化业务 query
         # ================================================
 
-        query = _normalize_query(_query_to_string(query))
+        query = _normalize_query(query)
+
+        # 受保护接口使用 WebSign 的规范 query 表示计算 A-Bogus。
+        # 普通接口不经过 WebSign，使用业务 query 表示。
+        protected = bool(url and _is_sign_protected(url))
+        uifid = _get_query_value(query, UIFID_PARAM) if protected else ""
+        if uifid:
+            query = _websign_normalize_query(query)
 
         a_bogus = self._get_a_bogus(
             query,
@@ -250,41 +241,14 @@ class DouYinParams(Params):
         signed_query = f"{query}&a_bogus={quote(a_bogus, safe='')}"
 
         # ================================================
-        # 2. 没有 URL
+        # 2. WebSign（仅受保护且带 UIFID 的接口）
         # ================================================
-
-        if not url:
-            return signed_query
-
-        # ================================================
-        # 3. 接口是否需要 WebSign
-        # ================================================
-
-        # 只有签名保护接口才附加 x-secsdk-web-signature，
-        # 平台自己的页面对其余接口原样发送
-        if not _is_sign_protected(url):
-            return signed_query
-
-        # ================================================
-        # 4. UIFID
-        # ================================================
-
-        # 签名预映像包含 uifid，缺失时无法计算，
-        # 保持正常 a_bogus 行为
-        uifid = _get_query_value(
-            signed_query,
-            UIFID_PARAM,
-        )
 
         if not uifid:
             return signed_query
 
-        # ================================================
-        # 5. WebSign
-        # ================================================
-
-        # 追加 timestamp 与 x-secsdk-web-signature，
-        # 签名覆盖其前面的完整 query（含 a_bogus）
+        # 追加 timestamp 与 x-secsdk-web-signature；签名覆盖其前面的
+        # 完整 query（含 a_bogus）。
         return web_sign(
             signed_query,
             uifid,

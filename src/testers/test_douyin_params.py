@@ -1,5 +1,5 @@
 from src.encrypt import DouYinParams
-from src.encrypt.douyin_params import _query_to_string
+from src.encrypt.douyin_params import _normalize_query
 from src.encrypt.websign import sign as websign_sign
 
 
@@ -71,7 +71,13 @@ def test_douyin_sign_url_websign_skips_unprotected_endpoint():
 def test_douyin_query_uses_standard_form_encoding_inside_signer():
     # This matches the main project's A-Bogus query encoder: quote_plus with
     # no extra safe characters.
-    assert _query_to_string({"keyword": "hello world", "value": "x=y"}) == (
+    assert _normalize_query({"keyword": "hello world", "value": "x=y"}) == (
+        "keyword=hello+world&value=x%3Dy"
+    )
+
+
+def test_douyin_normalizes_raw_query_string():
+    assert _normalize_query("keyword=hello%20world&value=x%3dy") == (
         "keyword=hello+world&value=x%3Dy"
     )
 
@@ -103,3 +109,22 @@ def test_douyin_websign_keeps_literal_plus_in_uifid():
         timestamp=1788848901,
     )
     assert "uifid=visitor%2Bid" in query
+
+
+def test_douyin_protected_query_is_canonicalized_before_a_bogus(monkeypatch):
+    captured_queries = []
+    signer = DouYinParams()
+
+    def capture_a_bogus(query, data, user_agent):
+        captured_queries.append(query)
+        return "test_a_bogus"
+
+    monkeypatch.setattr(signer, "_get_a_bogus", capture_a_bogus)
+    query = signer.sign_url(
+        url="https://www.douyin.com/aweme/v1/web/aweme/post/",
+        query={"os_name": "Mac OS", "uifid": "test_uifid"},
+    )
+
+    # A-Bogus receives WebSign's canonical query representation.
+    assert captured_queries == ["os_name=Mac%2BOS&uifid=test_uifid"]
+    assert query.startswith("os_name=Mac%2BOS&uifid=test_uifid&")

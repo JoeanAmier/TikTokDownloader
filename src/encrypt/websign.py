@@ -23,6 +23,7 @@ __all__ = [
     "SIGNATURE_PARAM",
     "UIFID_PARAM",
     "TIMESTAMP_PARAM",
+    "normalize_query",
     "sign",
 ]
 
@@ -53,6 +54,11 @@ def _encode_pairs(pairs: list[tuple[str, str]]) -> str:
         f"{quote(name, safe='*-._')}={quote(value, safe='*-._')}"
         for name, value in pairs
     )
+
+
+def normalize_query(query: str) -> str:
+    """Return the canonical query byte sequence emitted by WebSign."""
+    return _encode_pairs(_query_pairs(query))
 
 
 def sign(
