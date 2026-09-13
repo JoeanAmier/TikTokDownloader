@@ -20,13 +20,13 @@
 </div>
 <hr>
 <p>⚠️ 项目计划在 <code>6.0</code> 版本进行彻底重构，预期重构完成后支持 <code>GUI</code> 或者 <code>WebUI</code>！</p>
-<p>⚠️ 为确保项目合法合规，本项目的加密参数算法不再维护；如因平台更新导致部分功能无法正常工作，请自行准备加密参数生成代码，配置方法请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E5%8A%A0%E5%AF%86%E5%8F%82%E6%95%B0%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81%E9%85%8D%E7%BD%AE">文档</a>！</p>
+<p>⚠️ 为确保项目合法合规，本项目的加密参数算法不再维护；如因平台更新导致部分功能无法正常使用，请自行准备加密参数生成代码，配置方法请查阅 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E5%8A%A0%E5%AF%86%E5%8F%82%E6%95%B0%E7%94%9F%E6%88%90%E4%BB%A3%E7%A0%81%E9%85%8D%E7%BD%AE">文档</a>！</p>
 <hr>
 
 # 📝 项目功能
 
 <details>
-<summary>功能列表（点击展开）</summary>
+<summary>项目功能清单，适合想要快速了解项目能力的用户查阅（点击展开）</summary>
 <ul>
 <li>✅ 下载抖音视频/图集</li>
 <li>✅ 下载抖音实况/动图</li>
@@ -90,7 +90,7 @@
 
 ## Web UI 交互模式
 
-> **项目代码已重构，该模式代码尚未更新，未来开发完成重新开放！**
+> **该模式代码尚未更新，未来重构完成重新开放！**
 
 ## Web API 接口模式
 
@@ -174,6 +174,9 @@ demo()
 
 ### Docker 容器
 
+<details>
+<summary>Docker 容器部署步骤，适合使用 Docker 部署和运行本项目的用户查阅（点击展开）</summary>
+
 <ol>
 <li>获取镜像</li>
 <ul>
@@ -192,6 +195,8 @@ demo()
 </li>
 </ol>
 <p>Docker 容器无法直接访问宿主机的文件系统，部分功能不可用，例如：<code>从浏览器读取 Cookie</code>；其他功能如有异常请反馈！</p>
+
+</details>
 <hr>
 
 ## 关于 Cookie
@@ -200,8 +205,6 @@ demo()
 
 > * Cookie 仅需在失效后重新写入配置文件，并非每次运行程序都要写入配置文件！
 >
-> * Cookie 会影响下载的视频文件分辨率，如果无法下载最高分辨率的视频文件，请尝试更新 Cookie！
->
 > * 程序获取数据失败时，可以尝试更新 Cookie 或者使用已登录的 Cookie！
 
 <hr>
@@ -209,7 +212,7 @@ demo()
 ## 其他说明
 
 <ul>
-<li>本项目内置智能延时请求机制，避免请求频率过高影响平台服务器，如需关闭，请参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E9%AB%98%E7%BA%A7%E9%85%8D%E7%BD%AE">文档</a></li>
+<li>本项目内置延时请求机制，避免请求频率过高影响平台服务器，如需关闭，请参考 <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E9%AB%98%E7%BA%A7%E9%85%8D%E7%BD%AE">文档</a></li>
 <li>程序提示用户输入时，直接回车代表返回上级菜单，输入 <code>Q</code> 或 <code>q</code> 代表结束运行</li>
 <li>由于获取账号喜欢作品和收藏作品数据仅返回喜欢 / 收藏作品的发布日期，不返回操作日期，因此程序需要获取全部喜欢 / 收藏作品数据再进行日期筛选；如果作品数量较多，可能会花费较长的时间；可通过 <code>max_pages</code> 参数控制请求次数</li>
 <li>获取私密账号的发布作品数据需要登录后的 Cookie，且登录的账号需要关注该私密账号</li>
@@ -226,7 +229,7 @@ demo()
 </ul>
 <h2>构建可执行文件指南</h2>
 <details>
-<summary><b>构建可执行文件指南（点击展开）</b></summary>
+<summary>通过 GitHub Actions 简单几步即可自动完成，适合需要自行构建程序的用户查阅（点击展开）</summary>
 
 本指南将引导您通过 Fork 本仓库并执行 GitHub Actions 自动完成基于最新源码的程序构建和打包！
 
@@ -337,6 +340,9 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 <p><a href="https://tikhub.io/?utm_source=github&utm_medium=readme&utm_campaign=tiktok_downloader&ref=github_joeanamier_tiktokdownloader">TikHub API</a> 提供超过 700 个端点，可用于从 14+ 个社交媒体平台获取与分析数据 —— 包括视频、用户、评论、商店、商品与趋势等，一站式完成所有数据访问与分析。</p>
 <p>使用 <strong>邀请码</strong>：<code>ZrdH8McC</code> 注册并充值即可获得 <code>$2</code> 额度。</p>
 <h1>🌟 贡献指南</h1>
+<details>
+<summary>项目贡献规范与提交流程，适合有意向参与项目开发的贡献者查阅（点击展开）</summary>
+
 <p><strong>欢迎对本项目做出贡献！为了保持代码库的整洁、高效和易于维护，请仔细阅读以下指南，以确保您的贡献能够顺利被接受和整合。</strong></p>
 <ul>
 <li>在开始开发前，请从 <code>develop</code> 分支拉取最新的代码，以此为基础进行修改；这有助于避免合并冲突并保证您的改动基于最新的项目状态。</li>
@@ -354,6 +360,8 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 <li><a href="https://www.contributor-covenant.org/zh-cn/version/2/1/code_of_conduct/">贡献者公约</a></li>
 <li><a href="https://opensource.guide/zh-hans/how-to-contribute/">如何为开源做贡献</a></li>
 </ul>
+
+</details>
 
 # ♥️ 支持项目
 

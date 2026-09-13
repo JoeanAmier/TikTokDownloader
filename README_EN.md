@@ -26,7 +26,7 @@
 # 📝 Project Features
 
 <details>
-<summary>Function List (Click to Expand)</summary>
+<summary>Project feature list, for users who want to quickly understand project capabilities (Click to Expand)</summary>
 <ul>
 <li>✅ Download DouYin video/image</li>
 <li>✅ Download DouYin live photo</li>
@@ -90,8 +90,7 @@
 
 ## Web UI interaction mode
 
-> **The project code has been refactored; the code for this mode has not yet been updated. It will be reopened after
-future development is completed!**
+> **The code for this mode has not yet been updated. It will be reopened after the refactoring is completed!**
 
 ## Web API mode
 
@@ -176,6 +175,9 @@ demo()
 
 ### Docker Container
 
+<details>
+<summary>Docker container deployment steps, for users who deploy and run this project with Docker (Click to Expand)</summary>
+
 <ol>
 <li>Get the image</li>
 <ul>
@@ -193,6 +195,8 @@ demo()
 </li>
 </ol>
 <p>Docker containers cannot directly access the host machine's file system, and some features may be unavailable, for example: <code>Get Cookie from Browser</code>; if there are any other issues, please report!</p>
+
+</details>
 <hr>
 
 ## About Cookie
@@ -202,9 +206,6 @@ demo()
 > * Cookie only needs to be re-written to the configuration file after it expires, and not every time the program is
     run.
 >
-> * The Cookie can affect the resolution of the video files downloaded from the DouYin platform. If you are unable to
-    download high-resolution video files, please try updating the Cookie!
->
 > * When the program fails to obtain data, you can try updating the Cookie or using a Cookie that is already logged in!
 
 <hr>
@@ -212,7 +213,7 @@ demo()
 ## Other Instructions
 
 <ul>
-<li>This project has a built-in intelligent delay request mechanism to avoid affecting platform servers due to excessive request frequency. If you need to disable it, please refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E9%AB%98%E7%BA%A7%E9%85%8D%E7%BD%AE">documentation</a></li>
+<li>This project has a built-in delay request mechanism to avoid affecting platform servers due to excessive request frequency. If you need to disable it, please refer to the <a href="https://github.com/JoeanAmier/TikTokDownloader/wiki/Documentation#%E9%AB%98%E7%BA%A7%E9%85%8D%E7%BD%AE">documentation</a></li>
 <li>When the program prompts the user for input, pressing Enter directly will return to the previous menu, and inputting <code>Q</code> or <code>q</code> will end the program's execution.</li>
 <li>Since fetching data for liked and favorites works of an account only returns the publication dates of those works, not the dates of the actions (liking or favouring), the program needs to retrieve all liked and favorites works data before performing date filtering. If there are a large number of works, this may take a considerable amount of time. The number of requests can be controlled via the <code>max_pages</code> parameter.</li>
 <li>To obtain data for posts made by a private account, a logged-in Cookie is required, and the logged-in account must follow the private account.</li>
@@ -229,7 +230,7 @@ demo()
 </ul>
 <h2>Build of Executable File Guide</h2>
 <details>
-<summary>Build of Executable File Guide (Click to Expand)</summary>
+<summary>Automated with GitHub Actions in a few simple steps, for users who need to build the program themselves (Click to Expand)</summary>
 
 This guide will walk you through forking this repository and executing GitHub Actions to automatically build and package
 the program based on the latest source code!
@@ -345,6 +346,9 @@ repository to execute the build process
 <p><a href="https://tikhub.io/?utm_source=github&utm_medium=readme&utm_campaign=tiktok_downloader&ref=github_joeanamier_tiktokdownloader">TikHub API</a> offers over 700 endpoints to retrieve and analyze data from 14+ social media platforms—including videos, users, comments, stores, products, trends, and more—enabling one-stop access and analysis of all your data.</p>
 <p>Use <strong>invitation code</strong>: <code>ZrdH8McC</code> to register and recharge to get <code>$2</code> credit.</p>
 <h1>🌟 Contribution Guidelines</h1>
+<details>
+<summary>Contribution guidelines and submission process, for developers who intend to contribute to this project (Click to Expand)</summary>
+
 <p><strong>Welcome to contributing to this project! To keep the codebase clean, efficient, and easy to maintain, please read the following guidelines carefully to ensure that your contributions can be accepted and integrated smoothly.</strong></p>
 <ul>
 <li>Before starting development, please pull the latest code from the <code>develop</code> branch as the basis for your modifications; this helps avoid merge conflicts and ensures your changes are based on the latest state of the project.</li>
@@ -361,6 +365,8 @@ repository to execute the build process
 <li><a href="https://www.contributor-covenant.org/version/2/1/code_of_conduct/">Contributor Covenant</a></li>
 <li><a href="https://opensource.guide/how-to-contribute/">How to Contribute to Open Source</a></li>
 </ul>
+
+</details>
 
 # ♥️ Support the Project
 
