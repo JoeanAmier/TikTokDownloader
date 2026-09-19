@@ -357,7 +357,7 @@ class Downloader:
                 **params,
                 type=_("音乐"),
             )
-            self.download_cover(**params)
+            await self.download_cover(**params)
         await self.downloader_chart(
             tasks, count, self.general_progress_object(), **kwargs
         )
@@ -535,7 +535,7 @@ class Downloader:
                 )
             )
 
-    def download_cover(
+    async def download_cover(
         self,
         tasks: list,
         name: str,
@@ -547,44 +547,32 @@ class Downloader:
         dynamic_suffix: str = "webp",
         **kwargs,
     ) -> None:
-        if all(
-            (
-                self.static_cover,
-                url := item["static_cover"],
-                not self.is_exists(
-                    p := actual_root.with_name(f"{name}.{static_suffix}")
-                ),
-            )
-        ):
-            tasks.append(
-                (
-                    url,
-                    temp_root.with_name(f"{name}.{static_suffix}"),
-                    p,
-                    f"【封面】{name}",
-                    id_,
-                    static_suffix,
+        if self.static_cover and (url := item["static_cover"]):
+            p = actual_root.with_name(f"{name}.{static_suffix}")
+            if not await self.is_skip(id_, p):
+                tasks.append(
+                    (
+                        url,
+                        temp_root.with_name(f"{name}.{static_suffix}"),
+                        p,
+                        f"【封面】{name}",
+                        id_,
+                        static_suffix,
+                    )
                 )
-            )
-        if all(
-            (
-                self.dynamic_cover,
-                url := item["dynamic_cover"],
-                not self.is_exists(
-                    p := actual_root.with_name(f"{name}.{dynamic_suffix}")
-                ),
-            )
-        ):
-            tasks.append(
-                (
-                    url,
-                    temp_root.with_name(f"{name}.{dynamic_suffix}"),
-                    p,
-                    f"【动图】{name}",
-                    id_,
-                    dynamic_suffix,
+        if self.dynamic_cover and (url := item["dynamic_cover"]):
+            p = actual_root.with_name(f"{name}.{dynamic_suffix}")
+            if not await self.is_skip(id_, p):
+                tasks.append(
+                    (
+                        url,
+                        temp_root.with_name(f"{name}.{dynamic_suffix}"),
+                        p,
+                        f"【动图】{name}",
+                        id_,
+                        dynamic_suffix,
+                    )
                 )
-            )
 
     def check_deal_music(
         self,
