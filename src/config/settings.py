@@ -80,6 +80,9 @@ class Settings:
         "proxy_tiktok": "",
         "twc_tiktok": "",
         "download": True,
+        "transcribe": False,
+        "transcription_model": "small",
+        "transcription_language": "",
         "max_size": 0,
         "chunk": 1024 * 1024 * 2,  # 每次从服务器接收的数据块大小
         "timeout": 10,

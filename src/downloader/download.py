@@ -33,6 +33,7 @@ from ..tools import (
     format_size,
 )
 from ..translation import _
+from ..transcription import Transcriber
 
 if TYPE_CHECKING:
     from curl_cffi.requests import AsyncSession
@@ -97,6 +98,12 @@ class Downloader:
         self.ffmpeg: "FFMPEG" = params.ffmpeg
         self.cache: Path = params.cache
         self.truncate: int = params.truncate
+        self.transcriber = Transcriber(
+            self.log,
+            enabled=params.transcribe,
+            model=params.transcription_model,
+            language=params.transcription_language,
+        )
         self.general_progress_object: Callable[..., Progress | FakeProgress] = (
             self.init_general_progress(
                 server_mode,
@@ -371,6 +378,7 @@ class Downloader:
         semaphore: Semaphore = None,
         **kwargs,
     ):
+        transcription_files = []
         with progress:
             tasks = [
                 self.request_file(
@@ -379,10 +387,13 @@ class Downloader:
                     **kwargs,
                     progress=progress,
                     semaphore=semaphore,
+                    transcription_files=transcription_files,
                 )
                 for task in tasks
             ]
             await gather(*tasks)
+        # 所有网络下载完成后再串行转写，不占用下载信号量。
+        await self.transcriber.run(transcription_files)
 
     def deal_folder_path(
         self,
@@ -610,6 +621,7 @@ class Downloader:
         tiktok=False,
         unknown_size=False,
         semaphore: Semaphore = None,
+        transcription_files: list[Path] | None = None,
     ) -> bool | None:
         async with semaphore or self.semaphore:
             client = self.client_tiktok if tiktok else self.client
@@ -665,6 +677,7 @@ class Downloader:
                             position,
                             count,
                             progress,
+                            transcription_files,
                         )
                     case 0:
                         return True
@@ -710,6 +723,7 @@ class Downloader:
         position: int,
         count: SimpleNamespace,
         progress: Progress,
+        transcription_files: list[Path] | None = None,
     ) -> bool:
         task_id = progress.add_task(
             beautify_string(show, self.truncate),
@@ -741,6 +755,8 @@ class Downloader:
         self.log.info(f"文件路径 {actual.resolve()}", False)
         await self.recorder.update_id(id_)
         self.add_count(show, id_, count)
+        if transcription_files is not None and show.startswith(f"【{_('视频')}】"):
+            transcription_files.append(actual)
         return True
 
     def __record_request_messages(

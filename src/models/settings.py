@@ -88,6 +88,9 @@ class Settings(BaseModel):
     proxy_tiktok: str | None = None
     twc_tiktok: str | None = None
     download: bool | None = None
+    transcribe: bool | None = None
+    transcription_model: str | None = None
+    transcription_language: str | None = None
     max_size: int | None = None
     chunk: int | None = None
     timeout: int | None = None
