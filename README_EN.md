@@ -177,6 +177,10 @@ demo()
 </ol>
 <p>⭐ It is recommended to use <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows Terminal</a> (the default terminal that comes with Windows 11).</p>
 
+### Optional: post-download speech transcription
+
+Source installations can transcribe newly downloaded videos locally and save matching TXT transcripts and SRT subtitles. This is disabled by default; transcription failures do not affect downloads. See [installation and configuration](docs/Transcription.md#english).
+
 ### Docker Container
 
 <details>

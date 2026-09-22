@@ -114,6 +114,9 @@ class Parameter:
         timeout=10,
         douyin_platform=True,
         tiktok_platform=True,
+        transcribe=False,
+        transcription_model="small",
+        transcription_language="",
         **kwargs,
     ):
         self.settings = settings
@@ -176,6 +179,9 @@ class Parameter:
         self.static_cover = self.check_bool_false(static_cover)
         self.twc_tiktok = self.check_str(twc_tiktok)
         self.download = self.check_bool_true(download)
+        self.transcribe = self.check_bool_false(transcribe)
+        self.transcription_model = self.check_str(transcription_model) or "small"
+        self.transcription_language = self.check_str(transcription_language)
         self.max_size = self.__check_max_size(max_size)
         self.chunk = self.__check_chunk(chunk)
         self.timeout = self.__check_timeout(timeout)
@@ -256,6 +262,9 @@ class Parameter:
             "static_cover": self.check_bool_false,
             "twc_tiktok": self.check_str,
             "download": self.check_bool_true,
+            "transcribe": self.check_bool_false,
+            "transcription_model": lambda value: self.check_str(value) or "small",
+            "transcription_language": self.check_str,
             "max_size": self.__check_max_size,
             "chunk": self.__check_chunk,
             "timeout": self.__check_timeout,
@@ -876,6 +885,9 @@ class Parameter:
             "proxy_tiktok": self.proxy_tiktok,
             "twc_tiktok": self.twc_tiktok,
             "download": self.download,
+            "transcribe": self.transcribe,
+            "transcription_model": self.transcription_model,
+            "transcription_language": self.transcription_language,
             "max_size": self.max_size,
             "chunk": self.chunk,
             "max_retry": self.max_retry,

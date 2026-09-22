@@ -1,0 +1,2 @@
+# Optional local speech transcription; install in the downloader's Python environment.
+faster-whisper>=1.2.1,<2

@@ -176,6 +176,10 @@ demo()
 </ol>
 <p>⭐ 推荐使用 <a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">Windows 终端</a>（Windows 11 自带默认终端）</p>
 
+### 可选：下载后语音转写
+
+源码运行时可启用本地语音转写，在新下载的视频旁生成同名 TXT 文稿和 SRT 字幕。默认关闭，转写失败不影响视频下载。安装及配置方法见 [语音转写说明](docs/Transcription.md)。
+
 ### Docker 容器
 
 <details>
