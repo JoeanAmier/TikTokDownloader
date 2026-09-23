@@ -148,10 +148,20 @@ class APIServer(TikTok):
         async def handle_settings(
             extract: Settings, token: str = Depends(token_dependency)
         ):
+            # Fail-closed for settings mutations: require a configured token.
+            # Other routes (health checks, etc.) remain backward compatible via is_valid_token.
+            import secrets as _secrets
+            _expected_token = environ.get("TIKTOKDOWNLOADER_TOKEN", "")
+            if not _expected_token or not _secrets.compare_digest(token or "", _expected_token):
+                raise HTTPException(
+                    status_code=403,
+                    detail=_("未配置 TIKTOKDOWNLOADER_TOKEN 或令牌无效，拒绝修改配置！"),
+                )
             data = extract.model_dump()
             # Reject proxy mutation via the HTTP API to prevent SSRF and traffic MITM (CWE-306).
             # Proxy updates must only come from local config file loading.
-            if data.get("proxy") or data.get("proxy_tiktok"):
+            # Check field presence (not truthiness) so empty-string proxies are also rejected.
+            if "proxy" in extract.model_fields_set or "proxy_tiktok" in extract.model_fields_set:
                 raise HTTPException(
                     status_code=403,
                     detail=_("不允许通过 API 修改 proxy 字段！"),

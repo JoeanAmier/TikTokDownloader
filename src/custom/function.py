@@ -82,9 +82,10 @@ def is_valid_token(token: str) -> bool:
     import secrets
 
     expected = environ.get("TIKTOKDOWNLOADER_TOKEN", "")
-    # Fail-closed: if no token is configured, reject all settings mutations.
+    # Backward compatible: if no token is configured, allow access (original behavior).
+    # Settings mutations are separately guarded in handle_settings.
     if not expected:
-        return False
+        return True
     return secrets.compare_digest(token or "", expected)
 
 
