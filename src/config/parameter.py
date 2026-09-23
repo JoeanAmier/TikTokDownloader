@@ -897,13 +897,14 @@ class Parameter:
             data.pop("mix_urls_tiktok"),
             data.pop("owner_url_tiktok"),
         )
+        # Cookie updates via the HTTP API are rejected at the handler level.
+        # Pop the keys here so set_general_params doesn't choke, but pass empty
+        # values to set_cookie so the existing session credentials are preserved.
+        data.pop("cookie", None)
+        data.pop("cookie_tiktok", None)
         self.set_cookie(
-            data.pop(
-                "cookie",
-            ),
-            data.pop(
-                "cookie_tiktok",
-            ),
+            "",
+            "",
         )
         self.set_browser_info(
             data.pop(

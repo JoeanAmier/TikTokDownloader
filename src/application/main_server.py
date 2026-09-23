@@ -148,8 +148,21 @@ class APIServer(TikTok):
         async def handle_settings(
             extract: Settings, token: str = Depends(token_dependency)
         ):
-            await self.parameter.set_settings_data(extract.model_dump())
-            return Settings(**self.parameter.get_settings_data())
+            data = extract.model_dump()
+            # Reject cookie mutation via the HTTP API to prevent session hijack (CWE-306).
+            # Cookie updates must only come from local config file loading.
+            if data.get("cookie") or data.get("cookie_tiktok"):
+                raise HTTPException(
+                    status_code=403,
+                    detail=_("不允许通过 API 修改 cookie 字段！"),
+                )
+            await self.parameter.set_settings_data(data)
+            # Redact cookie fields from the HTTP response to prevent credential leakage (CWE-306).
+            # An unauthenticated caller could otherwise read the operator's session cookies.
+            result = self.parameter.get_settings_data()
+            result["cookie"] = ""
+            result["cookie_tiktok"] = ""
+            return Settings(**result)
 
         @self.server.get(
             "/settings",
@@ -159,7 +172,11 @@ class APIServer(TikTok):
             response_model=Settings,
         )
         async def get_settings(token: str = Depends(token_dependency)):
-            return Settings(**self.parameter.get_settings_data())
+            # Redact cookie fields from the HTTP response to prevent credential leakage.
+            result = self.parameter.get_settings_data()
+            result["cookie"] = ""
+            result["cookie_tiktok"] = ""
+            return Settings(**result)
 
         @self.server.post(
             "/douyin/share",
