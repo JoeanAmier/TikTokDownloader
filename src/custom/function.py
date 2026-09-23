@@ -1,5 +1,6 @@
 from asyncio import sleep
 from math import log
+from os import environ
 from random import lognormvariate
 from typing import TYPE_CHECKING
 
@@ -78,7 +79,14 @@ async def suspend(count: int, console: "ColorfulConsole") -> None:
 
 def is_valid_token(token: str) -> bool:
     """Web API 接口模式 和 Web UI 交互模式 token 参数验证"""
-    return True
+    import secrets
+
+    expected = environ.get("TIKTOKDOWNLOADER_TOKEN", "")
+    # Backward compatible: if no token is configured, allow access (original behavior).
+    # Settings mutations are separately guarded in handle_settings.
+    if not expected:
+        return True
+    return secrets.compare_digest(token or "", expected)
 
 
 if __name__ == "__main__":
