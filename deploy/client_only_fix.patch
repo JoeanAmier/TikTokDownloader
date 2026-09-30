@@ -1,0 +1,90 @@
+diff --git a/src/extract/extractor.py b/src/extract/extractor.py
+index d126343..dbd66e7 100644
+--- a/src/extract/extractor.py
++++ b/src/extract/extractor.py
+@@ -512,6 +512,14 @@ class Extractor:
+             )[-1]
+         return self.safe_extract(item, f"url_list[{IMAGE_INDEX}]")
+ 
++    @staticmethod
++    def __pick_play_url(url_list: list[str]) -> str:
++        # 优先选择视频直链: aweme/v1/play 通用链接对隔离内容(仅限客户端观看)的作品返回 403
++        for url in url_list:
++            if url and "aweme/v1/play" not in url:
++                return url
++        return url_list[VIDEO_INDEX] if url_list else ""
++
+     async def __extract_video_download(
+         self,
+         data: SimpleNamespace,
+@@ -523,6 +531,13 @@ class Extractor:
+             [],
+         )
+         bitrate_size = 0
++        restricted = bool(
++            self.safe_extract(
++                data,
++                "video_control.prevent_download_type",
++                0,
++            )
++        )
+         try:
+             bit_rate: list[tuple[int, int, int, int, int, list[str]]] = [
+                 (
+@@ -550,7 +565,9 @@ class Extractor:
+                 (
+                     bit_rate[-1][-3],
+                     bit_rate[-1][-2],
+-                    bit_rate[-1][-1][VIDEO_INDEX],
++                    self.__pick_play_url(bit_rate[-1][-1])
++                    if restricted
++                    else bit_rate[-1][-1][VIDEO_INDEX],
+                 )
+                 if bit_rate
+                 else (-1, -1, "")
+@@ -572,11 +589,41 @@ class Extractor:
+                 "play_addr.width",
+                 -1,
+             )
+-            url = self.safe_extract(
+-                bit_rate[0],
+-                f"play_addr.url_list[{VIDEO_INDEX}]",
++            url = self.__pick_play_url(
++                self.safe_extract(
++                    bit_rate[0],
++                    "play_addr.url_list",
++                    [],
++                )
+             )
+-        if use_original_quality and self.download and self.original_quality:
++        if not url:
++            # 仅限客户端观看(隔离内容)等受限作品可能没有码率数据，回退到播放地址列表
++            play_addr_urls = self.safe_extract(
++                data,
++                "video.play_addr.url_list",
++                [],
++            )
++            if play_addr_urls:
++                url = self.__pick_play_url(play_addr_urls)
++                height = self.safe_extract(data, "video.play_addr.height", -1)
++                width = self.safe_extract(data, "video.play_addr.width", -1)
++                self.log.info(_("该作品缺少码率数据，已使用播放地址下载"))
++        if restricted:
++            if url:
++                self.log.warning(
++                    _("检测到仅限客户端观看的受限作品，已使用可用地址下载"),
++                )
++            else:
++                self.log.error(
++                    _("作品仅限客户端观看且未获取到可用播放地址，无法下载"),
++                )
++        # 受限作品的通用原画质链接必然 403，跳过探测避免无意义的重试等待
++        if (
++            use_original_quality
++            and self.download
++            and self.original_quality
++            and not restricted
++        ):
+             uri = self.safe_extract(data, "video.play_addr.uri")
+             if uri:
+                 original_url = self.generate_original_quality_url(uri)
