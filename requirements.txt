@@ -22,5 +22,5 @@ pyperclip==1.11.0
     # via douk-downloader (pyproject.toml)
 rich==15.0.0
     # via douk-downloader (pyproject.toml)
-uvicorn==0.52.4
+uvicorn==0.54.0
     # via douk-downloader (pyproject.toml)
