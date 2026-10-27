@@ -8,7 +8,7 @@ curl-cffi==0.16.3
     # via douk-downloader (pyproject.toml)
 emoji==2.15.0
     # via douk-downloader (pyproject.toml)
-fastapi==0.141.1
+fastapi==0.162.0
     # via douk-downloader (pyproject.toml)
 javascript==1!1.2.6
     # via douk-downloader (pyproject.toml)
