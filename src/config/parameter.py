@@ -913,13 +913,14 @@ class Parameter:
                 "browser_info_tiktok",
             ),
         )
+        # Proxy updates via the HTTP API are rejected at the handler level.
+        # Pop the keys here so set_general_params doesn't choke, but pass None
+        # to set_proxy so the existing proxy configuration is preserved.
+        data.pop("proxy", None)
+        data.pop("proxy_tiktok", None)
         await self.set_proxy(
-            data.pop(
-                "proxy",
-            ),
-            data.pop(
-                "proxy_tiktok",
-            ),
+            None,
+            None,
         )
         self.set_general_params(data)
 
