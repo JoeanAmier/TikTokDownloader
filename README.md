@@ -332,6 +332,14 @@ A: 由于权限限制，您无法直接触发主仓库的 Actions。请通过 Fo
 
 ***
 
+## SX.ORG
+
+<p><a href="https://sx.org/c/TTD3"><img src="docs/AD/SX.ORG_CN.jpg" alt="SX.ORG" width="700" height="350"></a></p>
+<p>接入覆盖全球 200+ 国家及地区的 1000万+ 纯净住宅 IP 池，专为自动化、多账号防关联与数据采集打造，SX.ORG 提供超高连通率与严格的黑名单过滤，有效降低限流与封禁风险，保障网络连接的高稳定性与长效防封。</p>
+<p>专属福利：使用优惠码 TTD3 立即免费领取 3GB 流量，名额有限，点击链接马上体验！专属链接：<a href="https://sx.org/c/TTD3">https://sx.org/c/TTD3</a></p>
+
+***
+
 ## DartNode
 
 [![Powered by DartNode](docs/AD/DartNode_AD.png)](https://dartnode.com "Powered by DartNode - Free VPS for Open Source")
