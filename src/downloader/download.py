@@ -657,7 +657,11 @@ class Downloader:
                 )
                 match self._download_initial_check(
                     length,
-                    unknown_size,
+                    unknown_size
+                    or (
+                        response.status_code == 200
+                        and "Content-Length" not in response.headers
+                    ),
                     show,
                 ):
                     case 1:
@@ -724,16 +728,21 @@ class Downloader:
             total=content or None,
             completed=position,
         )
+        size = position
         try:
             buffer = bytearray()
             async with open(cache, "ab") as f:
                 async for chunk in response.aiter_content(self.chunk):
+                    size += len(chunk)
+                    if self.max_size and size > self.max_size:
+                        await response.aclose()
+                        break
                     buffer.extend(chunk)
                     if len(buffer) >= self.WRITE_BUFFER_SIZE:
                         await f.write(bytes(buffer))
                         buffer.clear()
                     progress.update(task_id, advance=len(chunk))
-                if buffer:
+                if buffer and (not self.max_size or size <= self.max_size):
                     await f.write(bytes(buffer))
                 progress.remove_task(task_id)
         except RequestException as e:
@@ -744,6 +753,12 @@ class Downloader:
             # self.delete_file(cache)
             await self.recorder.delete_id(id_)
             return False
+        check = self._download_initial_check(size, False, show)
+        if check != 1:
+            self.delete(cache)
+            if check == -1:
+                await self.recorder.delete_id(id_)
+            return check == 0
         self.save_file(cache, actual)
         self.log.info(_("{show} 文件下载成功").format(show=show))
         self.log.info(f"文件路径 {actual.resolve()}", False)
