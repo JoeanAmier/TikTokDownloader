@@ -617,16 +617,16 @@ class Downloader:
                 headers,
                 tiktok,
             )
-            self.__record_request_messages(
-                show,
-                url,
-                headers,
-            )
             try:
                 # length, suffix = await self.__head_file(client, url, headers, suffix, )
                 position = self.__update_headers_range(
                     headers,
                     temp,
+                )
+                self.__record_request_messages(
+                    show,
+                    url,
+                    headers,
                 )
                 response = await client.request(
                     "GET",
@@ -637,6 +637,14 @@ class Downloader:
                 if response.status_code == 416:
                     raise CacheError(_("文件缓存异常，尝试重新下载"))
                 response.raise_for_status()
+                if position and response.status_code == 200:
+                    self.log.warning(
+                        _("{show} 服务器未响应断点续传请求，重新下载完整文件").format(
+                            show=show,
+                        )
+                    )
+                    self.delete(temp)
+                    position = 0
                 length, suffix = self._extract_content(
                     response.headers,
                     suffix,
@@ -961,10 +969,11 @@ class Downloader:
         length: int = 0,
     ) -> int:
         position = self.__get_resume_byte_position(file)
-        # if length and position >= length:
-        #     self.delete(file)
-        #     position = 0
-        headers["Range"] = f"bytes={position}-"
+        for key in tuple(headers):
+            if key.lower() == "range":
+                del headers[key]
+        if position:
+            headers["Range"] = f"bytes={position}-"
         return position
 
     def __extract_type(self, content: str) -> str:
