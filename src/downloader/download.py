@@ -617,16 +617,16 @@ class Downloader:
                 headers,
                 tiktok,
             )
-            self.__record_request_messages(
-                show,
-                url,
-                headers,
-            )
             try:
                 # length, suffix = await self.__head_file(client, url, headers, suffix, )
                 position = self.__update_headers_range(
                     headers,
                     temp,
+                )
+                self.__record_request_messages(
+                    show,
+                    url,
+                    headers,
                 )
                 response = await client.request(
                     "GET",
@@ -637,6 +637,14 @@ class Downloader:
                 if response.status_code == 416:
                     raise CacheError(_("文件缓存异常，尝试重新下载"))
                 response.raise_for_status()
+                if position and response.status_code == 200:
+                    self.log.warning(
+                        _("{show} 服务器未响应断点续传请求，重新下载完整文件").format(
+                            show=show,
+                        )
+                    )
+                    self.delete(temp)
+                    position = 0
                 length, suffix = self._extract_content(
                     response.headers,
                     suffix,
@@ -649,7 +657,11 @@ class Downloader:
                 )
                 match self._download_initial_check(
                     length,
-                    unknown_size,
+                    unknown_size
+                    or (
+                        response.status_code == 200
+                        and "Content-Length" not in response.headers
+                    ),
                     show,
                 ):
                     case 1:
@@ -716,16 +728,21 @@ class Downloader:
             total=content or None,
             completed=position,
         )
+        size = position
         try:
             buffer = bytearray()
             async with open(cache, "ab") as f:
                 async for chunk in response.aiter_content(self.chunk):
+                    size += len(chunk)
+                    if self.max_size and size > self.max_size:
+                        await response.aclose()
+                        break
                     buffer.extend(chunk)
                     if len(buffer) >= self.WRITE_BUFFER_SIZE:
                         await f.write(bytes(buffer))
                         buffer.clear()
                     progress.update(task_id, advance=len(chunk))
-                if buffer:
+                if buffer and (not self.max_size or size <= self.max_size):
                     await f.write(bytes(buffer))
                 progress.remove_task(task_id)
         except RequestException as e:
@@ -736,6 +753,12 @@ class Downloader:
             # self.delete_file(cache)
             await self.recorder.delete_id(id_)
             return False
+        check = self._download_initial_check(size, False, show)
+        if check != 1:
+            self.delete(cache)
+            if check == -1:
+                await self.recorder.delete_id(id_)
+            return check == 0
         self.save_file(cache, actual)
         self.log.info(_("{show} 文件下载成功").format(show=show))
         self.log.info(f"文件路径 {actual.resolve()}", False)
@@ -961,10 +984,11 @@ class Downloader:
         length: int = 0,
     ) -> int:
         position = self.__get_resume_byte_position(file)
-        # if length and position >= length:
-        #     self.delete(file)
-        #     position = 0
-        headers["Range"] = f"bytes={position}-"
+        for key in tuple(headers):
+            if key.lower() == "range":
+                del headers[key]
+        if position:
+            headers["Range"] = f"bytes={position}-"
         return position
 
     def __extract_type(self, content: str) -> str:

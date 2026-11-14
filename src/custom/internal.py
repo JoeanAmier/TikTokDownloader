@@ -74,7 +74,6 @@ DATA_HEADERS_TIKTOK = DATA_HEADERS | {
 }
 DOWNLOAD_HEADERS = {
     "Accept": "*/*",
-    "Range": "bytes=0-",
     "Referer": REFERER,
 }
 DOWNLOAD_HEADERS_TIKTOK = DOWNLOAD_HEADERS | {
